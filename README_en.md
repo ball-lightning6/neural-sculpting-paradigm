@@ -32,7 +32,7 @@ The training script uses the following model from the Hugging Face Hub.
 
 ### A Note on Documentation
 
-The descriptions for each script in this repository were initially generated with the assistance of Large Language Models (e.g., GPT-4, Gemini). While they provide a general overview of each script's purpose, they may not be perfectly accurate or up-to-date with the latest experimental details. I will be manually reviewing and refining this documentation over time. Please refer to the source code as the definitive source of truth.
+The descriptions for each script in this repository were initially generated with the assistance of Gemini 2.5 Pro. While they provide a general overview of each script's purpose, they may not be perfectly accurate or up-to-date with the latest experimental details. I will be manually reviewing and refining this documentation over time. Please refer to the source code as the definitive source of truth.
 
 - **QUICK_INDEX_en.md**: A **quick index** with brief descriptions of all scripts for easy lookup.
 - **DOCS_GENERATE_en.md**: **Detailed documentation** for all generate_ scripts.
