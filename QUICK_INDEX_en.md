@@ -96,6 +96,16 @@
     
 - generate_chess_resolve_check_task.py: Generates a dataset specifically for the "Resolving a Check" tactical scenario in Chinese Chess. This task requires the model, when in a state of check, to find all moves that can legally resolve the check.
     
+- generate_binary_mod3_dfa_explain.py：To verify whether a model can learn recursive/modular arithmetic rules via *explainable labels*, solving the previously unconvergeable `mod 3` problem.
+    
+- generate_ca_text_format_dataset.py：To test whether a model can learn cellular automata (CA) evolution rules in an autoregressive text format.
+    
+- generate_ca110_full_trace.py：Used in the *“Neural Mind Scanner”* experiment to record *every intermediate state* during evolution, probing whether the model implicitly encodes step-by-step computation.  
+    
+- generate_mnist_ca_110.py：To verify whether a model can *simultaneously* perform pattern recognition and symbolic reasoning by coupling MNIST images with CA evolution rules.
+    
+- generate_rulemnist_ca.py：To verify whether a model can complete the full loop: *recognize digit → infer rule → execute CA evolution → generate image*, achieving a vision-symbol-vision loop.
+    
 
 ## B. Algorithm Learning
 
@@ -215,6 +225,9 @@
     
 - generate_checkers_jump_1d_v2.py: Solves a checker-swapping planning problem in a 1D space, which has been used to reveal the limitations of large language models on certain types of reasoning tasks.
     
+- generate_rain_water_final_showdown.py：To systematically compare how *different algorithmic explanation formats* affect convergence speed, testing the generality of the *decoupling format* idea. 
+    
+
 ## C. Image to Symbol
 
 - generate_checkerboard_to_binary.py: This is a basic vision-to-symbol conversion task, used to test the model's ability to decode structured information from raw pixel data.
@@ -370,6 +383,17 @@
     
 - train_image2image.py: The core image-to-image task script, using a Swin Transformer + U-Net decoder (i.e., Swin-Unet).
     
+- train_ar_transformer.py：This script trains a custom autoregressive Transformer model (GPT-2 architecture) for symbol-to-symbol (Text-to-Text) generation tasks, such as cellular automata evolution or algorithm step prediction. The model is trained in a “prompt → answer” format and supports generation.
+    
+- train_mlp_ctscan.py：This script performs a “CT-scan” style probing of neural network hidden layers, revealing whether each layer encodes intermediate evolution states (S₁→S₈) during a cellular automaton task. It directly tests the hypothesis: *“Does the network simulate step-by-step evolution internally?”*
+    
+- train_mlp_fulltrace.py：This script tests whether a neural network trained only on the final output (S₈) still encodes the full intermediate trace (S₁→S₆) in its final hidden layer. It’s a strong validation of your claim: *“The final layer remembers the full thought process.”*
+    
+- train_mlp_prefer.py：This script probes **which algorithmic structure (DP, monotonic stack, two-pointer) a neural network prefers internally** when solving the “Trapping Rain Water” problem. It empirically tests your hypothesis: *“The model internalizes a specific algorithmic style.”*
+    
+- train_mlp_visualize.py：This script visualizes the per-bit learning dynamics of a neural network trained on a cellular automaton rule. It reveals whether the model learns bit-by-bit or **all-at-once**, offering insight into its internal learning order.
+    
+
 
 ## K. Utility Script
 

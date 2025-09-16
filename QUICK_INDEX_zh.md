@@ -96,6 +96,16 @@
     
 - generate_chess_resolve_check_task.py: 生成一个专门针对中国象棋中“解将”（Resolving a Check）这一特定战术场景的数据集。这个任务要求模型在处于被将军的状态下，找出所有能够合法解除将军的走法。
     
+- generate_binary_mod3_dfa_explain.py：用于验证模型是否能通过“解释性标签”学习递归/模运算类规则，解决原本无法收敛的 mod 3 问题。
+    
+- generate_ca_text_format_dataset.py：测试模型是否能以**自回归文本格式**学习元胞自动机演化规则。
+    
+- generate_ca110_full_trace.py：用于“神经心智扫描仪”实验，记录每一层演化状态，探测模型是否隐式编码了中间计算步骤。
+    
+- generate_mnist_ca_110.py： 验证模型是否能同时完成模式识别与符号推理，将 MNIST 图像与元胞自动机演化规则耦合。
+    
+- generate_rulemnist_ca.py：验证模型是否能从图像中识别数字 → 推断规则 → 执行 CA 演化 → 生成图像，实现视觉-符号-视觉的完整闭环。
+    
 
 ## B. 算法学习 (Algorithm Learning)
 
@@ -215,7 +225,7 @@
     
 - generate_checkers_jump_1d_v2.py: 解决一维空间中的棋子交换规划问题，该问题被用于揭示大型语言模型在某些类型推理任务上的局限性。
     
-
+- generate_rain_water_final_showdown.py：系统性对比不同算法解释格式对模型收敛速度的影响，验证“解耦格式”是否普适。
 ## C. 图像输出符号 (Image to Symbol)
 
 - generate_checkerboard_to_binary.py: 这是一个基础的视觉到符号转换任务，用于测试模型从原始像素数据中解码结构化信息的能力。
@@ -369,6 +379,16 @@
 - train_diffusion.py: 图像到图像任务，使用条件Diffusion模型进行生成式推理。
     
 - train_image2image.py: 核心图像到图像任务脚本，使用Swin Transformer + U-Net解码器（即Swin-Unet）。
+    
+- train_ar_transformer.py：该脚本用于训练一个自回归Transformer模型（GPT-2结构），以完成符号到符号（Text-to-Text）的生成任务，例如元胞自动机演化、算法步骤预测等。模型通过“提示 → 答案”格式进行训练，具备生成能力。
+    
+- train_mlp_ctscan.py：该脚本用于“CT扫描”式探测神经网络隐藏层，揭示模型在解决元胞自动机任务时，各层是否编码了中间演化状态（S₁→S₈）。这是对你论文中 “神经网络是否逐层模拟演化”假设的直接验证。
+    
+- train_mlp_fulltrace.py：该脚本用于验证：一个只训练最终输出（S₈）的神经网络，其最终隐藏层是否完整编码了中间演化轨迹（S₁→S₆）。这是对你论文中 “最终层是否包含完整思维链” 的强验证。
+    
+- train_mlp_prefer.py：该脚本用于探测：在解决“接雨水”问题时，神经网络的隐藏层更偏向哪种算法结构（DP、单调栈、双指针）。这是对你论文中 “模型是否内化了某种算法风格”的实证分析。
+    
+- train_mlp_visualize.py：该脚本用于逐比特观察神经网络在学习元胞自动机规则时的收敛过程，可视化每一位的准确率变化，揭示模型是否“从低位到高位”或“同步”学习。
     
 
 ## K. 工具脚本（Utility Script）

@@ -534,6 +534,64 @@
 
 ---
 
+### **49. generate_binary_mod3_dfa_explain.py**
+
+- **Purpose:** To verify whether a model can learn recursive/modular arithmetic rules via *explainable labels*, solving the previously unconvergeable `mod 3` problem.  
+- **Logic:** Uses a Deterministic Finite Automaton (DFA) to simulate the step-by-step `mod 3` state transitions of a binary number, recording each intermediate state as an explanatory label.  
+- **I/O Format:**  
+  - Input: Binary string of length `N`.  
+  - Output:  
+    - `final_mod_result`: 2-bit binary encoding of the final `mod 3` result.  
+    - `dfa_state_trace`: `2×N`-bit binary sequence encoding each DFA state (S0/S1/S2) at every step.  
+- **Main Parameters:** `NUM_BITS = 30`, `DATASET_SIZE = 500,000`.
+
+---
+
+### **50. generate_ca_text_format_dataset.py**
+
+- **Purpose:** To test whether a model can learn cellular automata (CA) evolution rules in an *autoregressive text format*.  
+- **Logic:** Concatenates the initial and final states into a natural-language-style string (e.g., `"Evolve this: 1010 -> 1101"`), mimicking the text-to-text format commonly used in large language models.  
+- **I/O Format:**  
+  - Input: Text string containing the initial state.  
+  - Output: Text string containing the target state.  
+- **Main Parameters:** `NUM_BITS = 30`, `TOTAL_LAYERS = 2`, `DATASET_SIZE = 500,000`.
+
+---
+
+### **51. generate_ca110_full_trace.py**
+
+- **Purpose:** Used in the *“Neural Mind Scanner”* experiment to record *every intermediate state* during evolution, probing whether the model implicitly encodes step-by-step computation.  
+- **Logic:** Simulates 90 steps of Rule 110 CA evolution, recording the full state every 3 steps and concatenating them into an ultra-long output label.  
+- **I/O Format:**  
+  - Input: 30-bit binary string (initial state).  
+  - Output: `30×30`-bit binary vector (states recorded every 3 steps, 90 steps total).  
+- **Main Parameters:** `NUM_BITS = 30`, `TOTAL_LAYERS = 90`, `DATASET_SIZE = 500,000`.
+
+---
+
+### **52. generate_mnist_ca_110.py**
+
+- **Purpose:** To verify whether a model can *simultaneously* perform pattern recognition and symbolic reasoning by coupling MNIST images with CA evolution rules.  
+- **Logic:** Uses MNIST images of digits 0/1 as backgrounds; the initial CA state is embedded into the image by inverting pixel values. After evolution, the target image is generated similarly.  
+- **I/O Format:**  
+  - Input: 224×224 image with initial CA state embedded.  
+  - Output: 224×224 image with evolved CA state embedded.  
+- **Main Parameters:** `GRID = 6`, `STEP_EVOL = 3`, `RULE = 110`, dataset size: 150k train, 3k val.
+
+---
+
+### **53. generate_rulemnist_ca.py**
+
+- **Purpose:** To verify whether a model can complete the full loop: *recognize digit → infer rule → execute CA evolution → generate image*, achieving a vision-symbol-vision loop.  
+- **Logic:** Uses MNIST images as *rule indicators* (0 → Rule 30, 1 → Rule 110); the image class selects the CA rule, which is then applied to the initial state to produce the target image.  
+- **I/O Format:**  
+  - Input: 224×224 MNIST image with initial CA state embedded.  
+  - Output: 224×224 image with evolved CA state embedded.  
+- **Main Parameters:** `RULE_MAP = {0: 30, 1: 110}`, `STEP_EVOL = 3`, dataset size: 200k train, 3k val.
+
+
+---
+
 # B: Algorithm Learning
 
 ## 1. **generate_sort_integers.py**
@@ -1162,6 +1220,22 @@ The model's task is to determine if a path exists from (0,0) to (M-1,N-1) in a g
     - Input: An integer sequence of length 2*N+1, representing the board state.
     - Output: A single integer, representing the **position index** of the checker to be moved, which is a classification problem.
 - **Main Parameters:** `CHECKERS_N` (number of checkers of each color).
+
+---
+
+### **59. generate_rain_water_final_showdown.py**
+
+- **Purpose:** To systematically compare how *different algorithmic explanation formats* affect convergence speed, testing the generality of the *decoupling format* idea.  
+- **Logic:** For the same set of “trapping rain water” problems, generates intermediate explanation labels for three algorithms (DP, monotonic stack, two-pointer), each concatenated into different-length outputs.  
+- **I/O Format:**  
+  - Input: Binary-encoded heights of `N` pillars.  
+  - Output:  
+    - `final_answer`: per-pillar water amount (main task).  
+    - `explain_dp`: concatenated `leftMax` and `rightMax`.  
+    - `explain_stack`: monotonic-stack event triplets `(left, right, top)`.  
+    - `explain_tp`: max value used at each two-pointer step.  
+- **Main Parameters:** `NUM_COLUMNS_N = 10`, `BITS_PER_HEIGHT = 4`, `DATASET_SIZE = 500,000`.
+
 
 ---
 

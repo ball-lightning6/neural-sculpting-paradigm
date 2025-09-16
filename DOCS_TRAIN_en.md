@@ -261,6 +261,139 @@ This is your core **Image-to-Image** task training script, implementing a **Swin
 
 ---
 
+### 11. train_ar_transformer.py
+
+**▶︎ Brief Description**  
+This script trains a **custom autoregressive Transformer model (GPT-2 architecture)** for **symbol-to-symbol (Text-to-Text)** generation tasks, such as cellular automata evolution or algorithm step prediction. The model is trained in a “prompt → answer” format and supports generation.
+
+**▶︎ Core Architecture**
+
+- **Model**: `GPT2LMHeadModel`, initialized from scratch (no pretrained weights).
+- **Tokenizer**: Based on the `qwen2_0.5b` tokenizer, supporting mixed Chinese and symbolic input.
+- **Data Collator**: Custom `CausalInferenceDataCollator` for causal language modeling; masks loss on prompt tokens.
+- **Loss**: Internally uses `CrossEntropyLoss` for next-token prediction.
+- **Trainer**: Extends Hugging Face `Trainer`, supports generative evaluation (sampling outputs for inspection).
+
+**▶︎ How to Configure and Use**
+
+1. **Modify dataset path**: Set `DATASET_PATH` to your `.jsonl` file. Each line should contain a `"text"` field like `"1010 -> 1101"`.
+2. **Adjust model size**: Modify `HIDDEN_SIZE`, `NUM_LAYERS`, `NUM_HEADS` to control model capacity.
+3. **Set training params**: E.g., `BATCH_SIZE`, `EPOCHS`, `LEARNING_RATE`.
+4. **Run training**:
+
+   ```bash
+   python train_ar_transformer.py
+   ```
+
+5. **Output**: Model saved in `OUTPUT_DIR`. Final test prints prompt vs. generated result for comparison.
+
+---
+
+### 12. train_mlp_ctscan.py
+
+**▶︎ Brief Description**  
+This script performs a **“CT-scan” style probing of neural network hidden layers**, revealing whether each layer encodes intermediate evolution states (S₁→S₈) during a cellular automaton task. It directly tests the hypothesis: *“Does the network simulate step-by-step evolution internally?”*
+
+**▶︎ Core Architecture**
+
+- **Main Model (Body)**: An MLP that outputs hidden states layer-by-layer.
+- **Probe Model**: A small MLP that takes a hidden state and predicts an intermediate evolution step (e.g., S₃).
+- **Training**: Main model is trained only to predict final output (S₈); probes are trained independently without backpropagating into the main model.
+- **Evaluation**: Exact Match heatmap across layers × evolution steps.
+
+**▶︎ How to Configure and Use**
+
+1. **Prepare dataset**: Use `ca_rule110_n30_l8_full_trace.jsonl`, each line contains `input` and `output` (full trace S₁→S₈).
+2. **Set task params**: E.g., `TOTAL_LAYERS = 8` for evolution steps, `NUM_BITS = 30` for state length.
+3. **Run script**:
+
+   ```bash
+   python train_mlp_ctscan.py
+   ```
+
+4. **Output**: Console prints an information heatmap showing how well each hidden layer decodes each evolution step.
+
+---
+
+### 13. train_mlp_fulltrace.py
+
+**▶︎ Brief Description**  
+This script tests whether a **neural network trained only on the final output (S₈)** still **encodes the full intermediate trace (S₁→S₆)** in its final hidden layer. It’s a strong validation of your claim: *“The final layer remembers the full thought process.”*
+
+**▶︎ Core Architecture**
+
+- **Main Model**: Standard MLP trained only to predict final state S₈.
+- **Probe Model**: A stronger MLP that takes the final hidden state and tries to reconstruct the full trace (S₁→S₆).
+- **Dataset**: Uses `ca_rule110_n30_l4_full_trace.jsonl` with complete evolution chains.
+- **Loss**: `BCEWithLogitsLoss`, bit-wise regression over the trace.
+
+**▶︎ How to Configure and Use**
+
+1. **Set path**: Modify `DATASET_PATH` to point to your trace dataset.
+2. **Adjust probe capacity**: E.g., `PROBE_HEAD_HIDDEN_SIZE`, `PROBE_HEAD_NUM_HIDDEN_LAYERS`.
+3. **Run script**:
+
+   ```bash
+   python train_mlp_fulltrace.py
+   ```
+
+4. **Output**: Prints probe’s Exact Match on full trace. >95% implies final layer nearly “remembers” the entire process.
+
+---
+
+### 14. train_mlp_prefer.py
+
+**▶︎ Brief Description**  
+This script probes **which algorithmic structure (DP, monotonic stack, two-pointer) a neural network prefers internally** when solving the “Trapping Rain Water” problem. It empirically tests your hypothesis: *“The model internalizes a specific algorithmic style.”*
+
+**▶︎ Core Architecture**
+
+- **Main Model**: Trained to predict final water amount per column.
+- **Probe Models**: Three independent probes predicting intermediate variables of each algorithm (e.g., leftMax, stack state).
+- **Dataset**: Uses `rain_water_10n_4b_final_showdown.jsonl`, containing labels for all three algorithmic explanations.
+- **Evaluation**: Compare Exact Match of three probes; highest = model’s “preferred” style.
+
+**▶︎ How to Configure and Use**
+
+1. **Set dataset path**: Modify `DATASET_PATH` to your final dataset.
+2. **Set probe tasks**: Edit `probe_tasks` dict to add/remove algorithm labels.
+3. **Run script**:
+
+   ```bash
+   python train_mlp_prefer.py
+   ```
+
+4. **Output**: Prints accuracy of all three algorithm probes; highest = model’s intrinsic cognitive bias.
+
+---
+
+### 15. train_mlp_visualize.py
+
+**▶︎ Brief Description**  
+This script **visualizes the per-bit learning dynamics** of a neural network trained on a cellular automaton rule. It reveals whether the model learns **bit-by-bit** or **all-at-once**, offering insight into its internal learning order.
+
+**▶︎ Core Architecture**
+
+- **Model**: Standard MLP, input = initial state, output = final state.
+- **Dataset**: Uses `ca_rule110_layer6_30.jsonl`, each line contains input/output binary strings.
+- **Validation**: Prints per-bit accuracy every N steps to observe convergence order.
+- **Loss**: `BCEWithLogitsLoss`, computed per bit.
+
+**▶︎ How to Configure and Use**
+
+1. **Set dataset path**: Modify `DATASET_PATH` to your binary task data.
+2. **Adjust output size**: Set `OUTPUT_SIZE = NUM_BITS` to match task output length.
+3. **Run script**:
+
+   ```bash
+   python train_mlp_visualize.py
+   ```
+
+4. **Output**: Console prints per-bit accuracy over time, useful for analyzing learning order (e.g., does it converge from LSB to MSB?).
+
+
+---
+
 ### 1. eval_hanoi.py
 
 **▶︎ Brief Description**

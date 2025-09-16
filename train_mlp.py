@@ -16,32 +16,51 @@ from torch.utils.data import Dataset, DataLoader
 from tqdm import tqdm
 import logging
 import os
-import json  # 引入[json]库
-import random  # 引入[random]库
-
+import json   # 引入[json]库
+import random # 引入[random]库
 
 # --- 1. 配置区域 ---
 class Config:
     # --- 数据集路径配置 ---
-    DATASET_PATH = "ca_rule110_layer6_36.jsonl"  # 请将您的jsonl文件名放在这里
+    DATASET_PATH = "binary_mod3_dfa_explain_n30.jsonl" # 请将您的jsonl文件名放在这里
+    #ca_rule110_layer6_36.jsonl
+    #trapping_rain_water_decoupled_n12_b3_train.jsonl
+    #rain_water_summation_n10_b3_train.jsonl
+    #rain_water_summation_n2_b30_train.jsonl
+    #rain_water_then_ca_l3_train.jsonl
+    #trapping_rain_water_end_to_end_n10_b3_train.jsonl
+    #binary_addition_explainable.jsonl
+    #binary_mod3_dfa_explain_n30.jsonl
+    #multiplier_15bit_decoupled_train.jsonl
+    #multiplier_15bit_ultimate_decoupling.jsonl
+    #ca_rule110_n30_l30_decoupled_every_3.jsonl
+    #hanoi_n14_fractal_coordinate_decoupled.jsonl
+    #trapping_rain_water_ultimate_n10_b3.jsonl
+    #multiplier_12bit_ultimate_decoupling.jsonl
+    #multiplier_12bit_decoupled_train.jsonl
+    #binary_mod3_dfa_explain_n30.jsonl
+    #multiplier_12bit_ultimate_decoupling.jsonl
+    #multiplier_12bit_karatsuba_decoupling.jsonl
+    #autodl-tmp/ca_rule110_n30_l90_full_trace.jsonl
 
     # --- 模型参数 ---
-    BITS = 36
+    INPUT_BITS = 30#36
+    OUTPUT_BITS = 60
+    EXPLAIN_BITS = 58
     HIDDEN_SIZE = 4096
-    NUM_HIDDEN_LAYERS = 3
+    NUM_HIDDEN_LAYERS = 4
     DROPOUT_RATE = 0.1
 
     # --- 训练参数 ---
-    EPOCHS = 50
+    EPOCHS = 5000
     BATCH_SIZE = 512
     LEARNING_RATE = 1e-4
     DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
-    VAL_SPLIT = 0.01  # 10%的数据用于验证
+    VAL_SPLIT = 0.01 # 10%的数据用于验证
 
     # --- 日志和验证配置 ---
     LOG_FILE = "training_log_mlp.log"
     EVAL_INTERVAL_STEPS = 500
-
 
 # --- 2. 日志系统设置 ---
 def setup_logger(log_file):
@@ -56,35 +75,34 @@ def setup_logger(log_file):
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
     return logger
-
-
 # --- 3. 自定义数据集 (已更新) ---
 class CASymbolicDataset(Dataset):
     """从数据列表加载符号形式的元胞自动机数据。"""
-
     def __init__(self, metadata_list):
-        self.metadata_list = metadata_list  # 现在接收一个列表
+        self.metadata_list = metadata_list # 现在接收一个列表
 
     def __len__(self):
         return len(self.metadata_list)
 
     def __getitem__(self, index):
-        row = self.metadata_list[index]  # 直接通过索引访问
+        row = self.metadata_list[index] # 直接通过索引访问
         input_str = row['input']
-        output_str = row['output']
+        # input_str = row['output'][:30]
+        # print(len(input_str))
+        # output_str = row['explain_stack']+row['final_answer']#[144:]#[-24:]#+row['explain_tp']#[:30]#+row['output'][-7:]
+        output_str = row['dfa_state_trace']#[:300]
 
         input_tensor = torch.tensor([int(bit) for bit in input_str], dtype=torch.float32)
         output_tensor = torch.tensor([int(bit) for bit in output_str], dtype=torch.float32)
 
         return input_tensor, output_tensor
 
-
 # --- 4. MLP模型定义 (与之前一致) ---
 class MLP(nn.Module):
     def __init__(self, config):
         super().__init__()
         layers = []
-        layers.append(nn.Linear(config.BITS, config.HIDDEN_SIZE))
+        layers.append(nn.Linear(config.INPUT_BITS, config.HIDDEN_SIZE))
         layers.append(nn.GELU())
         layers.append(nn.LayerNorm(config.HIDDEN_SIZE))
         layers.append(nn.Dropout(config.DROPOUT_RATE))
@@ -93,39 +111,48 @@ class MLP(nn.Module):
             layers.append(nn.GELU())
             layers.append(nn.LayerNorm(config.HIDDEN_SIZE))
             layers.append(nn.Dropout(config.DROPOUT_RATE))
-        layers.append(nn.Linear(config.HIDDEN_SIZE, config.BITS))
+        layers.append(nn.Linear(config.HIDDEN_SIZE, config.OUTPUT_BITS))#config.BITS))
         self.net = nn.Sequential(*layers)
-
     def forward(self, x):
         return self.net(x)
 
-
 # --- 5. 验证与训练循环 (与之前一致) ---
-def validate(model, dataloader, criterion, device, logger, epoch, current_step):
+def validate(model, dataloader, criterion, device, logger, epoch, current_step,a=0):
     model.eval()
-    total_loss, total_correct_bits, exact_matches, total_bits = 0.0, 0, 0, 0
+    total_loss, total_correct_bits_1, total_correct_bits_2, exact_matches_1, exact_matches_2, total_bits_1, total_bits_2 = 0.0, 0.0,0.0, 0, 0, 0,0
     with torch.no_grad():
         for inputs, labels in dataloader:
             inputs, labels = inputs.to(device), labels.to(device)
             outputs = model(inputs)
             total_loss += criterion(outputs, labels).item()
             preds = (torch.sigmoid(outputs) > 0.5).float()
-            total_correct_bits += (preds==labels).sum().item()
-            exact_matches += torch.all(preds==labels, dim=1).sum().item()
-            total_bits += labels.numel()
-    avg_loss = total_loss / len(dataloader)
-    bit_accuracy = 100 * total_correct_bits / total_bits
-    exact_match_ratio = 100 * exact_matches / len(dataloader.dataset)
-    logger.info(f"--- Validation @ Epoch {epoch + 1}, Step {current_step} ---")
-    logger.info(
-        f"    Validation Loss: {avg_loss:.4f}, Bit Acc: {bit_accuracy:.2f}%, Exact Match: {exact_match_ratio:.2f}%")
+            if a!=0:
+                exact_matches_1 += torch.all(preds[...,:a] == labels[...,:a], dim=1).sum().item()
+                total_correct_bits_1 += (preds[...,:a] == labels[...,:a]).sum().item()
+                total_bits_1 += labels[...,:a].numel()
+            exact_matches_2 += torch.all(preds[...,a:] == labels[...,a:], dim=1).sum().item()
+            total_correct_bits_2 += (preds[...,a:] == labels[...,a:]).sum().item()
+            # total_bits += labels.numel()
 
+            total_bits_2 += labels[...,a:].numel()
+    avg_loss = total_loss / len(dataloader)
+    if a!=0:
+        bit_accuracy_1 = 100 * total_correct_bits_1 / total_bits_1
+        exact_match_ratio_1 = 100 * exact_matches_1 / len(dataloader.dataset)
+    bit_accuracy_2 = 100 * total_correct_bits_2 / total_bits_2
+
+    exact_match_ratio_2 = 100 * exact_matches_2 / len(dataloader.dataset)
+
+    logger.info(f"--- Validation @ Epoch {epoch+1}, Step {current_step} ---, Validation Loss: {avg_loss:.4f}")
+    if a!=0:
+        logger.info(f"Explain ----- Bit Acc: {bit_accuracy_1:.2f}%, Exact Match: {exact_match_ratio_1:.2f}%")
+    logger.info(f"Prediction ----- Bit Acc: {bit_accuracy_2:.2f}%, Exact Match: {exact_match_ratio_2:.2f}%")
 
 def train_loop(model, train_loader, val_loader, criterion, optimizer, device, config, logger):
     logger.info("\n[3/3] 开始MLP训练循环...")
     for epoch in range(config.EPOCHS):
         model.train()
-        progress_bar = tqdm(enumerate(train_loader), total=len(train_loader), desc=f"Epoch {epoch + 1}/{config.EPOCHS}")
+        progress_bar = tqdm(enumerate(train_loader), total=len(train_loader), desc=f"Epoch {epoch+1}/{config.EPOCHS}")
         for step, (inputs, labels) in progress_bar:
             inputs, labels = inputs.to(device), labels.to(device)
             optimizer.zero_grad()
@@ -134,13 +161,12 @@ def train_loop(model, train_loader, val_loader, criterion, optimizer, device, co
             loss.backward()
             optimizer.step()
             progress_bar.set_postfix(loss=f"{loss.item():.4f}")
-            if (step + 1) % config.EVAL_INTERVAL_STEPS==0 or (step + 1)==len(train_loader):
-                validate(model, val_loader, criterion, device, logger, epoch, step + 1)
+            if (step + 1) % config.EVAL_INTERVAL_STEPS == 0 or (step + 1) == len(train_loader):
+                validate(model, val_loader, criterion, device, logger, epoch, step + 1,config. EXPLAIN_BITS)
                 model.train()
 
-
 # --- 6. 主执行函数 (已更新) ---
-if __name__=='__main__':
+if __name__ == '__main__':
     config = Config()
     logger = setup_logger(config.LOG_FILE)
     device = torch.device(config.DEVICE)
@@ -158,7 +184,7 @@ if __name__=='__main__':
         exit()
 
     # 使用 random.shuffle 替代 pandas.sample
-    random.seed(42)  # 为了可复现性
+    random.seed(42) # 为了可复现性
     random.shuffle(full_metadata)
 
     # 通过列表切片进行划分
