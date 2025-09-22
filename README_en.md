@@ -4,7 +4,7 @@ This is the official implementation for the paper "Beyond Pattern Recognition: A
 
 The research introduces **"Neural Sculpting"** a new paradigm that transforms standard neural networks from probabilistic imitators into deterministic rule executors. By using procedurally generated ideal data and a parallel solving framework, we awaken the innate potential for precise reasoning in these models.
 
-**[📜 Read the Paper - paper.pdf]** | **[🚀 arXiv - TBD]**
+**[📜 Read the Paper - paper.pdf]** | **[🚀 Zenodo - [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17177215.svg)](https://doi.org/10.5281/zenodo.17177215)]**
 
 ## Setup
 

@@ -11,7 +11,7 @@
 
 研究提出了一种名为 **神经雕刻(Neural Sculpting)** 的新范式，通过使用程序化生成的理想数据和并行的求解框架，将标准神经网络从概率模仿者转变为确定性的规则执行器，从而唤醒其精确推理的潜能。
 
-**[📜 阅读论文 - paper_zh.pdf]** | **[🚀 arXiv - 待补充]**
+**[📜 阅读论文 - paper_zh.pdf]** | **[🚀 Zenodo - [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17177215.svg)](https://doi.org/10.5281/zenodo.17177215)]**
 
 ## 环境设置
 
