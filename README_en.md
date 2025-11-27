@@ -94,8 +94,10 @@ This project contains a large number of scripts. For easy reference, we provide 
 
 ---
 
+<div align="center">
+
 **If this looks like magic, it is! Just try it!**
 
-<div align="center">
 If this project inspires you, please give it a ⭐ Star!
+
 </div>

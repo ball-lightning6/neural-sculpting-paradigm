@@ -94,8 +94,10 @@ python train_tiny_transformer.py
 
 ---
 
+<div align="center">
+
 **如果这看起来像是魔法，它就是！Just try it!**
 
-<div align="center">
 如果这个项目对您有启发，请给它一个 ⭐ Star！
+
 </div>
