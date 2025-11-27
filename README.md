@@ -28,7 +28,7 @@
 1.  运行 `python generate_cellular_automata_1d.py` 生成数据。
 2.  运行 `python train_tiny_transformer.py` 进行训练。
 
-所有实验脚本均存放于 `to_be_organized/` 文件夹。该目录下的脚本未来会逐步整理并移出，目前不保证所有脚本100%同步于最终实验版本，但绝大部分可直接运行。
+所有实验脚本均存放于 `to_be_organized/` 文件夹。我们已将该目录下的脚本按功能进行了初步分类整理（如 `algorithms`, `cellular_automata`, `symbolic_math_logic` 等），方便查阅。
 
 ## 模型依赖
 

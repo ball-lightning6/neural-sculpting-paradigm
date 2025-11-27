@@ -21,7 +21,7 @@ The repository contains two types of scripts: `generate_*.py` (dataset generatio
 1.  Run `python generate_cellular_automata_1d.py` to generate data.
 2.  Run `python train_tiny_transformer.py` to start training.
 
-All experimental scripts are located in the `to_be_organized/` directory. These scripts will be organized and moved out over time. While most should run correctly, they are not guaranteed to be 100% in sync with the final experimental versions.
+All experimental scripts are located in the `to_be_organized/` directory. We have now preliminarily organized these scripts by function (e.g., `algorithms`, `cellular_automata`, `symbolic_math_logic`, etc.) for easier access.
 
 ## Model Dependencies
 
