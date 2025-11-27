@@ -39,7 +39,7 @@ This repository contains numerous experimental scripts demonstrating the model's
     *   Understanding abstract algebraic structures (e.g., N-base addition, Boolean logic) rather than simple symbol memorization.
 *   **🧠 Fusion of Pattern Recognition & Logic**:
     *   The MNIST evolution experiments demonstrate that precise symbolic reasoning is **endogenous** to neural networks. It runs parallel to traditional pattern recognition and can coexist perfectly within the same network.
-*   **� Algorithm Fitting & Planning**:
+*   **🧩 Algorithm Fitting & Planning**:
     *   Solving LeetCode Hard-level algorithmic problems (e.g., Trapping Rain Water, Largest Rectangle).
     *   Zero-search path planning in dense mazes.
 *   **📐 Visual Reasoning & Geometric Construction**:
