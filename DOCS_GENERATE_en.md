@@ -1107,12 +1107,10 @@
     1. **Inverse Problem (Combinatorial Optimization):** Input is a set of numbers + target value, output is a mask (which subset sums to target). This is an NP-hard problem requiring search, decision-making, and combinatorial reasoning, with extremely high learning difficulty, used to test the model's ability to learn combinatorial optimization.
     2. **Forward Problem (Pure Calculation):** Input is a set of numbers + subset mask (telling you which subset to choose), output is the sum (sum of these numbers). This only requires addition, with extremely low learning difficulty, used to verify the impact of task structure on learnability.
     The script switches between the two modes via the `MODE` configuration parameter. The actual training uses the **Forward Mode**, because the Inverse Mode (original subset sum problem) is almost unlearnable for neural networks. This strongly proves that **task structure itself** is the key factor determining learnability, not insufficient model capacity.
-- **Design Philosophy:** Even for such a simple mathematical problem, when presented in the form of "given a target sum, find the subset" (inverse), the neural network struggles to learn the underlying combinatorial logic. But when the problem is reconstructed as "given a subset, calculate the sum" (forward), the model can easily master it. This finding supports the core arguments in Chapter 5 of the paper regarding "computational irreducibility" and "task difficulty".
-- **Logic:** The script first generates a set of `n_items` unique integers. Then, it finds subsets whose sums satisfy a uniqueness condition by enumerating all possible subsets. The input is a concatenation of the **set of numbers** and a **binary mask indicating which subset is selected**. The output is the **sum of the elements** of the selected subset.
 - **I/O Format:**
-    - Input: A binary string of length (`n_items` * 4) (set of numbers) + `n_items` (mask).
-    - Output: A 6-bit binary string, representing the sum.
-- **Main Parameters:** `n_items`, `value_range` (number range), `num_samples`.
+    - Inverse Mode: Input is numbers(4-bit) + target(6-bit), output is mask(n_items bits).
+    - Forward Mode: Input is numbers(4-bit) + mask(n_items bits), output is sum(6-bit).
+- **Main Parameters:** `n_items`, `value_range` (number range), `num_samples`, `MODE` ("forward" or "reverse").
 
 ---
 

@@ -14,7 +14,7 @@
     
 - symbolic_math_logic/generate_multiply_decimal.py: 测试模型处理非二进制符号输入（0-9字符），并执行算术运算（乘法）的能力。
     
-- generate_add_n_base_with_shuffle.py: 这是我们研究中一项**关键的决定性实验**，旨在彻底分离模型的“表面模式匹配”能力和“抽象结构学习”能力。
+- symbolic_math_logic/generate_symbol_add_shuffle_dataset.py: 这是我们研究中一项**关键的决定性实验**，旨在彻底分离模型的“表面模式匹配”能力和“抽象结构学习”能力。
     
 - symbolic_math_logic/generate_add_binary_with_position_shuffle.py: 这是“语义洗牌”系列实验中的“位置洗牌”部分。它旨在验证模型是否依赖于输入的固定空间结构，还是能学习到与位置无关的抽象关系。
     
@@ -277,7 +277,7 @@
     
 - cellular_automata/generate_cellular_automata_multimodal_deprecated.py: 生成一个真正的多模态数据集，用于训练能够同时理解图像输入和文本指令的模型。 (已弃用)
     
-- generate_cellular_automata_1d_to_grid_image_interp.py: 该脚本旨在设计一个“逻辑/感知混合”任务，用以证明神经网络的规则学习能力和内插能力并非互斥，而是可以一体化地在单个任务中得到体现。它迫使模型必须同时“看穿”输入的连续灰度值以执行离散的逻辑推理，并记住这些灰度值以完成最终的连续值映射。
+- cellular_automata/generate_cellular_automata_1d_to_grid_image_interp.py: 该脚本旨在设计一个“逻辑/感知混合”任务，用以证明神经网络的规则学习能力和内插能力并非互斥，而是可以一体化地在单个任务中得到体现。它迫使模型必须同时“看穿”输入的连续灰度值以执行离散的逻辑推理，并记住这些灰度值以完成最终的连续值映射。
     
 
 ## E. 文字输出图像 (Text to Image)
