@@ -91,7 +91,7 @@ python train_tiny_transformer.py
 *   **[QUICK_INDEX_zh.md](./QUICK_INDEX_zh.md)**: **强烈推荐**。所有脚本的简明索引，用于快速查找感兴趣的实验。
 *   **[DOCS_GENERATE_zh.md](./DOCS_GENERATE_zh.md)**: 所有 `generate_` 脚本的详细参数和逻辑说明。
 *   **[DOCS_TRAIN_zh.md](./DOCS_TRAIN_zh.md)**: 所有 `train_` 脚本的详细说明。
-*   **[🌐 在线文档 (Interactive Docs)](./docs/index.html)**: 全新的交互式文档页面，支持中英切换与详情展开。
+*   **[🌐 在线文档 (Interactive Docs)](https://ball-lightning6.github.io/neural-sculpting-paradigm/)**: 全新的交互式文档页面，支持中英切换与详情展开。
 
 ---
 
