@@ -91,6 +91,7 @@ This project contains a large number of scripts. For easy reference, we provide 
 *   **[QUICK_INDEX_en.md](./QUICK_INDEX_en.md)**: **Highly Recommended**. A concise index of all scripts for quick lookup.
 *   **[DOCS_GENERATE_en.md](./DOCS_GENERATE_en.md)**: Detailed parameter and logic descriptions for all `generate_` scripts.
 *   **[DOCS_TRAIN_en.md](./DOCS_TRAIN_en.md)**: Detailed descriptions for all `train_` scripts.
+*   **[🌐 Interactive Docs](./docs/index.html)**: New interactive documentation page with bilingual support and expandable details.
 
 ---
 

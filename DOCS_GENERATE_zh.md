@@ -1,8 +1,7 @@
-# A: 符号规则学习 (Symbolic Rule Learning)
+# A: 符号数学逻辑 (Symbolic Math Logic)
 
 ## 1. **symbolic_math_logic/generate_conditional_add_subtract.py**
 
-    
 - **逻辑:** 脚本生成两个N-bit整数的加法或减法（取绝对值）问题。它包含两种模式：
     
     1. **INDICATOR_BIT模式:** 在输入前添加一个bit（0代表加法，1代表减法）作为明确的指令。
@@ -16,7 +15,6 @@
     - 输出: N+1 bit的二进制多标签向量，代表计算结果。
         
 - **主要参数:** NUM_BITS, DATASET_SIZE, EXPERIMENT_MODE, PROBABILITY_ADD。
-    
 
 ---
 
@@ -33,7 +31,6 @@
     - 输出: N长度的多标签二分类向量（0/1列表）。
         
 - **主要参数:** n_samples, bit_length。
-    
 
 ---
 
@@ -50,7 +47,6 @@
     - 输出: NUM_BITS * 2长度的二进制多标签向量。
         
 - **主要参数:** NUM_BITS, DATASET_SIZE。
-    
 
 ---
 
@@ -67,7 +63,6 @@
     - 输出: (NUM_BITS * 2) * BITS_PER_COUNTER长度的二进制多标签向量。
         
 - **主要参数:** NUM_BITS, DATASET_SIZE。
-    
 
 ---
 
@@ -85,7 +80,6 @@
         
 - **主要参数:** NUM_BITS, DATASET_SIZE。
 
-
 ---
 
 ## 6. **symbolic_math_logic/generate_add_hexadecimal.py**
@@ -101,7 +95,6 @@
     - 输出: 17位二进制多标签向量。
         
 - **主要参数:** NUM_BITS, DATASET_SIZE。
-    
 
 ---
 
@@ -118,32 +111,10 @@
     - 输出: OUTPUT_BITS长度的二进制多标签向量。
         
 - **主要参数:** NUM_DIGITS, DATASET_SIZE。
-    
 
 ---
 
-## 8. **generate_add_n_base_with_shuffle.py (实际文件名: symbolic_math_logic/generate_symbol_add_shuffle_dataset.py)**
-
-- **用途:** 这是我们研究中一项**关键的决定性实验**，旨在彻底分离模型的“表面模式匹配”能力和“抽象结构学习”能力。
-    
-- **逻辑:** 脚本可配置进行两种“洗牌”：
-    
-    1. **语义洗牌 (Semantic Shuffle):** 将表示N进制数字的符号（如'0'-'F'）随机映射到任意可打印字符。这切断了符号与其固有数值含义的联系。
-        
-    2. **位置洗牌 (Positional Shuffle):** 将输入字符串中每个字符的位置根据一个固定的随机映射进行重排。这破坏了所有局部的、空间的统计规律。
-        
-- **I/O格式:**
-    
-    - 输入: 2 * NUM_BITS长度的字符串（字符集可变）。
-        
-    - 输出: 和的二进制多标签向量。
-        
-- **主要参数:** NUM_BITS, BASE, SHUFFLE_SEMANTICS, SHUFFLE_POSITIONS。
-    
-
----
-
-## 9. **symbolic_math_logic/generate_add_binary_with_position_shuffle.py**
+## 8. **symbolic_math_logic/generate_add_binary_with_position_shuffle.py**
 
 - **用途:** 这是“语义洗牌”系列实验中的“位置洗牌”部分。它旨在验证模型是否依赖于输入的固定空间结构，还是能学习到与位置无关的抽象关系。
     
@@ -156,7 +127,26 @@
     - 输出: NUM_BITS + 1长度的二进制多标签向量。
         
 - **主要参数:** NUM_BITS, DATASET_SIZE。
-    
+
+---
+
+## 9. **symbolic_math_logic/generate_symbol_add_shuffle_dataset.py**
+
+- **用途:** 这是我们研究中一项**关键的决定性实验**，旨在彻底分离模型的"表面模式匹配"能力和"抽象结构学习"能力。
+
+- **逻辑:** 脚本可配置进行两种"洗牌"：
+
+    1. **语义洗牌 (Semantic Shuffle):** 将表示N进制数字的符号（如'0'-'F'）随机映射到任意可打印字符。这切断了符号与其固有数值含义的联系。
+
+    2. **位置洗牌 (Positional Shuffle):** 将输入字符串中每个字符的位置根据一个固定的随机映射进行重排。这破坏了所有局部的、空间的统计规律。
+
+- **I/O格式:**
+
+    - 输入: 2 * NUM_BITS长度的字符串（字符集可变）。
+
+    - 输出: 和的二进制多标签向量。
+
+- **主要参数:** NUM_BITS, BASE, SHUFFLE_SEMANTICS, SHUFFLE_POSITIONS。
 
 ---
 
@@ -173,7 +163,6 @@
     - 输出: NUM_BITS+1长度的二进制多标签向量 (代表x+C)。
         
 - **主要参数:** NUM_BITS, DATASET_SIZE。
-    
 
 ---
 
@@ -190,7 +179,6 @@
     - 输出: TOTAL_OUTPUT_BITS长度的二进制多标签向量，由所有任务结果拼接而成。
         
 - **主要参数:** NUM_BITS, DATASET_SIZE。
-    
 
 ---
 
@@ -207,7 +195,6 @@
     - 输出: N_BITS长度的二进制多标签向量。
         
 - **主要参数:** A_BITS, N_BITS (尽管当前固定为3), DATASET_SIZE。
-    
 
 ---
 
@@ -224,79 +211,10 @@
     - 输出: bits位的二进制字符串，代表密文c。
         
 - **主要参数:** e, n (公钥参数), bits (编码位数), output_file。
-    
 
 ---
 
-## 14. **cellular_automata/generate_cellular_automata_1d.py**
-
-- **用途:** 用于生成一维元胞自动机（CA）的演化数据集，以测试模型学习和执行局部、确定性规则的能力。
-    
-- **逻辑:** 给定一个随机的二进制初始状态，脚本会根据指定的演化规则（当前为Rule 110），迭代指定的层数（步数），并生成最终状态。
-    
-- **I/O格式:**
-    
-    - 输入: length位的二进制字符串，代表初始状态。
-        
-    - 输出: length位的二进制多标签向量，代表最终状态。
-        
-- **主要参数:** num_samples, length, l (演化层数)。
-    
-
----
-
-## 15. **cellular_automata/generate_game_of_life_2d.py**
-
-- **用途:** 生成二维元胞自动机——Conway's Game of Life的数据集。此任务比一维CA更复杂，需要模型理解二维空间中的邻域关系。
-    
-- **逻辑:** 基于一个随机的n*n初始棋盘，根据生命游戏标准规则（B3/S23）演化d个时间步，记录最终的棋盘状态。
-    
-- **I/O格式:**
-    
-    - 输入: n*n位的扁平化二进制字符串，代表初始棋盘。
-        
-    - 输出: n*n位的二进制多标签向量，代表最终棋盘。
-        
-- **主要参数:** num_samples, n (网格边长), d (演化步数)。
-
-
----
-
-## 16. **cellular_automata/generate_cellular_automata_1d_multistate.py**
-
-- **用途:** 作为一维元胞自动机实验的扩展，测试模型处理非二进制状态空间的能力。
-    
-- **逻辑:** CCA的演化规则是：一个元胞的下一个状态，是它自己当前状态+1（模n_states），当且仅当它的左邻居或右邻居的状态等于这个目标状态。该脚本生成这种演化过程的输入（初始状态）和输出（最终状态）。
-    
-- **I/O格式:**
-    
-    - 输入: n_cells * 2 (因为n_states=4) 长度的二进制字符串。
-        
-    - 输出: n_cells * 2 长度的二进制多标签向量。
-        
-- **主要参数:** n_cells, n_states, n_samples, steps。
-    
-
----
-
-## 17. **cellular_automata/generate_cellular_automata_programmable.py**
-
-- **用途:** 测试模型的“可编程性”或“元学习”能力。模型不仅要学会CA的演化过程，还要能根据每次输入中给出的不同规则来执行演化。
-    
-- **逻辑:** 每个样本将一个8-bit的规则编号和一个初始状态一同作为输入。脚本根据该规则对状态进行演化，生成输出。这要求模型将输入的一部分理解为“程序”，另一部分理解为“数据”。
-    
-- **I/O格式:**
-    
-    - 输入: 8 (规则) + CA_WIDTH (状态)位的二进制字符串。
-        
-    - 输出: CA_WIDTH位的多标签二进制向量。
-        
-- **主要参数:** TARGET_NUM_SAMPLES, CA_WIDTH, EVOLUTION_STEPS, RULES_TO_INCLUDE (指定数据集中包含哪些规则)。
-    
-
----
-
-## 18. **symbolic_math_logic/generate_deduction_chain_text.py**
+## 14. **symbolic_math_logic/generate_deduction_chain_text.py**
 
 - **用途:** 生成多步逻辑推理任务，测试模型执行符号演绎（deduction）的能力，类似于一个简化的定理证明器。
     
@@ -309,11 +227,10 @@
     - 输出: '1' (可以推出) 或 '0' (无法推出)。
         
 - **主要参数:** num_samples, attr_range, depth。
-    
 
 ---
 
-## 19. **symbolic_math_logic/generate_deduction_multirule_text.py**
+## 15. **symbolic_math_logic/generate_deduction_multirule_text.py**
 
 - **用途:** 测试模型在面对多个独立的、互不相干的规则时，能否根据查询（Query）正确地“路由”到相应的规则并进行判断。
     
@@ -326,11 +243,10 @@
     - 输出: 单个字符 '1' (可以推出) 或 '0' (无法推出)。
         
 - **主要参数:** n_samples。
-    
 
 ---
 
-## 20. **symbolic_math_logic/generate_deduction_multirule_text_v2.py**
+## 16. **symbolic_math_logic/generate_deduction_multirule_text_v2.py**
 
 - **用途:** 测试模型在面对多个独立的、互不相干的规则时，能否根据查询（Query）正确地“路由”到相应的规则并进行判断。
     
@@ -343,11 +259,10 @@
     - 输出: 单个字符 '1' (可以推出) 或 '0' (无法推出)。
         
 - **主要参数:** n_samples。
-    
 
 ---
 
-## 21. **symbolic_math_logic/generate_deduction_multirule_binary.py**
+## 17. **symbolic_math_logic/generate_deduction_multirule_binary.py**
 
 - **用途:** 这是对多规则推理任务的**格式优化**版本，旨在测试紧凑的二进制编码是否比稀疏的文本格式更有利于模型学习。
     
@@ -366,11 +281,10 @@
     - 输出: 单个字符 '1' 或 '0'。
         
 - **主要参数:** n_samples。
-    
 
 ---
 
-## 22. **symbolic_math_logic/generate_deduction_fixed_depth.py**
+## 18. **symbolic_math_logic/generate_deduction_fixed_depth.py**
 
 - **用途:** 测试模型在有明确结构、固定深度的符号演绎任务中的多步推理能力。
     
@@ -387,11 +301,10 @@
     - 输出: 单个字符 '1' (可以推出) 或 '0' (无法推出)。
         
 - **主要参数:** depth, num_attrs, num_samples。
-    
 
 ---
 
-## 23. **symbolic_math_logic/generate_function_composition.py**
+## 19. **symbolic_math_logic/generate_function_composition.py**
 
 - **用途:** 测试模型学习函数组合（Function Composition）的能力。这要求模型像解释器一样，按顺序解析指令并对数据进行变换。
     
@@ -404,28 +317,10 @@
     - 输出: 16位二进制字符串。
         
 - **主要参数:** num_samples。
-    
 
 ---
 
-## 24. **cellular_automata/generate_cellular_automata_inverse_rule90.py**
-
-- **用途:** 测试模型解决“逆问题”（Inverse Problem）的能力。给定一个确定性系统的输出，模型需要反向推断出满足特定约束（最稀疏且唯一）的可能输入。
-    
-- **逻辑:** 输入是一维元胞自动机Rule 90演化一步后的状态。任务是找到所有可能的“前一步”状态中，'1'的数量最少（最稀疏）的那一个。为了让问题有唯一解，脚本通过暴力搜索的方式，只保留那些“最稀疏解”恰好只有一个的样本。
-    
-- **I/O格式:**
-    
-    - 输入: N位二进制字符串 (演化后状态)。
-        
-    - 输出: N位二进制字符串 (演化前状态)。
-        
-- **主要参数:** num_samples, length。
-    
-
----
-
-## 25. **symbolic_math_logic/generate_count_set_bits.py**
+## 20. **symbolic_math_logic/generate_count_set_bits.py**
 
 - **用途:** 测试模型执行全局聚合操作的能力。与局部规则不同，计数需要模型综合整个输入序列的信息。
     
@@ -439,10 +334,9 @@
         
 - **主要参数:** num_samples, input_bits, output_bits, balanced。
 
-
 ---
 
-## 26. **symbolic_math_logic/generate_sum_pattern_positions.py**
+## 21. **symbolic_math_logic/generate_sum_pattern_positions.py**
 
 - **用途:** 测试模型执行更复杂的、分组式的并行聚合任务的能力。模型需要先分割输入，然后对每个分割后的模式进行分类，最后对属于同一类的模式的**位置信息**进行累加。
     
@@ -455,11 +349,10 @@
     - 输出: (2^p) * BITS_PER_SUM长度的二进制多标签向量，代表每种模式的位置和。
         
 - **主要参数:** BITS_PER_PATTERN, NUM_PATTERNS, DATASET_SIZE。
-    
 
 ---
 
-## 27. **symbolic_math_logic/generate_sum_pattern_positions_v2.py**
+## 22. **symbolic_math_logic/generate_sum_pattern_positions_v2.py**
 
 - **用途:** 测试模型执行更复杂的、分组式的并行聚合任务的能力。模型需要先分割输入，然后对每个分割后的模式进行分类，最后对属于同一类的模式的**位置信息**进行累加。
     
@@ -472,11 +365,10 @@
     - 输出: (2^p) * BITS_PER_SUM长度的二进制多标签向量，代表每种模式的位置和。
         
 - **主要参数:** BITS_PER_PATTERN, NUM_PATTERNS, DATASET_SIZE。
-    
 
 ---
 
-## 28. **symbolic_math_logic/generate_sum_pairwise_hamming_distance.py**
+## 23. **symbolic_math_logic/generate_sum_pairwise_hamming_distance.py**
 
 - **用途:** 测试模型执行一个需要两层嵌套聚合操作的复杂任务。模型需要先在**每个比特位**上进行全局统计，然后再将**所有比特位**的结果累加起来。
     
@@ -489,11 +381,10 @@
     - 输出: OUTPUT_BITS位二进制多标签向量，代表汉明距离总和。
         
 - **主要参数:** NUM_ITEMS, BITS_PER_ITEM, DATASET_SIZE。
-    
 
 ---
 
-## 29. **symbolic_math_logic/generate_circular_shift.py**
+## 24. **symbolic_math_logic/generate_circular_shift.py**
 
 - **用途:** 测试模型学习位移操作的能力，特别是循环位移（circular shift），这是密码学和底层编程中的常见操作。
     
@@ -506,11 +397,10 @@
     - 输出: NUM_DATA_BITS长度的二进制多标签向量。
         
 - **主要参数:** NUM_DATA_BITS, NUM_SHIFT_BITS, DATASET_SIZE。
-    
 
 ---
 
-## 30. **symbolic_math_logic/generate_multiply_matrix_3x3.py**
+## 25. **symbolic_math_logic/generate_multiply_matrix_3x3.py**
 
 - **用途:** 测试模型学习结构化代数运算（矩阵乘法）的能力，这比简单的标量运算需要更复杂的“数据路由”和“乘积累加”能力。
     
@@ -523,11 +413,10 @@
     - 输出: 18位的二进制多标签向量 (9个元素 * 2 bit/元素)。
         
 - **主要参数:** num_samples。
-    
 
 ---
 
-## 31. **symbolic_math_logic/generate_evaluate_boolean_expression_text.py**
+## 26. **symbolic_math_logic/generate_evaluate_boolean_expression_text.py**
 
 - **用途:** 测试模型解析一个简单的领域特定语言（DSL）并执行求值的能力，这比前面固定结构的表达式求值更进了一步。
     
@@ -540,11 +429,10 @@
     - 输出: 单个字符 '1' (True) 或 '0' (False)。
         
 - **主要参数:** num_samples, num_vars。
-    
 
 ---
 
-## 32. **symbolic_math_logic/generate_evaluate_arithmetic_expression.py**
+## 27. **symbolic_math_logic/generate_evaluate_arithmetic_expression.py**
 
 - **用途:** 训练模型执行符号表达式的求值任务，这要求模型理解运算符优先级（通过树状结构隐式表达）、变量替换和算术运算。
     
@@ -557,11 +445,10 @@
     - 输出: OUTPUT_BITS位二进制串，代表求值结果。
         
 - **主要参数:** VAL_RANGE, X_VAL_RANGE, DATASET_SIZE。
-    
 
 ---
 
-## 33. **symbolic_math_logic/generate_evaluate_arithmetic_expression_no_multiply.py**
+## 28. **symbolic_math_logic/generate_evaluate_arithmetic_expression_no_multiply.py**
 
 - **用途:** 这是对generate_evaluate_arithmetic_expression.py的简化版本，旨在通过移除乘法运算来降低学习难度，以测试模型在更基础的算术表达式求值上的能力。
     
@@ -574,15 +461,14 @@
     - 输出: OUTPUT_BITS位二进制串，代表求值结果。
         
 - **主要参数:** VAL_RANGE, X_VAL_RANGE, DATASET_SIZE。
-    
 
 ---
 
-## 34. **symbolic_math_logic/generate_evaluate_arithmetic_expression_no_multiply_small_range.py**
+## 29. **symbolic_math_logic/generate_evaluate_arithmetic_expression_no_multiply_small_range.py**
 
 - **用途:** 这是在前一个“无乘法”版本基础上的进一步简化，通过缩小数值范围来进一步降低学习难度，用于精确诊断模型在最简单表达式求值任务上的性能瓶颈。
     
-- **逻辑:** 逻辑与...nomul_dataset.py脚本相同，但VAL_RANGE和X_VAL_RANGE参数被设置为更小的值。这确保了计算过程中的所有中间值和最终结果都保持在一个较小的范围内，是难度最低的表达式求值版本。
+- **逻辑:** 逻辑与generate_evaluate_arithmetic_expression_no_multiply.py脚本相同，但VAL_RANGE和X_VAL_RANGE参数被设置为更小的值。这确保了计算过程中的所有中间值和最终结果都保持在一个较小的范围内，是难度最低的表达式求值版本。
     
 - **I/O格式:**
     
@@ -591,11 +477,10 @@
     - 输出: OUTPUT_BITS位二进制串，代表求值结果。
         
 - **主要参数:** VAL_RANGE, X_VAL_RANGE, DATASET_SIZE。
-    
 
 ---
 
-## 35. **symbolic_math_logic/generate_check_boolean_equivalence.py**
+## 30. **symbolic_math_logic/generate_check_boolean_equivalence.py**
 
 - **用途:** 测试模型对布尔代数逻辑等价性的判断能力。这是一个抽象的符号推理任务，要求模型理解表达式的结构和布尔运算法则。
     
@@ -609,10 +494,9 @@
         
 - **主要参数:** n (样本数), vars (变量集)。
 
-
 ---
 
-## 36. **symbolic_math_logic/generate_polynomial_shift_coefficients.py**
+## 31. **symbolic_math_logic/generate_polynomial_shift_coefficients.py**
 
 - **用途:** 测试模型学习一个抽象的代数变换规则的能力。这个任务需要模型理解多项式展开的内在结构。
     
@@ -625,11 +509,10 @@
     - 输出: 6 * 8 = 48位的二进制字符串。
         
 - **主要参数:** max_samples。
-    
 
 ---
 
-## 37. **symbolic_math_logic/generate_convolution_2d.py**
+## 32. **symbolic_math_logic/generate_convolution_2d.py**
 
 - **用途:** 测试模型学习二维卷积（Conv2D）这一基本图像处理操作的能力，并探究其是否能从输入输出对中推断出隐藏的固定规则（即卷积核本身）。
     
@@ -642,11 +525,10 @@
     - 输出: MAP_SIZE^2 * BITS_PER_OUTPUT_ELEMENT长度的二进制多标签向量，代表卷积结果（每个像素点的累加值）。
         
 - **主要参数:** MAP_SIZE, KERNEL_SIZE, DATASET_SIZE。
-    
 
 ---
 
-## 38. **symbolic_math_logic/generate_simple_block_cipher.py**
+## 33. **symbolic_math_logic/generate_simple_block_cipher.py**
 
 - **用途:** 测试模型“破解”或学习一个简单但非平凡的自定义加密算法的能力。该任务代表了一类复杂的、具有高度混沌和雪崩效应的符号变换规则。
     
@@ -659,11 +541,10 @@
     - 输出: INPUT_BITS长度的密文二进制多标签向量。
         
 - **主要参数:** INPUT_BITS, NUM_ROUNDS, DATASET_SIZE。
-    
 
 ---
 
-## 39. **symbolic_math_logic/generate_sin_function_float32.py**
+## 34. **symbolic_math_logic/generate_sin_function_float32.py**
 
 - **用途:** 测试模型拟合连续、周期性、非线性函数（sin(x)）的能力，使用标准的32位浮点数格式进行输入和输出。
     
@@ -676,11 +557,10 @@
     - 输出: 32位二进制多标签向量。
         
 - **主要参数:** N (样本数), x_range。
-    
 
 ---
 
-## 40. **symbolic_math_logic/generate_sin_function_float64_to_int12_deprecated.py**
+## 35. **symbolic_math_logic/generate_sin_function_float64_to_int12_deprecated.py**
 
 - **用途:** 这是对sin函数拟合任务的另一种编码尝试，旨在探索使用更高精度的浮点输入和更低精度的量化二进制输出对学习效果的影响。
     
@@ -693,11 +573,10 @@
     - 输出: 12位二进制多标签向量。
         
 - **状态:** (已弃用) 这是一个早期的、有问题的版本，已被更成功的generate_sin_function_float32_to_quantized_int.py取代。
-    
 
 ---
 
-## 41. **symbolic_math_logic/generate_sin_function_float32_to_quantized_int.py**
+## 36. **symbolic_math_logic/generate_sin_function_float32_to_quantized_int.py**
 
 - **用途:** 测试模型拟合连续、周期性、非线性函数（sin(x)）的能力，并探索不同输入/输出编码方案对学习效果的影响。
     
@@ -714,11 +593,10 @@
     - 输出: 24位二进制多标签向量。
         
 - **主要参数:** N (样本数), x_range。
-    
 
 ---
 
-## 42. **symbolic_math_logic/generate_multiply_binary_modulo.py**
+## 37. **symbolic_math_logic/generate_multiply_binary_modulo.py**
 
 - **用途:** 作为基础算术实验的一部分，测试模型对截断乘法（或称模乘法）的掌握能力。
     
@@ -731,11 +609,10 @@
     - 输出: bits长度的二进制多标签向量。
         
 - **主要参数:** num_samples, bits。
-    
 
 ---
 
-## 43. **symbolic_math_logic/generate_explainable_two_step_calculation.py**
+## 38. **symbolic_math_logic/generate_explainable_two_step_calculation.py**
 
 - **用途:** 测试模型输出计算“中间步骤”或“思维链”的能力，是“功能性可解释性”的一个直接验证。
     
@@ -748,141 +625,150 @@
     - 输出: 8 (中间结果) + 8 (最终结果)长度的二进制字符串。
         
 - **主要参数:** count。
-    
 
 ---
 
-## 44. **chinese_chess/generate_chess_positions_by_random_moves.py**
+## 39. **symbolic_math_logic/generate_min_swaps_for_checkerboard.py**
 
-- **用途:** 通过模拟一个完全随机的玩家下棋的过程，快速生成大量看起来合理的、合法的中国象棋局面。
+- **用途:** 解决LeetCode 782题"变为棋盘"([https://leetcode.cn/problems/transform-to-chessboard/](https://leetcode.cn/problems/transform-to-chessboard/)) - 通过任意交换行和列，将一个0/1矩阵变为"棋盘"模式（相邻元素不同）所需的最少交换次数。
     
-- **逻辑:** 脚本从标准的中国象棋起始局面开始。在一个循环中，它会获取当前局面下所有合法的走法，然后随机选择其中一步并执行。这个过程会重复max_steps次，最终得到一个随机但合法的局面。
+- **逻辑:** 脚本首先通过对一个完美棋盘进行随机行列交换，来智能地生成一个保证"可解"的输入矩阵。然后，它使用一个复杂的、基于位运算和组合分析的算法来精确计算恢复到棋盘模式所需的最少行列交换总数。如果无法恢复，则返回-1。
     
 - **I/O格式:**
     
-    - 输出: FEN格式的局面字符串。
+    - 输入: N*N长度的二进制字符串。
         
-- **主要参数:** max_steps, max_capture。
-    
+    - 输出: OUTPUT_BITS长度的二进制多标签向量 (-1映射为0，k次移动映射为k+1)。
+        
+- **主要参数:** MATRIX_SIZE_N, DATASET_SIZE。
 
 ---
 
-## 45. **chinese_chess/generate_chess_positions_by_random_placement.py**
+## 40. **symbolic_math_logic/generate_min_flips_for_alternating_binary.py**
 
-- **用途:** 通过在棋盘上随机放置棋子（而非模拟下棋）来生成大量非典型的、但大部分合法的中国象棋局面，用于对模型的鲁棒性进行压力测试。
+- **用途:** 测试模型解决一个基于位翻转的字符串优化问题，该问题可以被巧妙地映射为一个滑动窗口问题来求解。
     
-- **逻辑:** 该脚本不是通过下棋来生成局面，而是直接在棋盘上随机地、遵循棋子位置约束和将帅不照面规则地放置棋子，从而创造出大量在真实对局中极少出现但语法合法的局面。
+- **逻辑:** "美丽字符串"被定义为一个交替的01序列（如'0101...'或'1010...'）。输入是一个任意的二进制字符串，任务是计算最少的翻转次数，使其变为“美丽”。
     
 - **I/O格式:**
     
-    - 输出: FEN格式的局面字符串。
+    - 输入: STRING_LENGTH_N长度的二进制字符串。
         
-- **主要参数:** num_fens。
-
+    - 输出: OUTPUT_BITS长度的二进制多标签向量，代表最小翻转次数。
+        
+- **主要参数:** STRING_LENGTH_N, DATASET_SIZE。
 
 ---
 
-## 46. **chinese_chess/generate_chess_positions_from_engine_self_play.py**
+## 41. **symbolic_math_logic/generate_min_swaps_for_checkerboard_v2.py**
 
-- **用途:** 生成大量高质量、符合实战逻辑的中国象棋局面（FEN格式），作为训练棋类AI的基础数据源。
+- **用途:** 解决LeetCode 1536题"排布二进制网格的最少交换次数"([https://leetcode.cn/problems/minimum-swaps-to-arrange-a-binary-grid/](https://leetcode.cn/problems/minimum-swaps-to-arrange-a-binary-grid/)) - 通过交换相邻行，将一个二进制网格变为上三角形式（主对角线以上全为0）所需的最少交换次数。
     
-- **逻辑:** 通过子进程调用一个强大的第三方象棋引擎（PikaFish），模拟数万盘高水平的自对弈棋局。在模拟过程中，记录下棋局每一步的FEN表示，从而构建一个庞大且真实的局面数据库。
+- **逻辑:** 脚本首先随机生成一个二进制矩阵。然后，它使用BFS搜索排列空间，寻找通过相邻行交换将矩阵变为上三角形式的最小交换次数。如果无法完成，则返回-1。
     
 - **I/O格式:**
     
-    - 输出: 一个.txt文件，每行包含一个完整的FEN字符串。
+    - 输入: N*N长度的二进制字符串。
         
-- **主要参数:** num_games, max_steps, depth。
-    
+    - 输出: OUTPUT_BITS长度的二进制多标签向量 (-1映射为0，k次移动映射为k+1)。
+        
+- **主要参数:** MATRIX_SIZE_N, DATASET_SIZE。
 
 ---
 
-## 47. **chinese_chess/generate_preprocess_legal_moves.py**
+## 42. **symbolic_math_logic/generate_min_prefix_flips.py**
 
-- **用途:** 这是一个数据预处理脚本，用于将FEN格式的局面数据集转换为模型可以直接学习的“合法走法预测”任务。
+- **用途:** 测试模型学习一个依赖于历史状态的、顺序处理的贪心算法的能力。
     
-- **逻辑:** 读取一个FEN文件，对于每一个局面，使用cchess库解析并生成所有合法走法。然后，根据一个全局的映射文件，将每个具体的走法（如 'h2e2'）转换成一个唯一的整数ID。
+- **逻辑:** 这是一个经典的“前缀翻转”或“灯泡”问题。从左到右遍历该序列，如果当前位置在考虑了之前所有翻转的累积效应后仍然是'0'，则必须“拉动”当前位置的开关（这会翻转从当前位置到末尾的所有位），并计一次操作。
     
 - **I/O格式:**
     
-    - 输入: .txt文件，每行一个FEN。
+    - 输入: STRING_LENGTH_N长度的二进制字符串。
         
-    - 输出: .jsonl文件，每个JSON对象包含fen和其对应的legal_move_ids列表。
+    - 输出: OUTPUT_BITS长度的二进制多标签向量，代表最小翻转次数。
         
-- **主要参数:** fen_file, output_file。
-    
+- **主要参数:** STRING_LENGTH_N, DATASET_SIZE。
 
 ---
 
-## 48. **chinese_chess/generate_chess_resolve_check_task.py**
+## 43. **symbolic_math_logic/generate_min_flips_for_chunked_binary.py**
 
-- **用途:** 生成一个专门针对中国象棋中“解将”（Resolving a Check）这一特定战术场景的数据集。这个任务要求模型在处于被将军的状态下，找出所有能够合法解除将军的走法。
+- **用途:** 测试模型学习一个基于局部块（chunk）的字符串变换优化问题的能力。
     
-- **逻辑:** 脚本首先从一个庞大的随机局面库中进行筛选，只保留那些满足“正被将军，但并非无子可走（非将死）”条件的局面。然后，对于每一个筛选出的局面，它会计算所有能解除将军的合法走法，并将这些走法的ID保存下来。
+- **逻辑:** 输入一个偶数长度的二进制字符串。将其按两位一切分，对于每个2-bit的块，如果两个bit不相同（如'01'或'10'），则需要一次翻转操作才能使其“美丽”（变为'00'或'11'）。任务是计算总共需要的最少翻转次数。
     
 - **I/O格式:**
     
-    - 输出: 一个.jsonl文件。每个JSON对象包含fen（局面）和legal_move_ids（一个整数列表，代表所有合法的解将走法）。
+    - 输入: INPUT_BITS长度的二进制字符串。
         
-- **主要参数:** fen_file, output_file。
+    - 输出: OUTPUT_BITS长度的二进制多标签向量，代表总翻转次数。
+        
+- **主要参数:** INPUT_BITS, DATASET_SIZE。
+
+---
+
+## 44. **symbolic_math_logic/generate_largest_island_by_adding_one_cell.py**
+
+- **用途:** 解决一个涉及图遍历和全局优化的算法问题([LeetCode 827. 最大人工岛](https://leetcode.cn/problems/making-a-large-island/))。模型需要评估所有可能的“填海”位置，并选出能使合并后岛屿面积最大的那一个。
     
+- **逻辑:** 脚本首先使用DFS或BFS遍历输入网格，标记所有已存在的岛屿并计算它们的面积。然后，它遍历所有水域格点（'0'），计算如果将该点变为陆地，可以连接哪些相邻岛屿，并由此计算出新形成的总面积。最终，它找到能产生最大面积的最佳位置。
+    
+- **I/O格式:**
+    
+    - 输入: N*N长度的二进制字符串。
+        
+    - 输出: 一个包含output_class（最佳位置的类别标签）和output_area（最大面积的二进制串）的JSON对象。
+        
+- **主要参数:** NUM_SAMPLES, GRID_SIZE。
 
 ---
 
-### **49. symbolic_math_logic/generate_binary_mod3_dfa_explain.py**
+## 45. **symbolic_math_logic/generate_largest_island_by_adding_one_cell_v2.py**
 
-- **用途：** 用于验证模型是否能通过“解释性标签”学习递归/模运算类规则，解决原本无法收敛的 mod 3 问题。
-- **逻辑：** 使用确定性有限自动机（DFA）模拟二进制数逐位 mod 3 的状态转移过程，生成每一步的中间状态作为解释性标签。
-- **I/O格式：**
-  - 输入：N 位二进制字符串。
-  - 输出：
-    - `final_mod_result`：2 位二进制，表示最终 mod 3 结果。
-    - `dfa_state_trace`：2×N 位二进制，表示每一步的 DFA 状态编码（S0/S1/S2）。
-- **主要参数：** `NUM_BITS = 30`，`DATASET_SIZE = 500000`。
-
----
-
-### **50. cellular_automata/generate_ca_text_format_dataset.py**
-
-- **用途：** 测试模型是否能以**自回归文本格式**学习元胞自动机演化规则。
-- **逻辑：** 将初始状态与最终状态拼接为自然语言风格字符串（如 `"Evolve this: 1010 -> 1101"`），模拟大模型常用的文本到文本格式。
-- **I/O格式：**
-  - 输入：文本字符串，包含初始状态。
-  - 输出：文本字符串，包含目标状态。
-- **主要参数：** `NUM_BITS = 30`，`TOTAL_LAYERS = 2`，`DATASET_SIZE = 500000`。
+- **用途:** 解决一个涉及图遍历和全局优化的算法问题([LeetCode 827. 最大人工岛](https://leetcode.cn/problems/making-a-large-island/))。模型需要评估所有可能的“填海”位置，并选出能使合并后岛屿面积最大的那一个。
+    
+- **逻辑:** 脚本首先使用DFS或BFS遍历输入网格，标记所有已存在的岛屿并计算它们的面积。然后，它遍历所有水域格点（'0'），计算如果将该点变为陆地，可以连接哪些相邻岛屿，并由此计算出新形成的总面积。最终，它找到能产生最大面积的最佳位置。
+    
+- **I/O格式:**
+    
+    - 输入: N*N长度的二进制字符串。
+        
+    - 输出: 一个包含output_class（最佳位置的类别标签）和output_area（最大面积的二进制串）的JSON对象。
+        
+- **主要参数:** NUM_SAMPLES, GRID_SIZE。
 
 ---
 
-### **51. cellular_automata/generate_ca110_full_trace.py**
+## 46. **symbolic_math_logic/generate_sat_solver_text.py**
 
-- **用途：** 用于“神经心智扫描仪”实验，**记录每一层演化状态**，探测模型是否隐式编码了中间计算步骤。
-- **逻辑：** 模拟 Rule 110 元胞自动机演化 90 步，每 3 步记录一次完整状态，拼接为超长输出标签。
-- **I/O格式：**
-  - 输入：30 位二进制字符串（初始状态）。
-  - 输出：30×30 位二进制向量（每 3 步记录一次状态，共 90 步）。
-- **主要参数：** `NUM_BITS = 30`，`TOTAL_LAYERS = 90`，`DATASET_SIZE = 500000`。
-
----
-
-### **52. cellular_automata/generate_mnist_ca_110.py**
-
-- **用途：** 验证模型是否能**同时完成模式识别与符号推理**，将 MNIST 图像与元胞自动机演化规则耦合。
-- **逻辑：** 用 MNIST 图像的 0/1 数字图像作为“背景”，根据初始 CA 状态对图像进行反色处理，演化后再生成目标图像。
-- **I/O格式：**
-  - 输入：224×224 图像，初始状态嵌入图像中。
-  - 输出：224×224 图像，演化后状态嵌入图像中。
-- **主要参数：** `GRID = 6`，`STEP_EVOL = 3`，`RULE = 110`，数据集大小：训练 15 万，验证 3000。
+- **用途:** 测试模型解决一个标志性的NP完全问题——布尔可满足性（SAT）问题的能力。
+    
+- **逻辑:** 随机生成一个由多个子句组成的CNF（合取范式）公式。输入是对这个公式的字符串编码。然后，脚本调用一个外部求解器（pycosat）来判断该公式是否存在一组变量赋值使其为真。脚本会努力确保可满足和不可满足的样本比例为1:1。
+    
+- **I/O格式:**
+    
+    - 输入: 代表整个公式的字符串。
+        
+    - 输出: '1' (可满足) 或 '0' (不可满足)。
+        
+- **主要参数:** num_vars, num_clauses, num_samples_per_class。
 
 ---
 
-### **53. cellular_automata/generate_rulemnist_ca.py**
+## 47. **symbolic_math_logic/generate_sat_solver_compact_text.py**
 
-- **用途：** 验证模型是否能**从图像中识别数字 → 推断规则 → 执行 CA 演化 → 生成图像**，实现视觉-符号-视觉的完整闭环。
-- **逻辑：** 用 MNIST 图像作为“规则指示器”（0→Rule 30，1→Rule 110），根据图像类别选择规则，对初始 CA 状态演化，再生成目标图像。
-- **I/O格式：**
-  - 输入：224×224 图像（MNIST 数字），嵌入初始 CA 状态。
-  - 输出：224×224 图像，嵌入演化后 CA 状态。
-- **主要参数：** `RULE_MAP = {0: 30, 1: 110}`，`STEP_EVOL = 3`，数据集大小：训练 20 万，验证 3000。
+- **用途:** 这是对 symbolic_math_logic/generate_sat_solver_text.py 的一个变种，采用了不同的输入编码格式来解决同样的3-SAT问题。
+    
+- **逻辑:** 核心逻辑与前一个脚本相同，都是通过外部求解器（Z3）生成标签并保证数据平衡。主要区别在于输入格式：此版本使用大写字母表示变量的否定（如 a 代表 x1，A 代表 ~x1），这是一种更紧凑的表示法。
+    
+- **I/O格式:**
+    
+    - 输入: NUM_CLAUSES * 3长度的字符串，代表整个公式。
+        
+    - 输出: '1' (可满足) 或 '0' (不可满足)。
+        
+- **主要参数:** VAR_COUNT, NUM_CLAUSES, NUM_SAMPLES_PER_CLASS。
 
 ---
 
@@ -901,7 +787,6 @@
     - 输出: NUM_ITEMS * NUM_BITS_PER_ITEM长度的二进制多标签向量。
         
 - **主要参数:** NUM_ITEMS, NUM_BITS_PER_ITEM, DATASET_SIZE。
-    
 
 ---
 
@@ -918,7 +803,6 @@
     - 输出: OUTPUT_BITS长度的二进制多标签向量。
         
 - **主要参数:** NUM_BITS_PER_STRING, DATASET_SIZE。
-    
 
 ---
 
@@ -935,7 +819,6 @@
     - 输出: max_edits * str_len * 2长度的二进制多标签向量。
         
 - **主要参数:** num_samples, str_len, max_edits。
-    
 
 ---
 
@@ -952,7 +835,6 @@
     - 输出: 4分类的类别标签（上/下/左/右）。
         
 - **主要参数:** MAZE_HEIGHT, MAZE_WIDTH, TARGET_NUM_SAMPLES。
-    
 
 ---
 
@@ -970,7 +852,6 @@
         
 - **主要参数:** MAZE_HEIGHT, MAZE_WIDTH, TARGET_NUM_SAMPLES。
 
-
 ---
 
 ## 6. **algorithms/generate_blocks_world_arbitrary_goal.py**
@@ -986,7 +867,6 @@
     - 输出: 6分类的类别标签，代表最优动作。
         
 - **主要参数:** BLOCKS_N (积木数量)。
-    
 
 ---
 
@@ -1003,7 +883,6 @@
     - 输出: 6分类的类别标签，代表最优动作。
         
 - **主要参数:** BLOCKS_N。
-    
 
 ---
 
@@ -1020,7 +899,6 @@
     - 输出: NUM_ACTIONS长度的二进制多标签向量。
         
 - **主要参数:** BLOCKS_N。
-    
 
 ---
 
@@ -1037,7 +915,6 @@
     - 输出: NUM_ACTIONS长度的二进制多标签向量。
         
 - **主要参数:** BLOCKS_N, NUM_STACKS。
-    
 
 ---
 
@@ -1054,7 +931,6 @@
     - 输出: 单个整数，代表要移动的棋子的**位置索引**。
         
 - **主要参数:** CHECKERS_N (每种颜色棋子数)。
-    
 
 ---
 
@@ -1071,7 +947,6 @@
     - 输出: 2*N长度的多标签二进制向量，表示每个人是否上船。
         
 - **主要参数:** PAIRS_N (伴侣对数), BOAT_CAPACITY_K。
-    
 
 ---
 
@@ -1088,7 +963,6 @@
     - 输出: OUTPUT_BITS长度的二进制多标签向量，代表总雨水量。
         
 - **主要参数:** NUM_COLUMNS_N, BITS_PER_HEIGHT。
-    
 
 ---
 
@@ -1105,7 +979,6 @@
     - 输出: N * K位二进制多标签向量，代表N个柱子各自的接水量。
         
 - **主要参数:** NUM_COLUMNS_N, BITS_PER_HEIGHT。
-    
 
 ---
 
@@ -1122,7 +995,6 @@
     - 输出: NMK位二进制多标签向量，代表每个单元格的接水量。
         
 - **主要参数:** GRID_N, GRID_M, BITS_PER_HEIGHT。
-    
 
 ---
 
@@ -1140,7 +1012,6 @@
         
 - **主要参数:** NUM_SAMPLES, FIXED_N (建筑数量), MAX_HEIGHT。
 
-
 ---
 
 ## 16. **algorithms/generate_skyline_all_heights_decoupled.py**
@@ -1156,11 +1027,10 @@
     - 输出: n * bit_count长度的二进制多标签向量，代表每栋楼的最终高度。
         
 - **主要参数:** NUM_SAMPLES, FIXED_N (建筑数量), MAX_HEIGHT。
-    
 
 ---
 
-## 17. **algorithms/generate_hanoi_tower_path_strategy_sep_format.py**
+## 17. **algorithms/generate_hanoi_tower_path_strategy_sep_format.py**
 
 - **用途:** 作为对比组A，此脚本用于生成汉诺塔最优路径策略数据集，采用**分隔符+二进制编码**的输入格式。
     
@@ -1173,11 +1043,10 @@
     - 输出: 6分类的动作标签（代表源柱和目标柱）。
         
 - **主要参数:** HANOI_N。
-    
 
 ---
 
-## 18. **algorithms/generate_hanoi_tower_path_strategy_fixed_format.py**
+## 18. **algorithms/generate_hanoi_tower_path_strategy_fixed_format.py**
 
 - **用途:** 作为对比组B，此脚本同样生成汉诺塔最优路径策略数据集，但采用**结构化的固定槽位**输入格式（重命名自原来的`global`脚本以反映真实逻辑），用于验证数据表示对学习效率的影响。
     
@@ -1190,7 +1059,6 @@
     - 输出: 6分类的动作标签。
         
 - **主要参数:** HANOI_N, dataset_size。
-    
 
 ---
 
@@ -1207,7 +1075,6 @@
     - 输出: 6分类的类别标签。
         
 - **主要参数:** HANOI_N, DATASET_SIZE。
-    
 
 ---
 
@@ -1224,11 +1091,10 @@
     - 输出: 6分类的类别标签。
         
 - **主要参数:** HANOI_N, DATASET_SIZE。
-    
 
 ---
 
-## 21. **algorithms/generate_hanoi_tower_build_full_state_graph.py**
+## 21. **algorithms/generate_hanoi_tower_build_full_state_graph.py**
 
 - **用途:** 这是一个“汉诺塔问题”研究的集大成者，旨在通过多种不同的数据表示和采样策略，深度剖析模型对递归结构的理解能力。它是一个自给自足的数据工厂。该研究对应于论文中引用的 Apple Research 相关工作，重点在于通过完整状态图分析模型对递归结构的掌握。
     
@@ -1239,7 +1105,6 @@
     - 输出: 多个.jsonl文件（如hanoi_n10_path_slots_train_all.jsonl），包含输入状态（state_to_slots_B格式）和输出动作（0-5的整数标签）。
         
 - **主要参数:** HANOI_N。
-    
 
 ---
 
@@ -1256,7 +1121,6 @@
     - 输出: .jsonl格式的训练数据。
         
 - **主要参数:** HANOI_N, start_idx, end_idx。
-    
 
 ---
 
@@ -1273,7 +1137,6 @@
     - 输出: 4分类的类别标签。
         
 - **主要参数:** M_DIMENSION, N_DIMENSION, NUM_SAMPLES。
-    
 
 ---
 
@@ -1298,7 +1161,6 @@
     - 输出: 4位多标签二进制向量，代表上/下/左/右四个方向是否为最优动作。
         
 - **主要参数:** M_DIMENSION, N_DIMENSION, NUM_SAMPLES, MIN/MAX_DIFFICULTY。
-    
 
 ---
 
@@ -1310,61 +1172,9 @@
     
 - **状态:** **已弃用**。
 
-
 ---
 
-## 26. **symbolic_math_logic/generate_min_swaps_for_checkerboard.py**
-
-- **用途:** 解决LeetCode 782题"变为棋盘"([https://leetcode.cn/problems/transform-to-chessboard/](https://leetcode.cn/problems/transform-to-chessboard/)) - 通过任意交换行和列，将一个0/1矩阵变为"棋盘"模式（相邻元素不同）所需的最少交换次数。
-    
-- **逻辑:** 脚本首先通过对一个完美棋盘进行随机行列交换，来智能地生成一个保证"可解"的输入矩阵。然后，它使用一个复杂的、基于位运算和组合分析的算法来精确计算恢复到棋盘模式所需的最少行列交换总数。如果无法恢复，则返回-1。
-    
-- **I/O格式:**
-    
-    - 输入: N*N长度的二进制字符串。
-        
-    - 输出: OUTPUT_BITS长度的二进制多标签向量 (-1映射为0，k次移动映射为k+1)。
-        
-- **主要参数:** MATRIX_SIZE_N, DATASET_SIZE。
-    
-
----
-
-## 27. **symbolic_math_logic/generate_min_flips_for_alternating_binary.py**
-
-- **用途:** 测试模型解决一个基于位翻转的字符串优化问题，该问题可以被巧妙地映射为一个滑动窗口问题来求解。
-    
-- **逻辑:** "美丽字符串"被定义为一个交替的01序列（如'0101...'或'1010...'）。输入是一个任意的二进制字符串，任务是计算最少的翻转次数，使其变为“美丽”。
-    
-- **I/O格式:**
-    
-    - 输入: STRING_LENGTH_N长度的二进制字符串。
-        
-    - 输出: OUTPUT_BITS长度的二进制多标签向量，代表最小翻转次数。
-        
-- **主要参数:** STRING_LENGTH_N, DATASET_SIZE。
-    
-
----
-
-## 28. **symbolic_math_logic/generate_min_swaps_for_checkerboard_v2.py**
-
-- **用途:** 解决LeetCode 1536题"排布二进制网格的最少交换次数"([https://leetcode.cn/problems/minimum-swaps-to-arrange-a-binary-grid/](https://leetcode.cn/problems/minimum-swaps-to-arrange-a-binary-grid/)) - 通过交换相邻行，将一个二进制网格变为上三角形式（主对角线以上全为0）所需的最少交换次数。
-    
-- **逻辑:** 脚本首先随机生成一个二进制矩阵。然后，它使用BFS搜索排列空间，寻找通过相邻行交换将矩阵变为上三角形式的最小交换次数。如果无法完成，则返回-1。
-    
-- **I/O格式:**
-    
-    - 输入: N*N长度的二进制字符串。
-        
-    - 输出: OUTPUT_BITS长度的二进制多标签向量 (-1映射为0，k次移动映射为k+1)。
-        
-- **主要参数:** MATRIX_SIZE_N, DATASET_SIZE。
-    
-
----
-
-## 29. **algorithms/generate_matrix_flip_strategy.py**
+## 26. **algorithms/generate_matrix_flip_strategy.py**
 
 - **用途:** 解决一个矩阵优化的经典问题（Score After Flipping Matrix）。此版本旨在测试模型能否学习到一个"策略"而非最终结果。对应 LeetCode 题目：[861. Score After Flipping Matrix](https://leetcode.com/problems/score-after-flipping-matrix/)
 
@@ -1377,11 +1187,10 @@
     - 输出: M+N长度的二进制多标签向量，代表行和列的翻转掩码。
         
 - **主要参数:** MATRIX_M, MATRIX_N, DATASET_SIZE。
-    
 
 ---
 
-## 30. **algorithms/generate_matrix_flip_max_score.py**
+## 27. **algorithms/generate_matrix_flip_max_score.py**
 
 - **用途:** 测试模型学习一个矩阵优化问题的能力，该问题需要通过两步贪心策略（先行翻转，后列翻转）来达到全局最优。该版本要求模型直接输出最终的聚合结果（分数）。对应 LeetCode 题目：[861. Score After Flipping Matrix](https://leetcode.com/problems/score-after-flipping-matrix/)
     
@@ -1394,28 +1203,10 @@
     - 输出: OUTPUT_BITS 长度的二进制多标签向量，代表最大得分。
         
 - **主要参数:** MATRIX_M, MATRIX_N, DATASET_SIZE。
-    
 
 ---
 
-## 31. **symbolic_math_logic/generate_min_prefix_flips.py**
-
-- **用途:** 测试模型学习一个依赖于历史状态的、顺序处理的贪心算法的能力。
-    
-- **逻辑:** 这是一个经典的“前缀翻转”或“灯泡”问题。从左到右遍历该序列，如果当前位置在考虑了之前所有翻转的累积效应后仍然是'0'，则必须“拉动”当前位置的开关（这会翻转从当前位置到末尾的所有位），并计一次操作。
-    
-- **I/O格式:**
-    
-    - 输入: STRING_LENGTH_N长度的二进制字符串。
-        
-    - 输出: OUTPUT_BITS长度的二进制多标签向量，代表最小翻转次数。
-        
-- **主要参数:** STRING_LENGTH_N, DATASET_SIZE。
-    
-
----
-
-## 32. **algorithms/generate_min_k_bit_flips.py**
+## 28. **algorithms/generate_min_k_bit_flips.py**
 
 - **用途:** 测试模型学习一个依赖于历史状态的、顺序处理的贪心算法的能力，并且测试其能否将输入的一部分（k）作为“参数”来指导对另一部分（nums）的处理。对应 LeetCode 题目：[995. Minimum Number of K Consecutive Bit Flips](https://leetcode.com/problems/minimum-number-of-k-consecutive-bit-flips/)
     
@@ -1428,11 +1219,10 @@
     - 输出: OUTPUT_BITS 长度的二进制多标签向量 (代表最少翻转次数，0代表无解)。
         
 - **主要参数:** NUMS_LENGTH_N, K_MAX_N, DATASET_SIZE。
-    
 
 ---
 
-## 33. **algorithms/generate_min_k_bit_flips_fixed_k.py**
+## 29. **algorithms/generate_min_k_bit_flips_fixed_k.py**
 
 - **用途:** 测试模型学习一个依赖于历史状态的、顺序处理的贪心算法的能力。此版本中，环境参数（k=2）是固定的、隐藏的，模型必须从数据中隐式学习。这是一个对照实验，用于对比k可变的版本。对应 LeetCode 题目：[995. Minimum Number of K Consecutive Bit Flips](https://leetcode.com/problems/minimum-number-of-k-consecutive-bit-flips/)（k固定版）
     
@@ -1447,11 +1237,10 @@
     - 输出: OUTPUT_BITS 长度的二进制多标签向量 (代表最少翻转次数，0代表无解)。
         
 - **主要参数:** NUMS_LENGTH_N, DATASET_SIZE。
-    
 
 ---
 
-## 34. **algorithms/generate_special_binary_string_recursion.py**
+## 30. **algorithms/generate_special_binary_string_recursion.py**
 
 - **用途:** 测试模型学习一个递归定义的字符串变换规则的能力。该问题对应 LeetCode 题目：[761. Special Binary String](https://leetcode.com/problems/special-binary-string/)（困难题）。题目要求：一个特殊的二进制序列具有相等的0和1数量，且任何前缀中1不少于0；可以通过交换相邻的特殊子串来得到字典序最大的结果。本脚本精确实现了该问题的递归分解和字典序排序算法，作为测试神经网络学习复杂递归规则能力的基准实验。
     
@@ -1464,28 +1253,10 @@
     - 输出: STRING_LENGTH_N长度的二进制多标签向量，代表字典序最大的结果。
         
 - **主要参数:** STRING_LENGTH_N, DATASET_SIZE。
-    
 
 ---
 
-## 35. **symbolic_math_logic/generate_min_flips_for_chunked_binary.py**
-
-- **用途:** 测试模型学习一个基于局部块（chunk）的字符串变换优化问题的能力。
-    
-- **逻辑:** 输入一个偶数长度的二进制字符串。将其按两位一切分，对于每个2-bit的块，如果两个bit不相同（如'01'或'10'），则需要一次翻转操作才能使其“美丽”（变为'00'或'11'）。任务是计算总共需要的最少翻转次数。
-    
-- **I/O格式:**
-    
-    - 输入: INPUT_BITS长度的二进制字符串。
-        
-    - 输出: OUTPUT_BITS长度的二进制多标签向量，代表总翻转次数。
-        
-- **主要参数:** INPUT_BITS, DATASET_SIZE。
-
-
----
-
-## 36. **algorithms/generate_count_connected_components.py**
+## 31. **algorithms/generate_count_connected_components.py**
 
 - **用途:** 测试模型对图结构的基本理解，特别是“连通性”这一核心概念 (对应 LeetCode 323. [Number of Connected Components in an Undirected Graph](https://leetcode.com/problems/number-of-connected-components-in-an-undirected-graph/description/)，注：此为会员题)。
     
@@ -1498,11 +1269,10 @@
     - 输出: OUTPUT_BITS长度的二进制多标签向量，代表连通分量数。
         
 - **主要参数:** GRAPH_SIZE_N, EDGE_PROBABILITY (控制图的稀疏度), DATASET_SIZE。
-    
 
 ---
 
-## 37. **algorithms/generate_check_graph_connectivity.py**
+## 32. **algorithms/generate_check_graph_connectivity.py**
 
 - **用途:** 这是对模型图论基础能力的又一个核心测试，任务是判断图中任意两点之间是否存在一条路径 (对应 LeetCode 1971. [Find if Path Exists in Graph](https://leetcode.com/problems/find-if-path-exists-in-graph/))。
     
@@ -1515,11 +1285,10 @@
     - 输出: [1] (可连通)或 [0] (不连通)。
         
 - **主要参数:** num_samples, size (图的节点数)。
-    
 
 ---
 
-## 38. **algorithms/generate_minimize_malware_spread.py**
+## 33. **algorithms/generate_minimize_malware_spread.py**
 
 - **用途:** 解决一个基于图论的病毒传播优化问题（LeetCode Hard "Minimize Malware Spread"）。模型需要理解图的连通性，并评估移除不同节点对全局传播的影响。本脚本提供两种输出格式，用于对比哪种更容易学习。对应 LeetCode 题目：[924. Minimize Malware Spread](https://leetcode.com/problems/minimize-malware-spread/)
     
@@ -1534,11 +1303,10 @@
         - `output_full`: N位二进制向量，表示每个节点是否属于最优移除集合（完整任务，N位多标签分类）。
         
 - **主要参数:** GRAPH_SIZE_N, NUM_INITIAL, DATASET_SIZE。
-    
 
 ---
 
-## 39. **algorithms/generate_count_islands_1d.py**
+## 34. **algorithms/generate_count_islands_1d.py**
 
 - **用途:** 测试模型在一维序列上进行模式识别和计数的能力。
     
@@ -1551,45 +1319,10 @@
     - 输出: NUM_OUTPUT_BITS长度的二进制多标签向量，代表岛屿数量。
         
 - **主要参数:** NUM_INPUT_BITS, DATASET_SIZE。
-    
 
 ---
 
-## 40. **symbolic_math_logic/generate_largest_island_by_adding_one_cell.py**
-
-- **用途:** 解决一个涉及图遍历和全局优化的算法问题([LeetCode 827. 最大人工岛](https://leetcode.cn/problems/making-a-large-island/))。模型需要评估所有可能的“填海”位置，并选出能使合并后岛屿面积最大的那一个。
-    
-- **逻辑:** 脚本首先使用DFS或BFS遍历输入网格，标记所有已存在的岛屿并计算它们的面积。然后，它遍历所有水域格点（'0'），计算如果将该点变为陆地，可以连接哪些相邻岛屿，并由此计算出新形成的总面积。最终，它找到能产生最大面积的最佳位置。
-    
-- **I/O格式:**
-    
-    - 输入: N*N长度的二进制字符串。
-        
-    - 输出: 一个包含output_class（最佳位置的类别标签）和output_area（最大面积的二进制串）的JSON对象。
-        
-- **主要参数:** NUM_SAMPLES, GRID_SIZE。
-    
-
----
-
-## 41. **symbolic_math_logic/generate_largest_island_by_adding_one_cell_v2.py**
-
-- **用途:** 解决一个涉及图遍历和全局优化的算法问题([LeetCode 827. 最大人工岛](https://leetcode.cn/problems/making-a-large-island/))。模型需要评估所有可能的“填海”位置，并选出能使合并后岛屿面积最大的那一个。
-    
-- **逻辑:** 脚本首先使用DFS或BFS遍历输入网格，标记所有已存在的岛屿并计算它们的面积。然后，它遍历所有水域格点（'0'），计算如果将该点变为陆地，可以连接哪些相邻岛屿，并由此计算出新形成的总面积。最终，它找到能产生最大面积的最佳位置。
-    
-- **I/O格式:**
-    
-    - 输入: N*N长度的二进制字符串。
-        
-    - 输出: 一个包含output_class（最佳位置的类别标签）和output_area（最大面积的二进制串）的JSON对象。
-        
-- **主要参数:** NUM_SAMPLES, GRID_SIZE。
-    
-
----
-
-## 42. **algorithms/generate_find_articulation_points.py**
+## 35. **algorithms/generate_find_articulation_points.py**
 
 - **用途:** 测试模型识别图的“割点”（Articulation Point）或“桥”（Bridge）的能力，这是一个图论中的重要概念。 [LeetCode 1568. Minimum Number of Days to Disconnect Island](https://leetcode.com/problems/minimum-number-of-days-to-disconnect-island/description/)
     
@@ -1602,11 +1335,10 @@
     - 输出: M*N长度的二进制多标签向量，标记了被移除的点。
         
 - **主要参数:** NUM_SAMPLES, GRID_M, GRID_N。
-    
 
 ---
 
-## 43. **algorithms/generate_nim_game_zeckendorf.py**
+## 36. **algorithms/generate_nim_game_zeckendorf.py**
 
 - **用途:** 这个实验旨在测试我的范式能否学习一个基于复杂数论（齐肯多夫表示法）的非直观博弈论问题。它脱离了简单的模式匹配，需要模型理解更深层次的数学结构。
     
@@ -1619,11 +1351,10 @@
     - 输出: 1位二进制多标签（[1]代表必胜, [0]代表必败）。
         
 - **主要参数:** N_BITS, DATASET_SIZE。
-    
 
 ---
 
-## 44. **algorithms/generate_longest_subsequence_constrained.py**
+## 37. **algorithms/generate_longest_subsequence_constrained.py**
 
 - **用途:** 测试模型处理一个混合了序列操作和数值约束的复杂优化问题的能力。对应 LeetCode 题目：[2311. Longest Binary Subsequence Less Than or Equal to K](https://leetcode.com/problems/longest-binary-subsequence-less-than-or-equal-to-k/)
     
@@ -1636,11 +1367,10 @@
     - 输出: OUTPUT_BITS长度的二进制多标签向量，代表长度。
         
 - **主要参数:** STRING_LENGTH_N, K_BITS, DATASET_SIZE。
-    
 
 ---
 
-## 45. **algorithms/generate_treasure_hunt_tsp.py**
+## 38. **algorithms/generate_treasure_hunt_tsp.py**
 
 - **用途:** 解决一个复杂的状态空间搜索问题，它结合了图的遍历（BFS）和组合优化（状态压缩DP），是算法竞赛中的经典难题。
     
@@ -1654,10 +1384,9 @@
         
 - **主要参数:** MAZE_N, MAZE_M, DATASET_SIZE。
 
-
 ---
 
-## 46. **algorithms/generate_freedom_trail_dp.py**
+## 39. **algorithms/generate_freedom_trail_dp.py**
 
 - **用途:** [LeetCode 514. Freedom Trail](https://leetcode.com/problems/freedom-trail/description/) 测试模型学习解决一个需要动态规划和路径回溯的复杂优化问题的能力。
     
@@ -1670,11 +1399,10 @@
     - 输出: KEY_LENGTH * move_bits长度的二进制多标签向量，编码了每一步的操作。
         
 - **主要参数:** RING_LENGTH, KEY_LENGTH, NUM_SAMPLES。
-    
 
 ---
 
-## 47. **algorithms/generate_sum_of_subset_with_mask.py**
+## 40. **algorithms/generate_sum_of_subset_with_mask.py**
 
 - **用途:** 测试模型根据一个二进制掩码从一个集合中选择元素并执行聚合操作（求和）的能力。这是一个创新性的对照实验，旨在验证**任务结构本身**（而非模型容量）对神经网络可学习性的关键影响。
     
@@ -1693,10 +1421,9 @@
     
 - **主要参数:** n_items, value_range (数字范围), num_samples, MODE ("forward"或"reverse")。
 
-
 ---
 
-## 48. **algorithms/generate_sudoku_6x6.py**
+## 41. **algorithms/generate_sudoku_6x6.py**
 
 - **用途:** 测试模型在处理有强约束满足问题（Constraint Satisfaction Problem）——数独——上的能力。
     
@@ -1709,24 +1436,22 @@
     - 输出: 36 * 3 = 108位二进制多标签向量，每个数字用3位二进制表示。
         
 - **主要参数:** num_puzzles, difficulty (挖洞比例)。
-    
 
 ---
 
-## 49. **algorithms/generate_valid_parentheses_path_random_deprecated.py**
+## 42. **algorithms/generate_valid_parentheses_path_random_deprecated.py**
 
 - **用途:** (早期探索/已弃用) 这是解决“合法括号路径”问题的早期尝试。
     
-- **状态:** **已弃用**。此脚本通过随机生成括号网格来创建数据集，但这导致了严重的数据不平衡问题（绝大多数随机网格都没有合法路径），不利于模型训练。已被 to_be_organized/algorithms/generate_valid_parentheses_path_balanced.py 取代。
+- **状态:** **已弃用**。此脚本通过随机生成括号网格来创建数据集，但这导致了严重的数据不平衡问题（绝大多数随机网格都没有合法路径），不利于模型训练。已被 algorithms/generate_valid_parentheses_path_balanced.py 取代。
     
 - **逻辑:** 随机生成M x N的括号网格，并调用求解器判断是否存在合法路径。
     
 - **主要参数:** MAZE_M, MAZE_N, DATASET_SIZE。
-    
 
 ---
 
-## 50. **algorithms/generate_valid_parentheses_path_balanced.py**
+## 43. **algorithms/generate_valid_parentheses_path_balanced.py**
 
 - **用途:** 解决一个二维网格上的路径查找问题，但路径的合法性受到栈式结构（括号匹配）的约束。这是一个算法和逻辑约束结合的复杂任务 (LeetCode Hard [#2267](https://leetcode.com/problems/check-if-there-is-a-valid-parentheses-string-path/) "Check if There Is a Valid Parentheses String Path")。
     
@@ -1744,45 +1469,10 @@
     - 输出: [1] (存在) 或 [0] (不存在)。
         
 - **主要参数:** MAZE_M, MAZE_N, DATASET_SIZE。
-    
 
 ---
 
-## 51. **symbolic_math_logic/generate_sat_solver_text.py**
-
-- **用途:** 测试模型解决一个标志性的NP完全问题——布尔可满足性（SAT）问题的能力。
-    
-- **逻辑:** 随机生成一个由多个子句组成的CNF（合取范式）公式。输入是对这个公式的字符串编码。然后，脚本调用一个外部求解器（pycosat）来判断该公式是否存在一组变量赋值使其为真。脚本会努力确保可满足和不可满足的样本比例为1:1。
-    
-- **I/O格式:**
-    
-    - 输入: 代表整个公式的字符串。
-        
-    - 输出: '1' (可满足) 或 '0' (不可满足)。
-        
-- **主要参数:** num_vars, num_clauses, num_samples_per_class。
-    
-
----
-
-## 52. **symbolic_math_logic/generate_sat_solver_compact_text.py**
-
-- **用途:** 这是对 to_be_organized/symbolic_math_logic/generate_sat_solver_text.py 的一个变种，采用了不同的输入编码格式来解决同样的3-SAT问题。
-    
-- **逻辑:** 核心逻辑与前一个脚本相同，都是通过外部求解器（Z3）生成标签并保证数据平衡。主要区别在于输入格式：此版本使用大写字母表示变量的否定（如 a 代表 x1，A 代表 ~x1），这是一种更紧凑的表示法。
-    
-- **I/O格式:**
-    
-    - 输入: NUM_CLAUSES * 3长度的字符串，代表整个公式。
-        
-    - 输出: '1' (可满足) 或 '0' (不可满足)。
-        
-- **主要参数:** VAR_COUNT, NUM_CLAUSES, NUM_SAMPLES_PER_CLASS。
-    
-
----
-
-## 53. **algorithms/generate_point_in_polygon.py**
+## 44. **algorithms/generate_point_in_polygon.py**
 
 - **用途:** 测试模型学习一个计算几何中的经典算法——射线法（Ray Casting Algorithm）——的能力。
     
@@ -1795,11 +1485,10 @@
     - 输出: [1] (在内部)或 [0] (在外部)。
         
 - **主要参数:** NUM_VERTICES_N, BITS_PER_COORD, DATASET_SIZE。
-    
 
 ---
 
-## 54. **algorithms/generate_shortest_path_in_matrix_bfs.py**
+## 45. **algorithms/generate_shortest_path_in_matrix_bfs.py**
 
 - **用途:** 测试模型在一个二维网格中，基于经典的广度优先搜索（BFS）算法寻找最短路径的能力。
     
@@ -1813,41 +1502,37 @@
         
 - **主要参数:** MATRIX_SIZE_N, INPUT_FORMAT, DATASET_SIZE。
 
-
 ---
 
-## 55. **algorithms/generate_sudoku_4x4_stepwise_deprecated.py**
+## 46. **algorithms/generate_sudoku_4x4_stepwise_deprecated.py**
 
 - **用途:** (废弃) 旨在测试模型进行“步进式”（stepwise）推理的能力，即在每个状态下只预测下一步的最优动作，而不是一次性输出完整解。
     
 - **状态:** **已弃用**。该脚本试图通过一种复杂的倒推逻辑来为4x4数独生成步进式解法，但其核心算法不可靠，无法保证生成的数据的正确性和有效性。已被generate_sudoku_6x6.py等更完善的脚本替代。
     
 - **逻辑:** (存在问题) 尝试从一个完整的4x4数独解中，通过“挖洞”并检查唯一性的方式倒推出每一步的最优解。
-    
 
 ---
 
-## 56. **algorithms/generate_tiling_problem_deprecated.py**
+## 47. **algorithms/generate_tiling_problem_deprecated.py**
 
 - **用途:** (已弃用) 旨在测试模型解决一个经典的平铺覆盖优化问题的能力，这是一个NP-hard问题。
     
 - **状态:** **已弃用**。核心求解器使用了带剪枝的回溯搜索，但这是一种指数级复杂度的算法。对于大于约 13x13 的矩阵，其计算时间会变得不切实际，因此无法高效地生成大规模数据集。
     
 - **逻辑:** 使用回溯搜索法解决“用最少的正方形铺满一个m*n矩形”的问题。
-    
 
 ---
 
-## 57. **algorithms/generate_hanoi_tower_twisted_path_deprecated.py**
+## 48. **algorithms/generate_hanoi_tower_twisted_path_deprecated.py**
 
 - **用途:** (废弃) 此脚本意图生成一个汉诺塔问题的“扭曲路径”数据集，即从一个非标准但困难的起始状态到标准终点的最优路径。
     
 - **状态:** **已弃用**。核心的移动逻辑（apply_move）存在错误，未能正确模拟汉诺塔的“大盘在下，小盘在上”的规则，导致生成的路径并非有效的解。后续已被generate_hanoi_tower_build_full_state_graph.py等更完善的脚本取代。
-    
 
 ---
 
-## 58. **algorithms/generate_checkers_jump_1d_v2.py (以 algorithms/generate_checkers_jump_1d.py 为准)**
+## 49. **algorithms/generate_checkers_jump_1d_v2.py**
 
 - **用途:** 这是一个针对跳棋交换问题的**序列学习对比实验**脚本。与 V1 版本关注单步最优策略不同，本脚本旨在生成多种类型的完整路径数据集（包括最优路径、子路径、非最优路径等），用于系统性地研究模型在不同数据分布下学习长序列规划的能力。该任务同样源自苹果公司论文 [15] 中的跳棋交换问题，但侧重于探究序列级泛化与路径多样性的影响。
     
@@ -1860,26 +1545,50 @@
     - 输出: 单个整数，代表要移动的棋子的**位置索引**，这是一个分类问题。
         
 - **主要参数:** CHECKERS_N (每种颜色棋子数)。
+
+---
+
+## 50. **algorithms/generate_maze_symbolic_to_image.py**
+
+- **用途:** 将符号化的迷宫路径规划数据集转换为图像格式，以测试视觉模型（如CNN、ViT）直接从像素进行路径规划的能力。
     
+- **逻辑:** 该脚本读取一个包含迷宫布局字符串和对应最优动作的.jsonl文件。对于每一行，它将迷宫布局（包含墙壁、通路、起点和终点）渲染成一张高对比度的彩色图像。最终，它会生成一个图像文件夹和一个labels.csv文件，将图像文件名与最优动作标签（0-3的分类）关联起来。
+    
+- **I/O格式:**
+    
+    - 输入: .jsonl文件。
+        
+    - 输出: images/目录下的JPG图像 和 labels.csv元数据文件。
+        
+- **主要参数:** INPUT_JSONL_FILE, OUTPUT_IMAGE_DIR, IMAGE_SIZE, GRID_DIM。
 
 ---
 
-### **59. algorithms/generate_rain_water_final_showdown.py**
+## 51. **algorithms/generate_trapping_rain_water_visualizer.py**
 
-- **用途：** 系统性对比**不同算法解释格式**对模型收敛速度的影响，验证“解耦格式”是否普适。
-- **逻辑：** 对同一组接雨水问题，生成三种算法（DP、单调栈、双指针）的中间解释标签，拼接为不同长度的输出。
-- **I/O格式：**
-  - 输入：N 根柱子高度，二进制编码。
-  - 输出：
-    - `final_answer`：每根柱子接水量（主任务）。
-    - `explain_dp`：leftMax 与 rightMax 拼接。
-    - `explain_stack`：单调栈事件三元组（left, right, top）。
-    - `explain_tp`：双指针每一步使用的 max 值。
-- **主要参数：** `NUM_COLUMNS_N = 10`，`BITS_PER_HEIGHT = 4`，`DATASET_SIZE = 500000`。
+- **用途:** 这是一个**数据转换与可视化**脚本。它的作用是将已经生成的、符号化的“接雨水”数据集转换为一个image-to-image格式的数据集，以便用视觉模型来解决同一个问题。
+    
+- **逻辑:** 脚本逐行读取.jsonl文件，解析出每个样本的柱子高度和对应的接水量。它首先将柱子的高度渲染成一张黑白的图像作为输入。然后，它在柱子上方将对应的雨水量用蓝色渲染出来，生成输出图像。
+    
+- **I/O格式:** 输入: .jsonl文件 -> 输出: images/目录下的PNG图像对。
+    
+- **主要参数:** input_file, output_dir, image_size。
 
 ---
 
-# C: 图像输出符号 (Image to Symbol)
+## 52. **algorithms/generate_shortest_path_in_tree_deprecated.py**
+
+- **用途:** (早期探索/已弃用) 这是一个早期的实验，旨在测试模型从图像中寻找图上最短路径的能力。
+    
+- **状态:** **已弃用**。该脚本通过生成随机树来确保图的平面性，但这意外地将问题简化了：树中任意两点间的路径是唯一的，模型无需学习“最短”这一概念。该任务后来被更具挑战性的稠密迷宫路径规划任务所取代。
+    
+- **逻辑:** 脚本生成一个随机树图，并将其绘制在图像上。输入图像会高亮一个起点和一个终点。输出图像则会在输入的基础上，将连接起点和终点的唯一路径高亮出来。
+    
+- **主要参数:** MIN_NODES, MAX_NODES。
+
+---
+
+# C: 视觉推理 (Visual Reasoning)
 
 ## 1. **visual_reasoning/generate_checkerboard_to_binary.py**
 
@@ -1894,7 +1603,6 @@
     - 输出: GRID_DIM * GRID_DIM长度的二进制多标签向量。
         
 - **主要参数:** NUM_SAMPLES, IMAGE_SIZE, GRID_DIM。
-    
 
 ---
 
@@ -1911,7 +1619,6 @@
     - 输出: num_angle_bins长度的二进制多标签向量。
         
 - **主要参数:** image_size, num_angle_bins, min_lines, max_lines。
-    
 
 ---
 
@@ -1928,28 +1635,10 @@
     - 输出: 12位二进制多标签向量，分别编码6个类别的计数。
         
 - **主要参数:** TOTAL_SAMPLES, MAX_COUNT_PER_CATEGORY (仅对形状生效)。
-    
 
 ---
 
-## 4. **algorithms/generate_maze_symbolic_to_image.py**
-
-- **用途:** 将符号化的迷宫路径规划数据集转换为图像格式，以测试视觉模型（如CNN、ViT）直接从像素进行路径规划的能力。
-    
-- **逻辑:** 该脚本读取一个包含迷宫布局字符串和对应最优动作的.jsonl文件。对于每一行，它将迷宫布局（包含墙壁、通路、起点和终点）渲染成一张高对比度的彩色图像。最终，它会生成一个图像文件夹和一个labels.csv文件，将图像文件名与最优动作标签（0-3的分类）关联起来。
-    
-- **I/O格式:**
-    
-    - 输入: .jsonl文件。
-        
-    - 输出: images/目录下的JPG图像 和 labels.csv元数据文件。
-        
-- **主要参数:** INPUT_JSONL_FILE, OUTPUT_IMAGE_DIR, IMAGE_SIZE, GRID_DIM。
-    
-
----
-
-## 5. **visual_reasoning/generate_sokoban_symbolic_to_image_no_labels.py**
+## 4. **visual_reasoning/generate_sokoban_symbolic_to_image_no_labels.py**
 
 - **用途:** 这是一个数据转换脚本，用于将符号化的推箱子数据集（.jsonl格式）仅转换为图像格式，用于纯视觉任务或作为更复杂数据处理的中间步骤。
     
@@ -1963,10 +1652,9 @@
         
 - **主要参数:** INPUT_JSONL_PATH, OUTPUT_DIR, GRID_SIZE, CELL_PIXELS。
 
-
 ---
 
-## 6. **visual_reasoning/generate_sokoban_symbolic_to_image_with_labels.py**
+## 5. **visual_reasoning/generate_sokoban_symbolic_to_image_with_labels.py**
 
 - **用途:** 这是一个数据转换脚本，用于将符号化的推箱子数据集（.jsonl格式）转换为一个完整的图像分类数据集，以供计算机视觉模型（如ViT, Swin Transformer）进行训练。
     
@@ -1979,13 +1667,10 @@
     - 输出: images/目录下的PNG图像 和 labels.csv文件。
         
 - **主要参数:** INPUT_JSONL_PATH, OUTPUT_DIR, GRID_SIZE, CELL_PIXELS。
-    
 
 ---
 
-# D: 图像推理 (Image to Image)
-
-## 1. **visual_reasoning/generate_triangle_to_incircle.py**
+## 6. **visual_reasoning/generate_triangle_to_incircle.py**
 
 - **用途:** 这是展示“用梯度下降雕刻精确规则”的一个标志性实验。它测试模型能否学习到一个纯粹的、非平凡的几何构造规则（三角形内切圆）。
     
@@ -1998,11 +1683,10 @@
     - 输出: IMG_SIZE x IMG_SIZE的RGB图像 (三角形+红色内切圆)。
         
 - **主要参数:** NUM_SAMPLES_TRAIN, IMG_SIZE, MIN_TRIANGLE_AREA。
-    
 
 ---
 
-## 2. **visual_reasoning/generate_polygon_to_symmetry_axis.py**
+## 7. **visual_reasoning/generate_polygon_to_symmetry_axis.py**
 
 - **用途:** 测试模型从一个完整的对称图形中反向推断出其隐含的对称轴的能力。
     
@@ -2015,11 +1699,10 @@
     - 输出: IMG_SIZE x IMG_SIZE的RGB图像 (对称图形+对称轴)。
         
 - **主要参数:** NUM_SAMPLES_TRAIN, IMG_SIZE, MIN_POLYGON_VERTICES_HALF。
-    
 
 ---
 
-## 3. **visual_reasoning/generate_triangle_to_centroid.py**
+## 8. **visual_reasoning/generate_triangle_to_centroid.py**
 
 - **用途:** 测试模型学习另一个基础几何概念——重心的能力。
     
@@ -2032,11 +1715,10 @@
     - 输出: IMG_SIZE x IMG_SIZE的RGB图像 (三角形+红色重心圆)。
         
 - **主要参数:** NUM_SAMPLES_TRAIN, IMG_SIZE, MIN_TRIANGLE_AREA。
-    
 
 ---
 
-## 4. **visual_reasoning/generate_triangle_to_tessellation.py**
+## 9. **visual_reasoning/generate_triangle_to_tessellation.py**
 
 - **用途:** 这是我们范式能力的一个标志性展示。它测试模型能否学习一种无限的、基于晶格的生成规则。由于镶嵌图案的全局关联性和细节的精确性，它有力地排除了模型仅仅是靠“插值”或“记忆”来解决问题的可能性。
     
@@ -2049,11 +1731,140 @@
     - 输出: IMG_SIZE x IMG_SIZE的RGB图像 (完整的镶嵌图案)。
         
 - **主要参数:** NUM_SAMPLES, IMG_SIZE。
-    
 
 ---
 
-## 5. **cellular_automata/generate_game_of_life_image_to_image.py**
+## 10. **visual_reasoning/generate_shortest_distance_between_triangles.py**
+
+- **用途:** 测试模型在包含多个对象的情况下，进行全局几何关系（最短距离）推理的能力。
+    
+- **逻辑:** 脚本在一个画布上随机生成两个不重叠的绿色三角形。然后，它使用专业的计算几何库shapely来精确计算出这两个三角形之间的最短距离线段。输入图像只包含两个三角形，输出图像则额外绘制了这条红色的最短连线。
+    
+- **I/O格式:**
+    
+    - 输入: image_size x image_size的RGB图像 (包含两个绿色三角形)。
+        
+    - 输出: image_size x image_size的RGB图像 (三角形+红色最短连线)。
+        
+- **状态:** 逻辑正确，但依赖外部库shapely，可能存在环境配置问题。
+
+---
+
+## 11. **visual_reasoning/generate_coords_to_triangle.py**
+
+- **用途:** 这是一个基础的符号到几何的渲染任务，测试模型将抽象的坐标信息转换为具体像素形状的能力。
+    
+- **逻辑:** 脚本的输入是一个48-bit的二进制字符串，它编码了一个三角形三个顶点的(x, y)坐标（每个坐标8-bit）。输出是根据这些坐标绘制出的一个绿色实心三角形的图像。
+    
+- **I/O格式:**
+    
+    - 输入: 48位二进制字符串。
+        
+    - 输出: 256x256的RGB图像。
+        
+- **主要参数:** NUM_SAMPLES, IMAGE_SIZE。
+
+---
+
+## 12. **visual_reasoning/generate_triangle_coords_to_tessellation.py**
+
+- **用途:** 这是一个高级的、混合了符号指令和几何生成规则的推理任务。
+    
+- **逻辑:** 和generate_coords_to_triangle.py一样，输入是一个48-bit的二进制串，定义了一个基准三角形。和generate_triangle_to_tessellation.py一样，输出是基于这个基准三角形的完美平面镶嵌图案。**关键的修改**是，在输出的镶嵌图案中，由输入直接定义的那个基准三角形会被染成特殊的颜色（如黑色），而其他的三角形则依然是绿色和红色。这为模型提供了必要的“接地”（grounding）信息。
+    
+- **I/O格式:**
+    
+    - 输入: 48位二进制字符串。
+        
+    - 输出: 256x256的RGB图像 (镶嵌图案)。
+        
+- **主要参数:** NUM_SAMPLES, IMG_SIZE。
+
+---
+
+# D: 元胞自动机 (Cellular Automata)
+
+## 1. **cellular_automata/generate_cellular_automata_1d.py**
+
+- **用途:** 用于生成一维元胞自动机（CA）的演化数据集，以测试模型学习和执行局部、确定性规则的能力。
+    
+- **逻辑:** 给定一个随机的二进制初始状态，脚本会根据指定的演化规则（当前为Rule 110），迭代指定的层数（步数），并生成最终状态。
+    
+- **I/O格式:**
+    
+    - 输入: length位的二进制字符串，代表初始状态。
+        
+    - 输出: length位的二进制多标签向量，代表最终状态。
+        
+- **主要参数:** num_samples, length, l (演化层数)。
+
+---
+
+## 2. **cellular_automata/generate_game_of_life_2d.py**
+
+- **用途:** 生成二维元胞自动机——Conway's Game of Life的数据集。此任务比一维CA更复杂，需要模型理解二维空间中的邻域关系。
+    
+- **逻辑:** 基于一个随机的n*n初始棋盘，根据生命游戏标准规则（B3/S23）演化d个时间步，记录最终的棋盘状态。
+    
+- **I/O格式:**
+    
+    - 输入: n*n位的扁平化二进制字符串，代表初始棋盘。
+        
+    - 输出: n*n位的二进制多标签向量，代表最终棋盘。
+        
+- **主要参数:** num_samples, n (网格边长), d (演化步数)。
+
+---
+
+## 3. **cellular_automata/generate_cellular_automata_1d_multistate.py**
+
+- **用途:** 作为一维元胞自动机实验的扩展，测试模型处理非二进制状态空间的能力。
+    
+- **逻辑:** CCA的演化规则是：一个元胞的下一个状态，是它自己当前状态+1（模n_states），当且仅当它的左邻居或右邻居的状态等于这个目标状态。该脚本生成这种演化过程的输入（初始状态）和输出（最终状态）。
+    
+- **I/O格式:**
+    
+    - 输入: n_cells * 2 (因为n_states=4) 长度的二进制字符串。
+        
+    - 输出: n_cells * 2 长度的二进制多标签向量。
+        
+- **主要参数:** n_cells, n_states, n_samples, steps。
+
+---
+
+## 4. **cellular_automata/generate_cellular_automata_programmable.py**
+
+- **用途:** 测试模型的“可编程性”或“元学习”能力。模型不仅要学会CA的演化过程，还要能根据每次输入中给出的不同规则来执行演化。
+    
+- **逻辑:** 每个样本将一个8-bit的规则编号和一个初始状态一同作为输入。脚本根据该规则对状态进行演化，生成输出。这要求模型将输入的一部分理解为“程序”，另一部分理解为“数据”。
+    
+- **I/O格式:**
+    
+    - 输入: 8 (规则) + CA_WIDTH (状态)位的二进制字符串。
+        
+    - 输出: CA_WIDTH位的多标签二进制向量。
+        
+- **主要参数:** TARGET_NUM_SAMPLES, CA_WIDTH, EVOLUTION_STEPS, RULES_TO_INCLUDE (指定数据集中包含哪些规则)。
+
+---
+
+## 5. **cellular_automata/generate_cellular_automata_inverse_rule90.py**
+
+- **用途:** 测试模型解决“逆问题”（Inverse Problem）的能力。给定一个确定性系统的输出，模型需要反向推断出满足特定约束（最稀疏且唯一）的可能输入。
+    
+- **逻辑:** 输入是一维元胞自动机Rule 90演化一步后的状态。任务是找到所有可能的“前一步”状态中，'1'的数量最少（最稀疏）的那一个。为了让问题有唯一解，脚本通过暴力搜索的方式，只保留那些“最稀疏解”恰好只有一个的样本。
+    
+- **I/O格式:**
+    
+    - 输入: N位二进制字符串 (演化后状态)。
+        
+    - 输出: N位二进制字符串 (演化前状态)。
+        
+- **主要参数:** num_samples, length。
+
+---
+
+## 6. **cellular_automata/generate_game_of_life_image_to_image.py**
 
 - **用途:** 这是二维元胞自动机的image-to-image版本，测试模型能否直接在像素空间中执行基于局部规则的演化。
     
@@ -2066,62 +1877,10 @@
     - 输出: IMAGE_SIZE x IMAGE_SIZE的灰度图像 (演化一步后的状态)。
         
 - **主要参数:** GRID_SIZE, IMAGE_SIZE, NUM_SAMPLES。
-    
 
 ---
 
-## 6. **physics_simulation/generate_projectile_motion_simulation.py**
-
-- **用途:** 测试模型学习一个简单的动态物理过程的能力。这要求模型从初始条件（位置和速度向量）推断出整个时空轨迹。
-    
-- **逻辑:** 输入图像通过一个起始点和一条有向线段来编码小球的初始位置和速度向量（线段方向代表速度方向，颜色代表速度大小）。脚本内部的物理引擎会根据这些初始条件模拟出小球在重力场中的抛物线弹跳轨迹。输出图像则绘制了完整的轨迹。
-    
-- **I/O格式:**
-    
-    - 输入: IMG_SIZE x IMG_SIZE的RGB图像 (包含初始状态)。
-        
-    - 输出: IMG_SIZE x IMG_SIZE的RGB图像 (包含完整轨迹)。
-        
-- **主要参数:** NUM_SAMPLES_TRAIN, IMG_SIZE, GRAVITY, ELASTICITY_FACTOR。
-    
-
----
-
-## 7. **physics_simulation/generate_snell_refraction_simulation.py**
-
-- **用途:** 测试模型学习基础物理定律（斯涅尔折射定律）的能力。
-    
-- **逻辑:** (以 zheshe2.py 为代表) 输入图像包含两种不同颜色的介质，以及一条射向它们分界面的入射光线。脚本根据斯涅尔定律（n1sin(θ1) = n2sin(θ2)）精确计算出折射光线的路径。模型的任务是根据输入图像，预测出正确的折射光线。
-    
-- **I/O格式:**
-    
-    - 输入: IMG_SIZE x IMG_SIZE的RGB图像 (包含两种介质和入射光)。
-        
-    - 输出: 与输入相同，但额外绘制了红色的折射光线。
-        
-- **主要参数:** IMG_SIZE, NUM_SAMPLES_TRAIN。
-    
-
----
-
-## 8. **physics_simulation/generate_snell_refraction_with_contextual_index.py**
-
-- **用途:** 测试模型学习基础物理定律（斯涅尔折射定律）的能力，并且要求模型能从图像的上下文信息（背景颜色）中推断出物理参数（折射率）。
-    
-- **逻辑:** 输入图像包含两种不同颜色的介质，以及一条射向它们分界面的入射光线。脚本根据斯涅尔定律精确计算出折射光线的路径。在此版本中，其中一种介质的颜色与它的折射率n2是函数关系。模型的任务是根据输入图像，预测出正确的折射光线。
-    
-- **I/O格式:**
-    
-    - 输入: IMG_SIZE x IMG_SIZE的RGB图像 (包含两种介质和入射光)。
-        
-    - 输出: 与输入相同，但额外绘制了红色的折射光线。
-        
-- **主要参数:** IMG_SIZE, NUM_SAMPLES_TRAIN。
-    
-
----
-
-## 9. **cellular_automata/generate_cellular_automata_spatial_conditional.py**
+## 7. **cellular_automata/generate_cellular_automata_spatial_conditional.py**
 
 - **用途:** 测试模型在单一模态（图像）内部分区和解析“指令”与“数据”的能力，是一种“伪多模态”或“空间条件化”的实验。
     
@@ -2135,63 +1894,9 @@
         
 - **主要参数:** NUM_INITIAL_STATES, ITERATIONS, GRID_DIM。
 
-
 ---
 
-## 10. **algorithms/generate_trapping_rain_water_visualizer.py**
-
-- **用途:** 这是一个**数据转换与可视化**脚本。它的作用是将已经生成的、符号化的“接雨水”数据集转换为一个image-to-image格式的数据集，以便用视觉模型来解决同一个问题。
-    
-- **逻辑:** 脚本逐行读取.jsonl文件，解析出每个样本的柱子高度和对应的接水量。它首先将柱子的高度渲染成一张黑白的图像作为输入。然后，它在柱子上方将对应的雨水量用蓝色渲染出来，生成输出图像。
-    
-- **I/O格式:** 输入: .jsonl文件 -> 输出: images/目录下的PNG图像对。
-    
-- **主要参数:** input_file, output_dir, image_size。
-    
-
----
-
-## 11. **algorithms/generate_shortest_path_in_tree_deprecated.py**
-
-- **用途:** (早期探索/已弃用) 这是一个早期的实验，旨在测试模型从图像中寻找图上最短路径的能力。
-    
-- **状态:** **已弃用**。该脚本通过生成随机树来确保图的平面性，但这意外地将问题简化了：树中任意两点间的路径是唯一的，模型无需学习“最短”这一概念。该任务后来被更具挑战性的稠密迷宫路径规划任务所取代。
-    
-- **逻辑:** 脚本生成一个随机树图，并将其绘制在图像上。输入图像会高亮一个起点和一个终点。输出图像则会在输入的基础上，将连接起点和终点的唯一路径高亮出来。
-    
-- **主要参数:** MIN_NODES, MAX_NODES。
-    
-
----
-
-## 12. **visual_reasoning/generate_shortest_distance_between_triangles.py**
-
-- **用途:** 测试模型在包含多个对象的情况下，进行全局几何关系（最短距离）推理的能力。
-    
-- **逻辑:** 脚本在一个画布上随机生成两个不重叠的绿色三角形。然后，它使用专业的计算几何库shapely来精确计算出这两个三角形之间的最短距离线段。输入图像只包含两个三角形，输出图像则额外绘制了这条红色的最短连线。
-    
-- **I/O格式:**
-    
-    - 输入: image_size x image_size的RGB图像 (包含两个绿色三角形)。
-        
-    - 输出: image_size x image_size的RGB图像 (三角形+红色最短连线)。
-        
-- **状态:** 逻辑正确，但依赖外部库shapely，可能存在环境配置问题。
-    
-
---- 
-
-## 13. **physics_simulation/generate_reaction_diffusion_deprecated.py**
-
-- **用途:** (探索性/已弃用) 该脚本用于模拟基于 **Gray-Scott 模型** 的反应-扩散系统，以生成复杂的、类似分形的“雪花”图案。它本质上属于连续物理场的模拟（涉及偏微分方程的离散化和浮点运算），而非简单的离散状态元胞自动机。
-    
-- **状态:** **已弃用**。虽然物理模拟逻辑正确，但此任务的输出是动态演化的结果，且对初始条件高度敏感，不符合范式中研究的“从一个明确输入到唯一确定性输出”的映射关系，因此被判定为“不合适”并放弃。此外，因其核心逻辑基于连续物理模拟，现已从元胞自动机分类移至物理模拟分类。
-    
-- **逻辑:** 脚本从一个或几个“晶核”开始，通过迭代模拟养分（Nutrient）和物质（Matter）两个连续场的扩散和反应（使用卷积计算拉普拉斯算子），逐步生成复杂的固态结构。
-
----
-
-## 14. **cellular_automata/generate_cellular_automata_multimodal_deprecated.py**
+## 8. **cellular_automata/generate_cellular_automata_multimodal_deprecated.py**
 
 - **用途:** (已弃用) 生成一个真正的多模态数据集，用于训练能够同时理解图像输入和文本指令的模型。
     
@@ -2200,11 +1905,10 @@
 - **逻辑:** 脚本为每个样本生成一张代表元胞自动机初始状态的图像，和一条代表演化规则的文本字符串。输出是演化后的状态图像。
     
 - **主要参数:** NUM_SAMPLES, GRID_DIM, ITERATIONS。
-    
 
 ---
 
-### 15. **cellular_automata/generate_cellular_automata_1d_to_grid_image_interp.py**
+## 9. **generate_cellular_automata_1d_to_grid_image_interp.py**
 
 - **用途:** 该脚本旨在设计一个“逻辑/感知混合”任务，用以证明神经网络的规则学习能力和内插能力并非互斥，而是可以一体化地在单个任务中得到体现。它迫使模型必须同时“看穿”输入的连续灰度值以执行离散的逻辑推理，并记住这些灰度值以完成最终的连续值映射。
     
@@ -2218,29 +1922,9 @@
         
 - **主要参数:** NUM_SAMPLES, IMG_SIZE, RULE_NUMBER, ITERATIONS, ENABLE_INTERPOLATION_MODE。
 
-
 ---
 
-# E: 文字输出图像 (Text to Image)
-
-## 1. **visual_reasoning/generate_coords_to_triangle.py**
-
-- **用途:** 这是一个基础的符号到几何的渲染任务，测试模型将抽象的坐标信息转换为具体像素形状的能力。
-    
-- **逻辑:** 脚本的输入是一个48-bit的二进制字符串，它编码了一个三角形三个顶点的(x, y)坐标（每个坐标8-bit）。输出是根据这些坐标绘制出的一个绿色实心三角形的图像。
-    
-- **I/O格式:**
-    
-    - 输入: 48位二进制字符串。
-        
-    - 输出: 256x256的RGB图像。
-        
-- **主要参数:** NUM_SAMPLES, IMAGE_SIZE。
-    
-
----
-
-## 2. **cellular_automata/generate_cellular_automata_1d_to_grid_image.py**
+## 10. **cellular_automata/generate_cellular_automata_1d_to_grid_image.py**
 
 - **用途:** 测试模型能否直接将一维的符号计算结果“渲染”成结构化的二维图像。
     
@@ -2253,54 +1937,158 @@
     - 输出: 240x240的RGB图像（黑白棋盘格）。
         
 - **主要参数:** CA_WIDTH, RULE_NUMBER, ITERATIONS, GRID_DIM。
-    
 
 ---
 
-## 3. **visual_reasoning/generate_triangle_coords_to_tessellation.py**
+## 11. **cellular_automata/generate_cellular_automata_inverse_rule.py**
 
-- **用途:** 这是一个高级的、混合了符号指令和几何生成规则的推理任务。
+- **用途:** 这个实验是检验模型**逆向推理**（Inverse Reasoning）能力的第一个尝试。我的问题是：如果模型能从规则正向推出结果，那么它能否从“输入-输出”对中反向推断出其背后的规则？
     
-- **逻辑:** 和generate_coords_to_triangle.py一样，输入是一个48-bit的二进制串，定义了一个基准三角形。和generate_triangle_to_tessellation.py一样，输出是基于这个基准三角形的完美平面镶嵌图案。**关键的修改**是，在输出的镶嵌图案中，由输入直接定义的那个基准三角形会被染成特殊的颜色（如黑色），而其他的三角形则依然是绿色和红色。这为模型提供了必要的“接地”（grounding）信息。
+- **逻辑:** 我首先随机选择一个元胞自动机规则（从0到255）。然后，**构造一个包含所有8种3位邻域模式的初始状态（使用De Bruijn序列）**，应用这个规则演化固定的几步，得到最终状态。这种特殊的初始状态设计确保了规则可以被唯一推断。我将初始状态和最终状态拼接起来作为模型的输入，而将那个被隐藏的8-bit规则作为模型的预测目标。
     
 - **I/O格式:**
     
-    - 输入: 48位二进制字符串。
+    - 输入: CA_WIDTH * 2长度的二进制字符串 (initial_state + final_state)。
         
-    - 输出: 256x256的RGB图像 (镶嵌图案)。
+    - 输出: 8位二进制多标签向量 (代表被预测的规则)。
         
-- **主要参数:** NUM_SAMPLES, IMG_SIZE。
-    
+- **主要参数:** CA_WIDTH, NUM_SAMPLES, ITERATION_LAYERS。
 
 ---
 
-## 4. **physics_simulation/generate_cube_rotation_matplotlib_deprecated.py**
+## 12. **cellular_automata/generate_cellular_automata_inverse_rule_and_steps.py**
+
+- **用途:** 这是在实现“唯一解”版本之前的一个早期版本，它同样旨在让模型学习预测规则和迭代次数。
+    
+- **逻辑:** 和最终的_unique版本一样，这个脚本也为每个样本随机选择规则和迭代次数来生成数据。然而，它缺少了对解的唯一性进行验证的步骤。这意味着数据集中可能存在一些模糊的样本，即多个（规则，步数）组合可能产生相同的输入-输出对。
+    
+- **I/O格式:**
+    
+    - 输入: CA_WIDTH * 2长度的二进制字符串。
+        
+    - 输出: 8 + ITERATION_BITS长度的二进制多标签向量。
+        
+- **主要参数:** CA_WIDTH, NUM_SAMPLES, MAX_ITERATION_LAYERS。
+
+---
+
+## 13. **cellular_automata/generate_cellular_automata_inverse_rule_and_steps_unique.py**
+
+- **用途:** 这是对逆向推理任务的一次重大升级。我不仅要求模型推断出**什么**规则被应用了，还要推断出它被**应用了多少次**。
+    
+- **逻辑:** 这个脚本继承了上一个实验的思想，但增加了复杂性。在生成每个样本时，我随机选择一个规则和**一个随机的迭代次数**。在得到输入/输出对后，我引入了一个至关重要的**唯一性验证步骤**：我会暴力检查是否存在任何其他的规则/迭代次数组合，也能从同一个初始状态得到完全相同的最终状态。我只保留那些解是唯一的样本，从而为模型提供了一个无歧义的学习目标。
+    
+- **I/O格式:**
+    
+    - 输入: CA_WIDTH * 2长度的二进制字符串。
+        
+    - 输出: 8 + ITERATION_BITS长度的二进制多标签向量，拼接了规则和迭代次数。
+        
+- **主要参数:** CA_WIDTH, NUM_SAMPLES, MAX_ITERATION_LAYERS。
+
+---
+
+## 14. **generate_cellular_automata_1d_perturbed.py**
+
+- **用途:** 该脚本旨在系统性地测试“神经雕刻”范式在面对不完美数据时的鲁棒性。通过向输入（模拟观测噪声）和输出（模拟标签噪声）中引入可控的随机扰动，它探索了模型性能从理想规则世界向嘈杂现实世界过渡的连续谱。
+    
+- **逻辑:** 脚本首先生成一个原始的元胞自动机初始状态。然后，它根据INPUT_PERTURBATION_RATE对这个原始状态进行随机翻转，得到最终的“输入”序列。接着，它基于未受扰动的原始状态，根据精确的元胞自动机规则演化EVOLUTION_LAYERS步，得到一个“正确”的输出序列。最后，它根据OUTPUT_PERTURBATION_RATE对这个正确的输出序列进行随机翻转，得到最终的“输出”标签。
+    
+- **I/O格式:**
+    
+    - 输入: 长度为LENGTH的0/1字符串。
+        
+    - 输出: 长度为LENGTH的0/1整数列表。
+        
+- **主要参数:** NUM_SAMPLES, LENGTH, EVOLUTION_LAYERS, INPUT_PERTURBATION_RATE, OUTPUT_PERTURBATION_RATE。
+
+---
+
+# E: 物理模拟 (Physics Simulation)
+
+## 1. **physics_simulation/generate_projectile_motion_simulation.py**
+
+- **用途:** 测试模型学习一个简单的动态物理过程的能力。这要求模型从初始条件（位置和速度向量）推断出整个时空轨迹。
+    
+- **逻辑:** 输入图像通过一个起始点和一条有向线段来编码小球的初始位置和速度向量（线段方向代表速度方向，颜色代表速度大小）。脚本内部的物理引擎会根据这些初始条件模拟出小球在重力场中的抛物线弹跳轨迹。输出图像则绘制了完整的轨迹。
+    
+- **I/O格式:**
+    
+    - 输入: IMG_SIZE x IMG_SIZE的RGB图像 (包含初始状态)。
+        
+    - 输出: IMG_SIZE x IMG_SIZE的RGB图像 (包含完整轨迹)。
+        
+- **主要参数:** NUM_SAMPLES_TRAIN, IMG_SIZE, GRAVITY, ELASTICITY_FACTOR。
+
+---
+
+## 2. **physics_simulation/generate_snell_refraction_simulation.py**
+
+- **用途:** 测试模型学习基础物理定律（斯涅尔折射定律）的能力。
+    
+- **逻辑:** 输入图像包含两种不同颜色的介质，以及一条射向它们分界面的入射光线。脚本根据斯涅尔定律（n1sin(θ1) = n2sin(θ2)）精确计算出折射光线的路径。模型的任务是根据输入图像，预测出正确的折射光线。
+    
+- **I/O格式:**
+    
+    - 输入: IMG_SIZE x IMG_SIZE的RGB图像 (包含两种介质和入射光)。
+        
+    - 输出: 与输入相同，但额外绘制了红色的折射光线。
+        
+- **主要参数:** IMG_SIZE, NUM_SAMPLES_TRAIN。
+
+---
+
+## 3. **physics_simulation/generate_snell_refraction_with_contextual_index.py**
+
+- **用途:** 测试模型学习基础物理定律（斯涅尔折射定律）的能力，并且要求模型能从图像的上下文信息（背景颜色）中推断出物理参数（折射率）。
+    
+- **逻辑:** 输入图像包含两种不同颜色的介质，以及一条射向它们分界面的入射光线。脚本根据斯涅尔定律精确计算出折射光线的路径。在此版本中，其中一种介质的颜色与它的折射率n2是函数关系。模型的任务是根据输入图像，预测出正确的折射光线。
+    
+- **I/O格式:**
+    
+    - 输入: IMG_SIZE x IMG_SIZE的RGB图像 (包含两种介质和入射光)。
+        
+    - 输出: 与输入相同，但额外绘制了红色的折射光线。
+        
+- **主要参数:** IMG_SIZE, NUM_SAMPLES_TRAIN。
+
+---
+
+## 4. **physics_simulation/generate_reaction_diffusion_deprecated.py**
+
+- **用途:** (探索性/已弃用) 该脚本用于模拟基于 **Gray-Scott 模型** 的反应-扩散系统，以生成复杂的、类似分形的“雪花”图案。它本质上属于连续物理场的模拟（涉及偏微分方程的离散化和浮点运算），而非简单的离散状态元胞自动机。
+    
+- **状态:** **已弃用**。虽然物理模拟逻辑正确，但此任务的输出是动态演化的结果，且对初始条件高度敏感，不符合范式中研究的“从一个明确输入到唯一确定性输出”的映射关系，因此被判定为“不合适”并放弃。此外，因其核心逻辑基于连续物理模拟，现已从元胞自动机分类移至物理模拟分类。
+    
+- **逻辑:** 脚本从一个或几个“晶核”开始，通过迭代模拟养分（Nutrient）和物质（Matter）两个连续场的扩散和反应（使用卷积计算拉普拉斯算子），逐步生成复杂的固态结构。
+
+---
+
+## 5. **physics_simulation/generate_cube_rotation_matplotlib_deprecated.py**
 
 - **用途:** (早期探索版本) 旨在测试模型从抽象的姿态参数（旋转角度）推理并渲染出三维物体正确视图的能力。
     
 - **逻辑:** 此脚本使用 matplotlib 的3D绘图引擎来渲染立方体。它直接在3D空间中构建和旋转对象。虽然功能上可行，但由于 matplotlib 对渲染层次的控制较为复杂，可能导致在某些角度下线框和填充面的遮挡关系出现非预期的视觉效果。
     
 - **状态:** **已弃用**。被基于 Pillow 的、渲染效果更可控的后续版本所取代。
-    
 
 ---
 
-## 5. **physics_simulation/generate_cube_rotation_pillow_v1.py**
+## 6. **physics_simulation/generate_cube_rotation_pillow_v1.py**
 
 - **用途:** (技术升级版本) 旨在测试模型从抽象的姿态参数推理并渲染出三维物体正确视图的能力，采用了更底层的、渲染效果更精确的技术路线。
     
 - **逻辑:** 此脚本是对此任务的一次重大技术重构。它放弃了高级的 matplotlib 库，转而使用更基础的 Pillow 库。脚本在内部手动实现了完整的3D到2D投影变换、基于向量叉乘的背面剔除（back-face culling）以及基于面平均深度的深度排序。这种方式提供了对渲染管线的完全控制，确保了所有角度下的遮挡关系和图层顺序都是物理正确的。
     
 - **状态:** 这是通往最终成功版本的关键一步，但缺少了“高亮顶点”这一重要的辅助策略。
-    
 
 ---
 
-## 6. **physics_simulation/generate_cube_rotation_pillow_with_anchor.py**
+## 7. **physics_simulation/generate_cube_rotation_pillow_with_anchor.py**
 
 - **用途:** (论文中使用的最终版本) 测试模型从抽象的姿态参数推理并渲染出三维物体正确视图的能力，并通过引入“视觉锚点”来辅助模型学习。
     
-- **逻辑:** 该脚本继承了 to_be_organized/physics_simulation/generate_cube_rotation_pillow_v1.py 中所有精确的、基于 Pillow 的手动渲染管线。在此基础上，它引入了一个**关键的创新**：在所有常规渲染步骤完成后，总是在一个固定的特殊顶点（如(1,1,1)角点）上绘制一个醒目的高亮标记（一个橙色圆点），无论该顶点在当前视角下是否被遮挡。这个“视觉锚点”为模型提供了一个恒定的参照，极大地帮助了模型解决旋转的内在对称性和模糊性问题，从而成功收敛。
+- **逻辑:** 该脚本继承了 physics_simulation/generate_cube_rotation_pillow_v1.py 中所有精确的、基于 Pillow 的手动渲染管线。在此基础上，它引入了一个**关键的创新**：在所有常规渲染步骤完成后，总是在一个固定的特殊顶点（如(1,1,1)角点）上绘制一个醒目的高亮标记（一个橙色圆点），无论该顶点在当前视角下是否被遮挡。这个“视觉锚点”为模型提供了一个恒定的参照，极大地帮助了模型解决旋转的内在对称性和模糊性问题，从而成功收敛。
     
 - **I/O格式:**
     
@@ -2309,58 +2097,20 @@
     - 输出: 256x256的RGB图像。
         
 - **主要参数:** NUM_SAMPLES, IMAGE_SIZE_PX, SPECIAL_VERTEX_INDEX。
-    
 
 ---
 
-## 7. **physics_simulation/generate_cube_rotation_pillow_wireframe.py**
+## 8. **physics_simulation/generate_cube_rotation_pillow_wireframe.py**
 
 - **用途:** (变体实验版本) 测试模型在更稀疏的视觉输入下，能否仅通过线框和锚点信息来学习3D旋转。
     
-- **逻辑:** 该脚本是 to_be_organized/physics_simulation/generate_cube_rotation_pillow_with_anchor.py 的一个**消融（ablation）版本**。它保留了所有核心逻辑，包括精确的线框绘制和特殊顶点的高亮，但**移除了所有面的颜色填充**。这创建了一个“线框模式”的数据集，旨在探索模型在缺少表面信息的情况下，是否依然能够理解和重建三维结构。
+- **逻辑:** 该脚本是 physics_simulation/generate_cube_rotation_pillow_with_anchor.py 的一个**消融（ablation）版本**。它保留了所有核心逻辑，包括精确的线框绘制和特殊顶点的高亮，但**移除了所有面的颜色填充**。这创建了一个“线框模式”的数据集，旨在探索模型在缺少表面信息的情况下，是否依然能够理解和重建三维结构。
     
 - **状态:** 这是一个用于深入分析的变体实验。
-    
 
 ---
 
-### 8. cellular_automata/generate_cellular_automata_image_and_label.py
-
-- **用途:** 这是一个通用的数据集生成器，为元胞自动机任务同时创建**图像到图像 (Img2Img)** 和**图像到符号 (Img2Label)** 两种格式的数据。
-    
-- **逻辑:** 脚本首先生成一个随机的36位二进制串作为初始状态，并将其渲染成一个6x6的网格图（**输入图像**）。接着，它在内部根据指定规则（如Rule 110）对初始状态进行演化，得到最终状态。最后，将最终状态同时渲染成一个6x6的网格图（**目标图像**）并保存其36位二进制串（**目标标签**）。
-    
-- **I/O格式:**
-    
-    - 输出1 (Img2Img): 240x240 输入图像 -> 240x240 目标图像。
-        
-    - 输出2 (Img2Label): 240x240 输入图像 -> 36位二进制标签。
-        
-- **主要参数:** CA_WIDTH, RULE_NUMBER, ITERATIONS, NUM_SAMPLES, GRID_DIM。
-    
-
----
-
-### 9. algorithms/generate_trapping_rain_water_image_to_symbol.py
-
-- **用途:** 为经典的“接雨水”算法问题生成**图像到符号 (Image-to-Vector)** 格式的数据集。
-    
-- **逻辑:** 脚本首先生成一个随机的柱子高度数组（如12根柱子，每根高度用3-bit表示）。然后，它将这个总长为36-bit的输入信息渲染成一个6x6的黑白网格图。脚本内部使用双指针算法精确计算出每根柱子能接到的雨水量，并将这个同样为36-bit的结果作为输出标签。
-    
-- **I/O格式:**
-    
-    - 输入: 240x240的RGB图像（代表柱子高度的黑白网格）。
-        
-    - 输出: 36位二进制字符串（代表每个位置的雨水量）。
-        
-- **主要参数:** NUM_COLUMNS_N, BITS_PER_HEIGHT, DATASET_SIZE, GRID_SIZE。
-
-
----
-
-# F: 物理模拟 (Physics Simulation - Image Paradigm)
-
-## 1. **physics_simulation/generate_catenary_curve_simulation_deprecated.py**
+## 9. **physics_simulation/generate_catenary_curve_simulation_deprecated.py**
 
 - **用途:** 这是我早期探索悬链线问题的脚本，旨在测试模型学习由物理定律确定的非线性曲线的能力。
     
@@ -2374,10 +2124,9 @@
         
 - **主要参数:** NUM_SAMPLES_TRAIN, IMG_SIZE。
 
-
 ---
 
-## 2. **physics_simulation/generate_catenary_curve_from_points.py**
+## 10. **physics_simulation/generate_catenary_curve_from_points.py**
 
 - **用途:** 测试模型学习由物理定律（最小势能原理）唯一确定的非线性曲线（悬链线）的能力。
     
@@ -2390,11 +2139,10 @@
     - **输出:** IMG_SIZE x IMG_SIZE的RGB图像 (三个点+悬链线)。
         
 - **主要参数:** NUM_SAMPLES_TRAIN, IMG_SIZE。
-    
 
 ---
 
-## 3. **physics_simulation/generate_orbital_path_from_initial_state.py**
+## 11. **physics_simulation/generate_orbital_path_from_initial_state.py**
 
 - **用途:** 测试模型学习更复杂物理定律（开普勒定律/万有引力定律）的能力。
     
@@ -2407,11 +2155,10 @@
     - **输出:** IMG_SIZE x IMG_SIZE的RGB图像 (初始状态+完整轨道)。
         
 - **主要参数:** NUM_SAMPLES, IMG_SIZE, G (引力常数)。
-    
 
 ---
 
-# G: ARC-AGI 探索 (ARC-AGI Exploration)
+# F: ARC-AGI探索 (ARC-AGI Exploration)
 
 ## 1. **arc_agi/generate_arc_contextual_color_swap.py**
 
@@ -2422,7 +2169,6 @@
 - **I/O格式:** 图像到图像 (Image-to-Image)。
     
 - **主要参数:** GRID_DIM, NUM_SAMPLES。
-    
 
 ---
 
@@ -2435,7 +2181,6 @@
 - **I/O格式:** 图像到图像 (Image-to-Image)。
     
 - **主要参数:** GRID_DIM, NUM_SAMPLES。
-    
 
 ---
 
@@ -2448,7 +2193,6 @@
 - **I/O格式:** 图像到图像 (Image-to-Image)。
     
 - **主要参数:** GRID_DIM_IN, GRID_DIM_OUT, NUM_SAMPLES。
-    
 
 ---
 
@@ -2461,7 +2205,6 @@
 - **I/O格式:** 图像到图像 (Image-to-Image)。
     
 - **主要参数:** GRID_DIM, NUM_SAMPLES。
-    
 
 ---
 
@@ -2474,7 +2217,6 @@
 - **I/O格式:** 图像到图像 (Image-to-Image)。
     
 - **主要参数:** GRID_DIM, NUM_SAMPLES。
-    
 
 ---
 
@@ -2487,7 +2229,6 @@
 - **I/O格式:** 图像到图像 (Image-to-Image)。
     
 - **主要参数:** GRID_DIM, NUM_SAMPLES。
-    
 
 ---
 
@@ -2500,7 +2241,6 @@
 - **I/O格式:** 图像到图像 (Image-to-Image)。
     
 - **主要参数:** GRID_DIM, NUM_SAMPLES。
-    
 
 ---
 
@@ -2513,7 +2253,6 @@
 - **I/O格式:** 图像到图像 (Image-to-Image)。
     
 - **主要参数:** GRID_DIM_IN, GRID_DIM_OUT, NUM_SAMPLES。
-    
 
 ---
 
@@ -2527,7 +2266,6 @@
     
 - **主要参数:** GRID_DIM, NUM_SAMPLES。
 
-
 ---
 
 ## 10. **arc_agi/generate_arc_layered_fill.py**
@@ -2539,7 +2277,6 @@
 - **I/O格式:** 图像到图像 (Image-to-Image)。
     
 - **主要参数:** GRID_DIM, NUM_SAMPLES。
-    
 
 ---
 
@@ -2552,7 +2289,6 @@
 - **I/O格式:** 图像到图像。
     
 - **主要参数:** GRID_DIM, NUM_SAMPLES。
-    
 
 ---
 
@@ -2571,7 +2307,6 @@
 - **I/O格式:** 图像到图像。
     
 - **主要参数:** GRID_DIM, NUM_SAMPLES。
-    
 
 ---
 
@@ -2584,7 +2319,6 @@
 - **I/O格式:** 图像到图像。
     
 - **主要参数:** GRID_DIM, NUM_SAMPLES。
-    
 
 ---
 
@@ -2597,7 +2331,6 @@
 - **I/O格式:** 图像到图像。
     
 - **主要参数:** GRID_DIM, NUM_SAMPLES。
-    
 
 ---
 
@@ -2616,7 +2349,6 @@
 - **I/O格式:** 图像到图像。
     
 - **主要参数:** GRID_DIM, NUM_SAMPLES。
-    
 
 ---
 
@@ -2629,7 +2361,6 @@
 - **I/O格式:** 图像到图像。
     
 - **主要参数:** GRID_DIM, NUM_SAMPLES, num_source_pieces。
-    
 
 ---
 
@@ -2642,7 +2373,6 @@
 - **I/O格式:** 图像到图像。
     
 - **主要参数:** GRID_DIM, NUM_SAMPLES, num_source_pieces。
-    
 
 ---
 
@@ -2656,7 +2386,6 @@
     
 - **主要参数:** GRID_DIM, NUM_SAMPLES。
 
-
 ---
 
 ## 19. **arc_agi/generate_arc_reflection_simulation_deprecated.py**
@@ -2668,75 +2397,84 @@
 - **I/O格式:** 图像到图像。
     
 - **主要参数:** 不适用。
-    
 
 ---
 
-# H: 逆推规则 (Inverse Rule Inference)
+# G: 中国象棋 (Chinese Chess)
 
-## 1. **cellular_automata/generate_cellular_automata_inverse_rule.py**
+## 1. **chinese_chess/generate_chess_positions_by_random_moves.py**
 
-- **用途:** 这个实验是检验模型**逆向推理**（Inverse Reasoning）能力的第一个尝试。我的问题是：如果模型能从规则正向推出结果，那么它能否从“输入-输出”对中反向推断出其背后的规则？
+- **用途:** 通过模拟一个完全随机的玩家下棋的过程，快速生成大量看起来合理的、合法的中国象棋局面。
     
-- **逻辑:** 我首先随机选择一个元胞自动机规则（从0到255）。然后，**构造一个包含所有8种3位邻域模式的初始状态（使用De Bruijn序列）**，应用这个规则演化固定的几步，得到最终状态。这种特殊的初始状态设计确保了规则可以被唯一推断。我将初始状态和最终状态拼接起来作为模型的输入，而将那个被隐藏的8-bit规则作为模型的预测目标。
+- **逻辑:** 脚本从标准的中国象棋起始局面开始。在一个循环中，它会获取当前局面下所有合法的走法，然后随机选择其中一步并执行。这个过程会重复max_steps次，最终得到一个随机但合法的局面。
     
 - **I/O格式:**
     
-    - 输入: CA_WIDTH * 2长度的二进制字符串 (initial_state + final_state)。
+    - 输出: FEN格式的局面字符串。
         
-    - 输出: 8位二进制多标签向量 (代表被预测的规则)。
-        
-- **主要参数:** CA_WIDTH, NUM_SAMPLES, ITERATION_LAYERS。
-    
+- **主要参数:** max_steps, max_capture。
 
 ---
 
-## 2. **cellular_automata/generate_cellular_automata_inverse_rule_and_steps.py**
+## 2. **chinese_chess/generate_chess_positions_by_random_placement.py**
 
-- **用途:** 这是在实现“唯一解”版本之前的一个早期版本，它同样旨在让模型学习预测规则和迭代次数。
+- **用途:** 通过在棋盘上随机放置棋子（而非模拟下棋）来生成大量非典型的、但大部分合法的中国象棋局面，用于对模型的鲁棒性进行压力测试。
     
-- **逻辑:** 和最终的_unique版本一样，这个脚本也为每个样本随机选择规则和迭代次数来生成数据。然而，它缺少了对解的唯一性进行验证的步骤。这意味着数据集中可能存在一些模糊的样本，即多个（规则，步数）组合可能产生相同的输入-输出对。
+- **逻辑:** 该脚本不是通过下棋来生成局面，而是直接在棋盘上随机地、遵循棋子位置约束和将帅不照面规则地放置棋子，从而创造出大量在真实对局中极少出现但语法合法的局面。
     
 - **I/O格式:**
     
-    - 输入: CA_WIDTH * 2长度的二进制字符串。
+    - 输出: FEN格式的局面字符串。
         
-    - 输出: 8 + ITERATION_BITS长度的二进制多标签向量。
-        
-- **主要参数:** CA_WIDTH, NUM_SAMPLES, MAX_ITERATION_LAYERS。
-    
+- **主要参数:** num_fens。
 
 ---
 
-## 3. **cellular_automata/generate_cellular_automata_inverse_rule_and_steps_unique.py**
+## 3. **chinese_chess/generate_chess_positions_from_engine_self_play.py**
 
-- **用途:** 这是对逆向推理任务的一次重大升级。我不仅要求模型推断出**什么**规则被应用了，还要推断出它被**应用了多少次**。
+- **用途:** 生成大量高质量、符合实战逻辑的中国象棋局面（FEN格式），作为训练棋类AI的基础数据源。
     
-- **逻辑:** 这个脚本继承了上一个实验的思想，但增加了复杂性。在生成每个样本时，我随机选择一个规则和**一个随机的迭代次数**。在得到输入/输出对后，我引入了一个至关重要的**唯一性验证步骤**：我会暴力检查是否存在任何其他的规则/迭代次数组合，也能从同一个初始状态得到完全相同的最终状态。我只保留那些解是唯一的样本，从而为模型提供了一个无歧义的学习目标。
+- **逻辑:** 通过子进程调用一个强大的第三方象棋引擎（PikaFish），模拟数万盘高水平的自对弈棋局。在模拟过程中，记录下棋局每一步的FEN表示，从而构建一个庞大且真实的局面数据库。
     
 - **I/O格式:**
     
-    - 输入: CA_WIDTH * 2长度的二进制字符串。
+    - 输出: 一个.txt文件，每行包含一个完整的FEN字符串。
         
-    - 输出: 8 + ITERATION_BITS长度的二进制多标签向量，拼接了规则和迭代次数。
-        
-- **主要参数:** CA_WIDTH, NUM_SAMPLES, MAX_ITERATION_LAYERS。
-
+- **主要参数:** num_games, max_steps, depth。
 
 ---
 
-## **I: 鲁棒性测试（Robustness Analysis）**
+## 4. **chinese_chess/generate_preprocess_legal_moves.py**
 
-### 1. **cellular_automata/generate_cellular_automata_1d_perturbed.py**
-
-- **用途:** 该脚本旨在系统性地测试“神经雕刻”范式在面对不完美数据时的鲁棒性。通过向输入（模拟观测噪声）和输出（模拟标签噪声）中引入可控的随机扰动，它探索了模型性能从理想规则世界向嘈杂现实世界过渡的连续谱。
+- **用途:** 这是一个数据预处理脚本，用于将FEN格式的局面数据集转换为模型可以直接学习的“合法走法预测”任务。
     
-- **逻辑:** 脚本首先生成一个原始的元胞自动机初始状态。然后，它根据INPUT_PERTURBATION_RATE对这个原始状态进行随机翻转，得到最终的“输入”序列。接着，它基于未受扰动的原始状态，根据精确的元胞自动机规则演化EVOLUTION_LAYERS步，得到一个“正确”的输出序列。最后，它根据OUTPUT_PERTURBATION_RATE对这个正确的输出序列进行随机翻转，得到最终的“输出”标签。
+- **逻辑:** 读取一个FEN文件，对于每一个局面，使用cchess库解析并生成所有合法走法。然后，根据一个全局的映射文件，将每个具体的走法（如 'h2e2'）转换成一个唯一的整数ID。
     
 - **I/O格式:**
     
-    - 输入: 长度为LENGTH的0/1字符串。
+    - 输入: .txt文件，每行一个FEN。
         
-    - 输出: 长度为LENGTH的0/1整数列表。
+    - 输出: .jsonl文件，每个JSON对象包含fen和其对应的legal_move_ids列表。
         
-- **主要参数:** NUM_SAMPLES, LENGTH, EVOLUTION_LAYERS, INPUT_PERTURBATION_RATE, OUTPUT_PERTURBATION_RATE。
+- **主要参数:** fen_file, output_file。
+
+---
+
+## 5. **chinese_chess/generate_chess_resolve_check_task.py**
+
+- **用途:** 生成一个专门针对中国象棋中“解将”（Resolving a Check）这一特定战术场景的数据集。这个任务要求模型在处于被将军的状态下，找出所有能够合法解除将军的走法。
+    
+- **逻辑:** 脚本首先从一个庞大的随机局面库中进行筛选，只保留那些满足“正被将军，但并非无子可走（非将死）”条件的局面。然后，对于每一个筛选出的局面，它会计算所有能解除将军的合法走法，并将这些走法的ID保存下来。
+    
+- **I/O格式:**
+    
+    - 输出: 一个.jsonl文件。每个JSON对象包含fen（局面）和legal_move_ids（一个整数列表，代表所有合法的解将走法）。
+        
+- **主要参数:** fen_file, output_file。
+
+---
+
+
+# 训练脚本和工具脚本 (Training Scripts and Tools)
+
+---
