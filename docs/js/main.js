@@ -1,6 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
     let currentLang = 'zh'; // 'zh' or 'en'
-    let currentCategoryIndex = 0; // 当前选中的分类索引
+    let currentTopCategory = 'datasetScripts'; // 'datasetScripts', 'toolScripts', 'trainingScripts'
+    let currentSubCategoryIndex = 0; // 用于数据集脚本的子分类索引
+    
     const langToggleBtn = document.getElementById('lang-toggle');
     const categoryNav = document.getElementById('category-nav');
     const scriptsList = document.getElementById('scripts-list');
@@ -25,56 +27,120 @@ document.addEventListener('DOMContentLoaded', () => {
         categoryNav.innerHTML = '';
         scriptsList.innerHTML = '';
 
-        // 过滤掉没有脚本的空分类
-        const filteredDocsData = docsData.filter(category => category.scripts && category.scripts.length > 0);
-
-        // Render Categories Navigation
-        const navUl = document.createElement('ul');
-        filteredDocsData.forEach((category, index) => {
+        // ========== 渲染顶层分类导航 (三大类) ==========
+        const topNavContainer = document.createElement('div');
+        topNavContainer.className = 'top-nav-container';
+        
+        const topNavUl = document.createElement('ul');
+        topNavUl.className = 'top-nav';
+        
+        const topCategories = [
+            { key: 'datasetScripts', name_zh: docsData.datasetScripts.name_zh, name_en: docsData.datasetScripts.name_en },
+            { key: 'toolScripts', name_zh: docsData.toolScripts.name_zh, name_en: docsData.toolScripts.name_en },
+            { key: 'trainingScripts', name_zh: docsData.trainingScripts.name_zh, name_en: docsData.trainingScripts.name_en }
+        ];
+        
+        topCategories.forEach(cat => {
             const li = document.createElement('li');
             const a = document.createElement('a');
             a.href = '#';
-            a.textContent = currentLang === 'zh' ? category.category_zh : category.category_en;
+            a.textContent = currentLang === 'zh' ? cat.name_zh : cat.name_en;
+            a.className = 'top-nav-link';
             
-            // 添加点击事件来切换分类
-            a.addEventListener('click', (e) => {
-                e.preventDefault();
-                currentCategoryIndex = index;
-                renderScriptsContent(); // 只重新渲染脚本内容
-                updateActiveNav(); // 更新导航栏高亮
-            });
-            
-            // 如果是当前选中的分类，添加active类
-            if (index === currentCategoryIndex) {
+            if (cat.key === currentTopCategory) {
                 a.classList.add('active');
             }
             
+            a.addEventListener('click', (e) => {
+                e.preventDefault();
+                currentTopCategory = cat.key;
+                currentSubCategoryIndex = 0; // 重置子分类索引
+                render();
+            });
+            
             li.appendChild(a);
-            navUl.appendChild(li);
+            topNavUl.appendChild(li);
         });
-        categoryNav.appendChild(navUl);
+        
+        topNavContainer.appendChild(topNavUl);
+        categoryNav.appendChild(topNavContainer);
+
+        // ========== 渲染子分类导航 (仅数据集脚本有子分类) ==========
+        if (currentTopCategory === 'datasetScripts') {
+            const subNavContainer = document.createElement('div');
+            subNavContainer.className = 'sub-nav-container';
+            
+            const subNavUl = document.createElement('ul');
+            subNavUl.className = 'sub-nav';
+            
+            const categories = docsData.datasetScripts.categories;
+            
+            categories.forEach((category, index) => {
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = '#';
+                a.textContent = currentLang === 'zh' ? category.category_zh : category.category_en;
+                a.className = 'sub-nav-link';
+                
+                if (index === currentSubCategoryIndex) {
+                    a.classList.add('active');
+                }
+                
+                a.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    currentSubCategoryIndex = index;
+                    renderScriptsContent();
+                    updateSubNav();
+                });
+                
+                li.appendChild(a);
+                subNavUl.appendChild(li);
+            });
+            
+            subNavContainer.appendChild(subNavUl);
+            categoryNav.appendChild(subNavContainer);
+        }
 
         // 渲染脚本内容
         renderScriptsContent();
 
         function renderScriptsContent() {
-            // 清除脚本内容
             scriptsList.innerHTML = '';
-
-            // 只渲染当前选中的分类
-            const category = filteredDocsData[currentCategoryIndex];
-            if (!category) return;
+            
+            let scripts = [];
+            let sectionTitle = '';
+            
+            if (currentTopCategory === 'datasetScripts') {
+                const category = docsData.datasetScripts.categories[currentSubCategoryIndex];
+                if (category) {
+                    scripts = category.scripts;
+                    sectionTitle = currentLang === 'zh' ? category.category_zh : category.category_en;
+                }
+            } else if (currentTopCategory === 'toolScripts') {
+                scripts = docsData.toolScripts.scripts;
+                sectionTitle = currentLang === 'zh' ? docsData.toolScripts.name_zh : docsData.toolScripts.name_en;
+            } else if (currentTopCategory === 'trainingScripts') {
+                scripts = docsData.trainingScripts.scripts;
+                sectionTitle = currentLang === 'zh' ? docsData.trainingScripts.name_zh : docsData.trainingScripts.name_en;
+            }
+            
+            if (!scripts || scripts.length === 0) {
+                const emptyMsg = document.createElement('p');
+                emptyMsg.className = 'empty-message';
+                emptyMsg.textContent = currentLang === 'zh' ? '暂无脚本' : 'No scripts available';
+                scriptsList.appendChild(emptyMsg);
+                return;
+            }
 
             const section = document.createElement('section');
-            section.id = `cat-${currentCategoryIndex}`;
             section.className = 'category-section';
 
             const title = document.createElement('h2');
             title.className = 'category-title';
-            title.textContent = currentLang === 'zh' ? category.category_zh : category.category_en;
+            title.textContent = sectionTitle;
             section.appendChild(title);
 
-            category.scripts.forEach(script => {
+            scripts.forEach(script => {
                 const card = document.createElement('div');
                 card.className = 'script-card';
 
@@ -100,7 +166,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 details.className = 'script-details';
                 // Use marked.js to render markdown content
                 const rawDetails = currentLang === 'zh' ? script.details_zh : script.details_en;
-                details.innerHTML = marked.parse(rawDetails);
+                if (rawDetails) {
+                    details.innerHTML = marked.parse(rawDetails);
+                }
 
                 // Expand/Collapse Logic
                 expandBtn.addEventListener('click', () => {
@@ -123,11 +191,10 @@ document.addEventListener('DOMContentLoaded', () => {
             scriptsList.appendChild(section);
         }
 
-        function updateActiveNav() {
-            // 更新导航栏的高亮状态
-            const navLinks = categoryNav.querySelectorAll('a');
-            navLinks.forEach((link, index) => {
-                if (index === currentCategoryIndex) {
+        function updateSubNav() {
+            const subNavLinks = categoryNav.querySelectorAll('.sub-nav-link');
+            subNavLinks.forEach((link, index) => {
+                if (index === currentSubCategoryIndex) {
                     link.classList.add('active');
                 } else {
                     link.classList.remove('active');
