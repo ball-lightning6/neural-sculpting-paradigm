@@ -788,6 +788,22 @@
 
 ---
 
+## 49. **symbolic_math_logic/generate_add_binary_explainable.py**
+
+- **用途:** 测试模型是否能学会二进制加法的内部机制（进位传播）。这是一个可解释性实验，要求模型不仅输出结果，还要输出每一位的进位状态。
+    
+- **逻辑:** 模拟逐位二进制加法。输入是两个 N 位二进制数。输出包含两部分：一是每一位的无进位和（XOR结果），二是每一位的进位输入（Carry-in）。这迫使模型显式地表示出进位链。
+    
+- **I/O格式:**
+    
+    - 输入: N * 2 长度的二进制字符串。
+        
+    - 输出: 包含 `output` (2*N位，前N位为当前位结果，后N位为进位) 和 `sum_output` (N+1位最终和) 的JSON对象。
+        
+- **主要参数:** NUM_BITS, NUM_SAMPLES。
+
+---
+
 # B: 算法学习 (Algorithm Learning)
 
 ## 1. **algorithms/generate_sort_integers.py**
@@ -2673,5 +2689,47 @@
     - 自动生成临时文件列表，避免命令行长度限制
     - 支持错误处理和进度提示
     - 自动清理临时文件
+
+---
+
+## 3. **utils/analyze_ca_inverse_ambiguity.py**
+
+- **用途:** 这是一个**蒙特卡洛模拟分析工具**，用于定量估算一维元胞自动机（CA）逆向工程任务中的**歧义概率**——即不同的(规则, 演化层数)组合产生相同输出的概率。
+
+- **研究背景:** 该工具支撑了论文中关于"唯一性验证"必要性的论述。在 `cellular_automata/generate_cellular_automata_inverse_rule_and_steps_unique.py` 脚本中，我们会过滤掉那些解不唯一的样本。本工具通过大规模采样定量估算了这种歧义发生的概率，为实验设计提供理论依据。
+
+- **核心算法:**
+    - 对每个随机初始状态，遍历256种规则 × 4层深度 = 1024种组合
+    - 统计产生相同输出的组合数（即"碰撞"）
+    - 通过20万次采样估算平均歧义概率
+    - 使用迭代优化技巧，每个规则只需4次CA演化（而非16次）
+
+- **使用方法:**
+    ```bash
+    # 默认参数运行（20万采样，30位宽度）
+    python utils/analyze_ca_inverse_ambiguity.py
+    
+    # 自定义参数
+    python utils/analyze_ca_inverse_ambiguity.py --samples 100000 --length 36
+    
+    # 静默模式（仅输出最终结果）
+    python utils/analyze_ca_inverse_ambiguity.py --quiet
+    ```
+
+- **输出示例:**
+    ```
+    =================================================================
+    1D Cellular Automata Inverse Engineering Ambiguity Simulation
+    =================================================================
+    Parameters: length=30, samples=200,000
+    ...
+    **Estimated ambiguity probability**: 0.0000009530 (0.00009530%)
+    95% Confidence Interval: [0.0000008912, 0.0000010148]
+    ```
+
+- **主要参数:**
+    - `--samples`: 采样数量（默认200000）
+    - `--length`: CA状态宽度（默认30位）
+    - `--quiet`: 静默模式
 
 ---

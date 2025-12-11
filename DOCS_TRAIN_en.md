@@ -394,6 +394,31 @@ This script **visualizes the per-bit learning dynamics** of a neural network tra
 
 ---
 
+### 16. training_scripts/train_mlp_probe_add_binary.py
+
+**▶︎ Brief Description**
+This script is used for a **Linear Probe experiment on the binary addition task**. It verifies whether the model's hidden layers spontaneously encode intermediate carry information after learning to output the final sum. This is a supplementary experiment to the "Research on Converged Neural Networks" section in the paper.
+
+**▶︎ Core Architecture**
+
+- **MLPBody**: The core hidden layer part, responsible for feature extraction.
+- **ExplainableMLP**: The complete MLP model, containing Body and Head.
+- **Multi-stage Training**:
+    - **train_sum**: Phase 1, train the model to output only the final addition result.
+    - **train_probe**: Phase 2, freeze Body weights, train only a new Head to output interpretability labels (carry and result of each bit).
+
+**▶︎ How to Configure and Use**
+
+1. **Prepare Data**: Use `symbolic_math_logic/generate_add_binary_explainable.py` to generate the dataset.
+2. **Modify Configuration**: Adjust parameters like `DATASET_PATH`, `NUM_BITS`, `TASK_MODE` in the `Config` class.
+3. **Run Script**:
+    ```bash
+    python training_scripts/train_mlp_probe_add_binary.py
+    ```
+4. **Output**: Training logs and model weights are saved in `OUTPUT_DIR`.
+
+---
+
 ### 1. eval_hanoi.py
 
 **▶︎ Brief Description**

@@ -788,6 +788,22 @@
 
 ---
 
+## 49. **symbolic_math_logic/generate_add_binary_explainable.py**
+
+- **Purpose:** Tests whether the model can learn the internal mechanism (carry propagation) of binary addition. This is an interpretability experiment that requires the model to output not only the result but also the carry status of each bit.
+    
+- **Logic:** Simulates bitwise binary addition. Input is two N-bit binary numbers. Output contains two parts: one is the carry-free sum (XOR result) of each bit, and the other is the carry-in of each bit. This forces the model to explicitly represent the carry chain.
+    
+- **I/O Format:**
+    
+    - Input: N * 2 length binary string.
+        
+    - Output: JSON object containing `output` (2*N bits, first N bits are current bit result, last N bits are carry) and `sum_output` (N+1 bits final sum).
+        
+- **Main Parameters:** NUM_BITS, NUM_SAMPLES.
+
+---
+
 # B: Algorithm Learning
 
 ## 1. **algorithms/generate_sort_integers.py**
@@ -2674,3 +2690,46 @@
     - Automatically cleans up temporary files
 
 ---
+
+## 3. **utils/analyze_ca_inverse_ambiguity.py**
+
+- **Purpose:** This is a **Monte Carlo simulation analysis tool** for quantitatively estimating the **ambiguity probability** in 1D cellular automata (CA) inverse engineering tasks—the probability that different (rule, evolution layers) combinations produce identical outputs.
+
+- **Research Background:** This tool supports the discussion on the necessity of "uniqueness verification" in the paper. In the `cellular_automata/generate_cellular_automata_inverse_rule_and_steps_unique.py` script, we filter out samples with non-unique solutions. This tool quantitatively estimates the probability of such ambiguity through large-scale sampling, providing theoretical basis for experiment design.
+
+- **Core Algorithm:**
+    - For each random initial state, enumerate 256 rules × 4 layer depths = 1024 combinations
+    - Count combinations producing identical outputs (i.e., "collisions")
+    - Estimate average ambiguity probability through 200,000 samples
+    - Uses iterative optimization: only 4 CA evolutions per rule (instead of 16)
+
+- **Usage:**
+    ```bash
+    # Run with default parameters (200K samples, 30-bit width)
+    python utils/analyze_ca_inverse_ambiguity.py
+    
+    # Custom parameters
+    python utils/analyze_ca_inverse_ambiguity.py --samples 100000 --length 36
+    
+    # Quiet mode (only output final result)
+    python utils/analyze_ca_inverse_ambiguity.py --quiet
+    ```
+
+- **Output Example:**
+    ```
+    =================================================================
+    1D Cellular Automata Inverse Engineering Ambiguity Simulation
+    =================================================================
+    Parameters: length=30, samples=200,000
+    ...
+    **Estimated ambiguity probability**: 0.0000009530 (0.00009530%)
+    95% Confidence Interval: [0.0000008912, 0.0000010148]
+    ```
+
+- **Main Parameters:**
+    - `--samples`: Number of samples (default: 200000)
+    - `--length`: CA state width in bits (default: 30)
+    - `--quiet`: Quiet mode
+
+---
+

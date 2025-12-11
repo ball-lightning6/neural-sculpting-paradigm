@@ -527,7 +527,32 @@
 
 ---
 
-### 1. eval_hanoi.py
+### 16. training_scripts/train_mlp_probe_add_binary.py
+
+**▶︎ 简要说明**
+该脚本用于**针对二进制加法任务的线性探针（Linear Probe）实验**。它验证了模型在学会输出最终和之后，其隐藏层是否自发编码了中间的进位信息。这是对论文中“对已经收敛的神经网络的研究”的补充实验。
+
+**▶︎ 核心架构**
+
+- **MLPBody**: 核心隐藏层部分，负责提取特征。
+- **ExplainableMLP**: 完整的MLP模型，包含Body和Head。
+- **多阶段训练**:
+    - **train_sum**: 阶段一，只训练模型输出最终的加法结果。
+    - **train_probe**: 阶段二，冻结Body权重，只训练一个新的Head来输出可解释性标签（每一位的进位和结果）。
+
+**▶︎ 如何配置和使用**
+
+1. **准备数据**: 使用 `symbolic_math_logic/generate_add_binary_explainable.py` 生成数据集。
+2. **修改配置**: 在 `Config` 类中调整 `DATASET_PATH`, `NUM_BITS`, `TASK_MODE` 等参数。
+3. **运行脚本**:
+    ```bash
+    python training_scripts/train_mlp_probe_add_binary.py
+    ```
+4. **产出**: 训练日志和模型权重保存在 `OUTPUT_DIR` 中。
+
+---
+
+### 1. eval_hanoi.py
 
 **▶︎ 简要说明**  
 这是一个**验证工具**，而非训练脚本。它的功能是接收一个大语言模型（或其他来源）生成的汉诺塔问题解法字符串（如 "1>3;1>2;..."），并严格按照汉诺塔的游戏规则进行模拟，以判断该解法是否正确。
