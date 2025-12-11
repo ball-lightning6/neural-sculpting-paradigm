@@ -804,7 +804,59 @@
 
 ---
 
+## 50. **symbolic_math_logic/generate_add_quaternary_float_encoding.py**
+
+- **用途:** 测试MLP是否有能力解析实数并将其对应成编码的二进制，完成计算。事实证明它可以做到，说明在训练MLP时，可以将间隔一定距离的实数当作纯粹的符号使用。
+    
+- **逻辑:** 生成两个20位整数的加法任务。输入不直接使用0/1，而是采用“四进制浮点编码”（Quaternary Float Encoding），将每两位二进制（00, 01, 10, 11）映射为特定的浮点数（如 0.0, 5.5, 1.3, 10.0）。模型必须学会将这些连续的浮点数值映射回离散的二进制逻辑，并执行加法运算。
+    
+- **I/O格式:**
+    
+    - 输入: NUM_BITS / 2 长度的浮点数列表。
+        
+    - 输出: NUM_BITS + 1 长度的二进制多标签向量。
+        
+- **主要参数:** NUM_BITS_PER_ADDEND, DATASET_SIZE, QUATERNARY_MAP。
+
+---
+
+## 51. **symbolic_math_logic/generate_add_binary_masked_output.py**
+
+- **用途:** 测试模型在"条件输出"任务上的能力。模型不仅需要计算加法，还需要根据输入的掩码（Mask）动态决定只输出结果的哪几位。这类似于Attention机制，需要模型学会根据指令（Mask）来聚焦和路由信息。
+    
+- **逻辑:** 生成两个N位整数A和B，以及一个随机的二进制掩码Mask。模型需要计算 Sum = A + B，但只输出 Mask中为'1'的位置对应的Sum的值。例如，如果Sum是`10110`，Mask是`01010`，则只需输出`0`（第2位）和`1`（第4位）。
+    
+- **I/O格式:**
+    
+    - 输入: A(N-bit) + B(N-bit) + Mask(N+1-bit)。
+        
+    - 输出: 长度等于Mask中'1'的个数的二进制多标签向量。
+        
+- **主要参数:** BITS_PER_ADDEND, MASK_VISIBLE_BITS, NUM_SAMPLES。
+
+---
+
 # B: 算法学习 (Algorithm Learning)
+
+## 54. **algorithms/generate_bricks_falling.py**
+
+- **用途:** 解决 LeetCode 困难题 [803. Bricks Falling When Hit](https://leetcode.cn/problems/bricks-falling-when-hit/description/)。测试模型对物理稳定性和连通性的理解。砖块只有在与顶部直接相连或间接通过其他稳定砖块相连时才是稳定的，否则会掉落。
+    
+- **逻辑:** 
+    1.  随机生成一个初始网格并计算其稳定状态（移除悬空砖块）。
+    2.  在该稳定局面上选择一个砖块进行“击打”（移除）。
+    3.  使用并查集（Union-Find）重新计算击打后的稳定局面，所有不再与顶部连通的砖块都会消失。
+    4.  模型的任务是预测击打后的最终稳定局面。
+    
+- **I/O格式:**
+    
+    - 输入: 初始稳定网格(Flattened) + 击打位置(Row index binary) + 击打位置(Col index binary)。
+        
+    - 输出: 最终稳定网格(Flattened二进制向量)。
+        
+- **主要参数:** ROWS, COLS, NUM_SAMPLES。
+
+---
 
 ## 1. **algorithms/generate_sort_integers.py**
 
@@ -2733,3 +2785,67 @@
     - `--quiet`: 静默模式
 
 ---
+
+## 4. **chinese_chess/worker_logic.py**
+
+- **用途:** 这是一个核心的**引擎交互与任务调度模块**，支撑了从引擎到数据的桥梁建设。它既用于生成FEN局面，也用于计算走法的软标签。
+
+- **逻辑:** 
+    - **封装 Pikafish 引擎:** `PikaFishEngineFinal` 类封装了与 Pikafish 国际水平象棋引擎的 UCI 通信协议。它通过多进程安全的管道交互，发送 `go depth` 等指令，并健壮地解析引擎返回的 `bestmove` 和 `score` 信息。
+    - **确定性打破:** 为了生成多样化的数据，引擎初始化时会动态设置 Hash 大小，打破确定性。
+    - **多进程 Worker:** 
+        - `worker_label_generation`: 专为 `generate_soft_labels.py` 设计的 Worker 函数。它接收分配到的 FEN 块，启动独立的引擎进程，计算每个局面的 MultiPV（多候选）走法及其评分，生成软标签，并写入临时文件。
+
+- **关键特性:** 高效的多进程支持、健壮的 UCI 协议处理、支持 MultiPV 分数获取。
+
+---
+
+## 5. **chinese_chess/generate_soft_labels.py**
+
+- **用途:** 这是一个**知识蒸馏（Knowledge Distillation）**的数据生成脚本。它的目的是将强大的传统象棋引擎（Teacher）的知识，转移到一个适合神经网络（Student）学习的格式（软标签）。
+
+- **逻辑:**
+    - **大规模并行:** 使用 `multiprocessing.Pool` 将数百万个 FEN 局面分配给多个 CPU 核心。
+    - **软标签计算:** 对于每个局面，调用引擎计算 Top-K（例如 MultiPV=5）最佳走法的评分（CP Score）。
+    - **Softmax 归一化:** 将引擎的绝对分数（CP score）通过带温度（Temperature）的 Softmax 函数转换为概率分布。温度参数 `temperature` 控制分布的平滑程度：高温使分布更平滑（保留更多次优走法信息），低温使分布更尖锐（仅关注最佳走法）。
+    - **映射与保存:** 将走法字符串映射为模型词表的索引，最终保存为 JSONL 格式。
+
+- **I/O格式:**
+    - 输入: FEN 文件（每行一个局面） + `move2idx.json` (词表)。
+    - 输出: JSONL 文件，每行包含 `{"fen": "...", "label": [0.01, 0.95, ...]}`。
+
+- **主要参数:** `pikafish_engine_path`, `input_fen_file`, `engine_depth` (思考深度), `multipv_count` (候选数), `temperature`。
+
+---
+
+## 6. **training_scripts/train_chess_policy.py**
+
+- **用途:** 这是**策略网络（Policy Network）**的训练脚本。它训练一个 Transformer 模型，使其能够根据盘面（FEN）预测下一步的最佳走法概率分布。
+
+- **逻辑:**
+    - **Policy Transformer:** 定义了一个基于 Encoder-only Transformer（类似 BERT）的神经网络架构。
+        - **输入:** 将 FEN 字符串 Token 化。
+        - **输出:** 通过一个线性头（Policy Head）输出所有合法走法（Vocab 大小）的 Logits。
+    - **高效数据流:** 实现了 `NpzChunkDataset`，支持按块懒加载大规模 NPZ 格式的训练数据，大大降低内存占用。
+    - **训练目标:** 使用 Soft CrossEntropy（即 KL 散度）逼近引擎生成的软标签概率分布。这比单纯学习 One-hot 的“最佳走法”包含更多信息量。
+
+- **I/O格式:**
+    - 输入: 包含 `fens` 和 `labels` 数组的 .npz 文件目录。
+    - 输出: 训练好的模型权重 (`pytorch_model.bin`) 和配置。
+
+- **主要参数:** `train_data_dir`, `num_epochs`, `learning_rate`, `model_config`。
+
+---
+
+## 7. **chinese_chess/play_with_ai.py**
+
+- **用途:** 这是一个**人机对弈终端客户端**，用于测试和评估训练好的策略网络。
+
+- **逻辑:**
+    - **加载模型:** 自动加载最新的训练检查点。
+    - **局面编码:** 将当前棋盘状态（FEN）实时编码为模型输入张量。
+    - **策略采样:** 模型输出下一步所有走法的概率分布。脚本根据 `sampling_temperature` 对概率进行调整，并使用多项式采样（Multinomial Sampling）选择走法，从而实现多样化且高水平的下棋风格。
+    - **交互循环:** 提供简单的命令行界面，处理用户输入（UCI格式，如 `h2e2`）和 AI 走法的显示。
+
+- **交互方式:** 命令行输入。
+- **主要配置:** `model_dir`, `sampling_temperature`。

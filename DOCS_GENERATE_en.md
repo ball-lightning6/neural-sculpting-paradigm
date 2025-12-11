@@ -804,6 +804,38 @@
 
 ---
 
+## 50. **symbolic_math_logic/generate_add_quaternary_float_encoding.py**
+
+- **Purpose:** Tests if MLPs have the capability to parse real numbers and map them to encoded binary for calculation. This proves that real numbers with certain intervals can be treated as pure symbols when training MLPs.
+    
+- **Logic:** Generates addition tasks for two 20-bit integers. Input does not use 0/1 directly, but uses "Quaternary Float Encoding", mapping every two binary bits (00, 01, 10, 11) to specific floating-point numbers (e.g., 0.0, 5.5, 1.3, 10.0). The model must learn to map these continuous float values back to discrete binary logic and perform addition.
+    
+- **I/O Format:**
+    
+    - Input: List of floats of length NUM_BITS / 2.
+        
+    - Output: Binary multi-label vector of length NUM_BITS + 1.
+        
+- **Main Parameters:** NUM_BITS_PER_ADDEND, DATASET_SIZE, QUATERNARY_MAP.
+
+---
+
+## 51. **symbolic_math_logic/generate_add_binary_masked_output.py**
+
+- **Purpose:** Tests the model's ability on "conditional output" tasks. The model needs to not only calculate addition but also dynamically decide which bits of the result to output based on an input Mask. This resembles Attention mechanisms, requiring the model to learn to focus and route information based on instructions (Mask).
+    
+- **Logic:** Generates two N-bit integers A and B, and a random binary Mask. Model calculates Sum = A + B, but only outputs values of Sum corresponding to '1' positions in Mask. For example, if Sum is `10110` and Mask is `01010`, output `0` (2nd bit) and `1` (4th bit).
+    
+- **I/O Format:**
+    
+    - Input: A(N-bit) + B(N-bit) + Mask(N+1-bit).
+        
+    - Output: Binary multi-label vector with length equal to number of '1's in Mask.
+        
+- **Main Parameters:** BITS_PER_ADDEND, MASK_VISIBLE_BITS, NUM_SAMPLES.
+
+---
+
 # B: Algorithm Learning
 
 ## 1. **algorithms/generate_sort_integers.py**
@@ -1636,6 +1668,26 @@
     - Output: JSON object containing `final_answer` and `explain_dp`, `explain_stack`, `explain_tp`.
         
 - **Main Parameters:** NUM_COLUMNS_N, BITS_PER_HEIGHT.
+
+---
+
+## 54. **algorithms/generate_bricks_falling.py**
+
+- **Purpose:** Solves LeetCode Hard problem [803. Bricks Falling When Hit](https://leetcode.cn/problems/bricks-falling-when-hit/description/). Tests model's understanding of physical stability and connectivity. Bricks are stable only if connected to top directly or indirectly via other stable bricks.
+    
+- **Logic:** 
+    1. Randomly generate initial grid and calculate stable state (remove suspended bricks).
+    2. Choose a brick to "hit" (remove) on stable grid.
+    3. Use Union-Find to recalculate stable state after hit; bricks no longer connected to top disappear.
+    4. The model's task is to predict the final stable state after the hit.
+    
+- **I/O Format:**
+    
+    - Input: Initial stable grid (Flattened) + Hit row (binary) + Hit col (binary).
+        
+    - Output: Final stable grid (Flattened binary vector).
+        
+- **Main Parameters:** ROWS, COLS, NUM_SAMPLES.
 
 ---
 
@@ -2733,3 +2785,68 @@
 
 ---
 
+## 4. **chinese_chess/worker_logic.py**
+
+- **Purpose:** A core **engine interaction and task scheduling module**, bridging the gap between engine and data. It is used for both generating FEN positions and calculating soft labels for moves.
+
+- **Logic:** 
+    - **Encapsulate Pikafish Engine:** `PikaFishEngineFinal` class encapsulates the UCI communication protocol with the Pikafish international-level chess engine. It uses multiprocess-safe pipes to interact, sending instructions like `go depth` and robustly parsing `bestmove` and `score` information returned by the engine.
+    - **Breaking Determinism:** Dynamically sets Hash size at initialization to break determinism for generating diverse data.
+    - **Multiprocess Worker:** 
+        - `worker_label_generation`: A Worker function designed for `generate_soft_labels.py`. It receives assigned FEN chunks, starts independent engine processes, calculates MultiPV (multiple candidates) moves and their scores for each position, generates soft labels, and writes to temporary files.
+
+- **Key Features:** Efficient multiprocess support, robust UCI protocol handling, supports MultiPV score retrieval.
+
+---
+
+## 5. **chinese_chess/generate_soft_labels.py**
+
+- **Purpose:** This is a **Knowledge Distillation** data generation script. Its purpose is to transfer knowledge from a powerful traditional chess engine (Teacher) into a format (soft labels) suitable for neural network (Student) learning.
+
+- **Logic:**
+    - **Massive Parallelism:** Uses `multiprocessing.Pool` to distribute millions of FEN positions to multiple CPU cores.
+    - **Soft Label Calculation:** For each position, calls the engine to calculate scores (CP Score) for Top-K (e.g., MultiPV=5) best moves.
+    - **Softmax Normalization:** Converts absolute scores (CP score) from the engine into a probability distribution via Softmax function with temperature. The temperature parameter `temperature` controls smoothness: high temperature makes distribution smoother (retaining more info on sub-optimal moves), low temperature makes it sharper (focusing only on best moves).
+    - **Mapping & Saving:** Maps move strings to vocabulary indices and finally saves as JSONL format.
+
+- **I/O Format:**
+    - Input: FEN file (one position per line) + `move2idx.json` (vocabulary).
+    - Output: JSONL file, each line contains `{"fen": "...", "label": [0.01, 0.95, ...]}`.
+
+- **Main Parameters:** `pikafish_engine_path`, `input_fen_file`, `engine_depth` (search depth), `multipv_count` (candidate count), `temperature`.
+
+---
+
+## 6. **training_scripts/train_chess_policy.py**
+
+- **Purpose:** This is the training script for the **Policy Network**. It trains a Transformer model to predict the probability distribution of the best next move based on the board state (FEN).
+
+- **Logic:**
+    - **Policy Transformer:** Defines an Encoder-only Transformer (BERT-like) neural network architecture.
+        - **Input:** Tokenizes FEN string.
+        - **Output:** Outputs Logits for all legal moves (Vocab size) through a linear head (Policy Head).
+    - **Efficient Data Flow:** Implements `NpzChunkDataset`, supporting lazy loading of massive NPZ format training data chunks, significantly reducing memory usage.
+    - **Training Objective:** Uses Soft CrossEntropy (KL Divergence) to approximate the soft label probability distribution generated by the engine. This contains more information than merely learning the One-hot "best move."
+
+- **I/O Format:**
+    - Input: Directory of .npz files containing `fens` and `labels` arrays.
+    - Output: Trained model weights (`pytorch_model.bin`) and config.
+
+- **Main Parameters:** `train_data_dir`, `num_epochs`, `learning_rate`, `model_config`.
+
+---
+
+## 7. **chinese_chess/play_with_ai.py**
+
+- **Purpose:** This is a **Human-AI Battle Terminal Client** for testing and evaluating the trained policy network.
+
+- **Logic:**
+    - **Load Model:** Automatically loads the latest training checkpoint.
+    - **Position Encoding:** Real-time encoding of current board state (FEN) into model input tensor.
+    - **Policy Sampling:** Model outputs probability distribution for all next moves. Script adjusts probabilities based on `sampling_temperature` and selects move using Multinomial Sampling, achieving a diverse and high-level playing style.
+    - **Interaction Loop:** Provides a simple command-line interface handling user input (UCI format, e.g., `h2e2`) and displaying AI moves.
+
+- **Interaction Mode:** Command line input.
+- **Main Configuration:** `model_dir`, `sampling_temperature`.
+
+---
