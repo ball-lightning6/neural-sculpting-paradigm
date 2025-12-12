@@ -18,7 +18,8 @@ OUTPUT_FILE = f'autodl-tmp/ca_rule110_n{NUM_BITS}_l{TOTAL_LAYERS}_full_trace.jso
 # ==============================================================================
 # 计算总输出标签的长度
 # (总层数 * 每个状态的位数)
-TOTAL_OUTPUT_BITS = TOTAL_LAYERS * NUM_BITS
+# 注意：我们每3层记录一次 (t%3==2)
+TOTAL_OUTPUT_BITS = (TOTAL_LAYERS // 3) * NUM_BITS
 
 print("=" * 70)
 print(f"元胞自动机 Rule 110 - “完整演化轨迹”数据集生成器")

@@ -527,7 +527,81 @@
 
 ---
 
-### 16. training_scripts/train_mlp_probe_add_binary.py
+### 16. training_scripts/train_mlp_dual_head_supervision.py
+
+**▶︎ 简要说明**  
+该脚本实现了一种**早期的双分支监督解耦方法**。它将MLP网络分为Part1和Part2两部分，Part1的输出同时连接到两个分支：一个预测中间解释（无进位计数器），另一个继续送入Part2预测最终答案（乘积）。通过混合损失函数同时监督两个输出，强制中间层学习可解释的表示。
+
+**⚠️ 局限性说明**  
+这是论文第八幕"解耦辅助训练"的一个早期探索方法，但实践证明**不太好用**：
+- **浪费网络容量：** 需要人工设计Part1/Part2的分界点，难以充分利用网络参数。
+- **手动选择层级：** 必须预先决定在哪一层输出中间解释，缺乏灵活性。
+- **现在通用的更好方法：** 直接在输出层拼接解耦信息（如`generate_rain_water_final_showdown.py`），让网络自由分配内部表示，无需人为切分网络结构。
+
+本脚本作为历史记录保留，展示了解耦思想的演化过程。
+
+**▶︎ 核心架构**
+
+- **Part1**: 前4层MLP，输出连接到`intermediate_head`预测中间解释。
+- **Part2**: 后4层MLP，从Part1的输出继续处理，连接到`final_head`预测最终答案。
+- **混合损失**: `loss = α × loss_intermediate + β × loss_final`，两个分支同时监督。
+
+**▶︎ 如何配置和使用**
+
+1. **准备数据集**: 需要使用包含拼接标签的数据集（如Untitled7生成的乘法解耦数据）。
+2. **修改配置**: 在`Config`类中调整：
+    - `DATASET_PATH`: 数据集路径。
+    - `NUM_LAYERS_PART1`, `NUM_LAYERS_PART2`: 网络分段点（需要手动调整）。
+    - `LOSS_WEIGHT_INTERMEDIATE`, `LOSS_WEIGHT_FINAL`: 损失权重（默认各0.5）。
+3. **运行训练**:
+    ```bash
+    python training_scripts/train_mlp_dual_head_supervision.py
+    ```
+4. **产出**: 训练日志保存在`training_log_dual_head_supervision.log`。
+
+---
+
+### 17. training_scripts/train_probe_control_baseline.py
+
+**▶︎ 简要说明**  
+这是一个**探针实验的对照组（Control Group）基准测试脚本**。它的目的是验证一个关键问题：**探针成功解码中间表征，是因为主模型内部真的形成了可解释表征，还是仅仅因为探针头本身足够强大，能直接从原始输入学会到解释的映射？**
+
+**▶︎ 实验设计**
+
+- **对照方法：** 创建一个独立的浅层MLP（**不使用**主模型的隐藏层表征）。
+- **训练目标：** 直接学习"原始输入 → 解释标签"的映射。
+- **判断标准：** 
+    - 如果对照组性能**远低于**探针组 → 主模型确实学会了可解释表征
+    - 如果对照组性能**接近**探针组 → 探针成功可能只是因为头部足够强大
+
+**▶︎ 使用流程**
+
+1. **第一步：** 先运行主探针实验（如`train_mlp_probe_add_binary.py`）获得探针性能基准。
+2. **第二步：** 运行本脚本作为对照实验。
+3. **第三步：** 比较两者的Exact Match性能。
+
+**▶︎ 核心架构**
+
+- **ProbeHeadOnly模型：** 一个浅层MLP（1层隐藏层），直接从原始输入预测解释标签。
+- **参数量：** 与主探针实验中Probe Head的参数量保持一致，确保公平对比。
+- **训练轮数：** 与探针阶段相同（如5000个epoch），确保充分训练。
+
+**▶︎ 如何配置和使用**
+
+1. **修改配置**: 在`ControlConfig`类中调整：
+    - `DATASET_PATH`: 使用与探针实验相同的数据集。
+    - `NUM_HIDDEN_LAYERS`: 控制模型复杂度（0=纯线性，1=浅MLP）。
+    - `EPOCHS`, `BATCH_SIZE`: 与探针实验保持一致。
+2. **准备数据**: 使用 `symbolic_math_logic/generate_add_binary_explainable.py` 生成的数据集。
+3. **运行脚本**:
+    ```bash
+    python training_scripts/train_probe_control_baseline.py
+    ```
+4. **产出**: 日志文件`control_experiment_log.log`会给出最终的Exact Match，用于与探针实验对比。
+
+---
+
+### 18. training_scripts/train_mlp_probe_add_binary.py
 
 **▶︎ 简要说明**
 该脚本用于**针对二进制加法任务的线性探针（Linear Probe）实验**。它验证了模型在学会输出最终和之后，其隐藏层是否自发编码了中间的进位信息。这是对论文中“对已经收敛的神经网络的研究”的补充实验。

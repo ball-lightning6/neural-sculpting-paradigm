@@ -16,9 +16,10 @@ class Config:
 
     # --- 任务模式 ---
     # 'train_sum': 阶段一，只训练最终答案 (sum)
-    # 'train_probe': 阶段二，冻结主体，训练解释头 (probe)
+    # 'probe_serial': 阶段二.A，冻结主体，探测串行解释
+    # 'probe_parallel': 阶段二.B，冻结主体，探测并行解释
     # 'finetune_explain': 阶段三 (可选), 微调整个模型输出解释
-    TASK_MODE = 'train_sum' # <--- 修改这里来切换实验阶段
+    TASK_MODE = 'train_sum'  # <--- 修改这里来切换实验阶段
 
     # --- 模型架构 ---
     # 输入位数 = 2 * NUM_BITS
@@ -26,6 +27,10 @@ class Config:
     HIDDEN_SIZE = 4096
     NUM_HIDDEN_LAYERS = 3
     DROPOUT_RATE = 0.1
+    
+    # --- 探针头架构 (可配置更复杂的探针) ---
+    PROBE_HEAD_HIDDEN_SIZE = 2048
+    PROBE_HEAD_NUM_HIDDEN_LAYERS = 1  # 0代表线性，>0代表MLP
     
     # --- 训练参数 ---
     EPOCHS = 100
@@ -88,7 +93,17 @@ class CASymbolicDataset(Dataset):
     def __init__(self, metadata_list, task_mode, logger):
         self.metadata_list = metadata_list
         self.task_mode = task_mode
-        self.label_key = "sum_output" if self.task_mode == 'train_sum' else "output"
+        
+        # 根据任务模式选择标签字段
+        if self.task_mode == 'train_sum':
+            self.label_key = "sum_output"
+        elif self.task_mode == 'probe_serial':
+            self.label_key = "output"  # 串行解释：[结果位] + [进位]
+        elif self.task_mode == 'probe_parallel':
+            self.label_key = "output_parallel"  # 并行解释：[XOR] + [AND]
+        else:
+            self.label_key = "output"  # 默认使用串行解释
+            
         logger.info(f"Dataset created in '{self.task_mode}' mode. Using label key: '{self.label_key}'")
 
     def __len__(self):
@@ -187,7 +202,7 @@ def run_experiment(config: Config):
     model = ExplainableMLP(config).to(device)
     
     # 根据任务模式，加载或冻结权重
-    if config.TASK_MODE == 'train_probe':
+    if config.TASK_MODE in ['probe_serial', 'probe_parallel', 'train_probe']:
         logger.info(f"加载 Body 权重从: {config.BODY_WEIGHTS_PATH}")
         if not os.path.exists(config.BODY_WEIGHTS_PATH):
             logger.error("🚨 错误: Body 权重文件未找到! 请先运行 'train_sum' 模式。")
@@ -221,18 +236,46 @@ def run_experiment(config: Config):
         logger.info(f"✅ 阶段 '{config.TASK_MODE}' 训练完成。")
 
 if __name__ == '__main__':
-    # --- 运行完整的实验流程 ---
+    """
+    运行完整的双重解释探测实验流程:
+    1. 训练主模型 (只输出最终和)
+    2. 探测串行解释 (模拟人类逐位计算)
+    3. 探测并行解释 (模拟并行XOR/AND计算)
     
-    # 阶段一: 训练主模型 (只输出最终和)
+    通过对比两种解释的探测成功率，可以推断神经网络内部表征更接近哪种计算方式。
+    
+    注意: 需要先运行 symbolic_math_logic/generate_add_binary_explainable.py
+          并设置 DUAL_EXPLANATION = True 来生成包含双重解释的数据集。
+    """
+    
+    # --- 阶段一: 训练主模型 (只输出最终和) ---
+    print("\n" + "#"*20 + " 阶段一: 训练主模型 " + "#"*20)
     config_stage1 = Config()
     config_stage1.TASK_MODE = 'train_sum'
-    config_stage1.EPOCHS = 3 # 主模型训练久一点
+    config_stage1.EPOCHS = 3
     run_experiment(config_stage1)
     
-    print("\n" + "="*50 + "\n")
+    print("\n" + "="*60 + "\n")
     
-    # 阶段二: 冻结主模型，训练探针 (输出可解释标签)
-    config_stage2 = Config()
-    config_stage2.TASK_MODE = 'train_probe'
-    config_stage2.EPOCHS = 50 # 探针可能收敛更快
-    run_experiment(config_stage2)
+    # --- 阶段二.A: 冻结主模型，探测"串行解释" ---
+    print("\n" + "#"*20 + " 阶段二.A: 探测串行解释 " + "#"*20)
+    config_stage2a = Config()
+    config_stage2a.TASK_MODE = 'probe_serial'
+    config_stage2a.EPOCHS = 50
+    run_experiment(config_stage2a)
+    
+    print("\n" + "="*60 + "\n")
+    
+    # --- 阶段二.B: 冻结主模型，探测"并行解释" ---
+    print("\n" + "#"*20 + " 阶段二.B: 探测并行解释 " + "#"*20)
+    config_stage2b = Config()
+    config_stage2b.TASK_MODE = 'probe_parallel'
+    config_stage2b.EPOCHS = 50
+    run_experiment(config_stage2b)
+    
+    print("\n" + "="*60)
+    print("🎉 双重解释探测实验完成！")
+    print("请对比 probe_serial 和 probe_parallel 阶段的 Exact Match 性能")
+    print("- 如果串行解释更高：说明网络更倾向于串行计算方式")
+    print("- 如果并行解释更高：说明网络更倾向于并行计算方式")
+    print("="*60)

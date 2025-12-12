@@ -836,6 +836,44 @@
 
 ---
 
+## 52. **symbolic_math_logic/generate_multitask_prefixed_ca110.py**
+
+- **Purpose:** Generates a "Prefixed CA Evolution + 4 Downstream Tasks" multi-task learning dataset to test the model's ability to perform shared representation extraction and multiple independent downstream tasks in a single forward pass. This is an important extension of `generate_multitask_alu.py`, adding the concept of a shared preprocessing transformation layer.
+
+- **Experimental Validation (Chapter 8):** This script validates an important hypothesis proposed at the end of Chapter 8: **Does multi-task learning promote the spontaneous emergence of intermediate representations under cognitive economic pressure, thereby accelerating training?** Experimental results confirm this - training multiple tasks simultaneously is faster than training each task individually, almost certainly because neural networks converge more quickly toward reusable intermediate representation layers under multi-task pressure, rather than learning independently. This provides strong empirical support for the core argument in the paper about "multi-task learning facilitating the emergence of abstract representations."
+
+- **Logic:** The script employs a unique "Shared Prefix + Parallel Postfix" architecture:
+    1. **Shared Prefix Task:** The input 30-bit binary string is first fed into a cellular automaton (Rule 110) for 4 layers of evolution, yielding a 30-bit intermediate state. This intermediate state serves as the shared input for all downstream tasks.
+    2. **Parallel Downstream Tasks:** The intermediate state is simultaneously fed into 4 independent solvers:
+        - **Task A (Binary Addition):** Split the 30 bits into two 15-bit numbers and compute their sum (16-bit output).
+        - **Task B (Trapping Rain Water):** Interpret the 30 bits as heights of 10 columns (3 bits per column), compute water trapped by each column (30-bit output).
+        - **Task C (Mod 3 DFA):** Calculate mod 3 of the 30-bit binary number and output thecomplete DFA state transition trace (60-bit output).
+        - **Task D (CA Rule 30):** Apply Rule 30 to the 30-bit state and evolve for 3 layers (30-bit output).
+    
+    This design forces the model to first learn a shared feature extractor (prefix CA), then distribute the learned representation to multiple downstream task heads. This is valuable for studying knowledge transfer in multi-task learning, formation mechanisms of shared representations, and mutual effects between tasks (positive vs. negative transfer).
+
+- **I/O Format:**
+    - Input: 30-bit binary string (original input).
+    - Output: A JSON object containing 6 fields:
+        - `input`: Original input string.
+        - `inter`: Intermediate state (30-bit state after prefix CA evolution, list format).
+        - `output_add`: Task A output (16-bit list).
+        - `output_rain`: Task B output (30-bit list).
+        - `output_mod3`: Task C output (60-bit list).
+        - `output_ca30`: Task D output (30-bit list).
+
+- **Key Parameters:**
+    - `INPUT_LEN` (30): Original input length.
+    - `PRE_CA_RULE_NUMBER` (110): Prefix CA rule.
+    - `PRE_CA_EVOLUTION_LAYERS` (4): Prefix CA evolution layers.
+    - `DATASET_SIZE` (500000): Dataset size.
+
+- **Training Recommendations:** Use with `train_mlp_final.ipynb` (multi-task/multi-head MLP training script) to study various aspects of multi-task learning. During training, you can choose:
+    - Single-task mode: Train only one downstream task to observe how the model utilizes shared prefix representations.
+    - Multi-task mode: Train all 4 tasks simultaneously to study transfer effects and resource competition between tasks.
+
+---
+
 # B: Algorithm Learning
 
 ## 1. **algorithms/generate_sort_integers.py**
@@ -2196,6 +2234,39 @@
     - Output: Evolved state image.
         
 - **Main Parameters:** RULE_MAP, RULES.
+
+---
+
+## 23. **cellular_automata/generate_ca_to_abstract_real.py**
+
+- **Purpose:** Generates "CA Evolution → Abstract Real Number Symbols" datasets to test whether models can encode discrete evolution results into arbitrary real number symbol representations, verifying neural networks' understanding of symbolic abstraction.
+
+- **Logic:**
+    1. **Input:** 30-bit binary string (cellular automaton initial state).
+    2. **Evolution:** Evolve 5 layers according to Rule 110, obtaining a 30-bit final state.
+    3. **Encoding Conversion:** Split the final 30-bit binary state into groups of 2 bits each (15 groups total), and convert each group to a real number according to a predefined arbitrary real number mapping table. Mapping:
+        - `(0,0) → 7.6`
+        - `(0,1) → 1.3`
+        - `(1,0) → 5.9`
+        - `(1,1) → 3.0`
+    4. **Output:** List of 15 real numbers.
+
+- **Experimental Significance:** This task forces the model to:
+    - First learn the cellular automaton evolution rules.
+    - Then learn to map discrete binary patterns to completely arbitrary real number symbols with no semantic association.
+    - This verifies that the model learns abstract relationships rather than concrete symbols, echoing the "semantic shuffle" experiments in the paper.
+
+- **I/O Format:**
+    - Input: 30-bit binary string.
+    - Output: List of 15 floating-point numbers (JSON array).
+
+- **Key Parameters:**
+    - `CA_WIDTH` (30): Cellular automaton width.
+    - `CA_LAYERS` (5): Evolution layers.
+    - `REAL_SYMBOL_MAP`: Mapping table from 2-bit binary to real numbers.
+    - `NUM_SAMPLES` (500000): Dataset size.
+
+- **Training Recommendations:** Use models that support float output (like MLP), train with `train_mlp.py`. Pay special attention to whether the model can converge, as output is no longer discrete 0/1 but continuous arbitrary real numbers.
 
 ---
 
