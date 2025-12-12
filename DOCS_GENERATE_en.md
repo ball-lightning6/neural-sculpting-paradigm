@@ -836,6 +836,40 @@
 
 ---
 
+## 53. **symbolic_math_logic/generate_convergent_abstraction.py**
+
+- **Purpose:** Generates "Convergent Abstraction" (multi-input → single intermediate representation hub) experimental datasets. This experiment aims to verify a key hypothesis from Chapter 8: **Can different input tasks naturally converge to a shared abstract intermediate representation and complete subsequent reasoning tasks based on that representation?**
+
+- **Experimental Background (Chapter 8):** Chapter 8 explores the "intermediate representation emergence" problem. Unlike `generate_multitask_prefixed_ca110.py` which uses a "single-input → shared prefix → multi-output" architecture, this script adopts a "**multi-input → shared hub → single-output**" architecture, verifying the formation mechanism of abstract representations from another angle. Two completely different input tasks (trapping rain water and binary addition) are designed to pass through the same 30-bit "intermediate representation hub" before undergoing unified post-CA evolution. This design forces the model to learn an abstract representation that can serve both paths.
+
+- **Logic:** This script implements a unique "dual-path convergence" architecture:
+    1. **Path A (Rain Water → Hub):** Generates heights of 10 columns (3 bits each, 30 bits total) as input1, calculates water trapped by each column (30 bits total), which becomes the intermediate representation.
+    2. **Path B (Addition → Hub):** Based on the intermediate representation calculated from rain water (viewed as an integer), reverse-generates two 30-bit addends whose sum equals that intermediate representation, concatenated as input2 (60 bits total).
+    3. **Shared Hub:** 30-bit intermediate representation (both rain water output and addition's "hidden target").
+    4. **Common Post-Task:** Performs Rule 110 CA evolution on intermediate representation (8 layers total), getting final output. Also generates Rule 30 evolution (2 layers) output as comparison.
+
+- **I/O Format:**
+    - Input: JSON object with two independent input fields:
+        - `input_rain`: 30-bit binary string (10 column heights).
+        - `input_add`: 60-bit binary string (two 30-bit addends concatenated).
+    - Output: JSON object containing:
+        - `intermediate_shared`: 30-bit list (shared intermediate representation).
+        - `final_output`: 30-bit list (final state after Rule 110 evolution 8 layers).
+        - `final_output_30`: 30-bit list (Rule 30 evolution 2 layers comparison output).
+
+- **Key Parameters:** 
+    - `INTERMEDIATE_BITS` (30): Shared hub bit width.
+    - `RAIN_NUM_COLUMNS_N` (10): Number of columns.
+    - `RAIN_BITS_PER_HEIGHT` (3): Bits per column height.
+    - `ADD_NUM_BITS` (30): Addend bit width for addition task.
+    - `POST_CA_RULE_NUMBER` (110): Post-CA rule.
+    - `POST_CA_EVOLUTION_LAYERS` (6): Post-CA single-stage evolution layers (actual total 8 layers).
+    - `DATASET_SIZE` (500000): Dataset size.
+
+- **Training Recommendations:** This is an advanced, multi-path experimental design. Training requires model architectures supporting multiple inputs. Can train mappings from both inputs to intermediate representation separately, or train the entire flow end-to-end. Recommend first verifying feasibility on single paths before attempting dual-path joint training.
+
+---
+
 ## 52. **symbolic_math_logic/generate_multitask_prefixed_ca110.py**
 
 - **Purpose:** Generates a "Prefixed CA Evolution + 4 Downstream Tasks" multi-task learning dataset to test the model's ability to perform shared representation extraction and multiple independent downstream tasks in a single forward pass. This is an important extension of `generate_multitask_alu.py`, adding the concept of a shared preprocessing transformation layer.
@@ -1729,6 +1763,140 @@
 
 ---
 
+## 55. **algorithms/generate_maximal_rectangle_coords.py**
+
+- **Purpose:** Solves LeetCode Hard problem [85. Maximal Rectangle](https://leetcode.cn/problems/maximal-rectangle/).
+- **Logic:** Given a 2D matrix containing 0s and 1s, find the largest rectangle containing only 1s, and return its precise coordinates `(r1, c1, r2, c2)`.
+- **I/O Format:**
+    - Input: For fixed 8x8 matrix, input is flattened 64-bit binary string.
+    - Output: Concatenation of binary encodings of 4 coordinate values.
+- **Main Parameters:** ROWS, COLS, NUM_SAMPLES.
+
+---
+
+## 56. **algorithms/generate_median_island_median_finder.py**
+
+- **Purpose:** This is a complex symbolic reasoning task requiring the neural network to perform multi-level logical operations on binary sequences, combining sequence splitting, median calculation, and positioning operations.
+
+- **Logic:**
+    1. Scan the input string to identify start and end positions of all continuous '1' islands
+    2. Calculate total number of islands and find the median island (middle island in order)
+    3. Find the middle position '1' within that median island
+    4. Output the absolute position index of that median '1'
+
+- **Algorithm Steps ("Seven-Fold Purgatory" Algorithm):**
+    1. Island splitting and counting
+    2. Locating the median island
+    3. Calculating the internal sequence number of the median '1'
+    4. Final absolute position calculation
+
+- **I/O Format:**
+    - Input: 30-bit binary string
+    - Output: 5-bit binary encoding (representing position index 0-30, special value 30 indicates no islands)
+
+- **Main Parameters:** INPUT_WIDTH = 30, NUM_SAMPLES = 500,000.
+
+- **Task Characteristics:**
+    - Combines sequence splitting, median calculation, and positioning operations
+    - Requires understanding of sequence structure and relative position relationships
+    - Challenges neural network's spatial reasoning ability
+    - Includes boundary case handling (returns -1 when no islands, encoded as 30)
+
+---
+
+## 57. **algorithms/generate_rain_water_summation.py**
+
+- **Purpose:** A sub-task variant (Task B) of the "trapping rain water" problem. Instead of terrain heights, the input is already-calculated **water amount per cell** (intermediate state). The task is to calculate the **sum** of these water amounts. This tests the model's pure ability to perform "summation" mathematical aggregation operation, contrasting with the complete trapping rain water task (analyze terrain + sum).
+
+- **Logic:** Randomly generates water amounts for N cells. Sums them to get the total.
+
+- **I/O Format:**
+    - Input: NUM_COLUMNS_N * BITS_PER_CELL length binary string (concatenation of water amounts per cell).
+    - Output: TOTAL_OUTPUT_BITS length binary multi-label vector (binary representation of total water amount).
+
+- **Main Parameters:** NUM_COLUMNS_N, BITS_PER_CELL, DATASET_SIZE.
+
+---
+
+## 58. **algorithms/generate_rain_water_then_cellular_automata.py**
+
+- **Purpose:** This is a **cross-domain chain reasoning** task (Task D). Tests whether the model can, in a single forward pass, consecutively execute two logically completely unrelated complex steps: first solve the "trapping rain water" problem to calculate water amount per cell, then immediately use that water amount data as initial state to perform "cellular automaton" evolution.
+
+- **Logic:**
+    1. **Phase One (Trapping Rain Water):** Generate random terrain, calculate water trapped per cell.
+    2. **Phase Two (CA Evolution):** Directly use the "water amount per cell" sequence from Phase One as the initial state of a 1D cellular automaton (Rule 110).
+    3. **Evolution:** Evolve this state for multiple steps (CA_EVOLUTION_LAYERS).
+    4. **Output:** Final CA state.
+
+- **I/O Format:**
+    - Input: Binary encoding of terrain height data.
+    - Output: Final state after CA evolution (binary multi-label).
+
+- **Main Parameters:** NUM_COLUMNS_N, BITS_PER_HEIGHT, CA_RULE_NUMBER (110), CA_EVOLUTION_LAYERS.
+
+---
+
+## 59. **algorithms/generate_maze_decoupled.py**
+
+- **Purpose:** This is the **decoupled experimental** version of the dense maze pathfinding task. Building on `generate_maze_dense.py` which only outputs optimal direction (4-class), this script additionally outputs the complete BFS distance map as "explanation labels," used to study the impact of decoupled auxiliary information on model learning efficiency and to probe the existence of distance information in trained model internal representations.
+
+- **Experimental Value (Chapter 8):** This script applies the "decoupling accelerates convergence" idea from Chapter 8 to path planning problems. By providing the precise distance from each cell to the goal as auxiliary supervision signal, it tests whether this intermediate information can help the model learn optimal strategies faster. After training, the last hidden layer can be probed to verify whether the model truly learned to represent distance information.
+
+- **Logic:** 
+    1. Uses recursive division method to generate connected dense mazes (same as `generate_maze_dense.py`).
+    2. Randomly selects start and end points.
+    3. Uses reverse BFS from endpoint to calculate distances from all reachable cells to endpoint.
+    4. Output contains two parts:
+        - **prediction_label**: Optimal next-step direction (4-class: up/down/left/right).
+        - **explanation_label**: Complete distance map, each cell's distance encoded with fixed-bit binary (distance+1 to avoid -1).
+
+- **I/O Format:**
+    - Input: (H-2) * (W-2) length string representing maze interior layout after removing outer walls ('0'=passage, '1'=wall, 's'=start, 't'=target).
+    - Output: JSON object containing:
+        - `input`: Input string.
+        - `prediction_label`: Integer (0-3, representing up/down/left/right).
+        - `explanation_label`: bits_per_distance * (H-2) * (W-2) length binary list, flattened distance map.
+
+- **Key Parameters:** 
+    - `MAZE_HEIGHT` (11), `MAZE_WIDTH` (11): Maze dimensions (including outer walls).
+    - `TARGET_NUM_SAMPLES` (500000): Dataset size.
+    - `bits_per_distance`: Automatically calculated (based on maximum possible distance).
+
+- **Training Recommendations:** Can use multi-head MLP, one head predicting direction, another predicting distance map. Or use single-head model only predicting direction, with distance map as auxiliary supervision. After training, verify model internal representations through `train_mlp_probe_*.py` similar probing scripts.
+
+---
+
+## 60. **algorithms/generate_edit_nextstep_mlp.py**
+
+- **Purpose:** This is a **novel decoupling experiment** for the edit distance problem. Unlike `generate_edit_distance_explainable.py` which outputs the complete edit path, this script focuses on predicting the "next optimal operation" and provides two types of decoupled auxiliary information: operation mask (which operations are optimal) and operation type information from the complete DP table.
+
+- **Experimental Design Rationale:** This script explores a key question: if the model needs to predict the first-step operation from state A to state B, can providing the complete DP table (recording optimal operation types for all intermediate sub-problems) as auxiliary labels accelerate learning? This echoes the subtlety of "decoupling may both accelerate and decelerate convergence" discussed in Chapter 8 of the paper.
+
+- **Logic:**
+    1. Generate two random 15-bit binary strings A and B.
+    2. Use standard edit distance DP algorithm to calculate minimum distance, simultaneously recording the operation type (None/Insert/Delete/Substitute) used when reaching each DP table cell `(i,j)`.
+    3. Backtrack from DP table endpoint `(m,n)` to extract all possible "first-step" operations (may have multiple equivalent optimal operations).
+    4. Output contains three parts:
+        - **Input**: A and B concatenated (30 bits).
+        - **op_mask**: 90-bit binary mask (3 operations × 30 positions), marking which operations are optimal.
+        - **dp_ops**: 31×31×3 = 2883 bits binary, operation type encoding of complete DP table.
+
+- **I/O Format:**
+    - Input: 30-bit binary string (two 15-bit strings concatenated).
+    - Output: JSON object containing:
+        - `input`: Input string.
+        - `op_mask`: 90-bit integer list (multi-hot encoding of next-step operations).
+        - `dp_ops`: 2883-bit integer list (complete DP table).
+
+- **Key Parameters:** 
+    - `LEN` (15): Length of each string.
+    - `NUM_SAMPLES` (500000): Dataset size.
+    - `DP_BIT_PER_CELL` (3): Encoding bits per DP cell.
+
+- **Training Recommendations:** Can train op_mask prediction alone, or train both op_mask and dp_ops heads simultaneously, comparing which converges faster. This is an excellent experimental scenario for studying "whether decoupled labels are always beneficial."
+
+---
+
 # C: Visual Reasoning
 
 ## 1. **visual_reasoning/generate_checkerboard_to_binary.py**
@@ -2237,6 +2405,50 @@
 
 ---
 
+## 20. **cellular_automata/generate_ca_continuous_transform.py**
+
+- **Purpose:** This is a **continuous-discrete-continuous** hybrid cellular automaton experiment, focusing on testing MLP and other models' ability to handle "fuzzy logic" inputs.
+
+- **Logic:** 
+    1. **Fuzzy Input:** Randomly generates 30 real numbers, [0, 0.25] represents logical '0', [0.75, 1.0] represents logical '1'.
+    2. **Symbolic Evolution:** Evolves the input logical values 5 layers according to Rule 110, obtaining output logical values.
+    3. **Conditional Transformation:** Determines output real number value based on evolution result: if a bit's logical value is unchanged, output equals input; if logical value changed, output equals `1.0 - input`.
+    4. This forces the model to simultaneously learn "defuzzification" (decode continuous values), "logical reasoning" (CA evolution), and "numerical transformation" (interpolation).
+
+- **I/O Format:**
+    
+    - Input: List of 30 floating-point numbers.
+        
+    - Output: List of 30 floating-point numbers.
+        
+- **Main Parameters:** CA_WIDTH, CA_LAYERS, NUM_SAMPLES.
+    
+- **Note:** This dataset contains continuous real numbers, please use MLP or models supporting float input/output for training.
+
+---
+
+## 21. **cellular_automata/generate_ca_nested_masked.py**
+
+- **Purpose:** Generates "Russian doll"-style (nested mask) cellular automaton datasets to test model's ability to perform multi-stage implicit reasoning under dynamic mask conditions.
+- **Logic:** Process is divided into three stages: 1. Initial Evolution: Generate random initial state $S_0$, evolve L1 steps according to Rule 110 to get $S_1$. 2. Dynamic Mask: Generate random mask $M$, extract visible parts from $S_1$. 3. Second Evolution: Use extracted parts as new initial state, evolve again L2 steps to get final output. The model must learn to implicitly evolve the first stage and handle masking to correctly predict the second stage result.
+- **I/O Format:**
+    - Input: CA1_WIDTH-bit initial state + CA1_WIDTH-bit mask (concatenated string).
+    - Output: MASK_VISIBLE_BITS-bit final state (binary list).
+- **Main Parameters:** CA1_WIDTH, CA1_LAYERS, MASK_VISIBLE_BITS, CA2_LAYERS.
+
+---
+
+## 22. **cellular_automata/generate_ca_masked_output.py**
+
+- **Purpose:** Generates "partially observable" cellular automaton datasets to test the model's ability to selectively output computation results based on dynamic masks.
+- **Logic:** 1. Generate random initial state $S_0$. 2. Evolve 3 layers according to Rule 110 to get $S_3$. 3. Generate random mask $M$. 4. Output the part of $S_3$ selected by $M$ (Masked Output). The model doesn't need to output complete evolution result, only needs to "extract" the queried part from the hidden complete state.
+- **I/O Format:**
+    - Input: CA1_WIDTH-bit initial state + CA1_WIDTH-bit mask (concatenated string).
+    - Output: MASK_VISIBLE_BITS-bit final state (binary list).
+- **Main Parameters:** CA1_WIDTH, CA_LAYERS, MASK_VISIBLE_BITS.
+
+---
+
 ## 23. **cellular_automata/generate_ca_to_abstract_real.py**
 
 - **Purpose:** Generates "CA Evolution → Abstract Real Number Symbols" datasets to test whether models can encode discrete evolution results into arbitrary real number symbol representations, verifying neural networks' understanding of symbolic abstraction.
@@ -2267,6 +2479,49 @@
     - `NUM_SAMPLES` (500000): Dataset size.
 
 - **Training Recommendations:** Use models that support float output (like MLP), train with `train_mlp.py`. Pay special attention to whether the model can converge, as output is no longer discrete 0/1 but continuous arbitrary real numbers.
+
+---
+
+## 24. **cellular_automata/generate_ca_rule110_minimalist_trace.py**  
+  
+- **Purpose:** Generates a dataset for the cellular automaton Rule 110 in a **minimalist text explanation format**, specifically designed for training autoregressive language models (like GPT). Unlike `generate_ca_text_format_dataset.py`, which only outputs the final state, this script outputs CoT (Chain-of-Thought)-style explanations containing the step-by-step computational process for each layer.  
+  
+- **Experimental Context (Paper, Act 10):** This script is an extension of the "Autoregressive" experiment in Act 10 of the paper. The paper suggests that while standard autoregressive Transformers can learn CA evolution, they might still rely on the core idea of the paradigm (i.e., predicting each position essentially as an independent classification task). By providing a fine-grained computational process (neighborhood→result mapping for each bit), this script tests whether autoregressive models can learn a step-by-step evolution process that is closer to "true reasoning".  
+  
+- **Logic:**  
+    1. Generate a random 30-bit binary initial state.  
+    2. Perform a 2-layer Rule 110 evolution on that state.  
+    3. For each layer, generate a "minimalist explanation" text:  
+        - For each position *i*, record its neighborhood `(left, center, right)` and the output result in the format `"101>1"`.  
+        - Concatenate the 30 such computation processes with spaces to form the "Trace" for that layer.  
+        - Immediately output the full evolved state for that layer.  
+    4. Concatenate the explanations for all layers with newline characters to form the complete CoT text.  
+    5. Format it as a prompt-answer pair: `"Evolve Rule 110:\n[Initial State] -> \n[CoT Explanation]"`.  
+  
+- **I/O Format:**  
+    - Output: A JSON object containing a single field:  
+        - `text`: The complete prompt+answer string for use in autoregressive model training.  
+      
+- **Output Example (2-layer evolution):**  
+    ```  
+    Evolve Rule 110:  
+    101101... ->   
+    100>1 011>1 110>1 ... (30 neighborhood>result pairs)  
+    110101... (Layer 1 result)  
+    110>1 101>1 010>1 ... (30 neighborhood>result pairs)  
+    011010... (Layer 2 final result)  
+    ```  
+  
+- **Main Parameters:**  
+    - `NUM_BITS` (30): CA width.  
+    - `TOTAL_LAYERS` (2): Number of evolution layers.  
+    - `DATASET_SIZE` (500000): Dataset size.  
+  
+- **Training Recommendation:** Use a Decoder-only Transformer (e.g., GPT-2) with a custom Data Collator to ensure loss is computed only on the answer part. Note: Because the output contains detailed computation traces, the text length is long, requiring a sufficiently large `CONTEXT_LENGTH` (recommended >1024).  
+  
+- **Comparison with Related Scripts:**  
+    - vs. `generate_ca_text_format_dataset.py`: The latter only outputs the final state, without intermediate processes.  
+    - vs. `generate_ca110_full_trace.py`: The latter outputs the full trace but in a multi-label binary classification format, intended for non-autoregressive models.
 
 ---
 
