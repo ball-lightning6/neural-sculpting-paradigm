@@ -1914,7 +1914,7 @@
 
 ---
 
-## 60. **algorithms/generate_edit_distance_dp_table_full.py**
+## 61. **algorithms/generate_edit_distance_dp_table_full.py**
 
 - **Purpose:** Full DP table decoupling experiment for edit distance. Explore a profound research question: **Does every problem necessarily have decoupling information that can accelerate convergence?** Compared to `generate_edit_nextstep_mlp.py`, this script provides a more "complete" (but also more redundant) DP table as decoupled labels.
 
@@ -1959,6 +1959,92 @@
     - Is full DP table really harder to learn than partial table?
     - If harder, is it due to information redundancy or label space being too large?
     - Can curriculum learning (learn partial first, then full) help?
+
+---
+
+## 62. **algorithms/generate_median_one_finder.py**
+
+- **Purpose:** Generates "Median '1' Finder" task dataset. This is a basic statistical positioning task.
+- **Logic:** Input is a binary string. Find positions of all '1's, take the absolute index of the '1' at the median position. If the number of '1's is even, take the one slightly after the middle.
+- **I/O Format:** Input: 30-bit binary string; Output: 5-bit binary position encoding.
+- **Main Parameters:** INPUT_WIDTH (30), NUM_SAMPLES。
+
+---
+
+## 63. **algorithms/generate_mean_of_medians.py**
+
+- **Purpose:** Generates "Mean of Medians of Odd/Even Islands" task dataset. This is a complex logic reasoning task without any intermediate hints, dubbed "Nine-Fold Purgatory".
+- **Logic:** 1. Identify islands formed by continuous '1's; 2. Separate into odd-length and even-length groups; 3. Find the median island for both groups; 4. Find the median point of these two islands; 5. Calculate the arithmetic mean of these two points and round it.
+- **I/O Format:** Input: 30-bit binary string; Output: 5-bit binary position encoding.
+- **Main Parameters:** INPUT_WIDTH (30), NUM_SAMPLES。
+
+---
+
+## 64. **algorithms/generate_exam_seats.py**
+
+- **Purpose:** Generates "Exam Seating" task dataset (LeetCode 1349). Tests the model's state compression dynamic programming reasoning ability on a 2D grid.
+- **Logic:** Given a classroom layout with good and bad seats, calculate the maximum number of students that can be accommodated under anti-cheating rules "no adjacent left/right, no one at upper-left/upper-right". Uses state compression DP to generate labels.
+- **I/O Format:** Input: Flattened 8x6 grid string; Output: Binary encoding of maximum student count.
+- **Main Parameters:** ROWS (8), COLS (6), NUM_SAMPLES。
+- **Link:** [LeetCode 1349](https://leetcode.cn/problems/maximum-students-taking-exam/)
+
+---
+
+## 65. **algorithms/generate_parity_accumulator.py**
+
+- **Purpose:** Generates "Parity Instruction Accumulator" task. This is a complex logic task involving sequential dependency and conditional arithmetic.
+- **Logic:** Input binary stream. Parse into continuous '0' blocks and '1' blocks. Traverse all '1' islands; based on the parity of the length of the preceding '0' block, decide whether to add the island length to the accumulator or subtract from it.
+- **I/O Format:** Input: 30-bit binary string; Output: 6-bit unsigned binary value.
+- **Main Parameters:** INPUT_WIDTH (30), INITIAL_ACCUMULATOR (32)。
+
+---
+
+## 66. **algorithms/generate_neural_turing_machine.py**
+
+- **Purpose:** Simulates a simplified "Neural Turing Machine" to perform conditional write operations on a cyclic tape. This is a direct test of whether connectionist systems can learn to execute algorithmic operations.
+
+- **Logic:** The system receives 32-bit input instructions (8 groups of 4-bit instructions), each containing 3 address bits and 1 action bit. The neural network needs to learn to perform write operations on a 32-bit cyclic tape, supporting both overwrite and XOR modes.
+
+- **I/O Format:**
+    - Input: 32-bit binary instruction string (8 groups of 4-bit instructions).
+    - Output: 32-bit binary vector representing the final tape state.
+
+- **Main Parameters:** NUM_SAMPLES, TAPE_LENGTH, WRITE_MODE。
+
+---
+
+## 67. **algorithms/generate_lights_out_forward.py**
+
+- **Purpose:** Implements the **forward simulation** of the classic "Lights Out" game. This is an ideal platform for testing neural networks' ability to learn local rule propagation.
+
+- **Logic:** On a 5x5 grid, pressing a button flips the state of its up/down/left/right neighbors (excluding itself). The model needs to predict the final light state from the pressing plan.
+
+- **Note:** According to standard Lights Out rules, the pressed point itself does not flip, only neighbors are affected.
+
+- **I/O Format:**
+    - Input: 25-bit binary string representing the pressing plan.
+    - Output: 25-bit binary vector representing final light state.
+
+- **Main Parameters:** ROWS, COLS, NUM_SAMPLES。
+
+---
+
+## 68. **algorithms/generate_lights_out_gaussian_elimination.py**
+
+- **Purpose:** Models the Lights Out inverse problem as solving a system of linear equations, and provides decoupled information via Gaussian elimination. This is a breakthrough experiment proving that **neural networks can successfully learn to solve complex inverse problems that were originally unconvergent, through appropriate decoupling methods**.
+
+- **Key Finding:** Without decoupling, the Lights Out inverse problem fails to converge with neural network training. However, when providing intermediate steps (row echelon form matrix) of the Gaussian elimination process as auxiliary labels, the model successfully learns the complete solution process. This finding verifies the **decisive role of decoupling techniques in complex algorithm learning**.
+
+- **Logic:**
+    1. Uses modified Lights Out rules (including self-flip) to ensure the transformation matrix is invertible.
+    2. Models the problem as linear equations Ax = b (mod 2).
+    3. Requires the model to output not only the final solution x but also the intermediate matrix during Gaussian elimination.
+
+- **I/O Format:**
+    - Input: 25-bit light state.
+    - Output: 675-bit vector (25-bit final solution + 650-bit intermediate echelon matrix).
+
+- **Main Parameters:** ROWS, COLS, NUM_SAMPLES。
 
 ---
 
@@ -2625,6 +2711,24 @@
     - Two output files: ca_ood_train_dataset.jsonl and ca_ood_eval_dataset.jsonl
         
 - **Key Parameters:** CA_WIDTH (30), EVOLUTION_STEPS (2), TRAIN_RULES_RATIO (0.95), SAMPLES_PER_RULE (3000)
+
+---
+
+
+
+---
+
+## 27. **cellular_automata/generate_hierarchical_ca_tree.py**
+
+- **Purpose:** Hierarchical Abstract CA Tree dataset generator. Used to further verify the emergence of intermediate representations, checking emergence phenomena through the combination of two grandchildren nodes and another child node of a parent node.
+
+- **Core Idea:** While previous multi-task experiments verified if training on shared child nodes leads to emergence of parent node representations, this experiment checks through a more complex hierarchical structure (Grandfather-Father-Grandson three-generation relationship): 1) Can neural networks infer the parent node's state from multiple child nodes' states? 2) Does this hierarchical reasoning naturally emerge understanding of intermediate abstract layers?
+
+- **Data Structure:** Constructs a tree-like three-layer evolution structure: Base(4 layers) -> Branch(5 layers) -> Leaf(3 layers). Input is the 30-bit root node, output is a JSON object containing states of all 9 nodes on the tree.
+
+- **Theoretical Value:** This hierarchical emergence might be key to more complex reasoning capabilities, providing a new experimental platform for studying abstract reasoning in neural networks.
+
+- **Main Parameters:** INPUT_LEN，BASE_LAYERS，BRANCH_LAYERS，LEAF_LAYERS，various CA rule numbers。
 
 ---
 

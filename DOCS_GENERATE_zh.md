@@ -913,15 +913,33 @@
 - **用途:** 二进制乘法的三算法对决实验。扩展`generate_rain_water_final_showdown.py`的思想到乘法任务，提供三种解耦方法对比。
     
 - **逻辑:** 输入两个N-bit整数，输出乘积及三种算法的中间过程：
-    1. **逐行累加**: 记录部分积累加的中间和
-    2. **无进位列和**: 记录每列的计数器
-    3. **Karatsuba分解**: 记录Z0, Z1, Z2三个递归子问题
+    1. **逐行累加 (Progressive Sum)**:
+       - 模拟手工乘法过程，计算每个部分积并逐步累加
+       - 输出: (N-1)个中间和，每个用2N位表示
+       - 总长度: (N-1) * 2N bits
+
+    2. **无进位列和 (Carryless Counters)**:
+       - 计算每个位位置上1的个数（不考虑进位）
+       - 类似将乘法转化为计数问题的中间表示
+       - 输出: (2N-1)个计数器，每个用ceil(log2(N+1))位表示
+       - 总长度: (2N-1) * ceil(log2(N+1)) bits
+
+    3. **Karatsuba分解**:
+       - 实现分治乘法算法，计算三个递归子乘积
+       - Z0 = a_low * b_low, Z1 = (a_high+a_low)*(b_high+b_low), Z2 = a_high * b_high
+       - 输出: Z0(N位) + Z1(N+1位) + Z2(N位)
+       - 总长度: 3N + 1 bits
     
 - **I/O格式:**
     - 输入: 32位二进制字符串（两个16位数拼接）
     - 输出: JSON对象包含final_product和三种explain标签
         
 - **主要参数:** NUM_BITS (16), DATASET_SIZE (500000)
+
+- **实验价值:** 通过对比三种不同复杂度的算法表示，可以研究：
+  1. 神经网络对不同算法结构的偏好
+  2. 解耦复杂度与学习效率的关系
+  3. 哪种算法表示最适合神经网络学习
 
 ---
 
@@ -1760,7 +1778,7 @@
 
 ---
 
-## 53. **algorithms/generate_bricks_falling.py**
+## 54. **algorithms/generate_bricks_falling.py**
 
 - **用途:** 解决 LeetCode 困难题 [803. Bricks Falling When Hit](https://leetcode.cn/problems/bricks-falling-when-hit/description/)。测试模型对物理稳定性和连通性的理解。砖块只有在与顶部直接相连或间接通过其他稳定砖块相连时才是稳定的，否则会掉落。
     
@@ -1780,7 +1798,7 @@
 
 ---
 
-## 54. **algorithms/generate_maximal_rectangle_coords.py**
+## 55. **algorithms/generate_maximal_rectangle_coords.py**
 
 - **用途:** 解决 LeetCode 困难题 [85. Maximal Rectangle](https://leetcode.cn/problems/maximal-rectangle/)。
 - **逻辑:** 给定一个包含0和1的二维矩阵，找出只包含1的最大矩形，并返回其精确坐标 `(r1, c1, r2, c2)`。
@@ -1791,7 +1809,7 @@
 
 ---
 
-## 55. **algorithms/generate_median_island_median_finder.py**
+## 56. **algorithms/generate_median_island_median_finder.py**
 
 - **用途:** 这是一个复杂的符号推理任务，要求神经网络在二进制序列中执行多层逻辑操作，结合了序列分割、中位数计算和定位操作。
 
@@ -1821,7 +1839,7 @@
 
 ---
 
-## 56. **algorithms/generate_rain_water_summation.py**
+## 57. **algorithms/generate_rain_water_summation.py**
 
 - **用途:** “接雨水”问题的子任务变体（Task B）。输入不是地形高度，而是已经计算好的**每格雨水量**（中间状态）。任务是计算这些雨水量的**总和**。这用于测试模型单纯进行“求和”这一数学聚合操作的能力，与完整的接雨水任务（分析地形+求和）形成对比。
 
@@ -1835,7 +1853,7 @@
 
 ---
 
-## 57. **algorithms/generate_rain_water_then_cellular_automata.py**
+## 58. **algorithms/generate_rain_water_then_cellular_automata.py**
 
 - **用途:** 这是一个**跨领域链式推理**任务（Task D）。测试模型能否在一次前向传播中，连续执行两个逻辑上完全无关的复杂步骤：首先解决"接雨水"问题计算每格水量，然后立即将该水量数据作为初始状态，执行"元胞自动机"演化。
 
@@ -1853,7 +1871,7 @@
 
 ---
 
-## 58. **algorithms/generate_maze_decoupled.py**
+## 59. **algorithms/generate_maze_decoupled.py**
 
 - **用途:** 这是稠密迷宫寻路任务的**解耦实验**版本。在 `generate_maze_dense.py` 只输出最优方向（4分类）的基础上，本脚本额外输出完整的BFS距离图作为"解释标签"，用于研究解耦辅助信息对模型学习效率的影响，以及探测训练后模型内部表示中距离信息的存在性。
 
@@ -1883,7 +1901,7 @@
 
 ---
 
-## 59. **algorithms/generate_edit_nextstep_mlp.py**
+## 60. **algorithms/generate_edit_nextstep_mlp.py**
 
 - **用途:** 这是编辑距离问题的一个**新颖的解耦实验**。与 `generate_edit_distance_explainable.py` 输出完整编辑路径不同，本脚本聚焦于预测"下一步最优操作"，并提供两种解耦辅助信息：操作掩码（哪些操作是最优的）和完整DP表的操作类型信息。
 
@@ -1914,7 +1932,7 @@
 
 ---
 
-## 60. **algorithms/generate_edit_distance_dp_table_full.py**
+## 61. **algorithms/generate_edit_distance_dp_table_full.py**
 
 - **用途:** 编辑距离问题的**完整DP表解耦实验**。本脚本探索一个深刻的研究问题：**是否每一个问题都一定存在能加速收敛的解耦信息？** 与 `generate_edit_nextstep_mlp.py` 相比，本脚本提供了更"完整"（但也更冗余）的DP表作为解耦标签。
 
@@ -1959,6 +1977,92 @@
     - 完整DP表的学习难度是否真的高于部分表？
     - 如果难度更高，是因为信息冗余，还是因为标签空间过大？
     - 能否通过课程学习（先学部分，再学全部）来缓解？
+
+---
+
+## 62. **algorithms/generate_median_one_finder.py**
+
+- **用途:** 生成“中位数'1'定位”任务数据集。这是一个基础的统计定位任务。
+- **逻辑:** 输入二进制字符串，找到所有'1'的位置，取其中位数的那个'1'的绝对索引。如果'1'的个数为偶数，取中间偏后的那个。
+- **I/O格式:** 输入: 30位二进制串; 输出: 5位二进制位置编码。
+- **主要参数:** INPUT_WIDTH (30), NUM_SAMPLES。
+
+---
+
+## 63. **algorithms/generate_mean_of_medians.py**
+
+- **用途:** 生成“奇偶孤岛中位点均值”任务数据集。这是一个没有任何中间提示的复杂逻辑推理任务，被称为“九重炼狱”。
+- **逻辑:** 1. 识别连续'1'形成的孤岛；2. 分为奇数长度和偶数长度两组；3. 分别找到两组的中位孤岛；4. 找到这两个孤岛的中位点；5. 计算这两个点的算术平均值并取整。
+- **I/O格式:** 输入: 30位二进制串; 输出: 5位二进制位置编码。
+- **主要参数:** INPUT_WIDTH (30), NUM_SAMPLES。
+
+---
+
+## 64. **algorithms/generate_exam_seats.py**
+
+- **用途:** 生成“考试安排”任务数据集 (LeetCode 1349)。测试模型在二维网格上的状态压缩动态规划推理能力。
+- **逻辑:** 给定一个包含好坏座位的教室布局，在满足“左右不相邻、左上右上不坐人”的防作弊规则下，计算能容纳的最大学生数。脚本使用状态压缩DP生成标签。
+- **I/O格式:** 输入: 展平的8x6网格字符串；输出: 最大学生数的二进制编码。
+- **主要参数:** ROWS (8), COLS (6), NUM_SAMPLES。
+- **链接:** [LeetCode 1349](https://leetcode.cn/problems/maximum-students-taking-exam/)
+
+---
+
+## 65. **algorithms/generate_parity_accumulator.py**
+
+- **用途:** 生成“奇偶指令累加器”任务。这是一个包含顺序依赖和条件算术的复杂逻辑任务。
+- **逻辑:** 输入二进制流。解析为连续的'0'块和'1'块。遍历所有'1'孤岛，根据其前置'0'块长度的奇偶性，决定是将该孤岛长度加到累加器上还是从中减去。
+- **I/O格式:** 输入: 30位二进制串；输出: 6位无符号二进制数值。
+- **主要参数:** INPUT_WIDTH (30), INITIAL_ACCUMULATOR (32)。
+
+---
+
+## 66. **algorithms/generate_neural_turing_machine.py**
+
+- **用途:** 模拟一个简化的"神经图灵机"，在循环磁带上执行条件写入操作。这是对联结主义系统能否学习执行算法操作的直接测试。
+
+- **逻辑:** 系统接收32位输入指令（8组4-bit指令），每组指令包含3位计数位和1位动作位。神经网络需要学习在32位循环磁带上执行写入操作，支持覆写(overwrite)和异或(xor)两种模式。
+
+- **I/O格式:**
+    - 输入: 32位二进制指令串（8组4-bit指令）。
+    - 输出: 32位二进制向量，代表最终磁带状态。
+
+- **主要参数:** NUM_SAMPLES, TAPE_LENGTH, WRITE_MODE。
+
+---
+
+## 67. **algorithms/generate_lights_out_forward.py**
+
+- **用途:** 实现经典的"Lights Out"游戏**正向模拟**。这是一个测试神经网络学习局部规则传播能力的理想平台。
+
+- **逻辑:** 在5x5网格上，按压一个按钮会翻转其上下左右邻居的状态（不包括自己）。模型需要从按压方案预测最终的灯光状态。
+
+- **注意:** 根据标准Lights Out规则，按压点本身不翻转，只有邻居会受到影响。
+
+- **I/O格式:**
+    - 输入: 25位二进制串，代表按压方案。
+    - 输出: 25位二进制向量，代表最终灯光状态。
+
+- **主要参数:** ROWS, COLS, NUM_SAMPLES。
+
+---
+
+## 68. **algorithms/generate_lights_out_gaussian_elimination.py**
+
+- **用途:** 将Lights Out逆向问题建模为线性方程组求解，并通过高斯消元法提供解耦信息。这是一个突破性的实验，证明了**通过合适的解耦方法，神经网络可以成功学习求解原本无法收敛的复杂逆向问题**。
+
+- **关键发现:** 在没有解耦的情况下，Lights Out逆向问题无法通过神经网络训练收敛。然而，当提供高斯消元过程中的中间步骤（行简化阶梯矩阵）作为辅助标签时，模型能够成功学习完整的求解过程。这一发现验证了**解耦技术在复杂算法学习中的决定性作用**。
+
+- **逻辑:**
+    1. 使用改进的Lights Out规则（包含自身翻转）确保变换矩阵可逆。
+    2. 将问题建模为Ax = b（mod 2）的线性方程组。
+    3. 不仅要求模型输出最终解x，还要求其预测高斯消元过程中的中间矩阵。
+
+- **I/O格式:**
+    - 输入: 25位灯光状态。
+    - 输出: 675位向量（25位最终解 + 650位中间阶梯矩阵）。
+
+- **主要参数:** ROWS, COLS, NUM_SAMPLES。
 
 ---
 
@@ -2658,6 +2762,24 @@
 
 ---
 
+
+
+---
+
+## 27. **cellular_automata/generate_hierarchical_ca_tree.py**
+
+- **用途:** 层次化抽象CA树数据集生成器。用于更进一步验证中间表示的涌现现象，通过父节点的两个孙节点和另一个子节点的组合来检查涌现现象。
+
+- **核心思想:** 如果说前面的多任务实验验证了共有子节点的训练是否会涌现父节点表示，那么这个实验通过更复杂的层次化结构（祖父-父亲-孙子三代关系）来检查：1）神经网络能否从多个子节点的状态推断出父节点的状态？2）这种层次化推理是否会自然涌现出对中间抽象层的理解？
+
+- **数据结构:** 构建树状的三层演化结构：Base(4层) → Branch(5层) → Leaf(3层)，输入30位的根节点，输出包含树上所有9个节点状态的JSON对象。
+
+- **理论价值:** 这种层次化涌现可能是通向更复杂推理能力的关键，为研究神经网络的抽象推理能力提供了新的实验平台。
+
+- **主要参数:** INPUT_LEN，BASE_LAYERS，BRANCH_LAYERS，LEAF_LAYERS，各种CA规则编号。
+
+---
+
 # E: 物理模拟 (Physics Simulation)
 
 ## 1. **physics_simulation/generate_projectile_motion_simulation.py**
@@ -3308,3 +3430,47 @@
 
 - **交互方式:** 命令行输入。
 - **主要配置:** `model_dir`, `sampling_temperature`。
+
+---
+
+## 8. **utils/validate_model.py**
+
+- **用途:** 独立的模型性能验证工具。用于验证训练好的模型在大型验证集上的精确匹配率和位准确率，支持百万级样本的高效验证。
+
+- **逻辑:** 加载预训练的MLP模型和验证数据集，计算两个核心指标：
+  1. **精确匹配率 (Exact Match)**: 预测结果与真实结果完全一致的样本比例
+  2. **位准确率 (Bit Accuracy)**: 所有预测位中正确位的比例
+
+- **I/O格式:**
+  - 输入: 命令行参数指定模型路径(.pth)、数据集路径(.jsonl)、输入/输出位数
+  - 输出: 控制台显示验证进度和最终结果，同时保存详细报告到JSON文件
+
+- **主要参数:**
+  - `--model`: 模型文件路径
+  - `--dataset`: 验证数据集路径
+  - `--input-bits`: 输入维度
+  - `--output-bits`: 输出维度
+  - `--hidden-size`: 隐藏层大小（默认4096）
+  - `--num-layers`: 隐藏层数量（默认4）
+  - `--batch-size`: 验证批次大小（默认4096）
+
+- **使用示例:**
+  ```bash
+  python utils/validate_model.py \
+    --model checkpoints/best_model.pth \
+    --dataset datasets/test_data.jsonl \
+    --input-bits 40 --output-bits 21
+  ```
+
+- **功能特点:**
+  1. 支持大规模数据集验证（已测试2000万样本）
+  2. 实时显示验证进度和当前准确率
+  3. 详细的性能报告包括错误样本数、验证耗时等
+  4. 自动保存验证结果到JSON文件便于后续分析
+  5. 支持CUDA加速验证
+
+- **应用场景:**
+  1. 模型训练完成后的最终性能评估
+  2. 对比不同模型的泛化能力
+  3. 验证模型在特定测试集上的可靠性
+  4. 大规模数据集的性能基准测试

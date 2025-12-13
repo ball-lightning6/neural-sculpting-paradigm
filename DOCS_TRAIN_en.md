@@ -493,6 +493,39 @@ This script is used for a **Linear Probe experiment on the binary addition task*
 
 ---
 
+### 19. **training_scripts/train_mlp_tiyunzong.py**
+
+- **Purpose:** "TiYunZong" (Cloud Ladder) Curriculum Learning - Long-range CA reasoning training. Verifies if a model capable of ultra-long-range reasoning can be trained through curriculum learning that progressively increases reasoning depth.
+
+- **Key Finding:** **It becomes very difficult to increase layers after a certain point**. This important finding fully illustrates that this paradigm is not magic; it is likely impossible to arbitrarily increase CA layers through simple tricks.
+
+- **Theoretical Significance:**
+  1. Existence of capability ceilings that cannot be broken by simple techniques.
+  2. Verification of computational irreducibility in neural network learning.
+  3. Inherent limitations of curriculum learning.
+
+- **Core Idea:** Since n layers of CA have been trained, training n+1 layers with the same hidden layers should not be hard, which is certainly faster than training very high layers directly. This can be viewed as a form of decoupling.
+
+- **Experimental Design:** Uses a sliding window mechanism to progressively increase prediction layers; each stage must reach a convergence threshold before entering the next stage.
+
+- **Main Parameters:** WINDOW_SIZE，TOTAL_STAGES，GATE_THRESHOLD，MAX_EPOCHS_PER_STAGE。
+
+---
+
+### 20. **training_scripts/train_mlp_multitask.py**
+
+- **Purpose:** Multi-task/Multi-head MLP training script - Act 8 conjecture verification experiment. Used to verify if multi-task training leads to the emergence of shared intermediate decoupled representations, thereby accelerating learning of each task.
+
+- **Key Finding:** **Multi-task training converges faster than single-task training on almost every task**. This breakthrough finding verifies the core conjecture of Act 8: through shared underlying representations, neural networks can discover common patterns across tasks, achieving knowledge transfer and accelerated learning.
+
+- **Theoretical Significance:** This finding reveals the intrinsic law of neural network learning—multi-task pressure promotes the model to discover common representations shared across tasks, and this representation in turn accelerates the learning of each task. This provides empirical support for building more efficient multi-task learning systems.
+
+- **Experimental Design:** Supports single-task and multi-task training modes, can simultaneously train multiple different types of tasks like addition, trapping rain water, mod 3 operation, and CA30 evolution.
+
+- **Main Parameters:** TRAINING_MODE (single/multi)，TASKS (task definition)，HIDDEN_SIZE，NUM_HIDDEN_LAYERS。
+
+---
+
 ### 1. eval_hanoi.py
 
 **▶︎ Brief Description**
