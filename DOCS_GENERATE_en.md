@@ -908,6 +908,23 @@
 
 ---
 
+## 54. **symbolic_math_logic/generate_multiply_binary_showdown.py**
+
+- **Purpose:** Three-algorithm showdown experiment for binary multiplication. Extends the idea of `generate_rain_water_final_showdown.py` to multiplication tasks, providing three decoupling methods for comparison.
+    
+- **Logic:** Input two N-bit integers, output the product and intermediate results from three algorithms:
+    1. **Progressive Sum**: Record intermediate sums during partial product accumulation
+    2. **Carryless Counters**: Record counters for each column
+    3. **Karatsuba Decomposition**: Record Z0, Z1, Z2 recursive subproblems
+    
+- **I/O Format:**
+    - Input: 32-bit binary string (two 16-bit numbers concatenated)
+    - Output: JSON object containing final_product and three explain labels
+        
+- **Key Parameters:** NUM_BITS (16), DATASET_SIZE (500000)
+
+---
+
 # B: Algorithm Learning
 
 ## 1. **algorithms/generate_sort_integers.py**
@@ -1897,6 +1914,54 @@
 
 ---
 
+## 60. **algorithms/generate_edit_distance_dp_table_full.py**
+
+- **Purpose:** Full DP table decoupling experiment for edit distance. Explore a profound research question: **Does every problem necessarily have decoupling information that can accelerate convergence?** Compared to `generate_edit_nextstep_mlp.py`, this script provides a more "complete" (but also more redundant) DP table as decoupled labels.
+
+- **Experimental Background & Philosophical Reflection:** Chapter 8 systematically studies "decoupling accelerates convergence" and finds not all decoupling methods are beneficial—some even slow convergence (like monotonic stack decoupling for rain water). This script originates from such open questions:
+    
+    - **Hypothesis A (Naive Belief)**: More intermediate information is always beneficial; complete DP table should accelerate learning better than partial info.
+    - **Hypothesis B (Cognitive Economics)**: Overly redundant information may increase learning burden; model may prefer "just right" intermediate representations.
+    - **Experimental Finding**: Preliminary observations show predicting only first row converges faster than predicting full DP table. This suggests **more info isn't always better**—"relevance" and "learnability" are key.
+    
+    This echoes the paper's observation that "monotonic stack decoupling slows convergence," pointing to a deeper insight: **Neural learning has its own "cognitive economics"—it selects representation granularity matching the task, while artificially imposed overly fine or coarse decoupling may backfire**. This raises an important question for future research: Can models automatically discover optimal decoupling granularity through methods like meta-learning or neural architecture search?
+
+- **Logic:**
+    1. Generate two random 20-bit binary strings A and B.
+    2. Calculate edit distance using standard DP, building complete (LEN+1)×(LEN+1) operation table.
+    3. Ensure uniqueness using fixed priority ordering (Insert < Delete < Substitute).
+    4. Output contains two parts:
+        - **prediction_label**: DP table first row (length (LEN+1)×3 bits)
+        - **explanation_label**: Full DP table (length (LEN+1)²×3 bits)
+
+- **I/O Format:**
+    - Input: 40-bit binary string (two 20-bit strings concatenated).
+    - Output: JSON object containing:
+        - `input`: Input string
+        - `prediction_label`: 63-bit list (21 operations × 3-bit encoding)
+        - `explanation_label`: 1323-bit list (21×21 DP cells × 3-bit encoding)
+
+- **Key Parameters:**
+    - `LEN` (20): Each string length
+    - `NUM_SAMPLES` (500000): Dataset size
+
+- **Training Recommendations:**
+    - Can train only prediction_label (first row prediction)
+    - Or train both heads simultaneously (first row + full table), compare convergence speed
+    - Recommend testing on small scale first as full table label space is huge
+
+- **Comparison with Related Scripts:**
+    - vs. `generate_edit_distance.py`: Latter only outputs final distance value
+    - vs. `generate_edit_distance_explainable.py`: Latter outputs complete edit path sequence
+    - vs. `generate_edit_nextstep_mlp.py`: Same structure but different params (LEN=20 vs 15)
+
+- **Open Questions (Future Research):**
+    - Is full DP table really harder to learn than partial table?
+    - If harder, is it due to information redundancy or label space being too large?
+    - Can curriculum learning (learn partial first, then full) help?
+
+---
+
 # C: Visual Reasoning
 
 ## 1. **visual_reasoning/generate_checkerboard_to_binary.py**
@@ -2522,6 +2587,44 @@
 - **Comparison with Related Scripts:**  
     - vs. `generate_ca_text_format_dataset.py`: The latter only outputs the final state, without intermediate processes.  
     - vs. `generate_ca110_full_trace.py`: The latter outputs the full trace but in a multi-label binary classification format, intended for non-autoregressive models.
+
+---
+
+## 25. **cellular_automata/generate_ca_multirule_cot_trace.py** ⚠️ (Experimental)
+
+- **Purpose:** Generates multi-rule CA CoT (Chain-of-Thought) explanation datasets for training autoregressive language models capable of recognizing and executing different rules. Important extension of `generate_ca_rule110_minimalist_trace.py`, supporting multi-rule environment reasoning tests.
+
+- **Experimental Nature:** Primarily for exploratory research, testing whether models can learn to distinguish and execute multiple different CA rules in the same training set. Involves "rule routing" and "conditional execution" capabilities.
+
+- **Logic:**
+    1. Maintains database of 8 famous ECA rules (Rule 30, 54, 60, 90, 110, 126, 150, 184), covering different Wolfram classes.
+    2. Users select rules via `RULES_TO_INCLUDE` (default [30, 90, 110, 184]).
+    3. For each sample: randomly select rule, generate random initial state, evolve specified layers, generate complete CoT text.
+    4. Format: `"Rule: {rule_number}, State: {initial} -> \n{CoT Explanation}"`
+
+- **I/O Format:**
+    - Output: JSON with single field `text` (complete prompt+answer string).
+
+- **Key Parameters:** NUM_BITS (30), TOTAL_LAYERS (2), RULES_TO_INCLUDE ([30, 90, 110, 184]), DATASET_SIZE (500000)
+
+- **Training Recommendations:** Use Decoder-only Transformer (GPT-2) with custom Data Collator. Multi-rule training may need larger capacity and longer time. Start with single-rule validation.
+
+- **Research Value:** Explores whether models can parse rule numbers from prompts, whether multi-rule training promotes abstract "CA evolution" meta-concepts, and transfer effects between rules.
+
+---
+
+## 26. **cellular_automata/generate_ca_ood_hallucination_split.py**
+
+- **Purpose:** Generates CA OOD (Out-of-Distribution) generalization test datasets. Splits 256 CA rules proportionally into training and OOD test sets to test model generalization on unseen rules.
+
+- **Logic:** Randomly shuffle 256 rules; 95% for training, 5% for OOD test. Generate specified samples per rule.
+    
+- **I/O Format:**
+    - Input: 8-bit rule + 30-bit initial state
+    - Output: Final state after 2-step evolution
+    - Two output files: ca_ood_train_dataset.jsonl and ca_ood_eval_dataset.jsonl
+        
+- **Key Parameters:** CA_WIDTH (30), EVOLUTION_STEPS (2), TRAIN_RULES_RATIO (0.95), SAMPLES_PER_RULE (3000)
 
 ---
 

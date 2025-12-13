@@ -908,6 +908,23 @@
 
 ---
 
+## 54. **symbolic_math_logic/generate_multiply_binary_showdown.py**
+
+- **用途:** 二进制乘法的三算法对决实验。扩展`generate_rain_water_final_showdown.py`的思想到乘法任务，提供三种解耦方法对比。
+    
+- **逻辑:** 输入两个N-bit整数，输出乘积及三种算法的中间过程：
+    1. **逐行累加**: 记录部分积累加的中间和
+    2. **无进位列和**: 记录每列的计数器
+    3. **Karatsuba分解**: 记录Z0, Z1, Z2三个递归子问题
+    
+- **I/O格式:**
+    - 输入: 32位二进制字符串（两个16位数拼接）
+    - 输出: JSON对象包含final_product和三种explain标签
+        
+- **主要参数:** NUM_BITS (16), DATASET_SIZE (500000)
+
+---
+
 # B: 算法学习 (Algorithm Learning)
 
 ## 1. **algorithms/generate_sort_integers.py**
@@ -1897,6 +1914,54 @@
 
 ---
 
+## 60. **algorithms/generate_edit_distance_dp_table_full.py**
+
+- **用途:** 编辑距离问题的**完整DP表解耦实验**。本脚本探索一个深刻的研究问题：**是否每一个问题都一定存在能加速收敛的解耦信息？** 与 `generate_edit_nextstep_mlp.py` 相比，本脚本提供了更"完整"（但也更冗余）的DP表作为解耦标签。
+
+- **实验背景与哲学思考:** 论文第八幕系统性地研究了"解耦加速收敛"现象，并发现并非所有解耦方式都有益——某些解耦甚至会减缓收敛（如接雨水的单调栈解耦）。本脚本正是源于这样一个开放性问题的探索：
+    
+    - **假设A（朴素信念）**: 提供更多中间信息总是有益的，完整DP表应该比部分信息更能加速学习。
+    - **假设B（认知经济学）**: 过于冗余的信息可能增加学习负担，模型可能更倾向于学习"恰到好处"的中间表示。
+    - **实验发现**: 初步观察表明，直接预测第一行（`generate_edit_nextstep_mlp.py`的prediction_label）比预测完整DP表收敛更快。这暗示**并非信息越多越好**，而是信息的"相关性"和"可学习性"才是关键。
+    
+    这一发现与论文中关于"单调栈解耦反而减缓收敛"的观察相呼应，共同指向一个deeper insight：**神经网络的学习过程有其自身的"认知经济学"——它会选择与任务最匹配的表示粒度，而人为强加的过细或过粗的解耦都可能适得其反**。这为未来的研究提出了一个重要问题：能否通过某种方式（如元学习或神经架构搜索）让模型自动发现最优的解耦粒度？
+
+- **逻辑:**
+    1. 生成两个长度为20的随机二进制字符串A和B。
+    2. 使用标准DP算法计算编辑距离，同时构建完整的(LEN+1)×(LEN+1)操作表。
+    3. 为确保唯一性，使用固定的优先级排序（Insert < Delete < Substitute）。
+    4. 输出包含两部分：
+        - **prediction_label**: DP表第一行（长度(LEN+1)×3位）
+        - **explanation_label**: 完整DP表（长度(LEN+1)²×3位）
+
+- **I/O格式:**
+    - 输入: 40位二进制字符串（两个20位字符串拼接）。
+    - 输出: JSON对象包含：
+        - `input`: 输入字符串
+        - `prediction_label`: 63位列表（21个操作×3位编码）
+        - `explanation_label`: 1323位列表（21×21个DP单元格×3位编码）
+
+- **主要参数:**
+    - `LEN` (20): 每个字符串长度
+    - `NUM_SAMPLES` (500000): 数据集大小
+
+- **训练建议:** 
+    - 可以只训练prediction_label（第一行预测）
+    - 或同时训练两个头（第一行+完整表），对比收敛速度
+    - 建议先在小规模验证，因为完整表标签空间巨大
+
+- **与相关脚本对比:**
+    - vs. `generate_edit_distance.py`: 后者只输出最终距离值
+    - vs. `generate_edit_distance_explainable.py`: 后者输出完整编辑路径序列
+    - vs. `generate_edit_nextstep_mlp.py`: 后者提供第一行+完整表，本脚本结构相同但参数不同（LEN=20 vs 15）
+
+- **开放性问题（待研究）:**
+    - 完整DP表的学习难度是否真的高于部分表？
+    - 如果难度更高，是因为信息冗余，还是因为标签空间过大？
+    - 能否通过课程学习（先学部分，再学全部）来缓解？
+
+---
+
 # C: 视觉推理 (Visual Reasoning)
 
 ## 1. **visual_reasoning/generate_checkerboard_to_binary.py**
@@ -2517,12 +2582,79 @@
     - `TOTAL_LAYERS` (2): 演化层数。
     - `DATASET_SIZE` (500000): 数据集大小。
 
-- **训练建议:** 使用 Decoder-only Transformer（如GPT-2），配合自定义的 Data Collator 确保只在answer部分计算loss（见相关训练脚本 Untitled21/23）。注意：由于输出包含详细的计算轨迹，文本长度较长，需要足够大的 CONTEXT_LENGTH（建议>1024）。
+- **训练建议:** 使用 Decoder-only Transformer（如GPT-2），配合自定义的 Data Collator 确保只在answer部分计算loss。注意：由于输出包含详细的计算轨迹，文本长度较长，需要足够大的 CONTEXT_LENGTH（建议>1024）。
 
 - **与相关脚本对比:**
     - vs. `generate_ca_text_format_dataset.py`: 后者只输出最终状态，无中间过程。
     - vs. `generate_ca110_full_trace.py`: 后者输出完整轨迹但格式为多标签二分类，供非自回归模型使用。
-    - vs. Untitled24的多规则版本: 后者支持多种规则的CoT解释，本脚本专注于single Rule 110。
+    - vs. `generate_ca_multirule_cot_trace.py`: 后者支持多种规则的CoT解释，本脚本专注于single Rule 110。
+
+---
+
+## 25. **cellular_automata/generate_ca_multirule_cot_trace.py** ⚠️ (实验性)
+
+- **用途:** 生成包含多种元胞自动机规则的CoT（Chain-of-Thought）解释数据集，用于训练能够识别和执行不同规则的自回归语言模型。这是对 `generate_ca_rule110_minimalist_trace.py` 的重要扩展，支持多规则环境下的推理能力测试。
+
+- **实验性质:** 本脚本主要用于探索性研究，测试模型是否能在同一个训练集中学习区分和执行多种不同的CA规则。这涉及到模型的"规则路由"和"条件执行"能力。
+
+- **逻辑:**
+    1. 脚本维护一个包含8种著名ECA规则的数据库（Rule 30, 54, 60, 90, 110, 126, 150, 184），涵盖了Wolfram分类中的不同类别。
+    2. 用户可通过 `RULES_TO_INCLUDE` 参数选择训练集中包含哪些规则（默认[30, 90, 110, 184]）。
+    3. 对于每个样本：
+        - 随机选择一个规则
+        - 生成随机初始状态
+        - 按该规则演化指定层数
+        - 生成包含规则指定和逐层计算过程的完整CoT文本
+    4. 输出格式采用 `"Rule: {rule_number}, State: {initial} -> \n{CoT解释}"` 的prompt-answer结构。
+
+- **I/O格式:**
+    - 输出: JSON对象，包含单个字段：
+        - `text`: 完整的prompt+answer字符串。
+    
+- **输出示例（2层演化，Rule 110）:**
+    ```
+    Rule: 110, State: 101101... -> 
+    Received instruction to use Rule 110.
+    Thinking about Layer 1:
+    Trace: 100>1 011>1 110>1 ...
+    Result: 110101...
+    Thinking about Layer 2:
+    Trace: 110>1 101>1 010>1 ...
+    Result: 011010...
+    Evolution complete.
+    ```
+
+- **主要参数:**
+    - `NUM_BITS` (30): CA宽度。
+    - `TOTAL_LAYERS` (2): 演化层数。
+    - `RULES_TO_INCLUDE` ([30, 90, 110, 184]): 训练集包含的规则列表。
+    - `DATASET_SIZE` (500000): 数据集大小。
+
+- **训练建议:** 
+    - 使用 Decoder-only Transformer（如GPT-2）
+    - 配合自定义Data Collator确保只在answer部分计算loss
+    - 多规则训练可能需要更大的模型容量和更长的训练时间
+    - 可以先在单规则上验证收敛性，再扩展到多规则
+
+- **研究价值:** 该脚本为探索以下问题提供了实验平台：
+    - 模型能否从prompt中正确解析规则编号并路由到对应的执行逻辑？
+    - 多规则训练是否会促使模型形成更抽象的"CA演化"元概念？
+    - 不同规则之间是否存在正迁移或负迁移效应？
+
+---
+
+## 26. **cellular_automata/generate_ca_ood_hallucination_split.py**
+
+- **用途:** 生成CA OOD（Out-of-Distribution）泛化测试数据集。将256个CA规则按比例分为训练集和OOD测试集，用于测试模型在未见过规则上的泛化能力。
+
+- **逻辑:** 随机打乱256个规则，95%作为训练集，5%作为OOD测试集。为每个规则生成指定数量的样本。
+    
+- **I/O格式:**
+    - 输入: 8位规则 + 30位初始状态
+    - 输出: 演化2步后的最终状态
+    - 输出两个文件: ca_ood_train_dataset.jsonl 和 ca_ood_eval_dataset.jsonl
+        
+- **主要参数:** CA_WIDTH (30), EVOLUTION_STEPS (2), TRAIN_RULES_RATIO (0.95), SAMPLES_PER_RULE (3000)
 
 ---
 
