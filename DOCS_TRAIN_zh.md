@@ -656,3 +656,22 @@
 - **实验设计:** 支持单任务和多任务两种训练模式，可以同时训练加法、接雨水、模3运算和CA30演化等多个不同类型的任务。
 
 - **主要参数:** TRAINING_MODE（single/multi），TASKS（任务定义），HIDDEN_SIZE，NUM_HIDDEN_LAYERS。
+
+---
+
+### 21. **training_scripts/train_chess_policy.py**
+
+- **用途:** 这是**策略网络（Policy Network）**的训练脚本。它训练一个 Transformer 模型，使其能够根据盘面（FEN）预测下一步的最佳走法概率分布。
+
+- **逻辑:**
+    - **Policy Transformer:** 定义了一个基于 Encoder-only Transformer（类似 BERT）的神经网络架构。
+        - **输入:** 将 FEN 字符串 Token 化。
+        - **输出:** 通过一个线性头（Policy Head）输出所有合法走法（Vocab 大小）的 Logits。
+    - **高效数据流:** 实现了 `NpzChunkDataset`，支持按块懒加载大规模 NPZ 格式的训练数据，大大降低内存占用。
+    - **训练目标:** 使用 Soft CrossEntropy（即 KL 散度）逼近引擎生成的软标签概率分布。这比单纯学习 One-hot 的“最佳走法”包含更多信息量。
+
+- **I/O格式:**
+    - 输入: 包含 `fens` 和 `labels` 数组的 .npz 文件目录。
+    - 输出: 训练好的模型权重 (`pytorch_model.bin`) 和配置。
+
+- **主要参数:** `train_data_dir`, `num_epochs`, `learning_rate`, `model_config`。

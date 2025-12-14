@@ -233,6 +233,110 @@ header h1 {
     letter-spacing: -0.5px;
 }
 
+/* ========== 项目介绍样式 ========== */
+section.category-section .category-intro {
+    background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 28px 32px;
+    margin-bottom: 32px;
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+}
+
+.category-intro::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(to bottom, var(--accent-color) 0%, var(--secondary-color) 100%);
+}
+
+.category-intro h1,
+.category-intro h2,
+.category-intro h3,
+.category-intro h4 {
+    color: var(--primary-color);
+    margin-top: 0;
+    margin-bottom: 16px;
+    font-weight: 600;
+}
+
+.category-intro h1 {
+    font-size: 1.5rem;
+    border-bottom: 2px solid var(--accent-color);
+    padding-bottom: 8px;
+    display: inline-block;
+}
+
+.category-intro h2 {
+    font-size: 1.3rem;
+}
+
+.category-intro h3 {
+    font-size: 1.1rem;
+}
+
+.category-intro p {
+    color: var(--text-secondary);
+    line-height: 1.8;
+    margin-bottom: 16px;
+    font-size: 1rem;
+}
+
+.category-intro ul,
+.category-intro ol {
+    padding-left: 24px;
+    margin: 16px 0;
+}
+
+.category-intro li {
+    margin-bottom: 8px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+}
+
+.category-intro strong {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.category-intro code {
+    background: #e2e8f0;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 0.9em;
+    color: var(--secondary-color);
+}
+
+.category-intro pre {
+    background: #2d3748;
+    color: #e2e8f0;
+    padding: 16px;
+    border-radius: var(--radius);
+    overflow-x: auto;
+    margin: 16px 0;
+}
+
+.category-intro blockquote {
+    border-left: 4px solid var(--accent-color);
+    padding-left: 20px;
+    margin: 20px 0;
+    color: var(--text-secondary);
+    font-style: italic;
+    background: rgba(56, 178, 172, 0.05);
+    padding: 16px 20px;
+    border-radius: 0 var(--radius) var(--radius) 0;
+}
+
+.category-intro blockquote p:last-child {
+    margin-bottom: 0;
+}
+
 .script-card {
     background: var(--card-bg);
     border-radius: var(--radius);

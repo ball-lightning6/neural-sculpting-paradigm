@@ -36,6 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const topCategories = [
             { key: 'datasetScripts', name_zh: docsData.datasetScripts.name_zh, name_en: docsData.datasetScripts.name_en },
+            { key: 'independentProjects', name_zh: docsData.independentProjects.name_zh, name_en: docsData.independentProjects.name_en },
             { key: 'toolScripts', name_zh: docsData.toolScripts.name_zh, name_en: docsData.toolScripts.name_en },
             { key: 'trainingScripts', name_zh: docsData.trainingScripts.name_zh, name_en: docsData.trainingScripts.name_en }
         ];
@@ -65,15 +66,15 @@ document.addEventListener('DOMContentLoaded', () => {
         topNavContainer.appendChild(topNavUl);
         categoryNav.appendChild(topNavContainer);
 
-        // ========== 渲染子分类导航 (仅数据集脚本有子分类) ==========
-        if (currentTopCategory === 'datasetScripts') {
+        // ========== 渲染子分类导航 (数据集脚本和独立项目有子分类) ==========
+        if (currentTopCategory === 'datasetScripts' || currentTopCategory === 'independentProjects') {
             const subNavContainer = document.createElement('div');
             subNavContainer.className = 'sub-nav-container';
             
             const subNavUl = document.createElement('ul');
             subNavUl.className = 'sub-nav';
             
-            const categories = docsData.datasetScripts.categories;
+            const categories = docsData[currentTopCategory].categories;
             
             categories.forEach((category, index) => {
                 const li = document.createElement('li');
@@ -110,8 +111,8 @@ document.addEventListener('DOMContentLoaded', () => {
             let scripts = [];
             let sectionTitle = '';
             
-            if (currentTopCategory === 'datasetScripts') {
-                const category = docsData.datasetScripts.categories[currentSubCategoryIndex];
+            if (currentTopCategory === 'datasetScripts' || currentTopCategory === 'independentProjects') {
+                const category = docsData[currentTopCategory].categories[currentSubCategoryIndex];
                 if (category) {
                     scripts = category.scripts;
                     sectionTitle = currentLang === 'zh' ? category.category_zh : category.category_en;
@@ -139,6 +140,20 @@ document.addEventListener('DOMContentLoaded', () => {
             title.className = 'category-title';
             title.textContent = sectionTitle;
             section.appendChild(title);
+
+            // Render Introduction if available (For Independent Projects)
+            if (currentTopCategory === 'independentProjects') {
+                const category = docsData[currentTopCategory].categories[currentSubCategoryIndex];
+                const intro = currentLang === 'zh' ? category.intro_zh : category.intro_en;
+                console.log('Rendering intro for independentProjects:', !!intro);
+                if (intro) {
+                    const introDiv = document.createElement('div');
+                    introDiv.className = 'category-intro';
+                    // Use marked.js to render markdown content
+                    introDiv.innerHTML = marked.parse(intro);
+                    section.appendChild(introDiv);
+                }
+            }
 
             scripts.forEach(script => {
                 const card = document.createElement('div');

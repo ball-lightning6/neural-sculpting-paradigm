@@ -1,115 +1,151 @@
-# Neural Procesor Scripts
+# Neural Processor Scripts
 
-This directory contains scripts for generating and running neural processor datasets and models.
+This directory contains scripts for generating datasets and running models for Neural Processors.
 
 ## Project Status & Limitations
 
 **This is a very preliminary attempt with limited time investment.**
 
-The core motivation for this project stems from the observation that training direct "input-to-output" transformations in this paradigm becomes extremely difficult when the number of intermediate steps is large. This is reminiscent of earlier attempts to train maze tasks, where directly predicting the "shortest path from start to end" was very hard, but predicting the "optimal next step for the shortest path" was much more effective. This led to the idea: **Solving a difficult, potentially variable-length optimal solution problem can be transformed into a fixed-length "optimal single step" problem.**
+The core motivation of this project stems from an observation: in this paradigm, training a direct "input-to-output" transformation becomes extremely difficult if there are too many intermediate steps. This relates to the Maze task, where predicting the "shortest path from start to end" directly is hard, but predicting the "optimal next step" is much easier. This inspired us: **Solving a difficult, potentially variable-length optimal solution problem can be transformed into a fixed-length "optimal single step" problem.**
 
-Based on this, we conceived the idea: If we can simulate a mature CPU core, then theoretically we can solve any computable problem through multiple single-step simulations. This is the origin of the "Neural Processor" idea.
+Based on this, we had an idea: If we can simulate a mature CPU core, theoretically we can solve any computable problem through multiple single-step simulations. This is the origin of the "Neural Processor" idea.
 
 However, this idea faces a core challenge: **What is the precision of the Neural CPU?**
-- In actual training, using an RTX 4090 GPU, we can improve single-bit prediction accuracy to about **99.9999999% (9 nines)** and overall output state accuracy to about **99.99999% (7 nines)** in about 1 day.
-- Such precision is sufficient to support some simple, short-process problem calculations.
-- To further improve precision, we tried **voting methods**, but found that the effect was not significant. The analysis suggests that the patterns of errors made by different model instances are similar (non-independent errors), which may be related to the distribution characteristics of the training data.
+- In actual training, using an RTX 4090 GPU, we could increase single-bit prediction accuracy to about **99.9999999% (9 nines)** and overall state accuracy to about **99.99999% (7 nines)** in about 1 day.
+- Such precision is sufficient to support some simple, short-process computational problems.
+- To further improve precision, we experimented with **Voting Methods**, but found the effect insignificant. The reason might be that different model instances make mistakes in similar patterns (non-independent errors), which may relate to data distribution characteristics.
 
-**Vision for the Future:**
-The ideal architecture should be **modular**: not only is the CPU core simulated by a neural network, but the **memory access module** can obviously also be simulated by a neural network. The program execution process would be: Neural CPU executes instruction -> Read/Write Memory -> Loop repeatedly, until the CPU outputs a Halt instruction to interrupt execution.
+**Future Vision:**
+The ideal architecture should be **modular**: Not only the CPU core is simulated by a neural network, but the **Memory Access Module** could obviously also be simulated. The execution process would be: Neural CPU executes instruction -> Read/Write Memory -> Loop until CPU outputs Halt instruction.
 
-Although we have not invested further time at present, and the specific subsequent application scenarios of this project are not yet clear, as a **Proof of Concept**, it successfully proves that this "Neural Instruction Set Computer" can run simple programs.
+Although we haven't invested more time deeply, and the specific application scenarios are unclear, as a **Proof of Concept**, it successfully proves that such a "Neural Instruction Set Computer" can run simple programs.
 
 ---
 
-## Design Philosophy and Architecture
+## Design Philosophy & Architecture
 
-This project aims to explore the possibility of using neural networks as **Arithmetic Logic Units (ALUs)** or even complete **CPUs** to execute classical computer programs.
+This project aims to explore the possibility of using neural networks as **Arithmetic Logic Units (ALU)** or even complete **CPUs** to execute classic computer programs.
 
 1.  **Hybrid Architecture**:
-    -   After early attempts to manage all states and memory entirely with neural networks, it was found that training difficulty increased exponentially with complexity.
-    -   Therefore, this project established a **hybrid design pattern**: **Python scripts** act as the classic "Controller", responsible for instruction fetching, Program Counter (PC) jumps, memory read/write management, and I/O; while the **Neural Network** acts as a called "Black Box ALU", focusing on executing core logic operations and state transitions. This design retains the precise control flow of traditional architectures while leveraging the learning capabilities of neural networks.
-    -   The ideal future form might be: Neural CPU for computation -> Memory module for read/write -> Loop until a halt signal.
+    -   Early attempts to have the neural network manage all state and memory led to exponential complexity.
+    -   Therefore, a **Hybrid Design Pattern** was established: a **Python Script** acts as the classic "Controller", responsible for instruction fetching, PC jumps, memory management, and I/O; while the **Neural Network** acts as a called "Black Box ALU", focusing on core logic operations and state transitions. This preserves precise control flow while leveraging neural learning.
+    -   Future ideal form: Neural CPU computes -> Memory Module read/write -> Loop until Halt.
 
-2.  **Regarding "Neural Voter"**:
-    -   Attempts were made to use Ensemble Learning (Voting) to improve the precision of the Neural CPU.
-    -   However, experiments revealed that the patterns of errors made by different model instances were often not independent (Non-i.i.d. errors), leading to limited improvement from simple majority voting.
-    -   Therefore, the key to improving reliability lies in improving training data and the architecture itself, rather than relying solely on post-processing voting. This explains why the project ultimately shifted towards more refined single-model training.
+2.  **About "Neural Voter"**:
+    -   Attempts were made to use Ensemble Learning (Voting) to improve Neural CPU precision.
+    -   Experiments showed errors are non-i.i.d., limiting the gain from simple majority voting.
+    -   Thus, reliability depends on improving training data and architecture, not post-processing voting. This explains the shift to refined single-model training.
 
-3.  **Evolutionary Path**:
-    -   From the most basic Adder (v1), evolving to a Microprocessor with memory and jumps (v2), then to a specialized core for specific algorithms (GCD) (v2.1), and finally to a Turing-complete universal core (v2.2).
+3.  **Evolution Roadmap**:
+    -   From basic Adder (v1) -> Microprocessor with memory/jumps (v2) -> Specialized Core for Algorithms (v2.1 GCD) -> Universal Turing-complete Core (v2.2).
 
 ---
 
 ## Training Data Generation
 
-### 1. `generate_cpu_v1_basic.py`
-- **Purpose:** Prototype for a basic **Neural CPU**, designed to verify if a neural network can learn to execute a minimal instruction set.
-- **ISA Definition:**
-    - **State:** 4 8-bit registers.
-    - **Instructions:** `NOP`, `MOVI` (Move Immediate), `ADD`, `XOR`.
-    - **Architecture:** 16-bit instruction length.
+### 1. **generate_cpu_v1_basic.py**
+
+- **Purpose:** A basic **Neural CPU Prototype** to verify if NNs can learn basic instruction sets.
+- **Logic:** Simulates a minimal 4-register CPU. Randomly generates instructions (16-bit) and initial states (register values), calculates the next state. Supports basic arithmetic and data movement.
 - **I/O Format:**
     - Input: Instruction (16b) + Current State (32b).
     - Output: Next State (32b).
-- **Key Parameters:** `DATASET_SIZE`, `NUM_REGISTERS`.
-- **Status:** Verified (Basic functionality validated).
+- **Main Parameters:** `DATASET_SIZE`, `NUM_REGISTERS`.
 
-### 2. `generate_cpu_v2_microprocessor.py`
-- **Purpose:** A more fully-featured **Neural Microprocessor**, introducing **Memory Access** and **Control Flow**, simulating core features of the Von Neumann architecture. Used to train a model that handles not just computation but also data storage and branching.
-- **ISA Definition:**
-    - **State:** 8 8-bit registers + 1 flag bit + 16 bytes of memory.
-    - **Instructions:** `LOAD`, `STORE`, `ADD`, `SUB`, `CMP`, `JMP`, `JLT` (Jump if Less Than), `PRINT`, etc.
-    - **Architecture:** 24-bit instruction length.
+### 2. **generate_cpu_v2_microprocessor.py**
+
+- **Purpose:** A more complete **Neural Microprocessor**, introducing **Memory Access** and **Control Flow**, simulating von Neumann architecture features. Used to train a model capable of computation, data access, and program jumps.
+- **Logic:** Extends state space to include 16-byte memory and PC pointer. Adds LOAD/STORE and conditional jump instructions. Simulator maintains full system state updates.
 - **I/O Format:**
-    - Input: Instruction (24b) + Full Machine State (Registers + Flags + Memory).
+    - Input: Instruction (24b) + Full Machine State (Regs+Flags+Mem).
     - Output: Updated Full Machine State.
-- **Key Parameters:** `DATASET_SIZE`, `MEM_SIZE`.
-- **Status:** **Verified**. Used in `run_rainwater_program.py` to successfully execute the Trapping Rain Water algorithm.
+- **Main Parameters:** `DATASET_SIZE`, `MEM_SIZE`.
 
-### 3. `generate_cpu_v2_1_gcd.py`
-- **Purpose:** A **Specialized Neural ALU** with an instruction set tailored and optimized specifically to support the **Greatest Common Divisor (GCD)** algorithm (Euclidean algorithm).
-- **ISA Definition:**
-    - **State:** 4 8-bit registers + 2 flags (ZF, GF).
-    - **Instructions:** `MOVI`, `MOV`, `SUB`, `CMP`.
-- **Significance:** Demonstrates that by pruning the instruction set, a neural network can learn specific algorithmic primitives extremely efficiently. 
-- **Status:** **Verified**. This model was verified to execute the Euclidean algorithm with 100% accuracy in `run_gcd_program.py`.
+### 3. **generate_cpu_v2_1_gcd.py**
 
-### 4. `generate_cpu_v2_2_universal.py`
-- **Purpose:** A **Universal Neural ALU** containing almost all basic instructions required for Turing completeness. It is the most powerful general-purpose computation core in this series.
-- **ISA Definition:**
-    - **Instructions (Extended):** Arithmetic (`ADD`, `SUB`, `INC`, `DEC`), Logic (`AND`, `OR`, `XOR`, `NOT`), Shift (`SHL`), and Control (`CMP`).
-- **Significance:** In `run_bubble_sort_program.py`, this model demonstrated strong generalization capabilities, successfully executing the complex Bubble Sort algorithm.
-- **Status:** **Verified**. Achieved 100% accuracy in the Bubble Sort end-to-end test.
+- **Purpose:** A **Specialized Neural ALU**, with an ISA tailored/optimized for **Greatest Common Divisor (GCD)** execution. Verifies that NNs learn specific algorithm primitives highly efficiently with minimal ISAs.
+- **Logic:**
+    - **ISA:** 4 registers (8-bit) + 2 flags (ZF, GF).
+    - **Instructions:** MOV, MOVI, SUB, CMP.
+    - **Simulation:** Randomly generates instructions and states, uses Python Perfect ALU to compute next state.
+- **I/O Format:**
+    - Input: 16-bit Instruction + 34-bit State Vector.
+    - Output: 34-bit State Vector.
+- **Main Parameters:** `DATASET_SIZE` (20,000,000).
 
-### 5. `generate_cpu_v3_pi.py`
-- **Purpose:** A **High-Precision Computation Specialized ALU**, introducing Carry and Borrow flags to support multi-precision arithmetic, aiming to enable neural networks to compute high-precision values like Pi.
-- **ISA Definition:**
-    - **State:** 16-bit registers + 3 flags (ZF, GF, CF).
-    - **Instructions:** `ADC` (Add with Carry), `SBC` (Subtract with Borrow), etc.
-- **Status:** **Experimental**. Dataset generation script is available, but no end-to-end program execution has been verified with this specific architecture yet.
+### 4. **generate_cpu_v2_2_universal.py**
 
-### 6. `generate_voter_dataset.py`
-- **Purpose:** Generates datasets for training a "Neural Voter". This module aims to use Ensemble Learning to correct single-point errors by voting on the predictions of multiple neural processors.
-- **Logic:** Simulates outputs from multiple predictors with certain error rates and uses majority voting as the ground truth label.
-- **Note:** Subsequent research found that errors in neural processors often correlated (non-i.i.d.), so simple voting provided limited improvement. This module is kept primarily as an exploratory record.
-- **Status:** **Experimental**. Concept implementation only; not integrated into the main execution pipeline.
+- **Purpose:** A **Universal Neural ALU** with almost all basic instructions for Turing completeness. The most powerful core in the series, designed to support arbitrary complex algorithms (e.g., Sorting).
+- **Logic:**
+    - **ISA:** Extended set including Arithmetic (ADD, SUB, INC, DEC), Logic (AND, OR, XOR, NOT), Shift (SHL), Control (CMP, HALT).
+    - **Simulation:** Precisely simulates ALU behavior including flags for each instruction with random operands.
+- **I/O Format:**
+    - Input: 16-bit Instruction + 34-bit State Vector.
+    - Output: 34-bit State Vector.
+- **Main Parameters:** `DATASET_SIZE` (20,000,000).
+
+### 5. **generate_cpu_v3_pi.py**
+
+- **Purpose:** A **High-Precision Specialized ALU** introducing Carry/Borrow flags (`CF`), supporting multi-precision arithmetic, aiming to calculate Pi.
+- **Logic:**
+    - **ISA:** 16-bit register architecture. Core instructions include ADC (Add Moving Carry), SBC (Subtract Borrowing).
+    - **Simulation:** Maintains ZF, GF, CF. Arithmetic updates Carry Flag correctly for software-based arbitrary precision math.
+- **I/O Format:**
+    - Input: 16-bit Instruction + 35-bit State Vector.
+    - Output: 35-bit State Vector.
+- **Main Parameters:** `DATASET_SIZE`, `BITS_PER_REGISTER` (16).
+
+### 6. **generate_voter_dataset.py**
+
+- **Purpose:** Generates datasets for "Neural Voter". Uses Ensemble Learning to correct single-point errors by voting among multiple Neural Processors.
+- **Logic:** Simulates outputs from multiple predictors with error rates, uses majority voting as ground truth.
+- **I/O Format:**
+    - Input: Concatenated outputs from N models.
+    - Output: Correct output.
+- **Main Parameters:** `NUM_VOTERS`, `ERROR_RATE`.
 
 ## Verification & Execution
 
-### 7. `run_gcd_program.py`
-- **Purpose:** **End-to-End Verification Script**. Loads a trained `cpu_v2_1` binary model and drives it to execute a complete assembly program implementing the Euclidean algorithm (GCD).
-- **Core Logic:** Implements a hybrid architecture simulator. **Control Flow** (Jump/Branch) is handled by Python code (the traditional Von Neumann controller), while **Arithmetic Logic & State Updates** are performed entirely by neural network (Neural ALU) inference.
-- **Result:** Achieved **100%** program execution accuracy in tests.
+### 7. **run_gcd_program.py**
 
-### 8. `run_rainwater_program.py`
-- **Purpose:** **End-to-End Verification Script**. Uses the neural processor (`cpu_v2_microprocessor`) to execute the classic LeetCode Hard problem — **Trapping Rain Water** using the Two Pointers algorithm.
-- **Complexity:** Compared to GCD, this program involves more complex memory read/writes (`LOAD`/`STORE`) and pointer operations, verifying the neural microprocessor's ability to handle complex data structures.
-- **Result:** Validated successfully.
+- **Purpose:** **End-to-End Verification Script**. Loads the trained `cpu_v2_1` GCD-specialized model and verifies its ability to execute the Euclidean algorithm.
+- **Logic:**
+    - **Program:** Defines GCD assembly (CMP, SUB, JZ, JG).
+    - **Simulation:** Loads NN as ALU. Initializes registers.
+    - **Execution:** Loops instructions. Python controller handles jumps; NN predicts next state for calc instructions.
+    - **Verification:** Compares with Python built-in GCD result and checks per-step accuracy.
+- **I/O Format:**
+    - Input: None (Random internal test cases).
+    - Output: Console logs of program/step accuracy.
+- **Main Parameters:** `num_tests`.
 
-### 9. `run_bubble_sort_program.py`
-- **Purpose:** **End-to-End Verification Script**. Drives the `cpu_v2_2` (Universal) model to execute the **Bubble Sort** algorithm.
-- **Result:** Logs show extremely high accuracy in sorting 3 random numbers, proving the model's perfect mastery of compare-and-swap logic.
+### 8. **run_rainwater_program.py**
 
-### 10. `debug_gcd_program.py`
-- **Purpose:** A **Single-Step Debugging Version** of `run_gcd_program.py`. It runs the program and prints detailed logs for every step, including PC pointer, instruction, pre-execution state, neural network prediction, and ground truth comparison. Used for deep analysis of exactly where or in what state the model might fail.
+- **Purpose:** **End-to-End Verification Script**. Drives `cpu_v2_microprocessor` to execute the LeetCode Hard **Trapping Rain Water** (Two Pointers) assembly algorithm.
+- **Logic:**
+    - **Program:** Implements complex two-pointer logic with memory access (LOAD/STORE) and branches.
+    - **Simulation:** NN handles arithmetic/compare; Python handles memory/PC.
+    - **Verification:** Compares neural execution result with standard algorithm.
+- **I/O Format:**
+    - Input: 10 random heights.
+    - Output: 10 water values.
+- **Main Parameters:** `num_tests`.
+
+### 9. **run_bubble_sort_program.py**
+
+- **Purpose:** **End-to-End Verification Script**. Drives `cpu_v2_2` (Universal) model to execute **Bubble Sort**.
+- **Logic:**
+    - **Program:** Hardcoded assembly for sorting 3 integers (nested CMP/SWAP).
+    - **Simulation:** NN acts as ALU for CMP/MOV.
+    - **Verification:** Compares sorted registers with Python `sorted()`.
+- **I/O Format:**
+    - Input: 3 random 8-bit integers.
+    - Output: Sorted integers.
+- **Main Parameters:** `num_tests`.
+
+### 10. **debug_gcd_program.py**
+
+- **Purpose:** **Step-Debugging Version** of `run_gcd_program.py`. Used for deep analysis of specific instruction/state errors.
+- **Logic:** Same execution logic, but adds detailed per-step logging (PC, Instruction, Pre-State, Prediction vs Truth).
+- **I/O Format:** Detailed execution logs.
+- **Main Parameters:** Same as `run_gcd_program.py`.

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Debug Intro Rendering</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+    <div id="debug-output"></div>
+
+    <script src="js/data.js"></script>
+    <script>
+        // 模拟渲染逻辑
+        const currentLang = 'zh';
+        const currentTopCategory = 'independentProjects';
+        const currentSubCategoryIndex = 0;
+
+        // 检查数据结构
+        const category = docsData[currentTopCategory].categories[currentSubCategoryIndex];
+        console.log('Category:', category);
+        console.log('Intro zh:', category.intro_zh);
+
+        // 创建渲染内容
+        const section = document.createElement('div');
+        section.className = 'category-section';
+
+        const title = document.createElement('h2');
+        title.className = 'category-title';
+        title.textContent = category.category_zh;
+        section.appendChild(title);
+
+        // 渲染项目介绍
+        if (category.intro_zh) {
+            const introDiv = document.createElement('div');
+            introDiv.className = 'category-intro';
+            introDiv.innerHTML = marked.parse(category.intro_zh);
+            section.appendChild(introDiv);
+            console.log('Intro div created:', introDiv);
+        }
+
+        // 添加一个脚本卡片作为对比
+        const scriptCard = document.createElement('div');
+        scriptCard.className = 'script-card';
+        scriptCard.innerHTML = `
+            <div class="script-header">
+                <div class="script-path">chinese_chess/test_script.py</div>
+            </div>
+            <div class="script-desc">这是一个测试脚本描述</div>
+        `;
+        section.appendChild(scriptCard);
+
+        document.getElementById('debug-output').appendChild(section);
+    </script>
+</body>
+</html>

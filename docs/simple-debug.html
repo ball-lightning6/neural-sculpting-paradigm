@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Simple Debug</title>
+    <style>
+        /* 基础样式测试 */
+        .category-intro {
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 28px 32px;
+            margin-bottom: 32px;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .category-intro::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, #38b2ac 0%, #3182ce 100%);
+        }
+
+        .script-card {
+            background: white;
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
+        }
+    </style>
+</head>
+<body>
+    <h1>测试项目介绍样式</h1>
+
+    <!-- 硬编码的项目介绍 -->
+    <div class="category-intro">
+        <h3>总体思路 (Overall Architecture)</h3>
+        <p>本项目构建了一个完整的中国象棋 AI 训练闭环。核心理念是通过<strong>"专家迭代（Expert Iteration）"</strong>和<strong>"软标签蒸馏（Soft Label Distillation）"</strong>技术，将强大的传统引擎（如 PikaFish）的知识迁移到神经网络（Policy Transformer）中。</p>
+    </div>
+
+    <!-- 脚本卡片 -->
+    <div class="script-card">
+        <p>这是一个脚本卡片</p>
+    </div>
+
+    <hr>
+
+    <h2>使用JavaScript动态创建的内容：</h2>
+    <div id="dynamic-content"></div>
+
+    <script src="js/data.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        // 检查数据是否加载
+        console.log('docsData loaded:', typeof docsData !== 'undefined');
+        if (typeof docsData !== 'undefined') {
+            console.log('independentProjects data:', docsData.independentProjects);
+        }
+
+        // 创建动态内容
+        const div = document.createElement('div');
+        div.className = 'category-intro';
+        div.innerHTML = '<h4>动态创建的项目介绍</h4><p>这是通过JavaScript动态创建的内容。</p>';
+        document.getElementById('dynamic-content').appendChild(div);
+
+        // 测试marked.js
+        if (typeof marked !== 'undefined') {
+            const markdownDiv = document.createElement('div');
+            markdownDiv.className = 'category-intro';
+            markdownDiv.innerHTML = marked.parse('## Markdown 测试\n\n这是一个**加粗**文本和一个\n\n- 列表项1\n- 列表项2');
+            document.getElementById('dynamic-content').appendChild(markdownDiv);
+        }
+    </script>
+</body>
+</html>

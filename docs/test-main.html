@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试主页面逻辑</title>
+    <style>
+        body { padding: 20px; font-family: Arial, sans-serif; }
+        .debug-info { background: #f0f0f0; padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .category-intro {
+            background: #e8f4f8;
+            border-left: 4px solid #3182ce;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        .script-card {
+            background: white;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <h1>主页面逻辑测试</h1>
+
+    <div id="debug-info" class="debug-info">
+        <p>等待加载数据... </p>
+    </div>
+
+    <div id="test-content"></div>
+
+    <script src="js/data.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        // 测试数据加载
+        const debugInfo = document.getElementById('debug-info');
+
+        if (typeof docsData === 'undefined') {
+            debugInfo.innerHTML = '<p style="color: red;">错误：docsData 未定义，数据文件可能未加载</p>';
+        } else {
+            debugInfo.innerHTML = `
+                <p>✓ docsData 已加载</p>
+                <p>✓ 包含的关键：${Object.keys(docsData).join(', ')}</p>
+                <p>✓ independentProjects 存在：${!!docsData.independentProjects}</p>
+                <p>✓ categories 数量：${docsData.independentProjects.categories.length}</p>
+            `;
+
+            // 模拟渲染独立项目
+            const currentLang = 'zh';
+            const currentTopCategory = 'independentProjects';
+            const currentSubCategoryIndex = 0;
+
+            const section = document.createElement('div');
+            section.className = 'category-section';
+
+            // 添加标题
+            const title = document.createElement('h2');
+            title.className = 'category-title';
+            title.textContent = docsData[currentTopCategory].name_zh;
+            section.appendChild(title);
+
+            // 添加子分类标题
+            const subTitle = document.createElement('h3');
+            subTitle.textContent = docsData[currentTopCategory].categories[currentSubCategoryIndex].category_zh;
+            section.appendChild(subTitle);
+
+            // 渲染项目介绍
+            const category = docsData[currentTopCategory].categories[currentSubCategoryIndex];
+            const intro = category.intro_zh;
+
+            if (intro) {
+                const introDiv = document.createElement('div');
+                introDiv.className = 'category-intro';
+
+                if (typeof marked !== 'undefined') {
+                    introDiv.innerHTML = marked.parse(intro);
+                } else {
+                    introDiv.innerHTML = '<p>错误：marked.js 未加载</p>';
+                }
+
+                section.appendChild(introDiv);
+                debugInfo.innerHTML += '<p>✓ 项目介绍已渲染</p>';
+            } else {
+                debugInfo.innerHTML += '<p style="color: orange;">警告：intro_zh 为空</p>';
+            }
+
+            // 添加一个脚本卡片
+            const scriptCard = document.createElement('div');
+            scriptCard.className = 'script-card';
+            scriptCard.innerHTML = `
+                <h4>${category.scripts[0].path}</h4>
+                <p>${category.scripts[0].description_zh}</p>
+            `;
+            section.appendChild(scriptCard);
+
+            document.getElementById('test-content').appendChild(section);
+        }
+
+        // 检查marked.js
+        if (typeof marked === 'undefined') {
+            debugInfo.innerHTML += '<p style="color: red;">错误：marked.js 未加载</p>';
+        } else {
+            debugInfo.innerHTML += '<p>✓ marked.js 已加载 (版本: ' + (marked.version || '未知') + ')</p>';
+        }
+    </script>
+</body>
+</html>
