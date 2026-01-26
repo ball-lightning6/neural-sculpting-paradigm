@@ -1,4 +1,19 @@
+// Wait for MathJax to be ready before rendering
 document.addEventListener('DOMContentLoaded', () => {
+    const waitForMathJax = () => {
+        if (window.MathJax && window.MathJax.startup && window.MathJax.startup.document) {
+            // MathJax is ready
+            initPage();
+        } else {
+            // Check again in 100ms
+            setTimeout(waitForMathJax, 100);
+        }
+    };
+
+    waitForMathJax();
+});
+
+function initPage() {
     let currentLang = 'zh'; // 'zh' or 'en'
     let currentTopCategory = 'datasetScripts'; // 'datasetScripts', 'toolScripts', 'trainingScripts', 'faq'
     let currentSubCategoryIndex = 0; // 用于数据集脚本的子分类索引
@@ -192,6 +207,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
                 scriptsList.appendChild(section);
+
+                // Re-render MathJax after adding FAQ content
+                if (window.MathJax) {
+                    MathJax.typesetPromise([scriptsList]).catch((err) => console.error('MathJax typeset error:', err));
+                }
                 return;
             }
 
@@ -239,6 +259,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Use marked.js to render markdown content
                     introDiv.innerHTML = marked.parse(intro);
                     section.appendChild(introDiv);
+
+                    // Re-render MathJax after adding content
+                    if (window.MathJax) {
+                        MathJax.typesetPromise([introDiv]).catch((err) => console.error('MathJax typeset error:', err));
+                    }
                 }
             }
 
@@ -270,6 +295,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 const rawDetails = currentLang === 'zh' ? script.details_zh : script.details_en;
                 if (rawDetails) {
                     details.innerHTML = marked.parse(rawDetails);
+                }
+
+                // Re-render MathJax after adding content
+                if (window.MathJax) {
+                    MathJax.typesetPromise([details]).catch((err) => console.error('MathJax typeset error:', err));
                 }
 
                 // Expand/Collapse Logic
@@ -304,4 +334,4 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     }
-});
+}
