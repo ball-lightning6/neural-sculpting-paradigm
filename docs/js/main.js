@@ -97,6 +97,7 @@ function initPage() {
         
         const topCategories = [
             { key: 'datasetScripts', name_zh: docsData.datasetScripts.name_zh, name_en: docsData.datasetScripts.name_en },
+            { key: 'researchProjects', name_zh: docsData.researchProjects.name_zh, name_en: docsData.researchProjects.name_en },
             { key: 'independentProjects', name_zh: docsData.independentProjects.name_zh, name_en: docsData.independentProjects.name_en },
             { key: 'toolScripts', name_zh: docsData.toolScripts.name_zh, name_en: docsData.toolScripts.name_en },
             { key: 'trainingScripts', name_zh: docsData.trainingScripts.name_zh, name_en: docsData.trainingScripts.name_en },
@@ -128,8 +129,8 @@ function initPage() {
         topNavContainer.appendChild(topNavUl);
         categoryNav.appendChild(topNavContainer);
 
-        // ========== 渲染子分类导航 (数据集脚本和独立项目有子分类) ==========
-        if (currentTopCategory === 'datasetScripts' || currentTopCategory === 'independentProjects') {
+        // ========== 渲染子分类导航 (数据集脚本、研究项目和独立项目有子分类) ==========
+        if (currentTopCategory === 'datasetScripts' || currentTopCategory === 'researchProjects' || currentTopCategory === 'independentProjects') {
             const subNavContainer = document.createElement('div');
             subNavContainer.className = 'sub-nav-container';
             
@@ -218,8 +219,8 @@ function initPage() {
             // ============ SCRIPT RENDERING ============
             let scripts = [];
             let sectionTitle = '';
-            
-            if (currentTopCategory === 'datasetScripts' || currentTopCategory === 'independentProjects') {
+
+            if (currentTopCategory === 'datasetScripts' || currentTopCategory === 'researchProjects' || currentTopCategory === 'independentProjects') {
                 const category = docsData[currentTopCategory].categories[currentSubCategoryIndex];
                 if (category) {
                     scripts = category.scripts;
@@ -249,8 +250,8 @@ function initPage() {
             title.textContent = sectionTitle;
             section.appendChild(title);
 
-            // Render Introduction if available (For Independent Projects)
-            if (currentTopCategory === 'independentProjects') {
+            // Render Introduction if available (For Research Projects and Independent Projects)
+            if (currentTopCategory === 'researchProjects' || currentTopCategory === 'independentProjects') {
                 const category = docsData[currentTopCategory].categories[currentSubCategoryIndex];
                 const intro = currentLang === 'zh' ? category.intro_zh : category.intro_en;
                 if (intro) {
