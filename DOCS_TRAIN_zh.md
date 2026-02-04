@@ -115,7 +115,42 @@
 
 ---
 
-### 4. train_text2image.py
+---
+
+### 4. train_unet_v2.py
+
+**▶︎ 简要说明**
+这是 **train_unet.py 的高性能升级版 (UNet V3)**，专门针对**元胞自动机图像到图像任务**优化。原版 U-Net 在 CA 任务上存在点状伪影和难以拟合的问题，此版本通过关键架构改进解决了这些问题。
+
+**▶︎ 核心架构改进**
+
+- **Upsample (Nearest) + Conv2d**: 替代反卷积 (ConvTranspose2d)，彻底消除点状伪影。最近邻插值最符合元胞自动机的格点特性。
+- **Strided Convolution**: 替代 MaxPool2d 进行下采样，通过学习保留格点间的空间位置关系。
+- **GroupNorm**: 替代 BatchNorm，更适合高维度逻辑拟合，训练更稳定。
+- **GlobalAttention**: 在 Bottleneck 层加入全局自注意力模块，建立长距离逻辑关联，增强对复杂 CA 规则的建模能力。
+- **AdamW + MSELoss**: 使用 AdamW 优化器和 MSELoss，保持与 Swin-UNet 实验的变量一致性。
+
+**▶︎ 关键发现**
+
+- **原版 U-Net 无法拟合的 CA 任务，此版本可以成功拟合**。
+- 架构细节（上采样方式、归一化方法）对离散逻辑任务的可学习性有决定性影响。
+- 全局注意力模块显著提升了模型对长距离依赖的捕获能力。
+
+**▶︎ 如何配置和使用**
+
+1. **修改配置**: 在 `Config` 类中调整：
+    - `DATASET_DIR`: 指向数据集根目录（需包含 `initial_images/`、`final_images/` 和 `metadata.csv`）。
+    - `OUTPUT_DIR`: 指定训练产出保存位置。
+    - `EPOCHS`、`BATCH_SIZE`、`LEARNING_RATE` 等。
+    - `EVAL_INTERVAL_STEPS`: 验证间隔步数。
+2. **运行训练**:
+    ```bash
+    python train_unet_v2.py
+    ```
+3. **早停条件**: 当完美匹配率 (PERFECT) 超过 99.9% 时自动停止训练。
+4. **产出**: `OUTPUT_DIR` 中包含日志文件 (`training_log_unet_v3.log`) 和 `eval_images/` 目录，存放三联对比图（输入 | 目标 | 预测）。
+
+### 5. train_text2image.py
 
 **▶︎ 简要说明**  
 该脚本用于**符号到图像 (Text-to-Image)** 的任务，训练一个完全从零构建的模型。该模型由一个轻量级TinyTransformer作为文本编码器和一个U-Net风格的解码器组成。
@@ -156,7 +191,7 @@
 
 ---
 
-### 5. train_qwen2_text2image.py
+### 6. train_qwen2_text2image.py
 
 **▶︎ 简要说明**  
 这是一个更强大版本的**符号到图像 (Text-to-Image)** 脚本。它使用预训练的Qwen2大语言模型作为文本编码器，通过PEFT LoRA进行高效微调，并结合了与前者相同的U-Net风格解码器。整个训练流程由Hugging Face Trainer管理。
@@ -197,7 +232,7 @@
 
 ---
 
-### 6. train_mlp.py
+### 7. train_mlp.py
 
 **▶︎ 简要说明**  
 此脚本用于训练一个“巨型”MLP（多层感知机），解决**符号到符号**的任务。其主要目的是为更复杂的架构（如Transformer, RNN）提供一个无结构偏置的性能基准（baseline）。
@@ -234,7 +269,7 @@
 
 ---
 
-### 7. train_lstm.py
+### 8. train_lstm.py
 
 **▶︎ 简要说明**  
 该脚本使用LSTM（或可切换为GRU/RNN）来解决**符号到符号**的任务。其设计巧妙地测试了RNN的**时序演化和记忆能力**：模型接收一次性输入，然后在内部进行EVOLUTION_STEPS次迭代，最后输出结果。
@@ -273,7 +308,7 @@
 
 ---
 
-### 8. train_convnext.py
+### 9. train_convnext.py
 
 **▶︎ 简要说明**  
 此脚本用于**图像到符号**的任务，使用预训练的ConvNeXt模型。它将图像作为输入，输出一个固定长度的符号序列（二进制向量）。旨在测试先进的CNN架构在您的范式下的推理能力。
@@ -310,7 +345,7 @@
 
 ---
 
-### 9. train_diffusion.py
+### 10. train_diffusion.py
 
 **▶︎ 简要说明**  
 此脚本用于**图像到图像**的任务，但采用的是**条件Diffusion模型**。它将初始状态图像作为条件，学习生成演化后的目标图像。这是对生成模型能否学习确定性规则的严格测试。
@@ -351,7 +386,7 @@
 
 ---
 
-### 10. train_image2image.py
+### 11. train_image2image.py
 
 **▶︎ 简要说明**  
 这是您的核心**图像到图像**任务训练脚本，实现了一个**Swin-Unet**架构。它使用预训练的Swin Transformer作为编码器，一个U-Net风格的解码器来重建输出图像。
@@ -394,7 +429,7 @@
 
 ---
 
-### 11. train_ar_transformer.py
+### 12. train_ar_transformer.py
 
 **▶︎ 简要说明**  
 该脚本用于训练一个**自回归Transformer模型（GPT-2结构）**，以完成**符号到符号（Text-to-Text）**的生成任务，例如元胞自动机演化、算法步骤预测等。模型通过“提示 → 答案”格式进行训练，具备生成能力。
@@ -422,7 +457,7 @@
 
 ---
 
-### 12. train_mlp_ctscan.py
+### 13. train_mlp_ctscan.py
 
 **▶︎ 简要说明**  
 该脚本用于**“CT扫描”式探测神经网络隐藏层**，揭示模型在解决元胞自动机任务时，**各层是否编码了中间演化状态（S₁→S₈）**。这是对你论文中 **“神经网络是否逐层模拟演化”** 假设的直接验证。
@@ -448,7 +483,7 @@
 
 ---
 
-### 13. train_mlp_fulltrace.py
+### 14. train_mlp_fulltrace.py
 
 **▶︎ 简要说明**  
 该脚本用于验证：**一个只训练最终输出（S₈）的神经网络，其最终隐藏层是否完整编码了中间演化轨迹（S₁→S₆）**。这是对你论文中 **“最终层是否包含完整思维链”** 的强验证。
@@ -474,7 +509,7 @@
 
 ---
 
-### 14. train_mlp_prefer.py
+### 15. train_mlp_prefer.py
 
 **▶︎ 简要说明**  
 该脚本用于探测：在解决“接雨水”问题时，神经网络的隐藏层更偏向哪种算法结构（DP、单调栈、双指针）。这是对你论文中 **“模型是否内化了某种算法风格”** 的实证分析。
@@ -500,7 +535,7 @@
 
 ---
 
-### 15. train_mlp_visualize.py
+### 16. train_mlp_visualize.py
 
 **▶︎ 简要说明**  
 该脚本用于**逐比特观察神经网络在学习元胞自动机规则时的收敛过程**，可视化每一位的准确率变化，揭示模型是否“从低位到高位”或“同步”学习。
@@ -527,7 +562,7 @@
 
 ---
 
-### 16. training_scripts/train_mlp_dual_head_supervision.py
+### 17. training_scripts/train_mlp_dual_head_supervision.py
 
 **▶︎ 简要说明**  
 该脚本实现了一种**早期的双分支监督解耦方法**。它将MLP网络分为Part1和Part2两部分，Part1的输出同时连接到两个分支：一个预测中间解释（无进位计数器），另一个继续送入Part2预测最终答案（乘积）。通过混合损失函数同时监督两个输出，强制中间层学习可解释的表示。
@@ -561,7 +596,7 @@
 
 ---
 
-### 17. training_scripts/train_probe_control_baseline.py
+### 18. training_scripts/train_probe_control_baseline.py
 
 **▶︎ 简要说明**  
 这是一个**探针实验的对照组（Control Group）基准测试脚本**。它的目的是验证一个关键问题：**探针成功解码中间表征，是因为主模型内部真的形成了可解释表征，还是仅仅因为探针头本身足够强大，能直接从原始输入学会到解释的映射？**
@@ -601,7 +636,7 @@
 
 ---
 
-### 18. training_scripts/train_mlp_probe_add_binary.py
+### 19. training_scripts/train_mlp_probe_add_binary.py
 
 **▶︎ 简要说明**
 该脚本用于**针对二进制加法任务的线性探针（Linear Probe）实验**。它验证了模型在学会输出最终和之后，其隐藏层是否自发编码了中间的进位信息。这是对论文中“对已经收敛的神经网络的研究”的补充实验。
@@ -626,7 +661,7 @@
 
 ---
 
-### 19. **training_scripts/train_mlp_tiyunzong.py**
+### 20. **training_scripts/train_mlp_tiyunzong.py**
 
 - **用途:** “梯云纵”课程学习 - 元胞自动机长程推理训练。验证通过渐进式增加推理深度的课程学习，是否可以训练出能执行超长程推理的模型。
 
@@ -645,7 +680,7 @@
 
 ---
 
-### 20. **training_scripts/train_mlp_multitask.py**
+### 21. **training_scripts/train_mlp_multitask.py**
 
 - **用途:** 多任务/多头MLP训练脚本 - 第八幕猜想验证实验。用于验证多任务训练是否会涌现共享的中间解耦表示，从而加速各个任务的学习。
 
@@ -659,7 +694,7 @@
 
 ---
 
-### 21. **training_scripts/train_chess_policy.py**
+### 22. **training_scripts/train_chess_policy.py**
 
 - **用途:** 这是**策略网络（Policy Network）**的训练脚本。它训练一个 Transformer 模型，使其能够根据盘面（FEN）预测下一步的最佳走法概率分布。
 

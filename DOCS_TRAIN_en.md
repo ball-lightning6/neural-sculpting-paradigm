@@ -76,7 +76,42 @@ This script is for pure **Image-to-Image** tasks, training a standard U-Net mode
 
 ---
 
-### 4. train_text2image.py
+---
+
+### 4. train_unet_v2.py
+
+**▶︎ Brief Description**
+This is a **high-performance upgraded version (UNet V3)** of `train_unet.py`, specifically optimized for **cellular automata image-to-image tasks**. While the original U-Net suffered from dot artifacts and difficulty fitting CA tasks, this version solves these issues through key architectural improvements.
+
+**▶︎ Core Architecture Improvements**
+
+- **Upsample (Nearest) + Conv2d**: Replaces transposed convolution (ConvTranspose2d), completely eliminating dot artifacts. Nearest-neighbor interpolation best matches the grid nature of cellular automata.
+- **Strided Convolution**: Replaces MaxPool2d for downsampling, preserving spatial relationships between grid points through learnable parameters.
+- **GroupNorm**: Replaces BatchNorm, more suitable for high-dimensional logical fitting and more stable training.
+- **GlobalAttention**: Adds a global self-attention module at the Bottleneck layer to establish long-range logical associations, enhancing the ability to model complex CA rules.
+- **AdamW + MSELoss**: Uses AdamW optimizer and MSELoss, maintaining consistency with Swin-UNet experiments.
+
+**▶︎ Key Findings**
+
+- **CA tasks that the original U-Net could not fit can be successfully fitted by this version**.
+- Architectural details (upsampling method, normalization) have a decisive impact on learnability for discrete logic tasks.
+- The global attention module significantly improves the model's ability to capture long-range dependencies.
+
+**▶︎ How to Configure and Use**
+
+1. **Modify Configuration**: In the `Config` class, adjust:
+    - `DATASET_DIR`: Point to the dataset root directory (should contain `initial_images/`, `final_images/`, and `metadata.csv`).
+    - `OUTPUT_DIR`: Specify the save location for training outputs.
+    - `EPOCHS`, `BATCH_SIZE`, `LEARNING_RATE`, etc.
+    - `EVAL_INTERVAL_STEPS`: Validation interval steps.
+2. **Run Training**:
+    ```bash
+    python train_unet_v2.py
+    ```
+3. **Early Stopping**: Training automatically stops when the perfect match rate (PERFECT) exceeds 99.9%.
+4. **Output**: The `OUTPUT_DIR` contains a log file (`training_log_unet_v3.log`) and an `eval_images/` directory with triplet comparison images (input | ground truth | prediction).
+
+### 5. train_text2image.py
 
 **▶︎ Brief Description**
 This script is for **Text-to-Image** tasks, training a model built entirely from scratch. The model consists of a lightweight TinyTransformer as the text encoder and a U-Net style decoder.
@@ -103,7 +138,7 @@ This script is for **Text-to-Image** tasks, training a model built entirely from
 
 ---
 
-### 5. train_qwen2_text2image.py
+### 6. train_qwen2_text2image.py
 
 **▶︎ Brief Description**
 This is a more powerful version of the **Text-to-Image** script. It uses the pre-trained Qwen2 large language model as the text encoder, fine-tuned efficiently with PEFT LoRA, and combined with the same U-Net style decoder as the previous script. The entire training process is managed by the Hugging Face `Trainer`.
@@ -130,7 +165,7 @@ This is a more powerful version of the **Text-to-Image** script. It uses the pre
 
 ---
 
-### 6. train_mlp.py
+### 7. train_mlp.py
 
 **▶︎ Brief Description**
 This script is used to train a "giant" MLP (Multi-Layer Perceptron) to solve **Sequence-to-Sequence** tasks. Its main purpose is to provide a performance baseline with no structural bias for more complex architectures (like Transformers, RNNs).
@@ -155,7 +190,7 @@ This script is used to train a "giant" MLP (Multi-Layer Perceptron) to solve **S
 
 ---
 
-### 7. train_lstm.py
+### 8. train_lstm.py
 
 **▶︎ Brief Description**
 This script uses an LSTM (or can be switched to GRU/RNN) to solve **Sequence-to-Sequence** tasks. Its design cleverly tests the **temporal evolution and memory capabilities** of an RNN: the model receives a one-time input, then iterates internally for `EVOLUTION_STEPS`, and finally outputs the result.
@@ -181,7 +216,7 @@ This script uses an LSTM (or can be switched to GRU/RNN) to solve **Sequence-to-
 
 ---
 
-### 8. train_convnext.py
+### 9. train_convnext.py
 
 **▶︎ Brief Description**
 This script is for **Image-to-Sequence** tasks, using a pre-trained ConvNeXt model. It takes an image as input and outputs a fixed-length sequence of symbols (a binary vector). It aims to test the reasoning capabilities of advanced CNN architectures under your paradigm.
@@ -206,7 +241,7 @@ This script is for **Image-to-Sequence** tasks, using a pre-trained ConvNeXt mod
 
 ---
 
-### 9. train_diffusion.py
+### 10. train_diffusion.py
 
 **▶︎ Brief Description**
 This script is for **Image-to-Image** tasks but employs a **conditional Diffusion model**. It takes an initial state image as a condition and learns to generate the evolved target image. This is a rigorous test of whether a generative model can learn deterministic rules.
@@ -233,7 +268,7 @@ This script is for **Image-to-Image** tasks but employs a **conditional Diffusio
 
 ---
 
-### 10. train_image2image.py
+### 11. train_image2image.py
 
 **▶︎ Brief Description**
 This is your core **Image-to-Image** task training script, implementing a **Swin-Unet** architecture. It uses a pre-trained Swin Transformer as the encoder and a U-Net style decoder to reconstruct the output image.
@@ -261,7 +296,7 @@ This is your core **Image-to-Image** task training script, implementing a **Swin
 
 ---
 
-### 11. train_ar_transformer.py
+### 12. train_ar_transformer.py
 
 **▶︎ Brief Description**  
 This script trains a **custom autoregressive Transformer model (GPT-2 architecture)** for **symbol-to-symbol (Text-to-Text)** generation tasks, such as cellular automata evolution or algorithm step prediction. The model is trained in a “prompt → answer” format and supports generation.
@@ -289,7 +324,7 @@ This script trains a **custom autoregressive Transformer model (GPT-2 architectu
 
 ---
 
-### 12. train_mlp_ctscan.py
+### 13. train_mlp_ctscan.py
 
 **▶︎ Brief Description**  
 This script performs a **“CT-scan” style probing of neural network hidden layers**, revealing whether each layer encodes intermediate evolution states (S₁→S₈) during a cellular automaton task. It directly tests the hypothesis: *“Does the network simulate step-by-step evolution internally?”*
@@ -315,7 +350,7 @@ This script performs a **“CT-scan” style probing of neural network hidden la
 
 ---
 
-### 13. train_mlp_fulltrace.py
+### 14. train_mlp_fulltrace.py
 
 **▶︎ Brief Description**  
 This script tests whether a **neural network trained only on the final output (S₈)** still **encodes the full intermediate trace (S₁→S₆)** in its final hidden layer. It’s a strong validation of your claim: *“The final layer remembers the full thought process.”*
@@ -341,7 +376,7 @@ This script tests whether a **neural network trained only on the final output (S
 
 ---
 
-### 14. train_mlp_prefer.py
+### 15. train_mlp_prefer.py
 
 **▶︎ Brief Description**  
 This script probes **which algorithmic structure (DP, monotonic stack, two-pointer) a neural network prefers internally** when solving the “Trapping Rain Water” problem. It empirically tests your hypothesis: *“The model internalizes a specific algorithmic style.”*
@@ -367,7 +402,7 @@ This script probes **which algorithmic structure (DP, monotonic stack, two-point
 
 ---
 
-### 15. train_mlp_visualize.py
+### 16. train_mlp_visualize.py
 
 **▶︎ Brief Description**  
 This script **visualizes the per-bit learning dynamics** of a neural network trained on a cellular automaton rule. It reveals whether the model learns **bit-by-bit** or **all-at-once**, offering insight into its internal learning order.
@@ -394,7 +429,7 @@ This script **visualizes the per-bit learning dynamics** of a neural network tra
 
 ---
 
-### 16. training_scripts/train_mlp_dual_head_supervision.py
+### 17. training_scripts/train_mlp_dual_head_supervision.py
 
 **▶︎ Brief Description**  
 This script implements an **early dual-branch supervised decoupling method**. It divides the MLP network into Part1 and Part2, where Part1's output connects to two branches: one predicts intermediate explanations (carry-less counters), and the other continues into Part2 to predict the final answer (product). Through a hybrid loss function supervising both outputs simultaneously, it forces the intermediate layer to learn interpretable representations.
@@ -428,7 +463,7 @@ This script is preserved as a historical record, demonstrating the evolution of 
 
 ---
 
-### 17. training_scripts/train_probe_control_baseline.py
+### 18. training_scripts/train_probe_control_baseline.py
 
 **▶︎ Brief Description**  
 This is a **control group baseline test script for probe experiments**. Its purpose is to validate a crucial question: **Does probe success in decoding intermediate representations occur because the main model truly formed interpretable representations internally, or merely because the probe head itself is powerful enough to directly learn the input → explanation mapping?**
@@ -468,7 +503,7 @@ This is a **control group baseline test script for probe experiments**. Its purp
 
 ---
 
-### 18. training_scripts/train_mlp_probe_add_binary.py
+### 19. training_scripts/train_mlp_probe_add_binary.py
 
 **▶︎ Brief Description**
 This script is used for a **Linear Probe experiment on the binary addition task**. It verifies whether the model's hidden layers spontaneously encode intermediate carry information after learning to output the final sum. This is a supplementary experiment to the "Research on Converged Neural Networks" section in the paper.
@@ -493,7 +528,7 @@ This script is used for a **Linear Probe experiment on the binary addition task*
 
 ---
 
-### 19. **training_scripts/train_mlp_tiyunzong.py**
+### 20. **training_scripts/train_mlp_tiyunzong.py**
 
 - **Purpose:** "TiYunZong" (Cloud Ladder) Curriculum Learning - Long-range CA reasoning training. Verifies if a model capable of ultra-long-range reasoning can be trained through curriculum learning that progressively increases reasoning depth.
 
@@ -512,7 +547,7 @@ This script is used for a **Linear Probe experiment on the binary addition task*
 
 ---
 
-### 20. **training_scripts/train_mlp_multitask.py**
+### 21. **training_scripts/train_mlp_multitask.py**
 
 - **Purpose:** Multi-task/Multi-head MLP training script - Act 8 conjecture verification experiment. Used to verify if multi-task training leads to the emergence of shared intermediate decoupled representations, thereby accelerating learning of each task.
 
@@ -526,7 +561,7 @@ This script is used for a **Linear Probe experiment on the binary addition task*
 
 ---
 
-### 21. **training_scripts/train_chess_policy.py**
+### 22. **training_scripts/train_chess_policy.py**
 
 - **Purpose:** This is the training script for the **Policy Network**. It trains a Transformer model to predict the probability distribution of the best next move based on the board state (FEN).
 
