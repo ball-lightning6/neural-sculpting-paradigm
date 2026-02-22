@@ -8,7 +8,7 @@
 
 ---
 
-**[📜 阅读论文 - paper_zh.pdf]** | **[🚀 Zenodo - [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17177215.svg)](https://doi.org/10.5281/zenodo.17177215)]**
+**[📜 阅读论文 - paper_zh.pdf]** | **[🚀 Zenodo - [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18728833.svg)](https://doi.org/10.5281/zenodo.18728833)]**
 
 </div>
 
