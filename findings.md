@@ -5,8 +5,8 @@
 **1. “不可能”的泛化**
 我使用一个 **2.69亿参数的朴素 MLP** 在极小的数据集上进行了测试：
 *   **任务 1：一维元胞自动机 (Rule 110)**
-    *   单层演化：仅需 **~450** 个样本即可实现完美泛化。
-    *   双层演化：仅需 **~1800** 个样本。
+    *   单层演化：仅需 **~1500** 个样本即可实现完美泛化。
+    *   双层演化：仅需 **~4500** 个样本。
 *   **任务 2：20位二进制加法**
     *   仅需 **~75,000** 个样本（相对于 $2^{40}$ 的输入空间微不足道）。
 
@@ -33,8 +33,8 @@ Recent experiments have revealed a counter-intuitive phenomenon regarding the re
 **1. The "Impossible" Generalization**
 We tested a **massive naive MLP (269M parameters)** on extremely small datasets.
 *   **Task 1: 1D Cellular Automata (Rule 110)**
-    *   1-step evolution: **~450 samples** needed for perfect generalization.
-    *   2-step evolution: **~1,800 samples** needed.
+    *   1-step evolution: **~1,500 samples** needed for perfect generalization.
+    *   2-step evolution: **~4,500 samples** needed.
 *   **Task 2: 20-bit Binary Addition**
     *   Requires **~75,000 samples** (a tiny fraction of the $2^{40}$ input space).
 
