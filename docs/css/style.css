@@ -233,6 +233,95 @@ header h1 {
     letter-spacing: -0.5px;
 }
 
+/* ========== 快速索引 ========== */
+.quick-index-intro {
+    margin-bottom: 18px;
+    color: var(--text-secondary);
+}
+
+.quick-index-controls {
+    display: grid;
+    grid-template-columns: minmax(240px, 1fr) minmax(150px, 220px) auto;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.quick-index-search,
+.quick-index-filter {
+    width: 100%;
+    min-height: 42px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background: var(--card-bg);
+    color: var(--text-color);
+    padding: 9px 12px;
+    font: inherit;
+}
+
+.quick-index-search:focus,
+.quick-index-filter:focus {
+    outline: 2px solid rgba(49, 130, 206, 0.25);
+    border-color: var(--secondary-color);
+}
+
+.quick-index-count {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.quick-index-group {
+    margin-bottom: 24px;
+}
+
+.quick-index-group-title {
+    margin-bottom: 8px;
+    color: var(--primary-color);
+    font-size: 1.05rem;
+}
+
+.quick-index-list {
+    list-style: none;
+    border-top: 1px solid var(--border-color);
+}
+
+.quick-index-item {
+    display: grid;
+    grid-template-columns: minmax(260px, 0.9fr) minmax(300px, 1.4fr);
+    gap: 16px;
+    align-items: baseline;
+    padding: 9px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.quick-index-link {
+    border: 0;
+    background: transparent;
+    color: var(--secondary-color);
+    cursor: pointer;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 0.88rem;
+    font-weight: 600;
+    line-height: 1.45;
+    text-align: left;
+    word-break: break-word;
+}
+
+.quick-index-link:hover {
+    text-decoration: underline;
+}
+
+.quick-index-description {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.quick-index-empty {
+    padding: 28px 20px;
+}
+
 /* ========== 项目介绍样式 ========== */
 section.category-section .category-intro {
     background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
@@ -484,5 +573,14 @@ section.category-section .category-intro {
     .script-path {
         font-size: 0.9rem;
         padding: 6px 10px;
+    }
+
+    .quick-index-controls,
+    .quick-index-item {
+        grid-template-columns: 1fr;
+    }
+
+    .quick-index-item {
+        gap: 4px;
     }
 }

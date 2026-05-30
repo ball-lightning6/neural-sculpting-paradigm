@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function initPage() {
     let currentLang = 'zh'; // 'zh' or 'en'
-    let currentTopCategory = 'datasetScripts'; // 'datasetScripts', 'toolScripts', 'trainingScripts', 'faq'
+    let currentTopCategory = 'quickIndex'; // 'quickIndex', 'datasetScripts', 'toolScripts', 'trainingScripts', 'faq'
     let currentSubCategoryIndex = 0; // 用于数据集脚本的子分类索引
     
     // FAQ Data
@@ -96,6 +96,7 @@ function initPage() {
         topNavUl.className = 'top-nav';
         
         const topCategories = [
+            { key: 'quickIndex', name_zh: '快速索引', name_en: 'Quick Index' },
             { key: 'datasetScripts', name_zh: docsData.datasetScripts.name_zh, name_en: docsData.datasetScripts.name_en },
             { key: 'researchProjects', name_zh: docsData.researchProjects.name_zh, name_en: docsData.researchProjects.name_en },
             { key: 'independentProjects', name_zh: docsData.independentProjects.name_zh, name_en: docsData.independentProjects.name_en },
@@ -170,6 +171,12 @@ function initPage() {
 
         function renderMainContent() {
             scriptsList.innerHTML = '';
+
+            // ============ QUICK INDEX RENDERING ============
+            if (currentTopCategory === 'quickIndex') {
+                renderQuickIndex();
+                return;
+            }
             
             // ============ FAQ RENDERING ============
             if (currentTopCategory === 'faq') {
@@ -322,6 +329,221 @@ function initPage() {
             });
 
             scriptsList.appendChild(section);
+        }
+
+        function renderQuickIndex() {
+            const entries = collectIndexEntries();
+            const section = document.createElement('section');
+            section.className = 'category-section quick-index-section';
+
+            const title = document.createElement('h2');
+            title.className = 'category-title';
+            title.textContent = currentLang === 'zh' ? '快速索引' : 'Quick Index';
+            section.appendChild(title);
+
+            const intro = document.createElement('p');
+            intro.className = 'quick-index-intro';
+            intro.textContent = currentLang === 'zh'
+                ? `当前收录 ${entries.length} 个公开脚本。可以按名称、用途或分类搜索，点击脚本即可查看详细说明。`
+                : `${entries.length} public scripts are indexed. Search by name, purpose, or category, then click a script to view its documentation.`;
+            section.appendChild(intro);
+
+            const controls = document.createElement('div');
+            controls.className = 'quick-index-controls';
+
+            const searchInput = document.createElement('input');
+            searchInput.className = 'quick-index-search';
+            searchInput.type = 'search';
+            searchInput.placeholder = currentLang === 'zh' ? '搜索脚本、用途或分类...' : 'Search scripts, purposes, or categories...';
+            searchInput.setAttribute('aria-label', currentLang === 'zh' ? '搜索脚本' : 'Search scripts');
+
+            const typeFilter = document.createElement('select');
+            typeFilter.className = 'quick-index-filter';
+            typeFilter.setAttribute('aria-label', currentLang === 'zh' ? '按脚本类型筛选' : 'Filter by script type');
+            [
+                ['all', currentLang === 'zh' ? '全部类型' : 'All types'],
+                ['datasetScripts', currentLang === 'zh' ? '数据集脚本' : 'Dataset scripts'],
+                ['researchProjects', currentLang === 'zh' ? '研究项目' : 'Research projects'],
+                ['independentProjects', currentLang === 'zh' ? '独立项目' : 'Independent projects'],
+                ['toolScripts', currentLang === 'zh' ? '工具脚本' : 'Tool scripts'],
+                ['trainingScripts', currentLang === 'zh' ? '训练脚本' : 'Training scripts']
+            ].forEach(([value, label]) => {
+                const option = document.createElement('option');
+                option.value = value;
+                option.textContent = label;
+                typeFilter.appendChild(option);
+            });
+
+            const resultCount = document.createElement('span');
+            resultCount.className = 'quick-index-count';
+
+            controls.appendChild(searchInput);
+            controls.appendChild(typeFilter);
+            controls.appendChild(resultCount);
+            section.appendChild(controls);
+
+            const results = document.createElement('div');
+            results.className = 'quick-index-results';
+            section.appendChild(results);
+            scriptsList.appendChild(section);
+
+            const renderResults = () => {
+                const query = searchInput.value.trim().toLowerCase();
+                const type = typeFilter.value;
+                const filtered = entries.filter(entry => {
+                    const searchable = `${entry.path} ${entry.description_zh || ''} ${entry.description_en || ''} ${entry.group_zh} ${entry.group_en}`.toLowerCase();
+                    return (type === 'all' || entry.topCategory === type) && (!query || searchable.includes(query));
+                });
+
+                resultCount.textContent = currentLang === 'zh'
+                    ? `${filtered.length} 个结果`
+                    : `${filtered.length} results`;
+                results.innerHTML = '';
+
+                if (filtered.length === 0) {
+                    const empty = document.createElement('p');
+                    empty.className = 'empty-message quick-index-empty';
+                    empty.textContent = currentLang === 'zh' ? '没有匹配的脚本。' : 'No matching scripts.';
+                    results.appendChild(empty);
+                    return;
+                }
+
+                const groups = new Map();
+                filtered.forEach(entry => {
+                    const groupName = currentLang === 'zh' ? entry.group_zh : entry.group_en;
+                    if (!groups.has(groupName)) groups.set(groupName, []);
+                    groups.get(groupName).push(entry);
+                });
+
+                groups.forEach((groupEntries, groupName) => {
+                    const group = document.createElement('section');
+                    group.className = 'quick-index-group';
+
+                    const heading = document.createElement('h3');
+                    heading.className = 'quick-index-group-title';
+                    heading.textContent = `${groupName} (${groupEntries.length})`;
+                    group.appendChild(heading);
+
+                    const list = document.createElement('ul');
+                    list.className = 'quick-index-list';
+                    groupEntries.forEach(entry => {
+                        const item = document.createElement('li');
+                        item.className = 'quick-index-item';
+
+                        const button = document.createElement('button');
+                        button.type = 'button';
+                        button.className = 'quick-index-link';
+                        button.textContent = entry.path;
+                        button.addEventListener('click', () => openIndexedScript(entry));
+
+                        const desc = document.createElement('span');
+                        desc.className = 'quick-index-description';
+                        desc.textContent = stripMarkdownForIndex(
+                            currentLang === 'zh' ? entry.description_zh : entry.description_en
+                        );
+
+                        item.appendChild(button);
+                        item.appendChild(desc);
+                        list.appendChild(item);
+                    });
+
+                    group.appendChild(list);
+                    results.appendChild(group);
+                });
+            };
+
+            searchInput.addEventListener('input', renderResults);
+            typeFilter.addEventListener('change', renderResults);
+            renderResults();
+        }
+
+        function stripMarkdownForIndex(text = '') {
+            return text
+                .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+                .replace(/<[^>]+>/g, '')
+                .replace(/^\s*[-+>]\s+/gm, '')
+                .replace(/[*`~]/g, '')
+                .replace(/\s+/g, ' ')
+                .trim();
+        }
+
+        function collectIndexEntries() {
+            const entries = [];
+            const addCategories = topCategory => {
+                docsData[topCategory].categories.forEach((category, subCategoryIndex) => {
+                    category.scripts.forEach(script => entries.push({
+                        ...script,
+                        sourcePath: script.path,
+                        path: normalizeIndexPath(script.path, topCategory, category.category_en),
+                        topCategory,
+                        subCategoryIndex,
+                        group_zh: category.category_zh,
+                        group_en: category.category_en
+                    }));
+                });
+            };
+            const addFlat = topCategory => {
+                docsData[topCategory].scripts.forEach(script => entries.push({
+                    ...script,
+                    sourcePath: script.path,
+                    path: normalizeIndexPath(script.path, topCategory),
+                    topCategory,
+                    subCategoryIndex: 0,
+                    group_zh: docsData[topCategory].name_zh,
+                    group_en: docsData[topCategory].name_en
+                }));
+            };
+
+            addCategories('datasetScripts');
+            addCategories('researchProjects');
+            addCategories('independentProjects');
+            addFlat('toolScripts');
+            addFlat('trainingScripts');
+            return entries;
+        }
+
+        function normalizeIndexPath(scriptPath, topCategory, categoryName = '') {
+            const cleanPath = scriptPath.replace(/^\*+/, '');
+            if (cleanPath.includes('/')) return cleanPath;
+
+            if (topCategory === 'researchProjects') {
+                const researchDirs = {
+                    'NTK Batch Solver': 'research/ntk_batch_solver',
+                    'Rule Preference Phase Transition': 'research/rule_preference',
+                    'Meta-CA Learning Experiments': 'research/rule_ood_generalization'
+                };
+                return `${researchDirs[categoryName]}/${cleanPath}`;
+            }
+
+            if (topCategory === 'independentProjects') {
+                const projectDirs = {
+                    'Neural Processor': 'neural_processor',
+                    'Neural Inverse Engineering': 'neural_inverse_engineering'
+                };
+                return projectDirs[categoryName]
+                    ? `${projectDirs[categoryName]}/${cleanPath}`
+                    : cleanPath;
+            }
+
+            return cleanPath;
+        }
+
+        function openIndexedScript(entry) {
+            currentTopCategory = entry.topCategory;
+            currentSubCategoryIndex = entry.subCategoryIndex;
+            render();
+
+            const cards = Array.from(scriptsList.querySelectorAll('.script-card'));
+            const card = cards.find(item => item.querySelector('.script-path')?.textContent === entry.sourcePath);
+            if (!card) return;
+
+            const details = card.querySelector('.script-details');
+            const expandBtn = card.querySelector('.expand-btn');
+            if (details && expandBtn) {
+                details.classList.add('active');
+                expandBtn.textContent = currentLang === 'zh' ? '收起详情' : 'Hide Details';
+            }
+            card.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
         function updateSubNav() {
