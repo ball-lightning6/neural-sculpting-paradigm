@@ -113,6 +113,14 @@ This project contains a large number of experimental scripts. For convenient ref
 
 *   **[🌐 Interactive Docs](https://ball-lightning6.github.io/neural-sculpting-paradigm/)**: **Highly Recommended**. Covers all public scripts, with quick indexing, bilingual support, and expandable details.
 
+## 🛠️ Roadmap
+
+Most experiments in this repository have been verified to varying degrees. Since the repository preserves some early scripts from the exploratory process, a small number of experiments still require further reproduction, documentation, and status labeling.
+
+*   **Systematic Reproduction**: Gradually rerun the experiments and record key information, including training curves, convergence behavior, required dataset sizes, model configurations, training time, and random seeds.
+*   **Experiment Status Labels**: Add status notes to a small number of early attempts or experiments that have not yet been fully verified, avoiding potential confusion.
+*   **Documentation Improvement**: Continue refining the interactive documentation with clearer descriptions, usage instructions, parameter configurations, and experimental results.
+
 ---
 
 <div align="center">
