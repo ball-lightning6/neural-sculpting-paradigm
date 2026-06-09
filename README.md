@@ -8,7 +8,7 @@
 
 ---
 
-**[🎮 在线交互 Demo](https://www.modelscope.cn/studios/raven316/neural-network-rule-learning-lab)** | **[📜 中文论文](./paper_zh.pdf)** | **[📜 English Paper](./paper.pdf)** | **[🚀 Zenodo - [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20446430.svg)](https://zenodo.org/records/20446430)**
+**[🎮 在线交互 Demo](https://www.modelscope.cn/studios/raven316/neural-network-rule-learning-lab)** | **[📜 中文论文](./paper_zh.pdf)** | **[📜 English Paper](./paper.pdf)** | **[🚀 Zenodo](https://zenodo.org/records/20446430)** | [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20446430.svg)](https://zenodo.org/records/20446430)
 
 </div>
 
