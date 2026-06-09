@@ -8,7 +8,7 @@
 
 ---
 
-**[📜 Chinese Paper](./paper_zh.pdf)** | **[📜 English Paper](./paper.pdf)** | **[🚀 Zenodo - [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20446430.svg)](https://zenodo.org/records/20446430)**
+**[🎮 Interactive Demo](https://www.modelscope.cn/studios/raven316/neural-network-rule-learning-lab)** | **[📜 Chinese Paper](./paper_zh.pdf)** | **[📜 English Paper](./paper.pdf)** | **[🚀 Zenodo - [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20446430.svg)](https://zenodo.org/records/20446430)**
 
 </div>
 
@@ -112,6 +112,7 @@ Root-level `generate_*.py` and `train_*.py` files are the main experimental entr
 This project contains a large number of experimental scripts. For convenient reference, we provide complete interactive documentation:
 
 *   **[🌐 Interactive Docs](https://ball-lightning6.github.io/neural-sculpting-paradigm/)**: **Highly Recommended**. Covers all public scripts, with quick indexing, bilingual support, and expandable details.
+*   **[🎮 Interactive Demo (ModelScope)](https://www.modelscope.cn/studios/raven316/neural-network-rule-learning-lab)**: Generate random samples or enter inputs manually, then directly compare one-forward-pass neural network outputs with program-generated ground truth.
 
 ## 🛠️ Roadmap
 

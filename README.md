@@ -8,7 +8,7 @@
 
 ---
 
-**[📜 中文论文](./paper_zh.pdf)** | **[📜 English Paper](./paper.pdf)** | **[🚀 Zenodo - [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20446430.svg)](https://zenodo.org/records/20446430)**
+**[🎮 在线交互 Demo](https://www.modelscope.cn/studios/raven316/neural-network-rule-learning-lab)** | **[📜 中文论文](./paper_zh.pdf)** | **[📜 English Paper](./paper.pdf)** | **[🚀 Zenodo - [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20446430.svg)](https://zenodo.org/records/20446430)**
 
 </div>
 
@@ -112,6 +112,7 @@ python train_tiny_transformer.py
 本项目包含大量实验脚本。为了方便查阅，我们提供了完整的在线文档：
 
 *   **[🌐 在线文档 (Interactive Docs)](https://ball-lightning6.github.io/neural-sculpting-paradigm/)**: **强烈推荐**。覆盖全部公开脚本，支持快速索引、中英切换与详情展开。
+*   **[🎮 在线交互 Demo (ModelScope)](https://www.modelscope.cn/studios/raven316/neural-network-rule-learning-lab)**: 可以随机生成样本或手动输入，直接对比训练后神经网络的一次前向传播输出与程序生成的 ground truth。
 
 ## 🛠️ 待办事项与维护计划 (Roadmap)
 
