@@ -97,6 +97,7 @@ python train_tiny_transformer.py
     *   `research/ntk_batch_solver/`: NTK 对照实验，用于研究特征学习与懒惰学习的区别
     *   `research/rule_preference/`: 规则偏好相变实验，探索神经网络对低复杂度解释的偏好
     *   `research/rule_ood_generalization/`: 规则 OOD 泛化实验，研究模型能否执行未见过的新规则
+    *   `research/overfitting_related_research/`: 过拟合相关研究，通过 probe 一致性实验观察不同随机 seed 在训练集外形成的函数分布，探索“记忆”、泛化、随机标签与规则学习之间的关系
 *   `neural_processor/`: 将神经网络作为 ALU 或 CPU 部件，执行简单程序的概念验证
 *   `neural_inverse_engineering/`: 从输入输出观测反向推断规则的探索
 *   `chinese_chess/`: 中国象棋策略学习的早期探索
@@ -113,6 +114,7 @@ python train_tiny_transformer.py
 
 *   **[🌐 在线文档 (Interactive Docs)](https://ball-lightning6.github.io/neural-sculpting-paradigm/)**: **强烈推荐**。覆盖全部公开脚本，支持快速索引、中英切换与详情展开。
 *   **[🎮 在线交互 Demo (ModelScope)](https://www.modelscope.cn/studios/raven316/neural-network-rule-learning-lab)**: 可以随机生成样本或手动输入，直接对比训练后神经网络的一次前向传播输出与程序生成的 ground truth。
+*   **[🔬 过拟合相关研究](./research/overfitting_related_research/index.html)**: 一个后续实验页面，展示不同数据量、不同规则复杂度与随机标签条件下，训练后模型在 probe 集上的跨 seed 一致性、熵、共同错误结构等指标。
 
 ## 🛠️ 待办事项与维护计划 (Roadmap)
 

@@ -97,6 +97,7 @@ Root-level `generate_*.py` and `train_*.py` files are the main experimental entr
     *   `research/ntk_batch_solver/`: NTK control experiments for studying the distinction between feature learning and lazy learning
     *   `research/rule_preference/`: Rule-preference phase-transition experiments exploring neural networks' preference for lower-complexity explanations
     *   `research/rule_ood_generalization/`: Rule OOD generalization experiments studying whether models can execute unseen rules
+    *   `research/overfitting_related_research/`: Overfitting-related experiments that use probe consistency to observe the function distributions formed outside the training set across random seeds, exploring the relationship among "memorization", generalization, random labels, and rule learning
 *   `neural_processor/`: Proof-of-concept experiments using neural networks as ALU or CPU components to execute simple programs
 *   `neural_inverse_engineering/`: Explorations of inferring rules from input-output observations
 *   `chinese_chess/`: Early explorations of Chinese-chess policy learning
@@ -113,6 +114,7 @@ This project contains a large number of experimental scripts. For convenient ref
 
 *   **[🌐 Interactive Docs](https://ball-lightning6.github.io/neural-sculpting-paradigm/)**: **Highly Recommended**. Covers all public scripts, with quick indexing, bilingual support, and expandable details.
 *   **[🎮 Interactive Demo (ModelScope)](https://www.modelscope.cn/studios/raven316/neural-network-rule-learning-lab)**: Generate random samples or enter inputs manually, then directly compare one-forward-pass neural network outputs with program-generated ground truth.
+*   **[🔬 Overfitting-Related Research](./research/overfitting_related_research/index.html)**: A follow-up experiment page showing cross-seed probe consistency, entropy, and shared-error structure under different dataset sizes, rule complexities, and random-label conditions.
 
 ## 🛠️ Roadmap
 

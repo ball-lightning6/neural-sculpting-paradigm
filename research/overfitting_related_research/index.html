@@ -1,0 +1,1335 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>过拟合相关研究：Probe 一致性实验</title>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [["\\(", "\\)"]],
+        displayMath: [["\\[", "\\]"]],
+        processEscapes: true
+      },
+      svg: {
+        fontCache: "global"
+      },
+      startup: {
+        ready: () => {
+          MathJax.startup.defaultReady();
+          window.renderMathNow = () => {
+            const targets = Array.from(document.querySelectorAll("[data-lang-section]:not([hidden]), [data-i18n], .math-block, .metric-table"));
+            if (MathJax.typesetClear) {
+              MathJax.typesetClear(targets);
+            }
+            return MathJax.typesetPromise(targets).catch(err => console.warn("MathJax typeset failed:", err));
+          };
+        }
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f2e8;
+      --paper: #fffdf8;
+      --ink: #202938;
+      --muted: #647084;
+      --line: #ded5c3;
+      --soft: #efe7d5;
+      --soft-2: #fff8ea;
+      --green: #5f8f3f;
+      --blue: #2fa9c9;
+      --violet: #7b61e8;
+      --orange: #d97706;
+      --red: #dc2626;
+      --shadow: 0 12px 30px rgba(65, 52, 34, 0.10);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif;
+      line-height: 1.72;
+    }
+
+    a {
+      color: #2563eb;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    code {
+      padding: 2px 5px;
+      background: var(--soft);
+      color: #27313f;
+      font-family: "Cascadia Mono", Consolas, monospace;
+      font-size: 0.92em;
+    }
+
+    pre {
+      overflow-x: auto;
+      margin: 12px 0 0;
+      padding: 14px 16px;
+      background: #f3ead8;
+      border: 1px solid var(--line);
+      color: #2f3742;
+      font-family: "Cascadia Mono", Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .page {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 32px 0 56px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.65fr);
+      gap: 28px;
+      align-items: end;
+      padding: 34px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      color: var(--orange);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(32px, 5vw, 56px);
+      line-height: 1.08;
+    }
+
+    h2 {
+      margin: 0 0 18px;
+      font-size: 28px;
+      line-height: 1.25;
+    }
+
+    h3 {
+      margin: 22px 0 10px;
+      font-size: 20px;
+      line-height: 1.35;
+    }
+
+    p {
+      margin: 0 0 14px;
+    }
+
+    .subtitle {
+      max-width: 760px;
+      margin: 20px 0 0;
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 28px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 10px 16px;
+      border: 1px solid var(--ink);
+      border-radius: 6px;
+      background: var(--ink);
+      color: #fff;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .button:hover {
+      text-decoration: none;
+      filter: brightness(1.08);
+    }
+
+    .button.secondary {
+      background: transparent;
+      color: var(--ink);
+      border-color: var(--line);
+    }
+
+    .hero-note {
+      padding: 18px;
+      background: var(--soft);
+      border-left: 4px solid var(--orange);
+      border-radius: 6px;
+      color: #3d3324;
+      font-size: 15px;
+    }
+
+    .hero-note strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--ink);
+    }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+      padding: 12px;
+      background: rgba(246, 242, 232, 0.95);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      backdrop-filter: blur(8px);
+    }
+
+    .nav a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 36px;
+      padding: 7px 12px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--paper);
+      color: var(--ink);
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .nav a:hover {
+      background: var(--soft);
+      text-decoration: none;
+    }
+
+    section {
+      margin-top: 28px;
+      padding: 30px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      scroll-margin-top: 92px;
+    }
+
+    .article {
+      max-width: 900px;
+      font-size: 17px;
+    }
+
+    .section-note {
+      max-width: 900px;
+      color: var(--muted);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .grid.two {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .card {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--soft-2);
+    }
+
+    .label {
+      margin: 0 0 8px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .value {
+      margin: 0;
+      font-size: 25px;
+      font-weight: 800;
+      line-height: 1.2;
+    }
+
+    .desc {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .metric {
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--soft-2);
+    }
+
+    .formula {
+      display: block;
+      overflow-x: auto;
+      margin-top: 8px;
+      padding: 10px 12px;
+      background: #f3ead8;
+      color: #2f3742;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      font-family: "Cascadia Mono", Consolas, monospace;
+      font-size: 13px;
+      white-space: pre;
+    }
+
+    .chart-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .chart-box {
+      min-height: 360px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--soft-2);
+    }
+
+    .chart-box.wide {
+      grid-column: 1 / -1;
+      min-height: 430px;
+    }
+
+    .chart {
+      width: 100%;
+      height: 330px;
+    }
+
+    .chart-box.wide .chart {
+      height: 400px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      font-size: 15px;
+    }
+
+    th,
+    td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: var(--soft);
+      font-weight: 800;
+    }
+
+    .metric-table {
+      min-width: 900px;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 12px;
+    }
+
+    .math-block {
+      margin: 10px 0 14px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #f3ead8;
+      color: #2f3742;
+      overflow-x: auto;
+    }
+
+    .metric-table td:first-child,
+    .metric-table th:first-child {
+      width: 210px;
+    }
+
+    .metric-table td:nth-child(2),
+    .metric-table th:nth-child(2) {
+      width: 310px;
+    }
+
+    .takeaways {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .takeaway {
+      padding: 16px;
+      border-left: 4px solid var(--green);
+      border-radius: 6px;
+      background: var(--soft-2);
+    }
+
+    .takeaway:nth-child(2) {
+      border-left-color: var(--orange);
+    }
+
+    .takeaway:nth-child(3) {
+      border-left-color: var(--blue);
+    }
+
+    .takeaway:nth-child(4) {
+      border-left-color: var(--violet);
+    }
+
+    .note {
+      padding: 16px;
+      background: var(--soft);
+      border-left: 4px solid var(--blue);
+      border-radius: 6px;
+      color: #334155;
+    }
+
+    .footer {
+      color: var(--muted);
+      font-size: 14px;
+      text-align: center;
+      margin-top: 28px;
+    }
+
+    @media (max-width: 900px) {
+      .hero,
+      .grid,
+      .grid.two,
+      .metric-grid,
+      .chart-grid,
+      .takeaways {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding: 24px;
+      }
+
+      section {
+        padding: 22px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .page {
+        width: min(100% - 20px, 1120px);
+        padding-top: 18px;
+      }
+
+      table {
+        font-size: 13px;
+      }
+
+      th,
+      td {
+        padding: 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <div>
+        <p class="eyebrow" data-i18n="hero.eyebrow">Overfitting Related Research</p>
+        <h1 data-i18n="hero.title">过拟合之后，神经网络在训练集外做了什么？</h1>
+        <p class="subtitle" data-i18n="hero.subtitle">
+          这组实验把多个随机 seed 训练出的模型视为函数样本，观察它们在未见 probe 输入上的共同预测、分歧和错误结构。
+        </p>
+        <div class="hero-actions">
+          <a class="button" href="results/probe_consistency_dashboard.html" data-i18n="hero.dashboard">打开交互 Dashboard</a>
+          <a class="button secondary" href="results/probe_consistency_dashboard_aggregated.csv" data-i18n="hero.csv">查看聚合 CSV</a>
+          <button class="button secondary" type="button" id="lang-toggle" aria-pressed="false">English</button>
+        </div>
+      </div>
+      <aside class="hero-note">
+        <strong data-i18n="hero.note.title">核心观察</strong>
+        <span data-i18n="hero.note.body">随机约束会使训练后的函数分布碎裂，规则约束会使函数分布收缩；规则越复杂，收缩到规则态所需的数据越多。</span>
+      </aside>
+    </header>
+
+    <nav class="nav" aria-label="页面栏目">
+      <a href="#motivation" data-i18n="nav.motivation">研究动机</a>
+      <a href="#design" data-i18n="nav.design">实验设计</a>
+      <a href="#metrics" data-i18n="nav.metrics">指标公式</a>
+      <a href="#data" data-i18n="nav.data">真实图表</a>
+      <a href="#interpretation" data-i18n="nav.interpretation">结果解释</a>
+      <a href="#literature" data-i18n="nav.literature">文献回应</a>
+      <a href="#reproduce" data-i18n="nav.reproduce">复现文件</a>
+    </nav>
+
+    <section id="motivation">
+      <h2 data-i18n="motivation.title">研究动机</h2>
+      <div class="article">
+        <p data-i18n="motivation.p1">
+          这组实验的起点并不是一开始就想研究“贝叶斯机制”或“函数后验”，而是在研究 grokking 现象时，试图测量规则任务从过拟合到泛化的精确相变点。最初的问题很朴素：如果一个由程序生成的规则任务在训练样本足够多时可以完全泛化，那么把训练样本逐渐减少，究竟会在什么位置从“能泛化”变成“不能泛化”？这个临界点是否能稳定测出来？它是否和规则复杂度有关？
+        </p>
+        <p data-i18n="motivation.p2">
+          在测量相变点的过程中，一个现象变得越来越明显：从相变点往下减少训练样本时，验证集精度并不是简单地从“泛化”突然掉到“纯粹记忆噪声”，而是会逐渐下降，并且在很多数据量下停留在一个稳定但不完美的水平。这让我意识到，所谓过拟合远远不只是常说的“记住噪声”或“查表”那么简单。一个已经完全拟合训练集的网络，在训练集之外仍然是一个完整函数；它的表外行为不是空白，也不一定是完全随机。
+        </p>
+        <p data-i18n="motivation.p3">
+          于是问题从“模型什么时候 grokking 到规则？”进一步变成：“神经网络在过拟合训练集之后，在训练集之外到底做了什么？”如果用不同随机 seed 训练同一个过拟合训练集，这些模型在未见 probe 数据上的预测会完全一致吗？会完全随机吗？还是既有共同预测，又有不确定性？后续实验发现，第三种情况更接近事实：不同 seed 的预测既有确定性，也有分歧。
+        </p>
+        <p data-i18n="motivation.p4">
+          这个现象自然引出一种操作性解释：也许可以把不同随机 seed 得到的网络看作从某种训练诱导的函数分布中采样，而 probe 上的跨 seed 一致性就是这个函数分布集中程度的一个可测量读数。这个解释仍然是假设，不是已经完成的定理；但它非常有用，因为它把“过拟合”“记忆”“泛化”和“grokking”放到同一个连续图景里：训练数据不断约束可能函数，如果数据中存在可压缩规则，函数分布最终收缩到规则态；如果数据本身接近随机，约束越多，函数分布反而越碎裂。
+        </p>
+        <p data-i18n="motivation.p5">
+          更根本地说，如果把过拟合单纯理解为查表，那么训练集之外根本就不应该存在任何可讨论的泛化行为。即使我们在传统机器学习里常说的“插值”，也并不是没有前提的自然事实，而是默认模型会以某种方式把未见输入和已见样本联系起来；这种联系本身就是一种先验假设。因而，一旦我们观察到过拟合后的神经网络在 probe 空间中表现出稳定的跨 seed 结构，就意味着神经网络不可能只是没有偏好的查表器，它必然带有某种函数先验。这里的实验之所以重要，正在于它让这种先验不再只是抽象说法：我们可以通过不同 seed 的 probe 预测，直接观察训练约束下函数分布如何收缩、碎裂或停留在中间状态。进一步地，未来也许可以沿着这条路线，根据大量可控实验数据反推出神经网络实际使用的先验形状和近似贝叶斯更新机制。
+        </p>
+        <p data-i18n="motivation.p6">
+          本页展示的实验全部在模型已经拟合训练集、并继续训练到 monitor 平台期之后进行 probe 统计。因此我们观察的不是“还没训练好”的模型，而是稳定过拟合态或稳定泛化态在训练集之外的函数结构。
+        </p>
+      </div>
+    </section>
+
+    <section id="design">
+      <h2 data-i18n="design.title">实验设计</h2>
+      <div class="grid">
+        <div class="card">
+          <p class="label" data-i18n="design.card1.label">负对照</p>
+          <p class="value">random_bits</p>
+          <p class="desc" data-i18n="design.card1.desc">固定随机映射。输入 30 bit，输出 30 bit。没有可压缩底层规则，probe 准确率应接近 0.5。</p>
+        </div>
+        <div class="card">
+          <p class="label" data-i18n="design.card2.label">规则任务</p>
+          <p class="value">Rule 30</p>
+          <p class="desc" data-i18n="design.card2.desc">一维环形元胞自动机，输入输出均为 30 bit，背后存在固定程序规则。</p>
+        </div>
+        <div class="card">
+          <p class="label" data-i18n="design.card3.label">难度维度</p>
+          <p class="value" data-i18n="design.card3.value">1 / 2 / 3 层</p>
+          <p class="desc" data-i18n="design.card3.desc">演化层数越深，有效规则复杂度越高，收缩发生得越晚。</p>
+        </div>
+      </div>
+      <h3 data-i18n="design.flow.title">训练和统计流程</h3>
+      <p data-i18n="design.flow.p1">
+        对每个任务和每个训练样本数 <code>n</code>，先从同一数据源划分训练集、monitor 集和 probe 集；然后运行一个 pilot 模型，寻找 monitor 指标进入平台期的大致训练步数；再用同一训练步数训练多个随机初始化的 MLP；最后只在 probe 集上统计准确率、跨 seed 一致性、预测熵和共同错误结构。
+      </p>
+      <p class="note" data-i18n="design.flow.note">
+        关键点：所有模型都完全拟合同一个训练集，并且不是刚刚碰到训练集 100% 就立刻停止，而是在 monitor 指标进入稳定平台期后，再观察训练集之外的 probe 行为。
+      </p>
+    </section>
+
+    <section id="metrics">
+      <h2 data-i18n="metrics.title">指标公式</h2>
+      <div data-lang-section="zh">
+        <p>
+          下面列出当前脚本实际输出和 dashboard 使用的主要统计量。记模型数量为 \(M\)，probe 样本数为 \(P\)，每个输出有 \(B\) 个 bit，令 \(N=PB\)。第 \(m\) 个模型在第 \(i\) 个 probe 样本、第 \(b\) 个输出 bit 上的预测为
+          \(\hat y^{(m)}_{i,b}\in\{0,1\}\)，真实标签为 \(y_{i,b}\)。跨 seed 的 1 比例为：
+        </p>
+        <div class="math-block">
+          \[
+          p_{i,b}=\frac{1}{M}\sum_{m=1}^{M}\hat y^{(m)}_{i,b},
+          \qquad
+          e^{(m)}_{i,b}=\mathbf{1}\!\left[\hat y^{(m)}_{i,b}\ne y_{i,b}\right].
+          \]
+        </div>
+
+        <h3>准确率类指标</h3>
+        <div class="table-wrap">
+          <table class="metric-table">
+            <thead>
+              <tr><th>字段</th><th>公式 / 计算方式</th><th>测什么</th><th>高和低意味着什么</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>mean_probe_bit_accuracy</code></td>
+                <td>\(\frac{1}{MN}\sum_{m,i,b}\mathbf{1}[\hat y^{(m)}_{i,b}=y_{i,b}]\)，等价于对每个模型的 probe bit accuracy 再取平均。</td>
+                <td>单模型在未见 probe bit 上的平均正确率。</td>
+                <td>高：单个模型已经接近真实规则。低：模型在 probe 上仍大量错误；随机二分类基线约为 0.5。</td>
+              </tr>
+              <tr>
+                <td><code>mean_probe_exact_accuracy</code></td>
+                <td>\(\frac{1}{MP}\sum_{m,i}\mathbf{1}[\forall b,\hat y^{(m)}_{i,b}=y_{i,b}]\)。</td>
+                <td>单模型是否把整个输出序列完全预测对。</td>
+                <td>高：不仅 bit 准确，而且完整样本输出可靠。低：即使 bit acc 较高，也可能每个样本仍有少量错误。</td>
+              </tr>
+              <tr>
+                <td><code>majority_vote_bit_accuracy</code></td>
+                <td>先取多数投票 \(\tilde y_{i,b}=\mathbf{1}[p_{i,b}\ge 0.5]\)，再计算 \(\frac{1}{N}\sum_{i,b}\mathbf{1}[\tilde y_{i,b}=y_{i,b}]\)。</td>
+                <td>seed 系综的多数意见是否正确。</td>
+                <td>高：函数后验的主峰方向接近真实规则。若高于单模型 acc，说明集成能纠正部分 seed 噪声。</td>
+              </tr>
+              <tr>
+                <td><code>majority_vote_exact_accuracy</code></td>
+                <td>\(\frac{1}{P}\sum_i\mathbf{1}[\forall b,\tilde y_{i,b}=y_{i,b}]\)。</td>
+                <td>多数投票后的完整样本准确率。</td>
+                <td>高：系综主预测几乎完全等于真实函数。低：多数投票仍无法形成完整正确输出。</td>
+              </tr>
+              <tr>
+                <td><code>majority_vote_tied_bit_fraction</code></td>
+                <td>\(\frac{1}{N}\sum_{i,b}\mathbf{1}[p_{i,b}=0.5]\)。</td>
+                <td>有多少 probe bit 在 seed 间恰好打平。</td>
+                <td>高：这些 bit 的后验方向非常不确定。低：很少出现完全平票。只有 \(M\) 为偶数时才容易出现。</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>函数分布集中度指标</h3>
+        <div class="table-wrap">
+          <table class="metric-table">
+            <thead>
+              <tr><th>字段</th><th>公式 / 计算方式</th><th>测什么</th><th>高和低意味着什么</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>direct_pairwise_agreement</code></td>
+                <td>\(\frac{1}{\binom{M}{2}N}\sum_{a&lt;c}\sum_{i,b}\mathbf{1}[\hat y^{(a)}_{i,b}=\hat y^{(c)}_{i,b}]\)。</td>
+                <td>主指标。随机抽两个 seed，它们在同一 probe bit 上预测相同的概率。</td>
+                <td>高：不同 seed 收缩到相近函数。接近 0.5：probe 上近似彼此独立随机预测。它不需要真实标签，适合随机标签任务。</td>
+              </tr>
+              <tr>
+                <td><code>majority_fraction_agreement</code><br><code>mean_prediction_bit_agreement</code></td>
+                <td>\(\frac{1}{N}\sum_{i,b}\max(p_{i,b},1-p_{i,b})\)。</td>
+                <td>每个 probe bit 上，多数派 seed 占比的平均值。</td>
+                <td>高：多数派很强。低：接近均匀分裂。注意它和 pairwise agreement 不同，有限 seed 下随机基线会高于 0.5。</td>
+              </tr>
+              <tr>
+                <td><code>mean_pairwise_prediction_bit_hamming_distance</code></td>
+                <td>\(\frac{1}{\binom{M}{2}N}\sum_{a&lt;c,i,b}\mathbf{1}[\hat y^{(a)}_{i,b}\ne\hat y^{(c)}_{i,b}]\)。</td>
+                <td>不同 seed 输出函数之间的平均 bit 距离。</td>
+                <td>高：函数分布分散。低：函数分布集中。对于二分类 bit，它约等于 \(1-\)<code>direct_pairwise_agreement</code>。</td>
+              </tr>
+              <tr>
+                <td><code>mean_prediction_entropy_bits</code></td>
+                <td>\(\frac{1}{N}\sum_{i,b}h(p_{i,b})\)，其中 \(h(p)=-p\log_2 p-(1-p)\log_2(1-p)\)。</td>
+                <td>跨 seed 预测分布的平均二元熵。</td>
+                <td>高：seed 间不确定性强，函数后验宽。低：seed 几乎一致，函数后验窄。</td>
+              </tr>
+              <tr>
+                <td><code>unanimously_same_prediction_bit_fraction</code></td>
+                <td>\(\frac{1}{N}\sum_{i,b}\mathbf{1}[p_{i,b}=0\ \text{or}\ p_{i,b}=1]\)。</td>
+                <td>所有 seed 在同一 probe bit 上完全一致的比例。</td>
+                <td>高：大量 probe bit 已经被所有 seed 锁定。低：很多 bit 仍存在 seed 分歧。</td>
+              </tr>
+              <tr>
+                <td><code>prediction_one_rate</code></td>
+                <td>\(\frac{1}{MN}\sum_{m,i,b}\hat y^{(m)}_{i,b}\)。</td>
+                <td>所有模型、所有 probe bit 上预测为 1 的总体比例。</td>
+                <td>接近标签分布：输出没有明显偏置。过高或过低：模型可能偏向全 1 或全 0 等简单输出。</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>共同错误结构指标</h3>
+        <div class="table-wrap">
+          <table class="metric-table">
+            <thead>
+              <tr><th>字段</th><th>公式 / 计算方式</th><th>测什么</th><th>高和低意味着什么</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>unanimously_correct_bit_fraction</code></td>
+                <td>\(\frac{1}{N}\sum_{i,b}\mathbf{1}[p_{i,b}\in\{0,1\}\ \text{and}\ \tilde y_{i,b}=y_{i,b}]\)。</td>
+                <td>所有 seed 一致且一致正确的 probe bit 比例。</td>
+                <td>高：函数分布收缩到真实规则的一部分。低：一致正确区域少。</td>
+              </tr>
+              <tr>
+                <td><code>unanimously_wrong_bit_fraction</code></td>
+                <td>\(\frac{1}{N}\sum_{i,b}\mathbf{1}[p_{i,b}\in\{0,1\}\ \text{and}\ \tilde y_{i,b}\ne y_{i,b}]\)。</td>
+                <td>所有 seed 一致但一致错误的 probe bit 比例。</td>
+                <td>高：存在跨 seed 共享的系统性错误，像“共同幻觉”。低：一致错误少。</td>
+              </tr>
+              <tr>
+                <td><code>mixed_error_state_bit_fraction</code></td>
+                <td>\(\frac{1}{N}\sum_{i,b}\mathbf{1}[0&lt;\sum_m e^{(m)}_{i,b}&lt;M]\)。</td>
+                <td>同一个 probe bit 上有些 seed 对、有些 seed 错的比例。</td>
+                <td>高：后验仍处在混合状态。低：要么大多已一致正确，要么已一致错误。</td>
+              </tr>
+              <tr>
+                <td><code>mean_pairwise_joint_error_lift</code></td>
+                <td>对模型对 \((a,c)\)，\(\mathrm{lift}=\frac{P(e^{(a)}=1,e^{(c)}=1)}{P(e^{(a)}=1)P(e^{(c)}=1)}\)，再对模型对平均。</td>
+                <td>两个 seed 是否比独立错误更容易在同一位置一起错。</td>
+                <td>\(&gt;1\)：共同错误富集。约 \(1\)：错误近似独立。错误率很低时该指标会不稳定。</td>
+              </tr>
+              <tr>
+                <td><code>mean_pairwise_error_jaccard</code></td>
+                <td>\(\frac{|E_a\cap E_c|}{|E_a\cup E_c|}\)，其中 \(E_a\) 是模型 \(a\) 的错误 bit 集合。</td>
+                <td>两个 seed 的错误集合重叠程度。</td>
+                <td>高：错误集中在同一批 probe bit。低：各 seed 错误位置不同。</td>
+              </tr>
+              <tr>
+                <td><code>mean_pairwise_error_phi_correlation</code></td>
+                <td>\(\phi=\frac{P_{11}P_{00}-P_{10}P_{01}}{\sqrt{P_{1\cdot}P_{0\cdot}P_{\cdot1}P_{\cdot0}}}\)，其中 \(P_{uv}\) 是两个 seed 错误状态的联合比例。</td>
+                <td>两个 seed 的错误指示变量相关性。</td>
+                <td>正值高：共同错误结构强。接近 0：错误近似独立。负值：一个 seed 错的位置另一个更可能对。</td>
+              </tr>
+              <tr>
+                <td><code>mean_pairwise_error_state_cohen_kappa</code></td>
+                <td>\(\kappa=\frac{p_o-p_e}{1-p_e}\)，其中 \(p_o\) 是两个 seed 错误/正确状态的实际一致率，\(p_e\) 是按边缘分布计算的随机一致率。</td>
+                <td>扣除边缘错误率影响后的错误状态一致性。</td>
+                <td>高：两个 seed 的错误/正确状态有超出随机基线的一致性。约 0：接近 chance agreement。</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>训练过程和元数据指标</h3>
+        <div class="table-wrap">
+          <table class="metric-table">
+            <thead>
+              <tr><th>字段</th><th>含义</th><th>为什么保留</th><th>解释注意事项</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>mean_train_steps</code></td><td>正式 seed 训练到 plateau 记录时的平均步数。</td><td>保证不同任务/数据量是在相似停止规则下比较。</td><td>步数越大不一定任务越难，也可能是平台期检测更晚。</td></tr>
+              <tr><td><code>mean_train_fit_step</code></td><td>训练集首次达到完全拟合时的平均步数。</td><td>区分“刚拟合训练集”和“拟合后继续演化”。</td><td>如果任务很快拟合但 probe 仍差，说明训练集拟合本身不等于泛化。</td></tr>
+              <tr><td><code>pilot_steps</code></td><td>pilot 模型判断 monitor 进入平台期后选出的统一训练步数。</td><td>同一任务同一数据量的正式 seed 使用同一步数，减少停止时间混杂。</td><td>它是实验协议的一部分，不是模型能力指标。</td></tr>
+              <tr><td><code>model_count</code></td><td>参与统计的随机 seed / 模型数量。</td><td>决定 agreement、entropy 等系综统计的可靠性。</td><td>当前常用 20 个 seed；更多 seed 会让熵和多数派比例估计更稳。</td></tr>
+              <tr><td><code>probe_count</code></td><td>probe 样本数。</td><td>决定训练集外函数统计的采样精度。</td><td>probe 越大，估计越稳定，但训练和存储成本越高。</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>原始明细文件中的补充字段</h3>
+        <p>
+          上面的字段覆盖了聚合结果和 dashboard 的主要曲线。每个实验子目录还会保存 <code>run_statistics.jsonl</code> 和 <code>pairwise_statistics.jsonl</code>，其中包含更细粒度的单 seed 和 seed-pair 指标：
+        </p>
+        <div class="table-wrap">
+          <table class="metric-table">
+            <thead>
+              <tr><th>字段</th><th>出现位置</th><th>含义</th><th>用途</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>probe_bit_accuracy</code> / <code>probe_exact_accuracy</code></td><td><code>run_statistics.jsonl</code></td><td>每个单独 seed 的 probe bit / exact accuracy。</td><td>用于检查是否某些 seed 明显异常，也用于计算 <code>mean_probe_*</code>。</td></tr>
+              <tr><td><code>prediction_bit_agreement</code> / <code>prediction_bit_hamming_distance</code></td><td><code>pairwise_statistics.jsonl</code></td><td>某一对 seed 的 bit agreement 和 Hamming distance。</td><td>用于计算 pairwise 平均值，也可以看 seed-pair 方差。</td></tr>
+              <tr><td><code>prediction_exact_agreement</code> / <code>prediction_exact_disagreement</code></td><td><code>pairwise_statistics.jsonl</code></td><td>某一对 seed 是否在整个 probe 样本上完全一致或不一致。</td><td>比 bit 指标更严格，适合观察完整输出函数是否相同。</td></tr>
+              <tr><td><code>error_rate_a</code> / <code>error_rate_b</code> / <code>joint_error_rate</code></td><td><code>pairwise_statistics.jsonl</code></td><td>两个 seed 各自错误率，以及二者在同一 bit 上共同错误的概率。</td><td>是 <code>lift</code>、<code>Jaccard</code>、<code>phi</code> 等共同错误指标的基础量。</td></tr>
+              <tr><td><code>error_state_cohen_kappa</code></td><td><code>pairwise_statistics.jsonl</code></td><td>扣除随机一致后的错误/正确状态一致性。</td><td>与 <code>phi</code> 类似，但从 Cohen's kappa 的角度衡量共同错误结构。</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div data-lang-section="en" hidden>
+        <p>
+          This section lists the main statistics actually emitted by the scripts and used by the dashboard. Let \(M\) be the number of models, \(P\) the number of probe samples, \(B\) the number of output bits, and \(N=PB\). The prediction of model \(m\) on probe sample \(i\), output bit \(b\), is
+          \(\hat y^{(m)}_{i,b}\in\{0,1\}\), and the target is \(y_{i,b}\). The cross-seed one-probability is:
+        </p>
+        <div class="math-block">
+          \[
+          p_{i,b}=\frac{1}{M}\sum_{m=1}^{M}\hat y^{(m)}_{i,b},
+          \qquad
+          e^{(m)}_{i,b}=\mathbf{1}\!\left[\hat y^{(m)}_{i,b}\ne y_{i,b}\right].
+          \]
+        </div>
+
+        <h3>Accuracy metrics</h3>
+        <div class="table-wrap">
+          <table class="metric-table">
+            <thead>
+              <tr><th>Field</th><th>Formula / computation</th><th>What it measures</th><th>High / low meaning</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>mean_probe_bit_accuracy</code></td><td>\(\frac{1}{MN}\sum_{m,i,b}\mathbf{1}[\hat y^{(m)}_{i,b}=y_{i,b}]\), equivalently averaged over per-model probe bit accuracy.</td><td>Average single-model correctness on unseen probe bits.</td><td>High: a single model is close to the true rule. Low: many probe errors remain; random binary baseline is about 0.5.</td></tr>
+              <tr><td><code>mean_probe_exact_accuracy</code></td><td>\(\frac{1}{MP}\sum_{m,i}\mathbf{1}[\forall b,\hat y^{(m)}_{i,b}=y_{i,b}]\).</td><td>Whether a model predicts the whole output sequence exactly.</td><td>High: full-sample outputs are reliable. Low: even high bit accuracy may still leave errors in most samples.</td></tr>
+              <tr><td><code>majority_vote_bit_accuracy</code></td><td>First compute \(\tilde y_{i,b}=\mathbf{1}[p_{i,b}\ge 0.5]\), then \(\frac{1}{N}\sum_{i,b}\mathbf{1}[\tilde y_{i,b}=y_{i,b}]\).</td><td>Whether the ensemble majority is correct.</td><td>High: the dominant posterior mode points toward the true rule. If it exceeds single-model accuracy, ensembling corrects some seed noise.</td></tr>
+              <tr><td><code>majority_vote_exact_accuracy</code></td><td>\(\frac{1}{P}\sum_i\mathbf{1}[\forall b,\tilde y_{i,b}=y_{i,b}]\).</td><td>Exact-sample accuracy after majority voting.</td><td>High: the ensemble's main prediction is almost identical to the true function. Low: majority voting still cannot form full correct outputs.</td></tr>
+              <tr><td><code>majority_vote_tied_bit_fraction</code></td><td>\(\frac{1}{N}\sum_{i,b}\mathbf{1}[p_{i,b}=0.5]\).</td><td>Fraction of probe bits where seeds are exactly tied.</td><td>High: these bits have no clear posterior direction. Low: exact ties are rare. This is mostly relevant when \(M\) is even.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Function-distribution concentration metrics</h3>
+        <div class="table-wrap">
+          <table class="metric-table">
+            <thead>
+              <tr><th>Field</th><th>Formula / computation</th><th>What it measures</th><th>High / low meaning</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>direct_pairwise_agreement</code></td><td>\(\frac{1}{\binom{M}{2}N}\sum_{a&lt;c}\sum_{i,b}\mathbf{1}[\hat y^{(a)}_{i,b}=\hat y^{(c)}_{i,b}]\).</td><td>Main metric. The probability that two randomly chosen seeds predict the same value on the same probe bit.</td><td>High: different seeds contracted to similar functions. Near 0.5: probe predictions are close to independent random guesses. It does not require labels.</td></tr>
+              <tr><td><code>majority_fraction_agreement</code><br><code>mean_prediction_bit_agreement</code></td><td>\(\frac{1}{N}\sum_{i,b}\max(p_{i,b},1-p_{i,b})\).</td><td>Average fraction of seeds on the majority side for each probe bit.</td><td>High: strong majority. Low: near-even split. This differs from pairwise agreement, and its finite-seed random baseline is above 0.5.</td></tr>
+              <tr><td><code>mean_pairwise_prediction_bit_hamming_distance</code></td><td>\(\frac{1}{\binom{M}{2}N}\sum_{a&lt;c,i,b}\mathbf{1}[\hat y^{(a)}_{i,b}\ne\hat y^{(c)}_{i,b}]\).</td><td>Average bitwise distance between functions from different seeds.</td><td>High: dispersed function distribution. Low: concentrated function distribution. For binary bits it is approximately \(1-\)<code>direct_pairwise_agreement</code>.</td></tr>
+              <tr><td><code>mean_prediction_entropy_bits</code></td><td>\(\frac{1}{N}\sum_{i,b}h(p_{i,b})\), where \(h(p)=-p\log_2 p-(1-p)\log_2(1-p)\).</td><td>Mean binary entropy of the cross-seed prediction distribution.</td><td>High: strong seed uncertainty and broad function posterior. Low: near-unanimous seeds and narrow function posterior.</td></tr>
+              <tr><td><code>unanimously_same_prediction_bit_fraction</code></td><td>\(\frac{1}{N}\sum_{i,b}\mathbf{1}[p_{i,b}=0\ \text{or}\ p_{i,b}=1]\).</td><td>Fraction of probe bits where all seeds agree exactly.</td><td>High: many probe bits have been locked by all seeds. Low: many bits retain seed disagreement.</td></tr>
+              <tr><td><code>prediction_one_rate</code></td><td>\(\frac{1}{MN}\sum_{m,i,b}\hat y^{(m)}_{i,b}\).</td><td>Overall rate of predicting 1 across all models and probe bits.</td><td>Close to label distribution: no strong output bias. Very high or low: possible bias toward simple all-1 or all-0 outputs.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Shared-error structure metrics</h3>
+        <div class="table-wrap">
+          <table class="metric-table">
+            <thead>
+              <tr><th>Field</th><th>Formula / computation</th><th>What it measures</th><th>High / low meaning</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>unanimously_correct_bit_fraction</code></td><td>\(\frac{1}{N}\sum_{i,b}\mathbf{1}[p_{i,b}\in\{0,1\}\ \text{and}\ \tilde y_{i,b}=y_{i,b}]\).</td><td>Fraction of probe bits where all seeds agree and are correct.</td><td>High: part of the function distribution has contracted to the true rule. Low: little unanimous correctness.</td></tr>
+              <tr><td><code>unanimously_wrong_bit_fraction</code></td><td>\(\frac{1}{N}\sum_{i,b}\mathbf{1}[p_{i,b}\in\{0,1\}\ \text{and}\ \tilde y_{i,b}\ne y_{i,b}]\).</td><td>Fraction of probe bits where all seeds agree but are wrong.</td><td>High: systematic cross-seed errors, resembling shared hallucinations. Low: few unanimously wrong regions.</td></tr>
+              <tr><td><code>mixed_error_state_bit_fraction</code></td><td>\(\frac{1}{N}\sum_{i,b}\mathbf{1}[0&lt;\sum_m e^{(m)}_{i,b}&lt;M]\).</td><td>Fraction of probe bits where some seeds are right and some are wrong.</td><td>High: posterior remains in a mixed state. Low: bits are mostly unanimously correct or unanimously wrong.</td></tr>
+              <tr><td><code>mean_pairwise_joint_error_lift</code></td><td>For model pair \((a,c)\), \(\mathrm{lift}=\frac{P(e^{(a)}=1,e^{(c)}=1)}{P(e^{(a)}=1)P(e^{(c)}=1)}\), then averaged across pairs.</td><td>Whether two seeds co-make errors more often than independent errors predict.</td><td>\(&gt;1\): shared errors are enriched. Around \(1\): errors are roughly independent. Unstable when error rate is very low.</td></tr>
+              <tr><td><code>mean_pairwise_error_jaccard</code></td><td>\(\frac{|E_a\cap E_c|}{|E_a\cup E_c|}\), where \(E_a\) is model \(a\)'s set of erroneous bits.</td><td>Overlap between the error sets of two seeds.</td><td>High: errors concentrate on the same probe bits. Low: different seeds err in different places.</td></tr>
+              <tr><td><code>mean_pairwise_error_phi_correlation</code></td><td>\(\phi=\frac{P_{11}P_{00}-P_{10}P_{01}}{\sqrt{P_{1\cdot}P_{0\cdot}P_{\cdot1}P_{\cdot0}}}\), where \(P_{uv}\) is the joint proportion of two seeds' error states.</td><td>Correlation between two seeds' error indicators.</td><td>Large positive: strong shared-error structure. Near 0: approximately independent errors. Negative: one seed tends to be right where the other is wrong.</td></tr>
+              <tr><td><code>mean_pairwise_error_state_cohen_kappa</code></td><td>\(\kappa=\frac{p_o-p_e}{1-p_e}\), where \(p_o\) is observed agreement in correct/error state and \(p_e\) is chance agreement from marginals.</td><td>Error-state agreement after correcting for marginal error rates.</td><td>High: two seeds share correct/error states beyond chance. Near 0: chance-level agreement.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Training-process and metadata metrics</h3>
+        <div class="table-wrap">
+          <table class="metric-table">
+            <thead>
+              <tr><th>Field</th><th>Meaning</th><th>Why it is kept</th><th>Interpretation notes</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>mean_train_steps</code></td><td>Average number of steps used by the final seed ensemble at the plateau checkpoint.</td><td>Ensures tasks and data sizes are compared under a similar stopping rule.</td><td>More steps do not necessarily mean a harder task; plateau detection can also stop later.</td></tr>
+              <tr><td><code>mean_train_fit_step</code></td><td>Average first step at which the training set is fully fit.</td><td>Separates “first fitting the training set” from “continuing evolution after fitting.”</td><td>If the train set is fit quickly but probe remains poor, fitting the train set is not generalization.</td></tr>
+              <tr><td><code>pilot_steps</code></td><td>Unified training length selected by the pilot model after monitor plateau detection.</td><td>All formal seeds for the same task/data size use the same step count, reducing stopping-time confounds.</td><td>This is part of the protocol, not a capability metric.</td></tr>
+              <tr><td><code>model_count</code></td><td>Number of random seeds / models used in the ensemble statistics.</td><td>Determines reliability of agreement and entropy estimates.</td><td>Current runs often use 20 seeds; more seeds produce stabler estimates.</td></tr>
+              <tr><td><code>probe_count</code></td><td>Number of probe samples.</td><td>Determines sampling precision for out-of-training-set function statistics.</td><td>Larger probe sets give stabler estimates but cost more compute and storage.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Additional fields in raw detail files</h3>
+        <p>
+          The tables above cover the main aggregated results and dashboard curves. Each experiment directory also stores <code>run_statistics.jsonl</code> and <code>pairwise_statistics.jsonl</code>, which contain finer-grained per-seed and seed-pair metrics:
+        </p>
+        <div class="table-wrap">
+          <table class="metric-table">
+            <thead>
+              <tr><th>Field</th><th>Location</th><th>Meaning</th><th>Use</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>probe_bit_accuracy</code> / <code>probe_exact_accuracy</code></td><td><code>run_statistics.jsonl</code></td><td>Probe bit / exact accuracy for each individual seed.</td><td>Useful for detecting outlier seeds and for computing the <code>mean_probe_*</code> fields.</td></tr>
+              <tr><td><code>prediction_bit_agreement</code> / <code>prediction_bit_hamming_distance</code></td><td><code>pairwise_statistics.jsonl</code></td><td>Bit agreement and Hamming distance for one seed pair.</td><td>Used to compute pairwise averages, and useful for inspecting seed-pair variance.</td></tr>
+              <tr><td><code>prediction_exact_agreement</code> / <code>prediction_exact_disagreement</code></td><td><code>pairwise_statistics.jsonl</code></td><td>Whether two seeds agree or disagree on an entire probe sample.</td><td>Stricter than bit metrics; useful for checking whether whole output functions match.</td></tr>
+              <tr><td><code>error_rate_a</code> / <code>error_rate_b</code> / <code>joint_error_rate</code></td><td><code>pairwise_statistics.jsonl</code></td><td>Error rates of the two seeds, and the probability that both are wrong on the same bit.</td><td>Base quantities for <code>lift</code>, <code>Jaccard</code>, <code>phi</code>, and related shared-error metrics.</td></tr>
+              <tr><td><code>error_state_cohen_kappa</code></td><td><code>pairwise_statistics.jsonl</code></td><td>Error/correct-state agreement after correcting for chance agreement.</td><td>Similar to <code>phi</code>, but expressed through Cohen's kappa.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="data">
+      <h2 data-i18n="data.title">真实数据图表</h2>
+      <p class="section-note" data-i18n="data.note">
+        下面图表直接由 <code>results/probe_consistency_dashboard_aggregated.jsonl</code> 中的聚合数据绘制，不是示意图。更完整的交互版本见 <a href="results/probe_consistency_dashboard.html">Dashboard</a>。
+      </p>
+      <div class="chart-grid">
+        <div class="chart-box wide">
+          <div id="chart-agreement" class="chart" aria-label="pairwise agreement 曲线"></div>
+        </div>
+        <div class="chart-box">
+          <div id="chart-accuracy" class="chart" aria-label="probe bit accuracy 曲线"></div>
+        </div>
+        <div class="chart-box">
+          <div id="chart-entropy" class="chart" aria-label="prediction entropy 曲线"></div>
+        </div>
+        <div class="chart-box">
+          <div id="chart-phi" class="chart" aria-label="error phi 曲线"></div>
+        </div>
+        <div class="chart-box">
+          <div id="chart-lift" class="chart" aria-label="error lift 曲线"></div>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th data-i18n="data.table.task">任务</th>
+            <th data-i18n="data.table.range">n 范围</th>
+            <th data-i18n="data.table.startAgreement">起点 agreement</th>
+            <th data-i18n="data.table.endAgreement">终点 agreement</th>
+            <th data-i18n="data.table.startAcc">起点 bit acc</th>
+            <th data-i18n="data.table.endAcc">终点 bit acc</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><code>random_bits</code></td><td>100-6000</td><td>0.8628</td><td>0.5967</td><td>0.4995</td><td>0.4997</td></tr>
+          <tr><td><code>rule30_layer1</code></td><td>100-6000</td><td>0.8975</td><td>1.0000</td><td>0.6810</td><td>1.0000</td></tr>
+          <tr><td><code>rule30_layer2</code></td><td>100-6000</td><td>0.8673</td><td>1.0000</td><td>0.5479</td><td>1.0000</td></tr>
+          <tr><td><code>rule30_layer3</code></td><td>100-6000</td><td>0.8732</td><td>0.9441</td><td>0.5500</td><td>0.9587</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="interpretation">
+      <h2 data-i18n="interpretation.title">结果解释</h2>
+      <div class="takeaways">
+        <div class="takeaway">
+          <h3 data-i18n="interpretation.random.title">random：随机约束打碎共同外推</h3>
+          <p data-i18n="interpretation.random.body"><code>random_bits</code> 的 probe 准确率始终接近 0.5，但 agreement 随数据量增加下降，entropy 上升。它说明随机数据并不是把不同 seed 约束到同一个正确函数，而是在不断排除简单外推方式，使不同模型落到更分散的函数区域。</p>
+        </div>
+        <div class="takeaway">
+          <h3 data-i18n="interpretation.vector.title">随机向量比喻</h3>
+          <p data-i18n="interpretation.vector.body">可以把随机标签样本想象成随机方向的向量。少量随机向量的和可能偶然偏向某个方向，因此诱导出共同外推；随机向量越来越多时，不同方向互相抵消，整体结构趋向消失。</p>
+        </div>
+        <div class="takeaway">
+          <h3 data-i18n="interpretation.rule.title">规则任务：函数分布收缩</h3>
+          <p data-i18n="interpretation.rule.body">Rule 30 任务中，数据量增加后准确率和 agreement 共同上升，说明不同 seed 不只是记住训练集，而是在 probe 上逐渐收敛到同一个规则函数。</p>
+        </div>
+        <div class="takeaway">
+          <h3 data-i18n="interpretation.early.title">layer2 / layer3 早期下降</h3>
+          <p data-i18n="interpretation.early.body">样本太少时，多层规则尚未显露，新增约束首先排除简单但错误的外推方式，因此曲线会像 random 一样先下降，再在足够数据后分叉向上。</p>
+        </div>
+      </div>
+      <h3 data-i18n="interpretation.difficulty.title">同样数据量下的有效难度</h3>
+      <p data-i18n="interpretation.difficulty.p1">
+        在同一个模型、训练协议和采样方式下，如果多个任务都还没有进入完全泛化的饱和区，那么同样训练样本数下的 <code>direct_pairwise_agreement</code>、预测熵和 probe 准确率可以作为任务难度的经验读数。当前结果给出的经验顺序是：
+      </p>
+      <pre><code>rule30_layer1 &lt; rule30_layer2 &lt; rule30_layer3 &lt; random_bits</code></pre>
+      <p data-i18n="interpretation.difficulty.p2">
+        这里的“小于”不是严格数学意义上的 Kolmogorov 复杂度比较，而是神经网络训练协议下的有效复杂度比较：一个任务越容易用较少样本把函数分布收缩到规则态，它在这个实验系统中表现出的有效复杂度就越低。
+      </p>
+    </section>
+
+    <section id="literature">
+      <h2 data-i18n="literature.title">文献回应和理论意义</h2>
+      <h3 data-i18n="literature.random.title">对随机标签经典实验的回应</h3>
+      <p data-i18n="literature.random.p1">
+        Zhang、Bengio、Hardt、Recht 和 Vinyals 的
+        <a href="https://arxiv.org/abs/1611.03530">Understanding deep learning requires rethinking generalization</a>
+        证明了神经网络不仅可以拟合真实标签，也可以拟合随机标签。这个结果挑战了传统容量控制叙事：如果网络可以轻松记住随机标签，那它为什么又能在真实任务上泛化？
+      </p>
+      <p data-i18n="literature.random.p2">
+        本实验可以看作对这个问题的一个补充回答。Zhang et al. 证明网络<strong>能</strong>拟合随机标签；这里进一步问：拟合之后，它在训练集之外到底是什么样的函数？结果显示，随机标签训练后的网络不是普通意义上的规则泛化，也不是完全没有结构的死记硬背。小数据量下 probe 上仍有高一致性；随机约束增加后，这种一致性逐渐被打碎。
+      </p>
+
+      <h3 data-i18n="literature.compression.title">对压缩和 Kolmogorov 复杂度解释的支持</h3>
+      <p data-i18n="literature.compression.p1">
+        这些结果支持一种 Kolmogorov 复杂度 / MDL 风格的解释：神经网络训练不是显式计算 Kolmogorov 复杂度，但其训练结果表现出对低复杂度函数解释的偏好。随机任务近似不可压缩，因此数据越多，函数分布越碎裂；规则任务背后有固定程序，因此数据越多，低复杂度规则越能胜出，不同 seed 最终收缩到同一个规则函数。
+      </p>
+      <p data-i18n="literature.compression.p2">
+        更进一步地，这也支持一种“基于低复杂度偏好的贝叶斯统计机制”的图景：训练数据不断约束可能函数，低复杂度解释在足够数据下获得更高的有效后验，而不同 seed 可以被看作这个后验中的样本。这里仍然要强调：这不是严格证明神经网络在执行精确贝叶斯推断，也不是说我们已经知道了它的先验和更新规则的解析形式。更准确的说法是，这些实验现象与“神经网络在训练约束下进行低复杂度偏置的近似函数推断”高度一致。
+      </p>
+
+      <h3 data-i18n="literature.gde.title">不同 seed 作为函数后验采样，以及 GDE 的边界</h3>
+      <p data-i18n="literature.gde.p1">
+        本实验中一个关键解释是假设：同一训练集、同一训练协议下，不同随机 seed 训练出的模型，可以近似看作从某种训练诱导的函数分布中采样。这个说法仍然是假设，不应当当作已经严格证明的定理；但它能自然解释多个现象：同一训练集下不同 seed 既有共同预测，也有分歧；数据量增加会改变这种分布的集中程度；随机标签和规则标签会让分布朝相反方向演化。
+      </p>
+      <p data-i18n="literature.gde.p2">
+        这个想法也可以和已有文献接上。Jiang、Nagarajan、Baek 和 Kolter 的
+        <a href="https://arxiv.org/abs/2106.13799">Assessing Generalization of SGD via Disagreement</a>
+        提出，可以通过两次独立 SGD 训练得到的模型在无标签测试数据上的 disagreement 来估计测试误差；这一思路常被称为 GDE，即 generalization-disagreement equality。
+      </p>
+      <p data-i18n="literature.gde.p3">
+        我们的规则任务组与这个直觉大体一致：随着数据量增加，probe 准确率上升，seed 间 disagreement 下降，agreement 上升。但低数据量的 <code>random_bits</code> 提供了一个失效区：它的 probe accuracy 接近 0.5，但 agreement 显著高于 0.5。这意味着 disagreement 会严重低估错误率。换句话说，不同 seed 可以在错误方向上达成共识，这不是普通的独立随机错误，而是先验和少量训练约束共同诱导出的过度自信共同外推。
+      </p>
+    </section>
+
+    <section id="reproduce">
+      <h2 data-i18n="reproduce.title">复现文件</h2>
+      <pre><code>research/overfitting_related_research/
+  index.html
+  README.md
+  datasets/
+    ca_rule30_layer1_len30_n30000.jsonl
+    ca_rule30_layer2_len30_n30000.jsonl
+    ca_rule30_layer3_len30_n30000.jsonl
+  scripts/
+    generate_ca_rule_dataset.py
+    sweep_task_difficulty_plateau.py
+    build_probe_consistency_dashboard.py
+  results/
+    probe_consistency_dashboard.html
+    probe_consistency_dashboard_aggregated.csv
+    probe_consistency_dashboard_aggregated.jsonl
+    probe_consistency_dashboard_rows.jsonl</code></pre>
+      <p data-i18n="reproduce.intro">
+        三个脚本都是单文件自包含脚本，不依赖本仓库里的其他 Python / notebook 文件。默认目录已经全部指向本子目录：生成脚本写入 <code>datasets/</code>，训练 sweep 从 <code>datasets/</code> 读取并写入 <code>results/</code>，dashboard 脚本扫描 <code>results/</code> 并重建可视化页面。运行时需要的主要第三方包是 <code>torch</code>、<code>numpy</code>、<code>tqdm</code>。
+      </p>
+
+      <h3 data-i18n="reproduce.generate">生成元胞自动机数据集</h3>
+      <pre><code>python research/overfitting_related_research/scripts/generate_ca_rule_dataset.py</code></pre>
+
+      <h3 data-i18n="reproduce.sweep">运行训练 sweep</h3>
+      <pre><code>python research/overfitting_related_research/scripts/sweep_task_difficulty_plateau.py</code></pre>
+
+      <h3 data-i18n="reproduce.dashboard">生成可视化 dashboard</h3>
+      <pre><code>python research/overfitting_related_research/scripts/build_probe_consistency_dashboard.py</code></pre>
+
+      <h3 data-i18n="reproduce.limits.title">局限和后续方向</h3>
+      <div class="grid two">
+        <div class="card"><p class="value" data-i18n="reproduce.limit1.title">更多 split seed</p><p class="desc" data-i18n="reproduce.limit1.body">当前结果主要来自一个 split seed。更完整版本应增加多个数据划分。</p></div>
+        <div class="card"><p class="value" data-i18n="reproduce.limit2.title">更多任务和架构</p><p class="desc" data-i18n="reproduce.limit2.body">当前只测试 MLP、随机 bit 映射和 Rule 30。后续可以扩展到图像任务和不同架构。</p></div>
+        <div class="card"><p class="value" data-i18n="reproduce.limit3.title">共同错误指标需谨慎</p><p class="desc" data-i18n="reproduce.limit3.body"><code>phi</code> 和 <code>lift</code> 在错误率极低时不稳定，应主要用于中间区间分析。</p></div>
+        <div class="card"><p class="value" data-i18n="reproduce.limit4.title">仍不是完整理论</p><p class="desc" data-i18n="reproduce.limit4.body">本实验支持函数分布收缩 / 碎裂的行为图景，但不等于严格证明精确贝叶斯采样。</p></div>
+      </div>
+    </section>
+
+    <p class="footer" data-i18n="footer">
+      详细数据见 <a href="results/probe_consistency_dashboard.html">交互 dashboard</a>。
+    </p>
+  </main>
+
+  <script>
+    const originalTitle = document.title;
+    const originalHtml = new Map();
+    document.querySelectorAll("[data-i18n]").forEach(el => {
+      originalHtml.set(el.dataset.i18n, el.innerHTML);
+    });
+
+    const translations = {
+      en: {
+        pageTitle: "Overfitting-Related Research: Probe Consistency Experiments",
+        langButton: "中文",
+        navLabel: "Page sections",
+        "hero.eyebrow": "Overfitting Related Research",
+        "hero.title": "After overfitting, what do neural networks do outside the training set?",
+        "hero.subtitle": "These experiments treat models trained from multiple random seeds as samples of functions, then measure their shared predictions, disagreements, and error structure on unseen probe inputs.",
+        "hero.dashboard": "Open Interactive Dashboard",
+        "hero.csv": "View Aggregated CSV",
+        "hero.note.title": "Core Observation",
+        "hero.note.body": "Random constraints fragment the learned function distribution, while rule constraints make it contract; the more complex the rule, the more data is needed before the distribution collapses toward the rule state.",
+        "nav.motivation": "Motivation",
+        "nav.design": "Experiment Design",
+        "nav.metrics": "Metrics",
+        "nav.data": "Real Charts",
+        "nav.interpretation": "Interpretation",
+        "nav.literature": "Literature",
+        "nav.reproduce": "Reproduction",
+        "motivation.title": "Motivation",
+        "motivation.p1": "This line of experiments did not begin as an attempt to study a “Bayesian mechanism” or a “function posterior.” It began while studying grokking, when I tried to measure the precise phase transition from overfitting to generalization on rule-based tasks. The initial question was simple: if a program-generated rule task can generalize perfectly once enough training samples are provided, where exactly does it move from “can generalize” to “cannot generalize” as the number of samples is reduced? Can that critical point be measured stably? Does it depend on rule complexity?",
+        "motivation.p2": "During this phase-transition measurement, one phenomenon became increasingly clear: when the number of training samples is reduced below the transition point, validation accuracy does not simply jump from “generalization” to “pure memorized noise.” Instead, it often declines gradually and stabilizes at an imperfect but nontrivial level. This made me realize that overfitting is far more than the usual story of “memorizing noise” or “table lookup.” A network that has perfectly fit the training set is still a complete function outside the training set; its behavior outside the table is not blank, and it is not necessarily fully random.",
+        "motivation.p3": "The question therefore shifted from “when does the model grok the rule?” to “after a neural network overfits the training set, what function does it implement outside the training set?” If we train on the same overfitting dataset with different random seeds, will the models make identical predictions on unseen probe inputs? Will they be completely random? Or will they show both shared predictions and uncertainty? The experiments suggest that the third case is closest to reality: predictions across seeds contain both determinism and disagreement.",
+        "motivation.p4": "This naturally leads to an operational interpretation: models trained from different random seeds may be viewed as samples from some training-induced distribution over functions, and cross-seed agreement on probe inputs becomes a measurable readout of how concentrated that function distribution is. This is still a hypothesis, not a theorem. But it is useful because it places overfitting, memorization, generalization, and grokking into one continuous picture: training data constrains possible functions. If the data contains a compressible rule, the function distribution eventually contracts toward the rule state; if the data is close to random, more constraints can instead fragment the function distribution.",
+        "motivation.p5": "More fundamentally, if overfitting were merely table lookup, then there should be no meaningful generalization behavior outside the training set at all. Even the ordinary idea of “interpolation” in machine learning is not an assumption-free fact: it assumes that the model relates unseen inputs to seen samples in some way, and that relation is already a prior. Therefore, once we observe stable cross-seed structure on probe inputs after overfitting, the network cannot be a prior-free table lookup machine; it must carry some function prior. The importance of these experiments is that this prior becomes observable rather than merely philosophical: by comparing probe predictions across seeds, we can watch the function distribution contract, fragment, or remain in an intermediate state under training constraints. In the future, this route may allow us to infer the shape of the neural-network prior and its approximate Bayesian update mechanism from large amounts of controlled experimental data.",
+        "motivation.p6": "All probe statistics shown here are measured after the model has already fit the training set and then continued training until the monitor metric enters a plateau. We are not observing an undertrained model; we are observing the function structure outside the training set in stable overfitting states or stable generalization states.",
+        "design.title": "Experiment Design",
+        "design.card1.label": "Negative Control",
+        "design.card1.desc": "A fixed random mapping. Input: 30 bits. Output: 30 bits. There is no compressible underlying rule, so probe accuracy should stay near 0.5.",
+        "design.card2.label": "Rule Task",
+        "design.card2.desc": "A one-dimensional circular cellular automaton. Inputs and outputs are both 30 bits, and the mapping is generated by a fixed program.",
+        "design.card3.label": "Difficulty Axis",
+        "design.card3.value": "1 / 2 / 3 layers",
+        "design.card3.desc": "More evolution layers imply higher effective rule complexity, so contraction happens later.",
+        "design.flow.title": "Training and Measurement Protocol",
+        "design.flow.p1": "For each task and each training-sample count <code>n</code>, the same data source is split into a training set, a monitor set, and a probe set. A pilot model is first trained to estimate when the monitor metric enters a plateau. Then multiple randomly initialized MLPs are trained for the same number of steps. Finally, accuracy, cross-seed agreement, prediction entropy, and shared-error structure are computed only on the probe set.",
+        "design.flow.note": "Key point: every model perfectly fits the same training set. We do not stop immediately when training accuracy first reaches 100%; instead, we wait until the monitor metric stabilizes, then examine behavior outside the training set.",
+        "metrics.title": "Metrics",
+        "metrics.intro": "Let <code>M</code> be the number of models, <code>P</code> the number of probe samples, and <code>B</code> the number of output bits. The prediction of model <code>m</code> on probe sample <code>i</code> and output bit <code>b</code> is <code>pred[m,i,b]</code>, and the true label is <code>y[i,b]</code>.",
+        "metrics.acc.desc": "The average bit-level accuracy of a single model on the probe set.",
+        "metrics.agree.desc": "The main metric. It is the probability that two randomly chosen seeds make the same prediction on the same probe bit.",
+        "metrics.entropy.desc": "Binary entropy of the cross-seed prediction distribution. Lower entropy means the function distribution is more concentrated.",
+        "metrics.error.desc": "Measures whether different seeds make errors on the same probe bits.",
+        "metrics.outro": "<code>direct_pairwise_agreement</code> does not require ground-truth labels, so it also applies to random-label tasks. It directly measures how concentrated the functions learned from different seeds are on the probe set: values near 1 mean the models implement nearly the same function outside the training set; values near 0.5 mean their probe predictions are close to independent random guesses.",
+        "data.title": "Real Data Charts",
+        "data.note": "The charts below are drawn directly from <code>results/probe_consistency_dashboard_aggregated.jsonl</code>. They are not schematic illustrations. For the fuller interactive version, see the <a href=\"results/probe_consistency_dashboard.html\">Dashboard</a>.",
+        "data.table.task": "Task",
+        "data.table.range": "n range",
+        "data.table.startAgreement": "Start agreement",
+        "data.table.endAgreement": "End agreement",
+        "data.table.startAcc": "Start bit acc",
+        "data.table.endAcc": "End bit acc",
+        "interpretation.title": "Interpretation",
+        "interpretation.random.title": "random: random constraints break shared extrapolation",
+        "interpretation.random.body": "For <code>random_bits</code>, probe accuracy stays near 0.5, but agreement decreases and entropy increases as the dataset grows. This means random data does not constrain different seeds toward one correct function. Instead, it progressively rules out simple extrapolations and pushes models into more dispersed regions of function space.",
+        "interpretation.vector.title": "Random-vector analogy",
+        "interpretation.vector.body": "Random-label samples can be imagined as vectors with random directions. A small number of random vectors may accidentally point in a shared direction and induce a common extrapolation. As more random vectors are added, directions cancel out and the apparent structure disappears.",
+        "interpretation.rule.title": "Rule tasks: contraction of the function distribution",
+        "interpretation.rule.body": "In the Rule 30 tasks, both accuracy and agreement rise as the number of samples increases. This shows that different seeds are not merely memorizing the training set; on the probe set, they gradually converge toward the same rule function.",
+        "interpretation.early.title": "Early decline in layer2 / layer3",
+        "interpretation.early.body": "When there are too few samples, the multi-layer rule is not yet visible. Additional constraints first eliminate simple but wrong extrapolations, so the curves can initially behave like random data before splitting upward once enough evidence is present.",
+        "interpretation.difficulty.title": "Effective difficulty at the same data scale",
+        "interpretation.difficulty.p1": "Under the same model, training protocol, and sampling method, if several tasks have not yet entered the saturated perfect-generalization regime, <code>direct_pairwise_agreement</code>, prediction entropy, and probe accuracy can serve as empirical readouts of task difficulty. The current results suggest the following ordering:",
+        "interpretation.difficulty.p2": "The “less than” relation here is not a strict mathematical comparison of Kolmogorov complexity. It is an effective-complexity comparison under this neural-network training protocol: the fewer samples a task needs to contract the function distribution toward its rule state, the lower its effective complexity appears in this experimental system.",
+        "literature.title": "Literature Response and Theoretical Meaning",
+        "literature.random.title": "A response to the classic random-label experiment",
+        "literature.random.p1": "The paper <a href=\"https://arxiv.org/abs/1611.03530\">Understanding deep learning requires rethinking generalization</a> by Zhang, Bengio, Hardt, Recht, and Vinyals showed that neural networks can fit not only real labels but also random labels. This challenged the traditional capacity-control story: if a network can easily memorize random labels, why does it generalize on real tasks?",
+        "literature.random.p2": "This experiment can be seen as a complementary answer to that question. Zhang et al. showed that networks <strong>can</strong> fit random labels. Here we ask a further question: after fitting, what kind of function do they implement outside the training set? The results show that networks trained on random labels are neither rule-generalizing in the ordinary sense nor structureless table lookups. At low data counts, probe agreement remains high; as random constraints increase, this agreement is gradually broken apart.",
+        "literature.compression.title": "Support for a compression / Kolmogorov-complexity explanation",
+        "literature.compression.p1": "These results support a Kolmogorov-complexity / MDL-style explanation: neural-network training does not explicitly compute Kolmogorov complexity, but its outcomes show a preference for low-complexity functional explanations. Random tasks are approximately incompressible, so more data fragments the function distribution. Rule tasks are generated by a fixed program, so more data allows the low-complexity rule to win, and different seeds eventually contract toward the same rule function.",
+        "literature.compression.p2": "More broadly, the results support a picture of a Bayesian-like statistical mechanism biased toward low complexity: training data constrains possible functions, low-complexity explanations obtain higher effective posterior weight when enough data is present, and different seeds may be viewed as samples from that posterior. This is not a proof that neural networks perform exact Bayesian inference, nor does it mean we know the analytic form of their prior and update rule. The more precise statement is that these phenomena are highly consistent with approximate function inference under a low-complexity bias.",
+        "literature.gde.title": "Different seeds as function-posterior samples, and the boundary of GDE",
+        "literature.gde.p1": "A key interpretation in this experiment is the following hypothesis: under the same training set and protocol, models trained from different random seeds can be approximately regarded as samples from a training-induced distribution over functions. This remains a hypothesis, not a theorem. But it naturally explains several observations: different seeds show both shared predictions and disagreement; increasing the amount of data changes the concentration of this distribution; random labels and rule labels push the distribution in opposite directions.",
+        "literature.gde.p2": "This idea connects to existing work. Jiang, Nagarajan, Baek, and Kolter proposed in <a href=\"https://arxiv.org/abs/2106.13799\">Assessing Generalization of SGD via Disagreement</a> that the disagreement between two independently trained SGD models on unlabeled test data can estimate test error. This line is often referred to as GDE, or generalization-disagreement equality.",
+        "literature.gde.p3": "Our rule-task results broadly align with that intuition: as data increases, probe accuracy rises, disagreement between seeds falls, and agreement rises. But low-data <code>random_bits</code> provides a failure regime: probe accuracy is close to 0.5, while agreement is far above 0.5. This means disagreement would severely underestimate error. In other words, different seeds can agree in the wrong direction. This is not ordinary independent random error, but an overconfident shared extrapolation induced by the prior together with a small number of training constraints.",
+        "reproduce.title": "Reproduction Files",
+        "reproduce.intro": "All three scripts are self-contained single-file scripts and do not import other Python or notebook files from this repository. Their default paths all point to this subdirectory: the generation script writes to <code>datasets/</code>, the training sweep reads from <code>datasets/</code> and writes to <code>results/</code>, and the dashboard script scans <code>results/</code> and rebuilds the visualization page. The main third-party packages needed at runtime are <code>torch</code>, <code>numpy</code>, and <code>tqdm</code>.",
+        "reproduce.generate": "Generate cellular-automaton datasets",
+        "reproduce.sweep": "Run the training sweep",
+        "reproduce.dashboard": "Generate the visualization dashboard",
+        "reproduce.limits.title": "Limitations and future directions",
+        "reproduce.limit1.title": "More split seeds",
+        "reproduce.limit1.body": "The current results mainly come from one split seed. A more complete version should include multiple data splits.",
+        "reproduce.limit2.title": "More tasks and architectures",
+        "reproduce.limit2.body": "The current version tests only MLPs, random bit mappings, and Rule 30. Future work can extend this to image tasks and other architectures.",
+        "reproduce.limit3.title": "Shared-error metrics require care",
+        "reproduce.limit3.body": "<code>phi</code> and <code>lift</code> become unstable when the error rate is very low, so they should mainly be used in intermediate regimes.",
+        "reproduce.limit4.title": "Still not a complete theory",
+        "reproduce.limit4.body": "This experiment supports the behavioral picture of function-distribution contraction and fragmentation, but it does not strictly prove exact Bayesian sampling.",
+        "footer": "Detailed data are available in the <a href=\"results/probe_consistency_dashboard.html\">interactive dashboard</a>."
+      }
+    };
+
+    let currentLanguage = localStorage.getItem("overfit-research-language") === "en" ? "en" : "zh";
+
+    function applyLanguage(lang) {
+      currentLanguage = lang === "en" ? "en" : "zh";
+      const dict = translations[currentLanguage] || {};
+      document.documentElement.lang = currentLanguage === "en" ? "en" : "zh-CN";
+      document.title = currentLanguage === "en" ? dict.pageTitle : originalTitle;
+
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.dataset.i18n;
+        el.innerHTML = currentLanguage === "en" ? (dict[key] || originalHtml.get(key) || el.innerHTML) : (originalHtml.get(key) || el.innerHTML);
+      });
+
+      const nav = document.querySelector(".nav");
+      if (nav) {
+        nav.setAttribute("aria-label", currentLanguage === "en" ? dict.navLabel : "页面栏目");
+      }
+
+      const toggle = document.getElementById("lang-toggle");
+      if (toggle) {
+        toggle.textContent = currentLanguage === "en" ? dict.langButton : "English";
+        toggle.setAttribute("aria-pressed", currentLanguage === "en" ? "true" : "false");
+      }
+
+      document.querySelectorAll("[data-lang-section]").forEach(section => {
+        section.hidden = section.dataset.langSection !== currentLanguage;
+      });
+
+      localStorage.setItem("overfit-research-language", currentLanguage);
+      renderCharts();
+      if (window.renderMathNow) {
+        window.renderMathNow();
+      }
+    }
+
+    const rows = [
+      ["random_bits",100,0.8628,0.4995,0.2909,0.7256,1.7240],
+      ["random_bits",200,0.8198,0.4992,0.3802,0.6396,1.6376],
+      ["random_bits",300,0.8020,0.4990,0.4166,0.6040,1.6016],
+      ["random_bits",400,0.7901,0.5000,0.4410,0.5802,1.5801],
+      ["random_bits",600,0.7382,0.4989,0.5466,0.4763,1.4743],
+      ["random_bits",800,0.7165,0.4995,0.5889,0.4331,1.4322],
+      ["random_bits",1000,0.7040,0.5004,0.6132,0.4080,1.4086],
+      ["random_bits",1200,0.7029,0.5001,0.6147,0.4059,1.4060],
+      ["random_bits",1500,0.6905,0.5005,0.6384,0.3810,1.3817],
+      ["random_bits",1800,0.6658,0.5000,0.6853,0.3315,1.3316],
+      ["random_bits",2200,0.6400,0.4998,0.7329,0.2800,1.2798],
+      ["random_bits",3000,0.6260,0.4990,0.7579,0.2521,1.2511],
+      ["random_bits",4500,0.6075,0.4997,0.7908,0.2150,1.2147],
+      ["random_bits",6000,0.5967,0.4997,0.8095,0.1933,1.1931],
+
+      ["rule30_layer1",100,0.8975,0.6810,0.2180,0.7640,2.6307],
+      ["rule30_layer1",200,0.8475,0.7215,0.3252,0.6211,2.6117],
+      ["rule30_layer1",300,0.8636,0.7656,0.2915,0.6200,3.0253],
+      ["rule30_layer1",400,0.8668,0.8143,0.2849,0.5597,3.4550],
+      ["rule30_layer1",600,0.9071,0.9281,0.2052,0.3063,5.0008],
+      ["rule30_layer1",800,0.9914,0.9955,0.0225,0.0532,12.9361],
+      ["rule30_layer1",1000,1.0000,1.0000,0.0001,0.0011,20.8333],
+      ["rule30_layer1",1200,1.0000,1.0000,0.0000,null,null],
+      ["rule30_layer1",1500,1.0000,1.0000,0.0000,null,null],
+      ["rule30_layer1",1800,1.0000,1.0000,0.0000,null,null],
+      ["rule30_layer1",2200,1.0000,1.0000,0.0000,null,null],
+      ["rule30_layer1",3000,1.0000,1.0000,0.0000,null,null],
+      ["rule30_layer1",4500,1.0000,1.0000,0.0000,null,null],
+      ["rule30_layer1",6000,1.0000,1.0000,0.0000,null,null],
+
+      ["rule30_layer2",100,0.8673,0.5479,0.2814,0.7322,1.8873],
+      ["rule30_layer2",200,0.7881,0.5590,0.4465,0.5702,1.7232],
+      ["rule30_layer2",300,0.7708,0.5706,0.4810,0.5323,1.7077],
+      ["rule30_layer2",400,0.7707,0.5845,0.4807,0.5280,1.7427],
+      ["rule30_layer2",600,0.7380,0.6019,0.5466,0.4534,1.6857],
+      ["rule30_layer2",800,0.7399,0.6231,0.5427,0.4463,1.7382],
+      ["rule30_layer2",1000,0.7383,0.6420,0.5457,0.4307,1.7726],
+      ["rule30_layer2",1200,0.7238,0.6657,0.5746,0.3795,1.7562],
+      ["rule30_layer2",1500,0.7419,0.7178,0.5392,0.3631,1.9244],
+      ["rule30_layer2",1800,0.7800,0.8044,0.4659,0.3012,2.2406],
+      ["rule30_layer2",2200,0.9052,0.9385,0.2161,0.1796,3.7821],
+      ["rule30_layer2",3000,0.9982,0.9991,0.0049,0.0094,12.1087],
+      ["rule30_layer2",4500,1.0000,1.0000,0.0000,0,0],
+      ["rule30_layer2",6000,1.0000,1.0000,0.0000,null,null],
+
+      ["rule30_layer3",100,0.8732,0.5500,0.2691,0.7438,1.9089],
+      ["rule30_layer3",200,0.7942,0.5585,0.4343,0.5828,1.7375],
+      ["rule30_layer3",300,0.7811,0.5683,0.4596,0.5539,1.7291],
+      ["rule30_layer3",400,0.7715,0.5767,0.4793,0.5320,1.7249],
+      ["rule30_layer3",600,0.7403,0.5885,0.5418,0.4638,1.6633],
+      ["rule30_layer3",800,0.7358,0.6014,0.5510,0.4491,1.6779],
+      ["rule30_layer3",1000,0.7318,0.6123,0.5590,0.4351,1.6871],
+      ["rule30_layer3",1200,0.7167,0.6192,0.5887,0.3993,1.6496],
+      ["rule30_layer3",1500,0.7199,0.6350,0.5825,0.3958,1.6886],
+      ["rule30_layer3",1800,0.7218,0.6519,0.5795,0.3871,1.7248],
+      ["rule30_layer3",2200,0.7279,0.6754,0.5681,0.3796,1.7898],
+      ["rule30_layer3",3000,0.7575,0.7315,0.5114,0.3827,2.0429],
+      ["rule30_layer3",4500,0.8409,0.8535,0.3435,0.3640,3.1222],
+      ["rule30_layer3",6000,0.9441,0.9587,0.1260,0.2936,7.8328]
+    ].map(([task, n, agreement, accuracy, entropy, phi, lift]) => ({ task, n, agreement, accuracy, entropy, phi, lift }));
+
+    const colors = {
+      random_bits: "#d97706",
+      rule30_layer1: "#5f8f3f",
+      rule30_layer2: "#2fa9c9",
+      rule30_layer3: "#7b61e8"
+    };
+
+    const taskLabelText = {
+      zh: {
+        random_bits: "random bits",
+        rule30_layer1: "Rule30 1 层",
+        rule30_layer2: "Rule30 2 层",
+        rule30_layer3: "Rule30 3 层"
+      },
+      en: {
+        random_bits: "random bits",
+        rule30_layer1: "Rule30 layer1",
+        rule30_layer2: "Rule30 layer2",
+        rule30_layer3: "Rule30 layer3"
+      }
+    };
+
+    const tasks = Object.keys(taskLabelText.zh);
+
+    const chartText = {
+      zh: {
+        xAxisName: "训练样本数 n",
+        specs: [
+          ["chart-agreement", "Pairwise agreement", "agreement", 1],
+          ["chart-accuracy", "Probe bit accuracy", "accuracy", 1],
+          ["chart-entropy", "Prediction entropy bits", "entropy", 1],
+          ["chart-phi", "共同错误 phi", "phi", 0.8],
+          ["chart-lift", "共同错误 lift", "lift", 21]
+        ]
+      },
+      en: {
+        xAxisName: "training samples n",
+        specs: [
+          ["chart-agreement", "Pairwise agreement", "agreement", 1],
+          ["chart-accuracy", "Probe bit accuracy", "accuracy", 1],
+          ["chart-entropy", "Prediction entropy bits", "entropy", 1],
+          ["chart-phi", "Shared-error phi", "phi", 0.8],
+          ["chart-lift", "Shared-error lift", "lift", 21]
+        ]
+      }
+    };
+
+    function makeSeries(metric) {
+      const labels = taskLabelText[currentLanguage] || taskLabelText.zh;
+      return tasks.map(task => ({
+        name: labels[task],
+        type: "line",
+        smooth: false,
+        symbolSize: 6,
+        connectNulls: false,
+        itemStyle: { color: colors[task] },
+        lineStyle: { width: 3, color: colors[task] },
+        data: rows.filter(row => row.task === task).map(row => [row.n, row[metric]])
+      }));
+    }
+
+    function baseOption(title, metric, maxValue) {
+      return {
+        title: {
+          text: title,
+          left: 8,
+          top: 4,
+          textStyle: { fontSize: 15, fontWeight: 600, color: "#202938" }
+        },
+        color: tasks.map(task => colors[task]),
+        tooltip: {
+          trigger: "axis",
+          valueFormatter: value => value == null ? "NA" : Number(value).toFixed(4)
+        },
+        legend: {
+          top: 30,
+          type: "scroll",
+          textStyle: { color: "#647084" }
+        },
+        grid: { left: 52, right: 24, top: 78, bottom: 45 },
+        xAxis: {
+          type: "value",
+          name: chartText[currentLanguage].xAxisName,
+          min: 100,
+          max: 6000,
+          axisLabel: { color: "#647084" },
+          nameTextStyle: { color: "#647084" },
+          splitLine: { lineStyle: { color: "#e5dcc9" } }
+        },
+        yAxis: {
+          type: "value",
+          min: 0,
+          max: maxValue,
+          axisLabel: { color: "#647084" },
+          splitLine: { lineStyle: { color: "#e5dcc9" } }
+        },
+        series: makeSeries(metric)
+      };
+    }
+
+    const chartIds = chartText.zh.specs.map(spec => spec[0]);
+    const charts = chartIds.map(id => {
+      const el = document.getElementById(id);
+      return echarts.init(el);
+    });
+
+    function renderCharts() {
+      const specs = chartText[currentLanguage].specs;
+      specs.forEach(([id, title, metric, maxValue], index) => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.setAttribute("aria-label", title);
+        }
+        charts[index].setOption(baseOption(title, metric, maxValue), true);
+      });
+    }
+
+    window.addEventListener("resize", () => {
+      charts.forEach(chart => chart.resize());
+    });
+
+    const langToggle = document.getElementById("lang-toggle");
+    if (langToggle) {
+      langToggle.addEventListener("click", () => {
+        applyLanguage(currentLanguage === "en" ? "zh" : "en");
+      });
+    }
+
+    applyLanguage(currentLanguage);
+
+    window.addEventListener("load", () => {
+      [0, 300, 1000, 2000].forEach(delay => {
+        setTimeout(() => {
+          if (window.renderMathNow) {
+            window.renderMathNow();
+          }
+        }, delay);
+      });
+    });
+  </script>
+</body>
+</html>
