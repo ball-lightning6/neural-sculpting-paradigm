@@ -1,0 +1,27 @@
+﻿series,task_name,train_count,mean_probe_bit_accuracy,direct_pairwise_agreement,mean_prediction_entropy_bits,unanimously_wrong_bit_fraction,source,note,accuracy_baseline_agreement,excess_agreement,log_train_count_plus_1,mean_probe_exact_accuracy,unanimously_same_prediction_bit_fraction
+rule30_layer1_plus_prior,untrained_mlp_prior,0,,0.500099,0.999135,,untrained_mlp_prior_probe_package.zip,未训练 MLP；无真实标签，accuracy 留空,,,0.0,,
+rule30_layer1_plus_prior,rule30_layer1,1,0.499651,0.999995,1.3e-05,0.500333,rule30_layer1_tiny_n_sweep.zip,tiny-n sweep,0.5,0.499995,0.30103,0.0,
+rule30_layer1_plus_prior,rule30_layer1,2,0.509833,0.944988,0.115407,0.403513,rule30_layer1_tiny_n_sweep.zip,tiny-n sweep,0.500193,0.444795,0.477121,0.0,
+rule30_layer1_plus_prior,rule30_layer1,3,0.521706,0.941776,0.12359,0.384324,rule30_layer1_tiny_n_sweep.zip,tiny-n sweep,0.500942,0.440834,0.60206,0.0,
+rule30_layer1_plus_prior,rule30_layer1,5,0.525993,0.93016,0.148545,0.360237,rule30_layer1_tiny_n_sweep.zip,tiny-n sweep,0.501351,0.428809,0.778151,0.0,
+rule30_layer1_plus_prior,rule30_layer1,8,0.538222,0.926379,0.156561,0.342558,rule30_layer1_tiny_n_sweep.zip,tiny-n sweep,0.502922,0.423457,0.954243,0.0,
+rule30_layer1_plus_prior,rule30_layer1,10,0.546779,0.922122,0.16565,0.327232,rule30_layer1_tiny_n_sweep.zip,tiny-n sweep,0.504377,0.417745,1.041393,0.0,
+rule30_layer1_plus_prior,rule30_layer1,15,0.55637,0.92102,0.167956,0.316807,rule30_layer1_tiny_n_sweep.zip,tiny-n sweep,0.506355,0.414665,1.20412,0.0,
+rule30_layer1_plus_prior,rule30_layer1,20,0.566872,0.91325,0.184387,0.294724,rule30_layer1_tiny_n_sweep.zip,tiny-n sweep,0.508944,0.404306,1.322219,0.0,
+rule30_layer1_plus_prior,rule30_layer1,30,0.593755,0.910331,0.190616,0.265334,rule30_layer1_tiny_n_sweep.zip,tiny-n sweep,0.51758,0.392751,1.491362,0.0,
+rule30_layer1_plus_prior,rule30_layer1,50,0.612052,0.90296,0.206194,0.238581,rule30_layer1_tiny_n_sweep.zip,tiny-n sweep,0.525111,0.377849,1.70757,2e-06,
+rule30_layer1_plus_prior,rule30_layer1,75,0.649354,0.893233,0.226809,0.192253,rule30_layer1_tiny_n_sweep.zip,tiny-n sweep,0.544613,0.34862,1.880814,7e-06,
+rule30_layer1_plus_prior,rule30_layer1,100,0.680964,0.897454,0.21799,,probe_consistency_dashboard_aggregated.csv,旧 plateau sweep 聚合点,0.565496,0.331958,2.004321,3e-05,0.664347
+rule30_layer1_plus_prior,rule30_layer1,200,0.721492,0.847501,0.325242,,probe_consistency_dashboard_aggregated.csv,旧 plateau sweep 聚合点,0.598117,0.249384,2.303196,0.00013,0.494013
+rule30_layer1_plus_prior,rule30_layer1,300,0.76558,0.863571,0.291455,,probe_consistency_dashboard_aggregated.csv,旧 plateau sweep 聚合点,0.641065,0.222506,2.478566,0.00066,0.543093
+rule30_layer1_plus_prior,rule30_layer1,400,0.814261,0.866764,0.284881,,probe_consistency_dashboard_aggregated.csv,旧 plateau sweep 聚合点,0.69752,0.169244,2.603144,0.00416,0.55184
+rule30_layer1_plus_prior,rule30_layer1,600,0.928061,0.907136,0.205237,,probe_consistency_dashboard_aggregated.csv,旧 plateau sweep 聚合点,0.866472,0.040664,2.778874,0.12749,0.63738
+rule30_layer1_plus_prior,rule30_layer1,800,0.995457,0.991438,0.022474,,probe_consistency_dashboard_aggregated.csv,旧 plateau sweep 聚合点,0.990955,0.000483,2.903633,0.87435,0.9362
+rule30_layer1_plus_prior,rule30_layer1,1000,0.999982,0.999965,0.000101,,probe_consistency_dashboard_aggregated.csv,旧 plateau sweep 聚合点,0.999964,1e-06,3.000434,0.99947,0.999653
+rule30_layer1_plus_prior,rule30_layer1,1200,0.999999,0.999998,6e-06,,probe_consistency_dashboard_aggregated.csv,旧 plateau sweep 聚合点,0.999998,-0.0,3.079543,0.99997,0.99998
+rule30_layer1_plus_prior,rule30_layer1,1500,1.0,1.0,0.0,,probe_consistency_dashboard_aggregated.csv,旧 plateau sweep 聚合点,1.0,0.0,3.176381,1.0,1.0
+rule30_layer1_plus_prior,rule30_layer1,1800,1.0,1.0,0.0,,probe_consistency_dashboard_aggregated.csv,旧 plateau sweep 聚合点,1.0,0.0,3.255514,1.0,1.0
+rule30_layer1_plus_prior,rule30_layer1,2200,1.0,1.0,0.0,,probe_consistency_dashboard_aggregated.csv,旧 plateau sweep 聚合点,1.0,0.0,3.34262,1.0,1.0
+rule30_layer1_plus_prior,rule30_layer1,3000,1.0,1.0,0.0,,probe_consistency_dashboard_aggregated.csv,旧 plateau sweep 聚合点,1.0,0.0,3.477266,1.0,1.0
+rule30_layer1_plus_prior,rule30_layer1,4500,1.0,1.0,0.0,,probe_consistency_dashboard_aggregated.csv,旧 plateau sweep 聚合点,1.0,0.0,3.653309,1.0,1.0
+rule30_layer1_plus_prior,rule30_layer1,6000,1.0,1.0,0.0,,probe_consistency_dashboard_aggregated.csv,旧 plateau sweep 聚合点,1.0,0.0,3.778224,1.0,1.0

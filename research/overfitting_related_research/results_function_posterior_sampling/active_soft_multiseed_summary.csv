@@ -1,0 +1,4 @@
+﻿experiment,strategy,final_train_count,final_probe_exact_accuracy,first_exact_ge_0_8,first_exact_ge_0_9,first_exact_ge_0_95,first_exact_ge_0_99,first_exact_ge_0_999
+active_soft_multiseed,uncertain,1450,0.99252,1100,1200,1250,1450,
+active_soft_multiseed,random,1800,0.98804,1300,1450,1600,,
+active_soft_multiseed,certain,3150,0.99952,2250,2450,2550,2750,3000

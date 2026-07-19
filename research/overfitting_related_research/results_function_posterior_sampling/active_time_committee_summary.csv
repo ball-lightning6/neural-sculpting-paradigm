@@ -1,0 +1,4 @@
+﻿strategy,final_train_count,final_probe_bit_accuracy,final_probe_exact_accuracy,final_probe_agreement,final_probe_entropy,first_train_count_exact_ge_0.8,first_train_count_exact_ge_0.9,first_train_count_exact_ge_0.95,first_train_count_exact_ge_0.99,first_train_count_exact_ge_0.999,experiment
+uncertain,1850,0.9999666666666667,0.999,0.9999357142857143,0.00013822453570673217,1150,1250,1300,1500,1850,active_time_committee
+random,2350,0.9999741666666667,0.999225,0.9999526190476191,0.00010246906202676005,1350,1450,1650,1850,2350,active_time_committee
+certain,2450,0.9992225,0.97705,0.9989664285714286,0.002065710863963071,1850,2000,2200,,,active_time_committee

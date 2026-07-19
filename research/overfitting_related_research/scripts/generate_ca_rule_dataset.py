@@ -8,7 +8,7 @@ from tqdm import tqdm
 # =========================
 # 数据集配置
 # =========================
-NUM_SAMPLES = 30000
+NUM_SAMPLES = 300000
 LENGTH = 30
 LAYERS = 1
 

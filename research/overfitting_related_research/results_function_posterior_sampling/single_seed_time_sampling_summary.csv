@@ -1,0 +1,10 @@
+﻿task_name,train_count,sample_count,train_fit_step,plateau_step,mean_model_bit_accuracy,mean_model_exact_accuracy,time_pairwise_agreement,time_prediction_entropy_bits,plateau_stop_source,multiseed_pairwise_agreement,multiseed_mean_bit_accuracy,agreement_gap_time_minus_multiseed
+rule30_layer1,100,241,100,20100,0.651457,1e-06,0.88204,0.264255,postfit_budget_without_strict_plateau,0.897454,0.680964,-0.015414
+rule30_layer1,200,241,100,20100,0.689601,7e-06,0.815257,0.414348,postfit_budget_without_strict_plateau,0.847501,0.721492,-0.032244
+rule30_layer1,300,241,100,20100,0.729426,0.000132,0.8255,0.39403,postfit_budget_without_strict_plateau,0.863571,0.76558,-0.038071
+rule30_layer1,400,241,100,20100,0.77786,0.00071,0.838226,0.367388,postfit_budget_without_strict_plateau,0.866764,0.814261,-0.028538
+rule30_layer1,600,241,100,20100,0.918416,0.085243,0.908914,0.215513,postfit_budget_without_strict_plateau,0.907136,0.928061,0.001778
+rule30_layer1,800,241,100,20100,0.995934,0.885412,0.992643,0.02297,postfit_budget_without_strict_plateau,0.991438,0.995457,0.001205
+rule30_layer1,1000,241,100,7200,0.999706,0.991232,0.999422,0.002306,strict_rolling_plateau,0.999965,0.999982,-0.000543
+rule30_layer1,1200,241,100,5100,0.999909,0.997277,0.99982,0.000765,strict_rolling_plateau,0.999998,0.999999,-0.000178
+rule30_layer1,1500,241,100,5100,0.999983,0.999486,0.999966,0.000156,strict_rolling_plateau,1.0,1.0,-3.4e-05

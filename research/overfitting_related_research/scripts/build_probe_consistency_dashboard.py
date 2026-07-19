@@ -7,7 +7,7 @@
 3. 对同一 task / train_count / stage 的不同 split seed 做聚合。
 4. 生成一个可直接上传或本地打开的 ECharts HTML 页面。
 
-这个脚本只依赖 Python 标准库，方便复制到 AutoDL notebook 或终端中运行。
+这个脚本只依赖 Python 标准库，可以在本地或服务器终端中直接运行。
 """
 
 import csv
@@ -115,6 +115,7 @@ def infer_experiment_name(row, source_path):
 
 
 def normalize_summary(row, source_path):
+    actual_source_mtime = source_path.stat().st_mtime
     task_name = str(row.get("task_name") or row.get("dataset_name") or "unknown_task")
     difficulty_label = str(row.get("difficulty_label") or task_name)
     difficulty_order = safe_float(row.get("difficulty_order"))
@@ -157,7 +158,7 @@ def normalize_summary(row, source_path):
         "train_count": train_count,
         "split_seed": split_seed,
         "source_file": str(source_path),
-        "source_mtime": source_path.stat().st_mtime,
+        "_source_mtime_sort": actual_source_mtime,
         "direct_pairwise_agreement": direct_pairwise,
         "majority_fraction_agreement": majority_fraction,
     }
@@ -260,7 +261,7 @@ def collect_rows(cfg):
                 row.get("stage"),
             )
             old = deduped.get(key)
-            if old is None or row["source_mtime"] >= old["source_mtime"]:
+            if old is None or row["_source_mtime_sort"] >= old["_source_mtime_sort"]:
                 deduped[key] = row
         valid = list(deduped.values())
 
@@ -271,6 +272,8 @@ def collect_rows(cfg):
         row.get("split_seed") if row.get("split_seed") is not None else -1,
         row.get("stage", ""),
     ))
+    for row in valid:
+        row.pop("_source_mtime_sort", None)
     return valid, rows
 
 
@@ -397,6 +400,102 @@ h1 {{
   color: var(--muted);
   line-height: 1.6;
 }}
+.site-nav {{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0 0 18px;
+}}
+.site-nav a {{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 7px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--panel);
+  color: #2563eb;
+  font-weight: 600;
+  text-decoration: none;
+}}
+.site-nav button {{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 7px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--panel);
+  color: #2563eb;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}}
+body.lang-en .zh {{ display: none !important; }}
+body:not(.lang-en) .en {{ display: none !important; }}
+.explain {{
+  margin: 0 0 18px;
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--panel);
+}}
+.explain h2 {{
+  margin: 0 0 8px;
+  font-size: 20px;
+}}
+.explain p {{
+  margin: 0 0 10px;
+  line-height: 1.7;
+}}
+.explain-grid {{
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}}
+.explain-card {{
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #fff;
+  padding: 12px;
+}}
+.explain-card strong {{
+  display: block;
+  margin-bottom: 4px;
+}}
+.explain-card span {{
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.55;
+}}
+.toc {{
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}}
+.toc a {{
+  display: block;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--text);
+  text-decoration: none;
+}}
+.toc a:hover {{
+  border-color: #2563eb;
+}}
+.toc b {{
+  display: block;
+  color: #2563eb;
+}}
+.toc small {{
+  color: var(--muted);
+}}
 .toolbar {{
   display: flex;
   flex-wrap: wrap;
@@ -503,7 +602,7 @@ th {{
 }}
 @media (max-width: 920px) {{
   body {{ padding: 14px; }}
-  .grid {{ grid-template-columns: 1fr; }}
+  .grid, .explain-grid, .toc {{ grid-template-columns: 1fr; }}
   .stats {{ grid-template-columns: repeat(2, minmax(130px, 1fr)); }}
 }}
 @media (max-width: 520px) {{
@@ -514,50 +613,125 @@ th {{
 </style>
 </head>
 <body>
-<h1>Probe 一致性实验仪表盘</h1>
-<p class="subtitle">合并同一目录下分批运行的 summary 结果，按任务和训练样本数展示函数分布集中度、泛化准确率和共同错误结构。</p>
+<h1><span class="zh">Probe 一致性实验仪表盘</span><span class="en">Probe Consistency Dashboard</span></h1>
+<p class="subtitle">
+  <span class="zh">这不是单纯的绘图页。它展示的是：同一个训练集被多个随机 seed 训练到过拟合平台后，这些网络在未见 probe 输入上的函数行为是否收缩到同一个函数，还是分散成许多不同延拓。</span>
+  <span class="en">This is not just a plotting page. It asks whether models trained from different random seeds on the same overfitted training set collapse to the same function on unseen probe inputs, or spread into many different extensions.</span>
+</p>
 
-<div class="toolbar">
+<nav class="site-nav">
+  <a href="../index.html"><span class="zh">返回研究主页</span><span class="en">Back to overview</span></a>
+  <a href="../function_posterior_sampling_experiments.html"><span class="zh">打开函数后验采样补充实验</span><span class="en">Open posterior-sampling addendum</span></a>
+  <a href="probe_consistency_dashboard_aggregated.csv"><span class="zh">下载聚合 CSV</span><span class="en">Download aggregate CSV</span></a>
+  <button type="button" id="langToggle">English</button>
+</nav>
+
+<section class="explain" id="overview">
+  <h2><span class="zh">这个实验在测什么？</span><span class="en">What Does This Experiment Measure?</span></h2>
+  <p><span class="zh">每个条件固定一个任务和训练样本数 <code>n</code>，训练多个随机 seed。所有模型都先拟合训练集，再在严格未见的 probe 集上输出预测。跨 seed 的 <code>pairwise agreement</code>、预测熵和共同错误结构，被用来观察“训练约束之后的函数分布”有多集中。</span><span class="en">For each condition, a task and a training-set size <code>n</code> are fixed, and many random seeds are trained. Each model first fits the training set and is then evaluated on strictly unseen probe inputs. Cross-seed <code>pairwise agreement</code>, prediction entropy, and shared-error structure are used to inspect how concentrated the function distribution becomes after training constraints are imposed.</span></p>
+  <p><span class="zh">任务包括 <code>rule30_layer1/2/3</code> 这三档规则复杂度，以及 <code>random_bits</code> 随机标签对照。规则任务有真实可压缩结构；随机标签没有可泛化结构。两者的 agreement 曲线方向相反，是这个实验最重要的读图线索。</span><span class="en">The tasks include three levels of Rule 30 complexity, <code>rule30_layer1/2/3</code>, plus a <code>random_bits</code> random-label control. Rule tasks contain real compressible structure; random labels do not. The opposite directions of their agreement curves are the central reading clue.</span></p>
+  <div class="explain-grid">
+    <div class="explain-card">
+      <strong><span class="zh">规则任务</span><span class="en">Rule Tasks</span></strong>
+      <span class="zh">数据量增加后，函数后验应逐渐收缩到真实规则；任务越复杂，需要的数据越多。</span>
+      <span class="en">As data increases, the function posterior should contract toward the true rule. More complex rules require more data.</span>
+    </div>
+    <div class="explain-card">
+      <strong><span class="zh">随机标签</span><span class="en">Random Labels</span></strong>
+      <span class="zh">小数据量下可能出现共享的低复杂度伪规则；数据量增加后随机约束会打碎这种共识。</span>
+      <span class="en">With very little data, seeds can share a low-complexity pseudo-rule. As random constraints accumulate, that consensus fragments.</span>
+    </div>
+    <div class="explain-card">
+      <strong><span class="zh">agreement 的含义</span><span class="en">Meaning of Agreement</span></strong>
+      <span class="zh">高 agreement 不等于正确。它表示不同 seed 在 probe 上更像同一个函数；需要和 accuracy 一起读。</span>
+      <span class="en">High agreement does not mean correctness. It means different seeds behave more like the same function on the probe set, and must be read together with accuracy.</span>
+    </div>
+  </div>
+  <div class="toc">
+    <a href="#controls"><b><span class="zh">筛选器</span><span class="en">Filters</span></b><small><span class="zh">选择任务、阶段和 split 显示方式</span><span class="en">Choose tasks, stage, and split display mode</span></small></a>
+    <a href="#summary-stats"><b><span class="zh">汇总统计</span><span class="en">Summary</span></b><small><span class="zh">当前视图的数据点、任务数和 n 范围</span><span class="en">Point count, task count, and n range</span></small></a>
+    <a href="#charts"><b><span class="zh">六组曲线</span><span class="en">Six Charts</span></b><small><span class="zh">accuracy、agreement、entropy、共同错误等</span><span class="en">Accuracy, agreement, entropy, shared errors, and more</span></small></a>
+    <a href="#table-section"><b><span class="zh">数据表</span><span class="en">Data Table</span></b><small><span class="zh">当前筛选结果的逐行数值</span><span class="en">Rows for the current filtered view</span></small></a>
+  </div>
+</section>
+
+<section class="explain">
+  <h2><span class="zh">如何读这些图？</span><span class="en">How To Read The Charts</span></h2>
+  <div class="explain-grid">
+    <div class="explain-card">
+      <strong><span class="zh">泛化准确率</span><span class="en">Generalization Accuracy</span></strong>
+      <span class="zh">单模型 bit accuracy 和多数投票 accuracy。规则任务最终上升到 1，表示后验收缩到真实规则附近。</span>
+      <span class="en">Single-model bit accuracy and majority-vote accuracy. In rule tasks, convergence toward 1 indicates contraction toward the true rule.</span>
+    </div>
+    <div class="explain-card">
+      <strong><span class="zh">函数分布集中度</span><span class="en">Function Concentration</span></strong>
+      <span class="zh"><code>direct_pairwise_agreement</code> 是主指标，衡量任意两个 seed 在同一 probe bit 上预测相同的概率。</span>
+      <span class="en"><code>direct_pairwise_agreement</code> is the main metric: the probability that two seeds make the same prediction on a probe bit.</span>
+    </div>
+    <div class="explain-card">
+      <strong><span class="zh">预测熵与分歧</span><span class="en">Entropy And Disagreement</span></strong>
+      <span class="zh">entropy 越低、Hamming 距离越低，说明函数系综越集中；随机标签随 n 增大通常更分散。</span>
+      <span class="en">Lower entropy and lower Hamming distance mean a more concentrated function ensemble. Random labels usually become more dispersed as n grows.</span>
+    </div>
+    <div class="explain-card">
+      <strong><span class="zh">共同错误结构</span><span class="en">Shared Error Structure</span></strong>
+      <span class="zh">error phi / lift / Jaccard 衡量不同 seed 是否在同一批 probe bit 上共同犯错，可用于观察“集体错误”。</span>
+      <span class="en">Error phi, lift, and Jaccard measure whether seeds fail on the same probe bits, exposing shared or collective errors.</span>
+    </div>
+    <div class="explain-card">
+      <strong><span class="zh">输出偏置</span><span class="en">Output Bias</span></strong>
+      <span class="zh"><code>prediction_one_rate</code> 检查模型是否整体偏向输出 0 或 1，帮助排除简单边缘偏置解释。</span>
+      <span class="en"><code>prediction_one_rate</code> checks whether outputs are globally biased toward 0 or 1, helping rule out trivial marginal-bias explanations.</span>
+    </div>
+    <div class="explain-card">
+      <strong><span class="zh">训练步数</span><span class="en">Training Steps</span></strong>
+      <span class="zh">展示 fit step、pilot steps 和最终训练步数，帮助确认不同任务和数据量的训练协议可比。</span>
+      <span class="en">Fit step, pilot steps, and final training steps help check that conditions are compared under a consistent plateau protocol.</span>
+    </div>
+  </div>
+</section>
+
+<div class="toolbar" id="controls">
   <div class="field">
-    <label for="view-mode">显示方式</label>
+    <label for="view-mode"><span class="zh">显示方式</span><span class="en">View mode</span></label>
     <select id="view-mode">
       <option value="aggregated">合并 split seed</option>
       <option value="raw">显示每个 split seed</option>
     </select>
   </div>
   <div class="field">
-    <label for="stage-select">阶段</label>
+    <label for="stage-select"><span class="zh">阶段</span><span class="en">Stage</span></label>
     <select id="stage-select"></select>
   </div>
   <div class="field" style="flex:1; min-width:280px;">
-    <label>任务</label>
+    <label><span class="zh">任务</span><span class="en">Tasks</span></label>
     <div id="task-list" class="task-list"></div>
   </div>
-  <button id="select-all" type="button">全选</button>
-  <button id="select-rule" type="button">只看规则</button>
-  <button id="select-random" type="button">只看随机</button>
+  <button id="select-all" type="button"><span class="zh">全选</span><span class="en">All</span></button>
+  <button id="select-rule" type="button"><span class="zh">只看规则</span><span class="en">Rules only</span></button>
+  <button id="select-random" type="button"><span class="zh">只看随机</span><span class="en">Random only</span></button>
 </div>
 
-<div class="stats">
-  <div class="stat"><div class="label">数据点</div><div id="stat-points" class="value">0</div></div>
-  <div class="stat"><div class="label">任务数</div><div id="stat-tasks" class="value">0</div></div>
-  <div class="stat"><div class="label">n 范围</div><div id="stat-range" class="value">-</div></div>
-  <div class="stat"><div class="label">split 数</div><div id="stat-splits" class="value">-</div></div>
+<div class="stats" id="summary-stats">
+  <div class="stat"><div class="label"><span class="zh">数据点</span><span class="en">Data points</span></div><div id="stat-points" class="value">0</div></div>
+  <div class="stat"><div class="label"><span class="zh">任务数</span><span class="en">Tasks</span></div><div id="stat-tasks" class="value">0</div></div>
+  <div class="stat"><div class="label"><span class="zh">n 范围</span><span class="en">n range</span></div><div id="stat-range" class="value">-</div></div>
+  <div class="stat"><div class="label"><span class="zh">split 数</span><span class="en">Splits</span></div><div id="stat-splits" class="value">-</div></div>
 </div>
 
-<div class="grid">
+<div class="grid" id="charts">
   <div class="panel"><div id="accuracy-chart" class="chart"></div></div>
   <div class="panel"><div id="agreement-chart" class="chart"></div></div>
   <div class="panel"><div id="entropy-chart" class="chart"></div></div>
   <div class="panel"><div id="error-chart" class="chart"></div></div>
   <div class="panel"><div id="bias-chart" class="chart"></div></div>
   <div class="panel"><div id="steps-chart" class="chart"></div></div>
-  <div class="panel wide">
+  <div class="panel wide" id="table-section">
     <div class="table-wrap">
       <table>
         <thead>
           <tr>
-            <th>任务</th>
+            <th><span class="zh">任务</span><span class="en">Task</span></th>
             <th>n</th>
             <th>split</th>
             <th>bit acc</th>
@@ -595,6 +769,81 @@ const viewMode = document.getElementById('view-mode');
 const stageSelect = document.getElementById('stage-select');
 const taskList = document.getElementById('task-list');
 const tableBody = document.getElementById('data-table');
+const langToggle = document.getElementById('langToggle');
+
+const I18N = {{
+  zh: {{
+    pageTitle: 'Probe 一致性实验仪表盘',
+    mergedSplit: '合并 split seed',
+    rawSplit: '显示每个 split seed',
+    trainXAxis: '训练样本数 n',
+    value: '数值',
+    bitAcc: 'bit acc',
+    pairwise: 'pairwise',
+    entropy: 'entropy',
+    phi: 'phi',
+    accuracyTitle: '泛化准确率',
+    accuracyAxis: 'accuracy',
+    singleBitAcc: '单模型 bit acc',
+    majorityBitAcc: '多数投票 bit acc',
+    agreementTitle: '函数分布集中度',
+    agreementAxis: 'agreement',
+    majorityFraction: 'majority fraction',
+    unanimousBits: 'unanimous bits',
+    entropyTitle: '预测熵与分歧',
+    valueAxis: 'value',
+    errorTitle: '共同错误结构',
+    biasTitle: '输出偏置',
+    oneRateAxis: 'one rate',
+    stepsTitle: '训练步数',
+    stepsAxis: 'steps',
+  }},
+  en: {{
+    pageTitle: 'Probe Consistency Dashboard',
+    mergedSplit: 'Merge split seeds',
+    rawSplit: 'Show each split seed',
+    trainXAxis: 'training samples n',
+    value: 'value',
+    bitAcc: 'bit acc',
+    pairwise: 'pairwise',
+    entropy: 'entropy',
+    phi: 'phi',
+    accuracyTitle: 'Generalization Accuracy',
+    accuracyAxis: 'accuracy',
+    singleBitAcc: 'single-model bit acc',
+    majorityBitAcc: 'majority-vote bit acc',
+    agreementTitle: 'Function Distribution Concentration',
+    agreementAxis: 'agreement',
+    majorityFraction: 'majority fraction',
+    unanimousBits: 'unanimous bits',
+    entropyTitle: 'Prediction Entropy And Disagreement',
+    valueAxis: 'value',
+    errorTitle: 'Shared Error Structure',
+    biasTitle: 'Output Bias',
+    oneRateAxis: 'one rate',
+    stepsTitle: 'Training Steps',
+    stepsAxis: 'steps',
+  }},
+}};
+let currentLang = 'zh';
+
+function t(key) {{
+  return (I18N[currentLang] && I18N[currentLang][key]) || key;
+}}
+function applyLanguage(lang) {{
+  currentLang = lang === 'en' ? 'en' : 'zh';
+  const useEn = currentLang === 'en';
+  document.body.classList.toggle('lang-en', useEn);
+  document.documentElement.lang = useEn ? 'en' : 'zh-CN';
+  document.title = t('pageTitle');
+  if (langToggle) langToggle.textContent = useEn ? '中文' : 'English';
+  const aggregatedOption = viewMode.querySelector('option[value="aggregated"]');
+  const rawOption = viewMode.querySelector('option[value="raw"]');
+  if (aggregatedOption) aggregatedOption.textContent = t('mergedSplit');
+  if (rawOption) rawOption.textContent = t('rawSplit');
+  localStorage.setItem('probe-consistency-dashboard-language', currentLang);
+  renderCharts();
+}}
 
 function labelOf(row) {{
   return row.difficulty_label || row.task_name || 'unknown';
@@ -614,7 +863,7 @@ function taskNames(rows) {{
     const label = labelOf(row);
     if (!map.has(label)) map.set(label, orderOf(row));
   }});
-  return [...map.entries()].sort((a, b) => a[1] - b[1] || a[0].localeCompare(b[0], 'zh-CN')).map(item => item[0]);
+  return [...map.entries()].sort((a, b) => a[1] - b[1] || a[0].localeCompare(b[0], currentLang === 'en' ? 'en' : 'zh-CN')).map(item => item[0]);
 }}
 function stages() {{
   const values = new Set([...rawRows, ...aggregatedRows].map(row => row.stage || 'plateau'));
@@ -627,7 +876,7 @@ function currentRows() {{
   return rows
     .filter(row => selectedTasks.has(labelOf(row)))
     .filter(row => (row.stage || 'plateau') === stage)
-    .sort((a, b) => orderOf(a) - orderOf(b) || labelOf(a).localeCompare(labelOf(b), 'zh-CN') || a.train_count - b.train_count || String(a.split_seed || '').localeCompare(String(b.split_seed || '')));
+    .sort((a, b) => orderOf(a) - orderOf(b) || labelOf(a).localeCompare(labelOf(b), currentLang === 'en' ? 'en' : 'zh-CN') || a.train_count - b.train_count || String(a.split_seed || '').localeCompare(String(b.split_seed || '')));
 }}
 
 function initControls() {{
@@ -687,7 +936,7 @@ function tooltipFormatter(params) {{
     const row = param.data[2] || {{}};
     const value = param.value[1];
     const rendered = Math.abs(value) <= 1.2 ? num(value) : num(value, 2);
-    return `<b>${{param.seriesName}}</b><br>n=${{param.value[0]}}, value=${{rendered}}<br>bit acc=${{pct(row.mean_probe_bit_accuracy)}} / pairwise=${{pct(row.direct_pairwise_agreement)}}<br>entropy=${{num(row.mean_prediction_entropy_bits)}} / phi=${{num(row.mean_pairwise_error_phi_correlation)}}`;
+    return `<b>${{param.seriesName}}</b><br>n=${{param.value[0]}}, ${{t('value')}}=${{rendered}}<br>${{t('bitAcc')}}=${{pct(row.mean_probe_bit_accuracy)}} / ${{t('pairwise')}}=${{pct(row.direct_pairwise_agreement)}}<br>${{t('entropy')}}=${{num(row.mean_prediction_entropy_bits)}} / ${{t('phi')}}=${{num(row.mean_pairwise_error_phi_correlation)}}`;
   }}).join('<hr style="border:none;border-top:1px solid #ddd;margin:6px 0">');
 }}
 function baseOption(title, yName, yMax=null) {{
@@ -700,7 +949,7 @@ function baseOption(title, yName, yMax=null) {{
       {{ type: 'inside', xAxisIndex: 0 }},
       {{ type: 'slider', xAxisIndex: 0, height: 22, bottom: 18 }}
     ],
-    xAxis: {{ type: 'value', name: '训练样本数 n', nameLocation: 'middle', nameGap: 34 }},
+    xAxis: {{ type: 'value', name: t('trainXAxis'), nameLocation: 'middle', nameGap: 34 }},
     yAxis: {{ type: 'value', name: yName, min: 0, max: yMax, axisLabel: {{ formatter: value => yMax === 100 ? value + '%' : value }} }},
     series: []
   }};
@@ -715,22 +964,22 @@ function renderCharts() {{
   document.getElementById('stat-range').textContent = allTrainCounts.length ? `${{Math.min(...allTrainCounts)}}-${{Math.max(...allTrainCounts)}}` : '-';
   document.getElementById('stat-splits').textContent = splitValues.size || '-';
 
-  let option = baseOption('泛化准确率', 'accuracy', 100);
+  let option = baseOption(t('accuracyTitle'), t('accuracyAxis'), 100);
   option.series = multiSeries(rows, [
-    {{ key: 'mean_probe_bit_accuracy', name: '单模型 bit acc', scale: 100 }},
-    {{ key: 'majority_vote_bit_accuracy', name: '多数投票 bit acc', scale: 100, lineStyle: {{ type: 'dashed' }} }},
+    {{ key: 'mean_probe_bit_accuracy', name: t('singleBitAcc'), scale: 100 }},
+    {{ key: 'majority_vote_bit_accuracy', name: t('majorityBitAcc'), scale: 100, lineStyle: {{ type: 'dashed' }} }},
   ]);
   charts.accuracy.setOption(option, true);
 
-  option = baseOption('函数分布集中度', 'agreement', 100);
+  option = baseOption(t('agreementTitle'), t('agreementAxis'), 100);
   option.series = multiSeries(rows, [
     {{ key: 'direct_pairwise_agreement', name: 'pairwise agreement', scale: 100 }},
-    {{ key: 'majority_fraction_agreement', name: 'majority fraction', scale: 100, lineStyle: {{ type: 'dashed' }} }},
-    {{ key: 'unanimously_same_prediction_bit_fraction', name: 'unanimous bits', scale: 100, lineStyle: {{ type: 'dotted' }} }},
+    {{ key: 'majority_fraction_agreement', name: t('majorityFraction'), scale: 100, lineStyle: {{ type: 'dashed' }} }},
+    {{ key: 'unanimously_same_prediction_bit_fraction', name: t('unanimousBits'), scale: 100, lineStyle: {{ type: 'dotted' }} }},
   ]);
   charts.agreement.setOption(option, true);
 
-  option = baseOption('预测熵与分歧', 'value', null);
+  option = baseOption(t('entropyTitle'), t('valueAxis'), null);
   option.yAxis = [
     {{ type: 'value', name: 'entropy bits', min: 0, max: 1 }},
     {{ type: 'value', name: 'hamming', min: 0, max: 0.5 }}
@@ -741,7 +990,7 @@ function renderCharts() {{
   ]);
   charts.entropy.setOption(option, true);
 
-  option = baseOption('共同错误结构', 'value', null);
+  option = baseOption(t('errorTitle'), t('valueAxis'), null);
   option.yAxis = [
     {{ type: 'value', name: 'phi / Jaccard', min: 0 }},
     {{ type: 'value', name: 'lift', min: 0 }}
@@ -753,11 +1002,11 @@ function renderCharts() {{
   ]);
   charts.error.setOption(option, true);
 
-  option = baseOption('输出偏置', 'one rate', 1);
+  option = baseOption(t('biasTitle'), t('oneRateAxis'), 1);
   option.series = groupedSeries(rows, 'prediction_one_rate', 1);
   charts.bias.setOption(option, true);
 
-  option = baseOption('训练步数', 'steps', null);
+  option = baseOption(t('stepsTitle'), t('stepsAxis'), null);
   option.yAxis.min = null;
   option.series = multiSeries(rows, [
     {{ key: 'mean_train_steps', name: 'mean train steps', scale: 1 }},
@@ -805,10 +1054,15 @@ document.getElementById('select-random').addEventListener('click', () => {{
 viewMode.addEventListener('change', renderCharts);
 stageSelect.addEventListener('change', renderCharts);
 taskList.addEventListener('change', renderCharts);
+if (langToggle) {{
+  langToggle.addEventListener('click', () => {{
+    applyLanguage(currentLang === 'en' ? 'zh' : 'en');
+  }});
+}}
 window.addEventListener('resize', () => Object.values(charts).forEach(chart => chart.resize()));
 
 initControls();
-renderCharts();
+applyLanguage(localStorage.getItem('probe-consistency-dashboard-language') === 'en' ? 'en' : 'zh');
 </script>
 </body>
 </html>
