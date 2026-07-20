@@ -595,12 +595,14 @@ def build_html(data):
     <h2><span class="zh">4. Grokking 时间轴上的 agreement</span><span class="en">4. Agreement along the grokking time axis</span></h2>
     <div class="zh">
       <p>前面的数据量实验改变的是训练样本数；这里固定数据量，只改变训练时间。问题是：grokking 过程中，跨 seed 函数分布是否也会经历类似的重组？</p>
-      <p>图中可以看到一个清楚的时间版本：早期 agreement 和 excess agreement 快速升高，表示不同 seed 共享某种启发式；随后 agreement 有一个下探，表示这些启发式被训练数据和记忆压力打散；最后随着 probe accuracy 上升，agreement 也回到接近 1，表示不同 seed 收缩到同一个真实规则函数附近。</p>
+      <p>图里同时画出训练集 accuracy、probe/test bit accuracy、probe/test exact accuracy，以及跨 seed 的 pairwise agreement 和 excess agreement。这个区分很重要：probe/test accuracy 在这次实验里基本是单调上升的；真正出现“先升高、再下降、再上升”的是跨 seed agreement。更干净的 excess agreement 则表现为一个早期峰值，随后逐渐回到接近 0。</p>
+      <p>这说明时间轴上的非单调结构不是单模型测试准确率的影子，而是函数系综本身的重组：早期不同 seed 共享某种启发式，随后这个共享启发式被训练约束和记忆压力打散，最后随着 grokking 完成，不同 seed 又收缩到同一个真实规则函数附近。</p>
       <div class="callout">这把数据量轴和时间轴连在一起：agreement 测到的不是单个模型的准确率，而是当前函数后验空间的集中或发散。数据量增加和训练时间推进，都可以推动这个函数分布经历“伪规则共识、分歧、真实规则共识”的阶段。</div>
     </div>
     <div class="en">
       <p>The data-size experiment changes the number of training examples. Here the dataset is fixed and only training time changes. The question is whether the function ensemble also reorganizes during grokking.</p>
-      <p>The plot shows a clear time-axis version of the same phenomenon. Early agreement and excess agreement rise quickly, indicating a shared heuristic across seeds. Agreement then dips as this heuristic is disrupted by training constraints and memorization pressure. Finally, as probe accuracy rises, agreement returns close to 1, indicating that different seeds have contracted toward the same true rule function.</p>
+      <p>The plot shows training accuracy, probe/test bit accuracy, probe/test exact accuracy, cross-seed pairwise agreement, and excess agreement. This distinction matters: in this run, probe/test accuracy is mostly monotone increasing. The rise-fall-rise pattern appears in cross-seed agreement. The cleaner excess-agreement curve forms an early peak and then returns close to zero.</p>
+      <p>This means the time-axis non-monotonicity is not just a shadow of single-model test accuracy. It reflects a reorganization of the function ensemble: early seeds share a heuristic, that shared heuristic is disrupted by training constraints and memorization pressure, and after grokking the seeds contract toward the same true rule function.</p>
       <div class="callout">This links the data axis and the time axis. Agreement is not merely single-model accuracy; it measures how concentrated or dispersed the current function-posterior-like ensemble is. Increasing data and continuing training can both drive the function distribution through pseudo-rule consensus, dispersion, and true-rule consensus.</div>
     </div>
     <div id="grokkingTime" class="chart"></div>
@@ -835,9 +837,10 @@ chart("grokkingTime", {{
   xAxis: xStep,
   yAxis: yPct,
   series: [
-    line("probe bit accuracy", grokkingShown, "step", "probe_bit_accuracy"),
+    line("probe/test bit accuracy", grokkingShown, "step", "probe_bit_accuracy"),
+    line("probe/test exact accuracy", grokkingShown, "step", "probe_exact_accuracy", {{ lineStyle: {{ type: "dashed" }} }}),
     line("train bit accuracy", grokkingShown, "step", "train_bit_accuracy", {{ lineStyle: {{ type: "dashed" }} }}),
-    line("pairwise agreement", grokkingShown, "step", "direct_pairwise_agreement"),
+    line("cross-seed pairwise agreement", grokkingShown, "step", "direct_pairwise_agreement"),
     line("excess agreement", grokkingShown, "step", "excess_agreement", {{ lineStyle: {{ type: "dotted" }} }})
   ]
 }});
