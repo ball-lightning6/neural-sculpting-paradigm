@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title data-i18n="train.title">训练 — Neural CPU v3</title>
+<meta name="description" content="Neural CPU v3 训练方法：独立精确 ISA 真值、所有输出 bit 的 BCE、batch 内 32 opcode 均衡、动态审计驱动的 hard replay（12.5%）、SPARSE_STATE / DENSE_STATE 结构状态、balanced checkpoint 字典序选择与 RTX 5090 约 2.5 天训练。" data-i18n-attr="content:train.desc">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="skip-link" href="#main" data-i18n="nav.skip">跳到正文</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">Neural CPU v3 <span class="brand-tag">16-bit ISA</span></a>
+    <button id="nav-toggle" class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links" data-i18n="nav.menu" data-i18n-attr="aria-label:nav.menuAria">菜单</button>
+    <nav class="nav-links" id="nav-links" hidden aria-label="Main">
+      <a href="../index.html" data-i18n="nav.overview">总览</a>
+      <a href="architecture.html" data-i18n="nav.core">执行核心</a>
+      <a href="training.html" data-i18n="nav.training">训练</a>
+      <a href="reliability.html" data-i18n="nav.reliability">可靠性</a>
+      <a href="demos.html" data-i18n="nav.demos">Demo</a>
+      <a href="research-context.html" data-i18n="nav.research">研究位置</a>
+      <a href="reproduce.html" data-i18n="nav.reproduce">复现</a>
+      <button id="lang-toggle" class="lang-btn" type="button" data-i18n="nav.langToggle" data-i18n-attr="aria-label:nav.langToggleAria">English</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ======================= page header ======================= -->
+  <section class="band band--surface" aria-labelledby="page-title">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="nav.training">训练</span>
+        <h1 id="page-title" data-i18n="train.h1">从随机监督到动态审计 replay</h1>
+        <p data-i18n="train.lede">训练目标由独立、精确的 ISA 实现生成，损失是所有输出 bit 的 BCE。普通随机训练始终保留；由大规模独立审计驱动的 hard replay 只占每个 batch 的 12.5%，并决定下一阶段多练哪些 opcode 与结构状态。</p>
+        <p class="small muted" data-i18n="train.headerNote">本页不绘制 loss 曲线：仓库未发布完整训练 history，页面只呈现流程、阶段配置与选择口径。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= content with toc ======================= -->
+  <section class="band">
+    <div class="wrap with-toc">
+
+      <nav class="toc" aria-label="本页目录" data-i18n-attr="aria-label:ui.toc">
+        <strong data-i18n="ui.toc">本页目录</strong>
+        <ol>
+          <li><a href="#train-truth" data-i18n="train.truth.h2">精确真值由独立 ISA 实现生成</a></li>
+          <li><a href="#train-base" data-i18n="train.base.h2">基础随机分布与 opcode 均衡</a></li>
+          <li><a href="#train-stages" data-i18n="train.stages.h2">从普通训练到 hard replay</a></li>
+          <li><a href="#train-loop" data-i18n="train.loop.h2">动态审计 → replay 循环</a></li>
+          <li><a href="#train-structural" data-i18n="train.structural.h2">为什么需要结构状态</a></li>
+          <li><a href="#train-selection" data-i18n="train.selection.h2">best 与 balanced 的选择标准</a></li>
+          <li><a href="#train-cost" data-i18n="train.cost.h2">训练成本</a></li>
+          <li><a href="#train-outlook" data-i18n="train.outlook.h2">后续方向</a></li>
+        </ol>
+      </nav>
+
+      <div>
+
+        <!-- 1. exact ground truth -->
+        <section id="train-truth" aria-labelledby="train-truth-h" style="margin-bottom:40px">
+          <div class="section-head">
+            <span class="kicker">01</span>
+            <h2 id="train-truth-h" data-i18n="train.truth.h2">精确真值由独立 ISA 实现生成</h2>
+          </div>
+          <p class="prose" data-i18n="train.truth.p">训练目标不来自神经核心自身，而由独立、精确的 ISA 真值实现生成；损失是所有输出 bit 的 BCE。</p>
+          <ol class="flow">
+            <li>
+              <strong data-i18n="train.truth.s1h">按生成器规则采样输入</strong>
+              <p data-i18n="train.truth.s1p">指令字段、寄存器值和标志位随机产生，32 个 opcode 在 batch 内保持均衡。</p>
+            </li>
+            <li>
+              <strong data-i18n="train.truth.s2h">独立精确实现计算目标</strong>
+              <p data-i18n="train.truth.s2p">一个与神经网络无关的精确 ISA 实现算出下一时刻的标志位、寄存器与控制信号。</p>
+            </li>
+            <li>
+              <strong data-i18n="train.truth.s3h">逐位计算 BCE</strong>
+              <p data-i18n="train.truth.s3p">网络输出与精确目标在所有输出 bit 上计算二分类交叉熵损失。</p>
+            </li>
+          </ol>
+        </section>
+
+        <!-- 2. base random distribution -->
+        <section id="train-base" aria-labelledby="train-base-h" style="margin-bottom:40px">
+          <div class="section-head">
+            <span class="kicker">02</span>
+            <h2 id="train-base-h" data-i18n="train.base.h2">基础随机分布与 opcode 均衡</h2>
+          </div>
+          <ul class="prose">
+            <li data-i18n="train.base.l1">每个 batch 内 32 个 opcode 保持均衡；</li>
+            <li data-i18n="train.base.l2">指令字段、寄存器值和标志位按生成器规则随机产生。</li>
+          </ul>
+          <p class="prose"><a href="#train-structural" data-i18n="train.base.bridge">但只按 opcode 均衡还不够——见下文“结构状态”一节。</a></p>
+        </section>
+
+        <!-- 3. from normal training to hard replay -->
+        <section id="train-stages" aria-labelledby="train-stages-h" style="margin-bottom:40px">
+          <div class="section-head">
+            <span class="kicker">03</span>
+            <h2 id="train-stages-h" data-i18n="train.stages.h2">从普通训练到 hard replay</h2>
+          </div>
+          <p class="prose" data-i18n="train.stages.p1">普通随机训练始终保留，hard replay 只占 batch 的 12.5%。hard replay 内既包含已知算法边界样本，也包含由独立大规模审计动态分配的 opcode 与结构状态样本。</p>
+          <h3 data-i18n="train.stages.finalH">最终 hard replay 阶段配置</h3>
+          <dl class="facts">
+            <dt>batch</dt>
+            <dd class="mono">16,384</dd>
+            <dt data-i18n="train.stages.dtLr">学习率</dt>
+            <dd class="mono">3e-6</dd>
+            <dt>weight decay</dt>
+            <dd class="mono">0</dd>
+            <dt data-i18n="train.stages.dtPrec">数值精度</dt>
+            <dd data-i18n="train.stages.ddPrec">FP32（关闭 TF32 与 AMP）</dd>
+            <dt data-i18n="train.stages.dtStop">停止条件</dt>
+            <dd data-i18n="train.stages.ddStop">持续训练，直到人工停止</dd>
+          </dl>
+          <p class="small muted" data-i18n="train.stages.note">最终阶段使用 FP32 并关闭 TF32 与 AMP，以保留极低 loss 区间的数值精度。</p>
+        </section>
+
+        <!-- 4. dynamic audit -> replay loop -->
+        <section id="train-loop" aria-labelledby="train-loop-h" style="margin-bottom:40px">
+          <div class="section-head">
+            <span class="kicker">04</span>
+            <h2 id="train-loop-h" data-i18n="train.loop.h2">动态审计 → replay 循环</h2>
+          </div>
+          <ol class="flow">
+            <li><strong data-i18n="train.loop.s1">随机生成训练 batch</strong></li>
+            <li><strong data-i18n="train.loop.s2">常规训练</strong></li>
+            <li><strong data-i18n="train.loop.s3">定期独立审计每个 opcode 与结构状态</strong></li>
+            <li><strong data-i18n="train.loop.s4">计算风险并做 EMA</strong></li>
+            <li><strong data-i18n="train.loop.s5">更新下一阶段 replay 比例</strong></li>
+            <li class="flow-loop">
+              <strong data-i18n="train.loop.s6">继续保留大部分原始随机分布</strong>
+              <p data-i18n="train.loop.s6p">回到循环起点；hard replay 始终只占 batch 的 12.5%。</p>
+            </li>
+          </ol>
+          <div class="metric-grid">
+            <div class="metric"><span class="num">6,250</span><span class="lbl" data-i18n="train.loop.m1">训练 step 审计间隔</span></div>
+            <div class="metric"><span class="num">33,554,432</span><span class="lbl" data-i18n="train.loop.m2">单次 opcode 审计样本数</span></div>
+            <div class="metric"><span class="num">4,194,304</span><span class="lbl" data-i18n="train.loop.m3">单次结构状态审计样本数（SPARSE / DENSE 各）</span></div>
+            <div class="metric"><span class="num">0.5</span><span class="lbl" data-i18n="train.loop.m4">风险 EMA 系数</span></div>
+            <div class="metric"><span class="num">12.5%</span><span class="lbl" data-i18n="train.loop.m5">hard replay 占 batch 比例</span></div>
+            <div class="metric"><span class="num">20%</span><span class="lbl" data-i18n="train.loop.m6">replay 中始终混入的均匀分布占比</span></div>
+          </div>
+          <p class="prose" data-i18n="train.loop.risk">风险分数结合平均 bit BCE 与 sample exact error rate；风险取平方根后分配 replay 权重，避免权重过度振荡；20% 的均匀分布防止较容易的 opcode 被完全遗忘。</p>
+        </section>
+
+        <!-- 5. why structured states exist -->
+        <section id="train-structural" aria-labelledby="train-structural-h" style="margin-bottom:40px">
+          <div class="section-head">
+            <span class="kicker">05</span>
+            <h2 id="train-structural-h" data-i18n="train.structural.h2">为什么需要结构状态</h2>
+          </div>
+          <p class="prose" data-i18n="train.structural.p1">随机验证中，绝大多数状态的 35 个状态 bit 约有一半为 1；但真实程序轨迹经常经过全零、近全零、常量初始化、清空后的寄存器等结构化状态。</p>
+          <p class="prose" data-i18n="train.structural.p2">实际运行 pi 程序时，早期模型在零很多的状态上暴露出远高于全局随机验证的错误率；对称地，接近全 1 的状态也可能构成另一类边界。因此训练中加入两个“虚拟 opcode”式的结构组：</p>
+          <div class="table-scroll">
+            <table class="spec">
+              <thead>
+                <tr><th data-i18n="train.structural.colName">组</th><th data-i18n="train.structural.colDef">35 个状态 bit 中 1 的数量</th></tr>
+              </thead>
+              <tbody>
+                <tr><td class="mono">SPARSE_STATE</td><td class="mono">0 – 8</td></tr>
+                <tr><td class="mono">DENSE_STATE</td><td class="mono">27 – 35</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="note note--caution">
+            <p data-i18n="train.structural.note">这两个名字只是采样与审计分组（“虚拟 opcode”），不是 ISA 中真实存在的指令。</p>
+          </div>
+        </section>
+
+        <!-- 6. best vs balanced selection -->
+        <section id="train-selection" aria-labelledby="train-selection-h" style="margin-bottom:40px">
+          <div class="section-head">
+            <span class="kicker">06</span>
+            <h2 id="train-selection-h" data-i18n="train.selection.h2">best 与 balanced 的选择标准</h2>
+          </div>
+          <p class="prose" data-i18n="train.selection.p">训练脚本会保存两个候选 checkpoint，选择标准不同：</p>
+          <div class="table-scroll">
+            <table class="spec">
+              <thead>
+                <tr><th>checkpoint</th><th data-i18n="train.selection.colCrit">选择标准</th></tr>
+              </thead>
+              <tbody>
+                <tr><td class="mono">best_model.pt</td><td data-i18n="train.selection.bestCrit">优先最小化普通固定验证集的平均 loss</td></tr>
+                <tr><td class="mono">best_balanced_model.pt</td><td data-i18n="train.selection.balancedCrit">按更严格的字典序依次比较下列三项</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <ol class="flow">
+            <li><strong data-i18n="train.selection.c1">普通与结构验证组的 exact error 总数</strong></li>
+            <li><strong data-i18n="train.selection.c2">所有真实 / 虚拟组中的最坏 loss</strong></li>
+            <li><strong data-i18n="train.selection.c3">总体平均 loss</strong></li>
+          </ol>
+          <p class="prose" data-i18n="train.selection.release">发布版只提供 best_balanced_model.pt（weights/neural_cpu_v3_best_balanced_model.pt）。</p>
+          <p class="prose" data-i18n="train.selection.close">两个模型通常非常接近，但 balanced 版本更适合真实程序轨迹，也可作为继续训练的起点。</p>
+        </section>
+
+        <!-- 7. training cost -->
+        <section id="train-cost" aria-labelledby="train-cost-h" style="margin-bottom:40px">
+          <div class="section-head">
+            <span class="kicker">07</span>
+            <h2 id="train-cost-h" data-i18n="train.cost.h2">训练成本</h2>
+          </div>
+          <dl class="facts">
+            <dt>GPU</dt>
+            <dd class="mono">RTX 5090</dd>
+            <dt data-i18n="train.cost.dtTime">累计训练时间</dt>
+            <dd data-i18n="train.cost.ddTime">约 2.5 天</dd>
+          </dl>
+        </section>
+
+        <!-- 8. outlook -->
+        <section id="train-outlook" aria-labelledby="train-outlook-h">
+          <div class="section-head">
+            <span class="kicker">08</span>
+            <h2 id="train-outlook-h" data-i18n="train.outlook.h2">后续方向</h2>
+          </div>
+          <ul class="prose">
+            <li data-i18n="train.outlook.l1">从发布的 checkpoint 继续训练；</li>
+            <li data-i18n="train.outlook.l2">容量缩减：探索更小的网络能否达到相似结果。</li>
+          </ul>
+        </section>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= pager ======================= -->
+  <div class="wrap band--tight">
+    <nav class="pager" aria-label="Pager">
+      <a class="prev" href="architecture.html"><span class="dir" data-i18n="ui.prev">上一页</span><span class="name" data-i18n="nav.core">执行核心</span></a>
+      <a class="next" href="reliability.html"><span class="dir" data-i18n="ui.next">下一页</span><span class="name" data-i18n="nav.reliability">可靠性</span></a>
+    </nav>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <p data-i18n="footer.project">Neural CPU v3 —— 从输入输出监督训练得到的 16-bit 神经执行核心。</p>
+        <p data-i18n="footer.boundary">神经网络负责指令语义对应的状态变换；PC、取指、64 KiB RAM 与外部调度保持精确实现。</p>
+      </div>
+      <div>
+        <p><strong data-i18n="footer.legacy">早期版本（legacy）</strong></p>
+        <p><a href="../../legacy/README_zh.md" data-i18n="footer.legacyZh">legacy 中文 README</a><br>
+           <a href="../../legacy/README_en.md" data-i18n="footer.legacyEn">legacy English README</a></p>
+      </div>
+    </div>
+    <p class="small" style="margin-top:16px" data-i18n="footer.note">本站为研究项目静态页面，所有数字均可在仓库脚本与结果中核验。</p>
+  </div>
+</footer>
+
+<script src="i18n.js"></script>
+<script>
+window.I18N_PAGE = {
+  zh: {
+    "train.title": "训练 — Neural CPU v3",
+    "train.desc": "Neural CPU v3 训练方法：独立精确 ISA 真值、所有输出 bit 的 BCE、batch 内 32 opcode 均衡、动态审计驱动的 hard replay（12.5%）、SPARSE_STATE / DENSE_STATE 结构状态、balanced checkpoint 字典序选择与 RTX 5090 约 2.5 天训练。",
+    "train.h1": "从随机监督到动态审计 replay",
+    "train.lede": "训练目标由独立、精确的 ISA 实现生成，损失是所有输出 bit 的 BCE。普通随机训练始终保留；由大规模独立审计驱动的 hard replay 只占每个 batch 的 12.5%，并决定下一阶段多练哪些 opcode 与结构状态。",
+    "train.headerNote": "本页不绘制 loss 曲线：仓库未发布完整训练 history，页面只呈现流程、阶段配置与选择口径。",
+    "train.truth.h2": "精确真值由独立 ISA 实现生成",
+    "train.truth.p": "训练目标不来自神经核心自身，而由独立、精确的 ISA 真值实现生成；损失是所有输出 bit 的 BCE。",
+    "train.truth.s1h": "按生成器规则采样输入",
+    "train.truth.s1p": "指令字段、寄存器值和标志位随机产生，32 个 opcode 在 batch 内保持均衡。",
+    "train.truth.s2h": "独立精确实现计算目标",
+    "train.truth.s2p": "一个与神经网络无关的精确 ISA 实现算出下一时刻的标志位、寄存器与控制信号。",
+    "train.truth.s3h": "逐位计算 BCE",
+    "train.truth.s3p": "网络输出与精确目标在所有输出 bit 上计算二分类交叉熵损失。",
+    "train.base.h2": "基础随机分布与 opcode 均衡",
+    "train.base.l1": "每个 batch 内 32 个 opcode 保持均衡；",
+    "train.base.l2": "指令字段、寄存器值和标志位按生成器规则随机产生。",
+    "train.base.bridge": "但只按 opcode 均衡还不够——见下文“结构状态”一节。",
+    "train.stages.h2": "从普通训练到 hard replay",
+    "train.stages.p1": "普通随机训练始终保留，hard replay 只占 batch 的 12.5%。hard replay 内既包含已知算法边界样本，也包含由独立大规模审计动态分配的 opcode 与结构状态样本。",
+    "train.stages.finalH": "最终 hard replay 阶段配置",
+    "train.stages.dtLr": "学习率",
+    "train.stages.dtPrec": "数值精度",
+    "train.stages.ddPrec": "FP32（关闭 TF32 与 AMP）",
+    "train.stages.dtStop": "停止条件",
+    "train.stages.ddStop": "持续训练，直到人工停止",
+    "train.stages.note": "最终阶段使用 FP32 并关闭 TF32 与 AMP，以保留极低 loss 区间的数值精度。",
+    "train.loop.h2": "动态审计 → replay 循环",
+    "train.loop.s1": "随机生成训练 batch",
+    "train.loop.s2": "常规训练",
+    "train.loop.s3": "定期独立审计每个 opcode 与结构状态",
+    "train.loop.s4": "计算风险并做 EMA",
+    "train.loop.s5": "更新下一阶段 replay 比例",
+    "train.loop.s6": "继续保留大部分原始随机分布",
+    "train.loop.s6p": "回到循环起点；hard replay 始终只占 batch 的 12.5%。",
+    "train.loop.m1": "训练 step 审计间隔",
+    "train.loop.m2": "单次 opcode 审计样本数",
+    "train.loop.m3": "单次结构状态审计样本数（SPARSE / DENSE 各）",
+    "train.loop.m4": "风险 EMA 系数",
+    "train.loop.m5": "hard replay 占 batch 比例",
+    "train.loop.m6": "replay 中始终混入的均匀分布占比",
+    "train.loop.risk": "风险分数结合平均 bit BCE 与 sample exact error rate；风险取平方根后分配 replay 权重，避免权重过度振荡；20% 的均匀分布防止较容易的 opcode 被完全遗忘。",
+    "train.structural.h2": "为什么需要结构状态",
+    "train.structural.p1": "随机验证中，绝大多数状态的 35 个状态 bit 约有一半为 1；但真实程序轨迹经常经过全零、近全零、常量初始化、清空后的寄存器等结构化状态。",
+    "train.structural.p2": "实际运行 pi 程序时，早期模型在零很多的状态上暴露出远高于全局随机验证的错误率；对称地，接近全 1 的状态也可能构成另一类边界。因此训练中加入两个“虚拟 opcode”式的结构组：",
+    "train.structural.colName": "组",
+    "train.structural.colDef": "35 个状态 bit 中 1 的数量",
+    "train.structural.note": "这两个名字只是采样与审计分组（“虚拟 opcode”），不是 ISA 中真实存在的指令。",
+    "train.selection.h2": "best 与 balanced 的选择标准",
+    "train.selection.p": "训练脚本会保存两个候选 checkpoint，选择标准不同：",
+    "train.selection.colCrit": "选择标准",
+    "train.selection.bestCrit": "优先最小化普通固定验证集的平均 loss",
+    "train.selection.balancedCrit": "按更严格的字典序依次比较下列三项",
+    "train.selection.c1": "普通与结构验证组的 exact error 总数",
+    "train.selection.c2": "所有真实 / 虚拟组中的最坏 loss",
+    "train.selection.c3": "总体平均 loss",
+    "train.selection.release": "发布版只提供 best_balanced_model.pt（weights/neural_cpu_v3_best_balanced_model.pt）。",
+    "train.selection.close": "两个模型通常非常接近，但 balanced 版本更适合真实程序轨迹，也可作为继续训练的起点。",
+    "train.cost.h2": "训练成本",
+    "train.cost.dtTime": "累计训练时间",
+    "train.cost.ddTime": "约 2.5 天",
+    "train.outlook.h2": "后续方向",
+    "train.outlook.l1": "从发布的 checkpoint 继续训练；",
+    "train.outlook.l2": "容量缩减：探索更小的网络能否达到相似结果。"
+  },
+  en: {
+    "train.title": "Training — Neural CPU v3",
+    "train.desc": "How Neural CPU v3 was trained: exact targets from an independent ISA implementation, BCE over all output bits, 32 opcodes balanced per batch, audit-driven hard replay (12.5%), SPARSE_STATE / DENSE_STATE structured states, lexicographic balanced-checkpoint selection, and about 2.5 days on an RTX 5090.",
+    "train.h1": "From random supervision to dynamically audited replay",
+    "train.lede": "Training targets come from an independent, exact ISA implementation, and the loss is BCE over all output bits. Ordinary random training never stops; hard replay driven by large independent audits takes only 12.5% of each batch and decides which opcodes and structured states get replayed more in the next stage.",
+    "train.headerNote": "This page plots no loss curves: the repository does not publish a full training history, so it presents the process, stage configurations and selection criteria only.",
+    "train.truth.h2": "Ground truth from an independent ISA implementation",
+    "train.truth.p": "Targets never come from the neural core itself — they are produced by an independent, exact ISA implementation, and the loss is BCE over all output bits.",
+    "train.truth.s1h": "Sample inputs by the generator rules",
+    "train.truth.s1p": "Instruction fields, register values and flags are drawn at random, with all 32 opcodes balanced inside each batch.",
+    "train.truth.s2h": "The independent exact implementation computes the target",
+    "train.truth.s2p": "An exact ISA implementation, independent of the network, computes the next-step flags, registers and control signals.",
+    "train.truth.s3h": "Bit-by-bit BCE",
+    "train.truth.s3p": "The binary cross-entropy between the network output and the exact target is computed over every output bit.",
+    "train.base.h2": "The base random distribution and opcode balance",
+    "train.base.l1": "all 32 opcodes are balanced within every batch;",
+    "train.base.l2": "instruction fields, register values and flags are randomized according to the generator rules.",
+    "train.base.bridge": "Balancing opcodes alone is not enough — see the structured-state section below.",
+    "train.stages.h2": "From normal training to hard replay",
+    "train.stages.p1": "Normal random training always stays in place, and hard replay takes only 12.5% of a batch. The replay portion mixes known algorithmic-boundary samples with opcode and structured-state samples allocated dynamically by independent large-scale audits.",
+    "train.stages.finalH": "Final hard-replay stage configuration",
+    "train.stages.dtLr": "learning rate",
+    "train.stages.dtPrec": "numeric precision",
+    "train.stages.ddPrec": "FP32 (TF32 and AMP off)",
+    "train.stages.dtStop": "stopping condition",
+    "train.stages.ddStop": "keeps training until stopped manually",
+    "train.stages.note": "The final stage runs in FP32 with TF32 and AMP off, to preserve numeric precision in the extremely-low-loss regime.",
+    "train.loop.h2": "The dynamic audit → replay loop",
+    "train.loop.s1": "Generate a random training batch",
+    "train.loop.s2": "Train as usual",
+    "train.loop.s3": "Periodically audit every opcode and structured state independently",
+    "train.loop.s4": "Compute risks and smooth with EMA",
+    "train.loop.s5": "Update replay proportions for the next stage",
+    "train.loop.s6": "Keep most of the original random distribution",
+    "train.loop.s6p": "Back to the start of the loop; hard replay never exceeds 12.5% of a batch.",
+    "train.loop.m1": "training steps between audits",
+    "train.loop.m2": "samples in one opcode audit",
+    "train.loop.m3": "samples per structured-state audit (SPARSE and DENSE each)",
+    "train.loop.m4": "risk EMA coefficient",
+    "train.loop.m5": "hard-replay share of a batch",
+    "train.loop.m6": "uniform share always mixed into replay",
+    "train.loop.risk": "The risk score combines mean bit BCE with the sample exact error rate; its square root allocates the replay weights to avoid oscillation, and the 20% uniform mix keeps easier opcodes from being forgotten entirely.",
+    "train.structural.h2": "Why structured states are needed",
+    "train.structural.p1": "In random validation, about half of the 35 state bits are 1 in the vast majority of states; real program traces, however, routinely pass through structured states — all-zero, near-all-zero, constant-initialized or freshly cleared registers.",
+    "train.structural.p2": "When the pi program actually ran, early models showed error rates on zero-heavy states far above global random validation; symmetrically, near-all-ones states may form another boundary. Training therefore adds two “virtual opcode”-style structural groups:",
+    "train.structural.colName": "Group",
+    "train.structural.colDef": "number of 1s among the 35 state bits",
+    "train.structural.note": "These two names are sampling and audit groups (“virtual opcodes”) — not instructions that really exist in the ISA.",
+    "train.selection.h2": "How best and balanced are selected",
+    "train.selection.p": "The training script keeps two candidate checkpoints, selected by different criteria:",
+    "train.selection.colCrit": "Selection criterion",
+    "train.selection.bestCrit": "minimizes mean loss on the normal fixed validation set first",
+    "train.selection.balancedCrit": "a stricter lexicographic order over the three quantities below",
+    "train.selection.c1": "total exact errors across the normal and structural validation groups",
+    "train.selection.c2": "the worst loss among all real and virtual groups",
+    "train.selection.c3": "the overall mean loss",
+    "train.selection.release": "Only best_balanced_model.pt is released (weights/neural_cpu_v3_best_balanced_model.pt).",
+    "train.selection.close": "The two are usually very close, but the balanced one suits real program traces better and can seed further training.",
+    "train.cost.h2": "Training cost",
+    "train.cost.dtTime": "cumulative training time",
+    "train.cost.ddTime": "about 2.5 days",
+    "train.outlook.h2": "Open directions",
+    "train.outlook.l1": "continued training from the released checkpoint;",
+    "train.outlook.l2": "capacity reduction: probing whether smaller networks can reach similar results."
+  }
+};
+</script>
+<script src="site.js"></script>
+</body>
+</html>

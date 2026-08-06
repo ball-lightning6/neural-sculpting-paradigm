@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title data-i18n="primes.title">第 10,000,000 个质数 — Neural CPU v3</title>
+<meta name="description" content="Primes demo：分段奇数筛编译为 16-bit 指令流，由 Neural CPU 在 180,000,000 搜索上界内算出第 10,000,000 个质数 179,424,673；4,462,453,580 次神经操作，0 error。" data-i18n-attr="content:primes.desc">
+<link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+<a class="skip-link" href="#main" data-i18n="nav.skip">跳到正文</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../../index.html">Neural CPU v3 <span class="brand-tag">16-bit ISA</span></a>
+    <button id="nav-toggle" class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links" data-i18n="nav.menu" data-i18n-attr="aria-label:nav.menuAria">菜单</button>
+    <nav class="nav-links" id="nav-links" hidden aria-label="Main">
+      <a href="../../index.html" data-i18n="nav.overview">总览</a>
+      <a href="../architecture.html" data-i18n="nav.core">执行核心</a>
+      <a href="../training.html" data-i18n="nav.training">训练</a>
+      <a href="../reliability.html" data-i18n="nav.reliability">可靠性</a>
+      <a href="../demos.html" data-i18n="nav.demos">Demo</a>
+      <a href="../research-context.html" data-i18n="nav.research">研究位置</a>
+      <a href="../reproduce.html" data-i18n="nav.reproduce">复现</a>
+      <button id="lang-toggle" class="lang-btn" type="button" data-i18n="nav.langToggle" data-i18n-attr="aria-label:nav.langToggleAria">English</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ======================= page header + toc ======================= -->
+  <section class="band band--surface" aria-labelledby="page-h">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="primes.head.kicker">Demo · 程序执行</span>
+        <h1 id="page-h" data-i18n="primes.head.h">第 10,000,000 个质数</h1>
+        <p class="lede" data-i18n="primes.head.lede">分段奇数筛编译成 16-bit 指令流，由 Neural CPU 在 180,000,000 的搜索上界内算出第 10,000,000 个质数：179,424,673。最终审计 0 error。</p>
+      </div>
+      <nav class="toc" aria-labelledby="primes-toc-h">
+        <strong id="primes-toc-h" data-i18n="ui.toc">本页目录</strong>
+        <ol>
+          <li><a href="#output" data-i18n="primes.toc.out">运行结果</a></li>
+          <li><a href="#numbers" data-i18n="primes.toc.num">关键数字</a></li>
+          <li><a href="#isa" data-i18n="primes.toc.isa">ISA 映射</a></li>
+          <li><a href="#neural" data-i18n="primes.toc.neural">Neural CPU 的职责</a></li>
+          <li><a href="#external" data-i18n="primes.toc.external">外部运行时的职责</a></li>
+          <li><a href="#modes" data-i18n="primes.toc.modes">审计模式</a></li>
+          <li><a href="#run" data-i18n="primes.toc.run">运行方法</a></li>
+          <li><a href="#limits" data-i18n="primes.toc.limits">限制与不声称</a></li>
+        </ol>
+      </nav>
+    </div>
+  </section>
+
+  <!-- ======================= real output ======================= -->
+  <section class="band" aria-labelledby="output">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="primes.out.kicker">真实输出</span>
+        <h2 id="output" data-i18n="primes.out.h">运行结果</h2>
+      </div>
+      <div class="note note--ok">
+        <p><strong data-i18n="primes.out.result">第 10,000,000 个质数 = 179,424,673</strong></p>
+        <p data-i18n="primes.out.resultNote">脚本内置 EXPECTED_PRIME = 179,424,673 作为该名次的预期答案；本次最终 demo 审计 0 error。</p>
+      </div>
+      <p class="prose" data-i18n="primes.out.p">筛法标记全部写在外部 64 KiB RAM 中，但每一个标记的地址都由 Neural CPU 的指令流算出。RAM 不会替 CPU 判断一个数是否为质数。</p>
+    </div>
+  </section>
+
+  <!-- ======================= key numbers ======================= -->
+  <section class="band band--surface" aria-labelledby="numbers">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="primes.num.kicker">已核验结果</span>
+        <h2 id="numbers" data-i18n="primes.num.h">关键数字</h2>
+      </div>
+      <div class="metric-grid">
+        <div class="metric"><span class="num">10,000,000</span><span class="lbl" data-i18n="primes.num.m1">目标质数名次（TARGET_RANK）</span></div>
+        <div class="metric"><span class="num">180,000,000</span><span class="lbl" data-i18n="primes.num.m2">搜索上界（SEARCH_LIMIT）</span></div>
+        <div class="metric"><span class="num">179,424,673</span><span class="lbl" data-i18n="primes.num.m3">结果：第 10,000,000 个质数</span></div>
+        <div class="metric"><span class="num">4,462,453,580</span><span class="lbl" data-i18n="primes.num.m4">神经操作数</span></div>
+        <div class="metric"><span class="num ok">0</span><span class="lbl" data-i18n="primes.num.m5">最终 demo 审计的神经执行错误</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= ISA mapping ======================= -->
+  <section class="band" aria-labelledby="isa">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="primes.isa.kicker">程序 → ISA</span>
+        <h2 id="isa" data-i18n="primes.isa.h">分段奇数筛怎样映射到 16-bit ISA</h2>
+      </div>
+      <p class="prose" data-i18n="primes.isa.p1">筛法的全部决策都编译进 16-bit 指令流：基础质数、p²、筛缓冲区地址、跨分段的下一个倍数、质数计数和停止条件都由指令计算。</p>
+      <p class="prose" data-i18n="primes.isa.p2">外部 RAM 只按 Neural CPU 算出的地址读写标记位。它既不知道当前筛到哪个数，也不会替 CPU 判断一个数是否为质数。</p>
+      <ol class="prose">
+        <li data-i18n="primes.isa.s1">Neural CPU 先在 RAM 中筛出不超过 sqrt(180,000,000) = 13,416 的奇数基础质数，而不是由宿主预先提供质数表。</li>
+        <li data-i18n="primes.isa.s2">每条基础质数记录保存 p、32-bit 的 p² 和跨分段延续所需的下一个标记偏移。</li>
+        <li data-i18n="primes.isa.s3">32 KiB 筛缓冲区只表示奇数，因此每段覆盖 65,536 个整数；CPU 清空缓冲区、标记合数并把偏移带到下一段。</li>
+        <li data-i18n="primes.isa.s4">CPU 扫描未标记位置，用 24-bit 计数器累计质数名次；达到 10,000,000 时自行组合出 32-bit 结果 179,424,673 并 HALT。</li>
+      </ol>
+      <p class="small muted" data-i18n="primes.isa.p3">程序由 1,129 条静态机器指令和数据相关循环构成；完整运行执行 4,462,453,580 次神经操作，最终 demo 审计为 0 次执行错误。</p>
+    </div>
+  </section>
+
+  <!-- ======================= what the Neural CPU computes ======================= -->
+  <section class="band band--surface" aria-labelledby="neural">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="primes.neural.kicker">神经侧</span>
+        <h2 id="neural" data-i18n="primes.neural.h">Neural CPU 承担什么</h2>
+      </div>
+      <h3><span class="tag tag--neural" data-i18n="primes.neural.tag">神经核心 · MLP</span></h3>
+      <p class="prose" data-i18n="primes.neural.p">以下全部来自 16-bit 指令流的逐条状态转移：</p>
+      <ul class="prose">
+        <li data-i18n="primes.neural.l1">基础质数的生成与记录；</li>
+        <li data-i18n="primes.neural.l2">p² 与筛缓冲区地址计算；</li>
+        <li data-i18n="primes.neural.l3">跨分段的下一个倍数推进；</li>
+        <li data-i18n="primes.neural.l4">质数计数与停止条件（数到第 10,000,000 个时停机）。</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ======================= what the external runtime does ======================= -->
+  <section class="band" aria-labelledby="external">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="primes.external.kicker">外部侧</span>
+        <h2 id="external" data-i18n="primes.external.h">外部运行时承担什么</h2>
+      </div>
+      <h3><span class="tag tag--external" data-i18n="primes.external.tag">外部精确组件</span></h3>
+      <ul class="prose">
+        <li data-i18n="primes.external.l1">16-bit PC 与取指；</li>
+        <li data-i18n="primes.external.l2">64 KiB RAM：只按神经核心算出的地址读写筛标记；</li>
+        <li data-i18n="primes.external.l3">batch 模式下生成唯一精确轨迹、做 GPU 调度，并对神经核逐操作审计；</li>
+        <li data-i18n="primes.external.l4">进度打印等宿主侧显示（每 50,000,000 次操作一次）。</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ======================= audit modes ======================= -->
+  <section class="band band--surface" aria-labelledby="modes">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="primes.modes.kicker">验证口径</span>
+        <h2 id="modes" data-i18n="primes.modes.h">两种模式</h2>
+        <p data-i18n="primes.modes.p">当前脚本支持 exact 与 batch 两种模式，区别在于是谁推进状态、以及是否加载神经权重。</p>
+      </div>
+      <div class="table-scroll">
+        <table class="spec">
+          <thead>
+            <tr><th data-i18n="primes.modes.thMode">模式</th><th data-i18n="primes.modes.thDesc">含义</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="mono">exact</td>
+              <td data-i18n="primes.modes.exact">不加载神经权重，只运行精确实现，验证筛法程序和机器码（EXECUTION_MODE 设为 "exact" 时生效）。</td>
+            </tr>
+            <tr>
+              <td class="mono">batch</td>
+              <td data-i18n="primes.modes.batch">默认模式。与 pi 相同的轨迹审计：先由精确解释器生成唯一程序轨迹，再把大量相互独立的单步输入组成大 batch 做神经审计。它不是把质数答案从外部直接喂给网络。</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="small muted" data-i18n="primes.modes.note">两种模式覆盖同一条程序轨迹；模式只改变验证方式，不改变筛法的结果。</p>
+    </div>
+  </section>
+
+  <!-- ======================= how to run ======================= -->
+  <section class="band" aria-labelledby="run">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="primes.run.kicker">复现</span>
+        <h2 id="run" data-i18n="primes.run.h">运行方法</h2>
+        <p data-i18n="primes.run.p">所有可调参数集中在脚本顶部的 Config。在 neural_cpu_v3/ 目录下运行：</p>
+      </div>
+      <div class="codeblock"><pre><code>python scripts/run_neural_cpu_v3_primes.py</code></pre></div>
+      <div class="table-scroll">
+        <table class="spec">
+          <thead>
+            <tr><th data-i18n="primes.run.thParam">参数</th><th data-i18n="primes.run.thDefault">默认值</th><th data-i18n="primes.run.thDesc">说明</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="mono">TARGET_RANK</td><td class="mono">10_000_000</td><td data-i18n="primes.run.p1">目标质数名次</td></tr>
+            <tr><td class="mono">EXPECTED_PRIME</td><td class="mono">179_424_673</td><td data-i18n="primes.run.p2">该名次的预期答案</td></tr>
+            <tr><td class="mono">SEARCH_LIMIT</td><td class="mono">180_000_000</td><td data-i18n="primes.run.p3">搜索上界</td></tr>
+            <tr><td class="mono">EXECUTION_MODE</td><td class="mono">"batch"</td><td data-i18n="primes.run.p4">"exact" 或 "batch"</td></tr>
+            <tr><td class="mono">MAX_NEURAL_OPERATIONS</td><td class="mono">None</td><td data-i18n="primes.run.p5">神经操作步数上限；None 表示不设上限</td></tr>
+            <tr><td class="mono">TRACE_BATCH / INFERENCE_BATCH</td><td class="mono">262,144</td><td data-i18n="primes.run.p6">每块轨迹长度 / 单次 GPU 前向规模</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="note">
+        <p data-i18n="primes.run.tip">快速自检：按脚本开头说明，可把 TARGET_RANK、EXPECTED_PRIME、SEARCH_LIMIT 和 EXECUTION_MODE 分别改为 1000、7919、10000 和 "exact"。</p>
+      </div>
+      <h3 data-i18n="primes.run.files">相关文件</h3>
+      <ul class="prose">
+        <li><a href="../../scripts/run_neural_cpu_v3_primes.py">scripts/run_neural_cpu_v3_primes.py</a> — <span data-i18n="primes.run.fScript">脚本（自包含，Config 在顶部）</span></li>
+        <li><a href="../../weights/neural_cpu_v3_best_balanced_model.pt">weights/neural_cpu_v3_best_balanced_model.pt</a> — <span data-i18n="primes.run.fWeights">发布权重（Config.MODEL_PATH 默认值）</span></li>
+      </ul>
+      <p class="small muted" data-i18n="primes.run.outdir">输出写入 results/primes/（Config.RESULT_DIR）。</p>
+    </div>
+  </section>
+
+  <!-- ======================= limitations & non-claims ======================= -->
+  <section class="band band--surface" aria-labelledby="limits">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="primes.limits.kicker">边界</span>
+        <h2 id="limits" data-i18n="primes.limits.h">限制与不声称的内容</h2>
+      </div>
+      <ul class="prose">
+        <li><span data-i18n="primes.limits.l1">0 error 是这次最终 demo 审计的结果，不是对任意未来运行的保证；错误率数量级的口径与证据见可靠性页。</span> <a href="../reliability.html" data-i18n="primes.limits.l1link">可靠性页 →</a></li>
+        <li data-i18n="primes.limits.l2">batch 不是把质数答案从外部喂给网络：轨迹由精确实现唯一生成，神经核心逐项接受审计。</li>
+        <li data-i18n="primes.limits.l3">EXPECTED_PRIME 是脚本内置的预期答案对照；质数本身由筛法指令流计算。</li>
+        <li data-i18n="primes.limits.l4">默认目标是数十亿次操作级别的运行，需要 GPU 与相应运行时间；快速自检请用上面的小参数组合。</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ======================= back link + pager ======================= -->
+  <div class="wrap band--tight">
+    <p><a href="../demos.html" data-i18n="ui.backToDemos">返回 Demo 总览</a></p>
+    <nav class="pager" aria-label="Pager">
+      <a href="sudoku.html"><span class="dir" data-i18n="ui.prev">上一页</span><span class="name" data-i18n="primes.pager.prev">Sudoku · 10 道题</span></a>
+      <a class="next" href="mnist.html"><span class="dir" data-i18n="ui.next">下一页</span><span class="name" data-i18n="primes.pager.next">MNIST CNN · 量化推理</span></a>
+    </nav>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <p data-i18n="footer.project">Neural CPU v3 —— 从输入输出监督训练得到的 16-bit 神经执行核心。</p>
+        <p data-i18n="footer.boundary">神经网络负责指令语义对应的状态变换；PC、取指、64 KiB RAM 与外部调度保持精确实现。</p>
+      </div>
+      <div>
+        <p><strong data-i18n="footer.legacy">早期版本（legacy）</strong></p>
+        <p><a href="../../../legacy/README_zh.md" data-i18n="footer.legacyZh">legacy 中文 README</a><br>
+           <a href="../../../legacy/README_en.md" data-i18n="footer.legacyEn">legacy English README</a></p>
+      </div>
+    </div>
+    <p class="small" style="margin-top:16px" data-i18n="footer.note">本站为研究项目静态页面，所有数字均可在仓库脚本与结果中核验。</p>
+  </div>
+</footer>
+
+<script src="../i18n.js"></script>
+<script>
+window.I18N_PAGE = {
+  zh: {
+    "primes.title": "第 10,000,000 个质数 — Neural CPU v3",
+    "primes.desc": "Primes demo：分段奇数筛编译为 16-bit 指令流，由 Neural CPU 在 180,000,000 搜索上界内算出第 10,000,000 个质数 179,424,673；4,462,453,580 次神经操作，0 error。",
+    "primes.head.kicker": "Demo · 程序执行",
+    "primes.head.h": "第 10,000,000 个质数",
+    "primes.head.lede": "分段奇数筛编译成 16-bit 指令流，由 Neural CPU 在 180,000,000 的搜索上界内算出第 10,000,000 个质数：179,424,673。最终审计 0 error。",
+    "primes.toc.out": "运行结果",
+    "primes.toc.num": "关键数字",
+    "primes.toc.isa": "ISA 映射",
+    "primes.toc.neural": "Neural CPU 的职责",
+    "primes.toc.external": "外部运行时的职责",
+    "primes.toc.modes": "审计模式",
+    "primes.toc.run": "运行方法",
+    "primes.toc.limits": "限制与不声称",
+    "primes.out.kicker": "真实输出",
+    "primes.out.h": "运行结果",
+    "primes.out.result": "第 10,000,000 个质数 = 179,424,673",
+    "primes.out.resultNote": "脚本内置 EXPECTED_PRIME = 179,424,673 作为该名次的预期答案；本次最终 demo 审计 0 error。",
+    "primes.out.p": "筛法标记全部写在外部 64 KiB RAM 中，但每一个标记的地址都由 Neural CPU 的指令流算出。RAM 不会替 CPU 判断一个数是否为质数。",
+    "primes.num.kicker": "已核验结果",
+    "primes.num.h": "关键数字",
+    "primes.num.m1": "目标质数名次（TARGET_RANK）",
+    "primes.num.m2": "搜索上界（SEARCH_LIMIT）",
+    "primes.num.m3": "结果：第 10,000,000 个质数",
+    "primes.num.m4": "神经操作数",
+    "primes.num.m5": "最终 demo 审计的神经执行错误",
+    "primes.isa.kicker": "程序 → ISA",
+    "primes.isa.h": "分段奇数筛怎样映射到 16-bit ISA",
+    "primes.isa.p1": "筛法的全部决策都编译进 16-bit 指令流：基础质数、p²、筛缓冲区地址、跨分段的下一个倍数、质数计数和停止条件都由指令计算。",
+    "primes.isa.p2": "外部 RAM 只按 Neural CPU 算出的地址读写标记位。它既不知道当前筛到哪个数，也不会替 CPU 判断一个数是否为质数。",
+    "primes.isa.s1": "Neural CPU 先在 RAM 中筛出不超过 sqrt(180,000,000) = 13,416 的奇数基础质数，而不是由宿主预先提供质数表。",
+    "primes.isa.s2": "每条基础质数记录保存 p、32-bit 的 p² 和跨分段延续所需的下一个标记偏移。",
+    "primes.isa.s3": "32 KiB 筛缓冲区只表示奇数，因此每段覆盖 65,536 个整数；CPU 清空缓冲区、标记合数并把偏移带到下一段。",
+    "primes.isa.s4": "CPU 扫描未标记位置，用 24-bit 计数器累计质数名次；达到 10,000,000 时自行组合出 32-bit 结果 179,424,673 并 HALT。",
+    "primes.isa.p3": "程序由 1,129 条静态机器指令和数据相关循环构成；完整运行执行 4,462,453,580 次神经操作，最终 demo 审计为 0 次执行错误。",
+    "primes.neural.kicker": "神经侧",
+    "primes.neural.h": "Neural CPU 承担什么",
+    "primes.neural.tag": "神经核心 · MLP",
+    "primes.neural.p": "以下全部来自 16-bit 指令流的逐条状态转移：",
+    "primes.neural.l1": "基础质数的生成与记录；",
+    "primes.neural.l2": "p² 与筛缓冲区地址计算；",
+    "primes.neural.l3": "跨分段的下一个倍数推进；",
+    "primes.neural.l4": "质数计数与停止条件（数到第 10,000,000 个时停机）。",
+    "primes.external.kicker": "外部侧",
+    "primes.external.h": "外部运行时承担什么",
+    "primes.external.tag": "外部精确组件",
+    "primes.external.l1": "16-bit PC 与取指；",
+    "primes.external.l2": "64 KiB RAM：只按神经核心算出的地址读写筛标记；",
+    "primes.external.l3": "batch 模式下生成唯一精确轨迹、做 GPU 调度，并对神经核逐操作审计；",
+    "primes.external.l4": "进度打印等宿主侧显示（每 50,000,000 次操作一次）。",
+    "primes.modes.kicker": "验证口径",
+    "primes.modes.h": "两种模式",
+    "primes.modes.p": "当前脚本支持 exact 与 batch 两种模式，区别在于是谁推进状态、以及是否加载神经权重。",
+    "primes.modes.thMode": "模式",
+    "primes.modes.thDesc": "含义",
+    "primes.modes.exact": "不加载神经权重，只运行精确实现，验证筛法程序和机器码（EXECUTION_MODE 设为 \"exact\" 时生效）。",
+    "primes.modes.batch": "默认模式。与 pi 相同的轨迹审计：先由精确解释器生成唯一程序轨迹，再把大量相互独立的单步输入组成大 batch 做神经审计。它不是把质数答案从外部直接喂给网络。",
+    "primes.modes.note": "两种模式覆盖同一条程序轨迹；模式只改变验证方式，不改变筛法的结果。",
+    "primes.run.kicker": "复现",
+    "primes.run.h": "运行方法",
+    "primes.run.p": "所有可调参数集中在脚本顶部的 Config。在 neural_cpu_v3/ 目录下运行：",
+    "primes.run.thParam": "参数",
+    "primes.run.thDefault": "默认值",
+    "primes.run.thDesc": "说明",
+    "primes.run.p1": "目标质数名次",
+    "primes.run.p2": "该名次的预期答案",
+    "primes.run.p3": "搜索上界",
+    "primes.run.p4": "\"exact\" 或 \"batch\"",
+    "primes.run.p5": "神经操作步数上限；None 表示不设上限",
+    "primes.run.p6": "每块轨迹长度 / 单次 GPU 前向规模",
+    "primes.run.tip": "快速自检：按脚本开头说明，可把 TARGET_RANK、EXPECTED_PRIME、SEARCH_LIMIT 和 EXECUTION_MODE 分别改为 1000、7919、10000 和 \"exact\"。",
+    "primes.run.files": "相关文件",
+    "primes.run.fScript": "脚本（自包含，Config 在顶部）",
+    "primes.run.fWeights": "发布权重（Config.MODEL_PATH 默认值）",
+    "primes.run.outdir": "输出写入 results/primes/（Config.RESULT_DIR）。",
+    "primes.limits.kicker": "边界",
+    "primes.limits.h": "限制与不声称的内容",
+    "primes.limits.l1": "0 error 是这次最终 demo 审计的结果，不是对任意未来运行的保证；错误率数量级的口径与证据见可靠性页。",
+    "primes.limits.l1link": "可靠性页 →",
+    "primes.limits.l2": "batch 不是把质数答案从外部喂给网络：轨迹由精确实现唯一生成，神经核心逐项接受审计。",
+    "primes.limits.l3": "EXPECTED_PRIME 是脚本内置的预期答案对照；质数本身由筛法指令流计算。",
+    "primes.limits.l4": "默认目标是数十亿次操作级别的运行，需要 GPU 与相应运行时间；快速自检请用上面的小参数组合。",
+    "primes.pager.prev": "Sudoku · 10 道题",
+    "primes.pager.next": "MNIST CNN · 量化推理"
+  },
+  en: {
+    "primes.title": "The 10,000,000th prime — Neural CPU v3",
+    "primes.desc": "Primes demo: a segmented odd sieve compiled into the 16-bit instruction stream; the Neural CPU found the 10,000,000th prime, 179,424,673, within a search limit of 180,000,000; 4,462,453,580 neural operations, 0 errors.",
+    "primes.head.kicker": "Demo · Program execution",
+    "primes.head.h": "The 10,000,000th prime",
+    "primes.head.lede": "A segmented odd sieve compiled into the 16-bit instruction stream: the Neural CPU computed the 10,000,000th prime, 179,424,673, within a search limit of 180,000,000. Final audit: 0 errors.",
+    "primes.toc.out": "Run result",
+    "primes.toc.num": "Key numbers",
+    "primes.toc.isa": "ISA mapping",
+    "primes.toc.neural": "What the Neural CPU does",
+    "primes.toc.external": "What the runtime does",
+    "primes.toc.modes": "Audit modes",
+    "primes.toc.run": "How to run",
+    "primes.toc.limits": "Limitations & non-claims",
+    "primes.out.kicker": "Real output",
+    "primes.out.h": "Run result",
+    "primes.out.result": "The 10,000,000th prime = 179,424,673",
+    "primes.out.resultNote": "The script ships EXPECTED_PRIME = 179,424,673 as the expected answer for this rank; the final demo audit reported 0 errors.",
+    "primes.out.p": "Every sieve mark is written into the external 64 KiB RAM, but the address of every mark is computed by the Neural CPU's instruction stream. RAM never decides whether a number is prime.",
+    "primes.num.kicker": "Verified results",
+    "primes.num.h": "Key numbers",
+    "primes.num.m1": "target prime rank (TARGET_RANK)",
+    "primes.num.m2": "search limit (SEARCH_LIMIT)",
+    "primes.num.m3": "result: the 10,000,000th prime",
+    "primes.num.m4": "neural operations",
+    "primes.num.m5": "neural execution errors in the final demo audit",
+    "primes.isa.kicker": "Program → ISA",
+    "primes.isa.h": "How the segmented odd sieve maps to the 16-bit ISA",
+    "primes.isa.p1": "Every decision of the sieve is compiled into the 16-bit instruction stream: the base primes, p², sieve-buffer addresses, the next multiple across segments, prime counting and the stop condition are all computed by instructions.",
+    "primes.isa.p2": "The external RAM only reads and writes mark bits at addresses the Neural CPU computed. It neither knows which number is being sieved nor decides whether a number is prime.",
+    "primes.isa.s1": "The Neural CPU first sieves odd base primes up to sqrt(180,000,000) = 13,416 in RAM; the host does not supply a precomputed prime table.",
+    "primes.isa.s2": "Each base-prime record stores p, its 32-bit p², and the next marking offset needed to continue across segments.",
+    "primes.isa.s3": "The 32 KiB sieve buffer represents odd numbers only, so each segment spans 65,536 integers; the CPU clears the buffer, marks composites and carries offsets into the next segment.",
+    "primes.isa.s4": "The CPU scans unmarked locations with a 24-bit rank counter; at rank 10,000,000 it assembles the 32-bit result 179,424,673 itself and halts.",
+    "primes.isa.p3": "The program consists of 1,129 static machine instructions plus data-dependent loops. The full run executes 4,462,453,580 neural operations and completes the final demo audit with zero execution errors.",
+    "primes.neural.kicker": "Neural side",
+    "primes.neural.h": "What the Neural CPU computes",
+    "primes.neural.tag": "Neural core · MLP",
+    "primes.neural.p": "All of the following come from the per-instruction state transitions of the 16-bit instruction stream:",
+    "primes.neural.l1": "generating and recording the base primes;",
+    "primes.neural.l2": "computing p² and the sieve-buffer addresses;",
+    "primes.neural.l3": "advancing the next multiple across segments;",
+    "primes.neural.l4": "prime counting and the stop condition (halting at the 10,000,000th prime).",
+    "primes.external.kicker": "External side",
+    "primes.external.h": "What the external runtime still does",
+    "primes.external.tag": "External exact components",
+    "primes.external.l1": "the 16-bit PC and fetch;",
+    "primes.external.l2": "the 64 KiB RAM: it only reads/writes sieve marks at addresses computed by the neural core;",
+    "primes.external.l3": "in batch mode, generating the one exact trace, scheduling the GPU batches and auditing the neural core operation by operation;",
+    "primes.external.l4": "host-side display such as progress printing (once every 50,000,000 operations).",
+    "primes.modes.kicker": "Validation criteria",
+    "primes.modes.h": "Two modes",
+    "primes.modes.p": "The current script supports exact and batch; they differ in who advances the state and whether the neural weights are loaded.",
+    "primes.modes.thMode": "Mode",
+    "primes.modes.thDesc": "Meaning",
+    "primes.modes.exact": "Runs only the exact implementation without loading the neural weights, validating the sieve program and the machine code (in effect when EXECUTION_MODE is \"exact\").",
+    "primes.modes.batch": "Default. The same trace audit as in pi: an exact interpreter first generates the one unique program trace, then the many independent single-step inputs form large batches for the neural audit. It does not feed the prime answer into the network from outside.",
+    "primes.modes.note": "Both modes cover the same program trace; the mode changes how it is checked, not the sieve's result.",
+    "primes.run.kicker": "Reproduce",
+    "primes.run.h": "How to run",
+    "primes.run.p": "Every tunable parameter sits in the Config block at the top of the script. From the neural_cpu_v3/ directory:",
+    "primes.run.thParam": "Parameter",
+    "primes.run.thDefault": "Default",
+    "primes.run.thDesc": "What it does",
+    "primes.run.p1": "target prime rank",
+    "primes.run.p2": "expected answer for that rank",
+    "primes.run.p3": "search limit",
+    "primes.run.p4": "\"exact\" or \"batch\"",
+    "primes.run.p5": "cap on neural operations; None means no limit",
+    "primes.run.p6": "trace chunk length / single GPU forward-pass size",
+    "primes.run.tip": "Quick self-check: per the script's own notes, set TARGET_RANK, EXPECTED_PRIME, SEARCH_LIMIT and EXECUTION_MODE to 1000, 7919, 10000 and \"exact\" respectively.",
+    "primes.run.files": "Related files",
+    "primes.run.fScript": "the script (self-contained, Config at the top)",
+    "primes.run.fWeights": "released weights (default of Config.MODEL_PATH)",
+    "primes.run.outdir": "Output is written to results/primes/ (Config.RESULT_DIR).",
+    "primes.limits.kicker": "Boundary",
+    "primes.limits.h": "Limitations and non-claims",
+    "primes.limits.l1": "0 errors is the result of this final demo audit, not a guarantee for every future run; see the reliability page for the error-rate criteria and evidence.",
+    "primes.limits.l1link": "Reliability →",
+    "primes.limits.l2": "batch does not feed the prime answer into the network from outside: the trace is uniquely generated by the exact implementation, and the neural core is audited step by step.",
+    "primes.limits.l3": "EXPECTED_PRIME is an expected-answer reference built into the script; the prime itself is computed by the sieve instruction stream.",
+    "primes.limits.l4": "The default target is a billions-of-operations run that needs a GPU and the corresponding runtime; for a quick self-check use the small parameter set above.",
+    "primes.pager.prev": "Sudoku · 10 puzzles",
+    "primes.pager.next": "MNIST CNN · quantized inference"
+  }
+};
+</script>
+<script src="../site.js"></script>
+</body>
+</html>

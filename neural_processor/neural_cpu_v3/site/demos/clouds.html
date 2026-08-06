@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title data-i18n="clouds.title">Fast 2D Clouds — Neural CPU v3</title>
+<meta name="description" content="Neural CPU v3 渲染的 1280x720 Fast 2D Clouds 静态帧：10,740,326,400 个 lane-op，与精确整数参考逐像素完全一致（差异像素 0，最大通道差 0）。" data-i18n-attr="content:clouds.desc">
+<link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+<a class="skip-link" href="#main" data-i18n="nav.skip">跳到正文</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../../index.html">Neural CPU v3 <span class="brand-tag">16-bit ISA</span></a>
+    <button id="nav-toggle" class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links" data-i18n="nav.menu" data-i18n-attr="aria-label:nav.menuAria">菜单</button>
+    <nav class="nav-links" id="nav-links" hidden aria-label="Main">
+      <a href="../../index.html" data-i18n="nav.overview">总览</a>
+      <a href="../architecture.html" data-i18n="nav.core">执行核心</a>
+      <a href="../training.html" data-i18n="nav.training">训练</a>
+      <a href="../reliability.html" data-i18n="nav.reliability">可靠性</a>
+      <a href="../demos.html" data-i18n="nav.demos">Demo</a>
+      <a href="../research-context.html" data-i18n="nav.research">研究位置</a>
+      <a href="../reproduce.html" data-i18n="nav.reproduce">复现</a>
+      <button id="lang-toggle" class="lang-btn" type="button" data-i18n="nav.langToggle" data-i18n-attr="aria-label:nav.langToggleAria">English</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ======================= title ======================= -->
+  <section class="band band--surface">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="clouds.kicker">Demo · 并行图形</span>
+        <h1 data-i18n="clouds.h1">Fast 2D Clouds：1280x720 静态帧</h1>
+        <p class="lede" data-i18n="clouds.lede">10,740,326,400 个 lane-op（约 11,654 op/pixel）渲染出的云层帧，与精确整数参考逐像素完全一致：差异像素 0，最大通道差 0。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= body with toc ======================= -->
+  <section class="band">
+    <div class="wrap">
+      <div class="with-toc">
+        <nav class="toc" aria-label="本页目录" data-i18n-attr="aria-label:ui.toc">
+          <strong data-i18n="ui.toc">本页目录</strong>
+          <ol>
+            <li><a href="#output" data-i18n="clouds.toc.output">真实输出</a></li>
+            <li><a href="#numbers" data-i18n="clouds.toc.numbers">关键数字</a></li>
+            <li><a href="#isa" data-i18n="clouds.toc.isa">shader 到 ISA 的映射</a></li>
+            <li><a href="#neural" data-i18n="clouds.toc.neural">Neural CPU 承担什么</a></li>
+            <li><a href="#external" data-i18n="clouds.toc.external">外部运行时承担什么</a></li>
+            <li><a href="#audit" data-i18n="clouds.toc.audit">审计模式</a></li>
+            <li><a href="#run" data-i18n="clouds.toc.run">运行方法</a></li>
+            <li><a href="#limits" data-i18n="clouds.toc.limits">限制与不声称</a></li>
+          </ol>
+        </nav>
+
+        <div>
+          <!-- ============ real output ============ -->
+          <section id="output" style="margin-bottom:40px">
+            <h2 data-i18n="clouds.out.h">真实输出：可检查的最终帧</h2>
+            <div class="note">
+              <p><span data-i18n="clouds.source.p">视觉算法基于 Sinuosity 于 2014 年发布的 ShaderToy《2D Fast Clouds》。本项目保留其双 fBm、8 个 octave、curl 旋转、smoothstep 与颜色混合结构，并将浮点 shader 重写为可由本项目 16-bit ISA 执行和逐步审计的定点版本。</span> <a href="https://www.shadertoy.com/view/XsjSRt" target="_blank" rel="noopener noreferrer" data-i18n="clouds.source.link">查看 ShaderToy 原作 →</a></p>
+            </div>
+            <figure class="figure">
+              <img class="ratio-clouds" src="../../results/clouds/fast_clouds_neural.png" alt="Neural CPU v3 渲染的 1280x720 二维云层静态帧" data-i18n-attr="alt:ui.mediaAltClouds">
+              <figcaption data-i18n="clouds.out.cap">Neural CPU 渲染的最终帧（1280x720）。与精确整数参考逐像素一致：差异像素 0，最大通道差 0。</figcaption>
+              <p class="figure-actions"><a href="../../results/clouds/fast_clouds_neural.png" data-i18n="ui.viewFullSize">查看原尺寸图片</a></p>
+            </figure>
+            <p data-i18n="clouds.out.p2">输入纹理（下图）是仓库内置的 256x256 Gray Noise Medium，以只读纹理 RAM（含 mip 存储）的形式提供；纹理寻址、repeat、mipmap 坐标与插值全部由 ISA 指令计算。</p>
+            <figure class="figure">
+              <img src="../../assets/gray_noise_medium.png" width="256" height="256" style="aspect-ratio:1/1;width:100%;max-width:256px" alt="项目使用的 256x256 Gray Noise Medium 纹理" data-i18n-attr="alt:ui.mediaAltNoise">
+              <figcaption data-i18n="clouds.out.noiseCap">256x256 Gray Noise Medium —— shader 的唯一纹理输入。</figcaption>
+            </figure>
+          </section>
+
+          <!-- ============ key numbers ============ -->
+          <section id="numbers" style="margin-bottom:40px">
+            <h2 data-i18n="clouds.num.h">关键数字</h2>
+            <div class="metric-grid">
+              <div class="metric"><span class="num">10,740,326,400</span><span class="lbl" data-i18n="clouds.num.m1">lane-op 总数</span></div>
+              <div class="metric"><span class="num">≈ 11,654</span><span class="lbl" data-i18n="clouds.num.m2">平均每像素 lane-op</span></div>
+              <div class="metric"><span class="num">1280x720</span><span class="lbl" data-i18n="clouds.num.m3">输出帧尺寸</span></div>
+              <div class="metric"><span class="num ok">0</span><span class="lbl" data-i18n="clouds.num.m4">与精确整数参考的差异像素</span></div>
+              <div class="metric"><span class="num ok">0</span><span class="lbl" data-i18n="clouds.num.m5">最大通道差</span></div>
+              <div class="metric"><span class="num ok">0</span><span class="lbl" data-i18n="clouds.num.m6">register / flag / control error</span></div>
+            </div>
+          </section>
+
+          <!-- ============ isa mapping ============ -->
+          <section id="isa" style="margin-bottom:40px">
+            <h2 data-i18n="clouds.isa.h">shader 怎样映射到 ISA</h2>
+            <p data-i18n="clouds.isa.p1">原 GLSL 的结构被完整保留：双 fBm、8 个 octave、curl 旋转、smoothstep 与颜色混合。浮点运算被编译为定点指令（Q17.15 坐标、Q0.8 颜色）；坐标变换、fBm 累加、smoothstep 与颜色混合只使用训练过的 ADD/ADC/SUB/SBC/AND/OR/XOR/SHL/SHR/CMP。</p>
+            <p data-i18n="clouds.isa.p2">纹理读取严格走 LOAD → RAM → MOVI：repeat、mipmap 坐标与双线性插值由 Neural CPU 指令计算，RAM 只返回字节。torch.where 只承担 SIMD 分支路由，其条件来自 Neural CPU 的 CMP flags。</p>
+            <p data-i18n="clouds.isa.p3">1280x720 = 921,600 个像素彼此独立，同一条 shader 指令在所有像素上形成大 batch；每一个“某条 lane 上执行一次指令”记为一个 lane-op。这就是总量达到 10.7B、且能被 GPU 高效执行的原因。</p>
+          </section>
+
+          <!-- ============ neural cpu ============ -->
+          <section id="neural" style="margin-bottom:40px">
+            <h2><span class="tag tag--neural" data-i18n="clouds.neural.tag">由 Neural CPU 执行</span></h2>
+            <ul class="prose">
+              <li data-i18n="clouds.neural.l1">双 fBm 与 8 个 octave 的定点累加；</li>
+              <li data-i18n="clouds.neural.l2">curl 旋转；</li>
+              <li data-i18n="clouds.neural.l3">smoothstep 与颜色混合；</li>
+              <li data-i18n="clouds.neural.l4">纹理寻址、repeat、mipmap 坐标与双线性插值；</li>
+              <li data-i18n="clouds.neural.l5">驱动分支路由的 CMP flags。</li>
+            </ul>
+          </section>
+
+          <!-- ============ external runtime ============ -->
+          <section id="external" style="margin-bottom:40px">
+            <h2><span class="tag tag--external" data-i18n="clouds.external.tag">由外部运行时承担</span></h2>
+            <ul class="prose">
+              <li data-i18n="clouds.external.l1">整数像素坐标与时间常量；</li>
+              <li data-i18n="clouds.external.l2">只读纹理 RAM 与 mip 存储（只按地址返回字节）；</li>
+              <li data-i18n="clouds.external.l3">SIMD lane 调度与分支路由（torch.where）；</li>
+              <li data-i18n="clouds.external.l4">framebuffer。</li>
+            </ul>
+          </section>
+
+          <!-- ============ audit modes ============ -->
+          <section id="audit" style="margin-bottom:40px">
+            <h2 data-i18n="clouds.audit.h">审计模式</h2>
+            <div class="table-scroll">
+              <table class="spec">
+                <thead>
+                  <tr>
+                    <th data-i18n="clouds.audit.th1">模式</th>
+                    <th data-i18n="clouds.audit.th2">含义</th>
+                    <th data-i18n="clouds.audit.th3">Config 开关</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td data-i18n="clouds.audit.r1name">神经渲染 + 审计（默认）</td>
+                    <td data-i18n="clouds.audit.r1desc">渲染整帧并统计 register、flag、control 三类错误（本次均为 0）；最终帧再与精确整数参考逐像素对比，差异像素 0，最大通道差 0。</td>
+                    <td class="mono">REFERENCE_ONLY = False</td>
+                  </tr>
+                  <tr>
+                    <td data-i18n="clouds.audit.r2name">精确整数参考</td>
+                    <td data-i18n="clouds.audit.r2desc">只生成精确整数参考并核算操作量，不加载神经权重。</td>
+                    <td class="mono">REFERENCE_ONLY = True</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- ============ how to run ============ -->
+          <section id="run" style="margin-bottom:40px">
+            <h2 data-i18n="clouds.run.h">运行方法</h2>
+            <div class="codeblock"><pre><code>python scripts/render_neural_cpu_fast_clouds_frame.py</code></pre></div>
+            <p data-i18n="clouds.run.p1">所有参数位于脚本顶部的 Config，最常改的几项：</p>
+            <div class="table-scroll">
+              <table class="spec">
+                <thead>
+                  <tr>
+                    <th data-i18n="clouds.run.th1">参数</th>
+                    <th data-i18n="clouds.run.th2">默认值</th>
+                    <th data-i18n="clouds.run.th3">含义</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="mono">WIDTH</td>
+                    <td class="mono">1280</td>
+                    <td data-i18n="clouds.run.c1">输出帧宽（像素）。</td>
+                  </tr>
+                  <tr>
+                    <td class="mono">HEIGHT</td>
+                    <td class="mono">720</td>
+                    <td data-i18n="clouds.run.c2">输出帧高（像素）。</td>
+                  </tr>
+                  <tr>
+                    <td class="mono">TIME_SECONDS</td>
+                    <td class="mono">32.95</td>
+                    <td data-i18n="clouds.run.c3">shader 的时间常量 t。</td>
+                  </tr>
+                  <tr>
+                    <td class="mono">TILE_PIXELS</td>
+                    <td class="mono">65_536</td>
+                    <td data-i18n="clouds.run.c4">每个 tile 处理的像素 lane 数。</td>
+                  </tr>
+                  <tr>
+                    <td class="mono">INTERPOLATION_BITS</td>
+                    <td class="mono">7</td>
+                    <td data-i18n="clouds.run.c5">纹理插值的定点精度位数。</td>
+                  </tr>
+                  <tr>
+                    <td class="mono">REFERENCE_ONLY</td>
+                    <td class="mono">False</td>
+                    <td data-i18n="clouds.run.c6">只生成精确整数参考，不运行神经渲染。</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <h3 data-i18n="clouds.run.filesH">相关文件</h3>
+            <dl class="facts">
+              <dt data-i18n="clouds.run.fScript">脚本</dt>
+              <dd class="mono"><a href="../../scripts/render_neural_cpu_fast_clouds_frame.py">scripts/render_neural_cpu_fast_clouds_frame.py</a></dd>
+              <dt data-i18n="clouds.run.fTex">输入纹理</dt>
+              <dd class="mono"><a href="../../assets/gray_noise_medium.png">assets/gray_noise_medium.png</a></dd>
+              <dt data-i18n="clouds.run.fOut">输出图像</dt>
+              <dd class="mono"><a href="../../results/clouds/fast_clouds_neural.png">results/clouds/fast_clouds_neural.png</a></dd>
+              <dt data-i18n="clouds.run.fCpu">Neural CPU 权重</dt>
+              <dd class="mono"><a href="../../weights/neural_cpu_v3_best_balanced_model.pt">weights/neural_cpu_v3_best_balanced_model.pt</a></dd>
+            </dl>
+          </section>
+
+          <!-- ============ limitations ============ -->
+          <section id="limits">
+            <h2 data-i18n="clouds.limits.h">限制与不声称的内容</h2>
+            <ul class="prose">
+              <li data-i18n="clouds.limits.l1">本帧未使用以下捷径：乘法 LUT、三角函数 LUT、由 PyTorch 代算的 shader 中间量、低分辨率放大。1280x720 中的每个像素都由 ISA 指令算出。</li>
+              <li><span data-i18n="clouds.limits.l2">逐像素一致的结论针对这一输出帧与上述参数成立，不是“任意输入永不出错”的保证；全局单步错误率的口径见可靠性页。</span> <a href="../reliability.html" data-i18n="clouds.limits.l2link">可靠性页 →</a></li>
+              <li data-i18n="clouds.limits.l3">本页报告的是一张静态帧的渲染审计，不构成实时渲染性能声明。</li>
+            </ul>
+          </section>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= pager ======================= -->
+  <div class="wrap band--tight">
+    <p style="margin-bottom:18px"><a href="../demos.html"><span aria-hidden="true">← </span><span data-i18n="ui.backToDemos">返回 Demo 总览</span></a></p>
+    <nav class="pager" aria-label="Pager">
+      <a class="prev" href="mnist.html"><span class="dir" data-i18n="ui.prev">上一页</span><span class="name" data-i18n="clouds.pager.prevName">MNIST CNN</span></a>
+      <a class="next" href="rubiks.html"><span class="dir" data-i18n="ui.next">下一页</span><span class="name" data-i18n="clouds.pager.nextName">3x3 Rubik's Cube</span></a>
+    </nav>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <p data-i18n="footer.project">Neural CPU v3 —— 从输入输出监督训练得到的 16-bit 神经执行核心。</p>
+        <p data-i18n="footer.boundary">神经网络负责指令语义对应的状态变换；PC、取指、64 KiB RAM 与外部调度保持精确实现。</p>
+      </div>
+      <div>
+        <p><strong data-i18n="footer.legacy">早期版本（legacy）</strong></p>
+        <p><a href="../../../legacy/README_zh.md" data-i18n="footer.legacyZh">legacy 中文 README</a><br>
+           <a href="../../../legacy/README_en.md" data-i18n="footer.legacyEn">legacy English README</a></p>
+      </div>
+    </div>
+    <p class="small" style="margin-top:16px" data-i18n="footer.note">本站为研究项目静态页面，所有数字均可在仓库脚本与结果中核验。</p>
+  </div>
+</footer>
+
+<script src="../i18n.js"></script>
+<script>
+window.I18N_PAGE = {
+  zh: {
+    "clouds.title": "Fast 2D Clouds — Neural CPU v3",
+    "clouds.desc": "Neural CPU v3 渲染的 1280x720 Fast 2D Clouds 静态帧：10,740,326,400 个 lane-op，与精确整数参考逐像素完全一致（差异像素 0，最大通道差 0）。",
+    "clouds.kicker": "Demo · 并行图形",
+    "clouds.h1": "Fast 2D Clouds：1280x720 静态帧",
+    "clouds.lede": "10,740,326,400 个 lane-op（约 11,654 op/pixel）渲染出的云层帧，与精确整数参考逐像素完全一致：差异像素 0，最大通道差 0。",
+    "clouds.toc.output": "真实输出",
+    "clouds.toc.numbers": "关键数字",
+    "clouds.toc.isa": "shader 到 ISA 的映射",
+    "clouds.toc.neural": "Neural CPU 承担什么",
+    "clouds.toc.external": "外部运行时承担什么",
+    "clouds.toc.audit": "审计模式",
+    "clouds.toc.run": "运行方法",
+    "clouds.toc.limits": "限制与不声称",
+    "clouds.out.h": "真实输出：可检查的最终帧",
+    "clouds.source.p": "视觉算法基于 Sinuosity 于 2014 年发布的 ShaderToy《2D Fast Clouds》。本项目保留其双 fBm、8 个 octave、curl 旋转、smoothstep 与颜色混合结构，并将浮点 shader 重写为可由本项目 16-bit ISA 执行和逐步审计的定点版本。",
+    "clouds.source.link": "查看 ShaderToy 原作 →",
+    "clouds.out.cap": "Neural CPU 渲染的最终帧（1280x720）。与精确整数参考逐像素一致：差异像素 0，最大通道差 0。",
+    "clouds.out.p2": "输入纹理（下图）是仓库内置的 256x256 Gray Noise Medium，以只读纹理 RAM（含 mip 存储）的形式提供；纹理寻址、repeat、mipmap 坐标与插值全部由 ISA 指令计算。",
+    "clouds.out.noiseCap": "256x256 Gray Noise Medium —— shader 的唯一纹理输入。",
+    "clouds.num.h": "关键数字",
+    "clouds.num.m1": "lane-op 总数",
+    "clouds.num.m2": "平均每像素 lane-op",
+    "clouds.num.m3": "输出帧尺寸",
+    "clouds.num.m4": "与精确整数参考的差异像素",
+    "clouds.num.m5": "最大通道差",
+    "clouds.num.m6": "register / flag / control error",
+    "clouds.isa.h": "shader 怎样映射到 ISA",
+    "clouds.isa.p1": "原 GLSL 的结构被完整保留：双 fBm、8 个 octave、curl 旋转、smoothstep 与颜色混合。浮点运算被编译为定点指令（Q17.15 坐标、Q0.8 颜色）；坐标变换、fBm 累加、smoothstep 与颜色混合只使用训练过的 ADD/ADC/SUB/SBC/AND/OR/XOR/SHL/SHR/CMP。",
+    "clouds.isa.p2": "纹理读取严格走 LOAD → RAM → MOVI：repeat、mipmap 坐标与双线性插值由 Neural CPU 指令计算，RAM 只返回字节。torch.where 只承担 SIMD 分支路由，其条件来自 Neural CPU 的 CMP flags。",
+    "clouds.isa.p3": "1280x720 = 921,600 个像素彼此独立，同一条 shader 指令在所有像素上形成大 batch；每一个“某条 lane 上执行一次指令”记为一个 lane-op。这就是总量达到 10.7B、且能被 GPU 高效执行的原因。",
+    "clouds.neural.tag": "由 Neural CPU 执行",
+    "clouds.neural.l1": "双 fBm 与 8 个 octave 的定点累加；",
+    "clouds.neural.l2": "curl 旋转；",
+    "clouds.neural.l3": "smoothstep 与颜色混合；",
+    "clouds.neural.l4": "纹理寻址、repeat、mipmap 坐标与双线性插值；",
+    "clouds.neural.l5": "驱动分支路由的 CMP flags。",
+    "clouds.external.tag": "由外部运行时承担",
+    "clouds.external.l1": "整数像素坐标与时间常量；",
+    "clouds.external.l2": "只读纹理 RAM 与 mip 存储（只按地址返回字节）；",
+    "clouds.external.l3": "SIMD lane 调度与分支路由（torch.where）；",
+    "clouds.external.l4": "framebuffer。",
+    "clouds.audit.h": "审计模式",
+    "clouds.audit.th1": "模式",
+    "clouds.audit.th2": "含义",
+    "clouds.audit.th3": "Config 开关",
+    "clouds.audit.r1name": "神经渲染 + 审计（默认）",
+    "clouds.audit.r1desc": "渲染整帧并统计 register、flag、control 三类错误（本次均为 0）；最终帧再与精确整数参考逐像素对比，差异像素 0，最大通道差 0。",
+    "clouds.audit.r2name": "精确整数参考",
+    "clouds.audit.r2desc": "只生成精确整数参考并核算操作量，不加载神经权重。",
+    "clouds.run.h": "运行方法",
+    "clouds.run.p1": "所有参数位于脚本顶部的 Config，最常改的几项：",
+    "clouds.run.th1": "参数",
+    "clouds.run.th2": "默认值",
+    "clouds.run.th3": "含义",
+    "clouds.run.c1": "输出帧宽（像素）。",
+    "clouds.run.c2": "输出帧高（像素）。",
+    "clouds.run.c3": "shader 的时间常量 t。",
+    "clouds.run.c4": "每个 tile 处理的像素 lane 数。",
+    "clouds.run.c5": "纹理插值的定点精度位数。",
+    "clouds.run.c6": "只生成精确整数参考，不运行神经渲染。",
+    "clouds.run.filesH": "相关文件",
+    "clouds.run.fScript": "脚本",
+    "clouds.run.fTex": "输入纹理",
+    "clouds.run.fOut": "输出图像",
+    "clouds.run.fCpu": "Neural CPU 权重",
+    "clouds.limits.h": "限制与不声称的内容",
+    "clouds.limits.l1": "本帧未使用以下捷径：乘法 LUT、三角函数 LUT、由 PyTorch 代算的 shader 中间量、低分辨率放大。1280x720 中的每个像素都由 ISA 指令算出。",
+    "clouds.limits.l2": "逐像素一致的结论针对这一输出帧与上述参数成立，不是“任意输入永不出错”的保证；全局单步错误率的口径见可靠性页。",
+    "clouds.limits.l2link": "可靠性页 →",
+    "clouds.limits.l3": "本页报告的是一张静态帧的渲染审计，不构成实时渲染性能声明。",
+    "clouds.pager.prevName": "MNIST CNN",
+    "clouds.pager.nextName": "3x3 Rubik's Cube"
+  },
+  en: {
+    "clouds.title": "Fast 2D Clouds — Neural CPU v3",
+    "clouds.desc": "A 1280x720 Fast 2D Clouds still frame rendered by Neural CPU v3: 10,740,326,400 lane-ops, pixel-identical to the exact integer reference (0 differing pixels, max channel difference 0).",
+    "clouds.kicker": "Demo · Parallel graphics",
+    "clouds.h1": "Fast 2D Clouds: a 1280x720 still frame",
+    "clouds.lede": "10,740,326,400 lane-ops (about 11,654 per pixel) render this cloud frame pixel-identical to the exact integer reference: 0 differing pixels, max channel difference 0.",
+    "clouds.toc.output": "Real output",
+    "clouds.toc.numbers": "Key numbers",
+    "clouds.toc.isa": "Mapping the shader to the ISA",
+    "clouds.toc.neural": "What the Neural CPU computes",
+    "clouds.toc.external": "What the external runtime does",
+    "clouds.toc.audit": "Audit modes",
+    "clouds.toc.run": "How to run",
+    "clouds.toc.limits": "Limitations & non-claims",
+    "clouds.out.h": "Real output: the inspectable final frame",
+    "clouds.source.p": "The visual algorithm is based on Sinuosity's 2014 ShaderToy work, “2D Fast Clouds.” This project preserves its double-fBm, eight-octave, curl-rotation, smoothstep and color-blending structure, while rewriting the floating-point shader as fixed-point code executable and auditable through this project's 16-bit ISA.",
+    "clouds.source.link": "Original on ShaderToy →",
+    "clouds.out.cap": "The final frame rendered by the Neural CPU (1280x720). Pixel-identical to the exact integer reference: 0 differing pixels, max channel difference 0.",
+    "clouds.out.p2": "The input texture (below) is the repository's 256x256 Gray Noise Medium, provided as read-only texture RAM with mip storage; texture addressing, repeat, mipmap coordinates and interpolation are all computed by ISA instructions.",
+    "clouds.out.noiseCap": "256x256 Gray Noise Medium — the shader's only texture input.",
+    "clouds.num.h": "Key numbers",
+    "clouds.num.m1": "total lane-ops",
+    "clouds.num.m2": "average lane-ops per pixel",
+    "clouds.num.m3": "output frame size",
+    "clouds.num.m4": "differing pixels vs the exact integer reference",
+    "clouds.num.m5": "max channel difference",
+    "clouds.num.m6": "register / flag / control errors",
+    "clouds.isa.h": "How the shader maps to the ISA",
+    "clouds.isa.p1": "The original GLSL structure is preserved: double fBm, 8 octaves, curl rotation, smoothstep and color blending. Floating-point math is compiled into fixed-point instructions (Q17.15 coordinates, Q0.8 colors); coordinate transforms, fBm accumulation, smoothstep and color blending use only the trained ADD/ADC/SUB/SBC/AND/OR/XOR/SHL/SHR/CMP.",
+    "clouds.isa.p2": "Texture reads strictly follow LOAD → RAM → MOVI: repeat, mipmap coordinates and bilinear interpolation are computed by Neural CPU instructions while RAM only returns bytes. torch.where only performs SIMD branch routing, driven by the Neural CPU's CMP flags.",
+    "clouds.isa.p3": "The 1280x720 = 921,600 pixels are mutually independent, so the same shader instruction forms a large batch across all pixels; each 'one instruction executed on one lane' counts as one lane-op. That is why the total reaches 10.7B and why a GPU can execute it efficiently.",
+    "clouds.neural.tag": "Executed by the Neural CPU",
+    "clouds.neural.l1": "double fBm and its 8 octaves of fixed-point accumulation;",
+    "clouds.neural.l2": "curl rotation;",
+    "clouds.neural.l3": "smoothstep and color blending;",
+    "clouds.neural.l4": "texture addressing, repeat, mipmap coordinates and bilinear interpolation;",
+    "clouds.neural.l5": "the CMP flags that drive branch routing.",
+    "clouds.external.tag": "Done by the external runtime",
+    "clouds.external.l1": "integer pixel coordinates and time constants;",
+    "clouds.external.l2": "read-only texture RAM with mip storage (returns bytes by address only);",
+    "clouds.external.l3": "SIMD lane scheduling and branch routing (torch.where);",
+    "clouds.external.l4": "the framebuffer.",
+    "clouds.audit.h": "Audit modes",
+    "clouds.audit.th1": "Mode",
+    "clouds.audit.th2": "Meaning",
+    "clouds.audit.th3": "Config switch",
+    "clouds.audit.r1name": "Neural render + audit (default)",
+    "clouds.audit.r1desc": "Renders the full frame while counting register, flag and control errors (all 0 in this run); the final frame is then compared pixel by pixel against the exact integer reference: 0 differing pixels, max channel difference 0.",
+    "clouds.audit.r2name": "Exact integer reference",
+    "clouds.audit.r2desc": "Generates only the exact integer reference and accounts the operation count, without loading the neural weights.",
+    "clouds.run.h": "How to run",
+    "clouds.run.p1": "All parameters live in the Config block at the top of the script. The most commonly changed ones:",
+    "clouds.run.th1": "Parameter",
+    "clouds.run.th2": "Default",
+    "clouds.run.th3": "Meaning",
+    "clouds.run.c1": "output frame width (pixels).",
+    "clouds.run.c2": "output frame height (pixels).",
+    "clouds.run.c3": "the shader time constant t.",
+    "clouds.run.c4": "pixel lanes processed per tile.",
+    "clouds.run.c5": "fixed-point precision bits for texture interpolation.",
+    "clouds.run.c6": "generate only the exact integer reference, skipping neural rendering.",
+    "clouds.run.filesH": "Related files",
+    "clouds.run.fScript": "Script",
+    "clouds.run.fTex": "Input texture",
+    "clouds.run.fOut": "Output image",
+    "clouds.run.fCpu": "Neural CPU weights",
+    "clouds.limits.h": "Limitations & non-claims",
+    "clouds.limits.l1": "None of the following shortcuts were used for this frame: multiply LUTs, trigonometry LUTs, shader intermediates precomputed by PyTorch, or upscaling from a low resolution. Every pixel in the 1280x720 frame is produced by ISA instructions.",
+    "clouds.limits.l2": "Pixel-exact agreement holds for this output frame and the parameters above; it is not a guarantee of error-free output for arbitrary inputs. See the reliability page for the global single-step error-rate criteria.",
+    "clouds.limits.l2link": "Reliability page →",
+    "clouds.limits.l3": "This page reports the render audit of one still frame; it makes no claim about real-time rendering performance.",
+    "clouds.pager.prevName": "MNIST CNN",
+    "clouds.pager.nextName": "3x3 Rubik's Cube"
+  }
+};
+</script>
+<script src="../site.js"></script>
+</body>
+</html>

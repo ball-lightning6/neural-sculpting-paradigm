@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title data-i18n="arch.title">执行核心 — Neural CPU v3</title>
+<meta name="description" content="Neural CPU v3 执行核心：51 → 1024 × 3 → 39 的 MLP 状态转移函数、输入输出 bit 布局、16-bit ISA 四种编码格式与 32 个 opcode、LOAD 微操作序列与 lane-op 并行模型。" data-i18n-attr="content:arch.desc">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="skip-link" href="#main" data-i18n="nav.skip">跳到正文</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">Neural CPU v3 <span class="brand-tag">16-bit ISA</span></a>
+    <button id="nav-toggle" class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links" data-i18n="nav.menu" data-i18n-attr="aria-label:nav.menuAria">菜单</button>
+    <nav class="nav-links" id="nav-links" hidden aria-label="Main">
+      <a href="../index.html" data-i18n="nav.overview">总览</a>
+      <a href="architecture.html" data-i18n="nav.core">执行核心</a>
+      <a href="training.html" data-i18n="nav.training">训练</a>
+      <a href="reliability.html" data-i18n="nav.reliability">可靠性</a>
+      <a href="demos.html" data-i18n="nav.demos">Demo</a>
+      <a href="research-context.html" data-i18n="nav.research">研究位置</a>
+      <a href="reproduce.html" data-i18n="nav.reproduce">复现</a>
+      <button id="lang-toggle" class="lang-btn" type="button" data-i18n="nav.langToggle" data-i18n-attr="aria-label:nav.langToggleAria">English</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ======================= page header ======================= -->
+  <section class="band band--surface" aria-labelledby="page-title">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="nav.core">执行核心</span>
+        <h1 id="page-title" data-i18n="arch.h1">状态转移网络与 16-bit ISA</h1>
+        <p data-i18n="arch.lede">神经网络负责指令语义对应的状态变换——不是某个演示任务的最终答案。本页给出网络的输入输出边界、它学习的 16-bit 指令集，以及它与外部精确组件的分工。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= content with toc ======================= -->
+  <section class="band">
+    <div class="wrap with-toc">
+
+      <nav class="toc" aria-label="本页目录" data-i18n-attr="aria-label:ui.toc">
+        <strong data-i18n="ui.toc">本页目录</strong>
+        <ol>
+          <li><a href="#arch-shape" data-i18n="arch.shape.h2">主结构：51 → 1024 × 3 → 39</a></li>
+          <li><a href="#arch-io" data-i18n="arch.io.h2">输入 / 输出 bit 布局</a></li>
+          <li><a href="#arch-state" data-i18n="arch.state.h2">寄存器、标志位与控制信号</a></li>
+          <li><a href="#arch-exact" data-i18n="arch.exact.h2">为什么 PC 与 RAM 保持精确</a></li>
+          <li><a href="#arch-formats" data-i18n="arch.formats.h2">四种 16-bit 编码格式</a></li>
+          <li><a href="#arch-opcodes" data-i18n="arch.opcodes.h2">32 个 opcode：分组与完整表</a></li>
+          <li><a href="#arch-load" data-i18n="arch.load.h2">LOAD → RAM → 内部 MOVI</a></li>
+          <li><a href="#arch-lanes" data-i18n="arch.lanes.h2">lane-op 与并行模型</a></li>
+          <li><a href="#arch-limit" data-i18n="arch.limit.h2">设计限制：网络大小并非最小值</a></li>
+        </ol>
+      </nav>
+
+      <div>
+
+        <!-- 1. main shape -->
+        <section id="arch-shape" aria-labelledby="arch-shape-h" style="margin-bottom:40px">
+          <div class="section-head">
+            <span class="kicker">01</span>
+            <h2 id="arch-shape-h" data-i18n="arch.shape.h2">主结构：51 → 1024 × 3 → 39</h2>
+          </div>
+          <div class="mlp-shape">
+            <div class="mlp-stage">
+              <div class="stage-num">51</div>
+              <div class="stage-lbl" data-i18n="arch.shape.in">输入 bit · 16-bit 指令 + 标志位 + 寄存器</div>
+            </div>
+            <span class="mlp-arrow" aria-hidden="true">→</span>
+            <div class="mlp-stage">
+              <div class="stage-num">1024 × 3</div>
+              <div class="stage-lbl" data-i18n="arch.shape.hidden">线性隐藏层 · GELU + LayerNorm · dropout 0</div>
+            </div>
+            <span class="mlp-arrow" aria-hidden="true">→</span>
+            <div class="mlp-stage">
+              <div class="stage-num">39</div>
+              <div class="stage-lbl" data-i18n="arch.shape.out">输出 bit · 下一状态 + 控制信号</div>
+            </div>
+          </div>
+          <p class="prose" data-i18n="arch.shape.p">每次调用输入一条 16-bit 指令和当前神经状态，输出下一时刻的寄存器、标志位与控制信号。隐藏结构为 3 个 1024 宽线性层，每层使用 GELU 与 LayerNorm，dropout 为 0；参数量 2,198,567。</p>
+        </section>
+
+        <!-- 2. input / output bit layout -->
+        <section id="arch-io" aria-labelledby="arch-io-h" style="margin-bottom:40px">
+          <div class="section-head">
+            <span class="kicker">02</span>
+            <h2 id="arch-io-h" data-i18n="arch.io.h2">输入 / 输出 bit 布局</h2>
+          </div>
+          <h3><span class="tag tag--neural" data-i18n="arch.io.inTag">输入 · 51 bit</span></h3>
+          <div class="bitrow">
+            <span class="bit bit--instr" style="flex-grow:16"><span data-i18n="arch.io.instr">指令</span><small>16 bit</small></span>
+            <span class="bit bit--flag">ZF<small>1 bit</small></span>
+            <span class="bit bit--flag">GF<small>1 bit</small></span>
+            <span class="bit bit--flag">CF<small>1 bit</small></span>
+            <span class="bit bit--reg" style="flex-grow:8">R0<small>8 bit</small></span>
+            <span class="bit bit--reg" style="flex-grow:8">R1<small>8 bit</small></span>
+            <span class="bit bit--reg" style="flex-grow:8">R2<small>8 bit</small></span>
+            <span class="bit bit--reg" style="flex-grow:8">R3<small>8 bit</small></span>
+          </div>
+          <p class="small muted" data-i18n="arch.io.inCap">51 = 16（指令）+ 3（标志位）+ 32（4 个 8-bit 寄存器）</p>
+          <h3><span class="tag tag--neural" data-i18n="arch.io.outTag">输出 · 39 bit</span></h3>
+          <div class="bitrow">
+            <span class="bit bit--flag">ZF′<small>1 bit</small></span>
+            <span class="bit bit--flag">GF′<small>1 bit</small></span>
+            <span class="bit bit--flag">CF′<small>1 bit</small></span>
+            <span class="bit bit--reg" style="flex-grow:8">R0′<small>8 bit</small></span>
+            <span class="bit bit--reg" style="flex-grow:8">R1′<small>8 bit</small></span>
+            <span class="bit bit--reg" style="flex-grow:8">R2′<small>8 bit</small></span>
+            <span class="bit bit--reg" style="flex-grow:8">R3′<small>8 bit</small></span>
+            <span class="bit bit--ctrl">memory_read<small>1 bit</small></span>
+            <span class="bit bit--ctrl">memory_write<small>1 bit</small></span>
+            <span class="bit bit--ctrl">branch_taken<small>1 bit</small></span>
+            <span class="bit bit--ctrl">halt<small>1 bit</small></span>
+          </div>
+          <p class="small muted" data-i18n="arch.io.outCap">39 = 3（下一标志位）+ 32（下一寄存器）+ 4（控制信号）；′ 表示下一时刻。</p>
+        </section>
+
+        <!-- 3. registers / flags / control signals -->
+        <section id="arch-state" aria-labelledby="arch-state-h" style="margin-bottom:40px">
+          <div class="section-head">
+            <span class="kicker">03</span>
+            <h2 id="arch-state-h" data-i18n="arch.state.h2">寄存器、标志位与控制信号</h2>
+          </div>
+          <div class="grid-3">
+            <div>
+              <h3 data-i18n="arch.state.regH">寄存器 R0–R3</h3>
+              <p data-i18n="arch.state.regP">4 个 uint8 寄存器，共 32 bit，是神经状态的主体；每次调用的输入与输出都包含它们。</p>
+            </div>
+            <div>
+              <h3 data-i18n="arch.state.flagH">标志位 ZF / GF / CF</h3>
+              <p data-i18n="arch.state.flagP">3 bit 标志，与寄存器一起构成神经状态；每次状态转移都会给出下一时刻的标志值。</p>
+            </div>
+            <div>
+              <h3 data-i18n="arch.state.ctrlH">控制信号</h3>
+              <p data-i18n="arch.state.ctrlP">memory_read、memory_write、branch_taken、halt 共 4 bit，只出现在输出侧，用来驱动外部精确组件；LOAD 的第一步就是神经核心发出 memory_read。</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- 4. why PC and RAM stay exact -->
+        <section id="arch-exact" aria-labelledby="arch-exact-h" style="margin-bottom:40px">
+          <div class="section-head">
+            <span class="kicker">04</span>
+            <h2 id="arch-exact-h" data-i18n="arch.exact.h2">为什么 PC 与 RAM 保持精确</h2>
+          </div>
+          <p class="prose" data-i18n="arch.exact.p1">神经状态只有 4 个 uint8 寄存器 R0–R3 与标志位 ZF、GF、CF；16-bit PC 与 64 KiB uint8 RAM 是外部精确状态。PC、取指、地址访问与外部调度都由精确逻辑实现，不经过神经网络。</p>
+          <div class="note note--caution">
+            <p data-i18n="arch.exact.p2">内存不做成神经网络，原因不是“做不到”：本系统已经有明确的直接寻址。把 RAM 再替换成神经网络，只会增加不必要的不确定性和计算量，也不会帮助回答“指令状态转移能否被训练到极高精度”这个核心问题。</p>
+          </div>
+        </section>
+
+        <!-- 5. 16-bit encoding formats -->
+        <section id="arch-formats" aria-labelledby="arch-formats-h" style="margin-bottom:40px">
+          <div class="section-head">
+            <span class="kicker">05</span>
+            <h2 id="arch-formats-h" data-i18n="arch.formats.h2">四种 16-bit 编码格式</h2>
+          </div>
+          <p class="prose" data-i18n="arch.formats.p">每条指令定长 16 bit，按四种格式编码；opcode 字段占 5 bit，对应 32 个槽位。</p>
+          <div class="codeblock"><pre><code>RRR  = opcode[5] + rd[2] + ra[2] + rb[2] + reserved[5]
+RI8  = opcode[5] + rd[2] + reserved[1] + imm8[8]
+BR11 = opcode[5] + signed relative offset[11]
+JMPR = opcode[5] + ra[2] + reserved[9]</code></pre></div>
+        </section>
+
+        <!-- 6. opcode groups and full table -->
+        <section id="arch-opcodes" aria-labelledby="arch-opcodes-h" style="margin-bottom:40px">
+          <div class="section-head">
+            <span class="kicker">06</span>
+            <h2 id="arch-opcodes-h" data-i18n="arch.opcodes.h2">32 个 opcode：分组与完整表</h2>
+          </div>
+          <p class="prose" data-i18n="arch.opcodes.p">32 个 opcode 槽位按功能分为七组：</p>
+          <div class="opgroup">
+            <h3 data-i18n="arch.op.gMove">数据移动</h3>
+            <div class="opchips"><span class="opchip">MOV</span><span class="opchip">MOVI</span></div>
+          </div>
+          <div class="opgroup">
+            <h3 data-i18n="arch.op.gMem">内存</h3>
+            <div class="opchips"><span class="opchip">LOAD</span><span class="opchip">STORE</span></div>
+          </div>
+          <div class="opgroup">
+            <h3 data-i18n="arch.op.gArith">算术</h3>
+            <div class="opchips"><span class="opchip">ADD</span><span class="opchip">ADC</span><span class="opchip">SUB</span><span class="opchip">SBC</span><span class="opchip">INC</span><span class="opchip">DEC</span><span class="opchip">ADDI</span><span class="opchip">SUBI</span></div>
+          </div>
+          <div class="opgroup">
+            <h3 data-i18n="arch.op.gLogic">逻辑</h3>
+            <div class="opchips"><span class="opchip">AND</span><span class="opchip">OR</span><span class="opchip">XOR</span><span class="opchip">NOT</span><span class="opchip">SHL</span><span class="opchip">SHR</span></div>
+          </div>
+          <div class="opgroup">
+            <h3 data-i18n="arch.op.gCmp">比较</h3>
+            <div class="opchips"><span class="opchip">CMP</span><span class="opchip">CMPI</span></div>
+          </div>
+          <div class="opgroup">
+            <h3 data-i18n="arch.op.gBranch">分支</h3>
+            <div class="opchips"><span class="opchip">JMP</span><span class="opchip">JZ</span><span class="opchip">JNZ</span><span class="opchip">JG</span><span class="opchip">JL</span><span class="opchip">JC</span><span class="opchip">JNC</span><span class="opchip">JMPR</span></div>
+          </div>
+          <div class="opgroup">
+            <h3 data-i18n="arch.op.gSys">系统控制</h3>
+            <div class="opchips"><span class="opchip">NOP</span><span class="opchip">HALT</span><span class="opchip">RESERVED</span><span class="opchip">TRAP</span></div>
+          </div>
+          <div class="table-scroll">
+            <table class="spec">
+              <caption data-i18n="arch.op.tableCap">32 个 opcode 槽位与分组</caption>
+              <thead>
+                <tr><th>#</th><th>opcode</th><th data-i18n="arch.op.colGroup">分组</th></tr>
+              </thead>
+              <tbody>
+                <tr><td class="mono">0</td><td class="mono">NOP</td><td data-i18n="arch.op.gSys">系统控制</td></tr>
+                <tr><td class="mono">1</td><td class="mono">HALT</td><td data-i18n="arch.op.gSys">系统控制</td></tr>
+                <tr><td class="mono">2</td><td class="mono">MOV</td><td data-i18n="arch.op.gMove">数据移动</td></tr>
+                <tr><td class="mono">3</td><td class="mono">MOVI</td><td data-i18n="arch.op.gMove">数据移动</td></tr>
+                <tr><td class="mono">4</td><td class="mono">LOAD</td><td data-i18n="arch.op.gMem">内存</td></tr>
+                <tr><td class="mono">5</td><td class="mono">STORE</td><td data-i18n="arch.op.gMem">内存</td></tr>
+                <tr><td class="mono">6</td><td class="mono">ADD</td><td data-i18n="arch.op.gArith">算术</td></tr>
+                <tr><td class="mono">7</td><td class="mono">ADC</td><td data-i18n="arch.op.gArith">算术</td></tr>
+                <tr><td class="mono">8</td><td class="mono">SUB</td><td data-i18n="arch.op.gArith">算术</td></tr>
+                <tr><td class="mono">9</td><td class="mono">SBC</td><td data-i18n="arch.op.gArith">算术</td></tr>
+                <tr><td class="mono">10</td><td class="mono">INC</td><td data-i18n="arch.op.gArith">算术</td></tr>
+                <tr><td class="mono">11</td><td class="mono">DEC</td><td data-i18n="arch.op.gArith">算术</td></tr>
+                <tr><td class="mono">12</td><td class="mono">AND</td><td data-i18n="arch.op.gLogic">逻辑</td></tr>
+                <tr><td class="mono">13</td><td class="mono">OR</td><td data-i18n="arch.op.gLogic">逻辑</td></tr>
+                <tr><td class="mono">14</td><td class="mono">XOR</td><td data-i18n="arch.op.gLogic">逻辑</td></tr>
+                <tr><td class="mono">15</td><td class="mono">NOT</td><td data-i18n="arch.op.gLogic">逻辑</td></tr>
+                <tr><td class="mono">16</td><td class="mono">SHL</td><td data-i18n="arch.op.gLogic">逻辑</td></tr>
+                <tr><td class="mono">17</td><td class="mono">SHR</td><td data-i18n="arch.op.gLogic">逻辑</td></tr>
+                <tr><td class="mono">18</td><td class="mono">CMP</td><td data-i18n="arch.op.gCmp">比较</td></tr>
+                <tr><td class="mono">19</td><td class="mono">ADDI</td><td data-i18n="arch.op.gArith">算术</td></tr>
+                <tr><td class="mono">20</td><td class="mono">SUBI</td><td data-i18n="arch.op.gArith">算术</td></tr>
+                <tr><td class="mono">21</td><td class="mono">CMPI</td><td data-i18n="arch.op.gCmp">比较</td></tr>
+                <tr><td class="mono">22</td><td class="mono">JMP</td><td data-i18n="arch.op.gBranch">分支</td></tr>
+                <tr><td class="mono">23</td><td class="mono">JZ</td><td data-i18n="arch.op.gBranch">分支</td></tr>
+                <tr><td class="mono">24</td><td class="mono">JNZ</td><td data-i18n="arch.op.gBranch">分支</td></tr>
+                <tr><td class="mono">25</td><td class="mono">JG</td><td data-i18n="arch.op.gBranch">分支</td></tr>
+                <tr><td class="mono">26</td><td class="mono">JL</td><td data-i18n="arch.op.gBranch">分支</td></tr>
+                <tr><td class="mono">27</td><td class="mono">JC</td><td data-i18n="arch.op.gBranch">分支</td></tr>
+                <tr><td class="mono">28</td><td class="mono">JNC</td><td data-i18n="arch.op.gBranch">分支</td></tr>
+                <tr><td class="mono">29</td><td class="mono">JMPR</td><td data-i18n="arch.op.gBranch">分支</td></tr>
+                <tr><td class="mono">30</td><td class="mono">RESERVED</td><td data-i18n="arch.op.gSys">系统控制</td></tr>
+                <tr><td class="mono">31</td><td class="mono">TRAP</td><td data-i18n="arch.op.gSys">系统控制</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- 7. LOAD micro-op sequence -->
+        <section id="arch-load" aria-labelledby="arch-load-h" style="margin-bottom:40px">
+          <div class="section-head">
+            <span class="kicker">07</span>
+            <h2 id="arch-load-h" data-i18n="arch.load.h2">LOAD → RAM → 内部 MOVI</h2>
+          </div>
+          <p class="prose" data-i18n="arch.load.p">LOAD 分成两步完成，中间由精确的外部 RAM 返回字节：</p>
+          <ol class="flow">
+            <li>
+              <strong data-i18n="arch.load.s1h">神经核心发出 memory_read</strong>
+              <p data-i18n="arch.load.s1p">执行 LOAD 时，39 bit 输出中的 memory_read 置位，外部逻辑按地址访问 64 KiB RAM。</p>
+            </li>
+            <li>
+              <strong data-i18n="arch.load.s2h">外部 RAM 返回一个字节</strong>
+              <p data-i18n="arch.load.s2p">RAM 是精确组件，不经过任何神经计算。</p>
+            </li>
+            <li>
+              <strong data-i18n="arch.load.s3h">同一神经核心执行内部 MOVI rd, value</strong>
+              <p data-i18n="arch.load.s3p">返回的字节作为 value 写入目标寄存器 rd，LOAD 语义完成。</p>
+            </li>
+          </ol>
+        </section>
+
+        <!-- 8. lane-op and the parallelism model -->
+        <section id="arch-lanes" aria-labelledby="arch-lanes-h" style="margin-bottom:40px">
+          <div class="section-head">
+            <span class="kicker">08</span>
+            <h2 id="arch-lanes-h" data-i18n="arch.lanes.h2">lane-op 与并行模型</h2>
+          </div>
+          <div class="lanes">
+            <div class="lane-box">
+              <h3 data-i18n="arch.lanes.leftH">串行：一条依赖链</h3>
+              <div class="lane-chain">
+                <div class="node">t</div>
+                <div class="arrow" aria-hidden="true">↓</div>
+                <div class="node">t + 1</div>
+                <div class="arrow" aria-hidden="true">↓</div>
+                <div class="node">t + 2</div>
+                <div class="arrow" aria-hidden="true">↓</div>
+                <div class="node">t + 3</div>
+              </div>
+              <p class="lane-caption" data-i18n="arch.lanes.leftCap">单个程序内部，有依赖的指令必须顺序执行——上一步的输出状态就是下一步的输入。</p>
+            </div>
+            <div class="lane-box">
+              <h3 data-i18n="arch.lanes.rightH">并行：同一个核心，许多独立 lane</h3>
+              <div class="lane-grid">
+                <div class="node">lane-op</div>
+                <div class="node">lane-op</div>
+                <div class="node">lane-op</div>
+                <div class="node">lane-op</div>
+                <div class="node">lane-op</div>
+                <div class="node">lane-op</div>
+                <div class="node">lane-op</div>
+                <div class="node">lane-op</div>
+              </div>
+              <p class="lane-caption" data-i18n="arch.lanes.rightCap">像素、卷积 MAC、筛选标记、候选几何覆盖测试或一条长轨迹中的独立审计点，可以组成大 batch，一次通过同一个 MLP。</p>
+            </div>
+          </div>
+          <p class="prose" data-i18n="arch.lanes.p1">每“在某条 lane 上执行一次 Neural CPU 指令”记为一个 lane-op。这是工作负载层面的 SIMD / SIMT 式并行。</p>
+          <div class="note note--caution">
+            <p data-i18n="arch.lanes.p2">它不是把一条有严格依赖的指令链凭空并行化，也不是一个 CPU 变成许多真实 CPU 核。</p>
+          </div>
+          <p class="prose" data-i18n="arch.lanes.p3">RTX 5090 适合执行这种大 batch MLP，因此图形与 CNN demo 的总 lane-op 很大，但可以批量运行。</p>
+        </section>
+
+        <!-- 9. design limitation -->
+        <section id="arch-limit" aria-labelledby="arch-limit-h">
+          <div class="section-head">
+            <span class="kicker">09</span>
+            <h2 id="arch-limit-h" data-i18n="arch.limit.h2">设计限制：网络大小并非最小值</h2>
+          </div>
+          <div class="note note--caution">
+            <p data-i18n="arch.limit.p">当前的宽度与深度是一个保守但相对随意的选择，不代表最小网络。更小的网络也可能达到相似结果；容量下限尚未被系统地搜索。</p>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= pager ======================= -->
+  <div class="wrap band--tight">
+    <nav class="pager" aria-label="Pager">
+      <a class="prev" href="../index.html"><span class="dir" data-i18n="ui.prev">上一页</span><span class="name" data-i18n="nav.overview">总览</span></a>
+      <a class="next" href="training.html"><span class="dir" data-i18n="ui.next">下一页</span><span class="name" data-i18n="nav.training">训练</span></a>
+    </nav>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <p data-i18n="footer.project">Neural CPU v3 —— 从输入输出监督训练得到的 16-bit 神经执行核心。</p>
+        <p data-i18n="footer.boundary">神经网络负责指令语义对应的状态变换；PC、取指、64 KiB RAM 与外部调度保持精确实现。</p>
+      </div>
+      <div>
+        <p><strong data-i18n="footer.legacy">早期版本（legacy）</strong></p>
+        <p><a href="../../legacy/README_zh.md" data-i18n="footer.legacyZh">legacy 中文 README</a><br>
+           <a href="../../legacy/README_en.md" data-i18n="footer.legacyEn">legacy English README</a></p>
+      </div>
+    </div>
+    <p class="small" style="margin-top:16px" data-i18n="footer.note">本站为研究项目静态页面，所有数字均可在仓库脚本与结果中核验。</p>
+  </div>
+</footer>
+
+<script src="i18n.js"></script>
+<script>
+window.I18N_PAGE = {
+  zh: {
+    "arch.title": "执行核心 — Neural CPU v3",
+    "arch.desc": "Neural CPU v3 执行核心：51 → 1024 × 3 → 39 的 MLP 状态转移函数、输入输出 bit 布局、16-bit ISA 四种编码格式与 32 个 opcode、LOAD 微操作序列与 lane-op 并行模型。",
+    "arch.h1": "状态转移网络与 16-bit ISA",
+    "arch.lede": "神经网络负责指令语义对应的状态变换——不是某个演示任务的最终答案。本页给出网络的输入输出边界、它学习的 16-bit 指令集，以及它与外部精确组件的分工。",
+    "arch.shape.h2": "主结构：51 → 1024 × 3 → 39",
+    "arch.shape.in": "输入 bit · 16-bit 指令 + 标志位 + 寄存器",
+    "arch.shape.hidden": "线性隐藏层 · GELU + LayerNorm · dropout 0",
+    "arch.shape.out": "输出 bit · 下一状态 + 控制信号",
+    "arch.shape.p": "每次调用输入一条 16-bit 指令和当前神经状态，输出下一时刻的寄存器、标志位与控制信号。隐藏结构为 3 个 1024 宽线性层，每层使用 GELU 与 LayerNorm，dropout 为 0；参数量 2,198,567。",
+    "arch.io.h2": "输入 / 输出 bit 布局",
+    "arch.io.inTag": "输入 · 51 bit",
+    "arch.io.outTag": "输出 · 39 bit",
+    "arch.io.instr": "指令",
+    "arch.io.inCap": "51 = 16（指令）+ 3（标志位）+ 32（4 个 8-bit 寄存器）",
+    "arch.io.outCap": "39 = 3（下一标志位）+ 32（下一寄存器）+ 4（控制信号）；′ 表示下一时刻。",
+    "arch.state.h2": "寄存器、标志位与控制信号",
+    "arch.state.regH": "寄存器 R0–R3",
+    "arch.state.regP": "4 个 uint8 寄存器，共 32 bit，是神经状态的主体；每次调用的输入与输出都包含它们。",
+    "arch.state.flagH": "标志位 ZF / GF / CF",
+    "arch.state.flagP": "3 bit 标志，与寄存器一起构成神经状态；每次状态转移都会给出下一时刻的标志值。",
+    "arch.state.ctrlH": "控制信号",
+    "arch.state.ctrlP": "memory_read、memory_write、branch_taken、halt 共 4 bit，只出现在输出侧，用来驱动外部精确组件；LOAD 的第一步就是神经核心发出 memory_read。",
+    "arch.exact.h2": "为什么 PC 与 RAM 保持精确",
+    "arch.exact.p1": "神经状态只有 4 个 uint8 寄存器 R0–R3 与标志位 ZF、GF、CF；16-bit PC 与 64 KiB uint8 RAM 是外部精确状态。PC、取指、地址访问与外部调度都由精确逻辑实现，不经过神经网络。",
+    "arch.exact.p2": "内存不做成神经网络，原因不是“做不到”：本系统已经有明确的直接寻址。把 RAM 再替换成神经网络，只会增加不必要的不确定性和计算量，也不会帮助回答“指令状态转移能否被训练到极高精度”这个核心问题。",
+    "arch.formats.h2": "四种 16-bit 编码格式",
+    "arch.formats.p": "每条指令定长 16 bit，按四种格式编码；opcode 字段占 5 bit，对应 32 个槽位。",
+    "arch.opcodes.h2": "32 个 opcode：分组与完整表",
+    "arch.opcodes.p": "32 个 opcode 槽位按功能分为七组：",
+    "arch.op.gMove": "数据移动",
+    "arch.op.gMem": "内存",
+    "arch.op.gArith": "算术",
+    "arch.op.gLogic": "逻辑",
+    "arch.op.gCmp": "比较",
+    "arch.op.gBranch": "分支",
+    "arch.op.gSys": "系统控制",
+    "arch.op.tableCap": "32 个 opcode 槽位与分组",
+    "arch.op.colGroup": "分组",
+    "arch.load.h2": "LOAD → RAM → 内部 MOVI",
+    "arch.load.p": "LOAD 分成两步完成，中间由精确的外部 RAM 返回字节：",
+    "arch.load.s1h": "神经核心发出 memory_read",
+    "arch.load.s1p": "执行 LOAD 时，39 bit 输出中的 memory_read 置位，外部逻辑按地址访问 64 KiB RAM。",
+    "arch.load.s2h": "外部 RAM 返回一个字节",
+    "arch.load.s2p": "RAM 是精确组件，不经过任何神经计算。",
+    "arch.load.s3h": "同一神经核心执行内部 MOVI rd, value",
+    "arch.load.s3p": "返回的字节作为 value 写入目标寄存器 rd，LOAD 语义完成。",
+    "arch.lanes.h2": "lane-op 与并行模型",
+    "arch.lanes.leftH": "串行：一条依赖链",
+    "arch.lanes.leftCap": "单个程序内部，有依赖的指令必须顺序执行——上一步的输出状态就是下一步的输入。",
+    "arch.lanes.rightH": "并行：同一个核心，许多独立 lane",
+    "arch.lanes.rightCap": "像素、卷积 MAC、筛选标记、候选几何覆盖测试或一条长轨迹中的独立审计点，可以组成大 batch，一次通过同一个 MLP。",
+    "arch.lanes.p1": "每“在某条 lane 上执行一次 Neural CPU 指令”记为一个 lane-op。这是工作负载层面的 SIMD / SIMT 式并行。",
+    "arch.lanes.p2": "它不是把一条有严格依赖的指令链凭空并行化，也不是一个 CPU 变成许多真实 CPU 核。",
+    "arch.lanes.p3": "RTX 5090 适合执行这种大 batch MLP，因此图形与 CNN demo 的总 lane-op 很大，但可以批量运行。",
+    "arch.limit.h2": "设计限制：网络大小并非最小值",
+    "arch.limit.p": "当前的宽度与深度是一个保守但相对随意的选择，不代表最小网络。更小的网络也可能达到相似结果；容量下限尚未被系统地搜索。"
+  },
+  en: {
+    "arch.title": "Core & ISA — Neural CPU v3",
+    "arch.desc": "The Neural CPU v3 execution core: a 51 → 1024 × 3 → 39 MLP state-transition function, the input/output bit layout, the four 16-bit encoding formats and all 32 opcodes, the LOAD micro-op sequence and the lane-op parallelism model.",
+    "arch.h1": "The state-transition network and the 16-bit ISA",
+    "arch.lede": "The network owns the state transitions of the instruction semantics — not the final answer of any single demo. This page gives the network's input/output boundary, the 16-bit ISA it learned, and how work is split with the exact external components.",
+    "arch.shape.h2": "Main shape: 51 → 1024 × 3 → 39",
+    "arch.shape.in": "input bits · 16-bit instruction + flags + registers",
+    "arch.shape.hidden": "linear hidden layers · GELU + LayerNorm · dropout 0",
+    "arch.shape.out": "output bits · next state + control signals",
+    "arch.shape.p": "Each call takes one 16-bit instruction plus the current neural state, and outputs the next-step registers, flags and control signals. The hidden trunk is three 1024-wide linear layers, each with GELU and LayerNorm, dropout 0 — 2,198,567 parameters.",
+    "arch.io.h2": "Input / output bit layout",
+    "arch.io.inTag": "Input · 51 bit",
+    "arch.io.outTag": "Output · 39 bit",
+    "arch.io.instr": "instruction",
+    "arch.io.inCap": "51 = 16 (instruction) + 3 (flags) + 32 (four 8-bit registers)",
+    "arch.io.outCap": "39 = 3 (next flags) + 32 (next registers) + 4 (control signals); ′ marks the next time step.",
+    "arch.state.h2": "Registers, flags and control signals",
+    "arch.state.regH": "Registers R0–R3",
+    "arch.state.regP": "Four uint8 registers, 32 bits in total — the bulk of the neural state. Every call reads them as input and writes them as output.",
+    "arch.state.flagH": "Flags ZF / GF / CF",
+    "arch.state.flagP": "Three flag bits that complete the neural state alongside the registers; every transition emits their next-step values.",
+    "arch.state.ctrlH": "Control signals",
+    "arch.state.ctrlP": "memory_read, memory_write, branch_taken and halt — 4 bits that only appear on the output side and drive the exact external components; the first half of LOAD is the core issuing memory_read.",
+    "arch.exact.h2": "Why the PC and RAM stay exact",
+    "arch.exact.p1": "The neural state is just four uint8 registers R0–R3 plus the flags ZF, GF and CF; the 16-bit PC and the 64 KiB uint8 RAM are external exact state. The PC, fetch, addressing and external scheduling are all implemented with exact logic and never pass through the network.",
+    "arch.exact.p2": "RAM is not a neural network — and not because it would be impossible: this system already has clear direct addressing. Replacing RAM with a network would only add unnecessary uncertainty and computation, and it would not help answer the core question of whether instruction state transitions can be trained to extremely high precision.",
+    "arch.formats.h2": "The four 16-bit encoding formats",
+    "arch.formats.p": "Every instruction is a fixed 16 bits long, encoded in one of four formats; the opcode field takes 5 bits, matching the 32 slots.",
+    "arch.opcodes.h2": "The 32 opcodes: groups and full table",
+    "arch.opcodes.p": "The 32 opcode slots fall into seven functional groups:",
+    "arch.op.gMove": "Data movement",
+    "arch.op.gMem": "Memory",
+    "arch.op.gArith": "Arithmetic",
+    "arch.op.gLogic": "Logic",
+    "arch.op.gCmp": "Compare",
+    "arch.op.gBranch": "Branch",
+    "arch.op.gSys": "System control",
+    "arch.op.tableCap": "All 32 opcode slots by group",
+    "arch.op.colGroup": "Group",
+    "arch.load.h2": "LOAD → RAM → internal MOVI",
+    "arch.load.p": "LOAD runs in two steps, with the exact external RAM returning the byte in between:",
+    "arch.load.s1h": "The neural core issues memory_read",
+    "arch.load.s1p": "While executing LOAD, the core sets memory_read in its 39-bit output and the external logic addresses the 64 KiB RAM.",
+    "arch.load.s2h": "The external RAM returns one byte",
+    "arch.load.s2p": "RAM is an exact component; no neural computation is involved.",
+    "arch.load.s3h": "The same core executes an internal MOVI rd, value",
+    "arch.load.s3p": "The returned byte is written into the destination register rd as value, completing the LOAD semantics.",
+    "arch.lanes.h2": "lane-op and the parallelism model",
+    "arch.lanes.leftH": "Serial: one dependency chain",
+    "arch.lanes.leftCap": "Inside one program, dependent instructions must run in order — each step's output state is the next step's input.",
+    "arch.lanes.rightH": "Parallel: one core, many independent lanes",
+    "arch.lanes.rightCap": "Pixels, convolution MACs, sieve markers, candidate geometry coverage tests or independent audit points along one long trace can form a large batch through the same MLP.",
+    "arch.lanes.p1": "Each “one Neural CPU instruction executed on one lane” is counted as one lane-op. This is workload-level SIMD / SIMT-style parallelism.",
+    "arch.lanes.p2": "It does not parallelize a strictly dependent instruction chain, and it does not turn one CPU into many real CPU cores.",
+    "arch.lanes.p3": "The RTX 5090 is well suited to these large MLP batches, so the graphics and CNN demos rack up huge lane-op counts that can still run in bulk.",
+    "arch.limit.h2": "Design limit: the network size is not minimal",
+    "arch.limit.p": "The current width and depth are a conservative, somewhat arbitrary choice — not a minimum. Smaller networks may reach similar results; the capacity floor has not been systematically searched."
+  }
+};
+</script>
+<script src="site.js"></script>
+</body>
+</html>

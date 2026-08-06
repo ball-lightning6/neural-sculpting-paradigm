@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title data-i18n="demos.title">Demo 总览 — Neural CPU v3</title>
+<meta name="description" content="六个 demo 分三组：程序执行（Pi、Sudoku、Primes）、模型推理（MNIST CNN）、并行图形（Fast 2D Clouds、Rubik's Cube）。每条目给出任务、操作数量级、审计结果与神经 / 外部边界。" data-i18n-attr="content:demos.desc">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="skip-link" href="#main" data-i18n="nav.skip">跳到正文</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">Neural CPU v3 <span class="brand-tag">16-bit ISA</span></a>
+    <button id="nav-toggle" class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links" data-i18n="nav.menu" data-i18n-attr="aria-label:nav.menuAria">菜单</button>
+    <nav class="nav-links" id="nav-links" hidden aria-label="Main">
+      <a href="../index.html" data-i18n="nav.overview">总览</a>
+      <a href="architecture.html" data-i18n="nav.core">执行核心</a>
+      <a href="training.html" data-i18n="nav.training">训练</a>
+      <a href="reliability.html" data-i18n="nav.reliability">可靠性</a>
+      <a href="demos.html" data-i18n="nav.demos">Demo</a>
+      <a href="research-context.html" data-i18n="nav.research">研究位置</a>
+      <a href="reproduce.html" data-i18n="nav.reproduce">复现</a>
+      <button id="lang-toggle" class="lang-btn" type="button" data-i18n="nav.langToggle" data-i18n-attr="aria-label:nav.langToggleAria">English</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ======================= page head + rerun banner ======================= -->
+  <section class="band" aria-labelledby="sec-top">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="demos.top.kicker">Demo 总览</span>
+        <h1 id="sec-top" data-i18n="demos.top.h">六个 demo：任务、操作数与神经 / 外部边界</h1>
+        <p data-i18n="demos.top.lede">六个 demo 共用同一套发布权重，不为单个任务重新训练。它们分三组：三个程序执行、一个模型推理、两个并行图形。每条目给出任务、操作数量级、审计结果，以及神经核心与外部精确运行时的分工。</p>
+      </div>
+      <div class="note note--ok">
+        <p data-i18n="demos.banner.p">最终发布权重（checkpoint step 6,926,625）重新运行全部六个 demo，六项均报告 0 个神经执行错误。</p>
+        <p class="mb-0"><a href="reliability.html" data-i18n="demos.banner.link">验证口径与证据强度见可靠性页 →</a></p>
+      </div>
+      <div class="toc">
+        <strong data-i18n="ui.toc">本页目录</strong>
+        <ol>
+          <li><a href="#g1" data-i18n="demos.g1.h">程序执行</a></li>
+          <li><a href="#g2" data-i18n="demos.g2.h">模型推理</a></li>
+          <li><a href="#g3" data-i18n="demos.g3.h">并行图形</a></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= group 1: program execution ======================= -->
+  <section class="band band--surface" aria-labelledby="g1">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="demos.g1.kicker">真实程序轨迹</span>
+        <h2 id="g1" data-i18n="demos.g1.h">程序执行</h2>
+        <p data-i18n="demos.g1.lede">三个完整程序被编译为本项目的 16-bit 机器码。神经核心逐条执行指令；PC、取指与 64 KiB RAM 由外部精确运行时维护。</p>
+      </div>
+
+      <article aria-labelledby="g1-pi">
+        <h3 id="g1-pi">Pi · 1000 <span data-i18n="demos.pi.unit">位十进制有效数字</span></h3>
+        <p class="prose" data-i18n="demos.pi.task">Rabinowitz–Wagon 十进制 spigot 算法编译为 16-bit 机器码后逐条执行；默认计算 1000 个有效数字，输出与高精度参考逐位一致。</p>
+        <div class="metric-grid">
+          <div class="metric"><span class="num">5,559,684,667</span><span class="lbl" data-i18n="demos.pi.m1">神经操作数（1000 位运行）</span></div>
+          <div class="metric"><span class="num">1,000</span><span class="lbl" data-i18n="demos.pi.m2">十进制有效数字</span></div>
+          <div class="metric"><span class="num ok">0</span><span class="lbl" data-i18n="demos.pi.m3">最终审计神经执行错误</span></div>
+        </div>
+        <div class="digits-strip">3.1415926535 8979323846 2643383279 5028841971 6939937510 5820974944 5923078164 0628620899 8628034825 3421170679 …</div>
+        <p class="small muted" data-i18n="demos.pi.strip">输出前缀（小数点后前 100 位）；完整 1000 位数字带与逐位核验见详情页。</p>
+        <p>
+          <span class="tag tag--neural" data-i18n="demos.tag.neural">神经核心</span>
+          <span data-i18n="demos.pi.neural">算法的寄存器算术、比较、循环条件、分支与内存控制。</span>
+        </p>
+        <p>
+          <span class="tag tag--external" data-i18n="demos.tag.external">外部精确运行时</span>
+          <span data-i18n="demos.pi.external">PC、取指、64 KiB RAM 与输出显示。</span>
+        </p>
+        <p><a class="btn btn--primary" href="demos/pi.html" data-i18n="demos.pi.link">Pi 详情 →</a></p>
+      </article>
+
+      <article aria-labelledby="g1-sudoku" style="margin-top:36px">
+        <h3 id="g1-sudoku" data-i18n="demos.sudoku.h">Sudoku · 从 Project Euler 96 无放回抽取 10 题</h3>
+        <p class="prose" data-i18n="demos.sudoku.task">通用 9x9 求解器——MRV 搜索、显式回溯栈与每格 20 个 peer 的扫描——完全写成机器码；默认从 Project Euler 96 的 50 题中无放回随机抽取 10 题，全部解出并通过答案验证。</p>
+        <div class="metric-grid">
+          <div class="metric"><span class="num">180,243,530</span><span class="lbl" data-i18n="demos.sudoku.m1">一次已记录 10 题运行的神经操作数</span></div>
+          <div class="metric"><span class="num">10 / 10</span><span class="lbl" data-i18n="demos.sudoku.m2">解出并通过答案验证</span></div>
+          <div class="metric"><span class="num ok">0</span><span class="lbl" data-i18n="demos.sudoku.m3">神经执行错误</span></div>
+        </div>
+        <div class="codeblock"><pre><code data-i18n="demos.sudoku.map">0x0000-0x000F  搜索状态（DEPTH、BEST_CELL、STATUS 等）
+0x0100         STACK_CELL    回溯栈：格子
+0x0200         STACK_NEXT    回溯栈：下一候选
+0x1000         BOARD         9x9 棋盘
+0x1100/0x1200  PEER_POINTER_LOW / PEER_POINTER_HIGH
+0x2000         PEERS         固定 peer 表，每格 20 个 peer</code></pre></div>
+        <p class="small muted" data-i18n="demos.sudoku.mapnote">求解器在 64 KiB RAM 中的数据布局（地址取自 scripts/run_neural_cpu_v3_sudoku.py 的 Memory 定义）。</p>
+        <div class="note note--caution">
+          <p data-i18n="demos.sudoku.caution">180,243,530 是一次已记录运行的操作数，不是固定成本：单题难度不同，操作数会有明显差异。</p>
+        </div>
+        <p>
+          <span class="tag tag--neural" data-i18n="demos.tag.neural">神经核心</span>
+          <span data-i18n="demos.sudoku.neural">求解算法的全部指令执行：候选判定、MRV 选择与回溯栈维护。</span>
+        </p>
+        <p>
+          <span class="tag tag--external" data-i18n="demos.tag.external">外部精确运行时</span>
+          <span data-i18n="demos.sudoku.external">装入题目、提供固定 peer 表、展示并最终验证答案；维护 PC、取指与 RAM。</span>
+        </p>
+        <p><a class="btn btn--primary" href="demos/sudoku.html" data-i18n="demos.sudoku.link">Sudoku 详情 →</a></p>
+      </article>
+
+      <article aria-labelledby="g1-primes" style="margin-top:36px">
+        <h3 id="g1-primes" data-i18n="demos.primes.h">第 10,000,000 个质数</h3>
+        <p class="prose" data-i18n="demos.primes.task">分段奇数筛：基础质数、p²、筛缓冲地址、跨分段的下一个倍数、质数计数与停止条件全部由 16-bit 指令流计算。</p>
+        <div class="metric-grid">
+          <div class="metric"><span class="num">10,000,000</span><span class="lbl" data-i18n="demos.primes.m1">目标名次</span></div>
+          <div class="metric"><span class="num">180,000,000</span><span class="lbl" data-i18n="demos.primes.m2">搜索上界</span></div>
+          <div class="metric"><span class="num">179,424,673</span><span class="lbl" data-i18n="demos.primes.m3">结果</span></div>
+          <div class="metric"><span class="num">4,462,453,580</span><span class="lbl" data-i18n="demos.primes.m4">神经操作数</span></div>
+          <div class="metric"><span class="num ok">0</span><span class="lbl" data-i18n="demos.primes.m5">最终审计神经执行错误</span></div>
+        </div>
+        <p class="small muted" data-i18n="demos.primes.ram">RAM 只按 Neural CPU 算出的地址读写筛标记，不会替 CPU 判断一个数是否为质数。</p>
+        <p>
+          <span class="tag tag--neural" data-i18n="demos.tag.neural">神经核心</span>
+          <span data-i18n="demos.primes.neural">筛法的全部算术与地址计算：p²、下一个倍数、计数与停止条件。</span>
+        </p>
+        <p>
+          <span class="tag tag--external" data-i18n="demos.tag.external">外部精确运行时</span>
+          <span data-i18n="demos.primes.external">PC、取指与 RAM；RAM 按地址读写标记。</span>
+        </p>
+        <p><a class="btn btn--primary" href="demos/primes.html" data-i18n="demos.primes.link">Primes 详情 →</a></p>
+      </article>
+    </div>
+  </section>
+
+  <!-- ======================= group 2: model inference ======================= -->
+  <section class="band" aria-labelledby="g2">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="demos.g2.kicker">一个网络在另一个网络上运行</span>
+        <h2 id="g2" data-i18n="demos.g2.h">模型推理</h2>
+        <p data-i18n="demos.g2.lede">这里有两个不同的网络：MNIST CNN 是被推理的模型；Neural CPU v3 是执行该量化 CNN 数值程序的处理器。</p>
+      </div>
+      <div class="card-grid">
+        <article class="card">
+          <h3>MNIST CNN <span data-i18n="demos.mnist.sub">量化推理</span></h3>
+          <p data-i18n="demos.mnist.task">量化 CNN 的常量权重乘法编译成 NAF/CSD shift-add 序列；32-bit 累加、定点缩放、ReLU、max pooling 与最终 argmax 都拆成 ISA 操作，由 Neural CPU 执行。</p>
+          <p class="metric-inline">QAT acc 99.59% · IMAGE_INDEX=0 · label 7</p>
+          <p class="metric-inline" data-i18n="demos.mnist.paths">三条路径（QAT / 精确整数 / Neural CPU）均预测 7</p>
+          <p class="metric-inline">596,807,228 lane-ops · 0 result / flag / control error</p>
+          <p>
+            <span class="tag tag--neural" data-i18n="demos.tag.neural">神经核心</span>
+            <span data-i18n="demos.mnist.neural">每一次数值操作：shift-add 乘法、32-bit 累加、缩放、ReLU、pooling 与 argmax。</span>
+          </p>
+          <p>
+            <span class="tag tag--external" data-i18n="demos.tag.external">外部精确运行时</span>
+            <span data-i18n="demos.mnist.external">tensor 存储、地址生成、卷积窗口展开、lane 调度与 predicated writeback。</span>
+          </p>
+          <p class="card-foot"><a class="btn btn--primary" href="demos/mnist.html" data-i18n="demos.mnist.link">MNIST 详情 →</a></p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= group 3: parallel graphics ======================= -->
+  <section class="band band--surface" aria-labelledby="g3">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="demos.g3.kicker">大 batch 独立 lane</span>
+        <h2 id="g3" data-i18n="demos.g3.h">并行图形</h2>
+        <p data-i18n="demos.g3.lede">像素之间互相独立，同一个 MLP 可以一次处理大量 lane。这是工作负载层面的 SIMD/SIMT 式并行，不是把有依赖的指令链并行化。</p>
+      </div>
+      <div class="grid-2">
+        <div>
+          <h3>Fast 2D Clouds</h3>
+          <p data-i18n="demos.clouds.task">双 fBm、8 个 octave、curl 旋转、smoothstep 与颜色混合编译为定点 ISA 运算，输出 1280x720 静态帧。</p>
+          <figure class="figure">
+            <a href="demos/clouds.html"><img class="ratio-clouds" src="../results/clouds/fast_clouds_neural.png" alt="Neural CPU v3 渲染的 1280x720 二维云层静态帧" data-i18n-attr="alt:ui.mediaAltClouds"></a>
+            <figcaption data-i18n="demos.clouds.cap">Neural 渲染结果；与精确整数参考逐像素完全一致（差异像素 0，最大通道差 0）。</figcaption>
+            <p class="figure-actions"><a href="../results/clouds/fast_clouds_neural.png" data-i18n="ui.viewFullSize">查看原尺寸图片</a></p>
+          </figure>
+          <p class="metric-inline">10,740,326,400 lane-ops · ~11,654 op/pixel</p>
+          <p class="metric-inline">0 register / flag / control error</p>
+          <p>
+            <span class="tag tag--neural" data-i18n="demos.tag.neural">神经核心</span>
+            <span data-i18n="demos.clouds.neural">纹理地址、repeat、mipmap 坐标与插值，以及全部 shader 定点算术。</span>
+          </p>
+          <p>
+            <span class="tag tag--external" data-i18n="demos.tag.external">外部精确运行时</span>
+            <span data-i18n="demos.clouds.external">整数像素坐标、时间常量、只读纹理 RAM 与 mip 存储、SIMD 调度、framebuffer。</span>
+          </p>
+          <p><a class="btn btn--primary" href="demos/clouds.html" data-i18n="demos.clouds.link">Clouds 详情 →</a></p>
+        </div>
+        <div>
+          <h3>3x3 Rubik's Cube</h3>
+          <p data-i18n="demos.rubiks.task">pure_flat 模式逐帧渲染打乱序列的严格逆序复原过程：相机与层旋转、投影表读取、逐像素四边形 edge test 由 Neural CPU 执行。</p>
+          <figure class="figure">
+            <video class="ratio-rubiks" controls muted playsinline preload="metadata" src="../results/rubiks/neural_cpu_rubiks_cube_flat.mp4" aria-label="Neural CPU v3 渲染的 3x3 魔方复原视频" data-i18n-attr="aria-label:ui.mediaAltRubiks"></video>
+            <figcaption data-i18n="demos.rubiks.cap">640x360，303 帧 / 24 fps = 12.625 s，原生分辨率直接写入视频，不经 resize。</figcaption>
+          </figure>
+          <p class="metric-inline">7,029,721,682 lane-ops · 303 frames @ 24 fps</p>
+          <p class="metric-inline">0 result / load / store error</p>
+          <p>
+            <span class="tag tag--neural" data-i18n="demos.tag.neural">神经核心</span>
+            <span data-i18n="demos.rubiks.neural">相机和层旋转、坐标投影表读取、逐像素四边形 edge test、framebuffer store enable。</span>
+          </p>
+          <p>
+            <span class="tag tag--external" data-i18n="demos.tag.external">外部精确运行时</span>
+            <span data-i18n="demos.rubiks.external">魔方动作调度、framebuffer 存储与 MP4 编码。</span>
+          </p>
+          <p class="small muted" data-i18n="demos.rubiks.note">复原序列是预先给定打乱序列的严格逆序；不声称 Neural CPU 自己搜索了魔方解法。</p>
+          <p><a class="btn btn--primary" href="demos/rubiks.html" data-i18n="demos.rubiks.link">Rubiks 详情 →</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= pager ======================= -->
+  <div class="wrap band--tight">
+    <nav class="pager" aria-label="Pager">
+      <a class="prev" href="reliability.html"><span class="dir" data-i18n="ui.prev">上一页</span><span class="name" data-i18n="nav.reliability">可靠性</span></a>
+      <a class="next" href="demos/pi.html"><span class="dir" data-i18n="ui.next">下一页</span><span class="name" data-i18n="demos.pager.pi">Pi</span></a>
+    </nav>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <p data-i18n="footer.project">Neural CPU v3 —— 从输入输出监督训练得到的 16-bit 神经执行核心。</p>
+        <p data-i18n="footer.boundary">神经网络负责指令语义对应的状态变换；PC、取指、64 KiB RAM 与外部调度保持精确实现。</p>
+      </div>
+      <div>
+        <p><strong data-i18n="footer.legacy">早期版本（legacy）</strong></p>
+        <p><a href="../../legacy/README_zh.md" data-i18n="footer.legacyZh">legacy 中文 README</a><br>
+           <a href="../../legacy/README_en.md" data-i18n="footer.legacyEn">legacy English README</a></p>
+      </div>
+    </div>
+    <p class="small" style="margin-top:16px" data-i18n="footer.note">本站为研究项目静态页面，所有数字均可在仓库脚本与结果中核验。</p>
+  </div>
+</footer>
+
+<script src="i18n.js"></script>
+<script>
+window.I18N_PAGE = {
+  zh: {
+    "demos.title": "Demo 总览 — Neural CPU v3",
+    "demos.desc": "六个 demo 分三组：程序执行（Pi、Sudoku、Primes）、模型推理（MNIST CNN）、并行图形（Fast 2D Clouds、Rubik's Cube）。每条目给出任务、操作数量级、审计结果与神经 / 外部边界。",
+    "demos.top.kicker": "Demo 总览",
+    "demos.top.h": "六个 demo：任务、操作数与神经 / 外部边界",
+    "demos.top.lede": "六个 demo 共用同一套发布权重，不为单个任务重新训练。它们分三组：三个程序执行、一个模型推理、两个并行图形。每条目给出任务、操作数量级、审计结果，以及神经核心与外部精确运行时的分工。",
+    "demos.banner.p": "最终发布权重（checkpoint step 6,926,625）重新运行全部六个 demo，六项均报告 0 个神经执行错误。",
+    "demos.banner.link": "验证口径与证据强度见可靠性页 →",
+    "demos.tag.neural": "神经核心",
+    "demos.tag.external": "外部精确运行时",
+    "demos.g1.kicker": "真实程序轨迹",
+    "demos.g1.h": "程序执行",
+    "demos.g1.lede": "三个完整程序被编译为本项目的 16-bit 机器码。神经核心逐条执行指令；PC、取指与 64 KiB RAM 由外部精确运行时维护。",
+    "demos.pi.unit": "位十进制有效数字",
+    "demos.pi.task": "Rabinowitz–Wagon 十进制 spigot 算法编译为 16-bit 机器码后逐条执行；默认计算 1000 个有效数字，输出与高精度参考逐位一致。",
+    "demos.pi.m1": "神经操作数（1000 位运行）",
+    "demos.pi.m2": "十进制有效数字",
+    "demos.pi.m3": "最终审计神经执行错误",
+    "demos.pi.strip": "输出前缀（小数点后前 100 位）；完整 1000 位数字带与逐位核验见详情页。",
+    "demos.pi.neural": "算法的寄存器算术、比较、循环条件、分支与内存控制。",
+    "demos.pi.external": "PC、取指、64 KiB RAM 与输出显示。",
+    "demos.pi.link": "Pi 详情 →",
+    "demos.sudoku.h": "Sudoku · 从 Project Euler 96 无放回抽取 10 题",
+    "demos.sudoku.task": "通用 9x9 求解器——MRV 搜索、显式回溯栈与每格 20 个 peer 的扫描——完全写成机器码；默认从 Project Euler 96 的 50 题中无放回随机抽取 10 题，全部解出并通过答案验证。",
+    "demos.sudoku.m1": "一次已记录 10 题运行的神经操作数",
+    "demos.sudoku.m2": "解出并通过答案验证",
+    "demos.sudoku.m3": "神经执行错误",
+    "demos.sudoku.map": "0x0000-0x000F  搜索状态（DEPTH、BEST_CELL、STATUS 等）\n0x0100         STACK_CELL    回溯栈：格子\n0x0200         STACK_NEXT    回溯栈：下一候选\n0x1000         BOARD         9x9 棋盘\n0x1100/0x1200  PEER_POINTER_LOW / PEER_POINTER_HIGH\n0x2000         PEERS         固定 peer 表，每格 20 个 peer",
+    "demos.sudoku.mapnote": "求解器在 64 KiB RAM 中的数据布局（地址取自 scripts/run_neural_cpu_v3_sudoku.py 的 Memory 定义）。",
+    "demos.sudoku.caution": "180,243,530 是一次已记录运行的操作数，不是固定成本：单题难度不同，操作数会有明显差异。",
+    "demos.sudoku.neural": "求解算法的全部指令执行：候选判定、MRV 选择与回溯栈维护。",
+    "demos.sudoku.external": "装入题目、提供固定 peer 表、展示并最终验证答案；维护 PC、取指与 RAM。",
+    "demos.sudoku.link": "Sudoku 详情 →",
+    "demos.primes.h": "第 10,000,000 个质数",
+    "demos.primes.task": "分段奇数筛：基础质数、p²、筛缓冲地址、跨分段的下一个倍数、质数计数与停止条件全部由 16-bit 指令流计算。",
+    "demos.primes.m1": "目标名次",
+    "demos.primes.m2": "搜索上界",
+    "demos.primes.m3": "结果",
+    "demos.primes.m4": "神经操作数",
+    "demos.primes.m5": "最终审计神经执行错误",
+    "demos.primes.ram": "RAM 只按 Neural CPU 算出的地址读写筛标记，不会替 CPU 判断一个数是否为质数。",
+    "demos.primes.neural": "筛法的全部算术与地址计算：p²、下一个倍数、计数与停止条件。",
+    "demos.primes.external": "PC、取指与 RAM；RAM 按地址读写标记。",
+    "demos.primes.link": "Primes 详情 →",
+    "demos.g2.kicker": "一个网络在另一个网络上运行",
+    "demos.g2.h": "模型推理",
+    "demos.g2.lede": "这里有两个不同的网络：MNIST CNN 是被推理的模型；Neural CPU v3 是执行该量化 CNN 数值程序的处理器。",
+    "demos.mnist.sub": "量化推理",
+    "demos.mnist.task": "量化 CNN 的常量权重乘法编译成 NAF/CSD shift-add 序列；32-bit 累加、定点缩放、ReLU、max pooling 与最终 argmax 都拆成 ISA 操作，由 Neural CPU 执行。",
+    "demos.mnist.paths": "三条路径（QAT / 精确整数 / Neural CPU）均预测 7",
+    "demos.mnist.neural": "每一次数值操作：shift-add 乘法、32-bit 累加、缩放、ReLU、pooling 与 argmax。",
+    "demos.mnist.external": "tensor 存储、地址生成、卷积窗口展开、lane 调度与 predicated writeback。",
+    "demos.mnist.link": "MNIST 详情 →",
+    "demos.g3.kicker": "大 batch 独立 lane",
+    "demos.g3.h": "并行图形",
+    "demos.g3.lede": "像素之间互相独立，同一个 MLP 可以一次处理大量 lane。这是工作负载层面的 SIMD/SIMT 式并行，不是把有依赖的指令链并行化。",
+    "demos.clouds.task": "双 fBm、8 个 octave、curl 旋转、smoothstep 与颜色混合编译为定点 ISA 运算，输出 1280x720 静态帧。",
+    "demos.clouds.cap": "Neural 渲染结果；与精确整数参考逐像素完全一致（差异像素 0，最大通道差 0）。",
+    "demos.clouds.neural": "纹理地址、repeat、mipmap 坐标与插值，以及全部 shader 定点算术。",
+    "demos.clouds.external": "整数像素坐标、时间常量、只读纹理 RAM 与 mip 存储、SIMD 调度、framebuffer。",
+    "demos.clouds.link": "Clouds 详情 →",
+    "demos.rubiks.task": "pure_flat 模式逐帧渲染打乱序列的严格逆序复原过程：相机与层旋转、投影表读取、逐像素四边形 edge test 由 Neural CPU 执行。",
+    "demos.rubiks.cap": "640x360，303 帧 / 24 fps = 12.625 s，原生分辨率直接写入视频，不经 resize。",
+    "demos.rubiks.neural": "相机和层旋转、坐标投影表读取、逐像素四边形 edge test、framebuffer store enable。",
+    "demos.rubiks.external": "魔方动作调度、framebuffer 存储与 MP4 编码。",
+    "demos.rubiks.note": "复原序列是预先给定打乱序列的严格逆序；不声称 Neural CPU 自己搜索了魔方解法。",
+    "demos.rubiks.link": "Rubiks 详情 →",
+    "demos.pager.pi": "Pi"
+  },
+  en: {
+    "demos.title": "Demos — Neural CPU v3",
+    "demos.desc": "Six demos in three groups: program execution (Pi, Sudoku, Primes), model inference (MNIST CNN) and parallel graphics (Fast 2D Clouds, Rubik's Cube). Each entry lists the task, operation count, audit result and the neural/external boundary.",
+    "demos.top.kicker": "Demos overview",
+    "demos.top.h": "Six demos: tasks, operation counts and the neural/external boundary",
+    "demos.top.lede": "All six demos share the same released weights; the CPU is never retrained per task. They fall into three groups: three program executions, one model inference, and two parallel graphics renders. Each entry lists the task, the operation count, the audit result, and the split between the neural core and the exact external runtime.",
+    "demos.banner.p": "The released weights (checkpoint step 6,926,625) reran all six demos; all six report zero neural execution errors.",
+    "demos.banner.link": "See the reliability page for the validation criteria and evidence strength →",
+    "demos.tag.neural": "Neural core",
+    "demos.tag.external": "External exact runtime",
+    "demos.g1.kicker": "Real program traces",
+    "demos.g1.h": "Program execution",
+    "demos.g1.lede": "Three complete programs compiled to this project's 16-bit machine code. The neural core executes the instructions one by one; the PC, fetch and 64 KiB RAM stay with the exact external runtime.",
+    "demos.pi.unit": "significant decimal digits",
+    "demos.pi.task": "The Rabinowitz–Wagon decimal spigot algorithm compiled to 16-bit machine code and executed instruction by instruction; the default run computes 1000 significant digits and matches a high-precision reference digit for digit.",
+    "demos.pi.m1": "neural operations (1000-digit run)",
+    "demos.pi.m2": "significant decimal digits",
+    "demos.pi.m3": "neural execution errors in the final audit",
+    "demos.pi.strip": "Output prefix (first 100 digits after the decimal point); the full 1000-digit strip and digit-by-digit check are on the detail page.",
+    "demos.pi.neural": "The algorithm's register arithmetic, comparisons, loop conditions, branches and memory control.",
+    "demos.pi.external": "PC, fetch, 64 KiB RAM and output display.",
+    "demos.pi.link": "Pi details →",
+    "demos.sudoku.h": "Sudoku · 10 puzzles drawn from Project Euler 96",
+    "demos.sudoku.task": "A general 9x9 solver — MRV search, an explicit backtracking stack and a 20-peer scan per cell — written entirely in machine code; by default 10 puzzles are drawn without replacement from the 50 puzzles of Project Euler 96, all solved and answer-verified.",
+    "demos.sudoku.m1": "neural operations in one recorded 10-puzzle run",
+    "demos.sudoku.m2": "solved and answer-verified",
+    "demos.sudoku.m3": "neural execution errors",
+    "demos.sudoku.map": "0x0000-0x000F  search state (DEPTH, BEST_CELL, STATUS, ...)\n0x0100         STACK_CELL    backtrack stack: cell\n0x0200         STACK_NEXT    backtrack stack: next candidate\n0x1000         BOARD         9x9 board\n0x1100/0x1200  PEER_POINTER_LOW / PEER_POINTER_HIGH\n0x2000         PEERS         fixed peer table, 20 peers per cell",
+    "demos.sudoku.mapnote": "The solver's data layout in the 64 KiB RAM (addresses taken from the Memory definition in scripts/run_neural_cpu_v3_sudoku.py).",
+    "demos.sudoku.caution": "180,243,530 is the operation count of one recorded run, not a fixed cost: per-puzzle difficulty varies, so the operation count differs noticeably.",
+    "demos.sudoku.neural": "Every instruction of the solver: candidate tests, MRV selection and backtrack-stack maintenance.",
+    "demos.sudoku.external": "Loading puzzles, supplying the fixed peer table, displaying and finally verifying answers; plus PC, fetch and RAM.",
+    "demos.sudoku.link": "Sudoku details →",
+    "demos.primes.h": "The 10,000,000th prime",
+    "demos.primes.task": "A segmented odd sieve: base primes, p², sieve-buffer addresses, the next multiple across segments, the prime count and the stop condition are all computed by the 16-bit instruction stream.",
+    "demos.primes.m1": "target rank",
+    "demos.primes.m2": "search limit",
+    "demos.primes.m3": "result",
+    "demos.primes.m4": "neural operations",
+    "demos.primes.m5": "neural execution errors in the final audit",
+    "demos.primes.ram": "RAM only reads and writes sieve flags at addresses computed by the Neural CPU; it never decides whether a number is prime.",
+    "demos.primes.neural": "All sieve arithmetic and address computation: p², the next multiple, counting and the stop condition.",
+    "demos.primes.external": "PC, fetch and RAM; RAM reads and writes flags at the given addresses.",
+    "demos.primes.link": "Primes details →",
+    "demos.g2.kicker": "One network running on another",
+    "demos.g2.h": "Model inference",
+    "demos.g2.lede": "Two different networks are involved here: the MNIST CNN is the model being inferred; Neural CPU v3 is the processor executing that quantized CNN's numeric program.",
+    "demos.mnist.sub": "quantized inference",
+    "demos.mnist.task": "Constant-weight multiplies of the quantized CNN are compiled into NAF/CSD shift-add sequences; 32-bit accumulation, fixed-point scaling, ReLU, max pooling and the final argmax are all decomposed into ISA operations executed by the Neural CPU.",
+    "demos.mnist.paths": "All three paths (QAT / exact integer / Neural CPU) predict 7",
+    "demos.mnist.neural": "Every numeric operation: shift-add multiplies, 32-bit accumulation, scaling, ReLU, pooling and argmax.",
+    "demos.mnist.external": "Tensor storage, address generation, convolution-window unrolling, lane scheduling and predicated writeback.",
+    "demos.mnist.link": "MNIST details →",
+    "demos.g3.kicker": "Large batches of independent lanes",
+    "demos.g3.h": "Parallel graphics",
+    "demos.g3.lede": "Pixels are independent of each other, so the same MLP can process many lanes at once. This is SIMD/SIMT-style parallelism at the workload level, not parallelizing a dependent instruction chain.",
+    "demos.clouds.task": "Dual fBm, 8 octaves, curl rotation, smoothstep and color blending compiled into fixed-point ISA arithmetic, producing one 1280x720 frame.",
+    "demos.clouds.cap": "The neural render; pixel-identical to the exact integer reference (0 differing pixels, maximum channel difference 0).",
+    "demos.clouds.neural": "Texture addressing, repeat, mipmap coordinates and interpolation, plus all fixed-point shader arithmetic.",
+    "demos.clouds.external": "Integer pixel coordinates, the time constant, read-only texture RAM and mip storage, SIMD scheduling and the framebuffer.",
+    "demos.clouds.link": "Clouds details →",
+    "demos.rubiks.task": "pure_flat mode renders the exact inverse of a given scramble frame by frame: camera and layer rotations, projection-table reads and per-pixel quad edge tests run on the Neural CPU.",
+    "demos.rubiks.cap": "640x360, 303 frames at 24 fps = 12.625 s, written to video at native resolution without resizing.",
+    "demos.rubiks.neural": "Camera and layer rotations, projection-table reads, per-pixel quad edge tests and framebuffer store enable.",
+    "demos.rubiks.external": "Cube move scheduling, framebuffer storage and MP4 encoding.",
+    "demos.rubiks.note": "The solve sequence is the strict inverse of a pre-given scramble; the Neural CPU is not claimed to have searched for the cube solution itself.",
+    "demos.rubiks.link": "Rubiks details →",
+    "demos.pager.pi": "Pi"
+  }
+};
+</script>
+<script src="site.js"></script>
+</body>
+</html>

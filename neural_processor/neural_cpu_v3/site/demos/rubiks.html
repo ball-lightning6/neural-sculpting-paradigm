@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title data-i18n="rubiks.title">3x3 魔方复原视频 — Neural CPU v3</title>
+<meta name="description" content="Neural CPU v3 渲染的 303 帧、640x360、24 fps 魔方复原视频：逐像素四边形 edge test 以 ISA 指令执行，共 7,029,721,682 个 lane-op，0 result / load / store error。" data-i18n-attr="content:rubiks.desc">
+<link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+<a class="skip-link" href="#main" data-i18n="nav.skip">跳到正文</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../../index.html">Neural CPU v3 <span class="brand-tag">16-bit ISA</span></a>
+    <button id="nav-toggle" class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links" data-i18n="nav.menu" data-i18n-attr="aria-label:nav.menuAria">菜单</button>
+    <nav class="nav-links" id="nav-links" hidden aria-label="Main">
+      <a href="../../index.html" data-i18n="nav.overview">总览</a>
+      <a href="../architecture.html" data-i18n="nav.core">执行核心</a>
+      <a href="../training.html" data-i18n="nav.training">训练</a>
+      <a href="../reliability.html" data-i18n="nav.reliability">可靠性</a>
+      <a href="../demos.html" data-i18n="nav.demos">Demo</a>
+      <a href="../research-context.html" data-i18n="nav.research">研究位置</a>
+      <a href="../reproduce.html" data-i18n="nav.reproduce">复现</a>
+      <button id="lang-toggle" class="lang-btn" type="button" data-i18n="nav.langToggle" data-i18n-attr="aria-label:nav.langToggleAria">English</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ======================= title ======================= -->
+  <section class="band band--surface">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="rubiks.kicker">Demo · 并行图形</span>
+        <h1 data-i18n="rubiks.h1">3x3 魔方复原视频</h1>
+        <p class="lede" data-i18n="rubiks.lede">303 帧、640x360、24 fps（12.625 秒）的复原动画：逐像素四边形覆盖判定由 Neural CPU 执行，共 7,029,721,682 个 lane-op，0 result / load / store error。</p>
+      </div>
+      <div class="note note--caution">
+        <p data-i18n="rubiks.caution">复原序列是预先给定打乱序列（Config.SCRAMBLE）的严格逆序——每一步都是合法魔方动作，但 Neural CPU 没有自己搜索解法，本站也不声称它求解了魔方。它承担的是渲染这段过程所需的逐像素几何判定。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= body with toc ======================= -->
+  <section class="band">
+    <div class="wrap">
+      <div class="with-toc">
+        <nav class="toc" aria-label="本页目录" data-i18n-attr="aria-label:ui.toc">
+          <strong data-i18n="ui.toc">本页目录</strong>
+          <ol>
+            <li><a href="#output" data-i18n="rubiks.toc.output">真实输出</a></li>
+            <li><a href="#numbers" data-i18n="rubiks.toc.numbers">关键数字</a></li>
+            <li><a href="#isa" data-i18n="rubiks.toc.isa">渲染到 ISA 的映射</a></li>
+            <li><a href="#neural" data-i18n="rubiks.toc.neural">Neural CPU 承担什么</a></li>
+            <li><a href="#external" data-i18n="rubiks.toc.external">外部运行时承担什么</a></li>
+            <li><a href="#audit" data-i18n="rubiks.toc.audit">审计模式</a></li>
+            <li><a href="#run" data-i18n="rubiks.toc.run">运行方法</a></li>
+            <li><a href="#limits" data-i18n="rubiks.toc.limits">限制与不声称</a></li>
+          </ol>
+        </nav>
+
+        <div>
+          <!-- ============ real output ============ -->
+          <section id="output" style="margin-bottom:40px">
+            <h2 data-i18n="rubiks.out.h">真实输出：原生 640x360 视频</h2>
+            <figure class="figure">
+              <video class="ratio-rubiks" controls muted playsinline preload="metadata" aria-label="Neural CPU v3 渲染的 3x3 魔方复原视频" data-i18n-attr="aria-label:ui.mediaAltRubiks">
+                <source src="../../results/rubiks/neural_cpu_rubiks_cube_flat.mp4" type="video/mp4">
+              </video>
+              <figcaption data-i18n="rubiks.out.cap">pure_flat 模式的最终视频：Neural CPU 实际完成覆盖判定的原生帧缓冲直接编码为 MP4，不经 resize。默认静音，使用原生控件播放。</figcaption>
+            </figure>
+          </section>
+
+          <!-- ============ key numbers ============ -->
+          <section id="numbers" style="margin-bottom:40px">
+            <h2 data-i18n="rubiks.num.h">关键数字</h2>
+            <div class="metric-grid">
+              <div class="metric"><span class="num">640x360</span><span class="lbl" data-i18n="rubiks.num.m1">原生输出分辨率</span></div>
+              <div class="metric"><span class="num">303</span><span class="lbl" data-i18n="rubiks.num.m2">帧数</span></div>
+              <div class="metric"><span class="num">24 fps / 12.625 s</span><span class="lbl" data-i18n="rubiks.num.m3">帧率与时长</span></div>
+              <div class="metric"><span class="num">7,029,721,682</span><span class="lbl" data-i18n="rubiks.num.m4">lane-op 总数</span></div>
+              <div class="metric"><span class="num ok">0</span><span class="lbl" data-i18n="rubiks.num.m5">result / load / store error</span></div>
+              <div class="metric"><span class="num">pure_flat</span><span class="lbl" data-i18n="rubiks.num.m6">默认渲染模式</span></div>
+            </div>
+          </section>
+
+          <!-- ============ isa mapping ============ -->
+          <section id="isa" style="margin-bottom:40px">
+            <h2 data-i18n="rubiks.isa.h">渲染怎样映射到 ISA</h2>
+            <p data-i18n="rubiks.isa.p1">每个候选像素的四条边函数决定它属于哪个贴纸面（四边形 edge test）；相机与魔方层旋转、16-bit 坐标投影表读取与 framebuffer store enable 均由 Neural CPU 通过 LOAD/MOVI、ADD/ADC、SUB/SBC 与 RAM 中的 8-bit 乘法表执行。</p>
+            <p><span data-i18n="rubiks.isa.p2">打乱序列含 15 个动作；每个动作 MOVE_FRAMES = 12 帧，加上动作间暂停与首尾保持帧，合计 303 帧、12.625 秒。预先给定的打乱序列（Config.SCRAMBLE）：</span> <code>R U F' L2 D B' R2 U' F L' D2 B U2 R' F2</code></p>
+          </section>
+
+          <!-- ============ neural cpu ============ -->
+          <section id="neural" style="margin-bottom:40px">
+            <h2><span class="tag tag--neural" data-i18n="rubiks.neural.tag">由 Neural CPU 执行</span></h2>
+            <ul class="prose">
+              <li data-i18n="rubiks.neural.l1">相机与魔方层旋转；</li>
+              <li data-i18n="rubiks.neural.l2">16-bit 坐标投影表读取（LOAD）；</li>
+              <li data-i18n="rubiks.neural.l3">逐像素四边形 edge test：每个候选像素的四条边函数；</li>
+              <li data-i18n="rubiks.neural.l4">framebuffer store enable。</li>
+            </ul>
+          </section>
+
+          <!-- ============ external runtime ============ -->
+          <section id="external" style="margin-bottom:40px">
+            <h2><span class="tag tag--external" data-i18n="rubiks.external.tag">由外部运行时承担</span></h2>
+            <ul class="prose">
+              <li data-i18n="rubiks.external.l1">魔方动作调度（按预给逆序逐帧推进）；</li>
+              <li data-i18n="rubiks.external.l2">framebuffer 存储；</li>
+              <li data-i18n="rubiks.external.l3">MP4 编码。</li>
+            </ul>
+            <p data-i18n="rubiks.external.p">外部固定功能不决定面覆盖关系，也不计算颜色。</p>
+          </section>
+
+          <!-- ============ audit modes ============ -->
+          <section id="audit" style="margin-bottom:40px">
+            <h2 data-i18n="rubiks.audit.h">审计模式</h2>
+            <div class="table-scroll">
+              <table class="spec">
+                <thead>
+                  <tr>
+                    <th data-i18n="rubiks.audit.th1">模式</th>
+                    <th data-i18n="rubiks.audit.th2">含义</th>
+                    <th data-i18n="rubiks.audit.th3">Config 开关</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td data-i18n="rubiks.audit.r1name">pure_flat 渲染 + 审计（默认）</td>
+                    <td data-i18n="rubiks.audit.r1desc">Neural CPU 逐像素完成四边形覆盖判定，原生帧缓冲直接编码；审计统计 result、load、store 三类错误，本次均为 0。</td>
+                    <td class="mono">RENDER_MODE = "pure_flat"</td>
+                  </tr>
+                  <tr>
+                    <td data-i18n="rubiks.audit.r2name">REFERENCE_ONLY</td>
+                    <td data-i18n="rubiks.audit.r2desc">只检查画面，不加载 Neural CPU。</td>
+                    <td class="mono">REFERENCE_ONLY = True</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- ============ how to run ============ -->
+          <section id="run" style="margin-bottom:40px">
+            <h2 data-i18n="rubiks.run.h">运行方法</h2>
+            <div class="codeblock"><pre><code>python scripts/render_neural_gpu_rubiks_cube_video.py</code></pre></div>
+            <p data-i18n="rubiks.run.p1">脚本路径为 scripts/render_neural_gpu_rubiks_cube_video.py，文件名保留历史命名；实际执行核心是 Neural CPU v3，画面由神经核心逐像素判定产生。</p>
+            <p data-i18n="rubiks.run.p2">所有参数位于脚本顶部的 Config，最常改的几项：</p>
+            <div class="table-scroll">
+              <table class="spec">
+                <thead>
+                  <tr>
+                    <th data-i18n="rubiks.run.th1">参数</th>
+                    <th data-i18n="rubiks.run.th2">默认值</th>
+                    <th data-i18n="rubiks.run.th3">含义</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="mono">WIDTH</td>
+                    <td class="mono">640</td>
+                    <td data-i18n="rubiks.run.c1">输出帧宽（像素）。</td>
+                  </tr>
+                  <tr>
+                    <td class="mono">HEIGHT</td>
+                    <td class="mono">360</td>
+                    <td data-i18n="rubiks.run.c2">输出帧高（像素）。</td>
+                  </tr>
+                  <tr>
+                    <td class="mono">FPS</td>
+                    <td class="mono">24</td>
+                    <td data-i18n="rubiks.run.c3">视频帧率。</td>
+                  </tr>
+                  <tr>
+                    <td class="mono">MOVE_FRAMES</td>
+                    <td class="mono">12</td>
+                    <td data-i18n="rubiks.run.c4">每个魔方动作占用的帧数。</td>
+                  </tr>
+                  <tr>
+                    <td class="mono">RENDER_MODE</td>
+                    <td class="mono">"pure_flat"</td>
+                    <td data-i18n="rubiks.run.c5">默认渲染路径：无光照、阴影、纹理或 OpenCV 填充。</td>
+                  </tr>
+                  <tr>
+                    <td class="mono">REFERENCE_ONLY</td>
+                    <td class="mono">False</td>
+                    <td data-i18n="rubiks.run.c6">只检查画面，不加载神经权重。</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <h3 data-i18n="rubiks.run.filesH">相关文件</h3>
+            <dl class="facts">
+              <dt data-i18n="rubiks.run.fScript">脚本</dt>
+              <dd class="mono"><a href="../../scripts/render_neural_gpu_rubiks_cube_video.py">scripts/render_neural_gpu_rubiks_cube_video.py</a></dd>
+              <dt data-i18n="rubiks.run.fOut">输出视频</dt>
+              <dd class="mono"><a href="../../results/rubiks/neural_cpu_rubiks_cube_flat.mp4">results/rubiks/neural_cpu_rubiks_cube_flat.mp4</a></dd>
+              <dt data-i18n="rubiks.run.fCpu">Neural CPU 权重</dt>
+              <dd class="mono"><a href="../../weights/neural_cpu_v3_best_balanced_model.pt">weights/neural_cpu_v3_best_balanced_model.pt</a></dd>
+            </dl>
+          </section>
+
+          <!-- ============ limitations ============ -->
+          <section id="limits">
+            <h2 data-i18n="rubiks.limits.h">限制与不声称的内容</h2>
+            <ul class="prose">
+              <li data-i18n="rubiks.limits.l1">Neural CPU 没有搜索魔方解法：复原序列是预给打乱序列的严格逆序（见页首注意条）。</li>
+              <li data-i18n="rubiks.limits.l2">pure_flat 模式不使用光照、阴影、纹理或 OpenCV polygon rasterizer；画面是覆盖判定的直接结果，不做美化。</li>
+              <li data-i18n="rubiks.limits.l3">视频为原生 640x360 渲染并直接编码，不通过低分辨率 resize 冒充高清。</li>
+              <li><span data-i18n="rubiks.limits.l4">0 error 是本次渲染审计的实测结果，不是一般性无错误保证；全局口径见可靠性页。</span> <a href="../reliability.html" data-i18n="rubiks.limits.l4link">可靠性页 →</a></li>
+            </ul>
+          </section>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= pager ======================= -->
+  <div class="wrap band--tight">
+    <p style="margin-bottom:18px"><a href="../demos.html"><span aria-hidden="true">← </span><span data-i18n="ui.backToDemos">返回 Demo 总览</span></a></p>
+    <nav class="pager" aria-label="Pager">
+      <a class="prev" href="clouds.html"><span class="dir" data-i18n="ui.prev">上一页</span><span class="name" data-i18n="rubiks.pager.prevName">Fast 2D Clouds</span></a>
+      <a class="next" href="../research-context.html"><span class="dir" data-i18n="ui.next">下一页</span><span class="name" data-i18n="nav.research">研究位置</span></a>
+    </nav>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <p data-i18n="footer.project">Neural CPU v3 —— 从输入输出监督训练得到的 16-bit 神经执行核心。</p>
+        <p data-i18n="footer.boundary">神经网络负责指令语义对应的状态变换；PC、取指、64 KiB RAM 与外部调度保持精确实现。</p>
+      </div>
+      <div>
+        <p><strong data-i18n="footer.legacy">早期版本（legacy）</strong></p>
+        <p><a href="../../../legacy/README_zh.md" data-i18n="footer.legacyZh">legacy 中文 README</a><br>
+           <a href="../../../legacy/README_en.md" data-i18n="footer.legacyEn">legacy English README</a></p>
+      </div>
+    </div>
+    <p class="small" style="margin-top:16px" data-i18n="footer.note">本站为研究项目静态页面，所有数字均可在仓库脚本与结果中核验。</p>
+  </div>
+</footer>
+
+<script src="../i18n.js"></script>
+<script>
+window.I18N_PAGE = {
+  zh: {
+    "rubiks.title": "3x3 魔方复原视频 — Neural CPU v3",
+    "rubiks.desc": "Neural CPU v3 渲染的 303 帧、640x360、24 fps 魔方复原视频：逐像素四边形 edge test 以 ISA 指令执行，共 7,029,721,682 个 lane-op，0 result / load / store error。",
+    "rubiks.kicker": "Demo · 并行图形",
+    "rubiks.h1": "3x3 魔方复原视频",
+    "rubiks.lede": "303 帧、640x360、24 fps（12.625 秒）的复原动画：逐像素四边形覆盖判定由 Neural CPU 执行，共 7,029,721,682 个 lane-op，0 result / load / store error。",
+    "rubiks.caution": "复原序列是预先给定打乱序列（Config.SCRAMBLE）的严格逆序——每一步都是合法魔方动作，但 Neural CPU 没有自己搜索解法，本站也不声称它求解了魔方。它承担的是渲染这段过程所需的逐像素几何判定。",
+    "rubiks.toc.output": "真实输出",
+    "rubiks.toc.numbers": "关键数字",
+    "rubiks.toc.isa": "渲染到 ISA 的映射",
+    "rubiks.toc.neural": "Neural CPU 承担什么",
+    "rubiks.toc.external": "外部运行时承担什么",
+    "rubiks.toc.audit": "审计模式",
+    "rubiks.toc.run": "运行方法",
+    "rubiks.toc.limits": "限制与不声称",
+    "rubiks.out.h": "真实输出：原生 640x360 视频",
+    "rubiks.out.cap": "pure_flat 模式的最终视频：Neural CPU 实际完成覆盖判定的原生帧缓冲直接编码为 H.264/yuv420p MP4，不经 resize。默认静音，使用原生控件播放。",
+    "rubiks.num.h": "关键数字",
+    "rubiks.num.m1": "原生输出分辨率",
+    "rubiks.num.m2": "帧数",
+    "rubiks.num.m3": "帧率与时长",
+    "rubiks.num.m4": "lane-op 总数",
+    "rubiks.num.m5": "result / load / store error",
+    "rubiks.num.m6": "默认渲染模式",
+    "rubiks.isa.h": "渲染怎样映射到 ISA",
+    "rubiks.isa.p1": "每个候选像素的四条边函数决定它属于哪个贴纸面（四边形 edge test）；相机与魔方层旋转、16-bit 坐标投影表读取与 framebuffer store enable 均由 Neural CPU 通过 LOAD/MOVI、ADD/ADC、SUB/SBC 与 RAM 中的 8-bit 乘法表执行。",
+    "rubiks.isa.p2": "打乱序列含 15 个动作；每个动作 MOVE_FRAMES = 12 帧，加上动作间暂停与首尾保持帧，合计 303 帧、12.625 秒。预先给定的打乱序列（Config.SCRAMBLE）：",
+    "rubiks.neural.tag": "由 Neural CPU 执行",
+    "rubiks.neural.l1": "相机与魔方层旋转；",
+    "rubiks.neural.l2": "16-bit 坐标投影表读取（LOAD）；",
+    "rubiks.neural.l3": "逐像素四边形 edge test：每个候选像素的四条边函数；",
+    "rubiks.neural.l4": "framebuffer store enable。",
+    "rubiks.external.tag": "由外部运行时承担",
+    "rubiks.external.l1": "魔方动作调度（按预给逆序逐帧推进）；",
+    "rubiks.external.l2": "framebuffer 存储；",
+    "rubiks.external.l3": "MP4 编码。",
+    "rubiks.external.p": "外部固定功能不决定面覆盖关系，也不计算颜色。",
+    "rubiks.audit.h": "审计模式",
+    "rubiks.audit.th1": "模式",
+    "rubiks.audit.th2": "含义",
+    "rubiks.audit.th3": "Config 开关",
+    "rubiks.audit.r1name": "pure_flat 渲染 + 审计（默认）",
+    "rubiks.audit.r1desc": "Neural CPU 逐像素完成四边形覆盖判定，原生帧缓冲直接编码；审计统计 result、load、store 三类错误，本次均为 0。",
+    "rubiks.audit.r2name": "REFERENCE_ONLY",
+    "rubiks.audit.r2desc": "只检查画面，不加载 Neural CPU。",
+    "rubiks.run.h": "运行方法",
+    "rubiks.run.p1": "脚本路径为 scripts/render_neural_gpu_rubiks_cube_video.py，文件名保留历史命名；实际执行核心是 Neural CPU v3，画面由神经核心逐像素判定产生。",
+    "rubiks.run.p2": "所有参数位于脚本顶部的 Config，最常改的几项：",
+    "rubiks.run.th1": "参数",
+    "rubiks.run.th2": "默认值",
+    "rubiks.run.th3": "含义",
+    "rubiks.run.c1": "输出帧宽（像素）。",
+    "rubiks.run.c2": "输出帧高（像素）。",
+    "rubiks.run.c3": "视频帧率。",
+    "rubiks.run.c4": "每个魔方动作占用的帧数。",
+    "rubiks.run.c5": "默认渲染路径：无光照、阴影、纹理或 OpenCV 填充。",
+    "rubiks.run.c6": "只检查画面，不加载神经权重。",
+    "rubiks.run.filesH": "相关文件",
+    "rubiks.run.fScript": "脚本",
+    "rubiks.run.fOut": "输出视频",
+    "rubiks.run.fCpu": "Neural CPU 权重",
+    "rubiks.limits.h": "限制与不声称的内容",
+    "rubiks.limits.l1": "Neural CPU 没有搜索魔方解法：复原序列是预给打乱序列的严格逆序（见页首注意条）。",
+    "rubiks.limits.l2": "pure_flat 模式不使用光照、阴影、纹理或 OpenCV polygon rasterizer；画面是覆盖判定的直接结果，不做美化。",
+    "rubiks.limits.l3": "视频为原生 640x360 渲染并直接编码，不通过低分辨率 resize 冒充高清。",
+    "rubiks.limits.l4": "0 error 是本次渲染审计的实测结果，不是一般性无错误保证；全局口径见可靠性页。",
+    "rubiks.limits.l4link": "可靠性页 →",
+    "rubiks.pager.prevName": "Fast 2D Clouds"
+  },
+  en: {
+    "rubiks.title": "3x3 Rubik's cube solve video — Neural CPU v3",
+    "rubiks.desc": "A 303-frame, 640x360, 24 fps Rubik's cube solve video rendered by Neural CPU v3: per-pixel quadrilateral edge tests executed as ISA instructions, 7,029,721,682 lane-ops in total, 0 result / load / store errors.",
+    "rubiks.kicker": "Demo · Parallel graphics",
+    "rubiks.h1": "3x3 Rubik's cube solve video",
+    "rubiks.lede": "A 303-frame, 640x360, 24 fps (12.625 s) solve animation: per-pixel quadrilateral coverage tests are executed by the Neural CPU, 7,029,721,682 lane-ops in total, with 0 result / load / store errors.",
+    "rubiks.caution": "The solve sequence is the strict inverse of a pre-given scramble (Config.SCRAMBLE) — every step is a legal cube move, but the Neural CPU did not search for the solution, and this site does not claim it solved the cube. What it owns is the per-pixel geometry needed to render that process.",
+    "rubiks.toc.output": "Real output",
+    "rubiks.toc.numbers": "Key numbers",
+    "rubiks.toc.isa": "Mapping the rendering to the ISA",
+    "rubiks.toc.neural": "What the Neural CPU computes",
+    "rubiks.toc.external": "What the external runtime does",
+    "rubiks.toc.audit": "Audit modes",
+    "rubiks.toc.run": "How to run",
+    "rubiks.toc.limits": "Limitations & non-claims",
+    "rubiks.out.h": "Real output: native 640x360 video",
+    "rubiks.out.cap": "The final video in pure_flat mode: the native framebuffer of coverage decisions actually made by the Neural CPU, encoded directly as H.264/yuv420p MP4 without resizing. Muted by default, played with native controls.",
+    "rubiks.num.h": "Key numbers",
+    "rubiks.num.m1": "native output resolution",
+    "rubiks.num.m2": "frames",
+    "rubiks.num.m3": "frame rate and duration",
+    "rubiks.num.m4": "total lane-ops",
+    "rubiks.num.m5": "result / load / store errors",
+    "rubiks.num.m6": "default render mode",
+    "rubiks.isa.h": "How the rendering maps to the ISA",
+    "rubiks.isa.p1": "Four edge functions per candidate pixel decide which sticker face it belongs to (quadrilateral edge test); camera and layer rotations, 16-bit coordinate projection-table reads and framebuffer store enable are all executed by the Neural CPU via LOAD/MOVI, ADD/ADC, SUB/SBC and an 8-bit multiply table in RAM.",
+    "rubiks.isa.p2": "The scramble contains 15 moves; each move takes MOVE_FRAMES = 12 frames, plus inter-move pauses and hold frames at both ends, for 303 frames and 12.625 seconds in total. The pre-given scramble (Config.SCRAMBLE):",
+    "rubiks.neural.tag": "Executed by the Neural CPU",
+    "rubiks.neural.l1": "camera and cube-layer rotations;",
+    "rubiks.neural.l2": "16-bit coordinate projection-table reads (LOAD);",
+    "rubiks.neural.l3": "per-pixel quadrilateral edge tests: four edge functions per candidate pixel;",
+    "rubiks.neural.l4": "framebuffer store enable.",
+    "rubiks.external.tag": "Done by the external runtime",
+    "rubiks.external.l1": "cube-move scheduling (advancing the pre-given inverse sequence frame by frame);",
+    "rubiks.external.l2": "framebuffer storage;",
+    "rubiks.external.l3": "MP4 encoding.",
+    "rubiks.external.p": "The external fixed-function parts neither decide face coverage nor compute colors.",
+    "rubiks.audit.h": "Audit modes",
+    "rubiks.audit.th1": "Mode",
+    "rubiks.audit.th2": "Meaning",
+    "rubiks.audit.th3": "Config switch",
+    "rubiks.audit.r1name": "pure_flat render + audit (default)",
+    "rubiks.audit.r1desc": "The Neural CPU makes the per-pixel quadrilateral coverage decisions and the native framebuffer is encoded directly; the audit counts result, load and store errors — all 0 in this run.",
+    "rubiks.audit.r2name": "REFERENCE_ONLY",
+    "rubiks.audit.r2desc": "Only checks the picture, without loading the Neural CPU.",
+    "rubiks.run.h": "How to run",
+    "rubiks.run.p1": "The script lives at scripts/render_neural_gpu_rubiks_cube_video.py and keeps its historical file name; the execution core is Neural CPU v3, and the picture is produced by the neural core's per-pixel decisions.",
+    "rubiks.run.p2": "All parameters live in the Config block at the top of the script. The most commonly changed ones:",
+    "rubiks.run.th1": "Parameter",
+    "rubiks.run.th2": "Default",
+    "rubiks.run.th3": "Meaning",
+    "rubiks.run.c1": "output frame width (pixels).",
+    "rubiks.run.c2": "output frame height (pixels).",
+    "rubiks.run.c3": "video frame rate.",
+    "rubiks.run.c4": "frames per cube move.",
+    "rubiks.run.c5": "the default render path: no lighting, shadows, textures or OpenCV polygon filling.",
+    "rubiks.run.c6": "only check the picture, without loading the neural weights.",
+    "rubiks.run.filesH": "Related files",
+    "rubiks.run.fScript": "Script",
+    "rubiks.run.fOut": "Output video",
+    "rubiks.run.fCpu": "Neural CPU weights",
+    "rubiks.limits.h": "Limitations & non-claims",
+    "rubiks.limits.l1": "The Neural CPU did not search for the cube solution: the solve sequence is the strict inverse of a pre-given scramble (see the caution note at the top).",
+    "rubiks.limits.l2": "pure_flat mode uses no lighting, shadows, textures or the OpenCV polygon rasterizer; the picture is the direct result of coverage decisions, with no beautification.",
+    "rubiks.limits.l3": "The video is rendered at native 640x360 and encoded directly — no low-resolution resize masquerading as HD.",
+    "rubiks.limits.l4": "0 errors is the measured result of this render audit, not a general guarantee of error-free operation; see the reliability page for the global criteria.",
+    "rubiks.limits.l4link": "Reliability page →",
+    "rubiks.pager.prevName": "Fast 2D Clouds"
+  }
+};
+</script>
+<script src="../site.js"></script>
+</body>
+</html>

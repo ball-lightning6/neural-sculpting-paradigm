@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title data-i18n="rel.title">可靠性 — Neural CPU v3</title>
+<meta name="description" content="Neural CPU v3 可靠性证据：bit accuracy、operation exact accuracy 与程序轨迹审计的定义；固定验证 0 错误；10,737,418,240 次随机操作 1 个错误；相邻 checkpoint 历史与六个 demo 零错误复跑。" data-i18n-attr="content:rel.desc">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="skip-link" href="#main" data-i18n="nav.skip">跳到正文</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">Neural CPU v3 <span class="brand-tag">16-bit ISA</span></a>
+    <button id="nav-toggle" class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links" data-i18n="nav.menu" data-i18n-attr="aria-label:nav.menuAria">菜单</button>
+    <nav class="nav-links" id="nav-links" hidden aria-label="Main">
+      <a href="../index.html" data-i18n="nav.overview">总览</a>
+      <a href="architecture.html" data-i18n="nav.core">执行核心</a>
+      <a href="training.html" data-i18n="nav.training">训练</a>
+      <a href="reliability.html" data-i18n="nav.reliability">可靠性</a>
+      <a href="demos.html" data-i18n="nav.demos">Demo</a>
+      <a href="research-context.html" data-i18n="nav.research">研究位置</a>
+      <a href="reproduce.html" data-i18n="nav.reproduce">复现</a>
+      <button id="lang-toggle" class="lang-btn" type="button" data-i18n="nav.langToggle" data-i18n-attr="aria-label:nav.langToggleAria">English</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ======================= page intro + definitions ======================= -->
+  <section class="band band--surface" aria-labelledby="page-title">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="rel.intro.kicker">验证口径</span>
+        <h1 id="page-title" data-i18n="rel.intro.h">可靠性：每个数字怎么测出来</h1>
+        <p data-i18n="rel.intro.lede">本页给出可靠性证据的完整口径：三种测量定义、固定验证与结构组结果、10,737,418,240 次操作的最终随机验证、相邻 checkpoint 的历史结果，以及六个最终 demo 的零错误复跑。</p>
+      </div>
+      <div class="with-toc">
+        <div class="toc">
+          <strong data-i18n="ui.toc">本页目录</strong>
+          <ol>
+            <li><a href="#rel-defs" data-i18n="rel.toc.1">三种测量口径</a></li>
+            <li><a href="#rel-fixed" data-i18n="rel.toc.2">固定验证与结构组</a></li>
+            <li><a href="#rel-random" data-i18n="rel.toc.3">最终随机验证</a></li>
+            <li><a href="#rel-history" data-i18n="rel.toc.4">相邻 checkpoint 历史</a></li>
+            <li><a href="#rel-case" data-i18n="rel.toc.5">唯一错误案例</a></li>
+            <li><a href="#rel-noclaim" data-i18n="rel.toc.6">为什么不能声称“必不出错”</a></li>
+            <li><a href="#rel-dist" data-i18n="rel.toc.7">为什么两种分布都要测</a></li>
+            <li><a href="#rel-demos" data-i18n="rel.toc.8">六个 demo 零错误复跑</a></li>
+          </ol>
+        </div>
+        <div>
+          <div class="section-head">
+            <span class="kicker" data-i18n="rel.defs.kicker">口径定义</span>
+            <h2 id="rel-defs" data-i18n="rel.defs.h2">先定义：三种测量口径</h2>
+            <p data-i18n="rel.defs.lede">本站所有可靠性数字都对应以下三种口径之一；阅读任何数字前先确认它属于哪一种。</p>
+          </div>
+          <div class="grid-3">
+            <div>
+              <h3 data-i18n="rel.defs.bit.h">Bit accuracy（逐位准确率）</h3>
+              <p data-i18n="rel.defs.bit.p">每次状态转移输出 39 bit。逐位与独立、精确的 ISA 真值比较：任一输出 bit 与真值不符，计 1 个 bit error。这是最细粒度的口径。</p>
+            </div>
+            <div>
+              <h3 data-i18n="rel.defs.exact.h">Operation exact accuracy（逐操作精确率）</h3>
+              <p data-i18n="rel.defs.exact.p">一次操作的全部 39 个输出 bit 都与真值一致，该操作才算 exact；只要 1 个 bit 出错，整个样本计为 1 个 sample exact error。这是单步操作的最严格口径。</p>
+            </div>
+            <div>
+              <h3 data-i18n="rel.defs.traj.h">Program trajectory audit（程序轨迹审计）</h3>
+              <p data-i18n="rel.defs.traj.p">在真实程序产生的长指令轨迹上逐步比对神经核心与精确 ISA 实现。serial 模式让神经状态自主前进、首次差异即停；batch 模式把同一条唯一精确轨迹上的独立单步组成大批次审计，不改变程序答案。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= fixed validation + structural groups ======================= -->
+  <section class="band" aria-labelledby="rel-fixed">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="rel.fixed.kicker">固定验证</span>
+        <h2 id="rel-fixed" data-i18n="rel.fixed.h2">固定验证与结构状态组</h2>
+        <p data-i18n="rel.fixed.lede">发布权重在固定验证集与两个结构状态组上的结果。真值由独立、精确的 ISA 实现生成，损失为所有输出 bit 的 BCE。</p>
+      </div>
+      <div class="metric-grid">
+        <div class="metric"><span class="num">1,048,576</span><span class="lbl" data-i18n="rel.fixed.m1">固定验证集操作数</span></div>
+        <div class="metric"><span class="num">40,894,464</span><span class="lbl" data-i18n="rel.fixed.m2">输出 bit 数（1,048,576 × 39）</span></div>
+        <div class="metric"><span class="num">1.862512782179165e-09</span><span class="lbl" data-i18n="rel.fixed.m3">mean eval loss</span></div>
+        <div class="metric"><span class="num">2.066208267973276e-09</span><span class="lbl" data-i18n="rel.fixed.m4">state loss</span></div>
+        <div class="metric"><span class="num">8.017706149606590e-11</span><span class="lbl" data-i18n="rel.fixed.m5">control loss</span></div>
+        <div class="metric"><span class="num ok">0</span><span class="lbl" data-i18n="rel.fixed.m6">bit errors</span></div>
+        <div class="metric"><span class="num ok">0</span><span class="lbl" data-i18n="rel.fixed.m7">sample exact errors</span></div>
+        <div class="metric"><span class="num">9.794393489980207e-09</span><span class="lbl" data-i18n="rel.fixed.m8">最坏分组的 loss（SHR）</span></div>
+      </div>
+      <div class="table-scroll">
+        <table class="spec">
+          <caption data-i18n="rel.fixed.cap">固定验证集与结构状态组：规模、loss 与错误计数</caption>
+          <thead>
+            <tr>
+              <th data-i18n="rel.fixed.th1">分组</th>
+              <th data-i18n="rel.fixed.th2">样本数</th>
+              <th data-i18n="rel.fixed.th3">平均 loss（BCE）</th>
+              <th data-i18n="rel.fixed.th4">错误</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td data-i18n="rel.fixed.r1c1">固定验证集整体（32 个 opcode batch 内均衡）</td>
+              <td class="mono">1,048,576 ops · 40,894,464 bits</td>
+              <td class="mono">1.862512782179165e-09</td>
+              <td data-i18n="rel.fixed.err0">0 bit · 0 sample exact</td>
+            </tr>
+            <tr>
+              <td data-i18n="rel.fixed.r2c1">最坏 opcode 组：SHR</td>
+              <td data-i18n="rel.fixed.r2c2">固定验证集内子组</td>
+              <td class="mono">9.794393489980207e-09</td>
+              <td class="mono">0</td>
+            </tr>
+            <tr>
+              <td data-i18n="rel.fixed.r3c1">SPARSE_STATE（35 个状态 bit 中 0–8 个为 1）</td>
+              <td class="mono">262,144</td>
+              <td class="mono">4.980764063297545e-09</td>
+              <td class="mono">0</td>
+            </tr>
+            <tr>
+              <td data-i18n="rel.fixed.r4c1">DENSE_STATE（35 个状态 bit 中 27–35 个为 1）</td>
+              <td class="mono">262,144</td>
+              <td class="mono">4.338648824824094e-09</td>
+              <td class="mono">0</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="small muted" data-i18n="rel.fixed.structNote">SPARSE_STATE 与 DENSE_STATE 只是采样与审计分组，不是 ISA 中真实存在的指令。</p>
+      <dl class="facts">
+        <dt>balanced key</dt>
+        <dd class="mono">[0, 9.794393489980207e-09, 1.862512782179165e-09]</dd>
+      </dl>
+      <p class="small muted" data-i18n="rel.fixed.balP">balanced key 按字典序依次记录：普通与结构验证组的 sample exact error 总数、所有真实 / 虚拟组中的最坏 loss、总体平均 loss。发布版只提供按此标准选出的 best_balanced_model.pt。</p>
+    </div>
+  </section>
+
+  <!-- ======================= final random validation ======================= -->
+  <section class="band band--surface" aria-labelledby="rel-random">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="rel.random.kicker">大规模随机验证</span>
+        <h2 id="rel-random" data-i18n="rel.random.h2">最终随机验证：10,737,418,240 次操作</h2>
+        <p data-i18n="rel.random.lede">对最终发布权重的独立大规模验证。分布与训练的基础分布一致：32 个 opcode 在 batch 内均衡，指令字段、寄存器值与 flags 随机产生。</p>
+      </div>
+      <div class="metric-grid">
+        <div class="metric"><span class="num">10,737,418,240</span><span class="lbl" data-i18n="rel.random.m1">操作数</span></div>
+        <div class="metric"><span class="num err">1</span><span class="lbl" data-i18n="rel.random.m2">sample exact error（同时也是 1 个 bit error）</span></div>
+        <div class="metric"><span class="num">0.9999999999068677</span><span class="lbl" data-i18n="rel.random.m3">operation-level exact accuracy</span></div>
+        <div class="metric"><span class="num">0.999999999997612</span><span class="lbl" data-i18n="rel.random.m4">bit accuracy</span></div>
+      </div>
+      <p class="small"><a href="#rel-case" data-i18n="rel.random.note">唯一错误的具体情况见下方错误案例。</a></p>
+    </div>
+  </section>
+
+  <!-- ======================= adjacent checkpoint history ======================= -->
+  <section class="band" aria-labelledby="rel-history">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="rel.hist.kicker">历史测试</span>
+        <h2 id="rel-history" data-i18n="rel.hist.h2">相邻 checkpoint 的历史大样本测试</h2>
+        <p data-i18n="rel.hist.lede">训练过程中，相邻阶段的最佳 checkpoint 还做过两次独立大样本测试；连同最终发布权重的验证，事件计数如下。</p>
+      </div>
+      <ol class="flow">
+        <li>
+          <strong data-i18n="rel.hist.t1h">10,737,418,240 次操作 · 0 error</strong>
+          <p data-i18n="rel.hist.t1p">相邻训练阶段的一个最佳 checkpoint。</p>
+        </li>
+        <li>
+          <strong data-i18n="rel.hist.t2h">32,212,254,720 次操作 · 3 errors</strong>
+          <p data-i18n="rel.hist.t2p">另一个相邻最佳 checkpoint；3 个错误分别出现在 XOR、CMP、ADDI。</p>
+        </li>
+        <li>
+          <strong data-i18n="rel.hist.t3h">10,737,418,240 次操作 · 1 error</strong>
+          <p data-i18n="rel.hist.t3p">最终发布权重（checkpoint step 6,926,625）；错误来自 JG，细节见上方最终随机验证与下方错误案例。</p>
+        </li>
+      </ol>
+      <div class="note note--caution">
+        <p data-i18n="rel.hist.note">这三次测试使用的是训练过程中相近但不完全相同的最佳 checkpoint，不能简单合并成一个精确频率估计。谨慎的表述是：随机单步操作错误率处于每约 10^10 次操作一个错误的数量级。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= the single final error case ======================= -->
+  <section class="band band--surface" aria-labelledby="rel-case">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="rel.case.kicker">错误案例</span>
+        <h2 id="rel-case" data-i18n="rel.case.h2">唯一的最终错误案例</h2>
+      </div>
+      <details>
+        <summary data-i18n="rel.case.sum">JG 错误更新 ZF —— 10,737,418,240 次操作中的唯一错误</summary>
+        <dl class="facts">
+          <dt data-i18n="rel.case.dt1">出错指令</dt>
+          <dd class="mono">JG</dd>
+          <dt data-i18n="rel.case.dt2">出错输出</dt>
+          <dd data-i18n="rel.case.dd2">标志位 ZF：神经网络错误更新了 ZF。</dd>
+          <dt data-i18n="rel.case.dt3">其余输出</dt>
+          <dd data-i18n="rel.case.dd3">寄存器与控制信号（memory_read、memory_write、branch_taken、halt）全部正确。</dd>
+          <dt data-i18n="rel.case.dt4">错误计数</dt>
+          <dd data-i18n="rel.case.dd4">1 个 sample exact error，同时也是 1 个 bit error。</dd>
+        </dl>
+      </details>
+    </div>
+  </section>
+
+  <!-- ======================= why no guarantee claim ======================= -->
+  <section class="band" aria-labelledby="rel-noclaim">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="rel.noclaim.kicker">谨慎措辞</span>
+        <h2 id="rel-noclaim" data-i18n="rel.noclaim.h2">为什么不能声称“100 亿次必不出错”</h2>
+      </div>
+      <ul class="prose">
+        <li data-i18n="rel.noclaim.l1">“每约 10^10 次操作一个错误”是由有限的罕见事件计数得到的数量级估计：几次大样本测试合计只观察到 0、1、3 个错误。</li>
+        <li data-i18n="rel.noclaim.l2">相邻 checkpoint 的结果来自相近但不完全相同的权重，不能合并成精确的错误频率。</li>
+        <li data-i18n="rel.noclaim.l3">这是一个训练得到的神经网络权重的实测错误率，不是硬件级可靠性，也不能与真实硅 CPU 的可靠性相比较。</li>
+      </ul>
+      <div class="note note--caution prose">
+        <p data-i18n="rel.noclaim.note">该数量级估计来自有限罕见事件，不是硬件级可靠性保证，也不能写成“严格保证 100 亿次不出错”。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= why both distributions ======================= -->
+  <section class="band band--surface" aria-labelledby="rel-dist">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="rel.dist.kicker">分布覆盖</span>
+        <h2 id="rel-dist" data-i18n="rel.dist.h2">为什么真实程序分布和全局随机分布都要测</h2>
+      </div>
+      <p class="prose" data-i18n="rel.dist.p1">全局随机验证中，35 个状态 bit 约有一半为 1；真实程序轨迹却经常经过全零、近全零、常量初始化、刚清空的寄存器等结构化状态。</p>
+      <p class="prose" data-i18n="rel.dist.p2">实际运行 pi 程序时，早期模型在零很多的状态上暴露出远高于全局随机验证的错误率；对称地，接近全 1 的状态也可能构成另一类边界。</p>
+      <p class="prose" data-i18n="rel.dist.p3">因此训练加入了 SPARSE_STATE 与 DENSE_STATE 两个结构组；验证侧也必须同时覆盖全局随机分布与真实程序轨迹——六个 demo 的逐轨迹审计属于后者。</p>
+      <p><a href="training.html" data-i18n="rel.dist.link">结构组如何进入训练，见训练页 →</a></p>
+    </div>
+  </section>
+
+  <!-- ======================= six final demos ======================= -->
+  <section class="band" aria-labelledby="rel-demos">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="rel.final.kicker">Demo 复跑</span>
+        <h2 id="rel-demos" data-i18n="rel.final.h2">六个最终 demo：0 神经执行错误</h2>
+        <p data-i18n="rel.final.lede">最终发布权重重新运行全部六个 demo，六项均报告 0 个神经执行错误。各 demo 的审计口径与神经 / 外部职责边界见详情页。</p>
+      </div>
+      <div class="card-grid">
+        <article class="card">
+          <h3 data-i18n="rel.final.c1h">Pi · 1000 位十进制有效数字</h3>
+          <p data-i18n="rel.final.c1p">输出与高精度参考逐位一致。</p>
+          <p class="metric-inline">5,559,684,667 ops · 0 error</p>
+          <p class="card-foot"><a href="demos/pi.html" data-i18n="rel.final.link">详情 →</a></p>
+        </article>
+        <article class="card">
+          <h3 data-i18n="rel.final.c2h">Sudoku · 10 道题</h3>
+          <p data-i18n="rel.final.c2p">一次已记录的 10 题运行，全部解出并通过答案验证。</p>
+          <p class="metric-inline">180,243,530 ops · 0 error</p>
+          <p class="card-foot"><a href="demos/sudoku.html" data-i18n="rel.final.link">详情 →</a></p>
+        </article>
+        <article class="card">
+          <h3 data-i18n="rel.final.c3h">第 10,000,000 个质数</h3>
+          <p data-i18n="rel.final.c3p">分段奇数筛，结果 179,424,673。</p>
+          <p class="metric-inline">4,462,453,580 ops · 0 error</p>
+          <p class="card-foot"><a href="demos/primes.html" data-i18n="rel.final.link">详情 →</a></p>
+        </article>
+        <article class="card">
+          <h3 data-i18n="rel.final.c4h">MNIST CNN 量化推理</h3>
+          <p data-i18n="rel.final.c4p">QAT、精确整数与 Neural CPU 三条路径均预测 7。</p>
+          <p class="metric-inline">596,807,228 lane-ops · 0 error</p>
+          <p class="card-foot"><a href="demos/mnist.html" data-i18n="rel.final.link">详情 →</a></p>
+        </article>
+        <article class="card">
+          <h3>Fast 2D Clouds</h3>
+          <p data-i18n="rel.final.c5p">1280x720 帧与精确整数参考逐像素一致。</p>
+          <p class="metric-inline">10,740,326,400 lane-ops · 0 error</p>
+          <p class="card-foot"><a href="demos/clouds.html" data-i18n="rel.final.link">详情 →</a></p>
+        </article>
+        <article class="card">
+          <h3>3x3 Rubik's Cube</h3>
+          <p data-i18n="rel.final.c6p">303 帧复原视频，640x360 原生渲染。</p>
+          <p class="metric-inline">7,029,721,682 lane-ops · 0 error</p>
+          <p class="card-foot"><a href="demos/rubiks.html" data-i18n="rel.final.link">详情 →</a></p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= pager ======================= -->
+  <div class="wrap band--tight">
+    <nav class="pager" aria-label="Pager">
+      <a class="prev" href="training.html"><span class="dir" data-i18n="ui.prev">上一页</span><span class="name" data-i18n="nav.training">训练</span></a>
+      <a class="next" href="demos.html"><span class="dir" data-i18n="ui.next">下一页</span><span class="name" data-i18n="nav.demos">Demo</span></a>
+    </nav>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <p data-i18n="footer.project">Neural CPU v3 —— 从输入输出监督训练得到的 16-bit 神经执行核心。</p>
+        <p data-i18n="footer.boundary">神经网络负责指令语义对应的状态变换；PC、取指、64 KiB RAM 与外部调度保持精确实现。</p>
+      </div>
+      <div>
+        <p><strong data-i18n="footer.legacy">早期版本（legacy）</strong></p>
+        <p><a href="../../legacy/README_zh.md" data-i18n="footer.legacyZh">legacy 中文 README</a><br>
+           <a href="../../legacy/README_en.md" data-i18n="footer.legacyEn">legacy English README</a></p>
+      </div>
+    </div>
+    <p class="small" style="margin-top:16px" data-i18n="footer.note">本站为研究项目静态页面，所有数字均可在仓库脚本与结果中核验。</p>
+  </div>
+</footer>
+
+<script src="i18n.js"></script>
+<script>
+window.I18N_PAGE = {
+  zh: {
+    "rel.title": "可靠性 — Neural CPU v3",
+    "rel.desc": "Neural CPU v3 可靠性证据：bit accuracy、operation exact accuracy 与程序轨迹审计的定义；固定验证 0 错误；10,737,418,240 次随机操作 1 个错误；相邻 checkpoint 历史与六个 demo 零错误复跑。",
+    "rel.intro.kicker": "验证口径",
+    "rel.intro.h": "可靠性：每个数字怎么测出来",
+    "rel.intro.lede": "本页给出可靠性证据的完整口径：三种测量定义、固定验证与结构组结果、10,737,418,240 次操作的最终随机验证、相邻 checkpoint 的历史结果，以及六个最终 demo 的零错误复跑。",
+    "rel.toc.1": "三种测量口径",
+    "rel.toc.2": "固定验证与结构组",
+    "rel.toc.3": "最终随机验证",
+    "rel.toc.4": "相邻 checkpoint 历史",
+    "rel.toc.5": "唯一错误案例",
+    "rel.toc.6": "为什么不能声称“必不出错”",
+    "rel.toc.7": "为什么两种分布都要测",
+    "rel.toc.8": "六个 demo 零错误复跑",
+    "rel.defs.kicker": "口径定义",
+    "rel.defs.h2": "先定义：三种测量口径",
+    "rel.defs.lede": "本站所有可靠性数字都对应以下三种口径之一；阅读任何数字前先确认它属于哪一种。",
+    "rel.defs.bit.h": "Bit accuracy（逐位准确率）",
+    "rel.defs.bit.p": "每次状态转移输出 39 bit。逐位与独立、精确的 ISA 真值比较：任一输出 bit 与真值不符，计 1 个 bit error。这是最细粒度的口径。",
+    "rel.defs.exact.h": "Operation exact accuracy（逐操作精确率）",
+    "rel.defs.exact.p": "一次操作的全部 39 个输出 bit 都与真值一致，该操作才算 exact；只要 1 个 bit 出错，整个样本计为 1 个 sample exact error。这是单步操作的最严格口径。",
+    "rel.defs.traj.h": "Program trajectory audit（程序轨迹审计）",
+    "rel.defs.traj.p": "在真实程序产生的长指令轨迹上逐步比对神经核心与精确 ISA 实现。serial 模式让神经状态自主前进、首次差异即停；batch 模式把同一条唯一精确轨迹上的独立单步组成大批次审计，不改变程序答案。",
+    "rel.fixed.kicker": "固定验证",
+    "rel.fixed.h2": "固定验证与结构状态组",
+    "rel.fixed.lede": "发布权重在固定验证集与两个结构状态组上的结果。真值由独立、精确的 ISA 实现生成，损失为所有输出 bit 的 BCE。",
+    "rel.fixed.m1": "固定验证集操作数",
+    "rel.fixed.m2": "输出 bit 数（1,048,576 × 39）",
+    "rel.fixed.m3": "mean eval loss",
+    "rel.fixed.m4": "state loss",
+    "rel.fixed.m5": "control loss",
+    "rel.fixed.m6": "bit errors",
+    "rel.fixed.m7": "sample exact errors",
+    "rel.fixed.m8": "最坏分组的 loss（SHR）",
+    "rel.fixed.cap": "固定验证集与结构状态组：规模、loss 与错误计数",
+    "rel.fixed.th1": "分组",
+    "rel.fixed.th2": "样本数",
+    "rel.fixed.th3": "平均 loss（BCE）",
+    "rel.fixed.th4": "错误",
+    "rel.fixed.r1c1": "固定验证集整体（32 个 opcode batch 内均衡）",
+    "rel.fixed.err0": "0 bit · 0 sample exact",
+    "rel.fixed.r2c1": "最坏 opcode 组：SHR",
+    "rel.fixed.r2c2": "固定验证集内子组",
+    "rel.fixed.r3c1": "SPARSE_STATE（35 个状态 bit 中 0–8 个为 1）",
+    "rel.fixed.r4c1": "DENSE_STATE（35 个状态 bit 中 27–35 个为 1）",
+    "rel.fixed.structNote": "SPARSE_STATE 与 DENSE_STATE 只是采样与审计分组，不是 ISA 中真实存在的指令。",
+    "rel.fixed.balP": "balanced key 按字典序依次记录：普通与结构验证组的 sample exact error 总数、所有真实 / 虚拟组中的最坏 loss、总体平均 loss。发布版只提供按此标准选出的 best_balanced_model.pt。",
+    "rel.random.kicker": "大规模随机验证",
+    "rel.random.h2": "最终随机验证：10,737,418,240 次操作",
+    "rel.random.lede": "对最终发布权重的独立大规模验证。分布与训练的基础分布一致：32 个 opcode 在 batch 内均衡，指令字段、寄存器值与 flags 随机产生。",
+    "rel.random.m1": "操作数",
+    "rel.random.m2": "sample exact error（同时也是 1 个 bit error）",
+    "rel.random.m3": "operation-level exact accuracy",
+    "rel.random.m4": "bit accuracy",
+    "rel.random.note": "唯一错误的具体情况见下方错误案例。",
+    "rel.hist.kicker": "历史测试",
+    "rel.hist.h2": "相邻 checkpoint 的历史大样本测试",
+    "rel.hist.lede": "训练过程中，相邻阶段的最佳 checkpoint 还做过两次独立大样本测试；连同最终发布权重的验证，事件计数如下。",
+    "rel.hist.t1h": "10,737,418,240 次操作 · 0 error",
+    "rel.hist.t1p": "相邻训练阶段的一个最佳 checkpoint。",
+    "rel.hist.t2h": "32,212,254,720 次操作 · 3 errors",
+    "rel.hist.t2p": "另一个相邻最佳 checkpoint；3 个错误分别出现在 XOR、CMP、ADDI。",
+    "rel.hist.t3h": "10,737,418,240 次操作 · 1 error",
+    "rel.hist.t3p": "最终发布权重（checkpoint step 6,926,625）；错误来自 JG，细节见上方最终随机验证与下方错误案例。",
+    "rel.hist.note": "这三次测试使用的是训练过程中相近但不完全相同的最佳 checkpoint，不能简单合并成一个精确频率估计。谨慎的表述是：随机单步操作错误率处于每约 10^10 次操作一个错误的数量级。",
+    "rel.case.kicker": "错误案例",
+    "rel.case.h2": "唯一的最终错误案例",
+    "rel.case.sum": "JG 错误更新 ZF —— 10,737,418,240 次操作中的唯一错误",
+    "rel.case.dt1": "出错指令",
+    "rel.case.dt2": "出错输出",
+    "rel.case.dd2": "标志位 ZF：神经网络错误更新了 ZF。",
+    "rel.case.dt3": "其余输出",
+    "rel.case.dd3": "寄存器与控制信号（memory_read、memory_write、branch_taken、halt）全部正确。",
+    "rel.case.dt4": "错误计数",
+    "rel.case.dd4": "1 个 sample exact error，同时也是 1 个 bit error。",
+    "rel.noclaim.kicker": "谨慎措辞",
+    "rel.noclaim.h2": "为什么不能声称“100 亿次必不出错”",
+    "rel.noclaim.l1": "“每约 10^10 次操作一个错误”是由有限的罕见事件计数得到的数量级估计：几次大样本测试合计只观察到 0、1、3 个错误。",
+    "rel.noclaim.l2": "相邻 checkpoint 的结果来自相近但不完全相同的权重，不能合并成精确的错误频率。",
+    "rel.noclaim.l3": "这是一个训练得到的神经网络权重的实测错误率，不是硬件级可靠性，也不能与真实硅 CPU 的可靠性相比较。",
+    "rel.noclaim.note": "该数量级估计来自有限罕见事件，不是硬件级可靠性保证，也不能写成“严格保证 100 亿次不出错”。",
+    "rel.dist.kicker": "分布覆盖",
+    "rel.dist.h2": "为什么真实程序分布和全局随机分布都要测",
+    "rel.dist.p1": "全局随机验证中，35 个状态 bit 约有一半为 1；真实程序轨迹却经常经过全零、近全零、常量初始化、刚清空的寄存器等结构化状态。",
+    "rel.dist.p2": "实际运行 pi 程序时，早期模型在零很多的状态上暴露出远高于全局随机验证的错误率；对称地，接近全 1 的状态也可能构成另一类边界。",
+    "rel.dist.p3": "因此训练加入了 SPARSE_STATE 与 DENSE_STATE 两个结构组；验证侧也必须同时覆盖全局随机分布与真实程序轨迹——六个 demo 的逐轨迹审计属于后者。",
+    "rel.dist.link": "结构组如何进入训练，见训练页 →",
+    "rel.final.kicker": "Demo 复跑",
+    "rel.final.h2": "六个最终 demo：0 神经执行错误",
+    "rel.final.lede": "最终发布权重重新运行全部六个 demo，六项均报告 0 个神经执行错误。各 demo 的审计口径与神经 / 外部职责边界见详情页。",
+    "rel.final.c1h": "Pi · 1000 位十进制有效数字",
+    "rel.final.c1p": "输出与高精度参考逐位一致。",
+    "rel.final.c2h": "Sudoku · 10 道题",
+    "rel.final.c2p": "一次已记录的 10 题运行，全部解出并通过答案验证。",
+    "rel.final.c3h": "第 10,000,000 个质数",
+    "rel.final.c3p": "分段奇数筛，结果 179,424,673。",
+    "rel.final.c4h": "MNIST CNN 量化推理",
+    "rel.final.c4p": "QAT、精确整数与 Neural CPU 三条路径均预测 7。",
+    "rel.final.c5p": "1280x720 帧与精确整数参考逐像素一致。",
+    "rel.final.c6p": "303 帧复原视频，640x360 原生渲染。",
+    "rel.final.link": "详情 →"
+  },
+  en: {
+    "rel.title": "Reliability — Neural CPU v3",
+    "rel.desc": "Reliability evidence for Neural CPU v3: definitions of bit accuracy, operation exact accuracy and program trace audits; zero errors on fixed validation; one error in 10,737,418,240 random operations; adjacent-checkpoint history and the zero-error demo reruns.",
+    "rel.intro.kicker": "Validation criteria",
+    "rel.intro.h": "Reliability: how every number is measured",
+    "rel.intro.lede": "The complete basis for the reliability claims: three measurement definitions, fixed-validation and structural-group results, the final random validation over 10,737,418,240 operations, historical results from adjacent checkpoints, and the zero-error rerun of the six final demos.",
+    "rel.toc.1": "Three measurement scopes",
+    "rel.toc.2": "Fixed validation and structural groups",
+    "rel.toc.3": "The final random validation",
+    "rel.toc.4": "Adjacent-checkpoint history",
+    "rel.toc.5": "The single error case",
+    "rel.toc.6": "Why no “guaranteed zero error” claim",
+    "rel.toc.7": "Why both distributions are tested",
+    "rel.toc.8": "Six demos rerun with zero errors",
+    "rel.defs.kicker": "Definitions",
+    "rel.defs.h2": "First, definitions: three measurement scopes",
+    "rel.defs.lede": "Every reliability number on this site belongs to exactly one of the three scopes below; check which one before reading any figure.",
+    "rel.defs.bit.h": "Bit accuracy",
+    "rel.defs.bit.p": "Each state transition outputs 39 bits. Every bit is compared against an independent, exact ISA ground truth; any mismatching output bit counts as one bit error. This is the finest-grained measure.",
+    "rel.defs.exact.h": "Operation exact accuracy",
+    "rel.defs.exact.p": "An operation counts as exact only when all 39 output bits match the ground truth; a single wrong bit turns the whole sample into one sample exact error. This is the strictest per-operation measure.",
+    "rel.defs.traj.h": "Program trajectory audit",
+    "rel.defs.traj.p": "Step-by-step comparison between the neural core and the exact ISA implementation along the long instruction trace of a real program. serial mode lets the neural state run on its own and stops at the first divergence; batch mode audits independent single steps of the same unique exact trace in large batches, without changing the program's answer.",
+    "rel.fixed.kicker": "Fixed validation",
+    "rel.fixed.h2": "Fixed validation and structural state groups",
+    "rel.fixed.lede": "Results of the released weights on the fixed validation set and the two structural state groups. Ground truth comes from an independent, exact ISA implementation; the loss is BCE over all output bits.",
+    "rel.fixed.m1": "operations in the fixed validation set",
+    "rel.fixed.m2": "output bits (1,048,576 × 39)",
+    "rel.fixed.m3": "mean eval loss",
+    "rel.fixed.m4": "state loss",
+    "rel.fixed.m5": "control loss",
+    "rel.fixed.m6": "bit errors",
+    "rel.fixed.m7": "sample exact errors",
+    "rel.fixed.m8": "worst-group loss (SHR)",
+    "rel.fixed.cap": "Fixed validation set and structural state groups: size, loss and error counts",
+    "rel.fixed.th1": "Group",
+    "rel.fixed.th2": "Samples",
+    "rel.fixed.th3": "Mean loss (BCE)",
+    "rel.fixed.th4": "Errors",
+    "rel.fixed.r1c1": "Full fixed validation set (32 opcodes balanced per batch)",
+    "rel.fixed.err0": "0 bit · 0 sample exact",
+    "rel.fixed.r2c1": "Worst opcode group: SHR",
+    "rel.fixed.r2c2": "subgroup of the fixed set",
+    "rel.fixed.r3c1": "SPARSE_STATE (0–8 of the 35 state bits are 1)",
+    "rel.fixed.r4c1": "DENSE_STATE (27–35 of the 35 state bits are 1)",
+    "rel.fixed.structNote": "SPARSE_STATE and DENSE_STATE are sampling and audit groups only — not real instructions in the ISA.",
+    "rel.fixed.balP": "The balanced key records, in lexicographic order: total sample exact errors across the normal and structural groups, the worst loss among all real/virtual groups, and the overall mean loss. Only the best_balanced_model.pt selected by this criterion is released.",
+    "rel.random.kicker": "Large-scale random validation",
+    "rel.random.h2": "The final random validation: 10,737,418,240 operations",
+    "rel.random.lede": "An independent large-scale validation of the final released weights. The distribution matches the base training distribution: 32 opcodes balanced per batch, with random instruction fields, register values and flags.",
+    "rel.random.m1": "operations",
+    "rel.random.m2": "sample exact error (also one bit error)",
+    "rel.random.m3": "operation-level exact accuracy",
+    "rel.random.m4": "bit accuracy",
+    "rel.random.note": "See the error case below for the details of the single error.",
+    "rel.hist.kicker": "History",
+    "rel.hist.h2": "Historical large-sample tests on adjacent checkpoints",
+    "rel.hist.lede": "During training, two further independent large-sample tests ran on best checkpoints from adjacent stages; together with the final validation of the released weights, the event counts are:",
+    "rel.hist.t1h": "10,737,418,240 operations · 0 errors",
+    "rel.hist.t1p": "A best checkpoint from an adjacent training stage.",
+    "rel.hist.t2h": "32,212,254,720 operations · 3 errors",
+    "rel.hist.t2p": "Another adjacent best checkpoint; the 3 errors occurred in XOR, CMP and ADDI respectively.",
+    "rel.hist.t3h": "10,737,418,240 operations · 1 error",
+    "rel.hist.t3p": "The final released weights (checkpoint step 6,926,625); the error came from JG — see the final random validation above and the error case below.",
+    "rel.hist.note": "These three tests used nearby but not identical best checkpoints from training, so they cannot be merged into one precise frequency estimate. The careful statement is: the random single-step error rate is on the order of one error per ~10^10 operations.",
+    "rel.case.kicker": "Error case",
+    "rel.case.h2": "The single final error case",
+    "rel.case.sum": "JG updated ZF incorrectly — the single error in 10,737,418,240 operations",
+    "rel.case.dt1": "Faulting instruction",
+    "rel.case.dt2": "Faulting output",
+    "rel.case.dd2": "Flag ZF: the neural network updated ZF incorrectly.",
+    "rel.case.dt3": "All other outputs",
+    "rel.case.dd3": "Registers and control signals (memory_read, memory_write, branch_taken, halt) were all correct.",
+    "rel.case.dt4": "Error count",
+    "rel.case.dd4": "One sample exact error, which is also one bit error.",
+    "rel.noclaim.kicker": "Careful wording",
+    "rel.noclaim.h2": "Why we do not claim “no error in 10 billion operations, guaranteed”",
+    "rel.noclaim.l1": "“One error per ~10^10 operations” is an order-of-magnitude estimate from a finite count of rare events: the large-sample tests observed only 0, 1 and 3 errors in total.",
+    "rel.noclaim.l2": "The adjacent-checkpoint results came from nearby but not identical weights and cannot be merged into a precise error frequency.",
+    "rel.noclaim.l3": "This is a measured error rate of trained neural network weights — not hardware-grade reliability, and not comparable to the reliability of a real silicon CPU.",
+    "rel.noclaim.note": "This order-of-magnitude estimate comes from a finite count of rare events. It is not a hardware-grade reliability guarantee, and it must not be read as “no error in 10 billion operations, guaranteed”.",
+    "rel.dist.kicker": "Distribution coverage",
+    "rel.dist.h2": "Why both real-program and global-random distributions are tested",
+    "rel.dist.p1": "In global random validation about half of the 35 state bits are 1; real program traces, however, constantly pass through structured states — all-zero, near-all-zero, constant-initialized or freshly cleared registers.",
+    "rel.dist.p2": "When actually running the pi program, an early model showed a much higher error rate on zero-heavy states than in global random validation; symmetrically, near-all-ones states may form another boundary.",
+    "rel.dist.p3": "Training therefore added the SPARSE_STATE and DENSE_STATE structural groups, and validation must cover both the global random distribution and real program traces — the per-trace audits of the six demos are the latter.",
+    "rel.dist.link": "How the structural groups enter training — see the training page →",
+    "rel.final.kicker": "Demo reruns",
+    "rel.final.h2": "The six final demos: zero neural execution errors",
+    "rel.final.lede": "The released weights reran all six demos; every one reports zero neural execution errors. Audit criteria and the neural/external responsibility boundary of each demo are on the detail pages.",
+    "rel.final.c1h": "Pi · 1000 significant decimal digits",
+    "rel.final.c1p": "The output matches a high-precision reference digit for digit.",
+    "rel.final.c2h": "Sudoku · 10 puzzles",
+    "rel.final.c2p": "One recorded 10-puzzle run; all puzzles solved and answer-verified.",
+    "rel.final.c3h": "The 10,000,000th prime",
+    "rel.final.c3p": "Segmented odd sieve; result 179,424,673.",
+    "rel.final.c4h": "MNIST CNN quantized inference",
+    "rel.final.c4p": "All three paths — QAT, exact integer and Neural CPU — predict 7.",
+    "rel.final.c5p": "The 1280x720 frame is pixel-identical to the exact integer reference.",
+    "rel.final.c6p": "303-frame solve video, rendered natively at 640x360.",
+    "rel.final.link": "Details →"
+  }
+};
+</script>
+<script src="site.js"></script>
+</body>
+</html>

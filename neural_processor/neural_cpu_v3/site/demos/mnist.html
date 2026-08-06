@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title data-i18n="mnist.title">MNIST CNN 推理 — Neural CPU v3</title>
+<meta name="description" content="Neural CPU v3 执行量化 MNIST CNN：常量权重乘法编译为 NAF/CSD shift-add 序列；QAT、精确整数与 Neural CPU 三条路径对测试图像 0 均预测 7，596,807,228 个 lane-op，0 error。" data-i18n-attr="content:mnist.desc">
+<link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+<a class="skip-link" href="#main" data-i18n="nav.skip">跳到正文</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../../index.html">Neural CPU v3 <span class="brand-tag">16-bit ISA</span></a>
+    <button id="nav-toggle" class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links" data-i18n="nav.menu" data-i18n-attr="aria-label:nav.menuAria">菜单</button>
+    <nav class="nav-links" id="nav-links" hidden aria-label="Main">
+      <a href="../../index.html" data-i18n="nav.overview">总览</a>
+      <a href="../architecture.html" data-i18n="nav.core">执行核心</a>
+      <a href="../training.html" data-i18n="nav.training">训练</a>
+      <a href="../reliability.html" data-i18n="nav.reliability">可靠性</a>
+      <a href="../demos.html" data-i18n="nav.demos">Demo</a>
+      <a href="../research-context.html" data-i18n="nav.research">研究位置</a>
+      <a href="../reproduce.html" data-i18n="nav.reproduce">复现</a>
+      <button id="lang-toggle" class="lang-btn" type="button" data-i18n="nav.langToggle" data-i18n-attr="aria-label:nav.langToggleAria">English</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ======================= title ======================= -->
+  <section class="band band--surface">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="mnist.kicker">Demo · 模型推理</span>
+        <h1 data-i18n="mnist.h1">MNIST 量化 CNN 推理</h1>
+        <p class="lede" data-i18n="mnist.lede">QAT、精确整数与 Neural CPU 三条路径对测试图像 IMAGE_INDEX = 0（标签 7）均预测 7；神经路径消耗 596,807,228 个 lane-op，0 result / flag / control error。</p>
+      </div>
+      <div class="note">
+        <p data-i18n="mnist.twonets">本页涉及两个不同的网络，不要混淆：MNIST CNN 是被推理的模型——一个经 QAT 量化训练、测试准确率 99.59% 的卷积网络；Neural CPU v3 是执行该量化 CNN 数值程序的处理器。前者决定“算什么”，后者逐条执行“怎么算”。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= body with toc ======================= -->
+  <section class="band">
+    <div class="wrap">
+      <div class="with-toc">
+        <nav class="toc" aria-label="本页目录" data-i18n-attr="aria-label:ui.toc">
+          <strong data-i18n="ui.toc">本页目录</strong>
+          <ol>
+            <li><a href="#output" data-i18n="mnist.toc.output">真实输出</a></li>
+            <li><a href="#numbers" data-i18n="mnist.toc.numbers">关键数字</a></li>
+            <li><a href="#isa" data-i18n="mnist.toc.isa">计算到 ISA 的映射</a></li>
+            <li><a href="#neural" data-i18n="mnist.toc.neural">Neural CPU 承担什么</a></li>
+            <li><a href="#external" data-i18n="mnist.toc.external">外部运行时承担什么</a></li>
+            <li><a href="#audit" data-i18n="mnist.toc.audit">审计模式</a></li>
+            <li><a href="#run" data-i18n="mnist.toc.run">运行方法</a></li>
+            <li><a href="#limits" data-i18n="mnist.toc.limits">限制与不声称</a></li>
+          </ol>
+        </nav>
+
+        <div>
+          <!-- ============ real output ============ -->
+          <section id="output" style="margin-bottom:40px">
+            <h2 data-i18n="mnist.out.h">真实输出：三条路径，同一个预测</h2>
+            <p data-i18n="mnist.out.p1">脚本默认选择 MNIST 测试集中 IMAGE_INDEX = 0 的图像，其标签为 7。QAT 浮点前向、精确整数前向与 Neural CPU 前向对该图像的预测均为 7。</p>
+            <dl class="facts">
+              <dt data-i18n="mnist.out.dtImage">输入图像</dt>
+              <dd data-i18n="mnist.out.ddImage">MNIST 测试集，IMAGE_INDEX = 0（标签 7）</dd>
+              <dt data-i18n="mnist.out.dtQat">QAT 路径预测</dt>
+              <dd class="mono">7</dd>
+              <dt data-i18n="mnist.out.dtInt">精确整数路径预测</dt>
+              <dd class="mono">7</dd>
+              <dt data-i18n="mnist.out.dtNeural">Neural CPU 路径预测</dt>
+              <dd class="mono">7</dd>
+            </dl>
+            <p data-i18n="mnist.out.p2">在进入神经执行之前，脚本先在全部 10,000 张测试图上交叉核对 QAT 与精确整数实现的一致性。</p>
+          </section>
+
+          <!-- ============ key numbers ============ -->
+          <section id="numbers" style="margin-bottom:40px">
+            <h2 data-i18n="mnist.num.h">关键数字</h2>
+            <div class="metric-grid">
+              <div class="metric"><span class="num">99.59%</span><span class="lbl" data-i18n="mnist.num.m1">量化 CNN 的 QAT 测试准确率</span></div>
+              <div class="metric"><span class="num">596,807,228</span><span class="lbl" data-i18n="mnist.num.m2">Neural CPU lane-op（单张图像）</span></div>
+              <div class="metric"><span class="num ok">0</span><span class="lbl" data-i18n="mnist.num.m3">result / flag / control error</span></div>
+              <div class="metric"><span class="num">7</span><span class="lbl" data-i18n="mnist.num.m4">三条路径的一致预测</span></div>
+              <div class="metric"><span class="num">10,000</span><span class="lbl" data-i18n="mnist.num.m5">预先交叉核对的测试图像</span></div>
+            </div>
+          </section>
+
+          <!-- ============ isa mapping ============ -->
+          <section id="isa" style="margin-bottom:40px">
+            <h2 data-i18n="mnist.isa.h">计算怎样映射到 ISA</h2>
+            <p data-i18n="mnist.isa.p1">CNN 中的常量权重乘法被编译成 NAF/CSD shift-add 序列：每个定点常数被分解为移位与加减构成的 16-bit 指令流，不使用任何外部乘法 LUT。</p>
+            <p data-i18n="mnist.isa.p2">32-bit 累加、定点缩放、ReLU、max pooling 与最终 argmax 同样被拆成 ISA 操作。一次卷积或全连接输出因此展开成大量互相独立的 lane-op，由同一个神经核心批量执行。</p>
+            <div class="table-scroll">
+              <table class="spec">
+                <thead><tr><th data-i18n="mnist.isa.thStage">阶段</th><th data-i18n="mnist.isa.thShape">输出形状</th><th data-i18n="mnist.isa.thOp">计算</th></tr></thead>
+                <tbody>
+                  <tr><td class="mono">Input</td><td class="mono">1x28x28</td><td data-i18n="mnist.isa.opInput">MNIST 灰度图，uint8 定点输入</td></tr>
+                  <tr><td class="mono">Conv1</td><td class="mono">32x28x28</td><td data-i18n="mnist.isa.opConv1">3x3，1→32，padding 1，ReLU，量化</td></tr>
+                  <tr><td class="mono">Conv1b</td><td class="mono">32x14x14</td><td data-i18n="mnist.isa.opConv1b">3x3，32→32，ReLU，2x2 max pool，量化</td></tr>
+                  <tr><td class="mono">Conv2</td><td class="mono">64x14x14</td><td data-i18n="mnist.isa.opConv2">3x3，32→64，padding 1，ReLU，量化</td></tr>
+                  <tr><td class="mono">Conv2b</td><td class="mono">64x7x7</td><td data-i18n="mnist.isa.opConv2b">3x3，64→64，ReLU，2x2 max pool，量化</td></tr>
+                  <tr><td class="mono">FC1</td><td class="mono">256</td><td data-i18n="mnist.isa.opFc1">3136→256，ReLU，量化</td></tr>
+                  <tr><td class="mono">FC2</td><td class="mono">10</td><td data-i18n="mnist.isa.opFc2">256→10 logits，随后用 CMP 完成 argmax</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p data-i18n="mnist.isa.p3">被推理的 CNN 共 870,634 个参数，在 epoch 24 达到 99.59% QAT 测试准确率。输入采用 scale=255 的 8-bit 表示；权重采用 scale=4096、范围 ±32767；ReLU 后隐藏激活采用 scale=256、范围 0..65535，bias 使用 32-bit 整数。</p>
+            <p class="small muted" data-i18n="mnist.isa.p4">一次图像推理执行 596,807,228 个 lane-op。外部运行时只负责 tensor 存储、寻址、卷积窗口展开、lane 调度与条件写回；卷积和全连接的数值运算、量化、池化与分类决策均经过 Neural CPU。</p>
+          </section>
+
+          <!-- ============ neural cpu ============ -->
+          <section id="neural" style="margin-bottom:40px">
+            <h2><span class="tag tag--neural" data-i18n="mnist.neural.tag">由 Neural CPU 执行</span></h2>
+            <ul class="prose">
+              <li data-i18n="mnist.neural.l1">常量权重乘法（NAF/CSD shift-add 序列）；</li>
+              <li data-i18n="mnist.neural.l2">32-bit 累加与定点缩放；</li>
+              <li data-i18n="mnist.neural.l3">ReLU 与 max pooling；</li>
+              <li data-i18n="mnist.neural.l4">最终 argmax 分类。</li>
+            </ul>
+          </section>
+
+          <!-- ============ external runtime ============ -->
+          <section id="external" style="margin-bottom:40px">
+            <h2><span class="tag tag--external" data-i18n="mnist.external.tag">由外部运行时承担</span></h2>
+            <ul class="prose">
+              <li data-i18n="mnist.external.l1">tensor 存储；</li>
+              <li data-i18n="mnist.external.l2">地址生成；</li>
+              <li data-i18n="mnist.external.l3">卷积窗口展开；</li>
+              <li data-i18n="mnist.external.l4">lane 调度；</li>
+              <li data-i18n="mnist.external.l5">predicated writeback（按条件写回）。</li>
+            </ul>
+          </section>
+
+          <!-- ============ audit modes ============ -->
+          <section id="audit" style="margin-bottom:40px">
+            <h2 data-i18n="mnist.audit.h">三层检查与审计模式</h2>
+            <div class="table-scroll">
+              <table class="spec">
+                <thead>
+                  <tr>
+                    <th data-i18n="mnist.audit.th1">路径 / 模式</th>
+                    <th data-i18n="mnist.audit.th2">含义</th>
+                    <th data-i18n="mnist.audit.th3">Config 开关</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td data-i18n="mnist.audit.r1name">QAT 浮点前向</td>
+                    <td data-i18n="mnist.audit.r1desc">复现训练时的 fake-quantized 网络，给出 99.59% 的基线准确率。</td>
+                    <td class="mono">—</td>
+                  </tr>
+                  <tr>
+                    <td data-i18n="mnist.audit.r2name">精确整数前向</td>
+                    <td data-i18n="mnist.audit.r2desc">验证导出的定点 CNN 与 QAT 网络一致；默认先核对全部 10,000 张测试图。</td>
+                    <td class="mono">RUN_INTEGER_TEST_SET</td>
+                  </tr>
+                  <tr>
+                    <td data-i18n="mnist.audit.r3name">Neural CPU 前向</td>
+                    <td data-i18n="mnist.audit.r3desc">逐 lane-op 与精确整数实现比对，默认遇到首个错误即停止。</td>
+                    <td class="mono">RUN_NEURAL / STOP_ON_NEURAL_ERROR</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- ============ how to run ============ -->
+          <section id="run" style="margin-bottom:40px">
+            <h2 data-i18n="mnist.run.h">运行方法</h2>
+            <div class="codeblock"><pre><code>python scripts/run_neural_cpu_v3_mnist_cnn.py</code></pre></div>
+            <p data-i18n="mnist.run.p1">所有参数位于脚本顶部的 Config，最常改的几项：</p>
+            <div class="table-scroll">
+              <table class="spec">
+                <thead>
+                  <tr>
+                    <th data-i18n="mnist.run.th1">参数</th>
+                    <th data-i18n="mnist.run.th2">默认值</th>
+                    <th data-i18n="mnist.run.th3">含义</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="mono">IMAGE_INDEX</td>
+                    <td class="mono">0</td>
+                    <td data-i18n="mnist.run.c1">选择送入 Neural CPU 的 MNIST 测试图像索引。</td>
+                  </tr>
+                  <tr>
+                    <td class="mono">RUN_INTEGER_TEST_SET</td>
+                    <td class="mono">True</td>
+                    <td data-i18n="mnist.run.c2">先在 10,000 张测试图上交叉核对 QAT 与精确整数实现。</td>
+                  </tr>
+                  <tr>
+                    <td class="mono">RUN_NEURAL</td>
+                    <td class="mono">True</td>
+                    <td data-i18n="mnist.run.c3">运行 Neural CPU 前向并逐 lane-op 审计。</td>
+                  </tr>
+                  <tr>
+                    <td class="mono">STOP_ON_NEURAL_ERROR</td>
+                    <td class="mono">True</td>
+                    <td data-i18n="mnist.run.c4">遇到首个神经执行错误即停止。</td>
+                  </tr>
+                  <tr>
+                    <td class="mono">LANE_CHUNK</td>
+                    <td class="mono">131_072</td>
+                    <td data-i18n="mnist.run.c5">每个 chunk 内按 CSD bit 分组发射的 lane 指令数。</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p data-i18n="mnist.run.p2">若本地缺少 MNIST 测试文件，脚本会自动从 Config.MNIST_MIRRORS 配置的镜像下载并校验 SHA-256，无需手动准备数据。</p>
+            <h3 data-i18n="mnist.run.filesH">相关文件</h3>
+            <dl class="facts">
+              <dt data-i18n="mnist.run.fScript">脚本</dt>
+              <dd class="mono"><a href="../../scripts/run_neural_cpu_v3_mnist_cnn.py">scripts/run_neural_cpu_v3_mnist_cnn.py</a></dd>
+              <dt data-i18n="mnist.run.fCnn">量化 CNN 权重（被推理的模型）</dt>
+              <dd class="mono"><a href="../../weights/mnist_quantized_cnn_best_model.pt">weights/mnist_quantized_cnn_best_model.pt</a></dd>
+              <dt data-i18n="mnist.run.fCpu">Neural CPU 权重（处理器）</dt>
+              <dd class="mono"><a href="../../weights/neural_cpu_v3_best_balanced_model.pt">weights/neural_cpu_v3_best_balanced_model.pt</a></dd>
+            </dl>
+          </section>
+
+          <!-- ============ limitations ============ -->
+          <section id="limits">
+            <h2 data-i18n="mnist.limits.h">限制与不声称的内容</h2>
+            <ul class="prose">
+              <li data-i18n="mnist.limits.l1">lane-op 数与 0 error 对应所选单张图像（默认 IMAGE_INDEX = 0）的神经执行审计，不是全部 10,000 张测试图的神经执行结果。</li>
+              <li data-i18n="mnist.limits.l2">99.59% 是被推理模型（量化 CNN）的识别准确率，不是 Neural CPU 的错误率；处理器只执行指令状态转移，它并不“认识”数字。</li>
+              <li><span data-i18n="mnist.limits.l3">0 error 是本次审计的实测结果，不是“永不出错”的保证；全局单步错误率的口径见可靠性页。</span> <a href="../reliability.html" data-i18n="mnist.limits.l3link">可靠性页 →</a></li>
+            </ul>
+          </section>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= pager ======================= -->
+  <div class="wrap band--tight">
+    <p style="margin-bottom:18px"><a href="../demos.html"><span aria-hidden="true">← </span><span data-i18n="ui.backToDemos">返回 Demo 总览</span></a></p>
+    <nav class="pager" aria-label="Pager">
+      <a class="prev" href="primes.html"><span class="dir" data-i18n="ui.prev">上一页</span><span class="name" data-i18n="mnist.pager.prevName">第 10,000,000 个质数</span></a>
+      <a class="next" href="clouds.html"><span class="dir" data-i18n="ui.next">下一页</span><span class="name" data-i18n="mnist.pager.nextName">Fast 2D Clouds</span></a>
+    </nav>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <p data-i18n="footer.project">Neural CPU v3 —— 从输入输出监督训练得到的 16-bit 神经执行核心。</p>
+        <p data-i18n="footer.boundary">神经网络负责指令语义对应的状态变换；PC、取指、64 KiB RAM 与外部调度保持精确实现。</p>
+      </div>
+      <div>
+        <p><strong data-i18n="footer.legacy">早期版本（legacy）</strong></p>
+        <p><a href="../../../legacy/README_zh.md" data-i18n="footer.legacyZh">legacy 中文 README</a><br>
+           <a href="../../../legacy/README_en.md" data-i18n="footer.legacyEn">legacy English README</a></p>
+      </div>
+    </div>
+    <p class="small" style="margin-top:16px" data-i18n="footer.note">本站为研究项目静态页面，所有数字均可在仓库脚本与结果中核验。</p>
+  </div>
+</footer>
+
+<script src="../i18n.js"></script>
+<script>
+window.I18N_PAGE = {
+  zh: {
+    "mnist.title": "MNIST CNN 推理 — Neural CPU v3",
+    "mnist.desc": "Neural CPU v3 执行量化 MNIST CNN：常量权重乘法编译为 NAF/CSD shift-add 序列；QAT、精确整数与 Neural CPU 三条路径对测试图像 0 均预测 7，596,807,228 个 lane-op，0 error。",
+    "mnist.kicker": "Demo · 模型推理",
+    "mnist.h1": "MNIST 量化 CNN 推理",
+    "mnist.lede": "QAT、精确整数与 Neural CPU 三条路径对测试图像 IMAGE_INDEX = 0（标签 7）均预测 7；神经路径消耗 596,807,228 个 lane-op，0 result / flag / control error。",
+    "mnist.twonets": "本页涉及两个不同的网络，不要混淆：MNIST CNN 是被推理的模型——一个经 QAT 量化训练、测试准确率 99.59% 的卷积网络；Neural CPU v3 是执行该量化 CNN 数值程序的处理器。前者决定“算什么”，后者逐条执行“怎么算”。",
+    "mnist.toc.output": "真实输出",
+    "mnist.toc.numbers": "关键数字",
+    "mnist.toc.isa": "计算到 ISA 的映射",
+    "mnist.toc.neural": "Neural CPU 承担什么",
+    "mnist.toc.external": "外部运行时承担什么",
+    "mnist.toc.audit": "审计模式",
+    "mnist.toc.run": "运行方法",
+    "mnist.toc.limits": "限制与不声称",
+    "mnist.out.h": "真实输出：三条路径，同一个预测",
+    "mnist.out.p1": "脚本默认选择 MNIST 测试集中 IMAGE_INDEX = 0 的图像，其标签为 7。QAT 浮点前向、精确整数前向与 Neural CPU 前向对该图像的预测均为 7。",
+    "mnist.out.dtImage": "输入图像",
+    "mnist.out.ddImage": "MNIST 测试集，IMAGE_INDEX = 0（标签 7）",
+    "mnist.out.dtQat": "QAT 路径预测",
+    "mnist.out.dtInt": "精确整数路径预测",
+    "mnist.out.dtNeural": "Neural CPU 路径预测",
+    "mnist.out.p2": "在进入神经执行之前，脚本先在全部 10,000 张测试图上交叉核对 QAT 与精确整数实现的一致性。",
+    "mnist.num.h": "关键数字",
+    "mnist.num.m1": "量化 CNN 的 QAT 测试准确率",
+    "mnist.num.m2": "Neural CPU lane-op（单张图像）",
+    "mnist.num.m3": "result / flag / control error",
+    "mnist.num.m4": "三条路径的一致预测",
+    "mnist.num.m5": "预先交叉核对的测试图像",
+    "mnist.isa.h": "计算怎样映射到 ISA",
+    "mnist.isa.p1": "CNN 中的常量权重乘法被编译成 NAF/CSD shift-add 序列：每个定点常数被分解为移位与加减构成的 16-bit 指令流，不使用任何外部乘法 LUT。",
+    "mnist.isa.p2": "32-bit 累加、定点缩放、ReLU、max pooling 与最终 argmax 同样被拆成 ISA 操作。一次卷积或全连接输出因此展开成大量互相独立的 lane-op，由同一个神经核心批量执行。",
+    "mnist.isa.thStage": "阶段",
+    "mnist.isa.thShape": "输出形状",
+    "mnist.isa.thOp": "计算",
+    "mnist.isa.opInput": "MNIST 灰度图，uint8 定点输入",
+    "mnist.isa.opConv1": "3x3，1→32，padding 1，ReLU，量化",
+    "mnist.isa.opConv1b": "3x3，32→32，ReLU，2x2 max pool，量化",
+    "mnist.isa.opConv2": "3x3，32→64，padding 1，ReLU，量化",
+    "mnist.isa.opConv2b": "3x3，64→64，ReLU，2x2 max pool，量化",
+    "mnist.isa.opFc1": "3136→256，ReLU，量化",
+    "mnist.isa.opFc2": "256→10 logits，随后用 CMP 完成 argmax",
+    "mnist.isa.p3": "被推理的 CNN 共 870,634 个参数，在 epoch 24 达到 99.59% QAT 测试准确率。输入采用 scale=255 的 8-bit 表示；权重采用 scale=4096、范围 ±32767；ReLU 后隐藏激活采用 scale=256、范围 0..65535，bias 使用 32-bit 整数。",
+    "mnist.isa.p4": "一次图像推理执行 596,807,228 个 lane-op。外部运行时只负责 tensor 存储、寻址、卷积窗口展开、lane 调度与条件写回；卷积和全连接的数值运算、量化、池化与分类决策均经过 Neural CPU。",
+    "mnist.neural.tag": "由 Neural CPU 执行",
+    "mnist.neural.l1": "常量权重乘法（NAF/CSD shift-add 序列）；",
+    "mnist.neural.l2": "32-bit 累加与定点缩放；",
+    "mnist.neural.l3": "ReLU 与 max pooling；",
+    "mnist.neural.l4": "最终 argmax 分类。",
+    "mnist.external.tag": "由外部运行时承担",
+    "mnist.external.l1": "tensor 存储；",
+    "mnist.external.l2": "地址生成；",
+    "mnist.external.l3": "卷积窗口展开；",
+    "mnist.external.l4": "lane 调度；",
+    "mnist.external.l5": "predicated writeback（按条件写回）。",
+    "mnist.audit.h": "三层检查与审计模式",
+    "mnist.audit.th1": "路径 / 模式",
+    "mnist.audit.th2": "含义",
+    "mnist.audit.th3": "Config 开关",
+    "mnist.audit.r1name": "QAT 浮点前向",
+    "mnist.audit.r1desc": "复现训练时的 fake-quantized 网络，给出 99.59% 的基线准确率。",
+    "mnist.audit.r2name": "精确整数前向",
+    "mnist.audit.r2desc": "验证导出的定点 CNN 与 QAT 网络一致；默认先核对全部 10,000 张测试图。",
+    "mnist.audit.r3name": "Neural CPU 前向",
+    "mnist.audit.r3desc": "逐 lane-op 与精确整数实现比对，默认遇到首个错误即停止。",
+    "mnist.run.h": "运行方法",
+    "mnist.run.p1": "所有参数位于脚本顶部的 Config，最常改的几项：",
+    "mnist.run.th1": "参数",
+    "mnist.run.th2": "默认值",
+    "mnist.run.th3": "含义",
+    "mnist.run.c1": "选择送入 Neural CPU 的 MNIST 测试图像索引。",
+    "mnist.run.c2": "先在 10,000 张测试图上交叉核对 QAT 与精确整数实现。",
+    "mnist.run.c3": "运行 Neural CPU 前向并逐 lane-op 审计。",
+    "mnist.run.c4": "遇到首个神经执行错误即停止。",
+    "mnist.run.c5": "每个 chunk 内按 CSD bit 分组发射的 lane 指令数。",
+    "mnist.run.p2": "若本地缺少 MNIST 测试文件，脚本会自动从 Config.MNIST_MIRRORS 配置的镜像下载并校验 SHA-256，无需手动准备数据。",
+    "mnist.run.filesH": "相关文件",
+    "mnist.run.fScript": "脚本",
+    "mnist.run.fCnn": "量化 CNN 权重（被推理的模型）",
+    "mnist.run.fCpu": "Neural CPU 权重（处理器）",
+    "mnist.limits.h": "限制与不声称的内容",
+    "mnist.limits.l1": "lane-op 数与 0 error 对应所选单张图像（默认 IMAGE_INDEX = 0）的神经执行审计，不是全部 10,000 张测试图的神经执行结果。",
+    "mnist.limits.l2": "99.59% 是被推理模型（量化 CNN）的识别准确率，不是 Neural CPU 的错误率；处理器只执行指令状态转移，它并不“认识”数字。",
+    "mnist.limits.l3": "0 error 是本次审计的实测结果，不是“永不出错”的保证；全局单步错误率的口径见可靠性页。",
+    "mnist.limits.l3link": "可靠性页 →",
+    "mnist.pager.prevName": "第 10,000,000 个质数",
+    "mnist.pager.nextName": "Fast 2D Clouds"
+  },
+  en: {
+    "mnist.title": "MNIST CNN inference — Neural CPU v3",
+    "mnist.desc": "Neural CPU v3 executing a quantized MNIST CNN: constant-weight multiplies compiled into NAF/CSD shift-add sequences; all three paths (QAT, exact integer, Neural CPU) predict 7 for test image 0, over 596,807,228 lane-ops with 0 errors.",
+    "mnist.kicker": "Demo · Model inference",
+    "mnist.h1": "Quantized MNIST CNN inference",
+    "mnist.lede": "All three paths — QAT floating point, exact integer, and Neural CPU — predict 7 for test image IMAGE_INDEX = 0 (label 7); the neural path used 596,807,228 lane-ops with 0 result / flag / control errors.",
+    "mnist.twonets": "Two different networks appear on this page — do not conflate them. The MNIST CNN is the model being inferred: a convolutional network trained with QAT, test accuracy 99.59%. Neural CPU v3 is the processor executing that quantized CNN's numeric program. The first defines what is computed; the second executes how, one instruction at a time.",
+    "mnist.toc.output": "Real output",
+    "mnist.toc.numbers": "Key numbers",
+    "mnist.toc.isa": "Mapping the computation to the ISA",
+    "mnist.toc.neural": "What the Neural CPU computes",
+    "mnist.toc.external": "What the external runtime does",
+    "mnist.toc.audit": "Audit modes",
+    "mnist.toc.run": "How to run",
+    "mnist.toc.limits": "Limitations & non-claims",
+    "mnist.out.h": "Real output: three paths, one prediction",
+    "mnist.out.p1": "By default the script selects IMAGE_INDEX = 0 from the MNIST test set; its label is 7. The QAT float forward pass, the exact integer forward pass and the Neural CPU forward pass all predict 7 for this image.",
+    "mnist.out.dtImage": "Input image",
+    "mnist.out.ddImage": "MNIST test set, IMAGE_INDEX = 0 (label 7)",
+    "mnist.out.dtQat": "QAT path prediction",
+    "mnist.out.dtInt": "Exact integer path prediction",
+    "mnist.out.dtNeural": "Neural CPU path prediction",
+    "mnist.out.p2": "Before any neural execution, the script cross-checks QAT against the exact integer implementation on all 10,000 test images.",
+    "mnist.num.h": "Key numbers",
+    "mnist.num.m1": "QAT test accuracy of the quantized CNN",
+    "mnist.num.m2": "Neural CPU lane-ops (single image)",
+    "mnist.num.m3": "result / flag / control errors",
+    "mnist.num.m4": "agreed prediction of all three paths",
+    "mnist.num.m5": "test images cross-checked in advance",
+    "mnist.isa.h": "How the computation maps to the ISA",
+    "mnist.isa.p1": "Constant-weight multiplies in the CNN are compiled into NAF/CSD shift-add sequences: each fixed-point constant is decomposed into a 16-bit instruction stream of shifts, adds and subtracts, with no external multiply LUT.",
+    "mnist.isa.p2": "32-bit accumulation, fixed-point scaling, ReLU, max pooling and the final argmax are likewise decomposed into ISA operations. One convolution or fully-connected output therefore expands into a large number of mutually independent lane-ops, executed in batches by the same neural core.",
+    "mnist.isa.thStage": "Stage",
+    "mnist.isa.thShape": "Output shape",
+    "mnist.isa.thOp": "Computation",
+    "mnist.isa.opInput": "MNIST grayscale image as uint8 fixed-point input",
+    "mnist.isa.opConv1": "3x3, 1→32, padding 1, ReLU, quantization",
+    "mnist.isa.opConv1b": "3x3, 32→32, ReLU, 2x2 max pool, quantization",
+    "mnist.isa.opConv2": "3x3, 32→64, padding 1, ReLU, quantization",
+    "mnist.isa.opConv2b": "3x3, 64→64, ReLU, 2x2 max pool, quantization",
+    "mnist.isa.opFc1": "3136→256, ReLU, quantization",
+    "mnist.isa.opFc2": "256→10 logits, followed by CMP-based argmax",
+    "mnist.isa.p3": "The inferred CNN has 870,634 parameters and reaches 99.59% QAT test accuracy at epoch 24. Inputs use an 8-bit representation with scale 255; weights use scale 4096 and range ±32767; post-ReLU hidden activations use scale 256 and range 0..65535; biases are 32-bit integers.",
+    "mnist.isa.p4": "One image inference executes 596,807,228 lane-ops. The external runtime only handles tensor storage, addressing, convolution-window expansion, lane scheduling and predicated writeback; convolution and fully-connected arithmetic, quantization, pooling and the classification decision all pass through the Neural CPU.",
+    "mnist.neural.tag": "Executed by the Neural CPU",
+    "mnist.neural.l1": "constant-weight multiplies (NAF/CSD shift-add sequences);",
+    "mnist.neural.l2": "32-bit accumulation and fixed-point scaling;",
+    "mnist.neural.l3": "ReLU and max pooling;",
+    "mnist.neural.l4": "the final argmax classification.",
+    "mnist.external.tag": "Done by the external runtime",
+    "mnist.external.l1": "tensor storage;",
+    "mnist.external.l2": "address generation;",
+    "mnist.external.l3": "convolution-window unfolding;",
+    "mnist.external.l4": "lane scheduling;",
+    "mnist.external.l5": "predicated writeback.",
+    "mnist.audit.h": "Three check layers and audit modes",
+    "mnist.audit.th1": "Path / mode",
+    "mnist.audit.th2": "Meaning",
+    "mnist.audit.th3": "Config switch",
+    "mnist.audit.r1name": "QAT float forward",
+    "mnist.audit.r1desc": "Reproduces the fake-quantized network from training, giving the 99.59% baseline accuracy.",
+    "mnist.audit.r2name": "Exact integer forward",
+    "mnist.audit.r2desc": "Verifies the exported fixed-point CNN matches the QAT network; by default checks all 10,000 test images first.",
+    "mnist.audit.r3name": "Neural CPU forward",
+    "mnist.audit.r3desc": "Audits every lane-op against the exact integer implementation; stops at the first error by default.",
+    "mnist.run.h": "How to run",
+    "mnist.run.p1": "All parameters live in the Config block at the top of the script. The most commonly changed ones:",
+    "mnist.run.th1": "Parameter",
+    "mnist.run.th2": "Default",
+    "mnist.run.th3": "Meaning",
+    "mnist.run.c1": "index of the MNIST test image sent through the Neural CPU.",
+    "mnist.run.c2": "cross-check QAT vs the exact integer implementation on 10,000 test images first.",
+    "mnist.run.c3": "run the Neural CPU forward pass with per-lane-op audit.",
+    "mnist.run.c4": "stop at the first neural execution error.",
+    "mnist.run.c5": "lane instructions issued per chunk, grouped by CSD bit.",
+    "mnist.run.p2": "If the MNIST test files are missing locally, the script downloads them automatically from the mirrors configured in Config.MNIST_MIRRORS and verifies their SHA-256 — no manual data preparation needed.",
+    "mnist.run.filesH": "Related files",
+    "mnist.run.fScript": "Script",
+    "mnist.run.fCnn": "Quantized CNN weights (the inferred model)",
+    "mnist.run.fCpu": "Neural CPU weights (the processor)",
+    "mnist.limits.h": "Limitations & non-claims",
+    "mnist.limits.l1": "The lane-op count and the 0-error audit cover the neural execution of the single selected image (default IMAGE_INDEX = 0), not neural execution over all 10,000 test images.",
+    "mnist.limits.l2": "99.59% is the recognition accuracy of the inferred model (the quantized CNN), not an error rate of the Neural CPU; the processor only executes instruction state transitions — it does not 'recognize' digits.",
+    "mnist.limits.l3": "0 errors is the measured result of this audit, not a guarantee of error-free operation in general; see the reliability page for the global single-step error-rate criteria.",
+    "mnist.limits.l3link": "Reliability page →",
+    "mnist.pager.prevName": "The 10,000,000th prime",
+    "mnist.pager.nextName": "Fast 2D Clouds"
+  }
+};
+</script>
+<script src="../site.js"></script>
+</body>
+</html>

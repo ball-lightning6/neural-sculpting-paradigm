@@ -1,5 +1,7 @@
 # Neural Processor Scripts
 
+> **Legacy version.** The current project lives in [`../neural_cpu_v3/`](../neural_cpu_v3/). This directory preserves the early proofs of concept and their development history. The old execution scripts require `best_model_mlp_cpu2.pth`, which is not distributed with the repository; dataset generators write outputs to the working directory from which they are launched.
+
 This directory contains scripts for generating datasets and running models for Neural Processors.
 
 ## Project Status & Limitations

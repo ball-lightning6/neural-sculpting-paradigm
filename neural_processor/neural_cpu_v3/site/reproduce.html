@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title data-i18n="repro.title">复现 — Neural CPU v3</title>
+<meta name="description" content="复现 Neural CPU v3：环境与依赖、发布文件树、权重 SHA-256 校验、8 个脚本的运行命令与常用 Config 参数、Jupyter/AutoDL 用法、运行模式与输出目录。" data-i18n-attr="content:repro.desc">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="skip-link" href="#main" data-i18n="nav.skip">跳到正文</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">Neural CPU v3 <span class="brand-tag">16-bit ISA</span></a>
+    <button id="nav-toggle" class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links" data-i18n="nav.menu" data-i18n-attr="aria-label:nav.menuAria">菜单</button>
+    <nav class="nav-links" id="nav-links" hidden aria-label="Main">
+      <a href="../index.html" data-i18n="nav.overview">总览</a>
+      <a href="architecture.html" data-i18n="nav.core">执行核心</a>
+      <a href="training.html" data-i18n="nav.training">训练</a>
+      <a href="reliability.html" data-i18n="nav.reliability">可靠性</a>
+      <a href="demos.html" data-i18n="nav.demos">Demo</a>
+      <a href="research-context.html" data-i18n="nav.research">研究位置</a>
+      <a href="reproduce.html" data-i18n="nav.reproduce">复现</a>
+      <button id="lang-toggle" class="lang-btn" type="button" data-i18n="nav.langToggle" data-i18n-attr="aria-label:nav.langToggleAria">English</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ======================= page head + toc ======================= -->
+  <section class="band" aria-labelledby="sec-top">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="repro.top.kicker">复现</span>
+        <h1 id="sec-top" data-i18n="repro.top.h">运行仓库中的 8 个脚本</h1>
+        <p data-i18n="repro.top.lede">发布权重、8 个自包含脚本与全部数据都在仓库中。每个脚本直接以 python 命令运行；所有可调参数位于各脚本顶部的 Config 类。</p>
+      </div>
+      <div class="toc">
+        <strong data-i18n="ui.toc">本页目录</strong>
+        <ol>
+          <li><a href="#env" data-i18n="repro.toc.env">环境与依赖</a></li>
+          <li><a href="#tree" data-i18n="repro.toc.tree">发布文件树</a></li>
+          <li><a href="#weights" data-i18n="repro.toc.weights">发布权重与完整性校验</a></li>
+          <li><a href="#config" data-i18n="repro.toc.config">可调参数都在 Config</a></li>
+          <li><a href="#scripts" data-i18n="repro.toc.scripts">各脚本：运行命令与常用参数</a></li>
+          <li><a href="#jupyter" data-i18n="repro.toc.jupyter">Jupyter / AutoDL 用法</a></li>
+          <li><a href="#mnist-data" data-i18n="repro.toc.mnistdata">MNIST 数据自动下载</a></li>
+          <li><a href="#modes" data-i18n="repro.toc.modes">serial / batch / exact / REFERENCE_ONLY</a></li>
+          <li><a href="#outputs" data-i18n="repro.toc.outputs">输出目录</a></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= environment ======================= -->
+  <section class="band band--surface" aria-labelledby="env">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="repro.env.kicker">准备</span>
+        <h2 id="env" data-i18n="repro.env.h">环境与依赖</h2>
+      </div>
+      <p class="prose" data-i18n="repro.env.p1">仓库在 CPython 3.13 下开发运行，建议 Python 3.10 或更高版本。全部 8 个脚本都依赖 PyTorch；其余第三方包按脚本列出如下。</p>
+      <p class="prose" data-i18n="repro.env.p2">每个脚本自动选择 CUDA GPU（torch.cuda.is_available()），没有 CUDA 时退回 CPU。训练、全量验证与图形 demo 的默认规模面向 GPU 设计，CPU 只适合小规模自检。</p>
+      <div class="table-scroll">
+        <table class="spec">
+          <thead>
+            <tr><th data-i18n="repro.env.th1">脚本</th><th data-i18n="repro.env.th2">PyTorch 之外的第三方依赖</th><th data-i18n="repro.env.th3">备注</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="mono">scripts/train_neural_cpu_v3_hybrid.py</td><td class="mono">—</td><td data-i18n="repro.env.r1">建议 CUDA GPU。</td></tr>
+            <tr><td class="mono">scripts/validate_neural_cpu_v3.py</td><td class="mono">—</td><td data-i18n="repro.env.r2">建议 CUDA GPU。</td></tr>
+            <tr><td class="mono">scripts/run_neural_cpu_v3_pi.py</td><td class="mono">numpy</td><td data-i18n="repro.env.r3">batch 模式首次运行时用系统 C++ 编译器（g++ 或 clang++）编译原生真值轨迹生成器；该生成器面向 Linux。</td></tr>
+            <tr><td class="mono">scripts/run_neural_cpu_v3_sudoku.py</td><td class="mono">numpy</td><td data-i18n="repro.env.r4">—</td></tr>
+            <tr><td class="mono">scripts/run_neural_cpu_v3_primes.py</td><td class="mono">numpy</td><td data-i18n="repro.env.r5">与 pi 相同：batch 模式需要 C++ 编译器，原生生成器面向 Linux。</td></tr>
+            <tr><td class="mono">scripts/run_neural_cpu_v3_mnist_cnn.py</td><td class="mono">—</td><td data-i18n="repro.env.r6">本地缺少 MNIST 测试文件时需要联网下载一次（见下文）。</td></tr>
+            <tr><td class="mono">scripts/render_neural_cpu_fast_clouds_frame.py</td><td class="mono">numpy, Pillow</td><td data-i18n="repro.env.r7">—</td></tr>
+            <tr><td class="mono">scripts/render_neural_gpu_rubiks_cube_video.py</td><td class="mono">numpy, OpenCV (cv2)</td><td data-i18n="repro.env.r8">cv2 用于 MP4 编码。</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= released file tree ======================= -->
+  <section class="band" aria-labelledby="tree">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="repro.tree.kicker">仓库内容</span>
+        <h2 id="tree" data-i18n="repro.tree.h">发布文件树</h2>
+        <p data-i18n="repro.tree.lede">与运行相关的发布文件如下（网站文件未列出）。</p>
+      </div>
+      <div class="codeblock"><pre><code data-i18n="repro.tree.block">neural_cpu_v3/
+├── index.html                             # 网站唯一根入口
+├── scripts/
+│   ├── train_neural_cpu_v3_hybrid.py          # 训练：hard replay + 动态审计
+│   ├── validate_neural_cpu_v3.py              # 独立大规模随机验证
+│   ├── run_neural_cpu_v3_pi.py                # demo：Pi
+│   ├── run_neural_cpu_v3_sudoku.py            # demo：Sudoku
+│   ├── run_neural_cpu_v3_primes.py            # demo：第 10,000,000 个质数
+│   ├── run_neural_cpu_v3_mnist_cnn.py         # demo：MNIST CNN 推理
+│   ├── render_neural_cpu_fast_clouds_frame.py # demo：Fast 2D Clouds 单帧
+│   └── render_neural_gpu_rubiks_cube_video.py # demo：3x3 魔方复原视频
+├── site/                                  # 其余网页与共享 CSS / JS
+├── weights/
+│   ├── neural_cpu_v3_best_balanced_model.pt  # 发布权重
+│   └── mnist_quantized_cnn_best_model.pt     # MNIST 量化 CNN 权重
+├── assets/
+│   ├── gray_noise_medium.png            # 256x256 Gray Noise Medium 纹理
+│   ├── project_euler_096_sudoku.txt     # Project Euler 96 的 50 道题
+│   └── mnist_dataset/                   # MNIST 测试文件（缺失时自动下载）
+└── results/                             # 每个脚本写入自己的子目录
+    ├── clouds/  ├── mnist/  ├── pi/  ├── primes/
+    ├── rubiks/  ├── sudoku/  └── validation/</code></pre></div>
+    </div>
+  </section>
+
+  <!-- ======================= weights & integrity ======================= -->
+  <section class="band band--surface" aria-labelledby="weights">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="repro.weights.kicker">完整性</span>
+        <h2 id="weights" data-i18n="repro.weights.h">发布权重与完整性校验</h2>
+        <p data-i18n="repro.weights.lede">全部 demo 与验证脚本默认加载同一份发布权重。克隆或下载后先核对 SHA-256。</p>
+      </div>
+      <dl class="facts">
+        <dt data-i18n="repro.weights.dt1">发布权重</dt>
+        <dd class="mono">weights/neural_cpu_v3_best_balanced_model.pt</dd>
+        <dt>checkpoint step</dt>
+        <dd class="mono">6,926,625</dd>
+        <dt>SHA-256</dt>
+        <dd class="mono">89dc480163de72414d3ab12b9fbac045430359503844dbf4020ea12b961861c8</dd>
+      </dl>
+      <div class="codeblock"><pre><code>sha256sum weights/neural_cpu_v3_best_balanced_model.pt</code></pre></div>
+      <p class="small muted" data-i18n="repro.weights.note">输出的完整哈希应与上表一致。Windows PowerShell 可用：</p>
+      <div class="codeblock"><pre><code>Get-FileHash weights\neural_cpu_v3_best_balanced_model.pt -Algorithm SHA256</code></pre></div>
+    </div>
+  </section>
+
+  <!-- ======================= config ======================= -->
+  <section class="band" aria-labelledby="config">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="repro.config.kicker">改参数的方式</span>
+        <h2 id="config" data-i18n="repro.config.h">所有可调参数都在各脚本顶部的 Config</h2>
+      </div>
+      <p class="prose" data-i18n="repro.config.p1">8 个脚本都不使用 argparse，也不读取命令行参数。每个脚本顶部有一个 Config 类，集中保存路径、规模、模式与 batch 等全部可调项；修改参数就是编辑 Config 中的值，然后重新运行脚本。</p>
+      <p class="prose" data-i18n="repro.config.p2">例如把 pi 的计算位数改为 200：将 scripts/run_neural_cpu_v3_pi.py 中的 TARGET_DECIMAL_DIGITS = 1000 改为 200 再运行即可。下文按脚本列出最常改动的 3 到 6 个参数。</p>
+    </div>
+  </section>
+
+  <!-- ======================= per-script run commands & parameters ======================= -->
+  <section class="band band--surface" aria-labelledby="scripts">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="repro.scripts.kicker">8 个脚本</span>
+        <h2 id="scripts" data-i18n="repro.scripts.h">各脚本：运行命令与常用参数</h2>
+        <p data-i18n="repro.scripts.lede">在仓库根目录执行对应的 python 命令即可。每个脚本自包含，输出写入 results/ 下对应子目录。</p>
+      </div>
+      <div class="note note--caution">
+        <p data-i18n="repro.scripts.caution">训练与全量验证是长时间的 GPU 工作：训练在 RTX 5090 上累计约 2.5 天，全量验证默认 10,737,418,240 次操作；两个图形 demo 的默认运行同样是数十亿 lane-op 量级。正式运行前，先用各脚本的 SMOKE_TEST 或小规模参数做自检。</p>
+      </div>
+
+      <article aria-labelledby="s-train">
+        <h3 id="s-train" class="mono">scripts/train_neural_cpu_v3_hybrid.py</h3>
+        <p class="prose" data-i18n="repro.s.train.p">训练神经执行核心：在线生成训练样本，hard replay 与动态审计调度；默认从已发布权重继续训练，按 Ctrl+C 会保存断点。</p>
+        <div class="codeblock"><pre><code>python scripts/train_neural_cpu_v3_hybrid.py</code></pre></div>
+        <div class="table-scroll">
+          <table class="spec">
+            <thead><tr><th data-i18n="repro.t.param">参数</th><th data-i18n="repro.t.meaning">说明</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">SMOKE_TEST</td><td data-i18n="repro.s.train.p1">改为 True 执行快速自检。</td></tr>
+              <tr><td class="mono">HARD_REPLAY_MODE</td><td data-i18n="repro.s.train.p2">从已发布权重继续 hard-replay 训练（默认 True）。</td></tr>
+              <tr><td class="mono">PRETRAINED_MODEL_PATH</td><td data-i18n="repro.s.train.p3">继续训练使用的起始权重路径。</td></tr>
+              <tr><td class="mono">BATCH_SIZE</td><td data-i18n="repro.s.train.p4">训练 batch 大小（默认 16,384）。</td></tr>
+              <tr><td class="mono">LEARNING_RATE</td><td data-i18n="repro.s.train.p5">hard replay 阶段学习率（默认 3e-6）。</td></tr>
+              <tr><td class="mono">MAX_STEPS</td><td data-i18n="repro.s.train.p6">最大训练步数；None 表示持续训练直到手动中断。</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="small muted" data-i18n="repro.s.train.cost">预计成本：RTX 5090 上累计约 2.5 天。</p>
+      </article>
+
+      <article aria-labelledby="s-validate" style="margin-top:36px">
+        <h3 id="s-validate" class="mono">scripts/validate_neural_cpu_v3.py</h3>
+        <p class="prose" data-i18n="repro.s.validate.p">独立、只读的大规模随机验证器：内嵌网络结构与真值生成器，只加载 checkpoint 做推理，不改写权重。</p>
+        <div class="codeblock"><pre><code>python scripts/validate_neural_cpu_v3.py</code></pre></div>
+        <div class="table-scroll">
+          <table class="spec">
+            <thead><tr><th data-i18n="repro.t.param">参数</th><th data-i18n="repro.t.meaning">说明</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">SAMPLES</td><td data-i18n="repro.s.validate.p1">随机验证操作总数（默认 10,737,418,240）。</td></tr>
+              <tr><td class="mono">SEED</td><td data-i18n="repro.s.validate.p2">随机种子。</td></tr>
+              <tr><td class="mono">AUTO_TUNE_BATCH</td><td data-i18n="repro.s.validate.p3">启动时实测候选 batch，自动选择吞吐最高的一档。</td></tr>
+              <tr><td class="mono">FALLBACK_BATCH_SIZE</td><td data-i18n="repro.s.validate.p4">关闭自动调优时使用的 batch 大小。</td></tr>
+              <tr><td class="mono">SMOKE_TEST</td><td data-i18n="repro.s.validate.p5">改为 True 执行快速自检。</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="small muted" data-i18n="repro.s.validate.cost">预计成本：全量验证是长时间的 GPU 工作。</p>
+      </article>
+
+      <article aria-labelledby="s-pi" style="margin-top:36px">
+        <h3 id="s-pi" class="mono">scripts/run_neural_cpu_v3_pi.py</h3>
+        <p class="prose" data-i18n="repro.s.pi.p">让 Neural CPU 执行 Rabinowitz–Wagon spigot 汇编程序，默认计算 1000 个十进制有效数字。</p>
+        <div class="codeblock"><pre><code>python scripts/run_neural_cpu_v3_pi.py</code></pre></div>
+        <div class="table-scroll">
+          <table class="spec">
+            <thead><tr><th data-i18n="repro.t.param">参数</th><th data-i18n="repro.t.meaning">说明</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">TARGET_DECIMAL_DIGITS</td><td data-i18n="repro.s.pi.p1">目标十进制位数（默认 1000）。</td></tr>
+              <tr><td class="mono">EXECUTION_MODE</td><td data-i18n="repro.s.pi.p2">"serial" 自主执行或 "batch" 大 batch 审计（默认 "batch"）。</td></tr>
+              <tr><td class="mono">EXACT_ONLY</td><td data-i18n="repro.s.pi.p3">改为 True 只验证汇编程序本身，不加载神经权重。</td></tr>
+              <tr><td class="mono">MAX_NEURAL_OPERATIONS</td><td data-i18n="repro.s.pi.p4">神经操作上限；None 表示不限。</td></tr>
+              <tr><td class="mono">INFERENCE_BATCH</td><td data-i18n="repro.s.pi.p5">单次 GPU 前向规模。</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="small muted" data-i18n="repro.s.pi.note">batch 模式首次运行会编译原生 C++ 真值轨迹生成器（面向 Linux，需要 g++ 或 clang++）；1000 位约需数十亿次神经操作。</p>
+      </article>
+
+      <article aria-labelledby="s-sudoku" style="margin-top:36px">
+        <h3 id="s-sudoku" class="mono">scripts/run_neural_cpu_v3_sudoku.py</h3>
+        <p class="prose" data-i18n="repro.s.sudoku.p">让 Neural CPU 自主执行通用 9x9 Sudoku 求解器，默认从 Project Euler 96 的 50 题中无放回随机抽取 10 题。</p>
+        <div class="codeblock"><pre><code>python scripts/run_neural_cpu_v3_sudoku.py</code></pre></div>
+        <div class="table-scroll">
+          <table class="spec">
+            <thead><tr><th data-i18n="repro.t.param">参数</th><th data-i18n="repro.t.meaning">说明</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">MODE</td><td data-i18n="repro.s.sudoku.p1">"exact" / "serial" / "batch"（默认 "batch"）。</td></tr>
+              <tr><td class="mono">PUZZLE</td><td data-i18n="repro.s.sudoku.p2">直接给定 81 格题目字符串，跳过随机抽题。</td></tr>
+              <tr><td class="mono">PUZZLE_COUNT</td><td data-i18n="repro.s.sudoku.p3">无放回随机抽题数量（默认 10）。</td></tr>
+              <tr><td class="mono">PUZZLE_INDEXES / RANDOM_SEED</td><td data-i18n="repro.s.sudoku.p4">固定题号或随机种子，用于复现某次抽题。</td></tr>
+              <tr><td class="mono">MAX_NEURAL_OPERATIONS</td><td data-i18n="repro.s.sudoku.p5">神经操作上限（默认 1,000,000,000）。</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </article>
+
+      <article aria-labelledby="s-primes" style="margin-top:36px">
+        <h3 id="s-primes" class="mono">scripts/run_neural_cpu_v3_primes.py</h3>
+        <p class="prose" data-i18n="repro.s.primes.p">让 Neural CPU 用分段奇数筛寻找第 10,000,000 个质数，默认验收结果为 179,424,673。</p>
+        <div class="codeblock"><pre><code>python scripts/run_neural_cpu_v3_primes.py</code></pre></div>
+        <div class="table-scroll">
+          <table class="spec">
+            <thead><tr><th data-i18n="repro.t.param">参数</th><th data-i18n="repro.t.meaning">说明</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">TARGET_RANK</td><td data-i18n="repro.s.primes.p1">目标名次（默认 10,000,000）。</td></tr>
+              <tr><td class="mono">EXPECTED_PRIME</td><td data-i18n="repro.s.primes.p2">期望质数，用于验收（默认 179,424,673）。</td></tr>
+              <tr><td class="mono">SEARCH_LIMIT</td><td data-i18n="repro.s.primes.p3">搜索上界（默认 180,000,000）。</td></tr>
+              <tr><td class="mono">EXECUTION_MODE</td><td data-i18n="repro.s.primes.p4">"exact" 或 "batch"（默认 "batch"）。</td></tr>
+              <tr><td class="mono">INFERENCE_BATCH</td><td data-i18n="repro.s.primes.p5">单次 GPU 前向规模。</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="small muted" data-i18n="repro.s.primes.note">脚本说明给出的快速自检组合：TARGET_RANK = 1000、EXPECTED_PRIME = 7919、SEARCH_LIMIT = 10000、EXECUTION_MODE = "exact"。batch 模式与 pi 一样需要 C++ 编译器（面向 Linux）。</p>
+      </article>
+
+      <article aria-labelledby="s-mnist" style="margin-top:36px">
+        <h3 id="s-mnist" class="mono">scripts/run_neural_cpu_v3_mnist_cnn.py</h3>
+        <p class="prose" data-i18n="repro.s.mnist.p">用 Neural CPU 执行量化 MNIST CNN；同时加载 weights/mnist_quantized_cnn_best_model.pt 与 Neural CPU 发布权重。</p>
+        <div class="codeblock"><pre><code>python scripts/run_neural_cpu_v3_mnist_cnn.py</code></pre></div>
+        <div class="table-scroll">
+          <table class="spec">
+            <thead><tr><th data-i18n="repro.t.param">参数</th><th data-i18n="repro.t.meaning">说明</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">IMAGE_INDEX</td><td data-i18n="repro.s.mnist.p1">测试图像序号（默认 0，该图像标签为 7）。</td></tr>
+              <tr><td class="mono">RUN_INTEGER_TEST_SET</td><td data-i18n="repro.s.mnist.p2">先在 10,000 张测试图上核对 QAT 与精确整数实现。</td></tr>
+              <tr><td class="mono">RUN_NEURAL</td><td data-i18n="repro.s.mnist.p3">是否执行 Neural CPU 前向。</td></tr>
+              <tr><td class="mono">STOP_ON_NEURAL_ERROR</td><td data-i18n="repro.s.mnist.p4">遇到首个神经执行错误即停止。</td></tr>
+              <tr><td class="mono">STOP_AFTER_LAYER</td><td data-i18n="repro.s.mnist.p5">只执行到指定层（调试用）。</td></tr>
+              <tr><td class="mono">LANE_CHUNK</td><td data-i18n="repro.s.mnist.p6">每个 chunk 的 lane 规模。</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </article>
+
+      <article aria-labelledby="s-clouds" style="margin-top:36px">
+        <h3 id="s-clouds" class="mono">scripts/render_neural_cpu_fast_clouds_frame.py</h3>
+        <p class="prose" data-i18n="repro.s.clouds.p">用 Neural CPU 渲染 Fast 2D Clouds 的一帧，默认输出 1280x720，并与精确整数参考逐像素对比。</p>
+        <div class="codeblock"><pre><code>python scripts/render_neural_cpu_fast_clouds_frame.py</code></pre></div>
+        <div class="table-scroll">
+          <table class="spec">
+            <thead><tr><th data-i18n="repro.t.param">参数</th><th data-i18n="repro.t.meaning">说明</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">WIDTH / HEIGHT</td><td data-i18n="repro.s.clouds.p1">输出分辨率（默认 1280x720）。</td></tr>
+              <tr><td class="mono">TIME_SECONDS</td><td data-i18n="repro.s.clouds.p2">shader 时间常量。</td></tr>
+              <tr><td class="mono">REFERENCE_ONLY</td><td data-i18n="repro.s.clouds.p3">改为 True 只生成精确整数参考并核算操作量。</td></tr>
+              <tr><td class="mono">MAX_LANE_OPERATIONS / ALLOW_OVER_BUDGET</td><td data-i18n="repro.s.clouds.p4">lane-op 预算（默认 12,000,000,000）与是否允许超预算。</td></tr>
+              <tr><td class="mono">TILE_PIXELS</td><td data-i18n="repro.s.clouds.p5">分块渲染的 tile 大小。</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </article>
+
+      <article aria-labelledby="s-rubiks" style="margin-top:36px">
+        <h3 id="s-rubiks" class="mono">scripts/render_neural_gpu_rubiks_cube_video.py</h3>
+        <p class="prose" data-i18n="repro.s.rubiks.p">用 Neural CPU 渲染 3x3 魔方复原视频；默认 pure_flat 模式，640x360，24 fps。</p>
+        <div class="codeblock"><pre><code>python scripts/render_neural_gpu_rubiks_cube_video.py</code></pre></div>
+        <div class="table-scroll">
+          <table class="spec">
+            <thead><tr><th data-i18n="repro.t.param">参数</th><th data-i18n="repro.t.meaning">说明</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">RENDER_MODE</td><td data-i18n="repro.s.rubiks.p1">渲染模式（默认 "pure_flat"）。</td></tr>
+              <tr><td class="mono">SCRAMBLE</td><td data-i18n="repro.s.rubiks.p2">打乱序列；复原序列是其严格逆序。</td></tr>
+              <tr><td class="mono">WIDTH / HEIGHT / FPS</td><td data-i18n="repro.s.rubiks.p3">分辨率与帧率（默认 640x360 @ 24）。</td></tr>
+              <tr><td class="mono">MOVE_FRAMES / PAUSE_FRAMES</td><td data-i18n="repro.s.rubiks.p4">每个动作的帧数与动作间停顿帧数。</td></tr>
+              <tr><td class="mono">REFERENCE_ONLY</td><td data-i18n="repro.s.rubiks.p5">改为 True 只检查画面，不加载 Neural CPU。</td></tr>
+              <tr><td class="mono">MAX_NEURAL_LANE_OPS</td><td data-i18n="repro.s.rubiks.p6">lane-op 上限。</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="small muted" data-i18n="repro.s.rubiks.note">MP4 编码使用 OpenCV（cv2）；文件名中的 gpu 是历史命名。</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- ======================= jupyter / autodl ======================= -->
+  <section class="band" aria-labelledby="jupyter">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="repro.jupyter.kicker">Notebook 环境</span>
+        <h2 id="jupyter" data-i18n="repro.jupyter.h">Jupyter / AutoDL 用法</h2>
+      </div>
+      <p class="prose" data-i18n="repro.jupyter.p1">在 Jupyter / AutoDL 中，推荐先把当前工作目录切到 <code>neural_cpu_v3/</code>，再使用 <code>%run scripts/script.py</code>；这与普通 <code>python scripts/script.py</code> 使用同一份文件和路径逻辑，也不会把 Jupyter 自己的 <code>-f kernel.json</code> 参数误交给脚本。8 个发布脚本都不使用 argparse。</p>
+      <p class="prose" data-i18n="repro.jupyter.p2">8 个脚本在标准 <code>.py</code> 运行时会识别 <code>scripts/</code> 并把其父目录作为项目根；整段粘贴进 notebook cell、因而没有 <code>__file__</code> 时，则退回当前工作目录。因此两种方式都能使用，但粘贴运行前必须确认当前目录就是 <code>neural_cpu_v3/</code>。</p>
+    </div>
+  </section>
+
+  <!-- ======================= mnist auto-download ======================= -->
+  <section class="band band--surface" aria-labelledby="mnist-data">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="repro.mnistdata.kicker">数据准备</span>
+        <h2 id="mnist-data" data-i18n="repro.mnistdata.h">MNIST 数据自动下载</h2>
+      </div>
+      <p class="prose" data-i18n="repro.mnistdata.p1">scripts/run_neural_cpu_v3_mnist_cnn.py 默认先在 10,000 张测试图上核对 QAT 与精确整数实现（RUN_INTEGER_TEST_SET = True），再执行 Neural CPU 前向。</p>
+      <p class="prose" data-i18n="repro.mnistdata.p2">如果 assets/mnist_dataset/ 中缺少 MNIST 测试文件，脚本会自动从 Config.MNIST_MIRRORS 配置的镜像下载，并按内置 SHA-256 校验；下载失败时也可以手动把文件放入该目录。</p>
+    </div>
+  </section>
+
+  <!-- ======================= run modes ======================= -->
+  <section class="band" aria-labelledby="modes">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="repro.modes.kicker">运行模式</span>
+        <h2 id="modes" data-i18n="repro.modes.h">serial / batch / exact / REFERENCE_ONLY 的区别</h2>
+      </div>
+      <div class="table-scroll">
+        <table class="spec">
+          <thead>
+            <tr><th data-i18n="repro.modes.th1">模式</th><th data-i18n="repro.modes.th2">行为</th><th data-i18n="repro.modes.th3">说明</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="mono">serial</td>
+              <td data-i18n="repro.modes.serial.b">神经状态沿程序依赖顺序自主逐步前进。</td>
+              <td data-i18n="repro.modes.serial.n">最接近真实单核运行；首次出现差异时可以立即停止（pi、sudoku）。</td>
+            </tr>
+            <tr>
+              <td class="mono">batch</td>
+              <td data-i18n="repro.modes.batch.b">精确解释器先生成同一条唯一程序轨迹，再把轨迹上大量互相独立的单步输入组成 GPU batch，让神经核心逐项审计。</td>
+              <td data-i18n="repro.modes.batch.n">不改变程序答案，也不是同时计算多个独立程序（pi、sudoku、primes）。</td>
+            </tr>
+            <tr>
+              <td class="mono">exact / EXACT_ONLY</td>
+              <td data-i18n="repro.modes.exact.b">只运行精确实现，验证汇编程序与算法本身。</td>
+              <td data-i18n="repro.modes.exact.n">不代表神经执行（pi、sudoku、primes）。</td>
+            </tr>
+            <tr>
+              <td class="mono">REFERENCE_ONLY</td>
+              <td data-i18n="repro.modes.ref.b">图形脚本中的等价开关：只生成精确整数参考画面并核算操作量。</td>
+              <td data-i18n="repro.modes.ref.n">不加载神经权重（clouds、rubiks）。</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= output directories ======================= -->
+  <section class="band band--surface" aria-labelledby="outputs">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="repro.outputs.kicker">结果去向</span>
+        <h2 id="outputs" data-i18n="repro.outputs.h">输出目录</h2>
+        <p data-i18n="repro.outputs.lede">每个脚本把输出写入 results/ 下自己的子目录（Config.RESULT_DIR）；目录不存在时脚本会自动创建。</p>
+      </div>
+      <div class="table-scroll">
+        <table class="spec">
+          <thead>
+            <tr><th data-i18n="repro.outputs.th1">脚本</th><th data-i18n="repro.outputs.th2">输出目录</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="mono">scripts/train_neural_cpu_v3_hybrid.py</td><td class="mono">results/training/</td></tr>
+            <tr><td class="mono">scripts/validate_neural_cpu_v3.py</td><td class="mono">results/validation/</td></tr>
+            <tr><td class="mono">scripts/run_neural_cpu_v3_pi.py</td><td class="mono">results/pi/</td></tr>
+            <tr><td class="mono">scripts/run_neural_cpu_v3_sudoku.py</td><td class="mono">results/sudoku/</td></tr>
+            <tr><td class="mono">scripts/run_neural_cpu_v3_primes.py</td><td class="mono">results/primes/</td></tr>
+            <tr><td class="mono">scripts/run_neural_cpu_v3_mnist_cnn.py</td><td class="mono">results/mnist/</td></tr>
+            <tr><td class="mono">scripts/render_neural_cpu_fast_clouds_frame.py</td><td class="mono">results/clouds/</td></tr>
+            <tr><td class="mono">scripts/render_neural_gpu_rubiks_cube_video.py</td><td class="mono">results/rubiks/</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= pager ======================= -->
+  <div class="wrap band--tight">
+    <nav class="pager" aria-label="Pager">
+      <a class="prev" href="research-context.html"><span class="dir" data-i18n="ui.prev">上一页</span><span class="name" data-i18n="nav.research">研究位置</span></a>
+    </nav>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <p data-i18n="footer.project">Neural CPU v3 —— 从输入输出监督训练得到的 16-bit 神经执行核心。</p>
+        <p data-i18n="footer.boundary">神经网络负责指令语义对应的状态变换；PC、取指、64 KiB RAM 与外部调度保持精确实现。</p>
+      </div>
+      <div>
+        <p><strong data-i18n="footer.legacy">早期版本（legacy）</strong></p>
+        <p><a href="../../legacy/README_zh.md" data-i18n="footer.legacyZh">legacy 中文 README</a><br>
+           <a href="../../legacy/README_en.md" data-i18n="footer.legacyEn">legacy English README</a></p>
+      </div>
+    </div>
+    <p class="small" style="margin-top:16px" data-i18n="footer.note">本站为研究项目静态页面，所有数字均可在仓库脚本与结果中核验。</p>
+  </div>
+</footer>
+
+<script src="i18n.js"></script>
+<script>
+window.I18N_PAGE = {
+  zh: {
+    "repro.title": "复现 — Neural CPU v3",
+    "repro.desc": "复现 Neural CPU v3：环境与依赖、发布文件树、权重 SHA-256 校验、8 个脚本的运行命令与常用 Config 参数、Jupyter/AutoDL 用法、运行模式与输出目录。",
+    "repro.top.kicker": "复现",
+    "repro.top.h": "运行仓库中的 8 个脚本",
+    "repro.top.lede": "发布权重、8 个自包含脚本与全部数据都在仓库中。每个脚本直接以 python 命令运行；所有可调参数位于各脚本顶部的 Config 类。",
+    "repro.toc.env": "环境与依赖",
+    "repro.toc.tree": "发布文件树",
+    "repro.toc.weights": "发布权重与完整性校验",
+    "repro.toc.config": "可调参数都在 Config",
+    "repro.toc.scripts": "各脚本：运行命令与常用参数",
+    "repro.toc.jupyter": "Jupyter / AutoDL 用法",
+    "repro.toc.mnistdata": "MNIST 数据自动下载",
+    "repro.toc.modes": "serial / batch / exact / REFERENCE_ONLY",
+    "repro.toc.outputs": "输出目录",
+    "repro.env.kicker": "准备",
+    "repro.env.h": "环境与依赖",
+    "repro.env.p1": "仓库在 CPython 3.13 下开发运行，建议 Python 3.10 或更高版本。全部 8 个脚本都依赖 PyTorch；其余第三方包按脚本列出如下。",
+    "repro.env.p2": "每个脚本自动选择 CUDA GPU（torch.cuda.is_available()），没有 CUDA 时退回 CPU。训练、全量验证与图形 demo 的默认规模面向 GPU 设计，CPU 只适合小规模自检。",
+    "repro.env.th1": "脚本",
+    "repro.env.th2": "PyTorch 之外的第三方依赖",
+    "repro.env.th3": "备注",
+    "repro.env.r1": "建议 CUDA GPU。",
+    "repro.env.r2": "建议 CUDA GPU。",
+    "repro.env.r3": "batch 模式首次运行时用系统 C++ 编译器（g++ 或 clang++）编译原生真值轨迹生成器；该生成器面向 Linux。",
+    "repro.env.r4": "—",
+    "repro.env.r5": "与 pi 相同：batch 模式需要 C++ 编译器，原生生成器面向 Linux。",
+    "repro.env.r6": "本地缺少 MNIST 测试文件时需要联网下载一次（见下文）。",
+    "repro.env.r7": "—",
+    "repro.env.r8": "cv2 用于 MP4 编码。",
+    "repro.tree.kicker": "仓库内容",
+    "repro.tree.h": "发布文件树",
+    "repro.tree.lede": "与运行相关的发布文件如下（网站文件未列出）。",
+    "repro.tree.block": "neural_cpu_v3/\n├── index.html                             # 网站唯一根入口\n├── scripts/\n│   ├── train_neural_cpu_v3_hybrid.py          # 训练：hard replay + 动态审计\n│   ├── validate_neural_cpu_v3.py              # 独立大规模随机验证\n│   ├── run_neural_cpu_v3_pi.py                # demo：Pi\n│   ├── run_neural_cpu_v3_sudoku.py            # demo：Sudoku\n│   ├── run_neural_cpu_v3_primes.py            # demo：第 10,000,000 个质数\n│   ├── run_neural_cpu_v3_mnist_cnn.py         # demo：MNIST CNN 推理\n│   ├── render_neural_cpu_fast_clouds_frame.py # demo：Fast 2D Clouds 单帧\n│   └── render_neural_gpu_rubiks_cube_video.py # demo：3x3 魔方复原视频\n├── site/                                  # 其余网页与共享 CSS / JS\n├── weights/\n│   ├── neural_cpu_v3_best_balanced_model.pt  # 发布权重\n│   └── mnist_quantized_cnn_best_model.pt     # MNIST 量化 CNN 权重\n├── assets/\n│   ├── gray_noise_medium.png            # 256x256 Gray Noise Medium 纹理\n│   ├── project_euler_096_sudoku.txt     # Project Euler 96 的 50 道题\n│   └── mnist_dataset/                   # MNIST 测试文件（缺失时自动下载）\n└── results/                             # 每个脚本写入自己的子目录\n    ├── clouds/  ├── mnist/  ├── pi/  ├── primes/\n    ├── rubiks/  ├── sudoku/  └── validation/",
+    "repro.weights.kicker": "完整性",
+    "repro.weights.h": "发布权重与完整性校验",
+    "repro.weights.lede": "全部 demo 与验证脚本默认加载同一份发布权重。克隆或下载后先核对 SHA-256。",
+    "repro.weights.dt1": "发布权重",
+    "repro.weights.note": "输出的完整哈希应与上表一致。Windows PowerShell 可用：",
+    "repro.config.kicker": "改参数的方式",
+    "repro.config.h": "所有可调参数都在各脚本顶部的 Config",
+    "repro.config.p1": "8 个脚本都不使用 argparse，也不读取命令行参数。每个脚本顶部有一个 Config 类，集中保存路径、规模、模式与 batch 等全部可调项；修改参数就是编辑 Config 中的值，然后重新运行脚本。",
+    "repro.config.p2": "例如把 pi 的计算位数改为 200：将 scripts/run_neural_cpu_v3_pi.py 中的 TARGET_DECIMAL_DIGITS = 1000 改为 200 再运行即可。下文按脚本列出最常改动的 3 到 6 个参数。",
+    "repro.scripts.kicker": "8 个脚本",
+    "repro.scripts.h": "各脚本：运行命令与常用参数",
+    "repro.scripts.lede": "在仓库根目录执行对应的 python 命令即可。每个脚本自包含，输出写入 results/ 下对应子目录。",
+    "repro.scripts.caution": "训练与全量验证是长时间的 GPU 工作：训练在 RTX 5090 上累计约 2.5 天，全量验证默认 10,737,418,240 次操作；两个图形 demo 的默认运行同样是数十亿 lane-op 量级。正式运行前，先用各脚本的 SMOKE_TEST 或小规模参数做自检。",
+    "repro.t.param": "参数",
+    "repro.t.meaning": "说明",
+    "repro.s.train.p": "训练神经执行核心：在线生成训练样本，hard replay 与动态审计调度；默认从已发布权重继续训练，按 Ctrl+C 会保存断点。",
+    "repro.s.train.p1": "改为 True 执行快速自检。",
+    "repro.s.train.p2": "从已发布权重继续 hard-replay 训练（默认 True）。",
+    "repro.s.train.p3": "继续训练使用的起始权重路径。",
+    "repro.s.train.p4": "训练 batch 大小（默认 16,384）。",
+    "repro.s.train.p5": "hard replay 阶段学习率（默认 3e-6）。",
+    "repro.s.train.p6": "最大训练步数；None 表示持续训练直到手动中断。",
+    "repro.s.train.cost": "预计成本：RTX 5090 上累计约 2.5 天。",
+    "repro.s.validate.p": "独立、只读的大规模随机验证器：内嵌网络结构与真值生成器，只加载 checkpoint 做推理，不改写权重。",
+    "repro.s.validate.p1": "随机验证操作总数（默认 10,737,418,240）。",
+    "repro.s.validate.p2": "随机种子。",
+    "repro.s.validate.p3": "启动时实测候选 batch，自动选择吞吐最高的一档。",
+    "repro.s.validate.p4": "关闭自动调优时使用的 batch 大小。",
+    "repro.s.validate.p5": "改为 True 执行快速自检。",
+    "repro.s.validate.cost": "预计成本：全量验证是长时间的 GPU 工作。",
+    "repro.s.pi.p": "让 Neural CPU 执行 Rabinowitz–Wagon spigot 汇编程序，默认计算 1000 个十进制有效数字。",
+    "repro.s.pi.p1": "目标十进制位数（默认 1000）。",
+    "repro.s.pi.p2": "\"serial\" 自主执行或 \"batch\" 大 batch 审计（默认 \"batch\"）。",
+    "repro.s.pi.p3": "改为 True 只验证汇编程序本身，不加载神经权重。",
+    "repro.s.pi.p4": "神经操作上限；None 表示不限。",
+    "repro.s.pi.p5": "单次 GPU 前向规模。",
+    "repro.s.pi.note": "batch 模式首次运行会编译原生 C++ 真值轨迹生成器（面向 Linux，需要 g++ 或 clang++）；1000 位约需数十亿次神经操作。",
+    "repro.s.sudoku.p": "让 Neural CPU 自主执行通用 9x9 Sudoku 求解器，默认从 Project Euler 96 的 50 题中无放回随机抽取 10 题。",
+    "repro.s.sudoku.p1": "\"exact\" / \"serial\" / \"batch\"（默认 \"batch\"）。",
+    "repro.s.sudoku.p2": "直接给定 81 格题目字符串，跳过随机抽题。",
+    "repro.s.sudoku.p3": "无放回随机抽题数量（默认 10）。",
+    "repro.s.sudoku.p4": "固定题号或随机种子，用于复现某次抽题。",
+    "repro.s.sudoku.p5": "神经操作上限（默认 1,000,000,000）。",
+    "repro.s.primes.p": "让 Neural CPU 用分段奇数筛寻找第 10,000,000 个质数，默认验收结果为 179,424,673。",
+    "repro.s.primes.p1": "目标名次（默认 10,000,000）。",
+    "repro.s.primes.p2": "期望质数，用于验收（默认 179,424,673）。",
+    "repro.s.primes.p3": "搜索上界（默认 180,000,000）。",
+    "repro.s.primes.p4": "\"exact\" 或 \"batch\"（默认 \"batch\"）。",
+    "repro.s.primes.p5": "单次 GPU 前向规模。",
+    "repro.s.primes.note": "脚本说明给出的快速自检组合：TARGET_RANK = 1000、EXPECTED_PRIME = 7919、SEARCH_LIMIT = 10000、EXECUTION_MODE = \"exact\"。batch 模式与 pi 一样需要 C++ 编译器（面向 Linux）。",
+    "repro.s.mnist.p": "用 Neural CPU 执行量化 MNIST CNN；同时加载 weights/mnist_quantized_cnn_best_model.pt 与 Neural CPU 发布权重。",
+    "repro.s.mnist.p1": "测试图像序号（默认 0，该图像标签为 7）。",
+    "repro.s.mnist.p2": "先在 10,000 张测试图上核对 QAT 与精确整数实现。",
+    "repro.s.mnist.p3": "是否执行 Neural CPU 前向。",
+    "repro.s.mnist.p4": "遇到首个神经执行错误即停止。",
+    "repro.s.mnist.p5": "只执行到指定层（调试用）。",
+    "repro.s.mnist.p6": "每个 chunk 的 lane 规模。",
+    "repro.s.clouds.p": "用 Neural CPU 渲染 Fast 2D Clouds 的一帧，默认输出 1280x720，并与精确整数参考逐像素对比。",
+    "repro.s.clouds.p1": "输出分辨率（默认 1280x720）。",
+    "repro.s.clouds.p2": "shader 时间常量。",
+    "repro.s.clouds.p3": "改为 True 只生成精确整数参考并核算操作量。",
+    "repro.s.clouds.p4": "lane-op 预算（默认 12,000,000,000）与是否允许超预算。",
+    "repro.s.clouds.p5": "分块渲染的 tile 大小。",
+    "repro.s.rubiks.p": "用 Neural CPU 渲染 3x3 魔方复原视频；默认 pure_flat 模式，640x360，24 fps。",
+    "repro.s.rubiks.p1": "渲染模式（默认 \"pure_flat\"）。",
+    "repro.s.rubiks.p2": "打乱序列；复原序列是其严格逆序。",
+    "repro.s.rubiks.p3": "分辨率与帧率（默认 640x360 @ 24）。",
+    "repro.s.rubiks.p4": "每个动作的帧数与动作间停顿帧数。",
+    "repro.s.rubiks.p5": "改为 True 只检查画面，不加载 Neural CPU。",
+    "repro.s.rubiks.p6": "lane-op 上限。",
+    "repro.s.rubiks.note": "MP4 编码使用 OpenCV（cv2）；文件名中的 gpu 是历史命名。",
+    "repro.jupyter.kicker": "Notebook 环境",
+    "repro.jupyter.h": "Jupyter / AutoDL 用法",
+    "repro.jupyter.p1": "在 Jupyter / AutoDL 中，推荐先把当前工作目录切到 neural_cpu_v3/，再使用 %run scripts/script.py；这与普通 python scripts/script.py 使用同一份文件和路径逻辑，也不会把 Jupyter 自己的 -f kernel.json 参数误交给脚本。8 个发布脚本都不使用 argparse。",
+    "repro.jupyter.p2": "8 个脚本在标准 .py 运行时会识别 scripts/ 并把其父目录作为项目根；整段粘贴进 notebook cell、因而没有 __file__ 时，则退回当前工作目录。因此两种方式都能使用，但粘贴运行前必须确认当前目录就是 neural_cpu_v3/。",
+    "repro.mnistdata.kicker": "数据准备",
+    "repro.mnistdata.h": "MNIST 数据自动下载",
+    "repro.mnistdata.p1": "scripts/run_neural_cpu_v3_mnist_cnn.py 默认先在 10,000 张测试图上核对 QAT 与精确整数实现（RUN_INTEGER_TEST_SET = True），再执行 Neural CPU 前向。",
+    "repro.mnistdata.p2": "如果 assets/mnist_dataset/ 中缺少 MNIST 测试文件，脚本会自动从 Config.MNIST_MIRRORS 配置的镜像下载，并按内置 SHA-256 校验；下载失败时也可以手动把文件放入该目录。",
+    "repro.modes.kicker": "运行模式",
+    "repro.modes.h": "serial / batch / exact / REFERENCE_ONLY 的区别",
+    "repro.modes.th1": "模式",
+    "repro.modes.th2": "行为",
+    "repro.modes.th3": "说明",
+    "repro.modes.serial.b": "神经状态沿程序依赖顺序自主逐步前进。",
+    "repro.modes.serial.n": "最接近真实单核运行；首次出现差异时可以立即停止（pi、sudoku）。",
+    "repro.modes.batch.b": "精确解释器先生成同一条唯一程序轨迹，再把轨迹上大量互相独立的单步输入组成 GPU batch，让神经核心逐项审计。",
+    "repro.modes.batch.n": "不改变程序答案，也不是同时计算多个独立程序（pi、sudoku、primes）。",
+    "repro.modes.exact.b": "只运行精确实现，验证汇编程序与算法本身。",
+    "repro.modes.exact.n": "不代表神经执行（pi、sudoku、primes）。",
+    "repro.modes.ref.b": "图形脚本中的等价开关：只生成精确整数参考画面并核算操作量。",
+    "repro.modes.ref.n": "不加载神经权重（clouds、rubiks）。",
+    "repro.outputs.kicker": "结果去向",
+    "repro.outputs.h": "输出目录",
+    "repro.outputs.lede": "每个脚本把输出写入 results/ 下自己的子目录（Config.RESULT_DIR）；目录不存在时脚本会自动创建。",
+    "repro.outputs.th1": "脚本",
+    "repro.outputs.th2": "输出目录"
+  },
+  en: {
+    "repro.title": "Reproduce — Neural CPU v3",
+    "repro.desc": "Reproduce Neural CPU v3: environment and dependencies, the released file tree, weight SHA-256 verification, run commands and common Config parameters for all 8 scripts, Jupyter/AutoDL usage, run modes and output directories.",
+    "repro.top.kicker": "Reproduce",
+    "repro.top.h": "Run the 8 scripts in this repository",
+    "repro.top.lede": "The released weights, 8 self-contained scripts and all data ship in this repository. Every script runs with a plain python command; all tunable parameters live in the Config class at the top of each script.",
+    "repro.toc.env": "Environment & dependencies",
+    "repro.toc.tree": "Released file tree",
+    "repro.toc.weights": "Released weights & integrity check",
+    "repro.toc.config": "All tunables live in Config",
+    "repro.toc.scripts": "Per-script commands & common parameters",
+    "repro.toc.jupyter": "Jupyter / AutoDL usage",
+    "repro.toc.mnistdata": "MNIST data auto-download",
+    "repro.toc.modes": "serial / batch / exact / REFERENCE_ONLY",
+    "repro.toc.outputs": "Output directories",
+    "repro.env.kicker": "Setup",
+    "repro.env.h": "Environment & dependencies",
+    "repro.env.p1": "The repository is developed and run on CPython 3.13; Python 3.10 or newer is recommended. All 8 scripts depend on PyTorch; the remaining third-party packages are listed per script below.",
+    "repro.env.p2": "Every script automatically selects a CUDA GPU (torch.cuda.is_available()) and falls back to CPU when CUDA is unavailable. Training, full-scale validation and the graphics demos are sized for GPU by default; CPU is only practical for small-scale smoke tests.",
+    "repro.env.th1": "Script",
+    "repro.env.th2": "Third-party dependencies beyond PyTorch",
+    "repro.env.th3": "Notes",
+    "repro.env.r1": "CUDA GPU recommended.",
+    "repro.env.r2": "CUDA GPU recommended.",
+    "repro.env.r3": "On first run, batch mode compiles a native ground-truth trace generator with the system C++ compiler (g++ or clang++); the generator targets Linux.",
+    "repro.env.r4": "—",
+    "repro.env.r5": "Same as pi: batch mode needs a C++ compiler, and the native generator targets Linux.",
+    "repro.env.r6": "Needs one online download when the MNIST test files are missing locally (see below).",
+    "repro.env.r7": "—",
+    "repro.env.r8": "cv2 is used for MP4 encoding.",
+    "repro.tree.kicker": "Repository contents",
+    "repro.tree.h": "Released file tree",
+    "repro.tree.lede": "The released files relevant to running the scripts (website files not listed).",
+    "repro.tree.block": "neural_cpu_v3/\n├── index.html                             # the only website entry at project root\n├── scripts/\n│   ├── train_neural_cpu_v3_hybrid.py          # training: hard replay + dynamic audits\n│   ├── validate_neural_cpu_v3.py              # independent large-scale random validation\n│   ├── run_neural_cpu_v3_pi.py                # demo: Pi\n│   ├── run_neural_cpu_v3_sudoku.py            # demo: Sudoku\n│   ├── run_neural_cpu_v3_primes.py            # demo: the 10,000,000th prime\n│   ├── run_neural_cpu_v3_mnist_cnn.py         # demo: MNIST CNN inference\n│   ├── render_neural_cpu_fast_clouds_frame.py # demo: Fast 2D Clouds single frame\n│   └── render_neural_gpu_rubiks_cube_video.py # demo: 3x3 Rubik's cube solve video\n├── site/                                  # remaining pages and shared CSS / JS\n├── weights/\n│   ├── neural_cpu_v3_best_balanced_model.pt  # released weights\n│   └── mnist_quantized_cnn_best_model.pt     # MNIST quantized CNN weights\n├── assets/\n│   ├── gray_noise_medium.png            # 256x256 Gray Noise Medium texture\n│   ├── project_euler_096_sudoku.txt     # the 50 puzzles of Project Euler 96\n│   └── mnist_dataset/                   # MNIST test files (auto-downloaded if missing)\n└── results/                             # each script writes its own subdirectory\n    ├── clouds/  ├── mnist/  ├── pi/  ├── primes/\n    ├── rubiks/  ├── sudoku/  └── validation/",
+    "repro.weights.kicker": "Integrity",
+    "repro.weights.h": "Released weights & integrity check",
+    "repro.weights.lede": "All demo and validation scripts load the same released weights by default. Verify the SHA-256 after cloning or downloading.",
+    "repro.weights.dt1": "Released weights",
+    "repro.weights.note": "The printed hash should match the table above in full. On Windows PowerShell:",
+    "repro.config.kicker": "How to change parameters",
+    "repro.config.h": "All tunables live in each script's top Config block",
+    "repro.config.p1": "None of the 8 scripts uses argparse or reads command-line arguments. Each script has a Config class at the top that collects every tunable — paths, sizes, modes and batch settings; changing a parameter means editing the Config value and rerunning the script.",
+    "repro.config.p2": "For example, to compute 200 digits of pi, change TARGET_DECIMAL_DIGITS = 1000 to 200 in scripts/run_neural_cpu_v3_pi.py and rerun. The 3 to 6 most commonly changed parameters per script are listed below.",
+    "repro.scripts.kicker": "8 scripts",
+    "repro.scripts.h": "Per-script run commands & common parameters",
+    "repro.scripts.lede": "Run the matching python command from the repository root. Every script is self-contained and writes into its own subdirectory under results/.",
+    "repro.scripts.caution": "Training and full-scale validation are long GPU jobs: training totals about 2.5 days on an RTX 5090, and full validation defaults to 10,737,418,240 operations; the two graphics demos also run at multi-billion lane-op scale by default. Before a full run, use each script's SMOKE_TEST or small-scale parameters for a self-check.",
+    "repro.t.param": "Parameter",
+    "repro.t.meaning": "Meaning",
+    "repro.s.train.p": "Trains the neural execution core: training samples are generated online, with hard replay and dynamic audit scheduling; by default it continues from the released weights, and Ctrl+C saves a checkpoint.",
+    "repro.s.train.p1": "Set to True for a quick self-check.",
+    "repro.s.train.p2": "Continue hard-replay training from the released weights (default True).",
+    "repro.s.train.p3": "Path of the starting weights for continued training.",
+    "repro.s.train.p4": "Training batch size (default 16,384).",
+    "repro.s.train.p5": "Learning rate for the hard-replay phase (default 3e-6).",
+    "repro.s.train.p6": "Maximum training steps; None means train until interrupted manually.",
+    "repro.s.train.cost": "Expected cost: about 2.5 days in total on an RTX 5090.",
+    "repro.s.validate.p": "An independent, read-only large-scale random validator: the network definition and ground-truth generator are embedded; it only loads the checkpoint for inference and never modifies the weights.",
+    "repro.s.validate.p1": "Total number of random validation operations (default 10,737,418,240).",
+    "repro.s.validate.p2": "Random seed.",
+    "repro.s.validate.p3": "Benchmarks candidate batch sizes at startup and picks the one with the highest throughput.",
+    "repro.s.validate.p4": "Batch size used when auto-tuning is disabled.",
+    "repro.s.validate.p5": "Set to True for a quick self-check.",
+    "repro.s.validate.cost": "Expected cost: full validation is a long GPU job.",
+    "repro.s.pi.p": "Runs the Rabinowitz–Wagon spigot assembly program on the Neural CPU; computes 1000 significant decimal digits by default.",
+    "repro.s.pi.p1": "Target decimal digits (default 1000).",
+    "repro.s.pi.p2": "\"serial\" autonomous execution or \"batch\" large-batch audit (default \"batch\").",
+    "repro.s.pi.p3": "Set to True to validate only the assembly program itself, without loading the neural weights.",
+    "repro.s.pi.p4": "Cap on neural operations; None means unlimited.",
+    "repro.s.pi.p5": "Size of a single GPU forward pass.",
+    "repro.s.pi.note": "On first run, batch mode compiles a native C++ ground-truth trace generator (Linux-oriented, needs g++ or clang++); 1000 digits take on the order of billions of neural operations.",
+    "repro.s.sudoku.p": "Lets the Neural CPU autonomously execute a general 9x9 Sudoku solver; by default 10 puzzles are drawn without replacement from the 50 puzzles of Project Euler 96.",
+    "repro.s.sudoku.p1": "\"exact\" / \"serial\" / \"batch\" (default \"batch\").",
+    "repro.s.sudoku.p2": "Give an 81-cell puzzle string directly, skipping the random draw.",
+    "repro.s.sudoku.p3": "Number of puzzles drawn without replacement (default 10).",
+    "repro.s.sudoku.p4": "Fix puzzle indexes or the random seed to reproduce a specific draw.",
+    "repro.s.sudoku.p5": "Cap on neural operations (default 1,000,000,000).",
+    "repro.s.primes.p": "Finds the 10,000,000th prime with a segmented odd sieve on the Neural CPU; the default acceptance result is 179,424,673.",
+    "repro.s.primes.p1": "Target rank (default 10,000,000).",
+    "repro.s.primes.p2": "Expected prime, used for acceptance (default 179,424,673).",
+    "repro.s.primes.p3": "Search limit (default 180,000,000).",
+    "repro.s.primes.p4": "\"exact\" or \"batch\" (default \"batch\").",
+    "repro.s.primes.p5": "Size of a single GPU forward pass.",
+    "repro.s.primes.note": "The script docstring suggests a quick self-check: TARGET_RANK = 1000, EXPECTED_PRIME = 7919, SEARCH_LIMIT = 10000, EXECUTION_MODE = \"exact\". Like pi, batch mode needs a C++ compiler (Linux-oriented).",
+    "repro.s.mnist.p": "Executes the quantized MNIST CNN on the Neural CPU; loads both weights/mnist_quantized_cnn_best_model.pt and the released Neural CPU weights.",
+    "repro.s.mnist.p1": "Test image index (default 0; that image is labeled 7).",
+    "repro.s.mnist.p2": "First cross-check QAT against the exact integer implementation on 10,000 test images.",
+    "repro.s.mnist.p3": "Whether to run the Neural CPU forward pass.",
+    "repro.s.mnist.p4": "Stop at the first neural execution error.",
+    "repro.s.mnist.p5": "Run only up to the given layer (for debugging).",
+    "repro.s.mnist.p6": "Lane count per chunk.",
+    "repro.s.clouds.p": "Renders one Fast 2D Clouds frame with the Neural CPU, 1280x720 by default, and compares it pixel by pixel against the exact integer reference.",
+    "repro.s.clouds.p1": "Output resolution (default 1280x720).",
+    "repro.s.clouds.p2": "The shader time constant.",
+    "repro.s.clouds.p3": "Set to True to generate only the exact integer reference and count the operations.",
+    "repro.s.clouds.p4": "Lane-op budget (default 12,000,000,000) and whether exceeding it is allowed.",
+    "repro.s.clouds.p5": "Tile size for tiled rendering.",
+    "repro.s.rubiks.p": "Renders the 3x3 Rubik's cube solve video with the Neural CPU; default pure_flat mode, 640x360 at 24 fps.",
+    "repro.s.rubiks.p1": "Render mode (default \"pure_flat\").",
+    "repro.s.rubiks.p2": "The scramble; the solve sequence is its strict inverse.",
+    "repro.s.rubiks.p3": "Resolution and frame rate (default 640x360 @ 24).",
+    "repro.s.rubiks.p4": "Frames per move and pause frames between moves.",
+    "repro.s.rubiks.p5": "Set to True to only inspect the frames without loading the Neural CPU.",
+    "repro.s.rubiks.p6": "Lane-op cap.",
+    "repro.s.rubiks.note": "MP4 encoding uses OpenCV (cv2); the gpu in the file name is historical.",
+    "repro.jupyter.kicker": "Notebook environments",
+    "repro.jupyter.h": "Jupyter / AutoDL usage",
+    "repro.jupyter.p1": "In Jupyter or AutoDL, first change the working directory to neural_cpu_v3/, then prefer %run scripts/script.py. This uses the same file and path logic as python scripts/script.py, and it avoids passing Jupyter's own -f kernel.json argument to the script. None of the 8 released scripts uses argparse.",
+    "repro.jupyter.p2": "When run as standard .py files, all 8 scripts recognize scripts/ and use its parent as the project root. When pasted into a notebook cell, where __file__ is absent, they fall back to the current working directory. Both routes work, but before pasting a script make sure the working directory is neural_cpu_v3/.",
+    "repro.mnistdata.kicker": "Data preparation",
+    "repro.mnistdata.h": "MNIST data auto-download",
+    "repro.mnistdata.p1": "scripts/run_neural_cpu_v3_mnist_cnn.py first cross-checks QAT against the exact integer implementation on 10,000 test images by default (RUN_INTEGER_TEST_SET = True), then runs the Neural CPU forward pass.",
+    "repro.mnistdata.p2": "If the MNIST test files are missing from assets/mnist_dataset/, the script automatically downloads them from the mirror configured in Config.MNIST_MIRRORS and verifies them against the built-in SHA-256; if the download fails, you can also place the files into that directory manually.",
+    "repro.modes.kicker": "Run modes",
+    "repro.modes.h": "The difference between serial / batch / exact / REFERENCE_ONLY",
+    "repro.modes.th1": "Mode",
+    "repro.modes.th2": "Behaviour",
+    "repro.modes.th3": "Notes",
+    "repro.modes.serial.b": "The neural state advances autonomously, step by step, along the program's dependency order.",
+    "repro.modes.serial.n": "Closest to a real single-core run; it can stop immediately at the first divergence (pi, sudoku).",
+    "repro.modes.batch.b": "An exact interpreter first generates the one unique program trace, then the many mutually independent single-step inputs on that trace are audited by the neural core in GPU batches.",
+    "repro.modes.batch.n": "It does not change the program's answer, and it is not running many independent programs in parallel (pi, sudoku, primes).",
+    "repro.modes.exact.b": "Runs only the exact implementation, validating the assembly program and the algorithm themselves.",
+    "repro.modes.exact.n": "Does not represent neural execution (pi, sudoku, primes).",
+    "repro.modes.ref.b": "The equivalent switch in the graphics scripts: generates only the exact integer reference image and counts the operations.",
+    "repro.modes.ref.n": "Does not load the neural weights (clouds, rubiks).",
+    "repro.outputs.kicker": "Where results go",
+    "repro.outputs.h": "Output directories",
+    "repro.outputs.lede": "Each script writes into its own subdirectory under results/ (Config.RESULT_DIR); the directory is created automatically if it does not exist.",
+    "repro.outputs.th1": "Script",
+    "repro.outputs.th2": "Output directory"
+  }
+};
+</script>
+<script src="site.js"></script>
+</body>
+</html>

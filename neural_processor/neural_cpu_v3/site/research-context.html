@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title data-i18n="ctx.title">研究位置 — Neural CPU v3</title>
+<meta name="description" content="Neural CPU v3 在神经计算研究谱系中的位置：按类别的高层比较、训练权重与手工构造权重的区别、本项目可辩护的位置与限制，以及 legacy 入口与预留的正式引用区。" data-i18n-attr="content:ctx.desc">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="skip-link" href="#main" data-i18n="nav.skip">跳到正文</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html">Neural CPU v3 <span class="brand-tag">16-bit ISA</span></a>
+    <button id="nav-toggle" class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links" data-i18n="nav.menu" data-i18n-attr="aria-label:nav.menuAria">菜单</button>
+    <nav class="nav-links" id="nav-links" hidden aria-label="Main">
+      <a href="../index.html" data-i18n="nav.overview">总览</a>
+      <a href="architecture.html" data-i18n="nav.core">执行核心</a>
+      <a href="training.html" data-i18n="nav.training">训练</a>
+      <a href="reliability.html" data-i18n="nav.reliability">可靠性</a>
+      <a href="demos.html" data-i18n="nav.demos">Demo</a>
+      <a href="research-context.html" data-i18n="nav.research">研究位置</a>
+      <a href="reproduce.html" data-i18n="nav.reproduce">复现</a>
+      <button id="lang-toggle" class="lang-btn" type="button" data-i18n="nav.langToggle" data-i18n-attr="aria-label:nav.langToggleAria">English</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ======================= page intro + guided tour ======================= -->
+  <section class="band band--surface" aria-labelledby="page-title">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="ctx.intro.kicker">研究谱系</span>
+        <h1 id="page-title" data-i18n="ctx.intro.h">研究位置：与既有神经计算工作的关系</h1>
+        <p data-i18n="ctx.intro.lede">神经网络承担计算并不是一个单一路线：有的工作学习可微内存与控制器，有的学习算法变换或程序调用，也有的把已知程序直接编译进权重。Neural CPU v3 关注的是另一项更窄、但可直接审计的问题：固定 ISA 的单步状态转移，能否只靠输入输出监督训练到足以长期执行真实机器码程序的精度。</p>
+      </div>
+      <div class="with-toc">
+        <div class="toc">
+          <strong data-i18n="ui.toc">本页目录</strong>
+          <ol>
+            <li><a href="#ctx-tour" data-i18n="ctx.toc.1">谱系导览</a></li>
+            <li><a href="#ctx-key" data-i18n="ctx.toc.2">一种操作性解释</a></li>
+            <li><a href="#ctx-table" data-i18n="ctx.toc.3">分类比较表</a></li>
+            <li><a href="#ctx-trained" data-i18n="ctx.toc.4">训练权重 vs 手工构造权重</a></li>
+            <li><a href="#ctx-pos" data-i18n="ctx.toc.5">本项目的位置与限制</a></li>
+            <li><a href="#ctx-theme" data-i18n="ctx.toc.6">与仓库主题的关系</a></li>
+            <li><a href="#ctx-legacy" data-i18n="ctx.toc.7">legacy 入口</a></li>
+            <li><a href="#ctx-cite" data-i18n="ctx.toc.8">正式引用</a></li>
+          </ol>
+        </div>
+        <div>
+          <div class="section-head">
+            <span class="kicker" data-i18n="ctx.tour.kicker">按类别导览</span>
+            <h2 id="ctx-tour" data-i18n="ctx.tour.h2">神经计算机研究谱系：简短导览</h2>
+            <p data-i18n="ctx.tour.lede">下面的导览不是按“谁更像完整计算机”排名，而是把几个经常被混在一起的问题拆开：学习内存与控制、从样例学习算法、从执行轨迹学习程序、把程序编译成权重，以及把训练得到的状态转移核心接入精确运行时。</p>
+          </div>
+          <ul class="prose">
+            <li data-i18n="ctx.tour.l1">Neural Turing Machine 与 Differentiable Neural Computer：可微外部记忆，面向任务学习。</li>
+            <li data-i18n="ctx.tour.l2">Neural GPU：用循环卷积结构学习算法变换。</li>
+            <li data-i18n="ctx.tour.l3">Neural Programmer-Interpreter 等程序解释工作：程序 / 任务表征与执行轨迹学习。</li>
+            <li data-i18n="ctx.tour.l4">Tracr 一类编译路线：把人类可读程序直接编译为具体 Transformer 权重，权重结构因此是已知的。</li>
+            <li data-i18n="ctx.tour.l5">Percepta Transformer VM：把 WebAssembly 解释器解析为计算图，解析构造 Transformer 权重，并以 attention 管理机器状态与历史。</li>
+            <li data-i18n="ctx.tour.l6">Neural CPU v3：保留精确 PC、RAM 与调度，让一个普通 MLP 只学习 16-bit ISA 的离散状态转移。</li>
+            <li data-i18n="ctx.tour.l7">本项目的 legacy 版本采用同一核心思想；v3 主要改进网络规模、训练分布、可靠性诊断和可复现工程。</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= key interpretation ======================= -->
+  <section class="band" aria-labelledby="ctx-key">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="ctx.key.kicker">一种解释</span>
+        <h2 id="ctx-key" data-i18n="ctx.key.h2">一种操作性解释</h2>
+      </div>
+      <blockquote class="keyline prose" data-i18n="ctx.key.quote">与其说它在做通常意义上的统计拟合，不如说训练过程正在根据输入输出样例，把一组程序电路“编译”进神经网络权重。</blockquote>
+      <p class="keyline-qualifier prose" data-i18n="ctx.key.qualifier">这是对现象的操作性解释，不是声称 SGD 就是传统编译器，也不是已被严格证明的等价定理。</p>
+    </div>
+  </section>
+
+  <!-- ======================= category comparison table ======================= -->
+  <section class="band band--surface" aria-labelledby="ctx-table">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="ctx.table.kicker">比较</span>
+        <h2 id="ctx-table" data-i18n="ctx.table.h2">分类比较表</h2>
+        <p data-i18n="ctx.table.lede">表格比较的是研究对象与证据口径，不是能力排行榜。“不以机器码为对象”不表示工作较弱，只表示它回答的是不同问题。</p>
+      </div>
+      <div class="comparison-table-stack">
+      <div class="comparison-table-wrap">
+        <table class="spec comparison-table comparison-table--system">
+          <caption data-i18n="ctx.table.cap1">第一部分：系统结构与权重来源</caption>
+          <thead>
+            <tr>
+              <th data-i18n="ctx.table.th1">工作类别</th>
+              <th data-i18n="ctx.table.th2">核心权重来自训练还是手工构造</th>
+              <th data-i18n="ctx.table.th3">是否有显式 ISA</th>
+              <th data-i18n="ctx.table.th4">外部内存形式</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="comparison-label" data-i18n="ctx.table.th1">工作类别</span>Neural Turing Machine &amp; Differentiable Neural Computer</td>
+              <td><span class="comparison-label" data-i18n="ctx.table.th2">核心权重来自训练还是手工构造</span><span data-i18n="ctx.table.r1w">训练得到</span></td>
+              <td><span class="comparison-label" data-i18n="ctx.table.th3">是否有显式 ISA</span><span data-i18n="ctx.table.no">否</span></td>
+              <td><span class="comparison-label" data-i18n="ctx.table.th4">外部内存形式</span><span data-i18n="ctx.table.r1mem">可微外部记忆</span></td>
+            </tr>
+            <tr>
+              <td><span class="comparison-label" data-i18n="ctx.table.th1">工作类别</span>Neural GPU</td>
+              <td><span class="comparison-label" data-i18n="ctx.table.th2">核心权重来自训练还是手工构造</span><span data-i18n="ctx.table.r2w">训练得到</span></td>
+              <td><span class="comparison-label" data-i18n="ctx.table.th3">是否有显式 ISA</span><span data-i18n="ctx.table.no">否</span></td>
+              <td><span class="comparison-label" data-i18n="ctx.table.th4">外部内存形式</span><span data-i18n="ctx.table.r2mem">循环卷积状态，不是 CPU 式 RAM</span></td>
+            </tr>
+            <tr>
+              <td><span class="comparison-label" data-i18n="ctx.table.th1">工作类别</span><span data-i18n="ctx.table.c3">Neural Programmer-Interpreter 风格的程序解释工作</span></td>
+              <td><span class="comparison-label" data-i18n="ctx.table.th2">核心权重来自训练还是手工构造</span><span data-i18n="ctx.table.r3w">由完整执行轨迹监督训练</span></td>
+              <td><span class="comparison-label" data-i18n="ctx.table.th3">是否有显式 ISA</span><span data-i18n="ctx.table.r3isa">有程序 / 子程序接口，但不是硬件 ISA</span></td>
+              <td><span class="comparison-label" data-i18n="ctx.table.th4">外部内存形式</span><span data-i18n="ctx.table.r3mem">程序记忆与任务环境（如 scratch pad）</span></td>
+            </tr>
+            <tr>
+              <td><span class="comparison-label" data-i18n="ctx.table.th1">工作类别</span><span data-i18n="ctx.table.c4">Tracr 等程序到权重的编译路线</span></td>
+              <td><span class="comparison-label" data-i18n="ctx.table.th2">核心权重来自训练还是手工构造</span><span data-i18n="ctx.table.r4w">解析构造，不经训练</span></td>
+              <td><span class="comparison-label" data-i18n="ctx.table.th3">是否有显式 ISA</span><span data-i18n="ctx.table.no">否</span></td>
+              <td><span class="comparison-label" data-i18n="ctx.table.th4">外部内存形式</span><span data-i18n="ctx.table.r4mem">模型激活；不是 CPU 式外部 RAM</span></td>
+            </tr>
+            <tr>
+              <td><span class="comparison-label" data-i18n="ctx.table.th1">工作类别</span>Percepta Transformer VM</td>
+              <td><span class="comparison-label" data-i18n="ctx.table.th2">核心权重来自训练还是手工构造</span><span data-i18n="ctx.table.r5w">由计算图和 MILP 排布解析构造，不经 SGD 训练</span></td>
+              <td><span class="comparison-label" data-i18n="ctx.table.th3">是否有显式 ISA</span><span data-i18n="ctx.table.r5isa">有：WebAssembly VM，35 个 opcode</span></td>
+              <td><span class="comparison-label" data-i18n="ctx.table.th4">外部内存形式</span><span data-i18n="ctx.table.r5mem">WASM stack、linear memory、locals 与调用状态编码在 token 历史中</span></td>
+            </tr>
+            <tr>
+              <td><span class="comparison-label" data-i18n="ctx.table.th1">工作类别</span><span data-i18n="ctx.table.c7">Neural CPU v3（本项目）</span></td>
+              <td><span class="comparison-label" data-i18n="ctx.table.th2">核心权重来自训练还是手工构造</span><span data-i18n="ctx.table.r7w">随机输入输出监督训练</span></td>
+              <td><span class="comparison-label" data-i18n="ctx.table.th3">是否有显式 ISA</span><span data-i18n="ctx.table.r7isa">有：16-bit，32 个 opcode</span></td>
+              <td><span class="comparison-label" data-i18n="ctx.table.th4">外部内存形式</span><span data-i18n="ctx.table.r7mem">64 KiB uint8 RAM（精确、非神经）</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="comparison-table-wrap">
+        <table class="spec comparison-table comparison-table--evidence">
+          <caption data-i18n="ctx.table.cap2">第二部分：执行边界与证据口径</caption>
+          <thead>
+            <tr>
+              <th data-i18n="ctx.table.th1">工作类别</th>
+              <th data-i18n="ctx.table.th5">神经网络负责的计算边界</th>
+              <th data-i18n="ctx.table.th6">是否执行真实机器码程序</th>
+              <th data-i18n="ctx.table.th7">是否报告长轨迹逐操作审计</th>
+              <th data-i18n="ctx.table.th8">主要科学目的</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="comparison-label" data-i18n="ctx.table.th1">工作类别</span>Neural Turing Machine &amp; Differentiable Neural Computer</td>
+              <td><span class="comparison-label" data-i18n="ctx.table.th5">神经网络负责的计算边界</span><span data-i18n="ctx.table.r1bound">学习控制器以及对外部记忆的读写</span></td>
+              <td><span class="comparison-label" data-i18n="ctx.table.th6">是否执行真实机器码程序</span><span data-i18n="ctx.table.no">否</span></td>
+              <td><span class="comparison-label" data-i18n="ctx.table.th7">是否报告长轨迹逐操作审计</span><span data-i18n="ctx.table.notfocus">不是主要证据口径</span></td>
+              <td><span class="comparison-label" data-i18n="ctx.table.th8">主要科学目的</span><span data-i18n="ctx.table.r1goal">从任务监督学习记忆使用与算法行为</span></td>
+            </tr>
+            <tr>
+              <td><span class="comparison-label" data-i18n="ctx.table.th1">工作类别</span>Neural GPU</td>
+              <td><span class="comparison-label" data-i18n="ctx.table.th5">神经网络负责的计算边界</span><span data-i18n="ctx.table.r2bound">端到端学习特定算法的序列变换</span></td>
+              <td><span class="comparison-label" data-i18n="ctx.table.th6">是否执行真实机器码程序</span><span data-i18n="ctx.table.no">否</span></td>
+              <td><span class="comparison-label" data-i18n="ctx.table.th7">是否报告长轨迹逐操作审计</span><span data-i18n="ctx.table.notfocus">不是主要证据口径</span></td>
+              <td><span class="comparison-label" data-i18n="ctx.table.th8">主要科学目的</span><span data-i18n="ctx.table.r2goal">用循环卷积结构学习算法变换</span></td>
+            </tr>
+            <tr>
+              <td><span class="comparison-label" data-i18n="ctx.table.th1">工作类别</span><span data-i18n="ctx.table.c3">Neural Programmer-Interpreter 风格的程序解释工作</span></td>
+              <td><span class="comparison-label" data-i18n="ctx.table.th5">神经网络负责的计算边界</span><span data-i18n="ctx.table.r3bound">学习程序调用、参数与终止信号</span></td>
+              <td><span class="comparison-label" data-i18n="ctx.table.th6">是否执行真实机器码程序</span><span data-i18n="ctx.table.no">否</span></td>
+              <td><span class="comparison-label" data-i18n="ctx.table.th7">是否报告长轨迹逐操作审计</span><span data-i18n="ctx.table.r3audit">评估执行轨迹，但目标不是 CPU 级长期误码率</span></td>
+              <td><span class="comparison-label" data-i18n="ctx.table.th8">主要科学目的</span><span data-i18n="ctx.table.r3goal">程序 / 任务表征与执行轨迹学习</span></td>
+            </tr>
+            <tr>
+              <td><span class="comparison-label" data-i18n="ctx.table.th1">工作类别</span><span data-i18n="ctx.table.c4">Tracr 等程序到权重的编译路线</span></td>
+              <td><span class="comparison-label" data-i18n="ctx.table.th5">神经网络负责的计算边界</span><span data-i18n="ctx.table.r4bound">把指定的 RASP 程序编译成 Transformer</span></td>
+              <td><span class="comparison-label" data-i18n="ctx.table.th6">是否执行真实机器码程序</span><span data-i18n="ctx.table.no">否</span></td>
+              <td><span class="comparison-label" data-i18n="ctx.table.th7">是否报告长轨迹逐操作审计</span><span data-i18n="ctx.table.r4audit">权重结构已知，重点不是训练后的误码审计</span></td>
+              <td><span class="comparison-label" data-i18n="ctx.table.th8">主要科学目的</span><span data-i18n="ctx.table.r4goal">为可解释性实验提供已知结构的模型</span></td>
+            </tr>
+            <tr>
+              <td><span class="comparison-label" data-i18n="ctx.table.th1">工作类别</span>Percepta Transformer VM</td>
+              <td><span class="comparison-label" data-i18n="ctx.table.th5">神经网络负责的计算边界</span><span data-i18n="ctx.table.r5bound">解析构造的 Transformer 执行 WASM 解释器；attention 查找和更新历史机器状态</span></td>
+              <td><span class="comparison-label" data-i18n="ctx.table.th6">是否执行真实机器码程序</span><span data-i18n="ctx.table.r5machine">是（编译后的 C / WASM bytecode）</span></td>
+              <td><span class="comparison-label" data-i18n="ctx.table.th7">是否报告长轨迹逐操作审计</span><span data-i18n="ctx.table.r5audit">以参考 VM trace 逐步验证；不是训练后误码率审计</span></td>
+              <td><span class="comparison-label" data-i18n="ctx.table.th8">主要科学目的</span><span data-i18n="ctx.table.r5goal">证明解析构造的标准 Transformer 可以作为通用 WASM 虚拟机</span></td>
+            </tr>
+            <tr>
+              <td><span class="comparison-label" data-i18n="ctx.table.th1">工作类别</span><span data-i18n="ctx.table.c7">Neural CPU v3（本项目）</span></td>
+              <td><span class="comparison-label" data-i18n="ctx.table.th5">神经网络负责的计算边界</span><span data-i18n="ctx.table.r7bound">每条指令的状态转移：寄存器、标志位、控制信号</span></td>
+              <td><span class="comparison-label" data-i18n="ctx.table.th6">是否执行真实机器码程序</span><span data-i18n="ctx.table.yes">是</span></td>
+              <td><span class="comparison-label" data-i18n="ctx.table.th7">是否报告长轨迹逐操作审计</span><span data-i18n="ctx.table.r7audit">是（serial 与 batch 逐操作审计）</span></td>
+              <td><span class="comparison-label" data-i18n="ctx.table.th8">主要科学目的</span><span data-i18n="ctx.table.r7goal">把固定 ISA 的规则映射训练到可运行真实程序的精度</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= trained vs hand-constructed ======================= -->
+  <section class="band" aria-labelledby="ctx-trained">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="ctx.trained.kicker">权重来源</span>
+        <h2 id="ctx-trained" data-i18n="ctx.trained.h2">训练权重与手工构造权重的区别</h2>
+      </div>
+      <p class="prose" data-i18n="ctx.trained.p1">本项目的全部核心权重来自随机输入输出监督训练：训练信号只包含（指令, 状态）→ 下一状态的样例，没有人把逻辑门、真值表或程序手工写进权重。学习对象是固定 ISA 的状态转移函数，程序本身仍以机器码形式运行。</p>
+      <p class="prose" data-i18n="ctx.trained.p2">这与 Tracr 和 Percepta Transformer VM 一类“已知程序 / 解释器 → 确定权重”的解析构造路线回答不同问题。Percepta 将 WASM 解释器写成计算图，用 MILP 把图节点排布进 Transformer 层，并构造对应权重；它还把 attention 用作历史状态寻址，以二维凸包 KV cache 加速近 hardmax 查找。本项目没有修改 attention，因为执行核心是 MLP，也不知道 SGD 选择了怎样的内部电路，只能通过独立真值生成器、结构化难例和长轨迹逐操作审计建立可靠性证据。</p>
+      <p><a href="reliability.html" data-i18n="ctx.trained.link">误差口径与实测结果，见可靠性页 →</a></p>
+    </div>
+  </section>
+
+  <!-- ======================= defensible position and limits ======================= -->
+  <section class="band band--surface" aria-labelledby="ctx-pos">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="ctx.pos.kicker">定位</span>
+        <h2 id="ctx-pos" data-i18n="ctx.pos.h2">本项目可辩护的位置与限制</h2>
+      </div>
+      <ul class="prose">
+        <li data-i18n="ctx.pos.l1">权重由随机输入输出监督训练得到，不是把逻辑门或程序手工烧进权重。</li>
+        <li data-i18n="ctx.pos.l2">学习对象是固定 ISA 的状态转移函数；程序本身仍然作为机器码运行。</li>
+        <li data-i18n="ctx.pos.l3">使用普通、精确的 RAM 与 PC，避免把所有系统组件都神经化。</li>
+        <li data-i18n="ctx.pos.l4">重点不是提出新的可微内存，而是把规则映射训练到足以运行真实程序和数十亿 lane-op demo 的精度。</li>
+        <li data-i18n="ctx.pos.l5">多个 demo 共享同一个 CPU 权重，不为每个任务重新训练 CPU。</li>
+        <li data-i18n="ctx.pos.l6">项目的主要价值既包括工程展示，也包括为更广泛研究提供直观证据：神经网络可以把离散、精确的变换学习到什么程度。</li>
+      </ul>
+      <div class="note note--caution prose">
+        <p data-i18n="ctx.pos.nonclaim">这不等于通用计算机的所有组件都已端到端学习，也不等于达到真实硬件 CPU 的可靠性。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= relation to repository theme ======================= -->
+  <section class="band" aria-labelledby="ctx-theme">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="ctx.theme.kicker">仓库主题</span>
+        <h2 id="ctx-theme" data-i18n="ctx.theme.h2">与本仓库主题的关系</h2>
+      </div>
+      <p class="prose" data-i18n="ctx.theme.p1">本仓库的主题是探索神经网络能否学习离散、精确的规则变换。Neural CPU v3 为这个问题提供直观证据：固定 ISA 的状态转移函数可以被训练到支撑数十亿步真实程序轨迹和并行渲染审计的精度。</p>
+      <p class="prose small muted" data-i18n="ctx.theme.p2">因此这个项目首先是一块直观的“广告牌”，而不是对整个研究纲领的单独证明：同一套训练权重既能串行运行程序，也能作为大量独立 lane 的并行执行器。它把“神经网络究竟能把规则学得多精确”变成可直接观看、也可逐操作核验的问题。</p>
+    </div>
+  </section>
+
+  <!-- ======================= legacy entry ======================= -->
+  <section class="band band--dark" aria-labelledby="ctx-legacy">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="ctx.legacy.kicker">早期版本</span>
+        <h2 id="ctx-legacy" data-i18n="ctx.legacy.h2">legacy 入口</h2>
+        <p data-i18n="ctx.legacy.lede">当前版本与 legacy/ 中早期方案的核心思想没有根本变化：神经网络学习固定 ISA 的状态转移函数。v3 的差别在工程与验证口径——更小的网络、更明确的 ISA 与系统边界、自包含脚本、错误诊断与结构状态审计、明显更长的训练时间。早期方案文档保留在仓库中，本站不复制其内容：</p>
+      </div>
+      <div class="hero-cta">
+        <a class="btn btn--ghost" href="../../legacy/README_zh.md">legacy/README_zh.md</a>
+        <a class="btn btn--ghost" href="../../legacy/README_en.md">legacy/README_en.md</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= formal citations ======================= -->
+  <section class="band band--surface" aria-labelledby="ctx-cite">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="ctx.cite.kicker">引用</span>
+        <h2 id="ctx-cite" data-i18n="ctx.cite.h2">正式引用</h2>
+        <p data-i18n="ctx.cite.lede">以下条目用于支撑本页的类别划分；它们不是穷尽性的综述，也不表示这些工作的目标可以直接用同一指标排名。</p>
+      </div>
+      <ol class="prose">
+        <li><a href="https://arxiv.org/abs/1410.5401">Graves, Wayne &amp; Danihelka (2014), <em>Neural Turing Machines</em>.</a></li>
+        <li><a href="https://www.nature.com/articles/nature20101">Graves et al. (2016), <em>Hybrid computing using a neural network with dynamic external memory</em>.</a></li>
+        <li><a href="https://arxiv.org/abs/1511.08228">Kaiser &amp; Sutskever (2015), <em>Neural GPUs Learn Algorithms</em>.</a></li>
+        <li><a href="https://arxiv.org/abs/1611.00736">Price, Zaremba &amp; Sutskever (2016), <em>Extensions and Limitations of the Neural GPU</em>.</a></li>
+        <li><a href="https://arxiv.org/abs/1511.06279">Reed &amp; de Freitas (2015), <em>Neural Programmer-Interpreters</em>.</a></li>
+        <li><a href="https://arxiv.org/abs/2301.05062">Lindner et al. (2023), <em>Tracr: Compiled Transformers as a Laboratory for Interpretability</em>.</a></li>
+        <li><a href="https://www.percepta.ai/blog/can-llms-be-computers">Tzamos et al. / Percepta (2026), <em>Can LLMs Be Computers?</em></a>；<a href="https://github.com/Percepta-Core/transformer-vm" data-i18n="ctx.cite.perceptaImpl">Transformer VM 实现与解析构权说明</a>。</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ======================= pager ======================= -->
+  <div class="wrap band--tight">
+    <nav class="pager" aria-label="Pager">
+      <a class="prev" href="demos.html"><span class="dir" data-i18n="ui.prev">上一页</span><span class="name" data-i18n="nav.demos">Demo</span></a>
+      <a class="next" href="reproduce.html"><span class="dir" data-i18n="ui.next">下一页</span><span class="name" data-i18n="nav.reproduce">复现</span></a>
+    </nav>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <p data-i18n="footer.project">Neural CPU v3 —— 从输入输出监督训练得到的 16-bit 神经执行核心。</p>
+        <p data-i18n="footer.boundary">神经网络负责指令语义对应的状态变换；PC、取指、64 KiB RAM 与外部调度保持精确实现。</p>
+      </div>
+      <div>
+        <p><strong data-i18n="footer.legacy">早期版本（legacy）</strong></p>
+        <p><a href="../../legacy/README_zh.md" data-i18n="footer.legacyZh">legacy 中文 README</a><br>
+           <a href="../../legacy/README_en.md" data-i18n="footer.legacyEn">legacy English README</a></p>
+      </div>
+    </div>
+    <p class="small" style="margin-top:16px" data-i18n="footer.note">本站为研究项目静态页面，所有数字均可在仓库脚本与结果中核验。</p>
+  </div>
+</footer>
+
+<script src="i18n.js"></script>
+<script>
+window.I18N_PAGE = {
+  zh: {
+    "ctx.title": "研究位置 — Neural CPU v3",
+    "ctx.desc": "Neural CPU v3 在神经计算研究谱系中的位置：从可微内存、算法学习、程序解释到程序编译进权重，并说明本项目训练得到的固定 ISA 状态转移核心究竟回答什么问题。",
+    "ctx.intro.kicker": "研究谱系",
+    "ctx.intro.h": "研究位置：与既有神经计算工作的关系",
+    "ctx.intro.lede": "神经网络承担计算并不是一个单一路线：有的工作学习可微内存与控制器，有的学习算法变换或程序调用，也有的把已知程序直接编译进权重。Neural CPU v3 关注的是另一项更窄、但可直接审计的问题：固定 ISA 的单步状态转移，能否只靠输入输出监督训练到足以长期执行真实机器码程序的精度。",
+    "ctx.toc.1": "谱系导览",
+    "ctx.toc.2": "一种操作性解释",
+    "ctx.toc.3": "分类比较表",
+    "ctx.toc.4": "训练权重 vs 手工构造权重",
+    "ctx.toc.5": "本项目的位置与限制",
+    "ctx.toc.6": "与仓库主题的关系",
+    "ctx.toc.7": "legacy 入口",
+    "ctx.toc.8": "正式引用",
+    "ctx.tour.kicker": "按类别导览",
+    "ctx.tour.h2": "神经计算机研究谱系：简短导览",
+    "ctx.tour.lede": "下面的导览不是按“谁更像完整计算机”排名，而是把几个经常被混在一起的问题拆开：学习内存与控制、从样例学习算法、从执行轨迹学习程序、把程序编译成权重，以及把训练得到的状态转移核心接入精确运行时。",
+    "ctx.tour.l1": "Neural Turing Machine 与 Differentiable Neural Computer：可微外部记忆，面向任务学习。",
+    "ctx.tour.l2": "Neural GPU：用循环卷积结构学习算法变换。",
+    "ctx.tour.l3": "Neural Programmer-Interpreter 等程序解释工作：程序 / 任务表征与执行轨迹学习。",
+    "ctx.tour.l4": "Tracr 一类编译路线：把人类可读程序直接编译为具体 Transformer 权重，权重结构因此是已知的。",
+    "ctx.tour.l5": "Percepta Transformer VM：把 WebAssembly 解释器解析为计算图，解析构造 Transformer 权重，并以 attention 管理机器状态与历史。",
+    "ctx.tour.l6": "Neural CPU v3：保留精确 PC、RAM 与调度，让一个普通 MLP 只学习 16-bit ISA 的离散状态转移。",
+    "ctx.tour.l7": "本项目的 legacy 版本采用同一核心思想；v3 主要改进网络规模、训练分布、可靠性诊断和可复现工程。",
+    "ctx.key.kicker": "一种解释",
+    "ctx.key.h2": "一种操作性解释",
+    "ctx.key.quote": "与其说它在做通常意义上的统计拟合，不如说训练过程正在根据输入输出样例，把一组程序电路“编译”进神经网络权重。",
+    "ctx.key.qualifier": "这是对现象的操作性解释，不是声称 SGD 就是传统编译器，也不是已被严格证明的等价定理。",
+    "ctx.table.kicker": "比较",
+    "ctx.table.h2": "分类比较表",
+    "ctx.table.lede": "表格比较的是研究对象与证据口径，不是能力排行榜。“不以机器码为对象”不表示工作较弱，只表示它回答的是不同问题。",
+    "ctx.table.cap": "神经计算相关工作类别的高层比较",
+    "ctx.table.cap1": "第一部分：系统结构与权重来源",
+    "ctx.table.cap2": "第二部分：执行边界与证据口径",
+    "ctx.table.th1": "工作类别",
+    "ctx.table.th2": "核心权重来自训练还是手工构造",
+    "ctx.table.th3": "是否有显式 ISA",
+    "ctx.table.th4": "外部内存形式",
+    "ctx.table.th5": "神经网络负责的计算边界",
+    "ctx.table.th6": "是否执行真实机器码程序",
+    "ctx.table.th7": "是否报告长轨迹逐操作审计",
+    "ctx.table.th8": "主要科学目的",
+    "ctx.table.c3": "Neural Programmer-Interpreter 风格的程序解释工作",
+    "ctx.table.c4": "Tracr 等程序到权重的编译路线",
+    "ctx.table.c7": "Neural CPU v3（本项目）",
+    "ctx.table.r1w": "训练得到",
+    "ctx.table.r1system": "学习控制器及对可微外部记忆的读写。",
+    "ctx.table.r1evidence": "从任务监督学习记忆使用和算法行为；不以固定 ISA、真实机器码或 CPU 级长轨迹误码率为主要对象。",
+    "ctx.table.r1mem": "可微外部记忆",
+    "ctx.table.r1bound": "学习控制器以及对外部记忆的读写",
+    "ctx.table.r1goal": "从任务监督学习记忆使用与算法行为",
+    "ctx.table.r2w": "训练得到",
+    "ctx.table.r2system": "循环卷积状态端到端学习特定算法的序列变换，不采用 CPU 式 RAM。",
+    "ctx.table.r2evidence": "重点是算法学习与长度泛化，不是执行一套机器码 ISA 或审计长期单步误码。",
+    "ctx.table.r2mem": "循环卷积状态，不是 CPU 式 RAM",
+    "ctx.table.r2bound": "端到端学习特定算法的序列变换",
+    "ctx.table.r2goal": "用循环卷积结构学习算法变换",
+    "ctx.table.r3w": "由完整执行轨迹监督训练",
+    "ctx.table.r3system": "学习程序调用、参数与终止信号，并使用程序记忆和任务环境；接口不是硬件 ISA。",
+    "ctx.table.r3evidence": "评估程序执行轨迹与跨程序泛化，但目标不是 CPU 级长期逐操作误码率。",
+    "ctx.table.r3isa": "有程序 / 子程序接口，但不是硬件 ISA",
+    "ctx.table.r3mem": "程序记忆与任务环境（如 scratch pad）",
+    "ctx.table.r3bound": "学习程序调用、参数与终止信号",
+    "ctx.table.r3audit": "评估执行轨迹，但目标不是 CPU 级长期误码率",
+    "ctx.table.r3goal": "程序 / 任务表征与执行轨迹学习",
+    "ctx.table.r4w": "解析构造，不经训练",
+    "ctx.table.r4system": "把指定 RASP 程序编译成标准 Transformer；状态位于模型激活中。",
+    "ctx.table.r4evidence": "电路和权重结构已知，主要为可解释性实验提供已知结构模型，不以训练后的误码审计为目标。",
+    "ctx.table.r4mem": "模型激活；不是 CPU 式外部 RAM",
+    "ctx.table.r4bound": "把指定的 RASP 程序编译成 Transformer",
+    "ctx.table.r4audit": "权重结构已知，重点不是训练后的误码审计",
+    "ctx.table.r4goal": "为可解释性实验提供已知结构的模型",
+    "ctx.table.r5w": "由计算图和 MILP 排布解析构造，不经 SGD 训练",
+    "ctx.table.r5system": "标准 softmax-ReGLU Transformer；WASM 的 stack、linear memory、locals、cursor 与 call depth 编码在 token 历史中，由 attention 查找和更新。",
+    "ctx.table.r5evidence": "支持 35 个 WASM opcode，执行编译后的 C/WASM 程序；以参考执行 trace 验证精确性，并以二维凸包 KV cache 将近 hardmax 寻址加速到 O(log n)。",
+    "ctx.table.r5isa": "有：WebAssembly VM，35 个 opcode",
+    "ctx.table.r5mem": "WASM stack、linear memory、locals 与调用状态编码在 token 历史中",
+    "ctx.table.r5bound": "解析构造的 Transformer 执行 WASM 解释器；attention 查找和更新历史机器状态",
+    "ctx.table.r5machine": "是（编译后的 C / WASM bytecode）",
+    "ctx.table.r5audit": "以参考 VM trace 逐步验证；不是训练后误码率审计",
+    "ctx.table.r5goal": "证明解析构造的标准 Transformer 可以作为通用 WASM 虚拟机",
+    "ctx.table.r7w": "随机输入输出监督训练",
+    "ctx.table.r7system": "普通 MLP 学习 16-bit、32-opcode ISA 的单步状态转移；PC、64 KiB uint8 RAM 与调度保持精确、非神经。",
+    "ctx.table.r7evidence": "执行真实机器码程序；用独立真值、随机验证以及 serial / batch 长轨迹逐操作审计训练后可靠性。",
+    "ctx.table.r7isa": "有：16-bit，32 个 opcode",
+    "ctx.table.r7mem": "64 KiB uint8 RAM（精确、非神经）",
+    "ctx.table.r7bound": "每条指令的状态转移：寄存器、标志位、控制信号",
+    "ctx.table.yes": "是",
+    "ctx.table.no": "否",
+    "ctx.table.notfocus": "不是主要证据口径",
+    "ctx.table.r7audit": "是（serial 与 batch 逐操作审计）",
+    "ctx.table.r7goal": "把固定 ISA 的规则映射训练到可运行真实程序的精度",
+    "ctx.trained.kicker": "权重来源",
+    "ctx.trained.h2": "训练权重与手工构造权重的区别",
+    "ctx.trained.p1": "本项目的全部核心权重来自随机输入输出监督训练：训练信号只包含（指令, 状态）→ 下一状态的样例，没有人把逻辑门、真值表或程序手工写进权重。学习对象是固定 ISA 的状态转移函数，程序本身仍以机器码形式运行。",
+    "ctx.trained.p2": "这与 Tracr 和 Percepta Transformer VM 一类“已知程序 / 解释器 → 确定权重”的解析构造路线回答不同问题。Percepta 将 WASM 解释器写成计算图，用 MILP 把图节点排布进 Transformer 层，并构造对应权重；它还把 attention 用作历史状态寻址，以二维凸包 KV cache 加速近 hardmax 查找。本项目没有修改 attention，因为执行核心是 MLP，也不知道 SGD 选择了怎样的内部电路，只能通过独立真值生成器、结构化难例和长轨迹逐操作审计建立可靠性证据。",
+    "ctx.trained.link": "误差口径与实测结果，见可靠性页 →",
+    "ctx.pos.kicker": "定位",
+    "ctx.pos.h2": "本项目可辩护的位置与限制",
+    "ctx.pos.l1": "权重由随机输入输出监督训练得到，不是把逻辑门或程序手工烧进权重。",
+    "ctx.pos.l2": "学习对象是固定 ISA 的状态转移函数；程序本身仍然作为机器码运行。",
+    "ctx.pos.l3": "使用普通、精确的 RAM 与 PC，避免把所有系统组件都神经化。",
+    "ctx.pos.l4": "重点不是提出新的可微内存，而是把规则映射训练到足以运行真实程序和数十亿 lane-op demo 的精度。",
+    "ctx.pos.l5": "多个 demo 共享同一个 CPU 权重，不为每个任务重新训练 CPU。",
+    "ctx.pos.l6": "项目的主要价值既包括工程展示，也包括为更广泛研究提供直观证据：神经网络可以把离散、精确的变换学习到什么程度。",
+    "ctx.pos.nonclaim": "这不等于通用计算机的所有组件都已端到端学习，也不等于达到真实硬件 CPU 的可靠性。",
+    "ctx.theme.kicker": "仓库主题",
+    "ctx.theme.h2": "与本仓库主题的关系",
+    "ctx.theme.p1": "本仓库的主题是探索神经网络能否学习离散、精确的规则变换。Neural CPU v3 为这个问题提供直观证据：固定 ISA 的状态转移函数可以被训练到支撑数十亿步真实程序轨迹和并行渲染审计的精度。",
+    "ctx.theme.p2": "因此这个项目首先是一块直观的“广告牌”，而不是对整个研究纲领的单独证明：同一套训练权重既能串行运行程序，也能作为大量独立 lane 的并行执行器。它把“神经网络究竟能把规则学得多精确”变成可直接观看、也可逐操作核验的问题。",
+    "ctx.legacy.kicker": "早期版本",
+    "ctx.legacy.h2": "legacy 入口",
+    "ctx.legacy.lede": "当前版本与 legacy/ 中早期方案的核心思想没有根本变化：神经网络学习固定 ISA 的状态转移函数。v3 的差别在工程与验证口径——更小的网络、更明确的 ISA 与系统边界、自包含脚本、错误诊断与结构状态审计、明显更长的训练时间。早期方案文档保留在仓库中，本站不复制其内容：",
+    "ctx.cite.kicker": "引用",
+    "ctx.cite.h2": "正式引用",
+    "ctx.cite.lede": "以下条目用于支撑本页的类别划分；它们不是穷尽性的综述，也不表示这些工作的目标可以直接用同一指标排名。",
+    "ctx.cite.perceptaImpl": "Transformer VM 实现与解析构权说明"
+  },
+  en: {
+    "ctx.title": "Research Context — Neural CPU v3",
+    "ctx.desc": "Where Neural CPU v3 sits in neural-computing research: from differentiable memory and algorithm learning to program interpretation and compiled weights, and the specific question answered by this trained fixed-ISA transition core.",
+    "ctx.intro.kicker": "Research landscape",
+    "ctx.intro.h": "Research context: how this project relates to earlier neural-computer work",
+    "ctx.intro.lede": "Neural networks carrying out computation are not one research route. Some systems learn memory and control, some learn algorithmic transforms or program calls, and others compile a known program directly into weights. Neural CPU v3 asks a narrower but directly auditable question: can the one-step transition function of a fixed ISA be learned from input/output supervision precisely enough to execute real machine-code programs for long trajectories?",
+    "ctx.toc.1": "Landscape tour",
+    "ctx.toc.2": "An operational interpretation",
+    "ctx.toc.3": "Category comparison table",
+    "ctx.toc.4": "Trained vs hand-constructed weights",
+    "ctx.toc.5": "Position and limits",
+    "ctx.toc.6": "Relation to the repository theme",
+    "ctx.toc.7": "Legacy entry",
+    "ctx.toc.8": "Formal citations",
+    "ctx.tour.kicker": "By category",
+    "ctx.tour.h2": "A short guided tour of the neural-computer landscape",
+    "ctx.tour.lede": "This is not a ranking of which system is the most complete computer. It separates questions that are often conflated: learning memory and control, learning algorithms from examples, learning programs from traces, compiling programs into weights, and attaching a trained transition core to an exact runtime.",
+    "ctx.tour.l1": "Neural Turing Machine and Differentiable Neural Computer: differentiable external memory aimed at task learning.",
+    "ctx.tour.l2": "Neural GPU: recurrent convolutions learning algorithmic transformations.",
+    "ctx.tour.l3": "Neural Programmer-Interpreter and related program-interpretation work: program/task representation and execution-trace learning.",
+    "ctx.tour.l4": "Compilation routes such as Tracr: human-readable programs are compiled directly into concrete Transformer weights whose structure is therefore known.",
+    "ctx.tour.l5": "Percepta Transformer VM: parses a WebAssembly interpreter into a computation graph, analytically constructs Transformer weights, and uses attention to manage machine state and history.",
+    "ctx.tour.l6": "Neural CPU v3: exact PC, RAM and scheduling are retained, while a plain MLP learns only the discrete transitions of a 16-bit ISA.",
+    "ctx.tour.l7": "The legacy version used the same core idea; v3 mainly improves model size, training distribution, reliability diagnosis and reproducible engineering.",
+    "ctx.key.kicker": "One interpretation",
+    "ctx.key.h2": "An operational interpretation",
+    "ctx.key.quote": "Rather than statistical fitting in the usual sense, the training process is better read as “compiling” a set of program circuits into the network weights from input/output examples.",
+    "ctx.key.qualifier": "This is an operational reading of the phenomenon — not a claim that SGD is a conventional compiler, and not a proven equivalence theorem.",
+    "ctx.table.kicker": "Comparison",
+    "ctx.table.h2": "Category comparison table",
+    "ctx.table.lede": "The table compares research targets and evidence standards, not overall capability. A system not targeting machine code is not weaker; it is answering a different question.",
+    "ctx.table.cap": "High-level comparison of neural-computing work categories",
+    "ctx.table.cap1": "Part I: system structure and weight origin",
+    "ctx.table.cap2": "Part II: execution boundary and evidence standard",
+    "ctx.table.th1": "Category",
+    "ctx.table.th2": "Core weights: trained or hand-constructed",
+    "ctx.table.th3": "Explicit ISA",
+    "ctx.table.th4": "Form of external memory",
+    "ctx.table.th5": "Computation boundary owned by the network",
+    "ctx.table.th6": "Executes real machine-code programs",
+    "ctx.table.th7": "Reports per-operation audits of long traces",
+    "ctx.table.th8": "Main scientific purpose",
+    "ctx.table.c3": "Neural Programmer-Interpreter style program-interpretation work",
+    "ctx.table.c4": "Program-to-weight compilation such as Tracr",
+    "ctx.table.c7": "Neural CPU v3 (this project)",
+    "ctx.table.r1w": "Trained",
+    "ctx.table.r1system": "Learns a controller and read/write access to differentiable external memory.",
+    "ctx.table.r1evidence": "Learns memory use and algorithmic behaviour from task supervision; a fixed ISA, real machine code and CPU-scale long-trace error rates are not its primary targets.",
+    "ctx.table.r1mem": "Differentiable external memory",
+    "ctx.table.r1bound": "Learns a controller and read/write access to external memory",
+    "ctx.table.r1goal": "Learning memory use and algorithmic behaviour from task supervision",
+    "ctx.table.r2w": "Trained",
+    "ctx.table.r2system": "A recurrent convolutional state learns end-to-end sequence transformations for particular algorithms, without CPU-style RAM.",
+    "ctx.table.r2evidence": "Targets algorithm learning and length generalisation rather than executing a machine-code ISA or auditing long-run per-operation errors.",
+    "ctx.table.r2mem": "Recurrent convolutional state, not CPU-style RAM",
+    "ctx.table.r2bound": "End-to-end sequence transforms for particular algorithms",
+    "ctx.table.r2goal": "Learning algorithmic transformations with recurrent convolutions",
+    "ctx.table.r3w": "Trained from full execution traces",
+    "ctx.table.r3system": "Learns program calls, arguments and termination signals with program memory and task environments; its interface is not a hardware ISA.",
+    "ctx.table.r3evidence": "Evaluates execution traces and cross-program generalisation, but does not target CPU-scale long-run per-operation error rates.",
+    "ctx.table.r3isa": "Program/subprogram interface, not a hardware ISA",
+    "ctx.table.r3mem": "Program memory and task environments such as scratch pads",
+    "ctx.table.r3bound": "Learns program calls, arguments and termination signals",
+    "ctx.table.r3audit": "Evaluates execution traces, but not CPU-scale long-run bit error rates",
+    "ctx.table.r3goal": "Program/task representation and execution-trace learning",
+    "ctx.table.r4w": "Analytically constructed, not trained",
+    "ctx.table.r4system": "Compiles a specified RASP program into a standard Transformer; state lives in model activations.",
+    "ctx.table.r4evidence": "The circuit and weight structure are known and mainly provide known-structure models for interpretability experiments, rather than post-training error audits.",
+    "ctx.table.r4mem": "Model activations, not CPU-style external RAM",
+    "ctx.table.r4bound": "Compiles a specified RASP program into a Transformer",
+    "ctx.table.r4audit": "Known weight structure; post-training error audits are not the focus",
+    "ctx.table.r4goal": "Known-structure models for interpretability experiments",
+    "ctx.table.r5w": "Analytically constructed from a computation graph and MILP schedule; no SGD training",
+    "ctx.table.r5system": "A standard softmax-ReGLU Transformer; the WASM stack, linear memory, locals, cursor and call depth are encoded in token history and retrieved or updated through attention.",
+    "ctx.table.r5evidence": "Supports 35 WASM opcodes and executes compiled C/WASM programs; exactness is checked against reference traces, while a 2D convex-hull KV cache accelerates near-hardmax addressing to O(log n).",
+    "ctx.table.r5isa": "Yes: a WebAssembly VM with 35 opcodes",
+    "ctx.table.r5mem": "WASM stack, linear memory, locals and call state encoded in token history",
+    "ctx.table.r5bound": "An analytically constructed Transformer runs a WASM interpreter; attention retrieves and updates historical machine state",
+    "ctx.table.r5machine": "Yes (compiled C / WASM bytecode)",
+    "ctx.table.r5audit": "Stepwise validation against reference VM traces, not a post-training error-rate audit",
+    "ctx.table.r5goal": "Showing that an analytically constructed standard Transformer can act as a general WASM virtual machine",
+    "ctx.table.r7w": "Trained from random input/output supervision",
+    "ctx.table.r7system": "A plain MLP learns single-step transitions for a 16-bit, 32-opcode ISA; the PC, 64 KiB uint8 RAM and scheduling remain exact and non-neural.",
+    "ctx.table.r7evidence": "Executes real machine-code programs; reliability is tested with an independent oracle, random validation, and serial/batch per-operation audits of long traces.",
+    "ctx.table.r7isa": "Yes: 16-bit, 32 opcodes",
+    "ctx.table.r7mem": "64 KiB uint8 RAM (exact, non-neural)",
+    "ctx.table.r7bound": "Per-instruction state transitions: registers, flags, control signals",
+    "ctx.table.yes": "Yes",
+    "ctx.table.no": "No",
+    "ctx.table.notfocus": "Not the primary evidence standard",
+    "ctx.table.r7audit": "Yes (serial and batch per-operation audits)",
+    "ctx.table.r7goal": "Training the rule mapping of a fixed ISA to a precision that runs real programs",
+    "ctx.trained.kicker": "Weight origin",
+    "ctx.trained.h2": "Trained vs hand-constructed weights",
+    "ctx.trained.p1": "Every core weight in this project comes from supervised training on random input/output pairs: the training signal consists only of (instruction, state) → next-state examples — no one hand-wrote logic gates, truth tables or programs into the weights. The learning target is the state transition function of a fixed ISA, and programs themselves still run as machine code.",
+    "ctx.trained.p2": "This answers a different question from analytical construction routes such as Tracr and Percepta Transformer VM, which map known programs or interpreters to determined weights. Percepta expresses a WASM interpreter as a computation graph, uses MILP to schedule graph nodes into Transformer layers, and constructs the corresponding weights. Attention addresses historical machine state with near-hardmax lookup, while a 2D convex-hull KV cache accelerates that path. This project modifies no attention because its execution core is an MLP; the circuit selected by SGD is unknown, so reliability must be established with an independent oracle, structured hard cases and per-operation audits of long traces.",
+    "ctx.trained.link": "Error criteria and measured results — see the reliability page →",
+    "ctx.pos.kicker": "Position",
+    "ctx.pos.h2": "This project's defensible position — and its limits",
+    "ctx.pos.l1": "The weights come from random input/output supervised training — logic gates or programs are not burned in by hand.",
+    "ctx.pos.l2": "The learning target is the state transition function of a fixed ISA; programs themselves still run as machine code.",
+    "ctx.pos.l3": "It uses ordinary, exact RAM and PC rather than neuralizing every system component.",
+    "ctx.pos.l4": "The focus is not a new differentiable memory, but training a rule mapping to a precision that runs real programs and multi-billion lane-op demos.",
+    "ctx.pos.l5": "All demos share the same CPU weights; the CPU is not retrained per task.",
+    "ctx.pos.l6": "The project's value is both an engineering demonstration and intuitive evidence for a broader question: how far neural networks can learn discrete, exact transformations.",
+    "ctx.pos.nonclaim": "This does not mean every component of a general-purpose computer has been learned end to end, nor that the reliability of a real hardware CPU has been reached.",
+    "ctx.theme.kicker": "Repository theme",
+    "ctx.theme.h2": "Relation to this repository's theme",
+    "ctx.theme.p1": "This repository explores whether neural networks can learn discrete, exact rule transformations. Neural CPU v3 provides intuitive evidence: the state transition function of a fixed ISA can be trained to a precision that supports multi-billion-step real program traces and parallel render audits.",
+    "ctx.theme.p2": "The project is therefore first an intuitive billboard, not a standalone proof of the repository's entire research programme: the same trained weights run serial programs and also act as a massively parallel bank of independent lanes. It turns the question “how exactly can a neural network learn a rule?” into something visible and auditable operation by operation.",
+    "ctx.legacy.kicker": "Earlier versions",
+    "ctx.legacy.h2": "Legacy entry",
+    "ctx.legacy.lede": "The core idea has not fundamentally changed from the earlier designs in legacy/: a neural network learns the state transition function of a fixed ISA. What changed in v3 is engineering and validation discipline — a smaller network, a sharper ISA/system boundary, self-contained scripts, error diagnosis and structured-state audits, and much longer training. The earlier documents are kept in the repository; this site does not duplicate their content:",
+    "ctx.cite.kicker": "Citations",
+    "ctx.cite.h2": "Formal citations",
+    "ctx.cite.lede": "These references support the categories used on this page. They are not an exhaustive review, and their objectives should not be ranked by one common metric.",
+    "ctx.cite.perceptaImpl": "Transformer VM implementation and analytical weight-construction notes"
+  }
+};
+</script>
+<script src="site.js"></script>
+</body>
+</html>

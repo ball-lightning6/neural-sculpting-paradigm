@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title data-i18n="home.title">总览 — Neural CPU v3</title>
+<meta name="description" content="Neural CPU v3：从输入输出监督训练得到的 16-bit 神经执行核心。网络负责指令状态转移，PC 与 RAM 保持精确；约每 10^10 次随机操作出现 1 次错误。" data-i18n-attr="content:home.desc">
+<link rel="stylesheet" href="site/styles.css">
+</head>
+<body>
+<a class="skip-link" href="#main" data-i18n="nav.skip">跳到正文</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="index.html">Neural CPU v3 <span class="brand-tag">16-bit ISA</span></a>
+    <button id="nav-toggle" class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links" data-i18n="nav.menu" data-i18n-attr="aria-label:nav.menuAria">菜单</button>
+    <nav class="nav-links" id="nav-links" hidden aria-label="Main">
+      <a href="index.html" data-i18n="nav.overview">总览</a>
+      <a href="site/architecture.html" data-i18n="nav.core">执行核心</a>
+      <a href="site/training.html" data-i18n="nav.training">训练</a>
+      <a href="site/reliability.html" data-i18n="nav.reliability">可靠性</a>
+      <a href="site/demos.html" data-i18n="nav.demos">Demo</a>
+      <a href="site/research-context.html" data-i18n="nav.research">研究位置</a>
+      <a href="site/reproduce.html" data-i18n="nav.reproduce">复现</a>
+      <button id="lang-toggle" class="lang-btn" type="button" data-i18n="nav.langToggle" data-i18n-attr="aria-label:nav.langToggleAria">English</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ======================= first viewport ======================= -->
+  <section class="hero hero--light">
+    <div class="hero-media" aria-hidden="true">
+      <img src="results/clouds/fast_clouds_neural.png" alt="">
+    </div>
+    <div class="hero-inner">
+      <h1>Neural CPU v3</h1>
+      <p class="hero-sub" data-i18n="home.hero.sub">一个从输入输出监督训练得到的 16-bit 神经执行核心：MLP 学习每条指令对应的状态转移，PC、取指与 64 KiB RAM 保持精确实现。</p>
+      <p class="hero-note" data-i18n="home.hero.note">下方云层图与站内六个 demo 都使用同一个 Neural CPU 执行核心权重；各 demo 没有为自己的任务重新训练核心。</p>
+      <ul class="hero-metrics">
+        <li><span class="num">2,198,567</span><span class="lbl" data-i18n="home.hero.m1">MLP 参数量</span></li>
+        <li><span class="num">32</span><span class="lbl" data-i18n="home.hero.m2">opcode 槽位</span></li>
+        <li><span class="num">~10<sup>10</sup></span><span class="lbl" data-i18n="home.hero.m3">次随机操作约 1 次错误（数量级）</span></li>
+        <li><span class="num">6 / 6</span><span class="lbl" data-i18n="home.hero.m4">最终 demo 复跑，0 神经执行错误</span></li>
+      </ul>
+      <div class="hero-cta">
+        <a class="btn btn--primary" href="site/demos.html" data-i18n="home.hero.cta1">查看六个 demo</a>
+        <a class="btn btn--ghost" href="site/architecture.html" data-i18n="home.hero.cta2">理解执行核心</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= what the network learned ======================= -->
+  <section class="band band--surface" aria-labelledby="sec-what">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="home.what.kicker">核心定义</span>
+        <h2 id="sec-what" data-i18n="home.what.h">网络实际学了什么</h2>
+        <p data-i18n="home.what.lede">这不是把整台计算机放进一个网络。神经网络负责 32 条指令语义对应的状态变换；程序本身仍以机器码形式，由精确的外部运行时取指执行。</p>
+      </div>
+      <div class="grid-3">
+        <div>
+          <h3><span class="tag tag--external" data-i18n="home.what.in.tag">输入 · 51 bit</span></h3>
+          <p data-i18n="home.what.in.p">一条 16-bit 指令、3 bit 标志位（ZF、GF、CF）与 4 个 8-bit 寄存器 R0–R3。</p>
+        </div>
+        <div>
+          <h3><span class="tag tag--neural" data-i18n="home.what.net.tag">神经核心 · MLP</span></h3>
+          <p data-i18n="home.what.net.p">51 → 1024 × 3 → 39。三个 1024 宽线性隐藏层，GELU 与 LayerNorm，dropout 0，共 2,198,567 个参数。</p>
+        </div>
+        <div>
+          <h3><span class="tag tag--external" data-i18n="home.what.out.tag">输出 · 39 bit</span></h3>
+          <p data-i18n="home.what.out.p">下一时刻的标志位与寄存器，以及 4 个控制信号：memory_read、memory_write、branch_taken、halt。</p>
+        </div>
+      </div>
+      <p class="small muted" data-i18n="home.what.foot">保持精确的外部状态：16-bit PC、取指逻辑、64 KiB uint8 RAM、地址访问与调度。LOAD 拆成两步：神经核心发出 memory_read，RAM 返回字节后由同一核心执行内部 MOVI。</p>
+    </div>
+  </section>
+
+  <!-- ======================= six demos band ======================= -->
+  <section class="band" aria-labelledby="sec-demos">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="home.demos.kicker">真实计算</span>
+        <h2 id="sec-demos" data-i18n="home.demos.h">六个 demo，同一套权重</h2>
+        <p data-i18n="home.demos.lede">最终发布权重重新运行全部六个 demo，六项均报告 0 个神经执行错误。每个 demo 的神经 / 外部职责边界见详情页。</p>
+      </div>
+
+      <h3 data-i18n="home.demos.g1">程序执行</h3>
+      <div class="card-grid" style="margin-bottom:24px">
+        <article class="card">
+          <h3>Pi · 1000 <span data-i18n="home.demos.pi.unit">位十进制有效数字</span></h3>
+          <p data-i18n="home.demos.pi.p">Rabinowitz–Wagon spigot 算法编译为 16-bit 机器码，输出与高精度参考逐位一致。</p>
+          <p class="metric-inline">5,559,684,667 ops · 0 error</p>
+          <p class="card-foot"><a href="site/demos/pi.html" data-i18n="home.demos.pi.link">Pi 详情 →</a></p>
+        </article>
+        <article class="card">
+          <h3 data-i18n="home.demos.sudoku.h">Sudoku · 10 道题</h3>
+          <p data-i18n="home.demos.sudoku.p">MRV 搜索与显式回溯栈运行于 64 KiB RAM 之上，10 题全部解出并通过答案验证。</p>
+          <p class="metric-inline">180,243,530 ops · 0 error</p>
+          <p class="card-foot"><a href="site/demos/sudoku.html" data-i18n="home.demos.sudoku.link">Sudoku 详情 →</a></p>
+        </article>
+        <article class="card">
+          <h3 data-i18n="home.demos.primes.h">第 10,000,000 个质数</h3>
+          <p data-i18n="home.demos.primes.p">分段奇数筛，质数判定、计数与停止条件全部由 16-bit 指令流计算。结果 179,424,673。</p>
+          <p class="metric-inline">4,462,453,580 ops · 0 error</p>
+          <p class="card-foot"><a href="site/demos/primes.html" data-i18n="home.demos.primes.link">Primes 详情 →</a></p>
+        </article>
+      </div>
+
+      <h3 data-i18n="home.demos.g2">模型推理</h3>
+      <div class="card-grid" style="margin-bottom:24px">
+        <article class="card">
+          <h3>MNIST CNN <span data-i18n="home.demos.mnist.sub">量化推理</span></h3>
+          <p data-i18n="home.demos.mnist.p">常量权重乘法编译成 NAF/CSD shift-add 序列；32-bit 累加、ReLU、max pooling 与 argmax 全部由 Neural CPU 执行。三条路径均预测 7。</p>
+          <p class="metric-inline">596,807,228 lane-ops · 0 error</p>
+          <p class="card-foot"><a href="site/demos/mnist.html" data-i18n="home.demos.mnist.link">MNIST 详情 →</a></p>
+        </article>
+      </div>
+
+      <h3 data-i18n="home.demos.g3">并行图形</h3>
+      <div class="grid-2">
+        <figure class="figure">
+          <a href="site/demos/clouds.html"><img class="ratio-clouds" src="results/clouds/fast_clouds_neural.png" alt="Neural CPU v3 渲染的 1280x720 二维云层静态帧" data-i18n-attr="alt:ui.mediaAltClouds"></a>
+          <figcaption><strong>Fast 2D Clouds</strong> — <span data-i18n="home.demos.clouds.cap">10,740,326,400 lane-op，与精确整数参考逐像素一致（差异像素 0）。</span> <a href="site/demos/clouds.html" data-i18n="home.demos.clouds.link">详情 →</a></figcaption>
+        </figure>
+        <figure class="figure">
+          <video class="ratio-rubiks" controls muted playsinline preload="metadata" src="results/rubiks/neural_cpu_rubiks_cube_flat.mp4"></video>
+          <figcaption><strong>3x3 Rubik's Cube</strong> — <span data-i18n="home.demos.rubiks.cap">303 帧 / 24 fps，7,029,721,682 lane-op，0 result / load / store error。</span> <a href="site/demos/rubiks.html" data-i18n="home.demos.rubiks.link">详情 →</a></figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= reliability summary ======================= -->
+  <section class="band band--dark" aria-labelledby="sec-rel">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="home.rel.kicker">可靠性证据</span>
+        <h2 id="sec-rel" data-i18n="home.rel.h">这个数字从哪里来</h2>
+      </div>
+      <div class="metric-grid">
+        <div class="metric"><span class="num">10,737,418,240</span><span class="lbl" data-i18n="home.rel.m1">最终随机验证操作数</span></div>
+        <div class="metric"><span class="num err">1</span><span class="lbl" data-i18n="home.rel.m2">sample exact error（JG 错误更新 ZF）</span></div>
+        <div class="metric"><span class="num">0.9999999999068677</span><span class="lbl" data-i18n="home.rel.m3">operation-level exact accuracy</span></div>
+        <div class="metric"><span class="num ok">0</span><span class="lbl" data-i18n="home.rel.m4">固定验证集 1,048,576 个操作的 bit error</span></div>
+      </div>
+      <p class="lede" data-i18n="home.rel.p1">相邻训练阶段的其他大样本测试曾得到 10.737B 操作 0 error 与 32.212B 操作 3 errors。这些结果来自相近但不同的 checkpoint，只能谨慎表述为：随机单步操作错误率处于每约 10<sup>10</sup> 次操作一个错误的数量级。</p>
+      <p class="small" data-i18n="home.rel.p2">该数量级估计来自有限罕见事件，不是硬件级可靠性保证，也不能写成“严格保证 100 亿次不出错”。</p>
+      <p><a class="btn btn--ghost" href="site/reliability.html" data-i18n="home.rel.link">查看验证口径与全部证据</a></p>
+    </div>
+  </section>
+
+  <!-- ======================= legacy evolution ======================= -->
+  <section class="band" aria-labelledby="sec-legacy">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="home.legacy.kicker">演进</span>
+        <h2 id="sec-legacy" data-i18n="home.legacy.h">从 legacy 到 v3</h2>
+        <p data-i18n="home.legacy.lede">核心思想没有根本变化——神经网络学习固定 ISA 的状态转移函数。v3 的差别主要在工程与验证口径：</p>
+      </div>
+      <ul class="prose">
+        <li data-i18n="home.legacy.l1">网络更小，ISA 与 CPU / 外部系统边界更明确；</li>
+        <li data-i18n="home.legacy.l2">训练与验证脚本自包含；</li>
+        <li data-i18n="home.legacy.l3">加入错误诊断、hard replay、动态采样与结构状态审计；</li>
+        <li data-i18n="home.legacy.l4">训练时间明显更长（RTX 5090 约 2.5 天）；</li>
+        <li data-i18n="home.legacy.l5">精度从概念验证提升到可支撑数十亿步真实程序轨迹与并行渲染审计。</li>
+      </ul>
+      <p class="small">
+        <span data-i18n="home.legacy.links">早期方案文档：</span>
+        <a href="../legacy/README_zh.md">legacy README_zh.md</a> ·
+        <a href="../legacy/README_en.md">legacy README_en.md</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- ======================= research interpretation ======================= -->
+  <section class="band band--surface" aria-labelledby="sec-research">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="home.research.kicker">一种解释</span>
+        <h2 id="sec-research" data-i18n="home.research.h">它在研究谱系中的位置</h2>
+      </div>
+      <blockquote class="keyline prose" data-i18n="home.research.quote">与其说它在做通常意义上的统计拟合，不如说训练过程正在根据输入输出样例，把一组程序电路“编译”进神经网络权重。</blockquote>
+      <p class="keyline-qualifier prose" data-i18n="home.research.qualifier">这是对现象的操作性解释，不是声称 SGD 就是传统编译器，也不是已被严格证明的等价定理。</p>
+      <p class="prose" data-i18n="home.research.p">与 Neural Turing Machine、Neural GPU 或手工构造权重的工作相比，本项目的权重全部由随机输入输出监督训练得到，程序仍以真实机器码运行在精确的 PC 与 RAM 之上，并报告长轨迹逐操作审计。</p>
+      <p><a href="site/research-context.html" data-i18n="home.research.link">查看分类比较与准确定位 →</a></p>
+    </div>
+  </section>
+
+  <!-- ======================= reproduce entry ======================= -->
+  <section class="band" aria-labelledby="sec-repro">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="home.repro.kicker">复现</span>
+        <h2 id="sec-repro" data-i18n="home.repro.h">直接运行仓库脚本</h2>
+        <p data-i18n="home.repro.lede">发布权重、8 个自包含脚本与全部数据都在仓库中。所有可调参数位于各脚本顶部的 Config，普通 python 命令即可运行。</p>
+      </div>
+      <dl class="facts">
+        <dt data-i18n="home.repro.dt1">发布权重</dt>
+        <dd class="mono">weights/neural_cpu_v3_best_balanced_model.pt</dd>
+        <dt>checkpoint step</dt>
+        <dd class="mono">6,926,625</dd>
+        <dt>SHA-256</dt>
+        <dd class="mono">89dc480163de72414d3ab12b9fbac045430359503844dbf4020ea12b961861c8</dd>
+      </dl>
+      <div class="codeblock"><pre><code>python scripts/run_neural_cpu_v3_pi.py</code></pre></div>
+      <p><a class="btn btn--primary" href="site/reproduce.html" data-i18n="home.repro.link">查看全部脚本的运行方法</a></p>
+    </div>
+  </section>
+
+  <!-- ======================= pager ======================= -->
+  <div class="wrap band--tight">
+    <nav class="pager" aria-label="Pager">
+      <a class="next" href="site/architecture.html"><span class="dir" data-i18n="ui.next">下一页</span><span class="name" data-i18n="nav.core">执行核心</span></a>
+    </nav>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <p data-i18n="footer.project">Neural CPU v3 —— 从输入输出监督训练得到的 16-bit 神经执行核心。</p>
+        <p data-i18n="footer.boundary">神经网络负责指令语义对应的状态变换；PC、取指、64 KiB RAM 与外部调度保持精确实现。</p>
+      </div>
+      <div>
+        <p><strong data-i18n="footer.legacy">早期版本（legacy）</strong></p>
+        <p><a href="../legacy/README_zh.md" data-i18n="footer.legacyZh">legacy 中文 README</a><br>
+           <a href="../legacy/README_en.md" data-i18n="footer.legacyEn">legacy English README</a></p>
+      </div>
+    </div>
+    <p class="small" style="margin-top:16px" data-i18n="footer.note">本站为研究项目静态页面，所有数字均可在仓库脚本与结果中核验。</p>
+  </div>
+</footer>
+
+<script src="site/i18n.js"></script>
+<script>
+window.I18N_PAGE = {
+  zh: {
+    "home.title": "总览 — Neural CPU v3",
+    "home.desc": "Neural CPU v3：从输入输出监督训练得到的 16-bit 神经执行核心。网络负责指令状态转移，PC 与 RAM 保持精确；约每 10^10 次随机操作出现 1 次错误。",
+    "home.hero.sub": "一个从输入输出监督训练得到的 16-bit 神经执行核心：MLP 学习每条指令对应的状态转移，PC、取指与 64 KiB RAM 保持精确实现。",
+    "home.hero.note": "下方云层图与站内六个 demo 都使用同一个 Neural CPU 执行核心权重；各 demo 没有为自己的任务重新训练核心。",
+    "home.hero.m1": "MLP 参数量",
+    "home.hero.m2": "opcode 槽位",
+    "home.hero.m3": "次随机操作约 1 次错误（数量级）",
+    "home.hero.m4": "最终 demo 复跑，0 神经执行错误",
+    "home.hero.cta1": "查看六个 demo",
+    "home.hero.cta2": "理解执行核心",
+    "home.what.kicker": "核心定义",
+    "home.what.h": "网络实际学了什么",
+    "home.what.lede": "这不是把整台计算机放进一个网络。神经网络负责 32 条指令语义对应的状态变换；程序本身仍以机器码形式，由精确的外部运行时取指执行。",
+    "home.what.in.tag": "输入 · 51 bit",
+    "home.what.in.p": "一条 16-bit 指令、3 bit 标志位（ZF、GF、CF）与 4 个 8-bit 寄存器 R0–R3。",
+    "home.what.net.tag": "神经核心 · MLP",
+    "home.what.net.p": "51 → 1024 × 3 → 39。三个 1024 宽线性隐藏层，GELU 与 LayerNorm，dropout 0，共 2,198,567 个参数。",
+    "home.what.out.tag": "输出 · 39 bit",
+    "home.what.out.p": "下一时刻的标志位与寄存器，以及 4 个控制信号：memory_read、memory_write、branch_taken、halt。",
+    "home.what.foot": "保持精确的外部状态：16-bit PC、取指逻辑、64 KiB uint8 RAM、地址访问与调度。LOAD 拆成两步：神经核心发出 memory_read，RAM 返回字节后由同一核心执行内部 MOVI。",
+    "home.demos.kicker": "真实计算",
+    "home.demos.h": "六个 demo，同一套权重",
+    "home.demos.lede": "最终发布权重重新运行全部六个 demo，六项均报告 0 个神经执行错误。每个 demo 的神经 / 外部职责边界见详情页。",
+    "home.demos.g1": "程序执行",
+    "home.demos.pi.unit": "位十进制有效数字",
+    "home.demos.pi.p": "Rabinowitz–Wagon spigot 算法编译为 16-bit 机器码，输出与高精度参考逐位一致。",
+    "home.demos.pi.link": "Pi 详情 →",
+    "home.demos.sudoku.h": "Sudoku · 10 道题",
+    "home.demos.sudoku.p": "MRV 搜索与显式回溯栈运行于 64 KiB RAM 之上，10 题全部解出并通过答案验证。",
+    "home.demos.sudoku.link": "Sudoku 详情 →",
+    "home.demos.primes.h": "第 10,000,000 个质数",
+    "home.demos.primes.p": "分段奇数筛，质数判定、计数与停止条件全部由 16-bit 指令流计算。结果 179,424,673。",
+    "home.demos.primes.link": "Primes 详情 →",
+    "home.demos.g2": "模型推理",
+    "home.demos.mnist.sub": "量化推理",
+    "home.demos.mnist.p": "常量权重乘法编译成 NAF/CSD shift-add 序列；32-bit 累加、ReLU、max pooling 与 argmax 全部由 Neural CPU 执行。三条路径均预测 7。",
+    "home.demos.mnist.link": "MNIST 详情 →",
+    "home.demos.g3": "并行图形",
+    "home.demos.clouds.cap": "10,740,326,400 lane-op，与精确整数参考逐像素一致（差异像素 0）。",
+    "home.demos.clouds.link": "详情 →",
+    "home.demos.rubiks.cap": "303 帧 / 24 fps，7,029,721,682 lane-op，0 result / load / store error。",
+    "home.demos.rubiks.link": "详情 →",
+    "home.rel.kicker": "可靠性证据",
+    "home.rel.h": "这个数字从哪里来",
+    "home.rel.m1": "最终随机验证操作数",
+    "home.rel.m2": "sample exact error（JG 错误更新 ZF）",
+    "home.rel.m3": "operation-level exact accuracy",
+    "home.rel.m4": "固定验证集 1,048,576 个操作的 bit error",
+    "home.rel.p1": "相邻训练阶段的其他大样本测试曾得到 10.737B 操作 0 error 与 32.212B 操作 3 errors。这些结果来自相近但不同的 checkpoint，只能谨慎表述为：随机单步操作错误率处于每约 10^10 次操作一个错误的数量级。",
+    "home.rel.p2": "该数量级估计来自有限罕见事件，不是硬件级可靠性保证，也不能写成“严格保证 100 亿次不出错”。",
+    "home.rel.link": "查看验证口径与全部证据",
+    "home.legacy.kicker": "演进",
+    "home.legacy.h": "从 legacy 到 v3",
+    "home.legacy.lede": "核心思想没有根本变化——神经网络学习固定 ISA 的状态转移函数。v3 的差别主要在工程与验证口径：",
+    "home.legacy.l1": "网络更小，ISA 与 CPU / 外部系统边界更明确；",
+    "home.legacy.l2": "训练与验证脚本自包含；",
+    "home.legacy.l3": "加入错误诊断、hard replay、动态采样与结构状态审计；",
+    "home.legacy.l4": "训练时间明显更长（RTX 5090 约 2.5 天）；",
+    "home.legacy.l5": "精度从概念验证提升到可支撑数十亿步真实程序轨迹与并行渲染审计。",
+    "home.legacy.links": "早期方案文档：",
+    "home.research.kicker": "一种解释",
+    "home.research.h": "它在研究谱系中的位置",
+    "home.research.quote": "与其说它在做通常意义上的统计拟合，不如说训练过程正在根据输入输出样例，把一组程序电路“编译”进神经网络权重。",
+    "home.research.qualifier": "这是对现象的操作性解释，不是声称 SGD 就是传统编译器，也不是已被严格证明的等价定理。",
+    "home.research.p": "与 Neural Turing Machine、Neural GPU 或手工构造权重的工作相比，本项目的权重全部由随机输入输出监督训练得到，程序仍以真实机器码运行在精确的 PC 与 RAM 之上，并报告长轨迹逐操作审计。",
+    "home.research.link": "查看分类比较与准确定位 →",
+    "home.repro.kicker": "复现",
+    "home.repro.h": "直接运行仓库脚本",
+    "home.repro.lede": "发布权重、8 个自包含脚本与全部数据都在仓库中。所有可调参数位于各脚本顶部的 Config，普通 python 命令即可运行。",
+    "home.repro.dt1": "发布权重",
+    "home.repro.link": "查看全部脚本的运行方法"
+  },
+  en: {
+    "home.title": "Overview — Neural CPU v3",
+    "home.desc": "Neural CPU v3: a 16-bit neural execution core trained from input/output supervision. The network owns instruction state transitions while the PC and RAM stay exact; roughly one error per 10^10 random operations.",
+    "home.hero.sub": "A 16-bit neural execution core trained from input/output supervision: an MLP learns the state transition of every instruction, while the PC, fetch logic and 64 KiB RAM stay exact.",
+    "home.hero.note": "The cloud image below and all six demos use the same trained Neural CPU execution-core weights; the core is not retrained for any individual demo.",
+    "home.hero.m1": "MLP parameters",
+    "home.hero.m2": "opcode slots",
+    "home.hero.m3": "random operations per error (order of magnitude)",
+    "home.hero.m4": "final demos rerun, zero neural execution errors",
+    "home.hero.cta1": "See the six demos",
+    "home.hero.cta2": "Understand the core",
+    "home.what.kicker": "Definition",
+    "home.what.h": "What the network actually learned",
+    "home.what.lede": "This is not a whole computer inside one network. The neural core owns the state transitions of 32 instruction semantics; programs still run as machine code under an exact external runtime that fetches and schedules them.",
+    "home.what.in.tag": "Input · 51 bit",
+    "home.what.in.p": "One 16-bit instruction, 3 flag bits (ZF, GF, CF) and four 8-bit registers R0–R3.",
+    "home.what.net.tag": "Neural core · MLP",
+    "home.what.net.p": "51 → 1024 × 3 → 39. Three 1024-wide linear hidden layers with GELU and LayerNorm, dropout 0, 2,198,567 parameters in total.",
+    "home.what.out.tag": "Output · 39 bit",
+    "home.what.out.p": "The next-step flags and registers, plus 4 control signals: memory_read, memory_write, branch_taken, halt.",
+    "home.what.foot": "External state kept exact: the 16-bit PC, fetch logic, 64 KiB uint8 RAM, addressing and scheduling. LOAD runs in two steps: the neural core issues memory_read, RAM returns a byte, and the same core then executes an internal MOVI.",
+    "home.demos.kicker": "Real computation",
+    "home.demos.h": "Six demos, one set of weights",
+    "home.demos.lede": "The released weights reran all six demos; all six report zero neural execution errors. Each detail page draws the exact boundary between neural and external work.",
+    "home.demos.g1": "Program execution",
+    "home.demos.pi.unit": "significant decimal digits",
+    "home.demos.pi.p": "The Rabinowitz–Wagon spigot algorithm compiled to 16-bit machine code; the output matches a high-precision reference digit for digit.",
+    "home.demos.pi.link": "Pi details →",
+    "home.demos.sudoku.h": "Sudoku · 10 puzzles",
+    "home.demos.sudoku.p": "MRV search with an explicit backtracking stack living in the 64 KiB RAM; all 10 puzzles solved and answer-verified.",
+    "home.demos.sudoku.link": "Sudoku details →",
+    "home.demos.primes.h": "The 10,000,000th prime",
+    "home.demos.primes.p": "A segmented odd sieve; primality, counting and the stop condition are all computed by the 16-bit instruction stream. Result: 179,424,673.",
+    "home.demos.primes.link": "Primes details →",
+    "home.demos.g2": "Model inference",
+    "home.demos.mnist.sub": "quantized inference",
+    "home.demos.mnist.p": "Constant-weight multiplies are compiled into NAF/CSD shift-add sequences; 32-bit accumulation, ReLU, max pooling and argmax all run on the Neural CPU. All three paths predict 7.",
+    "home.demos.mnist.link": "MNIST details →",
+    "home.demos.g3": "Parallel graphics",
+    "home.demos.clouds.cap": "10,740,326,400 lane-ops, pixel-identical to the exact integer reference (0 differing pixels).",
+    "home.demos.clouds.link": "Details →",
+    "home.demos.rubiks.cap": "303 frames at 24 fps, 7,029,721,682 lane-ops, 0 result / load / store errors.",
+    "home.demos.rubiks.link": "Details →",
+    "home.rel.kicker": "Reliability evidence",
+    "home.rel.h": "Where the number comes from",
+    "home.rel.m1": "operations in the final random validation",
+    "home.rel.m2": "sample exact error (JG updated ZF incorrectly)",
+    "home.rel.m3": "operation-level exact accuracy",
+    "home.rel.m4": "bit errors on the fixed validation set of 1,048,576 operations",
+    "home.rel.p1": "Other large-sample tests at adjacent training stages saw 0 errors in 10.737B operations and 3 errors in 32.212B operations. These ran on nearby but not identical checkpoints, so the careful statement is: the random single-step error rate is on the order of one error per ~10^10 operations.",
+    "home.rel.p2": "This order-of-magnitude estimate comes from a finite count of rare events. It is not a hardware-grade reliability guarantee, and it must not be read as “no error in 10 billion operations, guaranteed”.",
+    "home.rel.link": "Read the validation criteria and all evidence",
+    "home.legacy.kicker": "Evolution",
+    "home.legacy.h": "From legacy to v3",
+    "home.legacy.lede": "The core idea is unchanged — a neural network learns the state transition function of a fixed ISA. What changed in v3 is mostly engineering and validation discipline:",
+    "home.legacy.l1": "a smaller network, with a sharper boundary between the CPU and the external system;",
+    "home.legacy.l2": "self-contained training and validation scripts;",
+    "home.legacy.l3": "error diagnosis, hard replay, dynamic sampling and structured-state audits added;",
+    "home.legacy.l4": "much longer training (about 2.5 days on an RTX 5090);",
+    "home.legacy.l5": "precision moved from proof-of-concept to supporting multi-billion-step real program traces and parallel render audits.",
+    "home.legacy.links": "Earlier design documents:",
+    "home.research.kicker": "One interpretation",
+    "home.research.h": "Its place in the research landscape",
+    "home.research.quote": "Rather than statistical fitting in the usual sense, the training process is better read as “compiling” a set of program circuits into the network weights from input/output examples.",
+    "home.research.qualifier": "This is an operational reading of the phenomenon — not a claim that SGD is a conventional compiler, and not a proven equivalence theorem.",
+    "home.research.p": "Compared with Neural Turing Machines, Neural GPUs or hand-constructed weight work, every weight here comes from supervised training on random input/output pairs; programs still run as real machine code on an exact PC and RAM, and long traces are audited operation by operation.",
+    "home.research.link": "See the category comparison and precise positioning →",
+    "home.repro.kicker": "Reproduce",
+    "home.repro.h": "Run the repository scripts directly",
+    "home.repro.lede": "The released weights, 8 self-contained scripts and all data ship in this repository. Every tunable parameter sits in the Config block at the top of each script; a plain python command is enough.",
+    "home.repro.dt1": "Released weights",
+    "home.repro.link": "See how to run every script"
+  }
+};
+</script>
+<script src="site/site.js"></script>
+</body>
+</html>

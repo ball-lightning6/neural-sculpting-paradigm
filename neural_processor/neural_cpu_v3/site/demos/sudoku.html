@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title data-i18n="sudoku.title">Sudoku · 通用 9x9 求解器 — Neural CPU v3</title>
+<meta name="description" content="Sudoku demo：MRV 搜索、显式回溯栈与 peer 扫描写成本项目 ISA 的机器码，棋盘与回溯栈位于 64 KiB RAM；一次已记录的 10 题运行全部解出并通过答案验证，180,243,530 次神经操作，0 神经错误。" data-i18n-attr="content:sudoku.desc">
+<link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+<a class="skip-link" href="#main" data-i18n="nav.skip">跳到正文</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../../index.html">Neural CPU v3 <span class="brand-tag">16-bit ISA</span></a>
+    <button id="nav-toggle" class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links" data-i18n="nav.menu" data-i18n-attr="aria-label:nav.menuAria">菜单</button>
+    <nav class="nav-links" id="nav-links" hidden aria-label="Main">
+      <a href="../../index.html" data-i18n="nav.overview">总览</a>
+      <a href="../architecture.html" data-i18n="nav.core">执行核心</a>
+      <a href="../training.html" data-i18n="nav.training">训练</a>
+      <a href="../reliability.html" data-i18n="nav.reliability">可靠性</a>
+      <a href="../demos.html" data-i18n="nav.demos">Demo</a>
+      <a href="../research-context.html" data-i18n="nav.research">研究位置</a>
+      <a href="../reproduce.html" data-i18n="nav.reproduce">复现</a>
+      <button id="lang-toggle" class="lang-btn" type="button" data-i18n="nav.langToggle" data-i18n-attr="aria-label:nav.langToggleAria">English</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ======================= page header + toc ======================= -->
+  <section class="band band--surface" aria-labelledby="page-h">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="sudoku.head.kicker">Demo · 程序执行</span>
+        <h1 id="page-h" data-i18n="sudoku.head.h">Sudoku · 通用 9x9 求解器</h1>
+        <p class="lede" data-i18n="sudoku.head.lede">MRV 搜索、显式回溯栈与 peer 扫描写成本项目 ISA 的机器码，由 Neural CPU 逐条执行；一次已记录的 10 题运行中，10 题全部解出并通过答案验证，0 神经错误。</p>
+      </div>
+      <nav class="toc" aria-labelledby="sudoku-toc-h">
+        <strong id="sudoku-toc-h" data-i18n="ui.toc">本页目录</strong>
+        <ol>
+          <li><a href="#output" data-i18n="sudoku.toc.out">示例输入</a></li>
+          <li><a href="#numbers" data-i18n="sudoku.toc.num">关键数字</a></li>
+          <li><a href="#isa" data-i18n="sudoku.toc.isa">ISA 映射</a></li>
+          <li><a href="#neural" data-i18n="sudoku.toc.neural">Neural CPU 的职责</a></li>
+          <li><a href="#external" data-i18n="sudoku.toc.external">外部运行时的职责</a></li>
+          <li><a href="#modes" data-i18n="sudoku.toc.modes">审计模式</a></li>
+          <li><a href="#run" data-i18n="sudoku.toc.run">运行方法</a></li>
+          <li><a href="#limits" data-i18n="sudoku.toc.limits">限制与不声称</a></li>
+        </ol>
+      </nav>
+    </div>
+  </section>
+
+  <!-- ======================= example input ======================= -->
+  <section class="band" aria-labelledby="output">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="sudoku.out.kicker">示例输入</span>
+        <h2 id="output" data-i18n="sudoku.out.h">一道真实题目：Grid 01</h2>
+        <p data-i18n="sudoku.out.p">默认从 Project Euler 96 的 50 道题中无放回随机抽取 10 道。下表是数据文件中的第 1 题（Grid 01），作为求解器的输入示例；空白格对应文件中的 0。</p>
+      </div>
+      <div class="table-scroll" style="max-width:440px">
+        <table class="spec mono" style="min-width:0; text-align:center">
+          <caption data-i18n="sudoku.out.gridCap">Grid 01 — assets/project_euler_096_sudoku.txt 的第 1 题；空白格 = 0</caption>
+          <tbody>
+            <tr><td>&nbsp;</td><td>&nbsp;</td><td><strong>3</strong></td><td>&nbsp;</td><td><strong>2</strong></td><td>&nbsp;</td><td><strong>6</strong></td><td>&nbsp;</td><td>&nbsp;</td></tr>
+            <tr><td><strong>9</strong></td><td>&nbsp;</td><td>&nbsp;</td><td><strong>3</strong></td><td>&nbsp;</td><td><strong>5</strong></td><td>&nbsp;</td><td>&nbsp;</td><td><strong>1</strong></td></tr>
+            <tr><td>&nbsp;</td><td>&nbsp;</td><td><strong>1</strong></td><td><strong>8</strong></td><td>&nbsp;</td><td><strong>6</strong></td><td><strong>4</strong></td><td>&nbsp;</td><td>&nbsp;</td></tr>
+            <tr><td>&nbsp;</td><td>&nbsp;</td><td><strong>8</strong></td><td><strong>1</strong></td><td>&nbsp;</td><td><strong>2</strong></td><td><strong>9</strong></td><td>&nbsp;</td><td>&nbsp;</td></tr>
+            <tr><td><strong>7</strong></td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td><strong>8</strong></td></tr>
+            <tr><td>&nbsp;</td><td>&nbsp;</td><td><strong>6</strong></td><td><strong>7</strong></td><td>&nbsp;</td><td><strong>8</strong></td><td><strong>2</strong></td><td>&nbsp;</td><td>&nbsp;</td></tr>
+            <tr><td>&nbsp;</td><td>&nbsp;</td><td><strong>2</strong></td><td><strong>6</strong></td><td>&nbsp;</td><td><strong>9</strong></td><td><strong>5</strong></td><td>&nbsp;</td><td>&nbsp;</td></tr>
+            <tr><td><strong>8</strong></td><td>&nbsp;</td><td>&nbsp;</td><td><strong>2</strong></td><td>&nbsp;</td><td><strong>3</strong></td><td>&nbsp;</td><td>&nbsp;</td><td><strong>9</strong></td></tr>
+            <tr><td>&nbsp;</td><td>&nbsp;</td><td><strong>5</strong></td><td>&nbsp;</td><td><strong>1</strong></td><td>&nbsp;</td><td><strong>3</strong></td><td>&nbsp;</td><td>&nbsp;</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="prose" data-i18n="sudoku.out.p2">求解完成后，Python 负责显示棋盘并最终验证答案；搜索过程本身由机器码完成。</p>
+    </div>
+  </section>
+
+  <!-- ======================= key numbers ======================= -->
+  <section class="band band--surface" aria-labelledby="numbers">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="sudoku.num.kicker">已核验结果</span>
+        <h2 id="numbers" data-i18n="sudoku.num.h">关键数字</h2>
+      </div>
+      <div class="metric-grid">
+        <div class="metric"><span class="num">50</span><span class="lbl" data-i18n="sudoku.num.m1">Project Euler 96 题库题目数</span></div>
+        <div class="metric"><span class="num">10</span><span class="lbl" data-i18n="sudoku.num.m2">默认无放回抽取题数（PUZZLE_COUNT）</span></div>
+        <div class="metric"><span class="num">180,243,530</span><span class="lbl" data-i18n="sudoku.num.m3">一次已记录 10 题运行的神经操作数（非固定成本）</span></div>
+        <div class="metric"><span class="num">10 / 10</span><span class="lbl" data-i18n="sudoku.num.m4">该次运行中解出并通过答案验证的题目</span></div>
+        <div class="metric"><span class="num ok">0</span><span class="lbl" data-i18n="sudoku.num.m5">该次运行的神经执行错误</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= ISA mapping ======================= -->
+  <section class="band" aria-labelledby="isa">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="sudoku.isa.kicker">程序 → ISA</span>
+        <h2 id="isa" data-i18n="sudoku.isa.h">求解器怎样映射到 16-bit ISA</h2>
+      </div>
+      <p class="prose" data-i18n="sudoku.isa.p1">求解算法完全写成项目 ISA 的机器码：MRV（最少剩余候选）搜索、显式回溯栈和对每格 20 个 peer 的扫描都由指令流实现。每个候选数字都由程序扫描该格的 peer 后判定。</p>
+      <p class="prose" data-i18n="sudoku.isa.p2">棋盘、候选搜索状态和回溯栈位于 64 KiB RAM；脚本还定义了一组低地址命名单元（如 DEPTH、BEST_CELL、POINTER_LOW / POINTER_HIGH）保存搜索状态。固定的 peer 表由 Python 提供。</p>
+    </div>
+  </section>
+
+  <!-- ======================= what the Neural CPU computes ======================= -->
+  <section class="band band--surface" aria-labelledby="neural">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="sudoku.neural.kicker">神经侧</span>
+        <h2 id="neural" data-i18n="sudoku.neural.h">Neural CPU 承担什么</h2>
+      </div>
+      <h3><span class="tag tag--neural" data-i18n="sudoku.neural.tag">神经核心 · MLP</span></h3>
+      <p class="prose" data-i18n="sudoku.neural.p">求解过程中由神经核心逐条完成的状态转移包括：</p>
+      <ul class="prose">
+        <li data-i18n="sudoku.neural.l1">候选计数、MRV 比较与选择的寄存器算术；</li>
+        <li data-i18n="sudoku.neural.l2">回溯栈与指针单元的读写控制和相关算术；</li>
+        <li data-i18n="sudoku.neural.l3">peer 扫描循环的条件判断与分支；</li>
+        <li data-i18n="sudoku.neural.l4">标志位（ZF、GF、CF）与 memory_read / memory_write / branch_taken / halt 控制信号。</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ======================= what the external runtime does ======================= -->
+  <section class="band" aria-labelledby="external">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="sudoku.external.kicker">外部侧</span>
+        <h2 id="external" data-i18n="sudoku.external.h">外部运行时承担什么</h2>
+      </div>
+      <h3><span class="tag tag--external" data-i18n="sudoku.external.tag">外部精确组件</span></h3>
+      <ul class="prose">
+        <li data-i18n="sudoku.external.l1">装入题目：从 assets/project_euler_096_sudoku.txt 无放回抽取 10 道；</li>
+        <li data-i18n="sudoku.external.l2">提供固定的 peer 表（每格 20 个 peer）；</li>
+        <li data-i18n="sudoku.external.l3">显示棋盘并最终验证答案；</li>
+        <li data-i18n="sudoku.external.l4">PC、取指、64 KiB RAM 读写，以及 batch 模式下的轨迹生成与 GPU 调度。</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ======================= audit modes ======================= -->
+  <section class="band band--surface" aria-labelledby="modes">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="sudoku.modes.kicker">验证口径</span>
+        <h2 id="modes" data-i18n="sudoku.modes.h">三种模式</h2>
+        <p data-i18n="sudoku.modes.p">同一个求解器可以以三种方式运行或审计，区别在于是谁推进状态、以及是否加载神经权重。</p>
+      </div>
+      <div class="table-scroll">
+        <table class="spec">
+          <thead>
+            <tr><th data-i18n="sudoku.modes.thMode">模式</th><th data-i18n="sudoku.modes.thDesc">含义</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="mono">exact</td>
+              <td data-i18n="sudoku.modes.exact">不加载权重，只运行精确实现，验证求解器和机器码。</td>
+            </tr>
+            <tr>
+              <td class="mono">serial</td>
+              <td data-i18n="sudoku.modes.serial">神经核心自主执行单条依赖轨迹。</td>
+            </tr>
+            <tr>
+              <td class="mono">batch</td>
+              <td data-i18n="sudoku.modes.batch">默认模式。逐题生成该题的精确轨迹，然后分块批量审计 Neural CPU 的每一步。</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="small muted" data-i18n="sudoku.modes.note">默认行为：随机抽取 10 道题，逐题生成轨迹并用 GPU 大 batch 审计。</p>
+    </div>
+  </section>
+
+  <!-- ======================= how to run ======================= -->
+  <section class="band" aria-labelledby="run">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="sudoku.run.kicker">复现</span>
+        <h2 id="run" data-i18n="sudoku.run.h">运行方法</h2>
+        <p data-i18n="sudoku.run.p">所有可调参数集中在脚本顶部的 Config。在 neural_cpu_v3/ 目录下运行：</p>
+      </div>
+      <div class="codeblock"><pre><code>python scripts/run_neural_cpu_v3_sudoku.py</code></pre></div>
+      <div class="table-scroll">
+        <table class="spec">
+          <thead>
+            <tr><th data-i18n="sudoku.run.thParam">参数</th><th data-i18n="sudoku.run.thDefault">默认值</th><th data-i18n="sudoku.run.thDesc">说明</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="mono">MODE</td><td class="mono">"batch"</td><td data-i18n="sudoku.run.p1">"exact" / "serial" / "batch"</td></tr>
+            <tr><td class="mono">PUZZLE_COUNT</td><td class="mono">10</td><td data-i18n="sudoku.run.p2">从 50 道题中无放回抽取的题数</td></tr>
+            <tr><td class="mono">PUZZLE_INDEXES</td><td class="mono">""</td><td data-i18n="sudoku.run.p3">逗号分隔的题号；设置后按题号选题</td></tr>
+            <tr><td class="mono">PUZZLE</td><td class="mono">""</td><td data-i18n="sudoku.run.p4">自定义题目字符串；设置后只解该题</td></tr>
+            <tr><td class="mono">RANDOM_SEED</td><td class="mono">""</td><td data-i18n="sudoku.run.p5">选题随机种子；留空则每次随机</td></tr>
+            <tr><td class="mono">MAX_NEURAL_OPERATIONS</td><td class="mono">1_000_000_000</td><td data-i18n="sudoku.run.p6">神经操作步数上限</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <h3 data-i18n="sudoku.run.files">相关文件</h3>
+      <ul class="prose">
+        <li><a href="../../scripts/run_neural_cpu_v3_sudoku.py">scripts/run_neural_cpu_v3_sudoku.py</a> — <span data-i18n="sudoku.run.fScript">脚本（自包含，Config 在顶部）</span></li>
+        <li><a href="../../assets/project_euler_096_sudoku.txt">assets/project_euler_096_sudoku.txt</a> — <span data-i18n="sudoku.run.fData">题库：Project Euler 96 的 50 道题</span></li>
+        <li><a href="../../weights/neural_cpu_v3_best_balanced_model.pt">weights/neural_cpu_v3_best_balanced_model.pt</a> — <span data-i18n="sudoku.run.fWeights">发布权重（Config.MODEL_PATH 默认值）</span></li>
+      </ul>
+      <p class="small muted" data-i18n="sudoku.run.outdir">输出写入 results/sudoku/（Config.RESULT_DIR）。</p>
+    </div>
+  </section>
+
+  <!-- ======================= limitations & non-claims ======================= -->
+  <section class="band band--surface" aria-labelledby="limits">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="sudoku.limits.kicker">边界</span>
+        <h2 id="limits" data-i18n="sudoku.limits.h">限制与不声称的内容</h2>
+      </div>
+      <ul class="prose">
+        <li data-i18n="sudoku.limits.l1">180,243,530 次操作是一次已记录运行的结果。单题难度不同，操作数会有明显差异，它不是固定成本。</li>
+        <li><span data-i18n="sudoku.limits.l2">0 神经错误针对该次已记录运行；随机单步错误率的数量级口径见可靠性页。</span> <a href="../reliability.html" data-i18n="sudoku.limits.l2link">可靠性页 →</a></li>
+        <li data-i18n="sudoku.limits.l3">batch 是先由精确实现生成每道题的唯一轨迹、再逐步审计神经核心，不是神经网络并行求解许多不同题目，也不是把答案从外部喂给网络。</li>
+        <li data-i18n="sudoku.limits.l4">答案由 Python 侧最终验证；0 神经错误指神经执行与精确真值逐步一致，两者是不同口径。</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ======================= back link + pager ======================= -->
+  <div class="wrap band--tight">
+    <p><a href="../demos.html" data-i18n="ui.backToDemos">返回 Demo 总览</a></p>
+    <nav class="pager" aria-label="Pager">
+      <a href="pi.html"><span class="dir" data-i18n="ui.prev">上一页</span><span class="name" data-i18n="sudoku.pager.prev">Pi · 1000 位</span></a>
+      <a class="next" href="primes.html"><span class="dir" data-i18n="ui.next">下一页</span><span class="name" data-i18n="sudoku.pager.next">第 10,000,000 个质数</span></a>
+    </nav>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <p data-i18n="footer.project">Neural CPU v3 —— 从输入输出监督训练得到的 16-bit 神经执行核心。</p>
+        <p data-i18n="footer.boundary">神经网络负责指令语义对应的状态变换；PC、取指、64 KiB RAM 与外部调度保持精确实现。</p>
+      </div>
+      <div>
+        <p><strong data-i18n="footer.legacy">早期版本（legacy）</strong></p>
+        <p><a href="../../../legacy/README_zh.md" data-i18n="footer.legacyZh">legacy 中文 README</a><br>
+           <a href="../../../legacy/README_en.md" data-i18n="footer.legacyEn">legacy English README</a></p>
+      </div>
+    </div>
+    <p class="small" style="margin-top:16px" data-i18n="footer.note">本站为研究项目静态页面，所有数字均可在仓库脚本与结果中核验。</p>
+  </div>
+</footer>
+
+<script src="../i18n.js"></script>
+<script>
+window.I18N_PAGE = {
+  zh: {
+    "sudoku.title": "Sudoku · 通用 9x9 求解器 — Neural CPU v3",
+    "sudoku.desc": "Sudoku demo：MRV 搜索、显式回溯栈与 peer 扫描写成本项目 ISA 的机器码，棋盘与回溯栈位于 64 KiB RAM；一次已记录的 10 题运行全部解出并通过答案验证，180,243,530 次神经操作，0 神经错误。",
+    "sudoku.head.kicker": "Demo · 程序执行",
+    "sudoku.head.h": "Sudoku · 通用 9x9 求解器",
+    "sudoku.head.lede": "MRV 搜索、显式回溯栈与 peer 扫描写成本项目 ISA 的机器码，由 Neural CPU 逐条执行；一次已记录的 10 题运行中，10 题全部解出并通过答案验证，0 神经错误。",
+    "sudoku.toc.out": "示例输入",
+    "sudoku.toc.num": "关键数字",
+    "sudoku.toc.isa": "ISA 映射",
+    "sudoku.toc.neural": "Neural CPU 的职责",
+    "sudoku.toc.external": "外部运行时的职责",
+    "sudoku.toc.modes": "审计模式",
+    "sudoku.toc.run": "运行方法",
+    "sudoku.toc.limits": "限制与不声称",
+    "sudoku.out.kicker": "示例输入",
+    "sudoku.out.h": "一道真实题目：Grid 01",
+    "sudoku.out.p": "默认从 Project Euler 96 的 50 道题中无放回随机抽取 10 道。下表是数据文件中的第 1 题（Grid 01），作为求解器的输入示例；空白格对应文件中的 0。",
+    "sudoku.out.gridCap": "Grid 01 — assets/project_euler_096_sudoku.txt 的第 1 题；空白格 = 0",
+    "sudoku.out.p2": "求解完成后，Python 负责显示棋盘并最终验证答案；搜索过程本身由机器码完成。",
+    "sudoku.num.kicker": "已核验结果",
+    "sudoku.num.h": "关键数字",
+    "sudoku.num.m1": "Project Euler 96 题库题目数",
+    "sudoku.num.m2": "默认无放回抽取题数（PUZZLE_COUNT）",
+    "sudoku.num.m3": "一次已记录 10 题运行的神经操作数（非固定成本）",
+    "sudoku.num.m4": "该次运行中解出并通过答案验证的题目",
+    "sudoku.num.m5": "该次运行的神经执行错误",
+    "sudoku.isa.kicker": "程序 → ISA",
+    "sudoku.isa.h": "求解器怎样映射到 16-bit ISA",
+    "sudoku.isa.p1": "求解算法完全写成项目 ISA 的机器码：MRV（最少剩余候选）搜索、显式回溯栈和对每格 20 个 peer 的扫描都由指令流实现。每个候选数字都由程序扫描该格的 peer 后判定。",
+    "sudoku.isa.p2": "棋盘、候选搜索状态和回溯栈位于 64 KiB RAM；脚本还定义了一组低地址命名单元（如 DEPTH、BEST_CELL、POINTER_LOW / POINTER_HIGH）保存搜索状态。固定的 peer 表由 Python 提供。",
+    "sudoku.neural.kicker": "神经侧",
+    "sudoku.neural.h": "Neural CPU 承担什么",
+    "sudoku.neural.tag": "神经核心 · MLP",
+    "sudoku.neural.p": "求解过程中由神经核心逐条完成的状态转移包括：",
+    "sudoku.neural.l1": "候选计数、MRV 比较与选择的寄存器算术；",
+    "sudoku.neural.l2": "回溯栈与指针单元的读写控制和相关算术；",
+    "sudoku.neural.l3": "peer 扫描循环的条件判断与分支；",
+    "sudoku.neural.l4": "标志位（ZF、GF、CF）与 memory_read / memory_write / branch_taken / halt 控制信号。",
+    "sudoku.external.kicker": "外部侧",
+    "sudoku.external.h": "外部运行时承担什么",
+    "sudoku.external.tag": "外部精确组件",
+    "sudoku.external.l1": "装入题目：从 assets/project_euler_096_sudoku.txt 无放回抽取 10 道；",
+    "sudoku.external.l2": "提供固定的 peer 表（每格 20 个 peer）；",
+    "sudoku.external.l3": "显示棋盘并最终验证答案；",
+    "sudoku.external.l4": "PC、取指、64 KiB RAM 读写，以及 batch 模式下的轨迹生成与 GPU 调度。",
+    "sudoku.modes.kicker": "验证口径",
+    "sudoku.modes.h": "三种模式",
+    "sudoku.modes.p": "同一个求解器可以以三种方式运行或审计，区别在于是谁推进状态、以及是否加载神经权重。",
+    "sudoku.modes.thMode": "模式",
+    "sudoku.modes.thDesc": "含义",
+    "sudoku.modes.exact": "不加载权重，只运行精确实现，验证求解器和机器码。",
+    "sudoku.modes.serial": "神经核心自主执行单条依赖轨迹。",
+    "sudoku.modes.batch": "默认模式。逐题生成该题的精确轨迹，然后分块批量审计 Neural CPU 的每一步。",
+    "sudoku.modes.note": "默认行为：随机抽取 10 道题，逐题生成轨迹并用 GPU 大 batch 审计。",
+    "sudoku.run.kicker": "复现",
+    "sudoku.run.h": "运行方法",
+    "sudoku.run.p": "所有可调参数集中在脚本顶部的 Config。在 neural_cpu_v3/ 目录下运行：",
+    "sudoku.run.thParam": "参数",
+    "sudoku.run.thDefault": "默认值",
+    "sudoku.run.thDesc": "说明",
+    "sudoku.run.p1": "\"exact\" / \"serial\" / \"batch\"",
+    "sudoku.run.p2": "从 50 道题中无放回抽取的题数",
+    "sudoku.run.p3": "逗号分隔的题号；设置后按题号选题",
+    "sudoku.run.p4": "自定义题目字符串；设置后只解该题",
+    "sudoku.run.p5": "选题随机种子；留空则每次随机",
+    "sudoku.run.p6": "神经操作步数上限",
+    "sudoku.run.files": "相关文件",
+    "sudoku.run.fScript": "脚本（自包含，Config 在顶部）",
+    "sudoku.run.fData": "题库：Project Euler 96 的 50 道题",
+    "sudoku.run.fWeights": "发布权重（Config.MODEL_PATH 默认值）",
+    "sudoku.run.outdir": "输出写入 results/sudoku/（Config.RESULT_DIR）。",
+    "sudoku.limits.kicker": "边界",
+    "sudoku.limits.h": "限制与不声称的内容",
+    "sudoku.limits.l1": "180,243,530 次操作是一次已记录运行的结果。单题难度不同，操作数会有明显差异，它不是固定成本。",
+    "sudoku.limits.l2": "0 神经错误针对该次已记录运行；随机单步错误率的数量级口径见可靠性页。",
+    "sudoku.limits.l2link": "可靠性页 →",
+    "sudoku.limits.l3": "batch 是先由精确实现生成每道题的唯一轨迹、再逐步审计神经核心，不是神经网络并行求解许多不同题目，也不是把答案从外部喂给网络。",
+    "sudoku.limits.l4": "答案由 Python 侧最终验证；0 神经错误指神经执行与精确真值逐步一致，两者是不同口径。",
+    "sudoku.pager.prev": "Pi · 1000 位",
+    "sudoku.pager.next": "第 10,000,000 个质数"
+  },
+  en: {
+    "sudoku.title": "Sudoku · general 9x9 solver — Neural CPU v3",
+    "sudoku.desc": "Sudoku demo: MRV search, an explicit backtracking stack and peer scanning written as machine code in this project's ISA, with the board and backtrack stack in the 64 KiB RAM; one recorded 10-puzzle run solved and answer-verified all 10, 180,243,530 neural operations, 0 neural errors.",
+    "sudoku.head.kicker": "Demo · Program execution",
+    "sudoku.head.h": "Sudoku · general 9x9 solver",
+    "sudoku.head.lede": "MRV search, an explicit backtracking stack and peer scanning written as machine code in this project's ISA and executed instruction by instruction by the Neural CPU; in one recorded 10-puzzle run, all 10 puzzles were solved and answer-verified with 0 neural errors.",
+    "sudoku.toc.out": "Example input",
+    "sudoku.toc.num": "Key numbers",
+    "sudoku.toc.isa": "ISA mapping",
+    "sudoku.toc.neural": "What the Neural CPU does",
+    "sudoku.toc.external": "What the runtime does",
+    "sudoku.toc.modes": "Audit modes",
+    "sudoku.toc.run": "How to run",
+    "sudoku.toc.limits": "Limitations & non-claims",
+    "sudoku.out.kicker": "Example input",
+    "sudoku.out.h": "A real puzzle: Grid 01",
+    "sudoku.out.p": "By default, 10 puzzles are drawn at random without replacement from the 50 puzzles of Project Euler 96. The table below shows the first puzzle in the data file (Grid 01) as an example solver input; blank cells correspond to 0 in the file.",
+    "sudoku.out.gridCap": "Grid 01 — the first puzzle in assets/project_euler_096_sudoku.txt; blank cells = 0",
+    "sudoku.out.p2": "After solving, Python displays the board and finally verifies the answer; the search itself is done by machine code.",
+    "sudoku.num.kicker": "Verified results",
+    "sudoku.num.h": "Key numbers",
+    "sudoku.num.m1": "puzzles in the Project Euler 96 set",
+    "sudoku.num.m2": "puzzles drawn by default without replacement (PUZZLE_COUNT)",
+    "sudoku.num.m3": "neural operations in one recorded 10-puzzle run (not a fixed cost)",
+    "sudoku.num.m4": "puzzles solved and answer-verified in that run",
+    "sudoku.num.m5": "neural execution errors in that run",
+    "sudoku.isa.kicker": "Program → ISA",
+    "sudoku.isa.h": "How the solver maps to the 16-bit ISA",
+    "sudoku.isa.p1": "The solving algorithm is written entirely as machine code in this project's ISA: MRV (minimum remaining values) search, an explicit backtracking stack, and the scan of each cell's 20 peers are all implemented by the instruction stream. Every candidate digit is accepted only after the program scans that cell's peers.",
+    "sudoku.isa.p2": "The board, the candidate-search state and the backtrack stack live in the 64 KiB RAM; the script also defines a set of named low-address cells (such as DEPTH, BEST_CELL, POINTER_LOW / POINTER_HIGH) holding search state. The fixed peer table is provided by Python.",
+    "sudoku.neural.kicker": "Neural side",
+    "sudoku.neural.h": "What the Neural CPU computes",
+    "sudoku.neural.tag": "Neural core · MLP",
+    "sudoku.neural.p": "During the search, the neural core carries out the per-instruction state transitions for:",
+    "sudoku.neural.l1": "register arithmetic for candidate counting, MRV comparison and selection;",
+    "sudoku.neural.l2": "read/write control and the related arithmetic for the backtrack stack and pointer cells;",
+    "sudoku.neural.l3": "condition evaluation and branches in the peer-scanning loops;",
+    "sudoku.neural.l4": "the flags (ZF, GF, CF) and the memory_read / memory_write / branch_taken / halt control signals.",
+    "sudoku.external.kicker": "External side",
+    "sudoku.external.h": "What the external runtime still does",
+    "sudoku.external.tag": "External exact components",
+    "sudoku.external.l1": "loading puzzles: drawing 10 without replacement from assets/project_euler_096_sudoku.txt;",
+    "sudoku.external.l2": "providing the fixed peer table (20 peers per cell);",
+    "sudoku.external.l3": "displaying the board and finally verifying the answers;",
+    "sudoku.external.l4": "the PC, fetch, 64 KiB RAM reads/writes, plus trace generation and GPU scheduling in batch mode.",
+    "sudoku.modes.kicker": "Validation criteria",
+    "sudoku.modes.h": "Three modes",
+    "sudoku.modes.p": "The same solver can run or be audited in three ways; they differ in who advances the state and whether the neural weights are loaded.",
+    "sudoku.modes.thMode": "Mode",
+    "sudoku.modes.thDesc": "Meaning",
+    "sudoku.modes.exact": "Runs only the exact implementation without loading the weights, validating the solver and the machine code.",
+    "sudoku.modes.serial": "The neural core autonomously executes the single dependency trace.",
+    "sudoku.modes.batch": "Default. Each puzzle's exact trace is generated first, then the Neural CPU is audited step by step in chunks.",
+    "sudoku.modes.note": "Default behaviour: draw 10 puzzles at random, generate one trace per puzzle and audit with large GPU batches.",
+    "sudoku.run.kicker": "Reproduce",
+    "sudoku.run.h": "How to run",
+    "sudoku.run.p": "Every tunable parameter sits in the Config block at the top of the script. From the neural_cpu_v3/ directory:",
+    "sudoku.run.thParam": "Parameter",
+    "sudoku.run.thDefault": "Default",
+    "sudoku.run.thDesc": "What it does",
+    "sudoku.run.p1": "\"exact\" / \"serial\" / \"batch\"",
+    "sudoku.run.p2": "number of puzzles drawn without replacement from the 50",
+    "sudoku.run.p3": "comma-separated puzzle indexes; when set, puzzles are chosen by index",
+    "sudoku.run.p4": "custom puzzle string; when set, only that puzzle is solved",
+    "sudoku.run.p5": "seed for puzzle selection; empty means random each run",
+    "sudoku.run.p6": "cap on neural operations",
+    "sudoku.run.files": "Related files",
+    "sudoku.run.fScript": "the script (self-contained, Config at the top)",
+    "sudoku.run.fData": "puzzle set: the 50 puzzles of Project Euler 96",
+    "sudoku.run.fWeights": "released weights (default of Config.MODEL_PATH)",
+    "sudoku.run.outdir": "Output is written to results/sudoku/ (Config.RESULT_DIR).",
+    "sudoku.limits.kicker": "Boundary",
+    "sudoku.limits.h": "Limitations and non-claims",
+    "sudoku.limits.l1": "180,243,530 operations is the result of one recorded run. Difficulty varies from puzzle to puzzle, so operation counts differ noticeably — it is not a fixed cost.",
+    "sudoku.limits.l2": "0 neural errors refers to that recorded run; see the reliability page for the order-of-magnitude error-rate criteria.",
+    "sudoku.limits.l2link": "Reliability →",
+    "sudoku.limits.l3": "batch means the exact implementation first generates each puzzle's unique trace and the neural core is then audited step by step — it is not the network solving many different puzzles in parallel, and the answer is not fed into the network from outside.",
+    "sudoku.limits.l4": "Answers are finally verified on the Python side; 0 neural errors means neural execution agreed with the exact ground truth step by step — the two are different criteria.",
+    "sudoku.pager.prev": "Pi · 1000 digits",
+    "sudoku.pager.next": "The 10,000,000th prime"
+  }
+};
+</script>
+<script src="../site.js"></script>
+</body>
+</html>

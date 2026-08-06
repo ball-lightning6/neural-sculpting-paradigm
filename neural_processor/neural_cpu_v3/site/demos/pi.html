@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title data-i18n="pi.title">Pi · 1000 位十进制有效数字 — Neural CPU v3</title>
+<meta name="description" content="Pi demo：Rabinowitz–Wagon 十进制 spigot 算法编译为 16-bit 机器码，由 Neural CPU 逐条执行；1000 位与高精度参考一致，5,559,684,667 次神经操作，0 error。" data-i18n-attr="content:pi.desc">
+<link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+<a class="skip-link" href="#main" data-i18n="nav.skip">跳到正文</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../../index.html">Neural CPU v3 <span class="brand-tag">16-bit ISA</span></a>
+    <button id="nav-toggle" class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links" data-i18n="nav.menu" data-i18n-attr="aria-label:nav.menuAria">菜单</button>
+    <nav class="nav-links" id="nav-links" hidden aria-label="Main">
+      <a href="../../index.html" data-i18n="nav.overview">总览</a>
+      <a href="../architecture.html" data-i18n="nav.core">执行核心</a>
+      <a href="../training.html" data-i18n="nav.training">训练</a>
+      <a href="../reliability.html" data-i18n="nav.reliability">可靠性</a>
+      <a href="../demos.html" data-i18n="nav.demos">Demo</a>
+      <a href="../research-context.html" data-i18n="nav.research">研究位置</a>
+      <a href="../reproduce.html" data-i18n="nav.reproduce">复现</a>
+      <button id="lang-toggle" class="lang-btn" type="button" data-i18n="nav.langToggle" data-i18n-attr="aria-label:nav.langToggleAria">English</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ======================= page header + toc ======================= -->
+  <section class="band band--surface" aria-labelledby="page-h">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="pi.head.kicker">Demo · 程序执行</span>
+        <h1 id="page-h" data-i18n="pi.head.h">Pi · 1000 位十进制有效数字</h1>
+        <p class="lede" data-i18n="pi.head.lede">Rabinowitz–Wagon 十进制 spigot 算法编译成本项目自己的 16-bit 机器指令，由 Neural CPU 逐条执行；1000 个有效数字与高精度参考逐位一致，最终审计 0 error。</p>
+      </div>
+      <nav class="toc" aria-labelledby="pi-toc-h">
+        <strong id="pi-toc-h" data-i18n="ui.toc">本页目录</strong>
+        <ol>
+          <li><a href="#output" data-i18n="pi.toc.out">完整输出</a></li>
+          <li><a href="#numbers" data-i18n="pi.toc.num">关键数字</a></li>
+          <li><a href="#isa" data-i18n="pi.toc.isa">ISA 映射</a></li>
+          <li><a href="#neural" data-i18n="pi.toc.neural">Neural CPU 的职责</a></li>
+          <li><a href="#external" data-i18n="pi.toc.external">外部运行时的职责</a></li>
+          <li><a href="#modes" data-i18n="pi.toc.modes">审计模式</a></li>
+          <li><a href="#run" data-i18n="pi.toc.run">运行方法</a></li>
+          <li><a href="#limits" data-i18n="pi.toc.limits">限制与不声称</a></li>
+        </ol>
+      </nav>
+    </div>
+  </section>
+
+  <!-- ======================= real output ======================= -->
+  <section class="band" aria-labelledby="output">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="pi.out.kicker">真实输出</span>
+        <h2 id="output" data-i18n="pi.out.h">pi 的完整 1000 位输出</h2>
+        <p data-i18n="pi.out.p">下面完整铺开本次 batch 轨迹审计得到的 1000 个十进制有效数字：1 位整数与 999 位小数，每 10 位分组并自动换行。</p>
+      </div>
+      <figure class="figure">
+        <div class="digits-strip">3.1415926535 8979323846 2643383279 5028841971 6939937510 5820974944 5923078164 0628620899 8628034825 3421170679 8214808651 3282306647 0938446095 5058223172 5359408128 4811174502 8410270193 8521105559 6446229489 5493038196 4428810975 6659334461 2847564823 3786783165 2712019091 4564856692 3460348610 4543266482 1339360726 0249141273 7245870066 0631558817 4881520920 9628292540 9171536436 7892590360 0113305305 4882046652 1384146951 9415116094 3305727036 5759591953 0921861173 8193261179 3105118548 0744623799 6274956735 1885752724 8912279381 8301194912 9833673362 4406566430 8602139494 6395224737 1907021798 6094370277 0539217176 2931767523 8467481846 7669405132 0005681271 4526356082 7785771342 7577896091 7363717872 1468440901 2249534301 4654958537 1050792279 6892589235 4201995611 2129021960 8640344181 5981362977 4771309960 5187072113 4999999837 2978049951 0597317328 1609631859 5024459455 3469083026 4252230825 3344685035 2619311881 7101000313 7838752886 5875332083 8142061717 7669147303 5982534904 2875546873 1159562863 8823537875 9375195778 1857780532 1712268066 1300192787 6611195909 216420198</div>
+        <figcaption data-i18n="pi.out.cap">完整输出：1000 个十进制有效数字与高精度参考逐位一致；本次运行共执行 5,559,684,667 次神经操作，轨迹审计 0 error。</figcaption>
+      </figure>
+      <p class="prose" data-i18n="pi.out.p2">运行时，脚本每产生一个新数字就打印当前 pi、已输出位数和与高精度参考一致的有效位数（PRINT_EVERY_DIGITS = 1）。</p>
+    </div>
+  </section>
+
+  <!-- ======================= key numbers ======================= -->
+  <section class="band band--surface" aria-labelledby="numbers">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="pi.num.kicker">已核验结果</span>
+        <h2 id="numbers" data-i18n="pi.num.h">关键数字</h2>
+      </div>
+      <div class="metric-grid">
+        <div class="metric"><span class="num">1,000</span><span class="lbl" data-i18n="pi.num.m1">默认计算的十进制有效数字（TARGET_DECIMAL_DIGITS）</span></div>
+        <div class="metric"><span class="num">5,559,684,667</span><span class="lbl" data-i18n="pi.num.m2">1000 位运行的神经操作数</span></div>
+        <div class="metric"><span class="num">1000 / 1000</span><span class="lbl" data-i18n="pi.num.m3">与高精度参考一致的有效数字</span></div>
+        <div class="metric"><span class="num ok">0</span><span class="lbl" data-i18n="pi.num.m4">最终 demo 审计的神经执行错误</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= ISA mapping ======================= -->
+  <section class="band" aria-labelledby="isa">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="pi.isa.kicker">程序 → ISA</span>
+        <h2 id="isa" data-i18n="pi.isa.h">spigot 算法怎样映射到 16-bit ISA</h2>
+      </div>
+      <p class="prose" data-i18n="pi.isa.p1">Rabinowitz–Wagon spigot 的完整计算被编译成项目自己的 16-bit 机器指令，而不是用 Python 算出数字再回放。算法的寄存器算术、比较、循环条件、分支与内存控制全部以指令形式执行。</p>
+      <p class="prose" data-i18n="pi.isa.p2">按脚本开头说明，当前汇编实现的 spigot 数组元素为 16 bit，可能溢出的临时累加器 X 为 24 bit。数组状态存放在外部 64 KiB RAM 中，读写由指令流发出的内存控制信号触发。</p>
+      <ol class="prose">
+        <li data-i18n="pi.isa.s1">1000 位配置使用长度 3333 的工作数组，并先把每个 16-bit 元素初始化为 2。</li>
+        <li data-i18n="pi.isa.s2">每轮从数组尾部向前计算 X = 10A[i] + Q·i、除数 2i−1，再把余数写回 A[i]、商写入 Q；乘法用重复加法，除法用重复减法完成。</li>
+        <li data-i18n="pi.isa.s3">扫完数组后得到下一候选数字，并显式处理暂存的 9 与候选值 10 所触发的跨位进位。</li>
+        <li data-i18n="pi.isa.s4">确认后的十进制数字由指令写入内存映射输出端口 0xFF00，宿主只收集字节，不参与数字计算。</li>
+      </ol>
+      <p class="small muted" data-i18n="pi.isa.p3">默认 1000 位程序只有 654 条静态机器指令；循环展开为 5,559,684,667 次动态神经操作，并逐步与精确 ISA 真值核对，最终 1000 位全部一致、0 次执行错误。</p>
+    </div>
+  </section>
+
+  <!-- ======================= what the Neural CPU computes ======================= -->
+  <section class="band band--surface" aria-labelledby="neural">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="pi.neural.kicker">神经侧</span>
+        <h2 id="neural" data-i18n="pi.neural.h">Neural CPU 承担什么</h2>
+      </div>
+      <h3><span class="tag tag--neural" data-i18n="pi.neural.tag">神经核心 · MLP</span></h3>
+      <p class="prose" data-i18n="pi.neural.p">以下每一步都由同一个训练权重以逐条指令的状态转移完成：</p>
+      <ul class="prose">
+        <li data-i18n="pi.neural.l1">寄存器算术与逻辑：R0–R3 的每一次更新；</li>
+        <li data-i18n="pi.neural.l2">比较与标志位：CMP / CMPI 语义与 ZF、GF、CF 更新；</li>
+        <li data-i18n="pi.neural.l3">循环条件与分支：branch_taken 及跳转方向；</li>
+        <li data-i18n="pi.neural.l4">内存控制：memory_read / memory_write 控制信号（LOAD 拆成两步：先发 memory_read，RAM 返回字节后由同一核心执行内部 MOVI）。</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ======================= what the external runtime does ======================= -->
+  <section class="band" aria-labelledby="external">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="pi.external.kicker">外部侧</span>
+        <h2 id="external" data-i18n="pi.external.h">外部运行时承担什么</h2>
+      </div>
+      <h3><span class="tag tag--external" data-i18n="pi.external.tag">外部精确组件</span></h3>
+      <ul class="prose">
+        <li data-i18n="pi.external.l1">16-bit PC 与取指逻辑；</li>
+        <li data-i18n="pi.external.l2">64 KiB uint8 RAM 的存储与地址访问；</li>
+        <li data-i18n="pi.external.l3">输出显示：打印当前 pi、位数进度与一致性计数；</li>
+        <li data-i18n="pi.external.l4">batch 模式下由精确解释器流式生成真值轨迹，并做 GPU batch 调度。</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ======================= audit modes ======================= -->
+  <section class="band band--surface" aria-labelledby="modes">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="pi.modes.kicker">验证口径</span>
+        <h2 id="modes" data-i18n="pi.modes.h">三种模式</h2>
+        <p data-i18n="pi.modes.p">同一份汇编程序可以用三种方式运行或审计，区别在于是谁推进状态、以及是否加载神经权重。</p>
+      </div>
+      <div class="table-scroll">
+        <table class="spec">
+          <thead>
+            <tr><th data-i18n="pi.modes.thMode">模式</th><th data-i18n="pi.modes.thDesc">含义</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="mono">serial</td>
+              <td data-i18n="pi.modes.serial">神经状态按程序依赖顺序自主向前执行，最接近真实单核运行；首次出现差异时可以立即停止。单 lane 完成 1000 位会非常慢，需显式启用。</td>
+            </tr>
+            <tr>
+              <td class="mono">batch</td>
+              <td data-i18n="pi.modes.batch">默认模式。精确解释器先流式生成同一条唯一程序轨迹，再把轨迹上大量相互独立的单步输入组成 GPU batch，由神经核心逐项审计。它不改变程序答案，也不是同时计算多个 pi，而是加速验证一条很长的确定轨迹。</td>
+            </tr>
+            <tr>
+              <td class="mono">EXACT_ONLY</td>
+              <td data-i18n="pi.modes.exact">只运行 reference 逻辑，验证汇编程序本身，不代表神经执行。</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="small muted" data-i18n="pi.modes.note">三种模式覆盖同一条程序轨迹；batch 与 EXACT_ONLY 只改变验证方式，不改变 pi 的数值。</p>
+    </div>
+  </section>
+
+  <!-- ======================= how to run ======================= -->
+  <section class="band" aria-labelledby="run">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="pi.run.kicker">复现</span>
+        <h2 id="run" data-i18n="pi.run.h">运行方法</h2>
+        <p data-i18n="pi.run.p">所有可调参数集中在脚本顶部的 Config。在 neural_cpu_v3/ 目录下运行：</p>
+      </div>
+      <div class="codeblock"><pre><code>python scripts/run_neural_cpu_v3_pi.py</code></pre></div>
+      <div class="table-scroll">
+        <table class="spec">
+          <thead>
+            <tr><th data-i18n="pi.run.thParam">参数</th><th data-i18n="pi.run.thDefault">默认值</th><th data-i18n="pi.run.thDesc">说明</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="mono">TARGET_DECIMAL_DIGITS</td><td class="mono">1000</td><td data-i18n="pi.run.p1">计算的十进制有效数字位数</td></tr>
+            <tr><td class="mono">EXECUTION_MODE</td><td class="mono">"batch"</td><td data-i18n="pi.run.p2">"serial" 或 "batch"；默认 batch —— 1000 位约需数十亿次操作</td></tr>
+            <tr><td class="mono">EXACT_ONLY</td><td class="mono">False</td><td data-i18n="pi.run.p3">设为 True 时只跑精确参考，不加载神经权重</td></tr>
+            <tr><td class="mono">MAX_NEURAL_OPERATIONS</td><td class="mono">None</td><td data-i18n="pi.run.p4">神经操作步数上限；None 表示不设上限</td></tr>
+            <tr><td class="mono">TRACE_BATCH / INFERENCE_BATCH</td><td class="mono">262,144</td><td data-i18n="pi.run.p5">每块轨迹长度 / 单次 GPU 前向规模</td></tr>
+            <tr><td class="mono">PRINT_EVERY_DIGITS</td><td class="mono">1</td><td data-i18n="pi.run.p6">每产生多少个数字打印一次进度</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <h3 data-i18n="pi.run.files">相关文件</h3>
+      <ul class="prose">
+        <li><a href="../../scripts/run_neural_cpu_v3_pi.py">scripts/run_neural_cpu_v3_pi.py</a> — <span data-i18n="pi.run.fScript">脚本（自包含，Config 在顶部）</span></li>
+        <li><a href="../../weights/neural_cpu_v3_best_balanced_model.pt">weights/neural_cpu_v3_best_balanced_model.pt</a> — <span data-i18n="pi.run.fWeights">发布权重（Config.MODEL_PATH 默认值）</span></li>
+      </ul>
+      <p class="small muted" data-i18n="pi.run.outdir">输出写入 results/pi/（Config.RESULT_DIR）。</p>
+    </div>
+  </section>
+
+  <!-- ======================= limitations & non-claims ======================= -->
+  <section class="band band--surface" aria-labelledby="limits">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="pi.limits.kicker">边界</span>
+        <h2 id="limits" data-i18n="pi.limits.h">限制与不声称的内容</h2>
+      </div>
+      <ul class="prose">
+        <li><span data-i18n="pi.limits.l1">0 error 是对这次最终 demo 审计的陈述，不是对任意未来运行的保证；错误率数量级的口径与证据见可靠性页。</span> <a href="../reliability.html" data-i18n="pi.limits.l1link">可靠性页 →</a></li>
+        <li data-i18n="pi.limits.l2">batch 模式不是同时计算多个 pi，也不是把答案从外部喂给网络：轨迹由精确解释器唯一生成，神经核心逐项接受审计。</li>
+        <li data-i18n="pi.limits.l3">EXACT_ONLY 的结果不代表神经执行质量。</li>
+        <li data-i18n="pi.limits.l4">默认 1000 位是数十亿次操作级别的运行，面向 GPU batch 设计；serial 单 lane 完成它会非常慢。</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ======================= back link + pager ======================= -->
+  <div class="wrap band--tight">
+    <p><a href="../demos.html" data-i18n="ui.backToDemos">返回 Demo 总览</a></p>
+    <nav class="pager" aria-label="Pager">
+      <a href="../demos.html"><span class="dir" data-i18n="ui.prev">上一页</span><span class="name" data-i18n="nav.demos">Demo</span></a>
+      <a class="next" href="sudoku.html"><span class="dir" data-i18n="ui.next">下一页</span><span class="name" data-i18n="pi.pager.next">Sudoku · 10 道题</span></a>
+    </nav>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <p data-i18n="footer.project">Neural CPU v3 —— 从输入输出监督训练得到的 16-bit 神经执行核心。</p>
+        <p data-i18n="footer.boundary">神经网络负责指令语义对应的状态变换；PC、取指、64 KiB RAM 与外部调度保持精确实现。</p>
+      </div>
+      <div>
+        <p><strong data-i18n="footer.legacy">早期版本（legacy）</strong></p>
+        <p><a href="../../../legacy/README_zh.md" data-i18n="footer.legacyZh">legacy 中文 README</a><br>
+           <a href="../../../legacy/README_en.md" data-i18n="footer.legacyEn">legacy English README</a></p>
+      </div>
+    </div>
+    <p class="small" style="margin-top:16px" data-i18n="footer.note">本站为研究项目静态页面，所有数字均可在仓库脚本与结果中核验。</p>
+  </div>
+</footer>
+
+<script src="../i18n.js"></script>
+<script>
+window.I18N_PAGE = {
+  zh: {
+    "pi.title": "Pi · 1000 位十进制有效数字 — Neural CPU v3",
+    "pi.desc": "Pi demo：Rabinowitz–Wagon 十进制 spigot 算法编译为 16-bit 机器码，由 Neural CPU 逐条执行；1000 位与高精度参考一致，5,559,684,667 次神经操作，0 error。",
+    "pi.head.kicker": "Demo · 程序执行",
+    "pi.head.h": "Pi · 1000 位十进制有效数字",
+    "pi.head.lede": "Rabinowitz–Wagon 十进制 spigot 算法编译成本项目自己的 16-bit 机器指令，由 Neural CPU 逐条执行；1000 个有效数字与高精度参考逐位一致，最终审计 0 error。",
+    "pi.toc.out": "完整输出",
+    "pi.toc.num": "关键数字",
+    "pi.toc.isa": "ISA 映射",
+    "pi.toc.neural": "Neural CPU 的职责",
+    "pi.toc.external": "外部运行时的职责",
+    "pi.toc.modes": "审计模式",
+    "pi.toc.run": "运行方法",
+    "pi.toc.limits": "限制与不声称",
+    "pi.out.kicker": "真实输出",
+    "pi.out.h": "pi 的完整 1000 位输出",
+    "pi.out.p": "下面完整铺开本次 batch 轨迹审计得到的 1000 个十进制有效数字：1 位整数与 999 位小数，每 10 位分组并自动换行。",
+    "pi.out.cap": "完整输出：1000 个十进制有效数字与高精度参考逐位一致；本次运行共执行 5,559,684,667 次神经操作，轨迹审计 0 error。",
+    "pi.out.p2": "运行时，脚本每产生一个新数字就打印当前 pi、已输出位数和与高精度参考一致的有效位数（PRINT_EVERY_DIGITS = 1）。",
+    "pi.num.kicker": "已核验结果",
+    "pi.num.h": "关键数字",
+    "pi.num.m1": "默认计算的十进制有效数字（TARGET_DECIMAL_DIGITS）",
+    "pi.num.m2": "1000 位运行的神经操作数",
+    "pi.num.m3": "与高精度参考一致的有效数字",
+    "pi.num.m4": "最终 demo 审计的神经执行错误",
+    "pi.isa.kicker": "程序 → ISA",
+    "pi.isa.h": "spigot 算法怎样映射到 16-bit ISA",
+    "pi.isa.p1": "Rabinowitz–Wagon spigot 的完整计算被编译成项目自己的 16-bit 机器指令，而不是用 Python 算出数字再回放。算法的寄存器算术、比较、循环条件、分支与内存控制全部以指令形式执行。",
+    "pi.isa.p2": "按脚本开头说明，当前汇编实现的 spigot 数组元素为 16 bit，可能溢出的临时累加器 X 为 24 bit。数组状态存放在外部 64 KiB RAM 中，读写由指令流发出的内存控制信号触发。",
+    "pi.isa.s1": "1000 位配置使用长度 3333 的工作数组，并先把每个 16-bit 元素初始化为 2。",
+    "pi.isa.s2": "每轮从数组尾部向前计算 X = 10A[i] + Q·i、除数 2i−1，再把余数写回 A[i]、商写入 Q；乘法用重复加法，除法用重复减法完成。",
+    "pi.isa.s3": "扫完数组后得到下一候选数字，并显式处理暂存的 9 与候选值 10 所触发的跨位进位。",
+    "pi.isa.s4": "确认后的十进制数字由指令写入内存映射输出端口 0xFF00，宿主只收集字节，不参与数字计算。",
+    "pi.isa.p3": "默认 1000 位程序只有 654 条静态机器指令；循环展开为 5,559,684,667 次动态神经操作，并逐步与精确 ISA 真值核对，最终 1000 位全部一致、0 次执行错误。",
+    "pi.neural.kicker": "神经侧",
+    "pi.neural.h": "Neural CPU 承担什么",
+    "pi.neural.tag": "神经核心 · MLP",
+    "pi.neural.p": "以下每一步都由同一个训练权重以逐条指令的状态转移完成：",
+    "pi.neural.l1": "寄存器算术与逻辑：R0–R3 的每一次更新；",
+    "pi.neural.l2": "比较与标志位：CMP / CMPI 语义与 ZF、GF、CF 更新；",
+    "pi.neural.l3": "循环条件与分支：branch_taken 及跳转方向；",
+    "pi.neural.l4": "内存控制：memory_read / memory_write 控制信号（LOAD 拆成两步：先发 memory_read，RAM 返回字节后由同一核心执行内部 MOVI）。",
+    "pi.external.kicker": "外部侧",
+    "pi.external.h": "外部运行时承担什么",
+    "pi.external.tag": "外部精确组件",
+    "pi.external.l1": "16-bit PC 与取指逻辑；",
+    "pi.external.l2": "64 KiB uint8 RAM 的存储与地址访问；",
+    "pi.external.l3": "输出显示：打印当前 pi、位数进度与一致性计数；",
+    "pi.external.l4": "batch 模式下由精确解释器流式生成真值轨迹，并做 GPU batch 调度。",
+    "pi.modes.kicker": "验证口径",
+    "pi.modes.h": "三种模式",
+    "pi.modes.p": "同一份汇编程序可以用三种方式运行或审计，区别在于是谁推进状态、以及是否加载神经权重。",
+    "pi.modes.thMode": "模式",
+    "pi.modes.thDesc": "含义",
+    "pi.modes.serial": "神经状态按程序依赖顺序自主向前执行，最接近真实单核运行；首次出现差异时可以立即停止。单 lane 完成 1000 位会非常慢，需显式启用。",
+    "pi.modes.batch": "默认模式。精确解释器先流式生成同一条唯一程序轨迹，再把轨迹上大量相互独立的单步输入组成 GPU batch，由神经核心逐项审计。它不改变程序答案，也不是同时计算多个 pi，而是加速验证一条很长的确定轨迹。",
+    "pi.modes.exact": "只运行 reference 逻辑，验证汇编程序本身，不代表神经执行。",
+    "pi.modes.note": "三种模式覆盖同一条程序轨迹；batch 与 EXACT_ONLY 只改变验证方式，不改变 pi 的数值。",
+    "pi.run.kicker": "复现",
+    "pi.run.h": "运行方法",
+    "pi.run.p": "所有可调参数集中在脚本顶部的 Config。在 neural_cpu_v3/ 目录下运行：",
+    "pi.run.thParam": "参数",
+    "pi.run.thDefault": "默认值",
+    "pi.run.thDesc": "说明",
+    "pi.run.p1": "计算的十进制有效数字位数",
+    "pi.run.p2": "\"serial\" 或 \"batch\"；默认 batch —— 1000 位约需数十亿次操作",
+    "pi.run.p3": "设为 True 时只跑精确参考，不加载神经权重",
+    "pi.run.p4": "神经操作步数上限；None 表示不设上限",
+    "pi.run.p5": "每块轨迹长度 / 单次 GPU 前向规模",
+    "pi.run.p6": "每产生多少个数字打印一次进度",
+    "pi.run.files": "相关文件",
+    "pi.run.fScript": "脚本（自包含，Config 在顶部）",
+    "pi.run.fWeights": "发布权重（Config.MODEL_PATH 默认值）",
+    "pi.run.outdir": "输出写入 results/pi/（Config.RESULT_DIR）。",
+    "pi.limits.kicker": "边界",
+    "pi.limits.h": "限制与不声称的内容",
+    "pi.limits.l1": "0 error 是对这次最终 demo 审计的陈述，不是对任意未来运行的保证；错误率数量级的口径与证据见可靠性页。",
+    "pi.limits.l1link": "可靠性页 →",
+    "pi.limits.l2": "batch 模式不是同时计算多个 pi，也不是把答案从外部喂给网络：轨迹由精确解释器唯一生成，神经核心逐项接受审计。",
+    "pi.limits.l3": "EXACT_ONLY 的结果不代表神经执行质量。",
+    "pi.limits.l4": "默认 1000 位是数十亿次操作级别的运行，面向 GPU batch 设计；serial 单 lane 完成它会非常慢。",
+    "pi.pager.next": "Sudoku · 10 道题"
+  },
+  en: {
+    "pi.title": "Pi · 1000 significant decimal digits — Neural CPU v3",
+    "pi.desc": "Pi demo: the Rabinowitz–Wagon decimal spigot algorithm compiled to 16-bit machine code and executed instruction by instruction by the Neural CPU; all 1000 digits match a high-precision reference, 5,559,684,667 neural operations, 0 errors.",
+    "pi.head.kicker": "Demo · Program execution",
+    "pi.head.h": "Pi · 1000 significant decimal digits",
+    "pi.head.lede": "The Rabinowitz–Wagon decimal spigot algorithm, compiled into this project's own 16-bit machine instructions and executed one instruction at a time by the Neural CPU: all 1000 significant digits match a high-precision reference, with 0 errors in the final audit.",
+    "pi.toc.out": "Full output",
+    "pi.toc.num": "Key numbers",
+    "pi.toc.isa": "ISA mapping",
+    "pi.toc.neural": "What the Neural CPU does",
+    "pi.toc.external": "What the runtime does",
+    "pi.toc.modes": "Audit modes",
+    "pi.toc.run": "How to run",
+    "pi.toc.limits": "Limitations & non-claims",
+    "pi.out.kicker": "Real output",
+    "pi.out.h": "The full 1000-digit output of pi",
+    "pi.out.p": "Below are all 1000 significant decimal digits from the audited batch trajectory: one integer digit and 999 decimal places, grouped in tens and wrapped naturally across lines.",
+    "pi.out.cap": "Full output: all 1000 significant decimal digits match the high-precision reference. This run executed 5,559,684,667 neural operations with zero trajectory-audit errors.",
+    "pi.out.p2": "While running, the script prints the current pi, the number of digits emitted and the count of digits agreeing with a high-precision reference each time a new digit appears (PRINT_EVERY_DIGITS = 1).",
+    "pi.num.kicker": "Verified results",
+    "pi.num.h": "Key numbers",
+    "pi.num.m1": "significant decimal digits computed by default (TARGET_DECIMAL_DIGITS)",
+    "pi.num.m2": "neural operations for the 1000-digit run",
+    "pi.num.m3": "significant digits matching the high-precision reference",
+    "pi.num.m4": "neural execution errors in the final demo audit",
+    "pi.isa.kicker": "Program → ISA",
+    "pi.isa.h": "How the spigot algorithm maps to the 16-bit ISA",
+    "pi.isa.p1": "The full Rabinowitz–Wagon spigot computation is compiled into the project's own 16-bit machine instructions — the digits are not computed by Python and replayed. The algorithm's register arithmetic, comparisons, loop conditions, branches and memory control all execute as instructions.",
+    "pi.isa.p2": "Per the script's own notes, the current assembly implementation uses 16-bit spigot array elements, and the temporary accumulator X that can overflow is 24-bit. Array state lives in the external 64 KiB RAM, read and written when the instruction stream issues memory control signals.",
+    "pi.isa.s1": "The 1000-digit configuration uses a 3333-element work array and initializes every 16-bit element to 2.",
+    "pi.isa.s2": "Each round scans backward, computes X = 10A[i] + Q·i with divisor 2i−1, then writes the remainder to A[i] and the quotient to Q; multiplication is repeated addition and division is repeated subtraction.",
+    "pi.isa.s3": "After the sweep it obtains the next candidate digit and explicitly handles held 9s and the cross-digit carry triggered by a candidate value of 10.",
+    "pi.isa.s4": "Confirmed decimal digits are written by instructions to memory-mapped output port 0xFF00; the host only collects bytes and does not compute digits.",
+    "pi.isa.p3": "The default 1000-digit program contains only 654 static machine instructions. Its loops expand to 5,559,684,667 dynamic neural operations, checked step by step against the exact ISA, producing all 1000 digits with zero execution errors.",
+    "pi.neural.kicker": "Neural side",
+    "pi.neural.h": "What the Neural CPU computes",
+    "pi.neural.tag": "Neural core · MLP",
+    "pi.neural.p": "Each of the following is carried out by the same trained weights, as per-instruction state transitions:",
+    "pi.neural.l1": "register arithmetic and logic: every update of R0–R3;",
+    "pi.neural.l2": "comparison and flags: CMP / CMPI semantics and ZF, GF, CF updates;",
+    "pi.neural.l3": "loop conditions and branches: branch_taken and the jump direction;",
+    "pi.neural.l4": "memory control: the memory_read / memory_write signals (LOAD runs in two steps: the core issues memory_read, RAM returns a byte, and the same core then executes an internal MOVI).",
+    "pi.external.kicker": "External side",
+    "pi.external.h": "What the external runtime still does",
+    "pi.external.tag": "External exact components",
+    "pi.external.l1": "the 16-bit PC and fetch logic;",
+    "pi.external.l2": "storage and addressing of the 64 KiB uint8 RAM;",
+    "pi.external.l3": "output display: printing the current pi, digit progress and the agreement count;",
+    "pi.external.l4": "in batch mode, streaming the ground-truth trace with an exact interpreter and scheduling the GPU batches.",
+    "pi.modes.kicker": "Validation criteria",
+    "pi.modes.h": "Three modes",
+    "pi.modes.p": "The same assembly program can run or be audited in three ways; they differ in who advances the state and whether the neural weights are loaded.",
+    "pi.modes.thMode": "Mode",
+    "pi.modes.thDesc": "Meaning",
+    "pi.modes.serial": "The neural state advances autonomously in program-dependency order — closest to a real single core — and can stop at the first divergence. Finishing 1000 digits on a single lane is very slow, so it must be enabled explicitly.",
+    "pi.modes.batch": "Default. An exact interpreter first streams the one unique program trace; the many independent single-step inputs along that trace then form GPU batches that the neural core audits item by item. It does not change the program's answer and does not compute multiple pis at once — it speeds up the verification of one long deterministic trace.",
+    "pi.modes.exact": "Runs only the reference logic to validate the assembly program itself; it says nothing about neural execution.",
+    "pi.modes.note": "All three modes cover the same program trace; batch and EXACT_ONLY change how it is checked, not the value of pi.",
+    "pi.run.kicker": "Reproduce",
+    "pi.run.h": "How to run",
+    "pi.run.p": "Every tunable parameter sits in the Config block at the top of the script. From the neural_cpu_v3/ directory:",
+    "pi.run.thParam": "Parameter",
+    "pi.run.thDefault": "Default",
+    "pi.run.thDesc": "What it does",
+    "pi.run.p1": "number of significant decimal digits to compute",
+    "pi.run.p2": "\"serial\" or \"batch\"; batch is default — 1000 digits needs billions of operations",
+    "pi.run.p3": "when True, run only the exact reference without loading the neural weights",
+    "pi.run.p4": "cap on neural operations; None means no limit",
+    "pi.run.p5": "trace chunk length / single GPU forward-pass size",
+    "pi.run.p6": "print progress every N produced digits",
+    "pi.run.files": "Related files",
+    "pi.run.fScript": "the script (self-contained, Config at the top)",
+    "pi.run.fWeights": "released weights (default of Config.MODEL_PATH)",
+    "pi.run.outdir": "Output is written to results/pi/ (Config.RESULT_DIR).",
+    "pi.limits.kicker": "Boundary",
+    "pi.limits.h": "Limitations and non-claims",
+    "pi.limits.l1": "0 errors is a statement about this final demo audit, not a guarantee for every future run; see the reliability page for the error-rate criteria and evidence.",
+    "pi.limits.l1link": "Reliability →",
+    "pi.limits.l2": "batch mode does not compute multiple pis at once and does not feed the answer into the network from outside: the trace is uniquely generated by the exact interpreter, and the neural core is audited step by step.",
+    "pi.limits.l3": "An EXACT_ONLY result says nothing about the quality of neural execution.",
+    "pi.limits.l4": "The default 1000 digits is a billions-of-operations run designed for GPU batches; finishing it on a single serial lane is very slow.",
+    "pi.pager.next": "Sudoku · 10 puzzles"
+  }
+};
+</script>
+<script src="../site.js"></script>
+</body>
+</html>

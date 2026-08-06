@@ -1,5 +1,7 @@
 # 神经处理器脚本 (Neural Processor Scripts)
 
+> **历史版本。** 当前项目位于 [`../neural_cpu_v3/`](../neural_cpu_v3/)。本目录保留早期概念验证及其演进过程。旧执行脚本需要未随仓库发布的 `best_model_mlp_cpu2.pth`；数据生成脚本会把输出写入启动命令所在的工作目录。
+
 本目录包含用于生成和运行神经处理器数据集及模型的脚本。
 
 ## 项目状态与局限性说明 (Project Status & Limitations)
