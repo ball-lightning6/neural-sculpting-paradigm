@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="检验固定控制位是否会被网络自动识别为语义无关变量，以及加入多少反事实样本才能让两条控制分支严格执行同一 ECA 规则。该实验同时区分：">
+  <title>E02：Rule-bit 反事实不变性与训练 loss 中心原则 · Neural K 研究档案</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="../assets/site.js"></script>
+</head>
+<body data-page-kind="experiment">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+  
+    <header class="topbar">
+      <a class="site-mark" href="../index.html" aria-label="返回研究主文">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K 研究档案</span>
+      </a>
+      <nav class="top-nav" aria-label="全站导航"><a class="top-link" href="../index.html">研究主文</a><a class="top-link" href="../theory-core.html">理论核心</a><a class="top-link active" href="../experiments/index.html">实验索引</a><a class="top-link" href="../references.html">参考文献</a><a class="top-link" href="../evidence-ledger.html">证据总账</a></nav>
+      <nav class="language-switch" aria-label="语言"><span class="active" lang="zh-CN">中文</span><a href="../en/experiments/e02.html" lang="en">EN</a></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>目录</span>
+      </button>
+    </header>
+    
+  <div class="page-shell">
+    
+    <aside class="sidebar" id="sidebar" aria-label="本页目录">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">本页目录</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#overview">实验概览</a></li>
+<li><a href="#目的">目的</a></li>
+<li><a href="#文件">文件</a></li>
+<li><a href="#冻结来源与-sha256">冻结来源与 SHA256</a></li>
+<li><a href="#motivation">为什么做、怎样判决</a></li>
+<li><a href="#1-背景问题">1. 背景问题</a></li>
+<li><a href="#2-实验前判据">2. 实验前判据</a><ul>
+<li><a href="#不变性补全">不变性补全</a></li>
+<li><a href="#表示复用">表示复用</a></li>
+<li><a href="#编码-参数化">编码/参数化</a></li>
+</ul>
+</li>
+<li><a href="#3-冻结协议">3. 冻结协议</a></li>
+<li><a href="#4-主要测量">4. 主要测量</a></li>
+<li><a href="#5-预先保留的边界">5. 预先保留的边界</a></li>
+<li><a href="#results">结果、解读与边界</a></li>
+<li><a href="#1-stage-1-原规则完全学会-反事实分支仍取决于编码">1. Stage 1：原规则完全学会，反事实分支仍取决于编码</a></li>
+<li><a href="#2-为什么全0与全1不同">2. 为什么全0与全1不同</a></li>
+<li><a href="#3-反事实剂量响应">3. 反事实剂量响应</a><ul>
+<li><a href="#warm-严格成功的最小-k-要求8-8-seed">Warm 严格成功的最小 k（要求8/8 seed）</a></li>
+<li><a href="#cold-对照">Cold 对照</a></li>
+</ul>
+</li>
+<li><a href="#4-阶段裁决">4. 阶段裁决</a></li>
+<li><a href="#5-对总体框架的修正">5. 对总体框架的修正</a></li>
+</ul>
+</div>
+</nav>
+        <div class="sidebar-label experiment-label">全部实验</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>静态硬条件化不足以描述训练函数分布</span></a><a class="experiment-nav-link active" href="e02.html"><span>E02</span><span>Rule-bit 反事实不变性与训练 loss 中心原则</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>函数系综动力学与网络参考语言</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>在 Mingard 2025协议中延长 post-fit 观察</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>固定 NTK 足够时的特征学习</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>连续 loss 条件下的静态函数质量</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>函数 ID 迁移与 matched-loss 静态对照</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>共享中间表示与有限容量压力</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>MNIST 80%隐藏标签噪声长训</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>4-bit raw-BCE 简单/复杂规则竞争</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule30 数据量与训练/验证梯度对齐</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND shortcut 的静态 loss 几何</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>AND shortcut 的 SGD 运输与单样本干预</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>加权 Rule-bit 的 loss 阶段函数换序</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Mod97 grokking 的完整函数与边缘凝聚</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity 终点偏好、全局入口与局部恢复</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>静态低-loss 质量与 optimizer 运输</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>高函数共识与符号可读性</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>完整真值表规则的 loss-resolved 体积</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Full-rule、固定 D 与 hard-margin 测度闭环</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement 控制与共识复杂度前沿</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>逐样本自由能与信息不变量</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>完整目标体积前瞻预测数据相变</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>深尾 Neural K-profile 与排序交叉</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST 样本复杂度与静态体积分支预测</span></a></nav>
+      </div>
+    </aside>
+    
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">E02 · 实验详情</div>
+          <h1>E02：Rule-bit 反事实不变性与训练 loss 中心原则</h1>
+          <p class="article-description">检验固定控制位是否会被网络自动识别为语义无关变量，以及加入多少反事实样本才能让两条控制分支严格执行同一 ECA 规则。该实验同时区分：</p>
+        </header>
+        <div class="article-body"><div class="source-bar"><span>复现脚本</span><div><a href="../../experiments/experiment_02_rule_bit_invariance/experiment_rule_bit_invariance_completion.py">experiment_rule_bit_invariance_completion.py</a></div></div><h2 id="overview">实验概览</h2>
+<h2 id="目的">目的</h2>
+<p>检验固定控制位是否会被网络自动识别为语义无关变量，以及加入多少反事实样本才能让两条控制分支严格执行同一 ECA 规则。该实验同时区分：</p>
+<ul>
+<li>训练中恒0与恒1；</li>
+<li>binary <code>0/1</code>与 centered <code>-1/+1</code>编码；</li>
+<li>已学规则后追加反事实样本（warm）；</li>
+<li>从头训练最终数据（cold）；</li>
+<li>继续训练但不加反事实样本（<code>k=0</code>）。</li>
+</ul>
+<h2 id="文件">文件</h2>
+<ul>
+<li><a href="#motivation">实验动机与预注册判据</a></li>
+<li><a href="#results">完整结果与阶段裁决</a></li>
+<li><a href="../../experiments/experiment_02_rule_bit_invariance/experiment_rule_bit_invariance_completion.py"><code>experiment_rule_bit_invariance_completion.py</code></a></li>
+</ul>
+<p>运行：</p>
+<pre><code class="language-bash">python experiment_rule_bit_invariance_completion.py
+</code></pre>
+<p>默认输出目录：</p>
+<pre><code class="language-text">results_rule_bit_invariance_completion/
+</code></pre>
+<h2 id="冻结来源与-sha256">冻结来源与 SHA256</h2>
+<table>
+<thead>
+<tr>
+<th>冻结文件</th>
+<th>开发版来源</th>
+<th>SHA256</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>experiment_rule_bit_invariance_completion.py</code></td>
+<td><code>research/overfitting_related_research/scripts/experiment_rule_bit_invariance_completion.py</code></td>
+<td><code>6c0ee495797ed215774c37ae6b1b3f25b73b4145d8dc5ff1dda124cbe85f9210</code></td>
+</tr>
+</tbody>
+</table>
+<p>本地原始结果缓存：<code>results/results_rule_bit_invariance_completion.zip</code>，SHA256<code>2932bc1ed92c4b7e0c67f251ca0ee595f6e5f49f0cd0c66162dcc07ae279ced4</code>。该 ZIP 不进入最终上传包，关键结果已完整抄入结果报告。</p>
+<h2 id="motivation">为什么做、怎样判决</h2>
+<h2 id="1-背景问题">1. 背景问题</h2>
+<p>E01 证明优化器不是静态 hard prior 的被动筛选器，但这不自动推出网络会恢复人类语义上最短、最纯净的程序。旧31-bit 实验中，训练只出现一个固定 rule bit，翻转该 bit 后输出仍大体执行已学规则，却没有严格不变。</p>
+<p>这形成两个竞争解释：</p>
+<ol>
+<li><strong>语义压缩强版本</strong>：既然目标规则与 rule bit 无关，训练会自动删除该变量；</li>
+<li><strong>训练 loss/参数化版本</strong>：训练集没有提供反事实不变性，常数 bit 可以参与 bias、门控和表示；网络只需降低可见训练 loss。</li>
+</ol>
+<p>这里外部 ECA 生成器规定的“rule bit 应当无关”只用于反事实评分。对 Stage 1训练集而言，所有在固定 bit 分支上正确的延拓都同样符合数据；不能因为研究者知道生成脚本，就预先把严格不变函数视为网络已经获得的唯一真实规则。</p>
+<h2 id="2-实验前判据">2. 实验前判据</h2>
+<h3 id="不变性补全">不变性补全</h3>
+<p>若极少反事实样本使翻转分支在全 probe 严格等于原规则，而<code>k=0</code>不产生同样改善，则数据能够用很小代价补全不变性。</p>
+<h3 id="表示复用">表示复用</h3>
+<p>若 warm 达到同样严格成功率所需样本或步数显著少于 cold，则已学主体表示对不变性补全提供正迁移。若无一致优势，不主张表示复用。</p>
+<h3 id="编码-参数化">编码/参数化</h3>
+<p>若恒0、恒1或 binary、centered 结果明显不同，则语义无关性不是充分解释，网络结构与编码必须进入理论。</p>
+<h2 id="3-冻结协议">3. 冻结协议</h2>
+<ul>
+<li>Rule30、Rule110，各一步 ECA；</li>
+<li>输入：1个 rule bit + 30个状态 bit；输出30 bit；</li>
+<li><code>31 -&gt; 1024 x 3 -&gt; 30</code>，GELU+LayerNorm；</li>
+<li>2,048训练状态，65,536 probe；</li>
+<li>8个 seed；Adam，学习率<code>1e-3</code>，batch 512；</li>
+<li><code>dropout=0</code>、<code>weight_decay=0</code>；</li>
+<li>Stage 1固定 rule bit 训练8,000步；</li>
+<li>warm 追加嵌套<code>k=0,1,2,...,512</code>反事实样本，训练5,000步；</li>
+<li>cold 从相同初始化训练最终数据13,000步；</li>
+<li>binary 与 centered 编码，固定 bit 0/1双向扫描。</li>
+</ul>
+<h2 id="4-主要测量">4. 主要测量</h2>
+<ul>
+<li>原分支/翻转分支 bit accuracy 与30-bit exact accuracy；</li>
+<li>两分支输出 agreement；</li>
+<li>hard strict success 和8/8 seed 严格成功率；</li>
+<li>logit 差与 rule-bit 输入列 L2 范数；</li>
+<li>warm/cold 达到严格不变性的最小<code>k</code>。</li>
+</ul>
+<h2 id="5-预先保留的边界">5. 预先保留的边界</h2>
+<ul>
+<li>训练目标没有包含“真实语义无关”这一信息；</li>
+<li>恒1可与 bias 不可辨识，恒0输入列可能完全无梯度；</li>
+<li>centered 翻转比 binary 删除通路更强；</li>
+<li>成功只说明当前协议存在不变性补全偏置，不证明任意网络都会自动找出无关变量。</li>
+</ul>
+<h2 id="results">结果、解读与边界</h2>
+<h2 id="1-stage-1-原规则完全学会-反事实分支仍取决于编码">1. Stage 1：原规则完全学会，反事实分支仍取决于编码</h2>
+<p>8,000步后，所有原始 rule-bit 分支在65,536 probe 上均达到 exact accuracy 1。翻转 rule bit 后的 median 结果：</p>
+<table>
+<thead>
+<tr>
+<th>编码</th>
+<th style="text-align: right;">规则</th>
+<th style="text-align: right;">训练固定bit</th>
+<th style="text-align: right;">flip bit accuracy</th>
+<th style="text-align: right;">flip exact accuracy</th>
+<th style="text-align: right;">严格成功seed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>binary</td>
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1.0000</td>
+<td style="text-align: right;">1.0000</td>
+<td style="text-align: right;">8/8</td>
+</tr>
+<tr>
+<td>binary</td>
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.99952</td>
+<td style="text-align: right;">0.98561</td>
+<td style="text-align: right;">0/8</td>
+</tr>
+<tr>
+<td>binary</td>
+<td style="text-align: right;">110</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1.0000</td>
+<td style="text-align: right;">1.0000</td>
+<td style="text-align: right;">8/8</td>
+</tr>
+<tr>
+<td>binary</td>
+<td style="text-align: right;">110</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.79358</td>
+<td style="text-align: right;">0.00151</td>
+<td style="text-align: right;">0/8</td>
+</tr>
+<tr>
+<td>centered</td>
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.86071</td>
+<td style="text-align: right;">0.01517</td>
+<td style="text-align: right;">0/8</td>
+</tr>
+<tr>
+<td>centered</td>
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.85416</td>
+<td style="text-align: right;">0.01137</td>
+<td style="text-align: right;">0/8</td>
+</tr>
+<tr>
+<td>centered</td>
+<td style="text-align: right;">110</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.50286</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0/8</td>
+</tr>
+<tr>
+<td>centered</td>
+<td style="text-align: right;">110</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.49822</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0/8</td>
+</tr>
+</tbody>
+</table>
+<p>相同语义任务仅改变常数编码，反事实行为便从完美不变到接近随机，直接否定“语义无关变量必然被自动删除”的强版本。</p>
+<h2 id="2-为什么全0与全1不同">2. 为什么全0与全1不同</h2>
+<p>第一层写成</p>
+<div class="math-display">$$
+h=W_xx+w_zz+b.
+$$</div>
+<ul>
+<li>binary 固定<code>z=0</code>：<code>w_z</code>列在 Stage 1不接收梯度；</li>
+<li>binary 固定<code>z=1</code>：数据只约束<code>w_z+b</code>，rule-bit 列成为额外 bias 通路；</li>
+<li>centered 翻转：贡献不仅被删除，还反向施加。</li>
+</ul>
+<p>优化器没有“该变量在外部生成器中无关”的语义信息。只要利用常数输入有助于降低训练 loss，它就可以承担阈值、门控和中间计算。</p>
+<h2 id="3-反事实剂量响应">3. 反事实剂量响应</h2>
+<h3 id="warm-严格成功的最小-k-要求8-8-seed">Warm 严格成功的最小 k（要求8/8 seed）</h3>
+<table>
+<thead>
+<tr>
+<th>编码</th>
+<th style="text-align: right;">规则</th>
+<th style="text-align: right;">固定bit</th>
+<th style="text-align: right;">最小k</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>binary</td>
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr>
+<td>binary</td>
+<td style="text-align: right;">110</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr>
+<td>binary</td>
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">未在512内达到</td>
+</tr>
+<tr>
+<td>binary</td>
+<td style="text-align: right;">110</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">未在512内达到</td>
+</tr>
+<tr>
+<td>centered</td>
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">0/1</td>
+<td style="text-align: right;">未在512内达到</td>
+</tr>
+<tr>
+<td>centered</td>
+<td style="text-align: right;">110</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">未在512内达到</td>
+</tr>
+<tr>
+<td>centered</td>
+<td style="text-align: right;">110</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">512</td>
+</tr>
+</tbody>
+</table>
+<p>binary 固定0时，仅1个反事实样本（占原训练集约0.049%）即可使两条规则8/8 seed 严格不变。但困难方向并不呈现同样的一例补全；许多条件到512个样本仍仅6/8或7/8严格成功。</p>
+<h3 id="cold-对照">Cold 对照</h3>
+<p>cold 在 binary 固定0时<code>k=0</code>已经严格成功；binary 固定1通常需<code>k=64</code>；centered 多数条件需<code>k=64</code>，个别需512。warm 没有一致地以更少样本达到相同成功率，所以本实验不支持“预训练主体表示普遍带来强样本效率优势”这一强结论。</p>
+<h2 id="4-阶段裁决">4. 阶段裁决</h2>
+<p>可以声称：</p>
+<ol>
+<li>训练集未约束的反事实分支会形成结构化延拓，而非自动保持随机；</li>
+<li>语义无关不等于训练中不参与计算；</li>
+<li>常数编码和网络 bias 结构会系统改变 off-support 函数；</li>
+<li>少量反事实证据在部分协议中能迅速补全严格不变性；</li>
+<li>神经网络直接优化训练目标，泛化与语义不变性只有在数据和归纳偏置对齐时才作为副作用出现。</li>
+</ol>
+<p>不能声称：</p>
+<ul>
+<li>SGD/Adam 会自动删除所有无关变量；</li>
+<li>一个反事实样本普遍足够；</li>
+<li>warm 总比 cold 样本效率高；</li>
+<li>结果证明人类语义上的最低 Kolmogorov complexity 程序被找到；</li>
+<li>任何 off-support 失败都能笼统归入“动力学”而不再接受证伪。</li>
+</ul>
+<h2 id="5-对总体框架的修正">5. 对总体框架的修正</h2>
+<p>本实验把理论从</p>
+<pre><code class="language-text">训练会恢复语义上最短的真实程序
+</code></pre>
+<p>修正为</p>
+<pre><code class="language-text">架构、编码、数据与优化器共同定义训练loss几何；
+网络在该协议中选择低loss实现，外部语义不是额外目标。
+</code></pre>
+<p>这也是后续 loss-resolved 体积框架以<code>L_D</code>而非 validation 或 teacher rule 为原始对象的直接来源。</p></div>
+        <footer class="experiment-pager"><a href="e01.html">← E01 静态硬条件化不足以描述训练函数分布</a><a href="e03.html">E03 函数系综动力学与网络参考语言 →</a></footer>
+      </article>
+    </main>
+  </div>
+</body>
+</html>

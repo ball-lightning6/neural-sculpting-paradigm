@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="E21 把 agreement 从被动统计量变为训练集干预工具：反复查询当前 committee 最分歧的未见输入，分别尝试两个标签，选择让函数分布收缩更快或更慢的分支。随后用长 anti-consensus 前缀逐层排除早期简单吸引子，再切换 pro-consensus 使分布重新凝聚，测量稳定终点的符号复杂度怎样变化。">
+  <title>E21：Agreement 控制与共识复杂度前沿 · Neural K 研究档案</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="../assets/site.js"></script>
+</head>
+<body data-page-kind="experiment">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+  
+    <header class="topbar">
+      <a class="site-mark" href="../index.html" aria-label="返回研究主文">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K 研究档案</span>
+      </a>
+      <nav class="top-nav" aria-label="全站导航"><a class="top-link" href="../index.html">研究主文</a><a class="top-link" href="../theory-core.html">理论核心</a><a class="top-link active" href="../experiments/index.html">实验索引</a><a class="top-link" href="../references.html">参考文献</a><a class="top-link" href="../evidence-ledger.html">证据总账</a></nav>
+      <nav class="language-switch" aria-label="语言"><span class="active" lang="zh-CN">中文</span><a href="../en/experiments/e21.html" lang="en">EN</a></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>目录</span>
+      </button>
+    </header>
+    
+  <div class="page-shell">
+    
+    <aside class="sidebar" id="sidebar" aria-label="本页目录">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">本页目录</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#overview">实验概览</a></li>
+<li><a href="#目的">目的</a></li>
+<li><a href="#文件与运行顺序">文件与运行顺序</a></li>
+<li><a href="#sha256">SHA256</a></li>
+<li><a href="#motivation">为什么做、怎样判决</a></li>
+<li><a href="#1-agreement-能说明什么">1. Agreement 能说明什么</a></li>
+<li><a href="#2-三种贪心分支">2. 三种贪心分支</a></li>
+<li><a href="#3-复杂度前沿">3. 复杂度前沿</a></li>
+<li><a href="#4-边界">4. 边界</a></li>
+<li><a href="#results">结果、解读与边界</a></li>
+<li><a href="#1-agreement-可以被标签选择因果控制">1. Agreement 可以被标签选择因果控制</a></li>
+<li><a href="#2-更长-anti-前缀提高重新凝聚成本">2. 更长 anti 前缀提高重新凝聚成本</a></li>
+<li><a href="#3-稳定终点复杂度形成清楚前沿">3. 稳定终点复杂度形成清楚前沿</a></li>
+<li><a href="#4-裁决">4. 裁决</a></li>
+</ul>
+</div>
+</nav>
+        <div class="sidebar-label experiment-label">全部实验</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>静态硬条件化不足以描述训练函数分布</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-bit 反事实不变性与训练 loss 中心原则</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>函数系综动力学与网络参考语言</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>在 Mingard 2025协议中延长 post-fit 观察</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>固定 NTK 足够时的特征学习</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>连续 loss 条件下的静态函数质量</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>函数 ID 迁移与 matched-loss 静态对照</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>共享中间表示与有限容量压力</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>MNIST 80%隐藏标签噪声长训</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>4-bit raw-BCE 简单/复杂规则竞争</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule30 数据量与训练/验证梯度对齐</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND shortcut 的静态 loss 几何</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>AND shortcut 的 SGD 运输与单样本干预</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>加权 Rule-bit 的 loss 阶段函数换序</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Mod97 grokking 的完整函数与边缘凝聚</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity 终点偏好、全局入口与局部恢复</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>静态低-loss 质量与 optimizer 运输</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>高函数共识与符号可读性</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>完整真值表规则的 loss-resolved 体积</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Full-rule、固定 D 与 hard-margin 测度闭环</span></a><a class="experiment-nav-link active" href="e21.html"><span>E21</span><span>Agreement 控制与共识复杂度前沿</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>逐样本自由能与信息不变量</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>完整目标体积前瞻预测数据相变</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>深尾 Neural K-profile 与排序交叉</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST 样本复杂度与静态体积分支预测</span></a></nav>
+      </div>
+    </aside>
+    
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">E21 · 实验详情</div>
+          <h1>E21：Agreement 控制与共识复杂度前沿</h1>
+          <p class="article-description">E21 把 agreement 从被动统计量变为训练集干预工具：反复查询当前 committee 最分歧的未见输入，分别尝试两个标签，选择让函数分布收缩更快或更慢的分支。随后用长 anti-consensus 前缀逐层排除早期简单吸引子，再切换 pro-consensus 使分布重新凝聚，测量稳定终点的符号复杂度怎样变化。</p>
+        </header>
+        <div class="article-body"><div class="source-bar"><span>复现脚本</span><div><a href="../../experiments/experiment_21_agreement_complexity_frontier/experiment_adversarial_disagreement_completion_pilot.py">experiment_adversarial_disagreement_completion_pilot.py</a><a href="../../experiments/experiment_21_agreement_complexity_frontier/experiment_consensus_complexity_frontier.py">experiment_consensus_complexity_frontier.py</a></div></div><h2 id="overview">实验概览</h2>
+<h2 id="目的">目的</h2>
+<p>E21 把 agreement 从被动统计量变为训练集干预工具：反复查询当前 committee 最分歧的未见输入，分别尝试两个标签，选择让函数分布收缩更快或更慢的分支。随后用长 anti-consensus 前缀逐层排除早期简单吸引子，再切换 pro-consensus 使分布重新凝聚，测量稳定终点的符号复杂度怎样变化。</p>
+<h2 id="文件与运行顺序">文件与运行顺序</h2>
+<pre><code class="language-bash">python experiment_adversarial_disagreement_completion_pilot.py
+python experiment_consensus_complexity_frontier.py
+</code></pre>
+<ul>
+<li><a href="#motivation">实验动机与判据</a></li>
+<li><a href="#results">结果与边界</a></li>
+</ul>
+<h2 id="sha256">SHA256</h2>
+<pre><code class="language-text">3cbe4dbeeb24aa45215d3710ec85419e117d2317f28aa2316371b855683bf9fe  adversarial pilot script
+1a0d1c21c6df3396bf035852ce361eabf29c4709abfa74d35830a3d241a71a82  frontier script
+91cb0db9c2d595cb205785af6624f18fc0dbb60abff370db424eee08e276878e  pilot ZIP
+8b917a33aa9b2aaf1606e0808e964d2fb4ec6689049353be4de556509506aa87  frontier ZIP
+</code></pre>
+<p>原始 ZIP 位于<code>E:\Downloads</code>，不进入发布包。</p>
+<h2 id="motivation">为什么做、怎样判决</h2>
+<h2 id="1-agreement-能说明什么">1. Agreement 能说明什么</h2>
+<p>对固定训练协议，多 seed 在未见输入上的高 agreement 表示经验函数分布集中；它不依赖研究者知道 teacher，因此可用于未知含义数据。低 agreement 只说明仍有延拓竞争，不能单独区分数据不足、标签噪声、优化不可达或多模态地形。</p>
+<p>逐点 agreement 较高仍不保证完整函数收束，因此实验同时报告：</p>
+<ul>
+<li>unseen pairwise agreement；</li>
+<li>vote entropy；</li>
+<li>exact modal 完整函数质量；</li>
+<li>0.5% Hamming ball mass；</li>
+<li>fresh-seed fit rate。</li>
+</ul>
+<h2 id="2-三种贪心分支">2. 三种贪心分支</h2>
+<p>从随机平衡 n=8训练集开始，每轮选择当前 committee 预测最接近50:50的未见输入；这与 <a href="https://doi.org/10.1145/130385.130417" target="_blank" rel="noopener">Seung、Opper 与 Sompolinsky（1992）的 Query by Committee</a>共享“用版本空间分歧选择查询”的基本思想。对标签0/1使用严格配对初始化分别从头训练：</p>
+<ul>
+<li>anti-consensus：选择最终全局 agreement 较低的分支；</li>
+<li>pro-consensus：选择 agreement 较高的分支；</li>
+<li>random-label：在可拟合分支中随机选。</li>
+</ul>
+<p>标签选择不读取任何符号复杂度。正式 pilot 使用8-bit、16起点、64-seed 发现、512 fresh-seed 审计，补到 n=24。</p>
+<h2 id="3-复杂度前沿">3. 复杂度前沿</h2>
+<p>共享16条 anti 主干，在<code>n=8,16,24,32,48,64</code>冻结快照；每个快照切换 pro 补全，最多加入32个样本直至发现阶段窄后验，再用512 fresh seeds 审计。只有 fresh-narrow 终点进入符号复杂度分析。</p>
+<p>预注册代理包括 essential variables、ANF、decision tree、ROBDD 与线性阈值审计。二次 polynomial threshold 是看到未解释候选后增加的 post-hoc 审计，必须单独标记。</p>
+<h2 id="4-边界">4. 边界</h2>
+<ul>
+<li>pro/anti 是每步贪心，不保证全局最优数据序列；</li>
+<li>high agreement 不等于外部正确；</li>
+<li>宽函数分布的逐点多数函数不能拿来作稳定程序复杂度判决；</li>
+<li>“可读”指存在较短、可提取的符号程序，不等于人类能一眼发现；</li>
+<li>当前结论限于8-bit tanh MLP。</li>
+</ul>
+<h2 id="results">结果、解读与边界</h2>
+<h2 id="1-agreement-可以被标签选择因果控制">1. Agreement 可以被标签选择因果控制</h2>
+<p>16个8-bit 起点的 fresh-seed 终点：</p>
+<table>
+<thead>
+<tr>
+<th>策略</th>
+<th style="text-align: right;">unseen agreement</th>
+<th style="text-align: right;">vote entropy</th>
+<th style="text-align: right;">exact modal中位数</th>
+<th style="text-align: right;">0.5% ball mass</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>anti</td>
+<td style="text-align: right;">0.96977</td>
+<td style="text-align: right;">0.06913</td>
+<td style="text-align: right;">0.01563</td>
+<td style="text-align: right;">0.04883</td>
+</tr>
+<tr>
+<td>pro</td>
+<td style="text-align: right;">0.99904</td>
+<td style="text-align: right;">0.00259</td>
+<td style="text-align: right;">0.99902</td>
+<td style="text-align: right;">1.00000</td>
+</tr>
+<tr>
+<td>random</td>
+<td style="text-align: right;">0.97599</td>
+<td style="text-align: right;">0.05575</td>
+<td style="text-align: right;">0.04590</td>
+<td style="text-align: right;">0.15625</td>
+</tr>
+</tbody>
+</table>
+<p>anti 低于 pro 为16/16，公平符号概率<code>1.53e-5</code>；anti 低于 random 为12/16。窄后验门槛下 anti 0/16、pro 15/16、random 0/16。Anti 不是每轮都让 agreement 绝对下降，而是在两个标签都可能收缩时选择收缩较慢者。</p>
+<p>15个稳定 pro 函数经 post-run LP 审计15/15都是一般线性阈值，其中7个为等权 signed threshold，8个为小整数加权阈值。唯一未通过线性审计的路径也恰是唯一未达到窄后验者，不能作为稳定复杂反例。</p>
+<h2 id="2-更长-anti-前缀提高重新凝聚成本">2. 更长 anti 前缀提高重新凝聚成本</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">anti cutoff</th>
+<th style="text-align: right;">fresh narrow/16</th>
+<th style="text-align: right;">pro额外样本中位数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">6.5</td>
+</tr>
+<tr>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">5.5</td>
+</tr>
+<tr>
+<td style="text-align: right;">24</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">8.5</td>
+</tr>
+<tr>
+<td style="text-align: right;">32</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">10.0</td>
+</tr>
+<tr>
+<td style="text-align: right;">48</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">17.0</td>
+</tr>
+<tr>
+<td style="text-align: right;">64</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">15.0</td>
+</tr>
+</tbody>
+</table>
+<p>80个 fresh-narrow 终点中，cutoff 与 pro 额外样本数 Spearman 为0.433，<code>p=6e-5</code>。</p>
+<h2 id="3-稳定终点复杂度形成清楚前沿">3. 稳定终点复杂度形成清楚前沿</h2>
+<p>从 cutoff 8到64：essential variables 均值5.06升至7.91，ANF 项中位24升至100，ROBDD 节点中位10升至29。与 cutoff 的 Spearman 分别约0.786、0.662、0.777，均高度显著；在共同存活的11个 paired 起点中三项均11/11增加。</p>
+<p>一般线性阈值比例从100%降至0%。31个未被预注册语言解释的候选，经 post-hoc 二次 PTF 审计31/31可精确表示；全部80个窄终点均为 degree 不高于2的 PTF，而64个随机平衡函数中0/64属于该族。二次支持项中位随 cutoff 由6.5升至31。</p>
+<h2 id="4-裁决">4. 裁决</h2>
+<p>E21 证明：</p>
+<ol>
+<li>训练集标签路径能够系统控制函数分布的凝聚速度；</li>
+<li>最大分歧样本具有高干预价值，但标签方向决定收缩还是维持竞争；</li>
+<li>逐层排除巨大简单盆地后，重新凝聚所需样本和终点程序复杂度同时上升；</li>
+<li>未观察到高共识随机查表，而是得到从稀疏线性到更稠密二次阈值的复杂度前沿。</li>
+</ol>
+<p>它不证明所有高共识函数都人类可读；二次 PTF 是 post-hoc 统一发现。更准确的经验结论是：在当前协议中，能够以少量样本诱导稳定完整函数共识的映射仍高度结构化，并且 agreement 收束所需的数据预算可作为协议相对复杂度的操作性线索。</p></div>
+        <footer class="experiment-pager"><a href="e20.html">← E20 Full-rule、固定 D 与 hard-margin 测度闭环</a><a href="e22.html">E22 逐样本自由能与信息不变量 →</a></footer>
+      </article>
+    </main>
+  </div>
+</body>
+</html>

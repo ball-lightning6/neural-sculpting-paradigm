@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="每页合并实验目的、具体操作、判决标准、结果、边界和复现脚本。">
+  <title>E01–E25 实验索引 · Neural K 研究档案</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="../assets/site.js"></script>
+</head>
+<body data-page-kind="experiment-index">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+  
+    <header class="topbar">
+      <a class="site-mark" href="../index.html" aria-label="返回研究主文">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K 研究档案</span>
+      </a>
+      <nav class="top-nav" aria-label="全站导航"><a class="top-link" href="../index.html">研究主文</a><a class="top-link" href="../theory-core.html">理论核心</a><a class="top-link active" href="../experiments/index.html">实验索引</a><a class="top-link" href="../references.html">参考文献</a><a class="top-link" href="../evidence-ledger.html">证据总账</a></nav>
+      <nav class="language-switch" aria-label="语言"><span class="active" lang="zh-CN">中文</span><a href="../en/experiments/index.html" lang="en">EN</a></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>目录</span>
+      </button>
+    </header>
+    
+  <div class="page-shell">
+    
+    <aside class="sidebar" id="sidebar" aria-label="本页目录">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">本页目录</div>
+        <nav class="toc"><p class="muted">本页无分节目录</p></nav>
+        <div class="sidebar-label experiment-label">全部实验</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>静态硬条件化不足以描述训练函数分布</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-bit 反事实不变性与训练 loss 中心原则</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>函数系综动力学与网络参考语言</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>在 Mingard 2025协议中延长 post-fit 观察</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>固定 NTK 足够时的特征学习</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>连续 loss 条件下的静态函数质量</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>函数 ID 迁移与 matched-loss 静态对照</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>共享中间表示与有限容量压力</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>MNIST 80%隐藏标签噪声长训</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>4-bit raw-BCE 简单/复杂规则竞争</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule30 数据量与训练/验证梯度对齐</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND shortcut 的静态 loss 几何</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>AND shortcut 的 SGD 运输与单样本干预</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>加权 Rule-bit 的 loss 阶段函数换序</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Mod97 grokking 的完整函数与边缘凝聚</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity 终点偏好、全局入口与局部恢复</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>静态低-loss 质量与 optimizer 运输</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>高函数共识与符号可读性</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>完整真值表规则的 loss-resolved 体积</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Full-rule、固定 D 与 hard-margin 测度闭环</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement 控制与共识复杂度前沿</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>逐样本自由能与信息不变量</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>完整目标体积前瞻预测数据相变</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>深尾 Neural K-profile 与排序交叉</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST 样本复杂度与静态体积分支预测</span></a></nav>
+      </div>
+    </aside>
+    
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">实验档案 · 25 组证据单元</div>
+          <h1>E01–E25 实验索引</h1>
+          <p class="article-description">每页合并实验目的、具体操作、判决标准、结果、边界和复现脚本。</p>
+        </header>
+        <div class="article-body">
+    <div class="experiment-toolbar">
+      <label for="experiment-search">搜索实验</label>
+      <input id="experiment-search" type="search" placeholder="输入 E23、parity、MNIST…" data-experiment-search autocomplete="off">
+      <span class="search-count" data-search-count>25 / 25</span>
+    </div>
+    <div class="experiment-grid">
+            <article class="experiment-card" data-experiment-card data-search-text="e01 experiment 1：静态硬条件化不足以描述训练函数分布 科学问题">
+              <div class="experiment-card-top"><span class="experiment-code">E01</span><span>2 个复现脚本</span></div>
+              <h2><a href="e01.html">静态硬条件化不足以描述训练函数分布</a></h2>
+              <p>科学问题</p>
+              <a class="card-link" href="e01.html">查看实验说明 →</a>
+            </article>
+            
+            <article class="experiment-card" data-experiment-card data-search-text="e02 e02：rule-bit 反事实不变性与训练 loss 中心原则 检验固定控制位是否会被网络自动识别为语义无关变量，以及加入多少反事实样本才能让两条控制分支严格执行同一 eca 规则。该实验同时区分：">
+              <div class="experiment-card-top"><span class="experiment-code">E02</span><span>1 个复现脚本</span></div>
+              <h2><a href="e02.html">Rule-bit 反事实不变性与训练 loss 中心原则</a></h2>
+              <p>检验固定控制位是否会被网络自动识别为语义无关变量，以及加入多少反事实样本才能让两条控制分支严格执行同一 ECA 规则。该实验同时区分：</p>
+              <a class="card-link" href="e02.html">查看实验说明 →</a>
+            </article>
+            
+            <article class="experiment-card" data-experiment-card data-search-text="e03 e03：函数系综动力学与网络参考语言 实验组成">
+              <div class="experiment-card-top"><span class="experiment-code">E03</span><span>2 个复现脚本</span></div>
+              <h2><a href="e03.html">函数系综动力学与网络参考语言</a></h2>
+              <p>实验组成</p>
+              <a class="card-link" href="e03.html">查看实验说明 →</a>
+            </article>
+            
+            <article class="experiment-card" data-experiment-card data-search-text="e04 e04：在 mingard 2025协议中延长 post-fit 观察 mingard 等（2025），deep neural networks have an inbuilt occam&#x27;s razor中的 boolean 实验在模型首次达到零训练分类错误时停止，并据此比较初始化函数先验、复杂度分布与训练终点。e04 保持其核心网络、目标、初始化尺度与 advsgd 设置，只把观察窗口延长到 post-fit 100/1,000步，并保存每条轨迹的完整128-bit 函数。">
+              <div class="experiment-card-top"><span class="experiment-code">E04</span><span>1 个复现脚本</span></div>
+              <h2><a href="e04.html">在 Mingard 2025协议中延长 post-fit 观察</a></h2>
+              <p>Mingard 等（2025），Deep Neural Networks Have an Inbuilt Occam&#x27;s Razor中的 Boolean 实验在模型首次达到零训练分类错误时停止，并据此比较初始化函数先验、复杂度分布与训练终点。E04 保持其核心网络、目标、初始化尺度与 advSGD 设置，只把观察窗口延长到 post-fit 100/1,000步，并保存每条轨迹的完整128-bit 函数。</p>
+              <a class="card-link" href="e04.html">查看实验说明 →</a>
+            </article>
+            
+            <article class="experiment-card" data-experiment-card data-search-text="e05 e05：固定 ntk 足够时的特征学习 该实验检验一个容易被混淆的命题：若匹配架构的初始化固定 ntk 已经足以学习一层 rule 110，有限宽网络进行端到端训练时是否仍会改变经验 ntk、隐藏表示和 relu 门控。">
+              <div class="experiment-card-top"><span class="experiment-code">E05</span><span>1 个复现脚本</span></div>
+              <h2><a href="e05.html">固定 NTK 足够时的特征学习</a></h2>
+              <p>该实验检验一个容易被混淆的命题：若匹配架构的初始化固定 NTK 已经足以学习一层 Rule 110，有限宽网络进行端到端训练时是否仍会改变经验 NTK、隐藏表示和 ReLU 门控。</p>
+              <a class="card-link" href="e05.html">查看实验说明 →</a>
+            </article>
+            
+            <article class="experiment-card" data-experiment-card data-search-text="e06 e06：连续 loss 条件下的静态函数质量 该实验第一次直接测量：在网络、初始化分布和有限训练集都固定，并且所有参数已经满足相同 hard labels 后，继续收紧训练集 raw bce 是否会改变完整函数的相对参数质量。">
+              <div class="experiment-card-top"><span class="experiment-code">E06</span><span>1 个复现脚本</span></div>
+              <h2><a href="e06.html">连续 loss 条件下的静态函数质量</a></h2>
+              <p>该实验第一次直接测量：在网络、初始化分布和有限训练集都固定，并且所有参数已经满足相同 hard labels 后，继续收紧训练集 raw BCE 是否会改变完整函数的相对参数质量。</p>
+              <a class="card-link" href="e06.html">查看实验说明 →</a>
+            </article>
+            
+            <article class="experiment-card" data-experiment-card data-search-text="e07 e07：函数 id 迁移与 matched-loss 静态对照 e07 把 e06 的静态 loss 几何与真实 optimizer 运输放进完全相同的微型协议中比较：">
+              <div class="experiment-card-top"><span class="experiment-code">E07</span><span>2 个复现脚本</span></div>
+              <h2><a href="e07.html">函数 ID 迁移与 matched-loss 静态对照</a></h2>
+              <p>E07 把 E06 的静态 loss 几何与真实 optimizer 运输放进完全相同的微型协议中比较：</p>
+              <a class="card-link" href="e07.html">查看实验说明 →</a>
+            </article>
+            
+            <article class="experiment-card" data-experiment-card data-search-text="e08 e08：共享中间表示与有限容量压力 e08 检验一个唯象机制：当两个输出任务具有昂贵的共同 ca 前缀计算时，允许网络共享隐藏表示，是否比强制两条独立分支更容易达到同一极低 loss。">
+              <div class="experiment-card-top"><span class="experiment-code">E08</span><span>1 个复现脚本</span></div>
+              <h2><a href="e08.html">共享中间表示与有限容量压力</a></h2>
+              <p>E08 检验一个唯象机制：当两个输出任务具有昂贵的共同 CA 前缀计算时，允许网络共享隐藏表示，是否比强制两条独立分支更容易达到同一极低 loss。</p>
+              <a class="card-link" href="e08.html">查看实验说明 →</a>
+            </article>
+            
+            <article class="experiment-card" data-experiment-card data-search-text="e09 e09：mnist 80%隐藏标签噪声长训 该实验区分两个经常被混写的命题：">
+              <div class="experiment-card-top"><span class="experiment-code">E09</span><span>1 个复现脚本</span></div>
+              <h2><a href="e09.html">MNIST 80%隐藏标签噪声长训</a></h2>
+              <p>该实验区分两个经常被混写的命题：</p>
+              <a class="card-link" href="e09.html">查看实验说明 →</a>
+            </article>
+            
+            <article class="experiment-card" data-experiment-card data-search-text="e10 e10：4-bit raw-bce 简单/复杂规则竞争 e10 先用多任务大规模静态扫描检验“lower loss 普遍提高简单函数质量”，再针对训练集歧义和外部复杂度代理问题，构造训练输出完全一致、但表示难度严格有序的 simple/complex 函数对进行直接赔率检验。">
+              <div class="experiment-card-top"><span class="experiment-code">E10</span><span>2 个复现脚本</span></div>
+              <h2><a href="e10.html">4-bit raw-BCE 简单/复杂规则竞争</a></h2>
+              <p>E10 先用多任务大规模静态扫描检验“lower loss 普遍提高简单函数质量”，再针对训练集歧义和外部复杂度代理问题，构造训练输出完全一致、但表示难度严格有序的 simple/complex 函数对进行直接赔率检验。</p>
+              <a class="card-link" href="e10.html">查看实验说明 →</a>
+            </article>
+            
+            <article class="experiment-card" data-experiment-card data-search-text="e11 e11：rule30 数据量与训练/验证梯度对齐 e11 检验：增加同一规则的训练样本，是否只改变最终泛化终点，还是会在相同 raw bce 水平下系统性改变训练梯度与独立验证梯度的方向关系。">
+              <div class="experiment-card-top"><span class="experiment-code">E11</span><span>1 个复现脚本</span></div>
+              <h2><a href="e11.html">Rule30 数据量与训练/验证梯度对齐</a></h2>
+              <p>E11 检验：增加同一规则的训练样本，是否只改变最终泛化终点，还是会在相同 raw BCE 水平下系统性改变训练梯度与独立验证梯度的方向关系。</p>
+              <a class="card-link" href="e11.html">查看实验说明 →</a>
+            </article>
+            
+            <article class="experiment-card" data-experiment-card data-search-text="e12 e12：and shortcut 的静态 loss 几何 e12 沿完整 raw-bce 范围追踪简单目标函数，并定向调查 and、n=10中出现的真实反例：为什么结构上更复杂的兼容 shortcut 会在更深 loss 截面超过 and，以及只改变训练样本覆盖能否因果消除该优势。">
+              <div class="experiment-card-top"><span class="experiment-code">E12</span><span>2 个复现脚本</span></div>
+              <h2><a href="e12.html">AND shortcut 的静态 loss 几何</a></h2>
+              <p>E12 沿完整 raw-BCE 范围追踪简单目标函数，并定向调查 AND、n=10中出现的真实反例：为什么结构上更复杂的兼容 shortcut 会在更深 loss 截面超过 AND，以及只改变训练样本覆盖能否因果消除该优势。</p>
+              <a class="card-link" href="e12.html">查看实验说明 →</a>
+            </article>
+            
+            <article class="experiment-card" data-experiment-card data-search-text="e13 e13：and shortcut 的 sgd 运输与单样本干预 e13 检验 e12 的静态函数换序是否会在真实训练中出现，并用相同初始化、只替换一个训练样本的配对干预判断数据几何能否因果改写长期函数分布。">
+              <div class="experiment-card-top"><span class="experiment-code">E13</span><span>1 个复现脚本</span></div>
+              <h2><a href="e13.html">AND shortcut 的 SGD 运输与单样本干预</a></h2>
+              <p>E13 检验 E12 的静态函数换序是否会在真实训练中出现，并用相同初始化、只替换一个训练样本的配对干预判断数据几何能否因果改写长期函数分布。</p>
+              <a class="card-link" href="e13.html">查看实验说明 →</a>
+            </article>
+            
+            <article class="experiment-card" data-experiment-card data-search-text="e14 e14：加权 rule-bit 的 loss 阶段函数换序 e14 人为构造多数 rule110 与少数 rule30 的层级约束，使高 loss 时忽略少数分支最经济，而极低 loss 时必须满足完整复合映射。它直接检验固定 hard function 的概率是否必须随 loss 单调。">
+              <div class="experiment-card-top"><span class="experiment-code">E14</span><span>1 个复现脚本</span></div>
+              <h2><a href="e14.html">加权 Rule-bit 的 loss 阶段函数换序</a></h2>
+              <p>E14 人为构造多数 Rule110 与少数 Rule30 的层级约束，使高 loss 时忽略少数分支最经济，而极低 loss 时必须满足完整复合映射。它直接检验固定 hard function 的概率是否必须随 loss 单调。</p>
+              <a class="card-link" href="e14.html">查看实验说明 →</a>
+            </article>
+            
+            <article class="experiment-card" data-experiment-card data-search-text="e15 e15：mod97 grokking 的完整函数与边缘凝聚 e15 在原版风格 mod97 除法任务中同时跟踪完整9,312点 hard function、逐输入边缘众数、agreement、target-function 质量和 matched train ce，区分“完整函数样本仍全部不同”与“逐点预测已经围绕同一规则凝聚”。">
+              <div class="experiment-card-top"><span class="experiment-code">E15</span><span>1 个复现脚本</span></div>
+              <h2><a href="e15.html">Mod97 grokking 的完整函数与边缘凝聚</a></h2>
+              <p>E15 在原版风格 Mod97 除法任务中同时跟踪完整9,312点 hard function、逐输入边缘众数、agreement、target-function 质量和 matched train CE，区分“完整函数样本仍全部不同”与“逐点预测已经围绕同一规则凝聚”。</p>
+              <a class="card-link" href="e15.html">查看实验说明 →</a>
+            </article>
+            
+            <article class="experiment-card" data-experiment-card data-search-text="e16 e16：parity 终点偏好、全局入口与局部恢复 e16 通过 leave-one-out、随机半空间、错误点揭示和 prefix scaffold 四层干预，区分：">
+              <div class="experiment-card-top"><span class="experiment-code">E16</span><span>3 个复现脚本</span></div>
+              <h2><a href="e16.html">Parity 终点偏好、全局入口与局部恢复</a></h2>
+              <p>E16 通过 leave-one-out、随机半空间、错误点揭示和 prefix scaffold 四层干预，区分：</p>
+              <a class="card-link" href="e16.html">查看实验说明 →</a>
+            </article>
+            
+            <article class="experiment-card" data-experiment-card data-search-text="e17 e17：静态低-loss 质量与 optimizer 运输 e17 用暴力 prior、rare-event constrained smc、三种 optimizer crossing、32,768-seed adamw、smc 深尾起点续训和 seed/time 混合实验，系统检验：静态 loss 体积对真实训练有多强预测力，以及 optimizer 是否只是该静态分布的无偏或二阶采样修正。">
+              <div class="experiment-card-top"><span class="experiment-code">E17</span><span>5 个复现脚本</span></div>
+              <h2><a href="e17.html">静态低-loss 质量与 optimizer 运输</a></h2>
+              <p>E17 用暴力 prior、rare-event constrained SMC、三种 optimizer crossing、32,768-seed AdamW、SMC 深尾起点续训和 seed/time 混合实验，系统检验：静态 loss 体积对真实训练有多强预测力，以及 optimizer 是否只是该静态分布的无偏或二阶采样修正。</p>
+              <a class="card-link" href="e17.html">查看实验说明 →</a>
+            </article>
+            
+            <article class="experiment-card" data-experiment-card data-search-text="e18 e18：高函数共识与符号可读性 e18 在不知道数据生成规则的 teacher-free 随机部分真值表上，寻找跨初始化高度收束的完整函数，并审计这些函数是否属于人类可读的低复杂度符号族；随后进行跨容量、样本干预和8,192数据集大规模复核。">
+              <div class="experiment-card-top"><span class="experiment-code">E18</span><span>3 个复现脚本</span></div>
+              <h2><a href="e18.html">高函数共识与符号可读性</a></h2>
+              <p>E18 在不知道数据生成规则的 teacher-free 随机部分真值表上，寻找跨初始化高度收束的完整函数，并审计这些函数是否属于人类可读的低复杂度符号族；随后进行跨容量、样本干预和8,192数据集大规模复核。</p>
+              <a class="card-link" href="e18.html">查看实验说明 →</a>
+            </article>
+            
+            <article class="experiment-card" data-experiment-card data-search-text="e19 e19：完整真值表规则的 loss-resolved 体积 e19 用完整16点训练集直接指定每条4-bit 规则，避免部分训练集究竟诱导哪个函数的歧义，并用 constrained smc 比较不同完整目标达到相同 loss 的参数质量。">
+              <div class="experiment-card-top"><span class="experiment-code">E19</span><span>1 个复现脚本</span></div>
+              <h2><a href="e19.html">完整真值表规则的 loss-resolved 体积</a></h2>
+              <p>E19 用完整16点训练集直接指定每条4-bit 规则，避免部分训练集究竟诱导哪个函数的歧义，并用 constrained SMC 比较不同完整目标达到相同 loss 的参数质量。</p>
+              <a class="card-link" href="e19.html">查看实验说明 →</a>
+            </article>
+            
+            <article class="experiment-card" data-experiment-card data-search-text="e20 e20：full-rule、固定 d 与 hard-margin 测度闭环 e20 检验完整规则 self-loss 体积与固定部分训练集候选函数质量之间的严格关系，避免把不同测量对象凭直觉互换。它由 constant leave-one-out、and 四候选 full-rule 和 hard-cell margin bridge 三步组成。">
+              <div class="experiment-card-top"><span class="experiment-code">E20</span><span>3 个复现脚本</span></div>
+              <h2><a href="e20.html">Full-rule、固定 D 与 hard-margin 测度闭环</a></h2>
+              <p>E20 检验完整规则 self-loss 体积与固定部分训练集候选函数质量之间的严格关系，避免把不同测量对象凭直觉互换。它由 constant leave-one-out、AND 四候选 full-rule 和 hard-cell margin bridge 三步组成。</p>
+              <a class="card-link" href="e20.html">查看实验说明 →</a>
+            </article>
+            
+            <article class="experiment-card" data-experiment-card data-search-text="e21 e21：agreement 控制与共识复杂度前沿 e21 把 agreement 从被动统计量变为训练集干预工具：反复查询当前 committee 最分歧的未见输入，分别尝试两个标签，选择让函数分布收缩更快或更慢的分支。随后用长 anti-consensus 前缀逐层排除早期简单吸引子，再切换 pro-consensus 使分布重新凝聚，测量稳定终点的符号复杂度怎样变化。">
+              <div class="experiment-card-top"><span class="experiment-code">E21</span><span>2 个复现脚本</span></div>
+              <h2><a href="e21.html">Agreement 控制与共识复杂度前沿</a></h2>
+              <p>E21 把 agreement 从被动统计量变为训练集干预工具：反复查询当前 committee 最分歧的未见输入，分别尝试两个标签，选择让函数分布收缩更快或更慢的分支。随后用长 anti-consensus 前缀逐层排除早期简单吸引子，再切换 pro-consensus 使分布重新凝聚，测量稳定终点的符号复杂度怎样变化。</p>
+              <a class="card-link" href="e21.html">查看实验说明 →</a>
+            </article>
+            
+            <article class="experiment-card" data-experiment-card data-search-text="e22 e22：逐样本自由能与信息不变量 e22 把“逐个加入样本时的惊讶度能否累积为规则难度”改写为同一静态参数测度下的配分函数问题。它穷举3-bit 输入的全部部分标注状态、256条完整规则和全部样本加入顺序，检验逐步自由能增量是否为路径无关的端点势差。">
+              <div class="experiment-card-top"><span class="experiment-code">E22</span><span>1 个复现脚本</span></div>
+              <h2><a href="e22.html">逐样本自由能与信息不变量</a></h2>
+              <p>E22 把“逐个加入样本时的惊讶度能否累积为规则难度”改写为同一静态参数测度下的配分函数问题。它穷举3-bit 输入的全部部分标注状态、256条完整规则和全部样本加入顺序，检验逐步自由能增量是否为路径无关的端点势差。</p>
+              <a class="card-link" href="e22.html">查看实验说明 →</a>
+            </article>
+            
+            <article class="experiment-card" data-experiment-card data-search-text="e23 e23：完整目标体积前瞻预测数据相变 e23 在读取任何随机子集训练结果前，先用完整真值表 smc 冻结八条8-bit 规则的局部体积收缩分数；随后训练9,736个随机数据集条件，检验静态体积能否前瞻预测n50/n90样本相变，并用跨函数族反例压力测试单标量复杂度假说。">
+              <div class="experiment-card-top"><span class="experiment-code">E23</span><span>2 个复现脚本</span></div>
+              <h2><a href="e23.html">完整目标体积前瞻预测数据相变</a></h2>
+              <p>E23 在读取任何随机子集训练结果前，先用完整真值表 SMC 冻结八条8-bit 规则的局部体积收缩分数；随后训练9,736个随机数据集条件，检验静态体积能否前瞻预测n50/n90样本相变，并用跨函数族反例压力测试单标量复杂度假说。</p>
+              <a class="card-link" href="e23.html">查看实验说明 →</a>
+            </article>
+            
+            <article class="experiment-card" data-experiment-card data-search-text="e24 e24：深尾 neural k-profile 与排序交叉 e24 先在4-bit、54条完整规则上把 gaussian 参考体积推进到 hard-exact 区域，再选择唯一仍在追赶 parity4 的单点例外规则。随后从共享父系综并行推进两条分支，直接测量体积比是否在更深 loss 发生反转。">
+              <div class="experiment-card-top"><span class="experiment-code">E24</span><span>3 个复现脚本</span></div>
+              <h2><a href="e24.html">深尾 Neural K-profile 与排序交叉</a></h2>
+              <p>E24 先在4-bit、54条完整规则上把 Gaussian 参考体积推进到 hard-exact 区域，再选择唯一仍在追赶 parity4 的单点例外规则。随后从共享父系综并行推进两条分支，直接测量体积比是否在更深 loss 发生反转。</p>
+              <a class="card-link" href="e24.html">查看实验说明 →</a>
+            </article>
+            
+            <article class="experiment-card" data-experiment-card data-search-text="e25 e25：mnist 样本复杂度与静态体积分支预测 e25 把 boolean 真值表方法迁移到真实图像。stage 0先在两个二分类任务上校准最小训练集和过拟合 loss 区间；stage 1冻结条件后，从同一训练 loss parent 比较每张未见图像两个标签分支的静态质量，检验其预测准确率、nll u 形和 sgd 转折位置。">
+              <div class="experiment-card-top"><span class="experiment-code">E25</span><span>2 个复现脚本</span></div>
+              <h2><a href="e25.html">MNIST 样本复杂度与静态体积分支预测</a></h2>
+              <p>E25 把 Boolean 真值表方法迁移到真实图像。Stage 0先在两个二分类任务上校准最小训练集和过拟合 loss 区间；Stage 1冻结条件后，从同一训练 loss parent 比较每张未见图像两个标签分支的静态质量，检验其预测准确率、NLL U 形和 SGD 转折位置。</p>
+              <a class="card-link" href="e25.html">查看实验说明 →</a>
+            </article>
+            </div>
+    <p class="empty-search" data-empty-search hidden>没有匹配的实验。</p>
+    </div>
+        
+      </article>
+    </main>
+  </div>
+</body>
+</html>

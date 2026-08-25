@@ -1,0 +1,190 @@
+{
+  "title": "Neural K 研究档案",
+  "entry": "index.html",
+  "languages": {
+    "zh-CN": "index.html",
+    "en": "en/index.html"
+  },
+  "core_theory": {
+    "zh-CN": "theory-core.html",
+    "en": "en/theory-core.html"
+  },
+  "experiment_count": 25,
+  "experiments": [
+    {
+      "id": "E01",
+      "title_zh": "Experiment 1：静态硬条件化不足以描述训练函数分布",
+      "title_en": "Static Hard Conditioning versus Optimizer-Induced Function Transport",
+      "page_zh": "experiments/e01.html",
+      "page_en": "en/experiments/e01.html"
+    },
+    {
+      "id": "E02",
+      "title_zh": "E02：Rule-bit 反事实不变性与训练 loss 中心原则",
+      "title_en": "Rule-Bit Counterfactual Invariance",
+      "page_zh": "experiments/e02.html",
+      "page_en": "en/experiments/e02.html"
+    },
+    {
+      "id": "E03",
+      "title_zh": "E03：函数系综动力学与网络参考语言",
+      "title_en": "Prior-Consistent Function Dynamics and Width Intervention",
+      "page_zh": "experiments/e03.html",
+      "page_en": "en/experiments/e03.html"
+    },
+    {
+      "id": "E04",
+      "title_zh": "E04：在 Mingard 2025协议中延长 post-fit 观察",
+      "title_en": "Post-Fit Drift in the Mingard 2025 Boolean Protocol",
+      "page_zh": "experiments/e04.html",
+      "page_en": "en/experiments/e04.html"
+    },
+    {
+      "id": "E05",
+      "title_zh": "E05：固定 NTK 足够时的特征学习",
+      "title_en": "Feature Learning When a Fixed NTK Is Already Sufficient",
+      "page_zh": "experiments/e05.html",
+      "page_en": "en/experiments/e05.html"
+    },
+    {
+      "id": "E06",
+      "title_zh": "E06：连续 loss 条件下的静态函数质量",
+      "title_en": "Loss-Conditioned Prior Annealing",
+      "page_zh": "experiments/e06.html",
+      "page_en": "en/experiments/e06.html"
+    },
+    {
+      "id": "E07",
+      "title_zh": "E07：函数 ID 迁移与 matched-loss 静态对照",
+      "title_en": "Function-ID Wandering and Matched-Loss Static Controls",
+      "page_zh": "experiments/e07.html",
+      "page_en": "en/experiments/e07.html"
+    },
+    {
+      "id": "E08",
+      "title_zh": "E08：共享中间表示与有限容量压力",
+      "title_en": "Shared Intermediate Computation under Finite Capacity",
+      "page_zh": "experiments/e08.html",
+      "page_en": "en/experiments/e08.html"
+    },
+    {
+      "id": "E09",
+      "title_zh": "E09：MNIST 80%隐藏标签噪声长训",
+      "title_en": "Long Training with 80% Hidden Label Noise",
+      "page_zh": "experiments/e09.html",
+      "page_en": "en/experiments/e09.html"
+    },
+    {
+      "id": "E10",
+      "title_zh": "E10：4-bit raw-BCE 简单/复杂规则竞争",
+      "title_en": "Raw-BCE Competition between Preregistered Simple and Complex Function Pairs",
+      "page_zh": "experiments/e10.html",
+      "page_en": "en/experiments/e10.html"
+    },
+    {
+      "id": "E11",
+      "title_zh": "E11：Rule30 数据量与训练/验证梯度对齐",
+      "title_en": "Rule-30 Train/Validation Gradient Alignment across Dataset Size",
+      "page_zh": "experiments/e11.html",
+      "page_en": "en/experiments/e11.html"
+    },
+    {
+      "id": "E12",
+      "title_zh": "E12：AND shortcut 的静态 loss 几何",
+      "title_en": "AND Shortcut Static Geometry and a One-Example Balance Intervention",
+      "page_zh": "experiments/e12.html",
+      "page_en": "en/experiments/e12.html"
+    },
+    {
+      "id": "E13",
+      "title_zh": "E13：AND shortcut 的 SGD 运输与单样本干预",
+      "title_en": "SGD Dynamics of the AND Shortcut and Balanced Intervention",
+      "page_zh": "experiments/e13.html",
+      "page_en": "en/experiments/e13.html"
+    },
+    {
+      "id": "E14",
+      "title_zh": "E14：加权 Rule-bit 的 loss 阶段函数换序",
+      "title_en": "Weighted Rule-Bit Function Switching across Loss Scales",
+      "page_zh": "experiments/e14.html",
+      "page_en": "en/experiments/e14.html"
+    },
+    {
+      "id": "E15",
+      "title_zh": "E15：Mod97 grokking 的完整函数与边缘凝聚",
+      "title_en": "Complete Functions versus Marginal Concentration in Modular-97 Grokking",
+      "page_zh": "experiments/e15.html",
+      "page_en": "en/experiments/e15.html"
+    },
+    {
+      "id": "E16",
+      "title_zh": "E16：Parity 终点偏好、全局入口与局部恢复",
+      "title_en": "Parity Reachability, Half-Space Generalization, and Scaffold Recovery",
+      "page_zh": "experiments/e16.html",
+      "page_en": "en/experiments/e16.html"
+    },
+    {
+      "id": "E17",
+      "title_zh": "E17：静态低-loss 质量与 optimizer 运输",
+      "title_en": "Static Deep-Loss Mass versus Optimizer Transport",
+      "page_zh": "experiments/e17.html",
+      "page_en": "en/experiments/e17.html"
+    },
+    {
+      "id": "E18",
+      "title_zh": "E18：高函数共识与符号可读性",
+      "title_en": "Teacher-Free Consensus and Symbolic Readability",
+      "page_zh": "experiments/e18.html",
+      "page_en": "en/experiments/e18.html"
+    },
+    {
+      "id": "E19",
+      "title_zh": "E19：完整真值表规则的 loss-resolved 体积",
+      "title_en": "Full-Truth-Table Rule Volume",
+      "page_zh": "experiments/e19.html",
+      "page_en": "en/experiments/e19.html"
+    },
+    {
+      "id": "E20",
+      "title_zh": "E20：Full-rule、固定 D 与 hard-margin 测度闭环",
+      "title_en": "Measure Closure between Full Rules, Fixed Datasets, and Margin Cores",
+      "page_zh": "experiments/e20.html",
+      "page_en": "en/experiments/e20.html"
+    },
+    {
+      "id": "E21",
+      "title_zh": "E21：Agreement 控制与共识复杂度前沿",
+      "title_en": "Agreement Control and a Consensus Complexity Frontier",
+      "page_zh": "experiments/e21.html",
+      "page_en": "en/experiments/e21.html"
+    },
+    {
+      "id": "E22",
+      "title_zh": "E22：逐样本自由能与信息不变量",
+      "title_en": "Per-Example Free Energy and an Information Invariant",
+      "page_zh": "experiments/e22.html",
+      "page_en": "en/experiments/e22.html"
+    },
+    {
+      "id": "E23",
+      "title_zh": "E23：完整目标体积前瞻预测数据相变",
+      "title_en": "Prospective Prediction from Full-Rule Volume to Data Transition",
+      "page_zh": "experiments/e23.html",
+      "page_en": "en/experiments/e23.html"
+    },
+    {
+      "id": "E24",
+      "title_zh": "E24：深尾 Neural K-profile 与排序交叉",
+      "title_en": "Deep Neural K Crossing of Parity4 and a One-Point Exception",
+      "page_zh": "experiments/e24.html",
+      "page_en": "en/experiments/e24.html"
+    },
+    {
+      "id": "E25",
+      "title_zh": "E25：MNIST 样本复杂度与静态体积分支预测",
+      "title_en": "MNIST Sample Complexity and Static Branch Prediction",
+      "page_zh": "experiments/e25.html",
+      "page_en": "en/experiments/e25.html"
+    }
+  ]
+}

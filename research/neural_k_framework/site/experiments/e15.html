@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="E15 在原版风格 Mod97 除法任务中同时跟踪完整9,312点 hard function、逐输入边缘众数、agreement、target-function 质量和 matched train CE，区分“完整函数样本仍全部不同”与“逐点预测已经围绕同一规则凝聚”。">
+  <title>E15：Mod97 grokking 的完整函数与边缘凝聚 · Neural K 研究档案</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="../assets/site.js"></script>
+</head>
+<body data-page-kind="experiment">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+  
+    <header class="topbar">
+      <a class="site-mark" href="../index.html" aria-label="返回研究主文">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K 研究档案</span>
+      </a>
+      <nav class="top-nav" aria-label="全站导航"><a class="top-link" href="../index.html">研究主文</a><a class="top-link" href="../theory-core.html">理论核心</a><a class="top-link active" href="../experiments/index.html">实验索引</a><a class="top-link" href="../references.html">参考文献</a><a class="top-link" href="../evidence-ledger.html">证据总账</a></nav>
+      <nav class="language-switch" aria-label="语言"><span class="active" lang="zh-CN">中文</span><a href="../en/experiments/e15.html" lang="en">EN</a></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>目录</span>
+      </button>
+    </header>
+    
+  <div class="page-shell">
+    
+    <aside class="sidebar" id="sidebar" aria-label="本页目录">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">本页目录</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#overview">实验概览</a></li>
+<li><a href="#目的">目的</a></li>
+<li><a href="#文件">文件</a></li>
+<li><a href="#motivation">为什么做、怎样判决</a></li>
+<li><a href="#1-问题">1. 问题</a></li>
+<li><a href="#2-设置">2. 设置</a></li>
+<li><a href="#3-同时报告的对象">3. 同时报告的对象</a></li>
+<li><a href="#4-边界">4. 边界</a></li>
+<li><a href="#results">结果、解读与边界</a></li>
+<li><a href="#1-完整函数质量需要足够数据和足够深-loss">1. 完整函数质量需要足够数据和足够深 loss</a></li>
+<li><a href="#2-modal-function-远早于单-seed-完整恢复">2. Modal function 远早于单 seed 完整恢复</a></li>
+<li><a href="#3-公共-holdout-排除新增训练点平凡收益">3. 公共 holdout 排除新增训练点平凡收益</a></li>
+<li><a href="#4-阶段裁决">4. 阶段裁决</a></li>
+</ul>
+</div>
+</nav>
+        <div class="sidebar-label experiment-label">全部实验</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>静态硬条件化不足以描述训练函数分布</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-bit 反事实不变性与训练 loss 中心原则</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>函数系综动力学与网络参考语言</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>在 Mingard 2025协议中延长 post-fit 观察</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>固定 NTK 足够时的特征学习</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>连续 loss 条件下的静态函数质量</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>函数 ID 迁移与 matched-loss 静态对照</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>共享中间表示与有限容量压力</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>MNIST 80%隐藏标签噪声长训</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>4-bit raw-BCE 简单/复杂规则竞争</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule30 数据量与训练/验证梯度对齐</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND shortcut 的静态 loss 几何</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>AND shortcut 的 SGD 运输与单样本干预</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>加权 Rule-bit 的 loss 阶段函数换序</span></a><a class="experiment-nav-link active" href="e15.html"><span>E15</span><span>Mod97 grokking 的完整函数与边缘凝聚</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity 终点偏好、全局入口与局部恢复</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>静态低-loss 质量与 optimizer 运输</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>高函数共识与符号可读性</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>完整真值表规则的 loss-resolved 体积</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Full-rule、固定 D 与 hard-margin 测度闭环</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement 控制与共识复杂度前沿</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>逐样本自由能与信息不变量</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>完整目标体积前瞻预测数据相变</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>深尾 Neural K-profile 与排序交叉</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST 样本复杂度与静态体积分支预测</span></a></nav>
+      </div>
+    </aside>
+    
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">E15 · 实验详情</div>
+          <h1>E15：Mod97 grokking 的完整函数与边缘凝聚</h1>
+          <p class="article-description">E15 在原版风格 Mod97 除法任务中同时跟踪完整9,312点 hard function、逐输入边缘众数、agreement、target-function 质量和 matched train CE，区分“完整函数样本仍全部不同”与“逐点预测已经围绕同一规则凝聚”。</p>
+        </header>
+        <div class="article-body"><div class="source-bar"><span>复现脚本</span><div><a href="../../experiments/experiment_15_mod97_function_distribution/experiment_mod97_matched_loss_function_distribution.py">experiment_mod97_matched_loss_function_distribution.py</a></div></div><h2 id="overview">实验概览</h2>
+<h2 id="目的">目的</h2>
+<p>E15 在原版风格 Mod97 除法任务中同时跟踪完整9,312点 hard function、逐输入边缘众数、agreement、target-function 质量和 matched train CE，区分“完整函数样本仍全部不同”与“逐点预测已经围绕同一规则凝聚”。</p>
+<h2 id="文件">文件</h2>
+<ul>
+<li><a href="#motivation">实验动机与预注册判据</a></li>
+<li><a href="#results">完整结果与阶段裁决</a></li>
+<li><a href="../../experiments/experiment_15_mod97_function_distribution/experiment_mod97_matched_loss_function_distribution.py"><code>experiment_mod97_matched_loss_function_distribution.py</code></a></li>
+</ul>
+<p>运行：</p>
+<pre><code class="language-bash">python experiment_mod97_matched_loss_function_distribution.py
+</code></pre>
+<p>脚本 SHA256：<code>f87700c439929ce1e5dbc6cf0600ac88b71c453598646054b9758472ed110faf</code>。结果 ZIP SHA256：<code>4bf8e597268411c2c7dc483862ab871cfa22b4fe0fb1a1a0c899b4ea709381c8</code>。</p>
+<p>原始 ZIP 位于<code>E:\Downloads</code>，可重建且不进入发布包。</p>
+<h2 id="motivation">为什么做、怎样判决</h2>
+<h2 id="1-问题">1. 问题</h2>
+<p>Grokking 前的多 seed 分布究竟是共同 shortcut，还是共享规则骨架加 seed 特异残差？只看 validation accuracy 或 agreement 无法区分。完整函数 exact 又可能过严：每个 seed 只错不同少数点时，完整 hash 仍全部不同。</p>
+<h2 id="2-设置">2. 设置</h2>
+<ul>
+<li>任务：<code>x / y mod 97</code>，完整输入空间9,312；</li>
+<li>嵌套训练比例60%、70%、80%、90%；</li>
+<li>每比例32个 paired seeds，共128个模型；</li>
+<li>MLP：<code>194 -&gt; 512 x 3 -&gt; 97</code> GELU+LayerNorm；</li>
+<li>Adam <code>1e-3</code>，无 weight decay；</li>
+<li>运行121,101步；</li>
+<li>在相同 train CE first crossing 处比较函数分布。</li>
+</ul>
+<h2 id="3-同时报告的对象">3. 同时报告的对象</h2>
+<ul>
+<li>完整目标函数质量；</li>
+<li>完整函数 hash entropy 和 top 重复质量；</li>
+<li>coordinate-wise modal function；</li>
+<li>seed agreement；</li>
+<li>所有条件共用的最后10% holdout；</li>
+<li>train CE 与未见准确率的关系。</li>
+</ul>
+<h2 id="4-边界">4. 边界</h2>
+<p>32 seeds 只能解析不低于3.125%的单函数质量；modal function 是逐坐标边缘组合，不一定是任一单 seed 真实实现的完整函数；本实验测量 Adam 轨迹，不是静态体积。</p>
+<h2 id="results">结果、解读与边界</h2>
+<h2 id="1-完整函数质量需要足够数据和足够深-loss">1. 完整函数质量需要足够数据和足够深 loss</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">训练比例</th>
+<th style="text-align: right;">第一个目标seed</th>
+<th style="text-align: right;">最终目标质量</th>
+<th style="text-align: right;">最终函数熵</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">60%</td>
+<td style="text-align: right;">未出现</td>
+<td style="text-align: right;">0/32</td>
+<td style="text-align: right;">5.000 bit</td>
+</tr>
+<tr>
+<td style="text-align: right;">70%</td>
+<td style="text-align: right;">未出现</td>
+<td style="text-align: right;">0/32</td>
+<td style="text-align: right;">5.000 bit</td>
+</tr>
+<tr>
+<td style="text-align: right;">80%</td>
+<td style="text-align: right;">step 78,000</td>
+<td style="text-align: right;">1/32</td>
+<td style="text-align: right;">5.000 bit</td>
+</tr>
+<tr>
+<td style="text-align: right;">90%</td>
+<td style="text-align: right;">step 12,500</td>
+<td style="text-align: right;">18/32=56.25%</td>
+<td style="text-align: right;">2.654 bit</td>
+</tr>
+</tbody>
+</table>
+<p>90%条件中，target 质量随 matched train CE 从<code>3e-7</code>的3.125%逐步升到<code>3e-11</code>的56.25%。60%--80%的非目标完整函数几乎每个 seed 都不同，没有可重复共同 shortcut。</p>
+<h2 id="2-modal-function-远早于单-seed-完整恢复">2. Modal function 远早于单 seed 完整恢复</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">训练比例</th>
+<th style="text-align: right;">modal function成为完整目标</th>
+<th style="text-align: right;">第一个目标seed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">60%</td>
+<td style="text-align: right;">未发生</td>
+<td style="text-align: right;">未发生</td>
+</tr>
+<tr>
+<td style="text-align: right;">70%</td>
+<td style="text-align: right;">最终modal accuracy 95.41%</td>
+<td style="text-align: right;">未发生</td>
+</tr>
+<tr>
+<td style="text-align: right;">80%</td>
+<td style="text-align: right;">step 18,000</td>
+<td style="text-align: right;">step 78,000</td>
+</tr>
+<tr>
+<td style="text-align: right;">90%</td>
+<td style="text-align: right;">step 2,000</td>
+<td style="text-align: right;">step 12,500</td>
+</tr>
+</tbody>
+</table>
+<p>90%在 step 500时 modal full accuracy 已97.47%。不同 seed 错误围绕目标规则分布并在逐坐标边缘相互抵消，即使完整函数 hash 仍全部不同。</p>
+<h2 id="3-公共-holdout-排除新增训练点平凡收益">3. 公共 holdout 排除新增训练点平凡收益</h2>
+<p>最终公共10% holdout 准确率随训练比例为2.29%、16.19%、51.83%、91.65%。31/32 paired seeds 在四档严格不降；相邻数据量比较也几乎全部改善。</p>
+<h2 id="4-阶段裁决">4. 阶段裁决</h2>
+<p>E15 建立：</p>
+<ol>
+<li>数据量、loss 深度与优化时间是三个不同变量；</li>
+<li>完整函数分布宽不表示逐输入边缘没有围绕目标凝聚；</li>
+<li>grokking 前更准确的状态是共享目标骨架加 seed 特异残差，而非共同完整 shortcut；</li>
+<li>exact function probability、hash entropy、agreement 和 modal function 必须并列报告。</li>
+</ol>
+<p>它不证明静态体积因果，也不保证90%条件的其余14个 seed 最终必然到达目标。</p></div>
+        <footer class="experiment-pager"><a href="e14.html">← E14 加权 Rule-bit 的 loss 阶段函数换序</a><a href="e16.html">E16 Parity 终点偏好、全局入口与局部恢复 →</a></footer>
+      </article>
+    </main>
+  </div>
+</body>
+</html>

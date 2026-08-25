@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="E14 人为构造多数 Rule110 与少数 Rule30 的层级约束，使高 loss 时忽略少数分支最经济，而极低 loss 时必须满足完整复合映射。它直接检验固定 hard function 的概率是否必须随 loss 单调。">
+  <title>E14：加权 Rule-bit 的 loss 阶段函数换序 · Neural K 研究档案</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="../assets/site.js"></script>
+</head>
+<body data-page-kind="experiment">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+  
+    <header class="topbar">
+      <a class="site-mark" href="../index.html" aria-label="返回研究主文">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K 研究档案</span>
+      </a>
+      <nav class="top-nav" aria-label="全站导航"><a class="top-link" href="../index.html">研究主文</a><a class="top-link" href="../theory-core.html">理论核心</a><a class="top-link active" href="../experiments/index.html">实验索引</a><a class="top-link" href="../references.html">参考文献</a><a class="top-link" href="../evidence-ledger.html">证据总账</a></nav>
+      <nav class="language-switch" aria-label="语言"><span class="active" lang="zh-CN">中文</span><a href="../en/experiments/e14.html" lang="en">EN</a></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>目录</span>
+      </button>
+    </header>
+    
+  <div class="page-shell">
+    
+    <aside class="sidebar" id="sidebar" aria-label="本页目录">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">本页目录</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#overview">实验概览</a></li>
+<li><a href="#目的">目的</a></li>
+<li><a href="#文件">文件</a></li>
+<li><a href="#冻结来源">冻结来源</a></li>
+<li><a href="#motivation">为什么做、怎样判决</a></li>
+<li><a href="#1-构造">1. 构造</a></li>
+<li><a href="#2-竞争预测">2. 竞争预测</a></li>
+<li><a href="#3-配置">3. 配置</a></li>
+<li><a href="#4-边界">4. 边界</a></li>
+<li><a href="#results">结果、解读与边界</a></li>
+<li><a href="#1-固定-hard-function-明确先升后降">1. 固定 hard function 明确先升后降</a></li>
+<li><a href="#2-迁移由三个冲突约束逐步接管">2. 迁移由三个冲突约束逐步接管</a></li>
+<li><a href="#3-权重比例主要平移-loss-尺度">3. 权重比例主要平移 loss 尺度</a></li>
+<li><a href="#4-训练会主动恶化少数分支">4. 训练会主动恶化少数分支</a></li>
+<li><a href="#5-阶段裁决">5. 阶段裁决</a></li>
+</ul>
+</div>
+</nav>
+        <div class="sidebar-label experiment-label">全部实验</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>静态硬条件化不足以描述训练函数分布</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-bit 反事实不变性与训练 loss 中心原则</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>函数系综动力学与网络参考语言</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>在 Mingard 2025协议中延长 post-fit 观察</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>固定 NTK 足够时的特征学习</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>连续 loss 条件下的静态函数质量</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>函数 ID 迁移与 matched-loss 静态对照</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>共享中间表示与有限容量压力</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>MNIST 80%隐藏标签噪声长训</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>4-bit raw-BCE 简单/复杂规则竞争</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule30 数据量与训练/验证梯度对齐</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND shortcut 的静态 loss 几何</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>AND shortcut 的 SGD 运输与单样本干预</span></a><a class="experiment-nav-link active" href="e14.html"><span>E14</span><span>加权 Rule-bit 的 loss 阶段函数换序</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Mod97 grokking 的完整函数与边缘凝聚</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity 终点偏好、全局入口与局部恢复</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>静态低-loss 质量与 optimizer 运输</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>高函数共识与符号可读性</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>完整真值表规则的 loss-resolved 体积</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Full-rule、固定 D 与 hard-margin 测度闭环</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement 控制与共识复杂度前沿</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>逐样本自由能与信息不变量</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>完整目标体积前瞻预测数据相变</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>深尾 Neural K-profile 与排序交叉</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST 样本复杂度与静态体积分支预测</span></a></nav>
+      </div>
+    </aside>
+    
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">E14 · 实验详情</div>
+          <h1>E14：加权 Rule-bit 的 loss 阶段函数换序</h1>
+          <p class="article-description">E14 人为构造多数 Rule110 与少数 Rule30 的层级约束，使高 loss 时忽略少数分支最经济，而极低 loss 时必须满足完整复合映射。它直接检验固定 hard function 的概率是否必须随 loss 单调。</p>
+        </header>
+        <div class="article-body"><div class="source-bar"><span>复现脚本</span><div><a href="../../experiments/experiment_14_weighted_rulebit_function_switch/experiment_weighted_rulebit_sgd.py">experiment_weighted_rulebit_sgd.py</a></div></div><h2 id="overview">实验概览</h2>
+<h2 id="目的">目的</h2>
+<p>E14 人为构造多数 Rule110 与少数 Rule30 的层级约束，使高 loss 时忽略少数分支最经济，而极低 loss 时必须满足完整复合映射。它直接检验固定 hard function 的概率是否必须随 loss 单调。</p>
+<h2 id="文件">文件</h2>
+<ul>
+<li><a href="#motivation">实验动机与预注册判据</a></li>
+<li><a href="#results">完整结果与阶段裁决</a></li>
+<li><a href="../../experiments/experiment_14_weighted_rulebit_function_switch/experiment_weighted_rulebit_sgd.py"><code>experiment_weighted_rulebit_sgd.py</code></a></li>
+</ul>
+<p>运行：</p>
+<pre><code class="language-bash">python experiment_weighted_rulebit_sgd.py
+</code></pre>
+<h2 id="冻结来源">冻结来源</h2>
+<p>脚本 SHA256：<code>db944d90827da3ab3d4d68e2771ad86ee8639f27a67f166fbbf939923691bbcb</code>。开发版：<code>research/loss_level_function_switch/experiment_weighted_rulebit_sgd.py</code>。</p>
+<p>本地结果：<code>E:\Downloads\results_weighted_rulebit_sgd_package.zip</code>SHA256：<code>c3ce46a4c99a8d5d1a9a6c19cbb1d359952bb2e50f9b8e1bf1541505d8604cbe</code>。</p>
+<p>ZIP 含 checkpoint 且约177 MB，不进入发布包。</p>
+<h2 id="motivation">为什么做、怎样判决</h2>
+<h2 id="1-构造">1. 构造</h2>
+<p>输入含一个 rule bit。rule bit 0对应 Rule110，rule bit 1对应 Rule30。训练目标按：</p>
+<pre><code class="language-text">Rule110 : Rule30 = 1, 10, 100, 1000, 10000
+</code></pre>
+<p>加权。少数 Rule30 样本绝对数量仍足以表达规则，但对高 weighted loss 的贡献可被多数分支暂时忽略。</p>
+<h2 id="2-竞争预测">2. 竞争预测</h2>
+<ul>
+<li>若固定 hard 函数概率对 loss 全程单调，则<code>Rule110-both</code>不应先增后减；</li>
+<li>若不同 loss 深度激活不同约束，训练应先优化多数分支，随后逐位修正三个冲突 neighborhood，最终形成完整复合映射；</li>
+<li>权重比若只平移有效 loss 尺度，则用少数权重<code>epsilon</code>归一化后，各比例迁移应塌缩。</li>
+</ul>
+<h2 id="3-配置">3. 配置</h2>
+<ul>
+<li><code>4 -&gt; 64 x 3 -&gt; 1</code> GELU+LayerNorm；</li>
+<li>plain full-batch SGD，学习率0.05，无 momentum 和 weight decay；</li>
+<li>每个比例512个 paired seeds，共2,560个模型；</li>
+<li>matched weighted raw-BCE first crossing；</li>
+<li>最长运行125,204步。</li>
+</ul>
+<h2 id="4-边界">4. 边界</h2>
+<p>该实验有意通过样本权重制造约束接管，证明“可以非单调”，不主张所有自然数据集都出现同一路线。完整复合函数在足够低 loss 处还受到 hard 约束强制，不能单独解释成 MDL 终点证据。</p>
+<h2 id="results">结果、解读与边界</h2>
+<h2 id="1-固定-hard-function-明确先升后降">1. 固定 hard function 明确先升后降</h2>
+<p><code>Rule110-both=0x6E6E</code>的概率轨迹：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">Rule110:Rule30</th>
+<th style="text-align: right;">峰值</th>
+<th style="text-align: right;">峰值loss</th>
+<th style="text-align: right;">完整复合函数接管</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">10:1</td>
+<td style="text-align: right;">25.78%</td>
+<td style="text-align: right;">0.2</td>
+<td style="text-align: right;">100% at 0.01</td>
+</tr>
+<tr>
+<td style="text-align: right;">100:1</td>
+<td style="text-align: right;">52.93%</td>
+<td style="text-align: right;">0.05</td>
+<td style="text-align: right;">100% at 0.001</td>
+</tr>
+<tr>
+<td style="text-align: right;">1000:1</td>
+<td style="text-align: right;">54.69%</td>
+<td style="text-align: right;">0.005</td>
+<td style="text-align: right;">100% at 0.0001</td>
+</tr>
+<tr>
+<td style="text-align: right;">10000:1</td>
+<td style="text-align: right;">51.76%</td>
+<td style="text-align: right;">0.0005</td>
+<td style="text-align: right;">100% of 501 at 0.00001</td>
+</tr>
+</tbody>
+</table>
+<p>同 seed 转移排除了不同 seed 群体替换：例如1000:1峰值时的280个 Rule110-both 模型，257个在更深 loss 成为完整复合函数；10000:1对应260/260。</p>
+<h2 id="2-迁移由三个冲突约束逐步接管">2. 迁移由三个冲突约束逐步接管</h2>
+<p>多数分支先固定为 Rule110 低字节<code>0x6E</code>，少数分支依次沿：</p>
+<pre><code class="language-text">0x6E -&gt; {0x4E,0x2E} -&gt; 0x0E -&gt; 0x1E
+</code></pre>
+<p>逐位修正 Rule110 与 Rule30 在<code>100、101、110</code>上的冲突。转换不是一次发现完整规则，而是不同权重尺度的训练约束随 loss 深入逐步接管。</p>
+<h2 id="3-权重比例主要平移-loss-尺度">3. 权重比例主要平移 loss 尺度</h2>
+<p>令<code>epsilon=1/(ratio+1)</code>，100:1、1000:1、10000:1的迁移在<code>loss/epsilon</code>坐标近似塌缩。Rule110-both 的 hard-function loss floor 满足：</p>
+<div class="math-display">$$
+L_{floor}/\epsilon=(3/8)\ln2.
+$$</div>
+<p>最终换序正好发生在该下界附近。</p>
+<h2 id="4-训练会主动恶化少数分支">4. 训练会主动恶化少数分支</h2>
+<p>10000:1条件 step 500时，总 weighted BCE 已降至0.000979，Rule30 分支 BCE 却从初始0.728升至1.297；最终总 loss 继续降低，Rule30 分支才降至0.0145并形成完整映射。网络没有外部“完整复合函数”目标，只优化给定加权训练 loss。</p>
+<h2 id="5-阶段裁决">5. 阶段裁决</h2>
+<p>E14 直接否定：</p>
+<blockquote>
+<p>固定 hard function 在不同 loss 区域中的相对概率必然单调。</p>
+</blockquote>
+<p>它支持：数据权重和 loss 深度共同决定当前有效约束；中间函数质量可以多阶段换序，训练甚至可先系统远离外部完整规则再返回。该结果是动力学构造，不等于静态体积具有相同轨迹。</p></div>
+        <footer class="experiment-pager"><a href="e13.html">← E13 AND shortcut 的 SGD 运输与单样本干预</a><a href="e15.html">E15 Mod97 grokking 的完整函数与边缘凝聚 →</a></footer>
+      </article>
+    </main>
+  </div>
+</body>
+</html>

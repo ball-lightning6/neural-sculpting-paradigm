@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="E23 在读取任何随机子集训练结果前，先用完整真值表 SMC 冻结八条8-bit 规则的局部体积收缩分数；随后训练9,736个随机数据集条件，检验静态体积能否前瞻预测n50/n90样本相变，并用跨函数族反例压力测试单标量复杂度假说。">
+  <title>E23：完整目标体积前瞻预测数据相变 · Neural K 研究档案</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="../assets/site.js"></script>
+</head>
+<body data-page-kind="experiment">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+  
+    <header class="topbar">
+      <a class="site-mark" href="../index.html" aria-label="返回研究主文">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K 研究档案</span>
+      </a>
+      <nav class="top-nav" aria-label="全站导航"><a class="top-link" href="../index.html">研究主文</a><a class="top-link" href="../theory-core.html">理论核心</a><a class="top-link active" href="../experiments/index.html">实验索引</a><a class="top-link" href="../references.html">参考文献</a><a class="top-link" href="../evidence-ledger.html">证据总账</a></nav>
+      <nav class="language-switch" aria-label="语言"><span class="active" lang="zh-CN">中文</span><a href="../en/experiments/e23.html" lang="en">EN</a></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>目录</span>
+      </button>
+    </header>
+    
+  <div class="page-shell">
+    
+    <aside class="sidebar" id="sidebar" aria-label="本页目录">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">本页目录</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#overview">实验概览</a></li>
+<li><a href="#目的">目的</a></li>
+<li><a href="#运行顺序">运行顺序</a></li>
+<li><a href="#sha256">SHA256</a></li>
+<li><a href="#motivation">为什么做、怎样判决</a></li>
+<li><a href="#1-可证伪问题">1. 可证伪问题</a></li>
+<li><a href="#2-阶段-a-冻结体积预测">2. 阶段 A：冻结体积预测</a></li>
+<li><a href="#3-阶段-b-独立测量样本相变">3. 阶段 B：独立测量样本相变</a></li>
+<li><a href="#4-判决">4. 判决</a></li>
+<li><a href="#results">结果、解读与边界</a></li>
+<li><a href="#1-确认性-parity-预测严格命中">1. 确认性 parity 预测严格命中</a></li>
+<li><a href="#2-跨族关系很强-但单标量定律失败">2. 跨族关系很强，但单标量定律失败</a></li>
+<li><a href="#3-复杂度排序本身随-loss-改变">3. 复杂度排序本身随 loss 改变</a></li>
+<li><a href="#4-agreement-复现分叉再凝聚">4. Agreement 复现分叉再凝聚</a></li>
+<li><a href="#5-边界">5. 边界</a></li>
+</ul>
+</div>
+</nav>
+        <div class="sidebar-label experiment-label">全部实验</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>静态硬条件化不足以描述训练函数分布</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-bit 反事实不变性与训练 loss 中心原则</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>函数系综动力学与网络参考语言</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>在 Mingard 2025协议中延长 post-fit 观察</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>固定 NTK 足够时的特征学习</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>连续 loss 条件下的静态函数质量</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>函数 ID 迁移与 matched-loss 静态对照</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>共享中间表示与有限容量压力</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>MNIST 80%隐藏标签噪声长训</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>4-bit raw-BCE 简单/复杂规则竞争</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule30 数据量与训练/验证梯度对齐</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND shortcut 的静态 loss 几何</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>AND shortcut 的 SGD 运输与单样本干预</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>加权 Rule-bit 的 loss 阶段函数换序</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Mod97 grokking 的完整函数与边缘凝聚</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity 终点偏好、全局入口与局部恢复</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>静态低-loss 质量与 optimizer 运输</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>高函数共识与符号可读性</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>完整真值表规则的 loss-resolved 体积</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Full-rule、固定 D 与 hard-margin 测度闭环</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement 控制与共识复杂度前沿</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>逐样本自由能与信息不变量</span></a><a class="experiment-nav-link active" href="e23.html"><span>E23</span><span>完整目标体积前瞻预测数据相变</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>深尾 Neural K-profile 与排序交叉</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST 样本复杂度与静态体积分支预测</span></a></nav>
+      </div>
+    </aside>
+    
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">E23 · 实验详情</div>
+          <h1>E23：完整目标体积前瞻预测数据相变</h1>
+          <p class="article-description">E23 在读取任何随机子集训练结果前，先用完整真值表 SMC 冻结八条8-bit 规则的局部体积收缩分数；随后训练9,736个随机数据集条件，检验静态体积能否前瞻预测n50/n90样本相变，并用跨函数族反例压力测试单标量复杂度假说。</p>
+        </header>
+        <div class="article-body"><div class="source-bar"><span>复现脚本</span><div><a href="../../experiments/experiment_23_volume_to_data_transition/experiment_8bit_rule_volume_preregister.py">experiment_8bit_rule_volume_preregister.py</a><a href="../../experiments/experiment_23_volume_to_data_transition/experiment_8bit_volume_to_data_transition.py">experiment_8bit_volume_to_data_transition.py</a></div></div><h2 id="overview">实验概览</h2>
+<h2 id="目的">目的</h2>
+<p>E23 在读取任何随机子集训练结果前，先用完整真值表 SMC 冻结八条8-bit 规则的局部体积收缩分数；随后训练9,736个随机数据集条件，检验静态体积能否前瞻预测<code>n50/n90</code>样本相变，并用跨函数族反例压力测试单标量复杂度假说。</p>
+<h2 id="运行顺序">运行顺序</h2>
+<pre><code class="language-bash">python experiment_8bit_rule_volume_preregister.py
+python experiment_8bit_volume_to_data_transition.py
+</code></pre>
+<ul>
+<li><a href="#motivation">实验动机与预注册</a></li>
+<li><a href="#results">结果与边界</a></li>
+</ul>
+<h2 id="sha256">SHA256</h2>
+<pre><code class="language-text">466a59d8e0a2243a9040d328dfef5e6f11c4ecb9893452b72024c6ecbe02fbb7  volume script
+7b14e28ffd97a50da0af424e1bf755e72e82ad894e613cd129bcf00e5f742331  transition script
+ebf266355364f25a0e694ea41863190cbf8a546025c1c49fda309fcb5c1172c5  volume ZIP
+6e4075cae4fbd7072ab53f1e2764e65bbbf1934ced35f0301da965e8e0cd834d  transition ZIP
+</code></pre>
+<p>原始 ZIP 位于<code>E:\Downloads</code>，不进入发布包。</p>
+<h2 id="motivation">为什么做、怎样判决</h2>
+<h2 id="1-可证伪问题">1. 可证伪问题</h2>
+<p>若完整规则在固定神经参考协议下的低-loss 质量确实刻画了机器相对难度，那么它应预测另一个独立量：从随机部分真值表中可靠恢复该规则需要多少样本。为避免事后按训练结果选择复杂度指标，实验分为完全分离的 A/B 两阶段。</p>
+<h2 id="2-阶段-a-冻结体积预测">2. 阶段 A：冻结体积预测</h2>
+<p>固定<code>8 -&gt; 16 x 2 -&gt; 1 tanh</code>网络和八条平衡规则：parity1--4、majority3/5、MUX3 和 random-balanced。对完整256状态运行 SMC，以</p>
+<div class="math-display">$$
+K_f^N(\epsilon)=-\log V_f^{full}(\epsilon)
+$$</div>
+<p>在 raw BCE <code>0.690 -&gt; 0.670</code>上的割线斜率作为冻结 volume score。分数越大，预言规则越难。任何随机子集训练开始前，预测顺序和 SHA256 均写入文件。</p>
+<p>确认性主判决只使用嵌套 parity，因为其独立难度顺序最清楚；全部八规则是压力测试，允许暴露跨族单标量失败。</p>
+<h2 id="3-阶段-b-独立测量样本相变">3. 阶段 B：独立测量样本相变</h2>
+<p>每个非完整样本量、每条规则生成64份随机训练集，每份使用24个配对初始化训练40,000步。一个数据集被判定“恢复”须同时满足训练拟合率、目标完整函数质量、目标为 modal function 和函数 collision 阈值。<code>n50/n90</code>定义为 isotonic 恢复率首次达到50%/90%的最小随机样本数；<code>n=256</code>只作完整数据可达性检查。</p>
+<p>总计：</p>
+<pre><code class="language-text">19个非完整n x 8规则 x 64数据集 = 9,728
+8个完整数据资格条件
+每条件24个seed
+</code></pre>
+<h2 id="4-判决">4. 判决</h2>
+<ul>
+<li>主判决：parity 体积排序是否严格预测<code>n50/n90</code>排序；</li>
+<li>次判决：八规则的秩相关及明确反转；</li>
+<li>诊断：保存多阈值曲线，检查局部速度和绝对体积排名是否随 loss 变化。</li>
+</ul>
+<h2 id="results">结果、解读与边界</h2>
+<h2 id="1-确认性-parity-预测严格命中">1. 确认性 parity 预测严格命中</h2>
+<p>完整数据上八条规则均可100%拟合并恢复目标 hard function。冻结的 parity 顺序与独立测得的样本相变为：</p>
+<table>
+<thead>
+<tr>
+<th>规则</th>
+<th style="text-align: right;">volume score</th>
+<th style="text-align: right;"><code>n50</code></th>
+<th style="text-align: right;"><code>n90</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>parity1</td>
+<td style="text-align: right;">125.21</td>
+<td style="text-align: right;">24</td>
+<td style="text-align: right;">48</td>
+</tr>
+<tr>
+<td>parity2</td>
+<td style="text-align: right;">3266.21</td>
+<td style="text-align: right;">64</td>
+<td style="text-align: right;">80</td>
+</tr>
+<tr>
+<td>parity3</td>
+<td style="text-align: right;">4618.60</td>
+<td style="text-align: right;">96</td>
+<td style="text-align: right;">112</td>
+</tr>
+<tr>
+<td>parity4</td>
+<td style="text-align: right;">6719.58</td>
+<td style="text-align: right;">160</td>
+<td style="text-align: right;">160</td>
+</tr>
+</tbody>
+</table>
+<p>四个<code>n50</code>和<code>n90</code>网格区间均互不重叠；Spearman 为1.0/1.0。该顺序从5,000步起已经稳定，不是40,000步截止点偶然产生。由此获得从完整目标静态体积到随机训练集辨识样本量的直接前瞻证据。</p>
+<figure class="result-figure"><a href="../assets/figures/e23_volume_to_transition.png" target="_blank" rel="noopener"><img src="../assets/figures/e23_volume_to_transition.png" alt="完整目标体积与数据相变" loading="lazy"></a><figcaption>完整目标体积与数据相变</figcaption></figure>
+<h2 id="2-跨族关系很强-但单标量定律失败">2. 跨族关系很强，但单标量定律失败</h2>
+<p>全部八规则上，volume score 对<code>n50/n90</code>的 Spearman 为0.898/0.868；去掉随机规则后七条结构规则为0.955/0.927。但出现三组明确反转：MUX3/parity2、random/parity3、random/parity4。random 到<code>n=240</code>仍未恢复完整映射。</p>
+<p>因此浅层单区间斜率是强一阶预测量，却不是跨任意函数族的充分统计量。固定训练集中的竞争分母、样本覆盖结构和 optimizer 可达性仍可贡献差异。</p>
+<h2 id="3-复杂度排序本身随-loss-改变">3. 复杂度排序本身随 loss 改变</h2>
+<p>random-balanced 的局部收缩率随 loss 深入急剧加速，并依次超过 parity2、parity3 和 parity4。绝对体积排名也发生交叉。用更深局部窗口预测<code>n50/n90</code>时，Spearman 从约0.73/0.71上升到0.97/0.95；用单截面<code>-log V</code>预测时也从约0.83/0.77升到0.95/0.93。</p>
+<p>这迫使复杂度对象从单个数修正为完整 profile：</p>
+<div class="math-display">$$
+K_f^N(\epsilon)=-\log V_f(\epsilon),\quad
+s=-\log\epsilon,\quad
+\kappa_f(s)=\frac{dK_f^N}{ds}.
+$$</div>
+<p>局部斜率、曲率和交叉都携带信息；任一浅层切片都可能遗漏深尾成本。</p>
+<h2 id="4-agreement-复现分叉再凝聚">4. Agreement 复现分叉再凝聚</h2>
+<p>所有规则在<code>n=1</code>时 agreement 都接近1而目标函数质量为0。parity 随 n 增加先分叉，再按<code>parity1 -&gt; parity4</code>的次序重新凝聚到目标函数；random 的 agreement 则持续降到约0.656且目标质量始终为0。高 agreement 只代表当前函数分布窄，不代表外部正确。</p>
+<h2 id="5-边界">5. 边界</h2>
+<ul>
+<li>parity 是预注册确认性家族，跨族曲线诊断包含事后分析；</li>
+<li><code>n50/n90</code>是协议相对的操作阈值，不是机器无关样本复杂度；</li>
+<li>full-rule profile 强烈预测数据相变，但并未单独决定所有跨族排序；</li>
+<li>profile 为何具有特定形状仍是本文明确不求解的微观数学问题。</li>
+</ul></div>
+        <footer class="experiment-pager"><a href="e22.html">← E22 逐样本自由能与信息不变量</a><a href="e24.html">E24 深尾 Neural K-profile 与排序交叉 →</a></footer>
+      </article>
+    </main>
+  </div>
+</body>
+</html>

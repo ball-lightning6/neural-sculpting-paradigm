@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="E08 检验一个唯象机制：当两个输出任务具有昂贵的共同 CA 前缀计算时，允许网络共享隐藏表示，是否比强制两条独立分支更容易达到同一极低 loss。">
+  <title>E08：共享中间表示与有限容量压力 · Neural K 研究档案</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="../assets/site.js"></script>
+</head>
+<body data-page-kind="experiment">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+  
+    <header class="topbar">
+      <a class="site-mark" href="../index.html" aria-label="返回研究主文">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K 研究档案</span>
+      </a>
+      <nav class="top-nav" aria-label="全站导航"><a class="top-link" href="../index.html">研究主文</a><a class="top-link" href="../theory-core.html">理论核心</a><a class="top-link active" href="../experiments/index.html">实验索引</a><a class="top-link" href="../references.html">参考文献</a><a class="top-link" href="../evidence-ledger.html">证据总账</a></nav>
+      <nav class="language-switch" aria-label="语言"><span class="active" lang="zh-CN">中文</span><a href="../en/experiments/e08.html" lang="en">EN</a></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>目录</span>
+      </button>
+    </header>
+    
+  <div class="page-shell">
+    
+    <aside class="sidebar" id="sidebar" aria-label="本页目录">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">本页目录</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#overview">实验概览</a></li>
+<li><a href="#目的">目的</a></li>
+<li><a href="#文件">文件</a></li>
+<li><a href="#冻结来源">冻结来源</a></li>
+<li><a href="#motivation">为什么做、怎样判决</a></li>
+<li><a href="#1-唯象假说">1. 唯象假说</a></li>
+<li><a href="#2-四个原子任务">2. 四个原子任务</a></li>
+<li><a href="#3-joint-与-split-干预">3. Joint 与 Split 干预</a></li>
+<li><a href="#4-正式配置与预注册剂量效应">4. 正式配置与预注册剂量效应</a></li>
+<li><a href="#5-指标边界">5. 指标边界</a></li>
+<li><a href="#results">结果、解读与边界</a></li>
+<li><a href="#1-设计审计">1. 设计审计</a></li>
+<li><a href="#2-晚期坍缩与主指标修正">2. 晚期坍缩与主指标修正</a></li>
+<li><a href="#3-最佳-loss-的深度与宽度剂量效应">3. 最佳 loss 的深度与宽度剂量效应</a></li>
+<li><a href="#4-达到固定-loss-需要的样本量">4. 达到固定 loss 需要的样本量</a></li>
+<li><a href="#5-阶段裁决">5. 阶段裁决</a></li>
+</ul>
+</div>
+</nav>
+        <div class="sidebar-label experiment-label">全部实验</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>静态硬条件化不足以描述训练函数分布</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-bit 反事实不变性与训练 loss 中心原则</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>函数系综动力学与网络参考语言</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>在 Mingard 2025协议中延长 post-fit 观察</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>固定 NTK 足够时的特征学习</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>连续 loss 条件下的静态函数质量</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>函数 ID 迁移与 matched-loss 静态对照</span></a><a class="experiment-nav-link active" href="e08.html"><span>E08</span><span>共享中间表示与有限容量压力</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>MNIST 80%隐藏标签噪声长训</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>4-bit raw-BCE 简单/复杂规则竞争</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule30 数据量与训练/验证梯度对齐</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND shortcut 的静态 loss 几何</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>AND shortcut 的 SGD 运输与单样本干预</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>加权 Rule-bit 的 loss 阶段函数换序</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Mod97 grokking 的完整函数与边缘凝聚</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity 终点偏好、全局入口与局部恢复</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>静态低-loss 质量与 optimizer 运输</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>高函数共识与符号可读性</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>完整真值表规则的 loss-resolved 体积</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Full-rule、固定 D 与 hard-margin 测度闭环</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement 控制与共识复杂度前沿</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>逐样本自由能与信息不变量</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>完整目标体积前瞻预测数据相变</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>深尾 Neural K-profile 与排序交叉</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST 样本复杂度与静态体积分支预测</span></a></nav>
+      </div>
+    </aside>
+    
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">E08 · 实验详情</div>
+          <h1>E08：共享中间表示与有限容量压力</h1>
+          <p class="article-description">E08 检验一个唯象机制：当两个输出任务具有昂贵的共同 CA 前缀计算时，允许网络共享隐藏表示，是否比强制两条独立分支更容易达到同一极低 loss。</p>
+        </header>
+        <div class="article-body"><div class="source-bar"><span>复现脚本</span><div><a href="../../experiments/experiment_08_shared_intermediate_pressure/experiment_ca_shared_intermediate_pressure.py">experiment_ca_shared_intermediate_pressure.py</a></div></div><h2 id="overview">实验概览</h2>
+<h2 id="目的">目的</h2>
+<p>E08 检验一个唯象机制：当两个输出任务具有昂贵的共同 CA 前缀计算时，允许网络共享隐藏表示，是否比强制两条独立分支更容易达到同一极低 loss。</p>
+<p>实验采用四格交叉设计，使完全相同的四个原子子任务各自在 Shared 与 Separate 组出现一次；另设参数量匹配的 forced-split 架构作为阴性对照，排除标签边际或原子任务固有难度。</p>
+<h2 id="文件">文件</h2>
+<ul>
+<li><a href="#motivation">实验动机与预注册判据</a></li>
+<li><a href="#results">完整结果与阶段裁决</a></li>
+<li><a href="../../experiments/experiment_08_shared_intermediate_pressure/experiment_ca_shared_intermediate_pressure.py"><code>experiment_ca_shared_intermediate_pressure.py</code></a></li>
+</ul>
+<p>运行：</p>
+<pre><code class="language-bash">python experiment_ca_shared_intermediate_pressure.py
+</code></pre>
+<h2 id="冻结来源">冻结来源</h2>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>开发版来源</th>
+<th>SHA256</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>experiment_ca_shared_intermediate_pressure.py</code></td>
+<td><code>research/computational_pressure/experiment_ca_shared_intermediate_pressure.py</code></td>
+<td><code>ec3b985274222d39dcb62c9dcbf8c115b079e76396a4a5e5618aa2729d52f7ab</code></td>
+</tr>
+</tbody>
+</table>
+<p>本地结果包：</p>
+<pre><code class="language-text">E:\Downloads\results_ca_shared_intermediate_pressure.zip
+</code></pre>
+<p>SHA256：</p>
+<pre><code class="language-text">97ec4fd2d6342ed62c682109a52cd4c462fb6ff358c8edfdbee1704303b1124f
+</code></pre>
+<p>哈希不区分大小写。ZIP 可快速重建，不进入最终发布包。</p>
+<h2 id="motivation">为什么做、怎样判决</h2>
+<h2 id="1-唯象假说">1. 唯象假说</h2>
+<p>若两个任务重复计算同一个昂贵中间状态，共享该状态应当节省有限网络容量；若被迫分别重算，两条任务各自可用的有效容量下降，达到同一低 loss 需要更多样本、更多优化步骤或更宽网络。</p>
+<p>该假说试图为“低 loss 为何可能偏向可复用表示”提供因果正控，但不预设网络内部一定形成研究者命名的符号节点。</p>
+<h2 id="2-四个原子任务">2. 四个原子任务</h2>
+<p>输入由两个独立30-bit 状态<code>u,v</code>组成。定义：</p>
+<pre><code class="language-text">F_k(u) = Rule30^k(u)
+G_k(v) = Rule110^k(v)
+A(z)   = z[:15] AND z[15:]
+B(z)   = z[:15] OR  z[15:]
+</code></pre>
+<p>四个联合条件为：</p>
+<pre><code class="language-text">shared_f    = [A(F), B(F)]
+shared_g    = [A(G), B(G)]
+separate_fg = [A(F), B(G)]
+separate_gf = [A(G), B(F)]
+</code></pre>
+<p>因此<code>A(F)、B(F)、A(G)、B(G)</code>在 Shared 与 Separate 两组中各出现一次。任何组间差异不能简单归因于使用了不同原子标签函数。</p>
+<h2 id="3-joint-与-split-干预">3. Joint 与 Split 干预</h2>
+<ul>
+<li>Joint：两个输出共享三层隐藏网络，具备复用中间计算的通道；</li>
+<li>Split：两个输出使用完全独立分支，禁止隐藏计算共享；</li>
+<li>Split 每分支宽度自动设为178/359/721，使总参数量与 Joint 宽度256/512/1024的误差低于0.16%。</li>
+</ul>
+<p>若 Shared 只是统计上更容易，它在 Split 中也应更容易。只有 Joint 出现额外 Shared 优势，才能归因于允许共享隐藏计算。</p>
+<h2 id="4-正式配置与预注册剂量效应">4. 正式配置与预注册剂量效应</h2>
+<ul>
+<li>CA 前缀深度<code>k=0,1,2,3</code>；</li>
+<li>Joint 宽度256、512、1024；</li>
+<li>每条件3 seeds，共288条轨迹；</li>
+<li>GELU+LayerNorm 三隐藏层，Adam <code>1e-3</code>，weight decay 与 dropout 均为0；</li>
+<li>在线随机 CA 数据，batch 512；固定32,768 probe；最多5,000步。</li>
+</ul>
+<p>主预测：</p>
+<ol>
+<li>Split 中的 Shared/Separate 差异应接近0；</li>
+<li>Joint 的共享优势应随前缀深度增加；</li>
+<li>网络越宽，重复计算越容易容纳，共享优势应减弱；</li>
+<li>优势可以表现为更低最佳 loss 或更快达到固定 loss 阈值。</li>
+</ol>
+<h2 id="5-指标边界">5. 指标边界</h2>
+<p>固定学习率在线训练可能在达到极低 loss 后发生晚期坍缩。因此理论判决优先使用：</p>
+<ul>
+<li>预算内最佳 probe loss；</li>
+<li>首次达到<code>1e-2、1e-3、1e-4</code>的累计样本量；</li>
+<li>late-collapse 审计。</li>
+</ul>
+<p>最终 checkpoint 均值只用于稳定性审计，不能作为主裁决。</p>
+<h2 id="results">结果、解读与边界</h2>
+<h2 id="1-设计审计">1. 设计审计</h2>
+<ul>
+<li>24/24个批量组、288条轨迹全部完成；</li>
+<li>Joint/Split 参数量匹配误差低于0.16%；</li>
+<li>Split 阴性对照在全部12个<code>depth x width</code>单元中的 Shared/Separate loss gap 约<code>1e-8</code>或更低；</li>
+<li>同一 seed 的四个条件使用逐元素相同初始化与相同在线输入流。</li>
+</ul>
+<p>Split 近零差异说明四格原子任务难度配平成功。Joint 中的差异才是共享通道存在后新增的交互效应。</p>
+<h2 id="2-晚期坍缩与主指标修正">2. 晚期坍缩与主指标修正</h2>
+<p>25/288条轨迹的最终 loss 比预算内最佳 loss 恶化超过5倍。极端轨迹曾先达到100%exact 和约<code>1e-5</code> loss，随后在最后区间突然升至<code>0.2--0.33</code>。因此最终 checkpoint 算术均值会被少数坍缩污染，结果以最佳可达 loss 和首次到阈值为准。</p>
+<h2 id="3-最佳-loss-的深度与宽度剂量效应">3. 最佳 loss 的深度与宽度剂量效应</h2>
+<p>下表给出：</p>
+<pre><code class="language-text">log(best separate / best shared)_joint
+- log(best separate / best shared)_split
+</code></pre>
+<p>括号为 Separate/Shared 最佳 loss 几何比例。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">prefix depth</th>
+<th style="text-align: right;">W=256</th>
+<th style="text-align: right;">W=512</th>
+<th style="text-align: right;">W=1024</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">-1.731 (0.18x)</td>
+<td style="text-align: right;">+0.022 (1.02x)</td>
+<td style="text-align: right;">-0.061 (0.94x)</td>
+</tr>
+<tr>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">+1.366 (3.92x)</td>
+<td style="text-align: right;">-0.147 (0.86x)</td>
+<td style="text-align: right;">-0.216 (0.81x)</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">+2.087 (8.06x)</td>
+<td style="text-align: right;">+1.524 (4.59x)</td>
+<td style="text-align: right;">+1.275 (3.58x)</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">+5.990 (399.4x)</td>
+<td style="text-align: right;">+4.315 (74.8x)</td>
+<td style="text-align: right;">+1.804 (6.07x)</td>
+</tr>
+</tbody>
+</table>
+<p><code>k=0</code>没有共享收益，<code>k=1</code>处于交叉区；<code>k=2/3</code>的全部18个 seed 配对中 Shared 最佳 loss 均低于 Separate。前缀越深，复用收益越大；网络越宽，收益系统性减弱。</p>
+<h2 id="4-达到固定-loss-需要的样本量">4. 达到固定 loss 需要的样本量</h2>
+<p><code>depth=2</code>达到 BCE <code>1e-3</code>：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">Joint width</th>
+<th style="text-align: right;">Shared中位样本量</th>
+<th style="text-align: right;">Separate中位样本量</th>
+<th style="text-align: right;">比例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">256</td>
+<td style="text-align: right;">768,000</td>
+<td style="text-align: right;">1,984,000</td>
+<td style="text-align: right;">2.58x</td>
+</tr>
+<tr>
+<td style="text-align: right;">512</td>
+<td style="text-align: right;">512,000</td>
+<td style="text-align: right;">768,000</td>
+<td style="text-align: right;">1.50x</td>
+</tr>
+<tr>
+<td style="text-align: right;">1024</td>
+<td style="text-align: right;">384,000</td>
+<td style="text-align: right;">512,000</td>
+<td style="text-align: right;">1.33x</td>
+</tr>
+</tbody>
+</table>
+<p><code>depth=3</code>时，W=512达到<code>1e-2</code>快4.71倍，W=1024快3.80倍；W=1024达到<code>1e-3</code>为576,000对2,048,000，Shared 快3.56倍。更窄设置中 Separate 常在预算内完全达不到深阈值。</p>
+<h2 id="5-阶段裁决">5. 阶段裁决</h2>
+<p>E08 允许声称：</p>
+<blockquote>
+<p>当两个输出具有足够昂贵的共同 CA 前缀计算时，允许共享隐藏网络能用更少容量和更少在线样本达到同一极低 loss；优势随共享前缀深度增加，并随网络宽度增加而减弱。没有昂贵前缀时，任务耦合成本可抵消甚至反转共享收益。</p>
+</blockquote>
+<p>这为“有限容量会形成计算复用压力，复用结构有利于更深 loss”提供了因果唯象证据。它不依赖用 hard function ID 猜内部程序，因此补充了完整映射体积测量无法直接分辨同一 hard function 内部实现的问题。</p>
+<p>不能声称：</p>
+<ul>
+<li>网络已经显式形成研究者预设的<code>F_k/G_k</code>中间变量；</li>
+<li>所有层或神经元会平均承担计算压力；</li>
+<li>任何共享任务都优于分离任务；</li>
+<li>该实验已经证明 Kolmogorov complexity 定律；</li>
+<li>OOD 规则语义或人类概念形成已由本实验直接证明。</li>
+</ul>
+<p>OOD 语义的合理连接仍是一个宏观假说：当许多任务能够通过同一解释器、符号绑定或中间状态复用时，该共享程序可能比多套焊死电路更经济，从而获得低-loss 优势。</p></div>
+        <footer class="experiment-pager"><a href="e07.html">← E07 函数 ID 迁移与 matched-loss 静态对照</a><a href="e09.html">E09 MNIST 80%隐藏标签噪声长训 →</a></footer>
+      </article>
+    </main>
+  </div>
+</body>
+</html>

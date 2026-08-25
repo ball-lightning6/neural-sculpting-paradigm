@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="E25 把 Boolean 真值表方法迁移到真实图像。Stage 0先在两个二分类任务上校准最小训练集和过拟合 loss 区间；Stage 1冻结条件后，从同一训练 loss parent 比较每张未见图像两个标签分支的静态质量，检验其预测准确率、NLL U 形和 SGD 转折位置。">
+  <title>E25：MNIST 样本复杂度与静态体积分支预测 · Neural K 研究档案</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="../assets/site.js"></script>
+</head>
+<body data-page-kind="experiment">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+  
+    <header class="topbar">
+      <a class="site-mark" href="../index.html" aria-label="返回研究主文">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K 研究档案</span>
+      </a>
+      <nav class="top-nav" aria-label="全站导航"><a class="top-link" href="../index.html">研究主文</a><a class="top-link" href="../theory-core.html">理论核心</a><a class="top-link active" href="../experiments/index.html">实验索引</a><a class="top-link" href="../references.html">参考文献</a><a class="top-link" href="../evidence-ledger.html">证据总账</a></nav>
+      <nav class="language-switch" aria-label="语言"><span class="active" lang="zh-CN">中文</span><a href="../en/experiments/e25.html" lang="en">EN</a></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>目录</span>
+      </button>
+    </header>
+    
+  <div class="page-shell">
+    
+    <aside class="sidebar" id="sidebar" aria-label="本页目录">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">本页目录</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#overview">实验概览</a></li>
+<li><a href="#目的">目的</a></li>
+<li><a href="#运行顺序">运行顺序</a></li>
+<li><a href="#sha256">SHA256</a></li>
+<li><a href="#motivation">为什么做、怎样判决</a></li>
+<li><a href="#1-从规则表到真实输入">1. 从规则表到真实输入</a></li>
+<li><a href="#2-stage-0校准">2. Stage 0校准</a></li>
+<li><a href="#3-stage-1冻结">3. Stage 1冻结</a></li>
+<li><a href="#results">结果、解读与边界</a></li>
+<li><a href="#1-四个样本的任务差异">1. 四个样本的任务差异</a></li>
+<li><a href="#2-静态体积预测真实图像">2. 静态体积预测真实图像</a></li>
+<li><a href="#3-静态几何重建-nll-u-形">3. 静态几何重建 NLL U 形</a></li>
+<li><a href="#4-agreement-accuracy-和校准发生分离">4. Agreement、accuracy 和校准发生分离</a></li>
+<li><a href="#5-体积差与样本复杂度同向">5. 体积差与样本复杂度同向</a></li>
+<li><a href="#6-边界">6. 边界</a></li>
+</ul>
+</div>
+</nav>
+        <div class="sidebar-label experiment-label">全部实验</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>静态硬条件化不足以描述训练函数分布</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-bit 反事实不变性与训练 loss 中心原则</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>函数系综动力学与网络参考语言</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>在 Mingard 2025协议中延长 post-fit 观察</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>固定 NTK 足够时的特征学习</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>连续 loss 条件下的静态函数质量</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>函数 ID 迁移与 matched-loss 静态对照</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>共享中间表示与有限容量压力</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>MNIST 80%隐藏标签噪声长训</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>4-bit raw-BCE 简单/复杂规则竞争</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule30 数据量与训练/验证梯度对齐</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND shortcut 的静态 loss 几何</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>AND shortcut 的 SGD 运输与单样本干预</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>加权 Rule-bit 的 loss 阶段函数换序</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Mod97 grokking 的完整函数与边缘凝聚</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity 终点偏好、全局入口与局部恢复</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>静态低-loss 质量与 optimizer 运输</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>高函数共识与符号可读性</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>完整真值表规则的 loss-resolved 体积</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Full-rule、固定 D 与 hard-margin 测度闭环</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement 控制与共识复杂度前沿</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>逐样本自由能与信息不变量</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>完整目标体积前瞻预测数据相变</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>深尾 Neural K-profile 与排序交叉</span></a><a class="experiment-nav-link active" href="e25.html"><span>E25</span><span>MNIST 样本复杂度与静态体积分支预测</span></a></nav>
+      </div>
+    </aside>
+    
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">E25 · 实验详情</div>
+          <h1>E25：MNIST 样本复杂度与静态体积分支预测</h1>
+          <p class="article-description">E25 把 Boolean 真值表方法迁移到真实图像。Stage 0先在两个二分类任务上校准最小训练集和过拟合 loss 区间；Stage 1冻结条件后，从同一训练 loss parent 比较每张未见图像两个标签分支的静态质量，检验其预测准确率、NLL U 形和 SGD 转折位置。</p>
+        </header>
+        <div class="article-body"><div class="source-bar"><span>复现脚本</span><div><a href="../../experiments/experiment_25_mnist_static_prediction/experiment_mnist_loss_calibration.py">experiment_mnist_loss_calibration.py</a><a href="../../experiments/experiment_25_mnist_static_prediction/experiment_mnist_static_branch_prediction.py">experiment_mnist_static_branch_prediction.py</a></div></div><h2 id="overview">实验概览</h2>
+<h2 id="目的">目的</h2>
+<p>E25 把 Boolean 真值表方法迁移到真实图像。Stage 0先在两个二分类任务上校准最小训练集和过拟合 loss 区间；Stage 1冻结条件后，从同一训练 loss parent 比较每张未见图像两个标签分支的静态质量，检验其预测准确率、NLL U 形和 SGD 转折位置。</p>
+<h2 id="运行顺序">运行顺序</h2>
+<pre><code class="language-bash">python experiment_mnist_loss_calibration.py
+python experiment_mnist_static_branch_prediction.py
+</code></pre>
+<ul>
+<li><a href="#motivation">实验动机与冻结协议</a></li>
+<li><a href="#results">结果与边界</a></li>
+</ul>
+<h2 id="sha256">SHA256</h2>
+<pre><code class="language-text">0cbd6099986c973fd77e38397d8f14a878ca7054f4e308e9675dfc819e1c5df5  calibration script
+20b19dffdcf254bd0656e83b9b02393e9ee887c0f00f62dc7ed2019d6c766eeb  static prediction script
+11e786b30e3e76739e3666f805fbbaaf9060475c021e54c7761b862ace85dae5  calibration ZIP
+f104fc963fa9e7afe1531b32d63a2da80796899f84179cd5c68df24de3b05ae9  prediction ZIP
+</code></pre>
+<p>MNIST IDX 文件需置于脚本配置的数据目录。原始结果 ZIP 位于<code>E:\Downloads</code>，不进入发布包。</p>
+<h2 id="motivation">为什么做、怎样判决</h2>
+<h2 id="1-从规则表到真实输入">1. 从规则表到真实输入</h2>
+<p>对未见样本<code>x</code>，框架的直接预测不是先训练一个额外分类器，而是在同一个<code>L_D&lt;=epsilon</code>静态 parent 中比较：</p>
+<div class="math-display">$$
+P_{hard}(y\mid x,D,\epsilon)
+=\frac{\mu\{L_D\le\epsilon,h_\theta(x)=y\}}
+{\mu\{L_D\le\epsilon\}}.
+$$</div>
+<p>soft 版本在 parent 内加入 Bernoulli likelihood；<code>-log P_soft(y)</code>是单样本自由能增量。两者都选择剩余参数质量更大的标签。</p>
+<h2 id="2-stage-0校准">2. Stage 0校准</h2>
+<ul>
+<li>任务：MNIST <code>0 vs 1</code>和<code>3 vs 8</code>；</li>
+<li>输入：28x28 平均池化到7x7 并映射到[-1,1]；</li>
+<li>网络：<code>49 -&gt; 32 -&gt; 1 tanh</code>，1,633参数；</li>
+<li>n=4到512，四份数据集 x 八 seed，15,000步；</li>
+<li>测量 train/validation BCE、hard accuracy、agreement 与 U 形转折。</li>
+</ul>
+<p>Stage 0允许使用 validation 选择两个对照任务、最小 n 和要覆盖的 loss 网格，因此后续是“校准后冻结”的确认，不是完全盲的新任务预测。</p>
+<h2 id="3-stage-1冻结">3. Stage 1冻结</h2>
+<p>冻结<code>0/1,n=4,dataset0</code>与<code>3/8,n=4,dataset0</code>，以及九个 train raw-BCE 截面<code>0.6...4e-5</code>。每个条件使用6副本 x4,096粒子的 Gaussian-pCN SMC。每个截面的 validation/test 预测先写入 unscored 文件并计算 SHA256，再读取标签评分。</p>
+<p>主要判决：</p>
+<ol>
+<li>静态分支是否显著高于随机预测真实 MNIST；</li>
+<li>静态 soft NLL 是否自行形成 U 形；</li>
+<li>其最低区间是否与 matched-loss SGD validation 转折对齐；</li>
+<li>两任务的低-loss 体积差是否与最小充分样本量同向。</li>
+</ol>
+<h2 id="results">结果、解读与边界</h2>
+<h2 id="1-四个样本的任务差异">1. 四个样本的任务差异</h2>
+<p>Stage 0中，按每条轨迹最低 validation BCE 选 checkpoint：<code>0/1,n=4</code>的 median validation accuracy 为96.74%、test 为98.31%；<code>3/8,n=4</code>仅为70.44%/69.66%。按 median best-validation 至少95%的操作阈值，0/1在 n=4已跨过，3/8直到 n=512才跨过。</p>
+<p>相同输入维度、网络、样本数和训练预算因此对应约128倍的样本辨识尺度差异。</p>
+<h2 id="2-静态体积预测真实图像">2. 静态体积预测真实图像</h2>
+<p>Stage 1九个 loss 截面全部完成。Test static hard accuracy 从浅到深大致为：</p>
+<pre><code class="language-text">0 vs 1: 92.97% -&gt; peak 96.35% -&gt; 96.09%
+3 vs 8: 76.69% -&gt; peak 78.13% -&gt; 78.13%
+</code></pre>
+<p>四个训练样本下，两任务在<code>epsilon=0.6</code>即明显高于随机；深入 loss 总体改善 hard 预测，但不是全程单调。静态分布也明显不同于 matched-loss AdamW，尤其3/8浅层静态准确率约76.7%而 SGD 约60%。</p>
+<figure class="result-figure"><a href="../assets/figures/e25_mnist_static_prediction.png" target="_blank" rel="noopener"><img src="../assets/figures/e25_mnist_static_prediction.png" alt="MNIST 静态分支预测与集中度" loading="lazy"></a><figcaption>MNIST 静态分支预测与集中度</figcaption></figure>
+<h2 id="3-静态几何重建-nll-u-形">3. 静态几何重建 NLL U 形</h2>
+<p>0/1的 test 和 validation soft NLL 在<code>epsilon=0.0006</code>附近最低；同一固定训练集的 SGD validation 最低点对应 train BCE 约<code>1.46e-4</code>，相差一个预注册网格区间。3/8的 test 最低在0.01、validation 最低在0.03，SGD 最低对应 train BCE 约0.0455，直接落在相邻区间。</p>
+<p>因此经典 validation-loss U 形至少存在一个 optimizer 之前的静态几何来源。由于 Stage 0参与选择任务和 loss 覆盖范围，这还不是对全新数字对转折位置的完全盲预测。</p>
+<h2 id="4-agreement-accuracy-和校准发生分离">4. Agreement、accuracy 和校准发生分离</h2>
+<p>Hard point collision 随 loss 深入：0/1从0.595升到0.979，3/8从0.542升到0.922。但3/8准确率在78%左右停住后仍继续收束。持续预测错误的样本上，真实标签 soft 分支质量在 NLL 最优点后继续下降，解释了 hard accuracy 近乎不变而 NLL 上升：少量边界修正与错误置信度膨胀可以同时发生。</p>
+<h2 id="5-体积差与样本复杂度同向">5. 体积差与样本复杂度同向</h2>
+<p>3/8相对0/1少的 median 参数质量从<code>epsilon=0.6</code>时0.56个十进制数量级，扩大到<code>epsilon=4e-5</code>时55.43个数量级；这与95%辨识阈值<code>n=512 vs n=4</code>同向。它构成 Neural K-profile、真实图像预测和样本相变之间的三角测量。</p>
+<h2 id="6-边界">6. 边界</h2>
+<ul>
+<li>只覆盖两个二分类任务、tiny MLP 和各一个固定 n=4数据集；</li>
+<li>static soft branch 不是完整 Bayesian posterior predictive；</li>
+<li>深尾 lineage 有退化，单样本高精度赔率仍需更多粒子和重复；</li>
+<li>结果证明静态体积有一阶预测力，同时再次否定“SGD 无偏采样静态后验”；</li>
+<li>本实验不解析为什么该网络语言给3/8分配更小低-loss 体积。</li>
+</ul></div>
+        <footer class="experiment-pager"><a href="e24.html">← E24 深尾 Neural K-profile 与排序交叉</a><span></span></footer>
+      </article>
+    </main>
+  </div>
+</body>
+</html>

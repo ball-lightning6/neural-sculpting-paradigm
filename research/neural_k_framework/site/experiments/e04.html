@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Mingard 等（2025），Deep Neural Networks Have an Inbuilt Occam&#x27;s Razor中的 Boolean 实验在模型首次达到零训练分类错误时停止，并据此比较初始化函数先验、复杂度分布与训练终点。E04 保持其核心网络、目标、初始化尺度与 advSGD 设置，只把观察窗口延长到 post-fit 100/1,000步，并保存每条轨迹的完整128-bit 函数。">
+  <title>E04：在 Mingard 2025协议中延长 post-fit 观察 · Neural K 研究档案</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="../assets/site.js"></script>
+</head>
+<body data-page-kind="experiment">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+  
+    <header class="topbar">
+      <a class="site-mark" href="../index.html" aria-label="返回研究主文">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K 研究档案</span>
+      </a>
+      <nav class="top-nav" aria-label="全站导航"><a class="top-link" href="../index.html">研究主文</a><a class="top-link" href="../theory-core.html">理论核心</a><a class="top-link active" href="../experiments/index.html">实验索引</a><a class="top-link" href="../references.html">参考文献</a><a class="top-link" href="../evidence-ledger.html">证据总账</a></nav>
+      <nav class="language-switch" aria-label="语言"><span class="active" lang="zh-CN">中文</span><a href="../en/experiments/e04.html" lang="en">EN</a></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>目录</span>
+      </button>
+    </header>
+    
+  <div class="page-shell">
+    
+    <aside class="sidebar" id="sidebar" aria-label="本页目录">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">本页目录</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#overview">实验概览</a></li>
+<li><a href="#目的">目的</a></li>
+<li><a href="#文件">文件</a></li>
+<li><a href="#冻结来源">冻结来源</a></li>
+<li><a href="#motivation">为什么做、怎样判决</a></li>
+<li><a href="#1-理论冲突">1. 理论冲突</a></li>
+<li><a href="#2-冻结设置">2. 冻结设置</a></li>
+<li><a href="#3-判据">3. 判据</a><ul>
+<li><a href="#单轨迹-hard-函数迁移">单轨迹 hard 函数迁移</a></li>
+<li><a href="#分布级定向漂移">分布级定向漂移</a></li>
+<li><a href="#零错误稳定子集">零错误稳定子集</a></li>
+</ul>
+</li>
+<li><a href="#4-竞争预测">4. 竞争预测</a></li>
+<li><a href="#5-预先边界">5. 预先边界</a></li>
+<li><a href="#results">结果、解读与边界</a></li>
+<li><a href="#1-完整性">1. 完整性</a></li>
+<li><a href="#2-post-fit-完整函数持续变化">2. Post-fit 完整函数持续变化</a></li>
+<li><a href="#3-泛化方向依协议而异">3. 泛化方向依协议而异</a></li>
+<li><a href="#4-lz-不是本项目结论">4. LZ 不是本项目结论</a></li>
+<li><a href="#5-静态后验比较的可靠性边界">5. 静态后验比较的可靠性边界</a></li>
+<li><a href="#6-阶段裁决">6. 阶段裁决</a></li>
+</ul>
+</div>
+</nav>
+        <div class="sidebar-label experiment-label">全部实验</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>静态硬条件化不足以描述训练函数分布</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-bit 反事实不变性与训练 loss 中心原则</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>函数系综动力学与网络参考语言</span></a><a class="experiment-nav-link active" href="e04.html"><span>E04</span><span>在 Mingard 2025协议中延长 post-fit 观察</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>固定 NTK 足够时的特征学习</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>连续 loss 条件下的静态函数质量</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>函数 ID 迁移与 matched-loss 静态对照</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>共享中间表示与有限容量压力</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>MNIST 80%隐藏标签噪声长训</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>4-bit raw-BCE 简单/复杂规则竞争</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule30 数据量与训练/验证梯度对齐</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND shortcut 的静态 loss 几何</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>AND shortcut 的 SGD 运输与单样本干预</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>加权 Rule-bit 的 loss 阶段函数换序</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Mod97 grokking 的完整函数与边缘凝聚</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity 终点偏好、全局入口与局部恢复</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>静态低-loss 质量与 optimizer 运输</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>高函数共识与符号可读性</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>完整真值表规则的 loss-resolved 体积</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Full-rule、固定 D 与 hard-margin 测度闭环</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement 控制与共识复杂度前沿</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>逐样本自由能与信息不变量</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>完整目标体积前瞻预测数据相变</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>深尾 Neural K-profile 与排序交叉</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST 样本复杂度与静态体积分支预测</span></a></nav>
+      </div>
+    </aside>
+    
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">E04 · 实验详情</div>
+          <h1>E04：在 Mingard 2025协议中延长 post-fit 观察</h1>
+          <p class="article-description">Mingard 等（2025），Deep Neural Networks Have an Inbuilt Occam&#x27;s Razor中的 Boolean 实验在模型首次达到零训练分类错误时停止，并据此比较初始化函数先验、复杂度分布与训练终点。E04 保持其核心网络、目标、初始化尺度与 advSGD 设置，只把观察窗口延长到 post-fit 100/1,000步，并保存每条轨迹的完整128-bit 函数。</p>
+        </header>
+        <div class="article-body"><div class="source-bar"><span>复现脚本</span><div><a href="../../experiments/experiment_04_mingard_postfit_drift/experiment_mingard_2025_postfit_drift.py">experiment_mingard_2025_postfit_drift.py</a></div></div><h2 id="overview">实验概览</h2>
+<h2 id="目的">目的</h2>
+<p><a href="https://www.nature.com/articles/s41467-024-54813-x" target="_blank" rel="noopener">Mingard 等（2025），<em>Deep Neural Networks Have an Inbuilt Occam's Razor</em></a>中的 Boolean 实验在模型首次达到零训练分类错误时停止，并据此比较初始化函数先验、复杂度分布与训练终点。E04 保持其核心网络、目标、初始化尺度与 advSGD 设置，只把观察窗口延长到 post-fit 100/1,000步，并保存每条轨迹的完整128-bit 函数。</p>
+<h2 id="文件">文件</h2>
+<ul>
+<li><a href="#motivation">实验动机与预注册判据</a></li>
+<li><a href="#results">完整结果与阶段裁决</a></li>
+<li><a href="../../experiments/experiment_04_mingard_postfit_drift/experiment_mingard_2025_postfit_drift.py"><code>experiment_mingard_2025_postfit_drift.py</code></a></li>
+</ul>
+<p>运行：</p>
+<pre><code class="language-bash">python experiment_mingard_2025_postfit_drift.py
+</code></pre>
+<p>默认<code>PROFILE="pilot"</code>，输出到：</p>
+<pre><code class="language-text">results_mingard_2025_postfit_drift/pilot/
+</code></pre>
+<h2 id="冻结来源">冻结来源</h2>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>开发版来源</th>
+<th>SHA256</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>experiment_mingard_2025_postfit_drift.py</code></td>
+<td><code>research/function_information_conservation/experiment_mingard_2025_postfit_drift.py</code></td>
+<td><code>dd3eb8706c2008f6ab6f1c8df51419687016eb3dcb6b60787c18b5781c60d5f8</code></td>
+</tr>
+</tbody>
+</table>
+<p>本地结果缓存<code>results/pilot.zip</code>，SHA256<code>72e00af9e6cd91765867afec2e09a55724b4cc9f40f780c5e6f04be40f04a91d</code>。ZIP 不进入最终发布包。</p>
+<h2 id="motivation">为什么做、怎样判决</h2>
+<h2 id="1-理论冲突">1. 理论冲突</h2>
+<p>静态 hard-conditioning 图景在首次插值以后没有时间变量。若训练集不变，函数赔率应由固定条件先验决定。Grokking 和 E01/E03 却表明，插值后函数仍可能迁移。</p>
+<p>直接在自造 tiny Boolean 任务上观察这一点仍可能被认为协议特殊，因此 E04 选择 <a href="https://www.nature.com/articles/s41467-024-54813-x" target="_blank" rel="noopener">Mingard 等（2025）</a>本身用于支持静态解释的 Boolean 设置，只修改停止时刻。</p>
+<h2 id="2-冻结设置">2. 冻结设置</h2>
+<ul>
+<li>输入：7 bit，完整128状态；</li>
+<li>网络：<code>7 -&gt; 40 x 10 -&gt; 1 tanh</code>；</li>
+<li>trainable bias 从0初始化；</li>
+<li><code>sigma_w=1,8</code>，按 fan-in 缩放；</li>
+<li>三个论文目标，LZ 值31.5/66.5/101.5；</li>
+<li>每个目标训练集大小64；</li>
+<li>Adam + 论文式 advSGD，batch 16；</li>
+<li>每个条件2,048个网络，共6个条件、12,288条轨迹；</li>
+<li>每个网络的训练集独立重采样，但单条轨迹内保持不变；</li>
+<li>快照：初始化、首次零错误、post-fit 100/1,000步；</li>
+<li>prior：每个初始化尺度262,144个未训练网络。</li>
+</ul>
+<h2 id="3-判据">3. 判据</h2>
+<h3 id="单轨迹-hard-函数迁移">单轨迹 hard 函数迁移</h3>
+<p>记录128个输入上的完整函数 ID，测量 post-fit 发生改变的比例与 Hamming 距离。</p>
+<h3 id="分布级定向漂移">分布级定向漂移</h3>
+<p>因为<code>2^128</code>函数空间远大于2,048个 seed，逐函数经验 TV 本身会被稀疏采样饱和。因此同时测逐输入预测边际、全空间错误数分布和配对迁移，并用置换零分布判定方向性。LZ 只用于复现对方指标，不承担本项目复杂度结论。</p>
+<h3 id="零错误稳定子集">零错误稳定子集</h3>
+<p>单独检查两个端点均维持训练集零错误的模型，避免把暂时离开插值集误写为“插值集合内部漂移”。</p>
+<h2 id="4-竞争预测">4. 竞争预测</h2>
+<ul>
+<li>强静态图景：首次零错误之后不应出现系统性函数边际漂移；</li>
+<li>动态图景：训练集不变时，post-fit 继续降低 loss 仍可定向移动未见输入函数；</li>
+<li>若只看 LZ/平均错误而不保存完整函数，迁移可能被粗粒度指标漏掉。</li>
+</ul>
+<h2 id="5-预先边界">5. 预先边界</h2>
+<ul>
+<li>pilot 对不同训练集平均，不直接等于固定单一 D 的函数后验；</li>
+<li><code>sigma_w=8</code>的静态 importance sampling ESS 可能太低，不能强行比较静态后验；</li>
+<li>完整函数 TV 在极稀疏空间中必须配合 null，不能单独解读；</li>
+<li>实验只检验论文所用训练协议和停止规则，不推断作者此后立场。</li>
+</ul>
+<h2 id="results">结果、解读与边界</h2>
+<h2 id="1-完整性">1. 完整性</h2>
+<ul>
+<li>6个条件各2,048条轨迹，12,288/12,288全部首次拟合并记录到 post-fit 1,000；</li>
+<li>主训练约145.9秒，prior 采样约80.7秒，完整 cell 约4分20秒；</li>
+<li>六条件最慢终止约1,770步，未触发12,000步上限；</li>
+<li>完整128-bit 函数、logits、训练 loss 和训练集一致性均已保存。</li>
+</ul>
+<h2 id="2-post-fit-完整函数持续变化">2. Post-fit 完整函数持续变化</h2>
+<p>首次零错误到 age 1,000：</p>
+<table>
+<thead>
+<tr>
+<th>target</th>
+<th style="text-align: right;">sigma_w</th>
+<th style="text-align: right;">函数改变率</th>
+<th style="text-align: right;">平均Hamming距离/128</th>
+<th style="text-align: right;">平均预测边际漂移</th>
+<th style="text-align: right;">边际置换p</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>low</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">59.96%</td>
+<td style="text-align: right;">1.16</td>
+<td style="text-align: right;">0.00529</td>
+<td style="text-align: right;">0.00498</td>
+</tr>
+<tr>
+<td>mid</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">87.74%</td>
+<td style="text-align: right;">2.51</td>
+<td style="text-align: right;">0.00407</td>
+<td style="text-align: right;">0.00498</td>
+</tr>
+<tr>
+<td>high</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">97.66%</td>
+<td style="text-align: right;">4.03</td>
+<td style="text-align: right;">0.00476</td>
+<td style="text-align: right;">0.00498</td>
+</tr>
+<tr>
+<td>low</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">99.66%</td>
+<td style="text-align: right;">14.77</td>
+<td style="text-align: right;">0.01467</td>
+<td style="text-align: right;">0.00498</td>
+</tr>
+<tr>
+<td>mid</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">99.80%</td>
+<td style="text-align: right;">15.33</td>
+<td style="text-align: right;">0.01387</td>
+<td style="text-align: right;">0.00498</td>
+</tr>
+<tr>
+<td>high</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">99.76%</td>
+<td style="text-align: right;">15.37</td>
+<td style="text-align: right;">0.01001</td>
+<td style="text-align: right;">0.00498</td>
+</tr>
+</tbody>
+</table>
+<p>函数迁移不是偶尔一两个阈值翻转。<code>sigma_w=8</code>平均约15/128个未见输出改变，所有条件的逐输入边际漂移均超过置换零分布。只保留两个端点都保持训练集零错误的模型，定性结论不变。</p>
+<h2 id="3-泛化方向依协议而异">3. 泛化方向依协议而异</h2>
+<p><code>sigma_w=8</code>三目标的全空间错误平均分别下降约1.81、1.53、0.80；<code>sigma_w=1</code>则为+0.46、+0.11、-0.03。故 post-fit 迁移真实存在，但不能简单概括为任何初始化尺度、任何目标下都单调改善外部规则。</p>
+<h2 id="4-lz-不是本项目结论">4. LZ 不是本项目结论</h2>
+<p>为对齐原论文，结果包保留 LZ 变化：<code>sigma_w=8</code>大体下降，<code>sigma_w=1</code>的低复杂度目标反而上升约1.93。该方向不统一，且 LZ 只是128-bit 真值表代理。E04 的核心裁决完全依赖完整函数迁移和边际漂移，不使用 LZ 测量 Kolmogorov complexity。</p>
+<h2 id="5-静态后验比较的可靠性边界">5. 静态后验比较的可靠性边界</h2>
+<p><code>sigma_w=1</code>的 prior importance ESS 约3,020--5,168，可作静态比较；<code>sigma_w=8</code>仅约1.7--4.4，明确标为不可靠。E04 因此不利用后者声称“静态后验数值错误”，而只使用无需 prior importance sampling 的 post-fit 时间实验。</p>
+<h2 id="6-阶段裁决">6. 阶段裁决</h2>
+<p>可以声称：</p>
+<blockquote>
+<p>在 <a href="https://www.nature.com/articles/s41467-024-54813-x" target="_blank" rel="noopener">Mingard 等（2025）</a>的核心 Boolean 协议中，首次零训练错误并不是函数选择终点；训练集不变而继续优化，会使完整 hard function 及其逐输入边际系统迁移。</p>
+</blockquote>
+<p>这直接否定“首次插值快照已经完整描述后续函数分布”的强版本，也说明原论文停止时刻遗漏了具有泛化意义的时间维度。</p>
+<p>不能声称：</p>
+<ul>
+<li>初始化函数先验没有预测价值；</li>
+<li>六条件均向同一复杂度代理单调压缩；</li>
+<li>稀疏经验 exact-function TV 本身可靠恢复了<code>2^128</code>总体分布；</li>
+<li><code>sigma_w=8</code>静态 importance posterior 可判读；</li>
+<li>结果否定所有 Bayesian 或作者后续动力学工作；</li>
+<li>LZ 是本项目的程序复杂度测量。</li>
+</ul></div>
+        <footer class="experiment-pager"><a href="e03.html">← E03 函数系综动力学与网络参考语言</a><a href="e05.html">E05 固定 NTK 足够时的特征学习 →</a></footer>
+      </article>
+    </main>
+  </div>
+</body>
+</html>

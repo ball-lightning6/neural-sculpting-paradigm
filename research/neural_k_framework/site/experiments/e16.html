@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="E16 通过 leave-one-out、随机半空间、错误点揭示和 prefix scaffold 四层干预，区分：">
+  <title>E16：Parity 终点偏好、全局入口与局部恢复 · Neural K 研究档案</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="../assets/site.js"></script>
+</head>
+<body data-page-kind="experiment">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+  
+    <header class="topbar">
+      <a class="site-mark" href="../index.html" aria-label="返回研究主文">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K 研究档案</span>
+      </a>
+      <nav class="top-nav" aria-label="全站导航"><a class="top-link" href="../index.html">研究主文</a><a class="top-link" href="../theory-core.html">理论核心</a><a class="top-link active" href="../experiments/index.html">实验索引</a><a class="top-link" href="../references.html">参考文献</a><a class="top-link" href="../evidence-ledger.html">证据总账</a></nav>
+      <nav class="language-switch" aria-label="语言"><span class="active" lang="zh-CN">中文</span><a href="../en/experiments/e16.html" lang="en">EN</a></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>目录</span>
+      </button>
+    </header>
+    
+  <div class="page-shell">
+    
+    <aside class="sidebar" id="sidebar" aria-label="本页目录">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">本页目录</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#overview">实验概览</a></li>
+<li><a href="#目的">目的</a></li>
+<li><a href="#文件">文件</a></li>
+<li><a href="#冻结脚本-sha256">冻结脚本 SHA256</a></li>
+<li><a href="#关键结果包-sha256">关键结果包 SHA256</a></li>
+<li><a href="#motivation">为什么做、怎样判决</a></li>
+<li><a href="#1-初始歧义">1. 初始歧义</a></li>
+<li><a href="#2-四层判决">2. 四层判决</a></li>
+<li><a href="#3-共同参考机">3. 共同参考机</a></li>
+<li><a href="#4-边界">4. 边界</a></li>
+<li><a href="#results">结果、解读与边界</a></li>
+<li><a href="#1-leave-one-out-先发生偏好换手-随后才是可达性崩溃">1. Leave-one-out 先发生偏好换手，随后才是可达性崩溃</a></li>
+<li><a href="#2-14-bit-随机半空间消除主要入口屏障">2. 14-bit 随机半空间消除主要入口屏障</a></li>
+<li><a href="#3-当前错误点具有极高信息增益">3. 当前错误点具有极高信息增益</a></li>
+<li><a href="#4-16-bit-scaffold-证明终点存在且局部可恢复">4. 16-bit scaffold 证明终点存在且局部可恢复</a></li>
+<li><a href="#5-因果裁决">5. 因果裁决</a></li>
+</ul>
+</div>
+</nav>
+        <div class="sidebar-label experiment-label">全部实验</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>静态硬条件化不足以描述训练函数分布</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-bit 反事实不变性与训练 loss 中心原则</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>函数系综动力学与网络参考语言</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>在 Mingard 2025协议中延长 post-fit 观察</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>固定 NTK 足够时的特征学习</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>连续 loss 条件下的静态函数质量</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>函数 ID 迁移与 matched-loss 静态对照</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>共享中间表示与有限容量压力</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>MNIST 80%隐藏标签噪声长训</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>4-bit raw-BCE 简单/复杂规则竞争</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule30 数据量与训练/验证梯度对齐</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND shortcut 的静态 loss 几何</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>AND shortcut 的 SGD 运输与单样本干预</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>加权 Rule-bit 的 loss 阶段函数换序</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Mod97 grokking 的完整函数与边缘凝聚</span></a><a class="experiment-nav-link active" href="e16.html"><span>E16</span><span>Parity 终点偏好、全局入口与局部恢复</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>静态低-loss 质量与 optimizer 运输</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>高函数共识与符号可读性</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>完整真值表规则的 loss-resolved 体积</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Full-rule、固定 D 与 hard-margin 测度闭环</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement 控制与共识复杂度前沿</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>逐样本自由能与信息不变量</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>完整目标体积前瞻预测数据相变</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>深尾 Neural K-profile 与排序交叉</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST 样本复杂度与静态体积分支预测</span></a></nav>
+      </div>
+    </aside>
+    
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">E16 · 实验详情</div>
+          <h1>E16：Parity 终点偏好、全局入口与局部恢复</h1>
+          <p class="article-description">E16 通过 leave-one-out、随机半空间、错误点揭示和 prefix scaffold 四层干预，区分：</p>
+        </header>
+        <div class="article-body"><div class="source-bar"><span>复现脚本</span><div><a href="../../experiments/experiment_16_parity_reachability/experiment_parity12_half_space_generalization.py">experiment_parity12_half_space_generalization.py</a><a href="../../experiments/experiment_16_parity_reachability/experiment_parity16_scaffold_perturb_recovery.py">experiment_parity16_scaffold_perturb_recovery.py</a><a href="../../experiments/experiment_16_parity_reachability/experiment_parity_leave_one_out_dimension_scan.py">experiment_parity_leave_one_out_dimension_scan.py</a></div></div><h2 id="overview">实验概览</h2>
+<h2 id="目的">目的</h2>
+<p>E16 通过 leave-one-out、随机半空间、错误点揭示和 prefix scaffold 四层干预，区分：</p>
+<ol>
+<li>parity 是否存在并被 endpoint loss 支持；</li>
+<li>随机初始化能否进入其低-loss 区域；</li>
+<li>已到达的精确解撤去辅助信息后是否稳定；</li>
+<li>强扰动破坏 hard function 后能否仅靠 endpoint loss 恢复。</li>
+</ol>
+<h2 id="文件">文件</h2>
+<ul>
+<li><a href="#motivation">实验动机与预注册判据</a></li>
+<li><a href="#results">完整结果与阶段裁决</a></li>
+<li><a href="../../experiments/experiment_16_parity_reachability/experiment_parity_leave_one_out_dimension_scan.py"><code>experiment_parity_leave_one_out_dimension_scan.py</code></a></li>
+<li><a href="../../experiments/experiment_16_parity_reachability/experiment_parity12_half_space_generalization.py"><code>experiment_parity12_half_space_generalization.py</code></a></li>
+<li><a href="../../experiments/experiment_16_parity_reachability/experiment_parity16_scaffold_perturb_recovery.py"><code>experiment_parity16_scaffold_perturb_recovery.py</code></a></li>
+</ul>
+<p>运行顺序：</p>
+<pre><code class="language-bash">python experiment_parity_leave_one_out_dimension_scan.py
+python experiment_parity12_half_space_generalization.py
+python experiment_parity16_scaffold_perturb_recovery.py
+</code></pre>
+<p>第二个脚本当前冻结配置为14-bit 半空间加错误揭示；文件名保留其最初12-bit 来源，以维持开发版追踪。</p>
+<h2 id="冻结脚本-sha256">冻结脚本 SHA256</h2>
+<pre><code class="language-text">4c9498cd825fbf887bc1ffb7ebd035a778d07b8cd139fb9aeb1dfac87a2aa6f2  leave-one-out
+5612bc8135377c96b431ca7835c428605080e5f55e01ca31836fc4690fd6f282  half-space/reveal
+abb131d68780c441eac692a34720309d5f14554414f67862f7884d31909b0424  scaffold/recovery
+</code></pre>
+<h2 id="关键结果包-sha256">关键结果包 SHA256</h2>
+<pre><code class="language-text">41099ca001b64cd4195f16639c1056de0098d6312b23a04d7a3000b7f36adccd  leave-one-out
+b503bf464212c59db2bbb14b10d8e5a5d13ff1f48a8ebe5c2b870f6af56dd882  parity14 half-space
+675716cafaa260f7a7ed89de2e6693220b54edd6c6facb3cd1edb07c246cd900  error reveal
+448072a1678dcdfE28e0d2622dd1070fe2ffee375bf45e0da840d2cb602a3b21  parity16 w256
+</code></pre>
+<p>哈希不区分大小写。ZIP 位于<code>E:\Downloads</code>，不进入发布包。</p>
+<h2 id="motivation">为什么做、怎样判决</h2>
+<h2 id="1-初始歧义">1. 初始歧义</h2>
+<p>高维 parity 从随机初始化常停在<code>ln2</code>平台。这可能意味着：</p>
+<ul>
+<li>网络无法表示精确 parity；</li>
+<li>低-loss 区域不偏好 parity；</li>
+<li>数据缺口使另一延拓更受偏好；</li>
+<li>目标存在且局部稳定，但普通梯度看不到全局入口。</li>
+</ul>
+<p>Leave-one-out 又会刻意打破输入空间对称性，不能把最后一个点预测错误直接解释成目标体积不足。</p>
+<h2 id="2-四层判决">2. 四层判决</h2>
+<ol>
+<li><strong>维数扫描</strong>：<code>n=4...16</code>，训练完整真值表减一个分层选择的 holdout；</li>
+<li><strong>随机半空间</strong>：14-bit 随机、标签平衡的50%训练/50%测试 mask；</li>
+<li><strong>错误揭示</strong>：从相同父权重复制 continue、随机正确点、当前错误点、错误 replay 和完整揭示五分支；</li>
+<li><strong>Scaffold 恢复</strong>：16-bit 网络先预测所有 prefix parity，迁移最终 head 后撤去全部中间监督，再从精确 anchor 施加0--0.2相对 L2 扰动并仅用 endpoint BCE 恢复。</li>
+</ol>
+<h2 id="3-共同参考机">3. 共同参考机</h2>
+<p>GELU+LayerNorm 三隐藏层、AdamW <code>1e-3</code>、weight decay 为0。leave-one-out 与 half-space 主网络宽64；最终 scaffold 判决宽256。完整输入空间均可穷举。</p>
+<h2 id="4-边界">4. 边界</h2>
+<ul>
+<li>parity 在人类逻辑语言中短，不等于在该网络梯度语言中易达；</li>
+<li>holdout 位置和 mask 频谱会改变优化可见性；</li>
+<li>高测试 accuracy 不等于 exact full function；</li>
+<li>辅助监督改变路径，成功后必须撤除并以 endpoint-only 稳定/恢复作最终判据。</li>
+</ul>
+<h2 id="results">结果、解读与边界</h2>
+<h2 id="1-leave-one-out-先发生偏好换手-随后才是可达性崩溃">1. Leave-one-out 先发生偏好换手，随后才是可达性崩溃</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">bits</th>
+<th style="text-align: right;">留一模型hard-exact</th>
+<th style="text-align: right;">其中完整parity</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">64/64</td>
+<td style="text-align: right;">0/64</td>
+<td>单点翻转占优</td>
+</tr>
+<tr>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">64/64</td>
+<td style="text-align: right;">26/64</td>
+<td>混合补全</td>
+</tr>
+<tr>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">64/64</td>
+<td style="text-align: right;">57/64</td>
+<td>parity占优</td>
+</tr>
+<tr>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">64/64</td>
+<td style="text-align: right;">45/64</td>
+<td>parity占优，有位置效应</td>
+</tr>
+<tr>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">64/64</td>
+<td style="text-align: right;">43/64</td>
+<td>parity占优，长尾到达</td>
+</tr>
+<tr>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">22/64</td>
+<td style="text-align: right;">10/22</td>
+<td>可达性主导</td>
+</tr>
+<tr>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">1/64</td>
+<td style="text-align: right;">1/1</td>
+<td>单次不稳定逃逸，不能估概率</td>
+</tr>
+</tbody>
+</table>
+<p>只看内部 holdout，8--12 bit 为89/96约92.7%补成 parity；总表下降主要来自低 Hamming-weight 边界被过采样。由此撤回“leave-one-out 永远无法补 parity”的猜想。</p>
+<h2 id="2-14-bit-随机半空间消除主要入口屏障">2. 14-bit 随机半空间消除主要入口屏障</h2>
+<p>64/64半空间模型全部拟合8,192个训练点，最终测试准确率均值99.935%，中位数99.963%，但0/64恢复完整16,384点 parity。完整真值表对照仅3/8逃出平台。</p>
+<p>从 step 500到2,000，train BCE 由0.678降至0.00644，test 由43.9%升至99.46%；极低 loss 后剩余1--21个错误不再单调消失。主要困难是全局入口，精确程序恢复仍是更细一层。</p>
+<h2 id="3-当前错误点具有极高信息增益">3. 当前错误点具有极高信息增益</h2>
+<p>从20,000步父模型复制五分支，平均原错误6.22个：</p>
+<table>
+<thead>
+<tr>
+<th>干预</th>
+<th style="text-align: right;">最终总错误均值</th>
+<th style="text-align: right;">完整parity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>继续训练</td>
+<td style="text-align: right;">6.50</td>
+<td style="text-align: right;">0/64</td>
+</tr>
+<tr>
+<td>同量随机正确点</td>
+<td style="text-align: right;">6.55</td>
+<td style="text-align: right;">0/64</td>
+</tr>
+<tr>
+<td>精准揭示错误点</td>
+<td style="text-align: right;">3.38</td>
+<td style="text-align: right;">23/64</td>
+</tr>
+<tr>
+<td>错误点25% replay</td>
+<td style="text-align: right;">6.47</td>
+<td style="text-align: right;">7/64</td>
+</tr>
+<tr>
+<td>揭示完整测试集</td>
+<td style="text-align: right;">0.61</td>
+<td style="text-align: right;">29/64</td>
+</tr>
+</tbody>
+</table>
+<p>精准样本几乎清除旧错误，却产生平均3.19个新错误；过强 replay 清除旧错误同时制造6.47个新错误。缺失约束决定哪些缺陷可存活，optimizer 决定修复是全局重组还是错误迁移。</p>
+<h2 id="4-16-bit-scaffold-证明终点存在且局部可恢复">4. 16-bit scaffold 证明终点存在且局部可恢复</h2>
+<p>宽256参考机：</p>
+<ul>
+<li>direct endpoint-only：0/8 exact，BCE 约0.693；</li>
+<li>prefix scaffold 最终 head：5/8 exact；</li>
+<li>撤去全部辅助监督、endpoint-only settle：7/8 exact；</li>
+<li>无扰动继续训练：7/7保持 exact。</li>
+</ul>
+<p>从7个 anchor 各做4次扰动：相对 L2 半径0.1和0.2时，28/28 hard function 全部被破坏；仅用 endpoint BCE 恢复5,000步，最终分别23/28和21/28重新 exact。半径0.2将 median BCE 推到0.631，仍能恢复大多数模型。</p>
+<h2 id="5-因果裁决">5. 因果裁决</h2>
+<p>在该协议下，16-bit parity 的主要障碍是从随机初始化进入目标区域的全局可达性，而不是表示容量不足、精确终点不被纯 endpoint loss 支持，或目标附近没有吸引域。</p>
+<p>这要求主理论显式条件化在“optimizer 能够进入相应低-loss 区域”之上。低描述长度和有利局部终点不能保证全局梯度入口；解耦/scaffold 可以改变路径而不改变最终架构与 endpoint 函数。</p></div>
+        <footer class="experiment-pager"><a href="e15.html">← E15 Mod97 grokking 的完整函数与边缘凝聚</a><a href="e17.html">E17 静态低-loss 质量与 optimizer 运输 →</a></footer>
+      </article>
+    </main>
+  </div>
+</body>
+</html>

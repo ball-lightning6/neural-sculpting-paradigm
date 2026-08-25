@@ -1,0 +1,5 @@
+# 本地结果包体积较大，仓库只保留脚本、结论和关键图。
+experiments/**/results/*.zip
+
+__pycache__/
+*.pyc

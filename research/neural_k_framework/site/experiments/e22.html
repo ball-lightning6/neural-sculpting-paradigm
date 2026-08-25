@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="E22 把“逐个加入样本时的惊讶度能否累积为规则难度”改写为同一静态参数测度下的配分函数问题。它穷举3-bit 输入的全部部分标注状态、256条完整规则和全部样本加入顺序，检验逐步自由能增量是否为路径无关的端点势差。">
+  <title>E22：逐样本自由能与信息不变量 · Neural K 研究档案</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="../assets/site.js"></script>
+</head>
+<body data-page-kind="experiment">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+  
+    <header class="topbar">
+      <a class="site-mark" href="../index.html" aria-label="返回研究主文">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K 研究档案</span>
+      </a>
+      <nav class="top-nav" aria-label="全站导航"><a class="top-link" href="../index.html">研究主文</a><a class="top-link" href="../theory-core.html">理论核心</a><a class="top-link active" href="../experiments/index.html">实验索引</a><a class="top-link" href="../references.html">参考文献</a><a class="top-link" href="../evidence-ledger.html">证据总账</a></nav>
+      <nav class="language-switch" aria-label="语言"><span class="active" lang="zh-CN">中文</span><a href="../en/experiments/e22.html" lang="en">EN</a></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>目录</span>
+      </button>
+    </header>
+    
+  <div class="page-shell">
+    
+    <aside class="sidebar" id="sidebar" aria-label="本页目录">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">本页目录</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#overview">实验概览</a></li>
+<li><a href="#目的">目的</a></li>
+<li><a href="#运行">运行</a></li>
+<li><a href="#sha256">SHA256</a></li>
+<li><a href="#motivation">为什么做、怎样判决</a></li>
+<li><a href="#1-问题">1. 问题</a></li>
+<li><a href="#2-静态定义">2. 静态定义</a></li>
+<li><a href="#3-穷举协议">3. 穷举协议</a></li>
+<li><a href="#4-判决边界">4. 判决边界</a></li>
+<li><a href="#results">结果、解读与边界</a></li>
+<li><a href="#1-数值闭合">1. 数值闭合</a></li>
+<li><a href="#2-rule150-仍是困难端点">2. Rule150 仍是困难端点</a></li>
+<li><a href="#3-理论意义">3. 理论意义</a></li>
+<li><a href="#4-边界">4. 边界</a></li>
+</ul>
+</div>
+</nav>
+        <div class="sidebar-label experiment-label">全部实验</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>静态硬条件化不足以描述训练函数分布</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-bit 反事实不变性与训练 loss 中心原则</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>函数系综动力学与网络参考语言</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>在 Mingard 2025协议中延长 post-fit 观察</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>固定 NTK 足够时的特征学习</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>连续 loss 条件下的静态函数质量</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>函数 ID 迁移与 matched-loss 静态对照</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>共享中间表示与有限容量压力</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>MNIST 80%隐藏标签噪声长训</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>4-bit raw-BCE 简单/复杂规则竞争</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule30 数据量与训练/验证梯度对齐</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND shortcut 的静态 loss 几何</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>AND shortcut 的 SGD 运输与单样本干预</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>加权 Rule-bit 的 loss 阶段函数换序</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Mod97 grokking 的完整函数与边缘凝聚</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity 终点偏好、全局入口与局部恢复</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>静态低-loss 质量与 optimizer 运输</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>高函数共识与符号可读性</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>完整真值表规则的 loss-resolved 体积</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Full-rule、固定 D 与 hard-margin 测度闭环</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement 控制与共识复杂度前沿</span></a><a class="experiment-nav-link active" href="e22.html"><span>E22</span><span>逐样本自由能与信息不变量</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>完整目标体积前瞻预测数据相变</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>深尾 Neural K-profile 与排序交叉</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST 样本复杂度与静态体积分支预测</span></a></nav>
+      </div>
+    </aside>
+    
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">E22 · 实验详情</div>
+          <h1>E22：逐样本自由能与信息不变量</h1>
+          <p class="article-description">E22 把“逐个加入样本时的惊讶度能否累积为规则难度”改写为同一静态参数测度下的配分函数问题。它穷举3-bit 输入的全部部分标注状态、256条完整规则和全部样本加入顺序，检验逐步自由能增量是否为路径无关的端点势差。</p>
+        </header>
+        <div class="article-body"><div class="source-bar"><span>复现脚本</span><div><a href="../../experiments/experiment_22_static_free_energy_information/experiment_static_free_energy_information_invariant.py">experiment_static_free_energy_information_invariant.py</a></div></div><h2 id="overview">实验概览</h2>
+<h2 id="目的">目的</h2>
+<p>E22 把“逐个加入样本时的惊讶度能否累积为规则难度”改写为同一静态参数测度下的配分函数问题。它穷举3-bit 输入的全部部分标注状态、256条完整规则和全部样本加入顺序，检验逐步自由能增量是否为路径无关的端点势差。</p>
+<h2 id="运行">运行</h2>
+<pre><code class="language-bash">python experiment_static_free_energy_information_invariant.py
+</code></pre>
+<ul>
+<li><a href="#motivation">实验动机与判据</a></li>
+<li><a href="#results">结果与边界</a></li>
+</ul>
+<h2 id="sha256">SHA256</h2>
+<pre><code class="language-text">8042df5e2818145ac3a8323c6343279efa5e2a11d01269c63071cdc125980514  script
+8a7d2eb7b02a133cf1fc1a77fa807044dee7c6cdabe9cc8179d51813d55e7a12  result ZIP
+</code></pre>
+<p>原始 ZIP 位于<code>E:\Downloads</code>，不进入发布包。</p>
+<h2 id="motivation">为什么做、怎样判决</h2>
+<h2 id="1-问题">1. 问题</h2>
+<p>早期逐样本实验用 committee 对新标签的分歧估计信息增益，但单步增量强烈依赖样本顺序。需要区分两个对象：每一步的惊讶度可以依赖路径，而一条完整规则的累计成本是否存在顺序不变量。</p>
+<h2 id="2-静态定义">2. 静态定义</h2>
+<p>固定网络协议和参考测度<code>mu</code>。对部分标注状态<code>S</code>定义质量或配分函数<code>Z(S)</code>，并令</p>
+<div class="math-display">$$
+F(S)=-\log_2 Z(S).
+$$</div>
+<p>加入样本<code>i</code>的广义惊讶度为</p>
+<div class="math-display">$$
+\Delta I(i\mid S)=F(S\cup\{i\})-F(S)
+=-\log_2\frac{Z(S\cup\{i\})}{Z(S)}.
+$$</div>
+<p>若所有状态都由同一个<code>Z</code>定义，则任意加入顺序<code>pi</code>必满足</p>
+<div class="math-display">$$
+\sum_t\Delta I(\pi_t\mid S_{t-1})=F(D_f)-F(\varnothing).
+$$</div>
+<p>单步惊讶度和阶段平均可以不同，端点总和必须相同。Shapley 平均则给出每个样本对端点成本的对称分摊。</p>
+<h2 id="3-穷举协议">3. 穷举协议</h2>
+<ul>
+<li>输入空间：3 bit，共8个状态；</li>
+<li>部分标注状态：每点可为未标注/0/1，共<code>3^8=6,561</code>个；</li>
+<li>完整规则：256条；</li>
+<li>每条规则的样本顺序：<code>8!=40,320</code>条；</li>
+<li>prior 样本：2,097,152个网络；</li>
+<li>同时计算 hard-conditioned 与多个 Gibbs beta 口径；</li>
+<li>另存完整规则 microcanonical volume，便于与后续 SMC 体积曲线对接。</li>
+</ul>
+<h2 id="4-判决边界">4. 判决边界</h2>
+<p>路径不变量本身是同一配分函数上的望远镜恒等式，不应包装成新定律。实验真正检查的是数值闭合、网络参考测度下端点成本的规则差异，以及此前逐样本信息量直觉能否被放进一个自洽静态状态函数。它不预测真实 SGD 的逐步路径。</p>
+<h2 id="results">结果、解读与边界</h2>
+<h2 id="1-数值闭合">1. 数值闭合</h2>
+<p>2,097,152个 prior 样本、6,561个部分状态、256条规则和每条40,320个顺序全部完成。</p>
+<pre><code class="language-text">max path-invariance error       = 2.84e-14 bit
+max stage-decomposition error   = 1.42e-14 bit
+max Shapley-efficiency error    = 5.68e-14 bit
+hard predictive normalization  = 1.89e-15
+beta=1 normalization error      = 6.10e-08
+</code></pre>
+<p>因此，逐样本广义惊讶度确实是同一静态势函数的差；不同顺序重新分配每一步成本，但总成本严格等于完整规则端点自由能。</p>
+<figure class="result-figure"><a href="../assets/figures/e22_free_energy.png" target="_blank" rel="noopener"><img src="../assets/figures/e22_free_energy.png" alt="代表规则的静态自由能成本" loading="lazy"></a><figcaption>代表规则的静态自由能成本</figcaption></figure>
+<h2 id="2-rule150-仍是困难端点">2. Rule150 仍是困难端点</h2>
+<p>Rule150 即3-bit parity。在 hard-conditioned 口径下，其完整规则成本约29.0000007 bit，在256条规则中排名最难；在<code>beta=1</code> Gibbs 口径下成本约8.0625 bit，排名第二。这复现了此前逐样本启发式中 parity 困难的方向，但现在总量不再依赖加入顺序。</p>
+<h2 id="3-理论意义">3. 理论意义</h2>
+<p>E22 建立了三者的严格关系：</p>
+<ol>
+<li>当前训练集上的预测分支质量；</li>
+<li>新样本的广义惊讶度；</li>
+<li>完整规则的端点自由能或码长。</li>
+</ol>
+<p>它为 <a href="https://proceedings.neurips.cc/paper_files/paper/2018/hash/3b712de48137572f3849aabd5666a4e3-Abstract.html" target="_blank" rel="noopener">Blier 与 Ollivier（2018）的 prequential coding</a>、Bayesian evidence 和 <a href="https://mlanthology.org/colt/1989/levin1989colt-statistical/" target="_blank" rel="noopener">Levin、Tishby、Solla（1989）的统计力学配分函数</a>提供了共同语言，也说明 agreement 与 surprise 可以被理解为函数系综凝聚和自由能增量的两个侧面。</p>
+<h2 id="4-边界">4. 边界</h2>
+<ul>
+<li>该不变量属于静态参考测度，不意味着 SGD 是 Gibbs 采样器；</li>
+<li>每一步信息量仍依赖加入顺序，只有端点总和与 Shapley 平均具有相应不变性；</li>
+<li>端点难度依赖网络、参数化、输入编码、loss 和参考测度，不是机器无关 K 复杂度；</li>
+<li>3-bit 穷举确认数学闭环，但不能单独证明大网络上的定量外推。</li>
+</ul></div>
+        <footer class="experiment-pager"><a href="e21.html">← E21 Agreement 控制与共识复杂度前沿</a><a href="e23.html">E23 完整目标体积前瞻预测数据相变 →</a></footer>
+      </article>
+    </main>
+  </div>
+</body>
+</html>

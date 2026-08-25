@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="E24 先在4-bit、54条完整规则上把 Gaussian 参考体积推进到 hard-exact 区域，再选择唯一仍在追赶 parity4 的单点例外规则。随后从共享父系综并行推进两条分支，直接测量体积比是否在更深 loss 发生反转。">
+  <title>E24：深尾 Neural K-profile 与排序交叉 · Neural K 研究档案</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="../assets/site.js"></script>
+</head>
+<body data-page-kind="experiment">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+  
+    <header class="topbar">
+      <a class="site-mark" href="../index.html" aria-label="返回研究主文">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K 研究档案</span>
+      </a>
+      <nav class="top-nav" aria-label="全站导航"><a class="top-link" href="../index.html">研究主文</a><a class="top-link" href="../theory-core.html">理论核心</a><a class="top-link active" href="../experiments/index.html">实验索引</a><a class="top-link" href="../references.html">参考文献</a><a class="top-link" href="../evidence-ledger.html">证据总账</a></nav>
+      <nav class="language-switch" aria-label="语言"><span class="active" lang="zh-CN">中文</span><a href="../en/experiments/e24.html" lang="en">EN</a></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>目录</span>
+      </button>
+    </header>
+    
+  <div class="page-shell">
+    
+    <aside class="sidebar" id="sidebar" aria-label="本页目录">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">本页目录</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#overview">实验概览</a></li>
+<li><a href="#目的">目的</a></li>
+<li><a href="#运行顺序">运行顺序</a></li>
+<li><a href="#sha256">SHA256</a></li>
+<li><a href="#motivation">为什么做、怎样判决</a></li>
+<li><a href="#1-问题">1. 问题</a></li>
+<li><a href="#2-54规则深尾面板">2. 54规则深尾面板</a></li>
+<li><a href="#3-共享父分布判决">3. 共享父分布判决</a></li>
+<li><a href="#results">结果、解读与边界</a></li>
+<li><a href="#1-4-bit-面板筛出唯一追赶者">1. 4-bit 面板筛出唯一追赶者</a></li>
+<li><a href="#2-共享桥确认绝对体积反转">2. 共享桥确认绝对体积反转</a></li>
+<li><a href="#3-交叉不是-hard-function-切换">3. 交叉不是 hard function 切换</a></li>
+<li><a href="#4-理论裁决">4. 理论裁决</a></li>
+</ul>
+</div>
+</nav>
+        <div class="sidebar-label experiment-label">全部实验</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>静态硬条件化不足以描述训练函数分布</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-bit 反事实不变性与训练 loss 中心原则</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>函数系综动力学与网络参考语言</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>在 Mingard 2025协议中延长 post-fit 观察</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>固定 NTK 足够时的特征学习</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>连续 loss 条件下的静态函数质量</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>函数 ID 迁移与 matched-loss 静态对照</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>共享中间表示与有限容量压力</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>MNIST 80%隐藏标签噪声长训</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>4-bit raw-BCE 简单/复杂规则竞争</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule30 数据量与训练/验证梯度对齐</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND shortcut 的静态 loss 几何</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>AND shortcut 的 SGD 运输与单样本干预</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>加权 Rule-bit 的 loss 阶段函数换序</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Mod97 grokking 的完整函数与边缘凝聚</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity 终点偏好、全局入口与局部恢复</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>静态低-loss 质量与 optimizer 运输</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>高函数共识与符号可读性</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>完整真值表规则的 loss-resolved 体积</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Full-rule、固定 D 与 hard-margin 测度闭环</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement 控制与共识复杂度前沿</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>逐样本自由能与信息不变量</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>完整目标体积前瞻预测数据相变</span></a><a class="experiment-nav-link active" href="e24.html"><span>E24</span><span>深尾 Neural K-profile 与排序交叉</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST 样本复杂度与静态体积分支预测</span></a></nav>
+      </div>
+    </aside>
+    
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">E24 · 实验详情</div>
+          <h1>E24：深尾 Neural K-profile 与排序交叉</h1>
+          <p class="article-description">E24 先在4-bit、54条完整规则上把 Gaussian 参考体积推进到 hard-exact 区域，再选择唯一仍在追赶 parity4 的单点例外规则。随后从共享父系综并行推进两条分支，直接测量体积比是否在更深 loss 发生反转。</p>
+        </header>
+        <div class="article-body"><div class="source-bar"><span>复现脚本</span><div><a href="../../experiments/experiment_24_deep_neural_k_crossing/experiment_4bit_deep_volume_flow.py">experiment_4bit_deep_volume_flow.py</a><a href="../../experiments/experiment_24_deep_neural_k_crossing/experiment_parity4_flip0000_joint_deep_bridge.py">experiment_parity4_flip0000_joint_deep_bridge.py</a><a href="../../experiments/experiment_24_deep_neural_k_crossing/experiment_parity4_flip0000_joint_deep_bridge_lockstep.py">experiment_parity4_flip0000_joint_deep_bridge_lockstep.py</a></div></div><h2 id="overview">实验概览</h2>
+<h2 id="目的">目的</h2>
+<p>E24 先在4-bit、54条完整规则上把 Gaussian 参考体积推进到 hard-exact 区域，再选择唯一仍在追赶 parity4 的单点例外规则。随后从共享父系综并行推进两条分支，直接测量体积比是否在更深 loss 发生反转。</p>
+<h2 id="运行顺序">运行顺序</h2>
+<pre><code class="language-bash">python experiment_4bit_deep_volume_flow.py
+python experiment_parity4_flip0000_joint_deep_bridge_lockstep.py
+</code></pre>
+<p><code>experiment_parity4_flip0000_joint_deep_bridge.py</code>保留同一实验的完整入口；lockstep 版本是用于同步观察交叉并按共享阈值停止的冻结实现。</p>
+<ul>
+<li><a href="#motivation">实验动机与预注册</a></li>
+<li><a href="#results">结果与边界</a></li>
+</ul>
+<h2 id="sha256">SHA256</h2>
+<pre><code class="language-text">8a0f603cd83220e58faccba9f16451611d30db52d159bb48b11f2edeffba954a  deep panel script
+5e97d88619f6faa2d45b3eba4da46542e911c96941821a849b53912c3a1b5c91  joint script
+45de3e1fdfb03163e73db7ba5b00a83010e7bdb2c86cebf1f1d7e2b6f73f13b2  lockstep script
+935971c32e35d3cf0a8280629806fe2a1d12ccef48d507949badf99d87443bbe  deep panel ZIP
+db3b99d03e3369888d4e973f177d944ea1f5925b0a817aaa52dea35b727b3ad7  joint bridge ZIP
+</code></pre>
+<p>原始 ZIP 位于<code>E:\Downloads</code>，不进入发布包。</p>
+<h2 id="motivation">为什么做、怎样判决</h2>
+<h2 id="1-问题">1. 问题</h2>
+<p>E23 显示局部收缩速度和绝对体积排名均会随 loss 变化。接下来的可证伪问题是：</p>
+<ol>
+<li>排名变化是否只是浅 loss 噪声；</li>
+<li>进入 hard-exact 区域后，曲线是否仍能交叉；</li>
+<li>单个 hard function ID 是否足以定义复杂度状态。</li>
+</ol>
+<h2 id="2-54规则深尾面板">2. 54规则深尾面板</h2>
+<p>固定<code>4 -&gt; 16 -&gt; 1 tanh</code>、97参数、标准 Gaussian 神经坐标和 prior-preserving pCN。目标包含6条结构规则、16条 parity4 单例外、16条平衡双例外及16条随机平衡规则。8副本 x8,192粒子推进25个阈值，从 BCE 0.700到0.01913；hard-exact 充分边界为<code>ln(2)/16=0.04332</code>。</p>
+<p>按预先规则选择在最深共同阈值上绝对体积最接近 parity4、且局部收缩率可靠更快的候选，再做共享父系综验证，避免独立 SMC 归一化偏移制造虚假交叉。</p>
+<h2 id="3-共享父分布判决">3. 共享父分布判决</h2>
+<p>候选为：</p>
+<pre><code class="language-text">parity4          = 0x6996
+parity4_flip0000 = 0x6997
+</code></pre>
+<p>共同父分布后用8副本 x32,768粒子同步推进。定义</p>
+<div class="math-display">$$
+R(\epsilon)=\log\frac{V_{parity4}(\epsilon)}{V_{flip}(\epsilon)}.
+$$</div>
+<p><code>R&gt;0</code>表示单点例外体积更小。严格停止标准要求连续五个窗口8/8副本同时满足<code>R&gt;0</code>且相对局部收缩率为正；中位交叉与该严格标准必须分开报告。</p>
+<h2 id="results">结果、解读与边界</h2>
+<h2 id="1-4-bit-面板筛出唯一追赶者">1. 4-bit 面板筛出唯一追赶者</h2>
+<p>54/54目标完成。最深五个阈值上，六条结构规则的绝对体积和速度排序均稳定；parity4 在全部25个阈值上都是面板中体积最小者。16条随机、16条双例外和15/16单例外均未追上 parity4。</p>
+<p>唯一候选<code>flip0000</code>在<code>epsilon=0.01913</code>仍比 parity4 大约<code>exp(13.65)</code>，但最后窗口收缩率为159.49，对比 parity4 的152.75，八副本区间完全不重叠。独立曲线外推的交叉位置约<code>epsilon=0.0025</code>。</p>
+<h2 id="2-共享桥确认绝对体积反转">2. 共享桥确认绝对体积反转</h2>
+<p>共享父系综下，中位体积比在</p>
+<div class="math-display">$$
+\epsilon_{cross}\approx0.002308
+$$</div>
+<p>处穿过零点，与独立外推高度一致。最深阈值<code>epsilon=0.000952</code>时，中位<code>R=16.82</code>，即 flip 体积约比 parity4 小<code>2.0e7</code>倍。7/8副本已绝对反超，8/8副本的局部相对收缩率均为正，交叉后差距仍在扩大。</p>
+<p>预注册严格停止标准要求8/8副本连续五窗绝对反超，当前未满足；因此只能写“中位及7/8副本已反超，全部副本继续向同一方向”，不能写成“全副本稳健标准通过”。</p>
+<figure class="result-figure"><a href="../assets/figures/e24_deep_crossing.png" target="_blank" rel="noopener"><img src="../assets/figures/e24_deep_crossing.png" alt="共享父系综中的深尾体积交叉" loading="lazy"></a><figcaption>共享父系综中的深尾体积交叉</figcaption></figure>
+<h2 id="3-交叉不是-hard-function-切换">3. 交叉不是 hard function 切换</h2>
+<p>二者从很早开始就各自100%固定为不同 hard function，交叉发生在 hard-exact 深尾。表示和 margin 指标在交叉点附近平滑变化，没有同步的离散跳跃。这说明相对复杂度换序可以由长期连续收缩率差累积产生，而不要求 hard ID 或某个表示指标突然相变。</p>
+<h2 id="4-理论裁决">4. 理论裁决</h2>
+<ol>
+<li><code>K^N_f(epsilon)</code>不是由 prior 概率或单个斜率决定的固定排序；</li>
+<li>hard function ID 内部的连续 logit、margin 和表示实现是必要状态变量；</li>
+<li>单点不可复用例外的深尾成本可以晚于 parity 的架构错配成本显现；</li>
+<li>复杂度应以 profile 为主，局部斜率和曲率为导出量；</li>
+<li>该静态结果不证明 SGD 在交叉点发生 feature learning，只刻画它面对的几何压力。</li>
+</ol></div>
+        <footer class="experiment-pager"><a href="e23.html">← E23 完整目标体积前瞻预测数据相变</a><a href="e25.html">E25 MNIST 样本复杂度与静态体积分支预测 →</a></footer>
+      </article>
+    </main>
+  </div>
+</body>
+</html>

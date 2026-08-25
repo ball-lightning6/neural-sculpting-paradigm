@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Separate the existence of a fixed-kernel solution from whether a finite network still reorganizes its features during end-to-end training.">
+  <title>E05: Feature Learning When a Fixed NTK Is Already Sufficient · Neural K Research Archive</title>
+  <link rel="stylesheet" href="../../assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="../../assets/site.js"></script>
+</head>
+<body data-page-kind="experiment">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+  
+    <header class="topbar">
+      <a class="site-mark" href="../index.html" aria-label="Back to the research narrative">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K Research Archive</span>
+      </a>
+      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="../index.html">Research</a><a class="top-link" href="../theory-core.html">Core Theory</a><a class="top-link active" href="../experiments/index.html">Experiments</a><a class="top-link" href="../references.html">References</a><a class="top-link" href="../evidence-ledger.html">Evidence</a></nav>
+      <nav class="language-switch" aria-label="Language"><a href="../../experiments/e05.html" lang="zh-CN">中文</a><span class="active" lang="en">EN</span></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>Contents</span>
+      </button>
+    </header>
+    
+  <div class="page-shell">
+    
+    <aside class="sidebar" id="sidebar" aria-label="On this page">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">On this page</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#overview">Experiment overview</a></li>
+<li><a href="#motivation">Why this experiment was run</a></li>
+<li><a href="#results">Results, interpretation, and limits</a></li>
+</ul>
+</div>
+</nav>
+        <div class="sidebar-label experiment-label">All experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>Static Hard Conditioning versus Optimizer-Induced Function Transport</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-Bit Counterfactual Invariance</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>Prior-Consistent Function Dynamics and Width Intervention</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>Post-Fit Drift in the Mingard 2025 Boolean Protocol</span></a><a class="experiment-nav-link active" href="e05.html"><span>E05</span><span>Feature Learning When a Fixed NTK Is Already Sufficient</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>Loss-Conditioned Prior Annealing</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>Function-ID Wandering and Matched-Loss Static Controls</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>Shared Intermediate Computation under Finite Capacity</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>Long Training with 80% Hidden Label Noise</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>Raw-BCE Competition between Preregistered Simple and Complex Function Pairs</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule-30 Train/Validation Gradient Alignment across Dataset Size</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND Shortcut Static Geometry and a One-Example Balance Intervention</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>SGD Dynamics of the AND Shortcut and Balanced Intervention</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>Weighted Rule-Bit Function Switching across Loss Scales</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Complete Functions versus Marginal Concentration in Modular-97 Grokking</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity Reachability, Half-Space Generalization, and Scaffold Recovery</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>Static Deep-Loss Mass versus Optimizer Transport</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>Teacher-Free Consensus and Symbolic Readability</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>Full-Truth-Table Rule Volume</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Measure Closure between Full Rules, Fixed Datasets, and Margin Cores</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement Control and a Consensus Complexity Frontier</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>Per-Example Free Energy and an Information Invariant</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>Prospective Prediction from Full-Rule Volume to Data Transition</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>Deep Neural K Crossing of Parity4 and a One-Point Exception</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST Sample Complexity and Static Branch Prediction</span></a></nav>
+      </div>
+    </aside>
+    
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">E05 · Experiment details</div>
+          <h1>E05: Feature Learning When a Fixed NTK Is Already Sufficient</h1>
+          <p class="article-description">Separate the existence of a fixed-kernel solution from whether a finite network still reorganizes its features during end-to-end training.</p>
+        </header>
+        <div class="article-body"><div class="source-bar"><span>Scripts</span><div><a href="../../../experiments/experiment_05_ntk_sufficient_feature_learning/rule110_ntk_sufficient_feature_learning.py">rule110_ntk_sufficient_feature_learning.py</a></div></div><h2 id="overview">Experiment overview</h2>
+<p>The task is one-step 30-bit Rule 110 with 8,000 training states and 20,000 unseen states. A bias-free <code>30 -&gt; 1024 x 3 ReLU -&gt; 30</code> network is trained with BCE and MSE. The experiment distinguishes the analytic infinite-width NTK, the finite-width empirical NTK at initialization, and the evolving multi-output block NTK during training.</p>
+<h2 id="motivation">Why this experiment was run</h2>
+<p><a href="https://arxiv.org/abs/2507.19680" target="_blank" rel="noopener">Göring et al. (2025)</a> emphasize that feature-learning strength and feature usefulness are different. E05 asks the reverse sufficiency question: if the fixed <a href="https://arxiv.org/abs/1806.07572" target="_blank" rel="noopener">NTK of Jacot et al. (2018)</a> already solves the rule, does the finite network remain lazy?</p>
+<h2 id="results">Results, interpretation, and limits</h2>
+<p>The analytic infinite-width NTK made zero errors over 600,000 unseen output bits. The width-1,024 empirical NTK was already near-perfect on three representative output bits. Nevertheless, all six finite-network trajectories reached complete zero error while changing hidden representations, ReLU gates, and empirical block NTKs.</p>
+<p>Centered kernel alignment, following <a href="https://proceedings.mlr.press/v97/kornblith19a.html" target="_blank" rel="noopener">Kornblith et al. (2019)</a>, was used together with gate flips and target alignment. Five of six trajectories crossed the preregistered post-fit structural-change thresholds; the sixth retained smaller but nonzero changes.</p>
+<p><strong>Conclusion.</strong> Kernel sufficiency does not force finite-network training to remain in the initialization-kernel mechanism. Feature learning can occur even when it is not necessary for generalization, so representation change cannot be equated with generalization or compression.</p></div>
+        <footer class="experiment-pager"><a href="e04.html">← E04 Post-Fit Drift in the Mingard 2025 Boolean Protocol</a><a href="e06.html">E06 Loss-Conditioned Prior Annealing →</a></footer>
+      </article>
+    </main>
+  </div>
+</body>
+</html>

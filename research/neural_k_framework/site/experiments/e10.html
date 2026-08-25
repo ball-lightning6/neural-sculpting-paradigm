@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="E10 先用多任务大规模静态扫描检验“lower loss 普遍提高简单函数质量”，再针对训练集歧义和外部复杂度代理问题，构造训练输出完全一致、但表示难度严格有序的 simple/complex 函数对进行直接赔率检验。">
+  <title>E10：4-bit raw-BCE 简单/复杂规则竞争 · Neural K 研究档案</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="../assets/site.js"></script>
+</head>
+<body data-page-kind="experiment">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+  
+    <header class="topbar">
+      <a class="site-mark" href="../index.html" aria-label="返回研究主文">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K 研究档案</span>
+      </a>
+      <nav class="top-nav" aria-label="全站导航"><a class="top-link" href="../index.html">研究主文</a><a class="top-link" href="../theory-core.html">理论核心</a><a class="top-link active" href="../experiments/index.html">实验索引</a><a class="top-link" href="../references.html">参考文献</a><a class="top-link" href="../evidence-ledger.html">证据总账</a></nav>
+      <nav class="language-switch" aria-label="语言"><span class="active" lang="zh-CN">中文</span><a href="../en/experiments/e10.html" lang="en">EN</a></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>目录</span>
+      </button>
+    </header>
+    
+  <div class="page-shell">
+    
+    <aside class="sidebar" id="sidebar" aria-label="本页目录">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">本页目录</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#overview">实验概览</a></li>
+<li><a href="#目的">目的</a></li>
+<li><a href="#文件">文件</a></li>
+<li><a href="#冻结来源">冻结来源</a></li>
+<li><a href="#motivation">为什么做、怎样判决</a></li>
+<li><a href="#1-为什么广泛扫描先失败">1. 为什么广泛扫描先失败</a></li>
+<li><a href="#2-两个更干净的判别原则">2. 两个更干净的判别原则</a></li>
+<li><a href="#3-主判决量">3. 主判决量</a></li>
+<li><a href="#4-最终可靠性标准">4. 最终可靠性标准</a></li>
+<li><a href="#5-边界">5. 边界</a></li>
+<li><a href="#results">结果、解读与边界</a></li>
+<li><a href="#1-广泛复杂度代理扫描否定强版本">1. 广泛复杂度代理扫描否定强版本</a></li>
+<li><a href="#2-先验-baseline-已强烈偏向简单规则">2. 先验 baseline 已强烈偏向简单规则</a></li>
+<li><a href="#3-最终重审计-raw-bce-为12-12">3. 最终重审计：raw BCE 为12/12</a></li>
+<li><a href="#4-理论作用">4. 理论作用</a></li>
+<li><a href="#5-边界与后续修正">5. 边界与后续修正</a></li>
+</ul>
+</div>
+</nav>
+        <div class="sidebar-label experiment-label">全部实验</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>静态硬条件化不足以描述训练函数分布</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-bit 反事实不变性与训练 loss 中心原则</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>函数系综动力学与网络参考语言</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>在 Mingard 2025协议中延长 post-fit 观察</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>固定 NTK 足够时的特征学习</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>连续 loss 条件下的静态函数质量</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>函数 ID 迁移与 matched-loss 静态对照</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>共享中间表示与有限容量压力</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>MNIST 80%隐藏标签噪声长训</span></a><a class="experiment-nav-link active" href="e10.html"><span>E10</span><span>4-bit raw-BCE 简单/复杂规则竞争</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule30 数据量与训练/验证梯度对齐</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND shortcut 的静态 loss 几何</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>AND shortcut 的 SGD 运输与单样本干预</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>加权 Rule-bit 的 loss 阶段函数换序</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Mod97 grokking 的完整函数与边缘凝聚</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity 终点偏好、全局入口与局部恢复</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>静态低-loss 质量与 optimizer 运输</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>高函数共识与符号可读性</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>完整真值表规则的 loss-resolved 体积</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Full-rule、固定 D 与 hard-margin 测度闭环</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement 控制与共识复杂度前沿</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>逐样本自由能与信息不变量</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>完整目标体积前瞻预测数据相变</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>深尾 Neural K-profile 与排序交叉</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST 样本复杂度与静态体积分支预测</span></a></nav>
+      </div>
+    </aside>
+    
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">E10 · 实验详情</div>
+          <h1>E10：4-bit raw-BCE 简单/复杂规则竞争</h1>
+          <p class="article-description">E10 先用多任务大规模静态扫描检验“lower loss 普遍提高简单函数质量”，再针对训练集歧义和外部复杂度代理问题，构造训练输出完全一致、但表示难度严格有序的 simple/complex 函数对进行直接赔率检验。</p>
+        </header>
+        <div class="article-body"><div class="source-bar"><span>复现脚本</span><div><a href="../../experiments/experiment_10_raw_bce_rule_pair_competition/analyze_loss_conditioned_rule_pair_competition.py">analyze_loss_conditioned_rule_pair_competition.py</a><a href="../../experiments/experiment_10_raw_bce_rule_pair_competition/experiment_loss_conditioned_prior_scaling_4bit.py">experiment_loss_conditioned_prior_scaling_4bit.py</a></div></div><h2 id="overview">实验概览</h2>
+<h2 id="目的">目的</h2>
+<p>E10 先用多任务大规模静态扫描检验“lower loss 普遍提高简单函数质量”，再针对训练集歧义和外部复杂度代理问题，构造训练输出完全一致、但表示难度严格有序的 simple/complex 函数对进行直接赔率检验。</p>
+<h2 id="文件">文件</h2>
+<ul>
+<li><a href="#motivation">实验动机与预注册判据</a></li>
+<li><a href="#results">完整结果、重审计与阶段裁决</a></li>
+<li><a href="../../experiments/experiment_10_raw_bce_rule_pair_competition/experiment_loss_conditioned_prior_scaling_4bit.py"><code>experiment_loss_conditioned_prior_scaling_4bit.py</code></a></li>
+<li><a href="../../experiments/experiment_10_raw_bce_rule_pair_competition/analyze_loss_conditioned_rule_pair_competition.py"><code>analyze_loss_conditioned_rule_pair_competition.py</code></a></li>
+</ul>
+<p>运行顺序：</p>
+<pre><code class="language-bash">python experiment_loss_conditioned_prior_scaling_4bit.py
+python analyze_loss_conditioned_rule_pair_competition.py
+</code></pre>
+<p>第二个冻结脚本已把默认来源恢复为第一步生成的<code>/root/results_loss_conditioned_prior_scaling_4bit</code>，并采用最终可靠性标准。</p>
+<h2 id="冻结来源">冻结来源</h2>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>来源</th>
+<th>SHA256</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>experiment_loss_conditioned_prior_scaling_4bit.py</code></td>
+<td>同名开发版</td>
+<td><code>dff27be60da28f4e537c5547f68d7d2a78b69727305b0ecf646ea0c5301cf5ab</code></td>
+</tr>
+<tr>
+<td><code>analyze_loss_conditioned_rule_pair_competition.py</code></td>
+<td>开发版恢复Aug-19数据路径后的发布副本</td>
+<td><code>5cff544b8b96199af4dbdd6ca2270c701639745f511d1b27f9cef755294256a2</code></td>
+</tr>
+</tbody>
+</table>
+<p>原始结果：</p>
+<table>
+<thead>
+<tr>
+<th>结果包</th>
+<th>SHA256</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>E:\Downloads\results_loss_conditioned_prior_scaling_4bit.zip</code></td>
+<td><code>9436665cb0ce8587b664cb9ce8da664527805022029c88cef125415656d2aa20</code></td>
+</tr>
+<tr>
+<td><code>E:\Downloads\results_loss_conditioned_rule_pair_competition.zip</code></td>
+<td><code>6df85b66acedcd670866fbf3e0bdbbc9ade06c36d8f5ff52d8f261411049a388</code></td>
+</tr>
+</tbody>
+</table>
+<p>旧 pair ZIP 中的自动<code>summary.json</code>使用了已废弃的尾部可靠性标准。正文数字来自<code>pair_odds_trajectories.csv</code>按最终零假设期望计数规则的重审计，冻结分析脚本可在重新生成 prior shards 后完整复现。ZIP 不进入最终发布包。</p>
+<h2 id="motivation">为什么做、怎样判决</h2>
+<h2 id="1-为什么广泛扫描先失败">1. 为什么广泛扫描先失败</h2>
+<p>第一阶段在完整4-bit 空间中组合 projection、majority、parity 和随机平衡训练约束，扫描<code>k=2,4,6,8</code>及两种网络测度：</p>
+<ul>
+<li><code>tanh 16x2</code>：67,108,864个 prior 样本；</li>
+<li><code>GELU+LayerNorm 1024x3</code>：100,663,296个 prior 样本。</li>
+</ul>
+<p>但“人类指定的生成规则”不一定是当前有限训练集下网络偏好的简单延拓；ANF、DNF、决策树和综合 rank 也不一定对应网络语言。严重欠约束条件下，低 loss 转向另一个阈值函数不能直接算作简单性失败。</p>
+<h2 id="2-两个更干净的判别原则">2. 两个更干净的判别原则</h2>
+<ol>
+<li>使用样本足以暴露的明显简单规则，如 projection、AND 和 OR；</li>
+<li>直接比较一对函数，其中 complex 由 simple 加入离散例外，并且：
+   - 二者在训练集上逐点完全相同；
+   - 完整 truth table Hamming weight 相同；
+   - simple 是单层线性阈值函数；
+   - complex 经线性规划证明不可线性分；
+   - complex 的 ANF、normal form 与 decision tree 代理均严格更大。</li>
+</ol>
+<p>训练样本只从两函数 agreement set 中抽取，使用<code>k=10,12,14</code>。</p>
+<h2 id="3-主判决量">3. 主判决量</h2>
+<p>对 simple 函数<code>f_s</code>和 complex 函数<code>f_c</code>定义：</p>
+<div class="math-display">$$
+R(q)=
+\frac{P_q(f_s)/P_q(f_c)}{P_{hard}(f_s)/P_{hard}(f_c)},
+$$</div>
+<p>其中<code>q</code>是 raw BCE 最低分位，<code>P_hard</code>是只满足相同 hard constraints 的 baseline。<code>R(q)&gt;1</code>表示 lower raw BCE 进一步提高简单规则赔率。</p>
+<p>raw BCE 是唯一 primary endpoint，因为它是对应训练实际优化的 loss。normalized BCE 与 fixed-scale 只作机制诊断，不参与主命题真伪。</p>
+<h2 id="4-最终可靠性标准">4. 最终可靠性标准</h2>
+<p>旧自动摘要错误地只要求 tail 中 simple+complex 实际总数足够。由于 baseline 可能已极端偏向 simple，complex 的0/1个命中会主导赔率。最终规则改为：</p>
+<div class="math-display">$$
+E_0[N_s]=N_s^{base}q\ge20,
+\qquad
+E_0[N_c]=N_c^{base}q\ge20.
+$$</div>
+<p>每个条件选择满足该规则的最深分位，并用 Fisher exact test 比较“入选低 loss tail”的 simple/complex 概率。该标准在结果返回后、读取方向前由统计可靠性问题触发，必须与旧 ZIP 摘要分开记录。</p>
+<h2 id="5-边界">5. 边界</h2>
+<ul>
+<li>这仍是静态参考测度，不是 SGD 终点分布；</li>
+<li>12个可靠比较集中在 projection、AND、OR 的 moderate variants；</li>
+<li>high variants 和 parity 常因 prior 命中过少不可裁决；</li>
+<li>12/12结果证明所测函数对中的强倾向，不是所有 loss 区间、函数对和架构的定理。</li>
+</ul>
+<h2 id="results">结果、解读与边界</h2>
+<h2 id="1-广泛复杂度代理扫描否定强版本">1. 广泛复杂度代理扫描否定强版本</h2>
+<p>第一阶段共分析两种网络各24组约束。剔除没有可靠低-loss 切片的条件后，按当时综合复杂度面板，“变简单”比例约为：</p>
+<table>
+<thead>
+<tr>
+<th>口径</th>
+<th style="text-align: right;">有效条件</th>
+<th style="text-align: right;">综合复杂度下降</th>
+<th style="text-align: right;">最简单10%质量增加</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>raw BCE</td>
+<td style="text-align: right;">44</td>
+<td style="text-align: right;">56.8%</td>
+<td style="text-align: right;">34.1%</td>
+</tr>
+<tr>
+<td>normalized BCE</td>
+<td style="text-align: right;">44</td>
+<td style="text-align: right;">29.5%</td>
+<td style="text-align: right;">15.9%</td>
+</tr>
+<tr>
+<td>fixed scale</td>
+<td style="text-align: right;">42</td>
+<td style="text-align: right;">33.3%</td>
+<td style="text-align: right;">21.4%</td>
+</tr>
+</tbody>
+</table>
+<p>这否定“任意有限约束下，lower loss 都按外部 Boolean 复杂度代理单调简化”的强版本。大量所谓失败实际转向线性阈值函数，说明训练集歧义和复杂度语言错配严重。</p>
+<h2 id="2-先验-baseline-已强烈偏向简单规则">2. 先验 baseline 已强烈偏向简单规则</h2>
+<p>在 GELU-LN <code>1024x3</code> hard-exact baseline 中：</p>
+<table>
+<thead>
+<tr>
+<th>规则对</th>
+<th style="text-align: right;">simple数量</th>
+<th style="text-align: right;">complex数量</th>
+<th style="text-align: right;">比例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>x0</code></td>
+<td style="text-align: right;">226,375</td>
+<td style="text-align: right;">1,794</td>
+<td style="text-align: right;">126:1</td>
+</tr>
+<tr>
+<td><code>x0 AND x1</code></td>
+<td style="text-align: right;">38,404</td>
+<td style="text-align: right;">2,984</td>
+<td style="text-align: right;">12.9:1</td>
+</tr>
+<tr>
+<td><code>x0 OR x1</code></td>
+<td style="text-align: right;">137,064</td>
+<td style="text-align: right;">482</td>
+<td style="text-align: right;">284:1</td>
+</tr>
+</tbody>
+</table>
+<p>高复杂度四例外 variants 大多稀少到无法可靠进入 pairwise 检验。</p>
+<h2 id="3-最终重审计-raw-bce-为12-12">3. 最终重审计：raw BCE 为12/12</h2>
+<p>使用零假设下 simple 与 complex 期望命中均不少于20的最终标准，raw BCE 得到12个可靠比较：</p>
+<ul>
+<li>12/12 simple odds 增加；</li>
+<li>12/12 Fisher 双侧检验显著偏向 simple；</li>
+<li>GELU 九组平均<code>log2 odds enrichment=3.40</code>，约10.6倍；</li>
+<li>tanh 三组平均<code>log2 odds enrichment=2.34</code>，约5.1倍。</li>
+</ul>
+<p>代表性结果：</p>
+<table>
+<thead>
+<tr>
+<th>架构/规则</th>
+<th style="text-align: right;">k</th>
+<th style="text-align: right;">retained fraction</th>
+<th style="text-align: right;">odds enrichment</th>
+<th style="text-align: right;">Fisher p</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GELU <code>x0</code></td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">2%</td>
+<td style="text-align: right;">13.59x</td>
+<td style="text-align: right;"><code>5.88e-8</code></td>
+</tr>
+<tr>
+<td>GELU <code>x0</code></td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">2%</td>
+<td style="text-align: right;">26.71x</td>
+<td style="text-align: right;"><code>2.00e-16</code></td>
+</tr>
+<tr>
+<td>GELU <code>x0</code></td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">2%</td>
+<td style="text-align: right;">81.99x</td>
+<td style="text-align: right;"><code>1.96e-18</code></td>
+</tr>
+<tr>
+<td>GELU AND</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">1%</td>
+<td style="text-align: right;">9.96x</td>
+<td style="text-align: right;"><code>3.95e-14</code></td>
+</tr>
+<tr>
+<td>GELU OR</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">5%</td>
+<td style="text-align: right;">8.49x</td>
+<td style="text-align: right;"><code>4.85e-10</code></td>
+</tr>
+<tr>
+<td>tanh AND</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">20%</td>
+<td style="text-align: right;">6.00x</td>
+<td style="text-align: right;"><code>1.58e-10</code></td>
+</tr>
+</tbody>
+</table>
+<p>normalized 口径为9/12方向为正；fixed-scale 只有 GELU 九组满足最终期望计数，其中6/9方向为正。它们是机制诊断，不参与 raw 主判决。</p>
+<h2 id="4-理论作用">4. 理论作用</h2>
+<p>E10 在限定函数对上直接支持：</p>
+<blockquote>
+<p>对满足完全相同训练 hard constraints、但在网络表示语言中严格有序的函数对，进入更低真实 raw BCE 子水平集会显著提高简单函数相对赔率。</p>
+</blockquote>
+<p>该结果把“复杂函数也存在同样低 loss 解”与“复杂函数拥有同样低-loss 概率质量”分开。它没有给训练增加复杂度目标；网络仍只优化 raw BCE，简单性富集是静态几何上的经验后果。</p>
+<h2 id="5-边界与后续修正">5. 边界与后续修正</h2>
+<ul>
+<li>结果不赋予研究者生成脚本先验特权；simple/complex 顺序由独立函数对构造；</li>
+<li>broad scan 的失败仍有效，说明外部复杂度代理不能替代架构相对难度；</li>
+<li>静态赔率倾向不等于 optimizer 分布，E07 已直接证明数值可显著偏离；</li>
+<li>12/12只检验每组选择的终端可靠切片，不证明赔率在整个 loss 路径单调；</li>
+<li>后来的 AND shortcut 和深尾交叉实验将进一步证明优势函数与体积排序可随 loss 尺度换序，因此 E10 是强正证据，不是无条件定律。</li>
+</ul></div>
+        <footer class="experiment-pager"><a href="e09.html">← E09 MNIST 80%隐藏标签噪声长训</a><a href="e11.html">E11 Rule30 数据量与训练/验证梯度对齐 →</a></footer>
+      </article>
+    </main>
+  </div>
+</body>
+</html>

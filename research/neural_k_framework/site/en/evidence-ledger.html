@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Measurement definitions, decisive numbers, negative results, integrated interpretation, and scope boundaries.">
+  <title>Neural K Evidence Ledger · Neural K Research Archive</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="../assets/site.js"></script>
+</head>
+<body data-page-kind="ledger">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+  
+    <header class="topbar">
+      <a class="site-mark" href="index.html" aria-label="Back to the research narrative">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K Research Archive</span>
+      </a>
+      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="index.html">Research</a><a class="top-link" href="theory-core.html">Core Theory</a><a class="top-link" href="experiments/index.html">Experiments</a><a class="top-link" href="references.html">References</a><a class="top-link active" href="evidence-ledger.html">Evidence</a></nav>
+      <nav class="language-switch" aria-label="Language"><a href="../evidence-ledger.html" lang="zh-CN">中文</a><span class="active" lang="en">EN</span></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>Contents</span>
+      </button>
+    </header>
+    
+  <div class="page-shell">
+    
+    <aside class="sidebar" id="sidebar" aria-label="On this page">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">On this page</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#abstract">Abstract</a></li>
+<li><a href="#1-framing-and-scope">1. Framing and scope</a></li>
+<li><a href="#2-measurement-objects">2. Measurement objects</a><ul>
+<li><a href="#2-1-neural-reference-protocol-and-training-loss">2.1 Neural reference protocol and training loss</a></li>
+<li><a href="#2-2-function-resolved-mass-under-a-fixed-dataset">2.2 Function-resolved mass under a fixed dataset</a></li>
+<li><a href="#2-3-full-target-volume-and-neural-k">2.3 Full-target volume and Neural K</a></li>
+<li><a href="#2-4-optimizer-induced-distribution">2.4 Optimizer-induced distribution</a></li>
+<li><a href="#2-5-predictive-branches-and-free-energy">2.5 Predictive branches and free energy</a></li>
+</ul>
+</li>
+<li><a href="#3-experimental-evidence-chain">3. Experimental evidence chain</a><ul>
+<li><a href="#e01-static-hard-conditioning-versus-optimizer-induced-function-transport">E01 · Static Hard Conditioning versus Optimizer-Induced Function Transport</a></li>
+<li><a href="#e02-rule-bit-counterfactual-invariance">E02 · Rule-Bit Counterfactual Invariance</a></li>
+<li><a href="#e03-prior-consistent-function-dynamics-and-width-intervention">E03 · Prior-Consistent Function Dynamics and Width Intervention</a></li>
+<li><a href="#e04-post-fit-drift-in-the-mingard-2025-boolean-protocol">E04 · Post-Fit Drift in the Mingard 2025 Boolean Protocol</a></li>
+<li><a href="#e05-feature-learning-when-a-fixed-ntk-is-already-sufficient">E05 · Feature Learning When a Fixed NTK Is Already Sufficient</a></li>
+<li><a href="#e06-loss-conditioned-prior-annealing">E06 · Loss-Conditioned Prior Annealing</a></li>
+<li><a href="#e07-function-id-wandering-and-matched-loss-static-controls">E07 · Function-ID Wandering and Matched-Loss Static Controls</a></li>
+<li><a href="#e08-shared-intermediate-computation-under-finite-capacity">E08 · Shared Intermediate Computation under Finite Capacity</a></li>
+<li><a href="#e09-long-training-with-80-hidden-label-noise">E09 · Long Training with 80% Hidden Label Noise</a></li>
+<li><a href="#e10-raw-bce-competition-between-preregistered-simple-and-complex-function-pairs">E10 · Raw-BCE Competition between Preregistered Simple and Complex Function Pairs</a></li>
+<li><a href="#e11-rule-30-train-validation-gradient-alignment-across-dataset-size">E11 · Rule-30 Train/Validation Gradient Alignment across Dataset Size</a></li>
+<li><a href="#e12-and-shortcut-static-geometry-and-a-one-example-balance-intervention">E12 · AND Shortcut Static Geometry and a One-Example Balance Intervention</a></li>
+<li><a href="#e13-sgd-dynamics-of-the-and-shortcut-and-balanced-intervention">E13 · SGD Dynamics of the AND Shortcut and Balanced Intervention</a></li>
+<li><a href="#e14-weighted-rule-bit-function-switching-across-loss-scales">E14 · Weighted Rule-Bit Function Switching across Loss Scales</a></li>
+<li><a href="#e15-complete-functions-versus-marginal-concentration-in-modular-97-grokking">E15 · Complete Functions versus Marginal Concentration in Modular-97 Grokking</a></li>
+<li><a href="#e16-parity-reachability-half-space-generalization-and-scaffold-recovery">E16 · Parity Reachability, Half-Space Generalization, and Scaffold Recovery</a></li>
+<li><a href="#e17-static-deep-loss-mass-versus-optimizer-transport">E17 · Static Deep-Loss Mass versus Optimizer Transport</a></li>
+<li><a href="#e18-teacher-free-consensus-and-symbolic-readability">E18 · Teacher-Free Consensus and Symbolic Readability</a></li>
+<li><a href="#e19-full-truth-table-rule-volume">E19 · Full-Truth-Table Rule Volume</a></li>
+<li><a href="#e20-measure-closure-between-full-rules-fixed-datasets-and-margin-cores">E20 · Measure Closure between Full Rules, Fixed Datasets, and Margin Cores</a></li>
+<li><a href="#e21-agreement-control-and-a-consensus-complexity-frontier">E21 · Agreement Control and a Consensus Complexity Frontier</a></li>
+<li><a href="#e22-per-example-free-energy-and-an-information-invariant">E22 · Per-Example Free Energy and an Information Invariant</a></li>
+<li><a href="#e23-prospective-prediction-from-full-rule-volume-to-data-transition">E23 · Prospective Prediction from Full-Rule Volume to Data Transition</a></li>
+<li><a href="#e24-deep-neural-k-crossing-of-parity4-and-a-one-point-exception">E24 · Deep Neural K Crossing of Parity4 and a One-Point Exception</a></li>
+<li><a href="#e25-mnist-sample-complexity-and-static-branch-prediction">E25 · MNIST Sample Complexity and Static Branch Prediction</a></li>
+</ul>
+</li>
+<li><a href="#4-final-integrated-picture">4. Final integrated picture</a><ul>
+<li><a href="#4-1-two-static-empirical-principles">4.1 Two static empirical principles</a></li>
+<li><a href="#4-2-data-amount-and-loss-depth">4.2 Data amount and loss depth</a></li>
+<li><a href="#4-3-grokking-overfitting-and-noise">4.3 Grokking, overfitting, and noise</a></li>
+<li><a href="#4-4-feature-reuse-and-symbolic-structure">4.4 Feature reuse and symbolic structure</a></li>
+<li><a href="#4-5-agreement">4.5 Agreement</a></li>
+</ul>
+</li>
+<li><a href="#5-relation-to-external-theory">5. Relation to external theory</a></li>
+<li><a href="#6-evidence-boundaries-and-next-falsifiable-tests">6. Evidence boundaries and next falsifiable tests</a></li>
+</ul>
+</div>
+</nav>
+        <a class="sidebar-action" href="index.html">Return to the narrative →</a>
+      </div>
+    </aside>
+    
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">Internal material · English evidence edition</div>
+          <h1>Neural K Evidence Ledger</h1>
+          <p class="article-description">Measurement definitions, decisive numbers, negative results, integrated interpretation, and scope boundaries.</p>
+        </header>
+        <div class="article-body"><div class="notice warning"><strong>Internal evidence ledger</strong><span>This page retains detailed measurements, negative results, and scope limits. Start with the research narrative on a first read.</span></div>
+    <nav class="ledger-path" aria-label="Recommended evidence-ledger reading path">
+      <span>Recommended path</span>
+      <a href="#abstract">Abstract</a>
+      <a href="#3-experimental-evidence-chain">Evidence chain</a>
+      <a href="#4-final-integrated-picture">Integrated picture</a>
+      <a href="#6-evidence-boundaries-and-next-falsifiable-tests">Boundaries</a>
+    </nav>
+    <blockquote>
+<p><strong>Status: internal evidence ledger, not a finished paper.</strong> This English edition preserves the measurement definitions, decisive numbers, negative results, and scope boundaries. The <a href="index.html">research narrative</a> is the recommended first read.</p>
+</blockquote>
+<h2 id="abstract">Abstract</h2>
+<p>Overparameterized neural networks can fit one finite training set with many incompatible complete functions, yet repeated training often concentrates on a small subset. Function-prior research has shown that random neural parameterizations are strongly nonuniform and often biased toward simple functions. This ledger tests what that static picture misses when training loss is treated as a continuous coordinate.</p>
+<p>The evidence separates four objects: the initialization function prior; static function-resolved mass at a fixed training set and loss threshold; the optimizer-induced pushforward over parameters and functions; and time samples from one trajectory. Complete-function enumeration, constrained SMC, paired interventions, multi-seed training, and real-image branch prediction show that these objects are related but not interchangeable.</p>
+<p>The central static result is differential contraction: compatible functions, and continuous implementations inside one hard-function cell, lose parameter mass at different and scale-dependent rates as raw loss is tightened. Rankings can reverse in the deep tail. The resulting Neural K-profile prospectively predicts parity sample transitions and produces strong MNIST label predictions, while optimizer-accessibility experiments show that static preference alone does not guarantee reachability.</p>
+<h2 id="1-framing-and-scope">1. Framing and scope</h2>
+<p>The optimizer receives the training objective and any explicit regularizer. It does not receive the researcher’s generator, validation set, semantic invariances, or a separate instruction to generalize. A finite dataset defines a family of compatible complete extensions, not a privileged “true function” inside the training objective.</p>
+<p>The broad repository matrix predates the present theory. It includes cellular automata, arithmetic, logic, algorithmic tasks, visual transformations, rule-conditioned pattern recognition, OOD rule composition, active-learning interventions, and explicit failures such as high-dimensional parity and endpoint-only Mod 3. Its value is breadth: exact rule learning is real across many controlled protocols, but representational capacity, data identifiability, and optimization accessibility remain distinct.</p>
+<p>The small Boolean experiments are measurement instruments. They do not claim that all real tasks are 3-bit systems. They make complete functions, compatible sets, and loss-resolved volume exactly observable so that explanations suggested by the broad experiments can be falsified.</p>
+<h2 id="2-measurement-objects">2. Measurement objects</h2>
+<h3 id="2-1-neural-reference-protocol-and-training-loss">2.1 Neural reference protocol and training loss</h3>
+<div class="math-display">$$
+\Pi=(\mathcal A,\varphi,\mu,\ell),
+$$</div>
+<p>where architecture and parameterization, encoding, parameter reference measure, and per-example loss are fixed together. For</p>
+<div class="math-display">$$
+D=\{(x_i,y_i)\}_{i=1}^{n},
+\qquad
+L_D(\theta)=\frac1n\sum_i\ell(h_\theta(x_i),y_i),
+$$</div>
+<p>the loss sublevel set is</p>
+<div class="math-display">$$
+A_D(\epsilon)=\{\theta:L_D(\theta)\le\epsilon\}.
+$$</div>
+<p>Every volume claim in this archive is relative to an explicit measure. It is not a coordinate-free Euclidean volume.</p>
+<h3 id="2-2-function-resolved-mass-under-a-fixed-dataset">2.2 Function-resolved mass under a fixed dataset</h3>
+<div class="math-display">$$
+\Omega_{\Pi,D}(f;\epsilon)
+=
+\mu_\Pi\{\theta:L_D(\theta)\le\epsilon,\ h_\theta=f\},
+$$</div>
+<p>and</p>
+<div class="math-display">$$
+Q^{\mathrm{static}}_{\Pi,D,\epsilon}(f)
+=
+\frac{\Omega_{\Pi,D}(f;\epsilon)}{\sum_g\Omega_{\Pi,D}(g;\epsilon)}.
+$$</div>
+<p>The rejected separable hypothesis is that every function receives one fixed factor multiplied by a common loss-dependent factor. E06, E10, E12, E14, E19, and E24 show genuine function-specific reweighting and ordering changes.</p>
+<h3 id="2-3-full-target-volume-and-neural-k">2.3 Full-target volume and Neural K</h3>
+<p>For a complete finite target,</p>
+<div class="math-display">$$
+V^{\mathrm{full}}_\Pi(f;\epsilon)
+=
+\mu_\Pi\{\theta:L_{D_{\mathrm{full}}(f)}(\theta)\le\epsilon\},
+$$</div>
+<p>and</p>
+<div class="math-display">$$
+K^N_\Pi(f;\epsilon)=-\log_2V^{\mathrm{full}}_\Pi(f;\epsilon).
+$$</div>
+<p>The full curve is the Neural K-profile. It is protocol-relative and not claimed to equal machine-independent Kolmogorov complexity.</p>
+<h3 id="2-4-optimizer-induced-distribution">2.4 Optimizer-induced distribution</h3>
+<div class="math-display">$$
+Q^{\mathrm{opt}}_{\Pi,D,t}=(T_{\Pi,D,t})_\#\mu_\Pi.
+$$</div>
+<p>Static mass can be a strong first-order determinant, while entrances, gradients, connectivity, optimizer state, numerical environment, and history generate additional transport. E01, E07, E16, and E17 directly test this separation.</p>
+<h3 id="2-5-predictive-branches-and-free-energy">2.5 Predictive branches and free energy</h3>
+<p>For one unseen input,</p>
+<div class="math-display">$$
+P_{\mathrm{hard}}(y\mid x,D,\epsilon)
+=
+\frac{\mu_\Pi\{\theta\in A_D(\epsilon):h_\theta(x)=y\}}
+{\mu_\Pi(A_D(\epsilon))}.
+$$</div>
+<p>The canonical partition function and free energy are</p>
+<div class="math-display">$$
+Z_{\Pi,D}(\beta)=\int e^{-\beta nL_D(\theta)}d\mu_\Pi(\theta),
+\qquad
+F_{\Pi,D}(\beta)=-\beta^{-1}\log Z_{\Pi,D}(\beta).
+$$</div>
+<p>E22 verifies that per-example generalized-surprise increments telescope to the complete-rule endpoint cost under one coherent static measure. It does not claim that real SGD samples the Gibbs ensemble.</p>
+<h2 id="3-experimental-evidence-chain">3. Experimental evidence chain</h2>
+<p>The following sections are generated from the same English experiment records used by the E01–E25 detail pages. Each preserves the motivation, actual measurement, decisive result, and limitation.</p>
+<h3 id="e01-static-hard-conditioning-versus-optimizer-induced-function-transport">E01 · <a href="experiments/e01.html">Static Hard Conditioning versus Optimizer-Induced Function Transport</a></h3>
+<p><strong>Purpose.</strong> Test whether repeated neural-network training merely samples the initialization function prior conditioned on training-label consistency.</p>
+<p>This unit contains two direct tests in a fully enumerable 3-bit Boolean space. E01a compares the initialization prior, the hard-conditioned prior, and the complete-function distribution produced by Adam. E01b uses a much wider network and a single training example to make the transport effect visually and statistically unmistakable.</p>
+<p>The complete output on all eight inputs is stored for every model, so no complexity proxy or test-accuracy summary is needed to identify the selected function.</p>
+<p>The function-prior program of <a href="https://www.nature.com/articles/s41467-018-03101-6" target="_blank" rel="noopener">Dingle et al. (2018)</a>, <a href="https://arxiv.org/abs/1805.08522" target="_blank" rel="noopener">Valle-Pérez et al. (2019)</a>, and <a href="https://www.jmlr.org/papers/v22/20-676.html" target="_blank" rel="noopener">Mingard et al. (2021)</a> supplies a strong static baseline: architecture induces a highly nonuniform function prior, and conditioning that prior on the observed labels can predict many first-order training statistics.</p>
+<p>The falsifiable strong version says that training only removes incompatible functions. If so, a network already compatible with the training labels should not be systematically transported to another complete function, and post-fit training should not continue changing function odds.</p>
+<p>E01a sampled 1,048,576 untrained networks and trained 8,192 models per condition. At first fit, total-variation distances from the hard-conditioned prior were about 0.10–0.31; 100 post-fit steps raised them to about 0.54–0.64, while repeated-sampling noise was only about 0.01–0.04. Function rankings reversed in several conditions, and different sample orders left measurable finite-time path dependence.</p>
+<p>E01b sampled 4,096 wide <code>3 -&gt; 1024 x 3 -&gt; 1</code> networks and trained 128 paired initializations per one-example condition. Roughly 72% of hard-compatible prior mass was nonconstant, so the hard-conditioned target-constant mass was only 27.5%–28.0%. Actual training made all 128/128 models the target constant after one optimizer step. Even the subset already correct on the training point moved unanimously.</p>
+<p><strong>Conclusion.</strong> Initialization simplicity bias is a real zeroth-order term, but optimization can transport mass between functions that already satisfy the training set. The result rejects exact hard-conditioning as a general training mechanism; it does not reject approximate Bayesian descriptions on richer continuous objects.</p>
+<h3 id="e02-rule-bit-counterfactual-invariance">E02 · <a href="experiments/e02.html">Rule-Bit Counterfactual Invariance</a></h3>
+<p><strong>Purpose.</strong> Determine whether a network automatically discards a control bit that is semantically irrelevant under the external rule but constant in training.</p>
+<p>Inputs contain one rule bit plus a 30-bit cellular-automaton state. The output is one step of Rule 30 or Rule 110. Stage 1 trains on only one fixed rule-bit value. Stage 2 flips the bit and adds an increasing number of counterfactual examples. Binary and centered encodings, both fixed-bit directions, warm starts, and cold controls are compared.</p>
+<p>The external generator says the trained branch should remain correct when an irrelevant control bit is flipped, but the optimizer never receives that counterfactual constraint. A strong “training recovers the cleanest semantic rule” claim predicts spontaneous invariance; a training-set-centered view predicts that constant features may be used as bias or gating resources.</p>
+<p>All Stage-1 branches fit their observed data exactly, but counterfactual behavior depended strongly on encoding and fixed value. In binary encoding, training at bit 0 and testing at bit 1 often remained exact; training at bit 1 and deleting that contribution at test time could nearly destroy Rule 110. Centered encoding produced still larger reversals.</p>
+<p>Small counterfactual datasets could write invariance into the objective, but sample requirements varied from one example to hundreds. Warm starts were not uniformly superior to cold training.</p>
+<p><strong>Conclusion.</strong> Human semantic irrelevance is not the same as geometric irrelevance in a parameterized network. The experiment supports protocol-relative complexity and data-defined invariance; it does not show that clean semantic programs are always selected automatically.</p>
+<h3 id="e03-prior-consistent-function-dynamics-and-width-intervention">E03 · <a href="experiments/e03.html">Prior-Consistent Function Dynamics and Width Intervention</a></h3>
+<p><strong>Purpose.</strong> Measure complete-function motion without defining complexity from the same outcomes that the theory is meant to explain.</p>
+<p>E03a initializes ordinary models and models that already satisfy all labels of one-, two-, or four-example 3-bit datasets. Complete function IDs and logits are recorded after one update and through 5,000 post-fit steps. E03b repeats the analysis for tanh networks of widths 16, 32, 64, and 128.</p>
+<p>After E01 rejected passive hard conditioning, an immediate temptation was to label every destination “lower Kolmogorov complexity.” That would be circular. E03 deliberately measures no complexity proxy. It establishes the raw dynamical facts that any later complexity theory must explain.</p>
+<p>Among prior-consistent models, one update changed the complete function in 72.7%, 99.0%, and 97.9% of the one-, two-, and four-example conditions. Long after first fit, 32.8%–50.8% of ordinary models still changed function. Marginal histograms could look stable while paired models moved in opposite directions.</p>
+<p>Width 16 through 128 preserved the qualitative post-fit transport, although priors and near-tied rankings changed. The tanh family and the much wider GELU–LayerNorm family also had systematically different priors and attractors.</p>
+<p><strong>Conclusion.</strong> Function transport is robust across the tested widths, but its destination is architecture-relative. The experiment does not identify transport with <a href="https://mlanthology.org/misc/1964/solomonoff1964misc-formal/" target="_blank" rel="noopener">Solomonoff induction</a> or machine-independent compression.</p>
+<h3 id="e04-post-fit-drift-in-the-mingard-2025-boolean-protocol">E04 · <a href="experiments/e04.html">Post-Fit Drift in the Mingard 2025 Boolean Protocol</a></h3>
+<p><strong>Purpose.</strong> Test whether first zero training error is the endpoint of function selection in a protocol used to support a static function-prior explanation.</p>
+<p>The experiment reproduces the central 7-bit Boolean setup of <a href="https://www.nature.com/articles/s41467-024-54813-x" target="_blank" rel="noopener">Mingard et al. (2025)</a>: 128-state truth tables, a <code>7 -&gt; 40 x 10 -&gt; 1 tanh</code> network, three target-complexity groups, two initialization scales, and advSGD example selection. The only conceptual intervention is to continue training for 100 and 1,000 steps after first zero classification error while saving the complete 128-bit function.</p>
+<p>Static hard conditioning has no time coordinate after interpolation. If the first zero-error snapshot is already representative of the conditioned endpoint, complete-function changes afterward should be sampling-level noise. Systematic post-fit drift would instead show that continuous loss and optimizer transport remain active.</p>
+<p>Across 12,288 trajectories, 59.96%–97.66% of models changed complete function at initialization scale 1, and 99.66%–99.80% changed at scale 8. Mean Hamming distances reached roughly 1–4 bits at scale 1 and about 15 bits at scale 8. Permutation tests for per-input marginal drift were significant in all six conditions.</p>
+<p>Direction was protocol-dependent: some groups improved over the full input space while others worsened. Lempel–Ziv trends were not uniform and are retained only as auxiliary statistics.</p>
+<p><strong>Conclusion.</strong> First interpolation is not the endpoint of function selection in this protocol. The claim is post-fit function drift, not monotone improvement under an artificial complexity proxy.</p>
+<h3 id="e05-feature-learning-when-a-fixed-ntk-is-already-sufficient">E05 · <a href="experiments/e05.html">Feature Learning When a Fixed NTK Is Already Sufficient</a></h3>
+<p><strong>Purpose.</strong> Separate the existence of a fixed-kernel solution from whether a finite network still reorganizes its features during end-to-end training.</p>
+<p>The task is one-step 30-bit Rule 110 with 8,000 training states and 20,000 unseen states. A bias-free <code>30 -&gt; 1024 x 3 ReLU -&gt; 30</code> network is trained with BCE and MSE. The experiment distinguishes the analytic infinite-width NTK, the finite-width empirical NTK at initialization, and the evolving multi-output block NTK during training.</p>
+<p><a href="https://arxiv.org/abs/2507.19680" target="_blank" rel="noopener">Göring et al. (2025)</a> emphasize that feature-learning strength and feature usefulness are different. E05 asks the reverse sufficiency question: if the fixed <a href="https://arxiv.org/abs/1806.07572" target="_blank" rel="noopener">NTK of Jacot et al. (2018)</a> already solves the rule, does the finite network remain lazy?</p>
+<p>The analytic infinite-width NTK made zero errors over 600,000 unseen output bits. The width-1,024 empirical NTK was already near-perfect on three representative output bits. Nevertheless, all six finite-network trajectories reached complete zero error while changing hidden representations, ReLU gates, and empirical block NTKs.</p>
+<p>Centered kernel alignment, following <a href="https://proceedings.mlr.press/v97/kornblith19a.html" target="_blank" rel="noopener">Kornblith et al. (2019)</a>, was used together with gate flips and target alignment. Five of six trajectories crossed the preregistered post-fit structural-change thresholds; the sixth retained smaller but nonzero changes.</p>
+<p><strong>Conclusion.</strong> Kernel sufficiency does not force finite-network training to remain in the initialization-kernel mechanism. Feature learning can occur even when it is not necessary for generalization, so representation change cannot be equated with generalization or compression.</p>
+<h3 id="e06-loss-conditioned-prior-annealing">E06 · <a href="experiments/e06.html">Loss-Conditioned Prior Annealing</a></h3>
+<p><strong>Purpose.</strong> Measure whether continuous raw training loss reweights complete functions beyond hard label consistency.</p>
+<p>The experiment samples 4,194,304 <code>3 -&gt; 1024 x 3 -&gt; 1</code> GELU–LayerNorm networks, stores all eight logits, and reconstructs complete-function distributions under nested raw-BCE tails, normalized-loss tails, fixed-scale controls, and Gibbs-style annealing for one-, two-, and four-example datasets.</p>
+<p>If every hard-compatible function has the same loss-dependent volume factor, tightening loss cannot change function odds. Function-specific reweighting would make loss depth a static selection coordinate even before optimizer dynamics are considered.</p>
+<p>For one example, the target constant rose strongly in raw-loss tails, but much of that effect disappeared under scale control. For two examples, a symmetric threshold function rose from 1.57% of the hard-exact population to 23.0% in the deepest raw tail, 50.7% in the deepest normalized tail, and 44.1% in a fixed-scale tail.</p>
+<p>The four-example condition rejected global monotonicity: the main SGD-attractor pair rose at intermediate depth and fell again in the deepest tail. Real SGD still concentrated far more strongly on that pair than the static sample.</p>
+<p><strong>Conclusion.</strong> Continuous loss produces architecture- and function-specific static reweighting, but no prespecified function is guaranteed to rise throughout all loss ranges, and the static distribution is not the optimizer distribution.</p>
+<h3 id="e07-function-id-wandering-and-matched-loss-static-controls">E07 · <a href="experiments/e07.html">Function-ID Wandering and Matched-Loss Static Controls</a></h3>
+<p><strong>Purpose.</strong> Observe post-fit movement between neighboring complete functions and test whether matching a scalar loss makes static and optimizer-induced distributions equal.</p>
+<p>A 4-bit, six-example dataset leaves 1,024 compatible hard extensions. 1,024 width-16 tanh networks are aligned at first complete fit and followed for 20,000 steps. A separate 4,194,304-network static sample is annealed to a normalized-BCE level matching late SGD.</p>
+<p>E06 showed static reweighting but not actual transport. E07 asks whether trajectories move through adjacent function cells and whether the late function distribution is determined by loss alone.</p>
+<p>1,019 of 1,024 trajectories changed complete function at least once after first fit, producing 4,379 transitions; 90.9% flipped only one unseen bit. Entropy fell from 5.217 bits to 1.291 bits and the top-function mass rose from 12.1% to 79.8%.</p>
+<p>At matched normalized loss, static sampling already amplified the eventual SGD attractor from 0.94% to 23.9%, showing strong first-order geometric relevance. Yet the static and SGD distributions still had Jensen–Shannon divergence 0.378 bits and reversed important pairwise odds.</p>
+<p><strong>Conclusion.</strong> Transport occurs mainly across neighboring hard cells. Static loss geometry identifies candidate structure, while optimizer history determines inflow and residence. Equal scalar loss does not imply equal function distribution.</p>
+<h3 id="e08-shared-intermediate-computation-under-finite-capacity">E08 · <a href="experiments/e08.html">Shared Intermediate Computation under Finite Capacity</a></h3>
+<p><strong>Purpose.</strong> Test whether reusable intermediate computation causally helps a network reach deeper loss with less capacity and data.</p>
+<p>Four matched task families are built from multi-step Rule 30/Rule 110 prefixes and two output summaries. In Shared conditions, both outputs can reuse the same expensive prefix; in Separate conditions, they require different prefixes. Joint networks can share hidden layers, while parameter-matched Split controls cannot.</p>
+<p>The phenomenological compression account requires a reason that reusable computation should be favored by the explicit loss objective. If sharing only changes label statistics, Shared tasks should also be easier in the Split control. A Joint-only advantage isolates finite-capacity computation reuse.</p>
+<p>The experiment scans prefix depth 0–3, widths 256/512/1024, and three seeds. Split controls show essentially zero Shared/Separate gap. At prefix depth 0, the Joint model has no sharing benefit. At depths 2 and 3, Shared wins all 18 paired comparisons.</p>
+<p>At depth 2, the Separate-to-Shared best-loss ratio decreases from 8.06 to 3.58 as width increases. At depth 3 it decreases from about 399 to 6.07. Fixed-loss crossing counts show the same sample-efficiency direction.</p>
+<p><strong>Conclusion.</strong> When common intermediate computation is sufficiently expensive, reuse lets a finite network reach lower loss with less capacity and data. The experiment does not prove that the learned hidden variables exactly equal the researcher-named CA prefixes.</p>
+<h3 id="e09-long-training-with-80-hidden-label-noise">E09 · <a href="experiments/e09.html">Long Training with 80% Hidden Label Noise</a></h3>
+<p><strong>Purpose.</strong> Separate early learning of shared digit structure from later memorization of fixed incorrect labels.</p>
+<p>Forty thousand of fifty thousand MNIST training labels are permanently corrupted without marking which inputs are noisy. An overparameterized CNN and a smaller CNN, each with three paired seeds and clean-label controls, are trained for 300 epochs.</p>
+<p>A widely repeated result says networks can reach roughly 91% test accuracy even with 80% corrupted labels. The crucial question is whether this occurs after noise interpolation or in an early phase before the wrong labels are memorized.</p>
+<p>The overparameterized CNN reached 91.89% test accuracy at epoch 4 and the small CNN reached 93.89% at epoch 5. At those times, noisy-train accuracy was only about 19.5%; the models were still roughly 91%–93% aligned with hidden clean labels and about 1% aligned with corrupted labels on the noisy subset.</p>
+<p>Continued noisy-loss reduction drove test accuracy down to roughly 23%–32%. No noisy model reached 99.99% interpolation within 300 epochs, so the experiment does not claim the final fully memorized endpoint.</p>
+<p><strong>Conclusion.</strong> The famous high accuracy is an early shared-structure phase, not evidence that a fully noise-memorizing network retains the rule. Overfitting is visible as loss pressure shifts from reusable structure to example-specific residuals.</p>
+<h3 id="e10-raw-bce-competition-between-preregistered-simple-and-complex-function-pairs">E10 · <a href="experiments/e10.html">Raw-BCE Competition between Preregistered Simple and Complex Function Pairs</a></h3>
+<p><strong>Purpose.</strong> Test lower-loss simplicity enrichment without defining complexity from the observed winner.</p>
+<p>Simple targets are projections, AND, or OR. Complex targets match them on every training example and have the same full output balance, but introduce two unseen exceptions. Linear programming certifies that the simple member is a threshold function and the complex member is not. Both tanh and GELU–LayerNorm reference networks are tested at training-set sizes 10, 12, and 14.</p>
+<p>A broad external-complexity scan produced many apparent failures because datasets were underconstrained and several supposedly complex functions were easy threshold functions for the MLP. The pair design removes those ambiguities and uses the actual raw BCE optimized by training.</p>
+<p>After requiring reliable expected counts for both members in the chosen tail, all 12 of 12 comparisons increased the simple-to-complex odds and all were significant. Mean odds amplification was about 10.6-fold for GELU and 5.1-fold for tanh. Examples include about 9.96-fold for GELU AND at k=12 and 8.49-fold for GELU OR at k=10.</p>
+<p><strong>Conclusion.</strong> Lower raw BCE favors independently ordered simple compatible functions in this controlled family. The result is not a universal all-loss monotonicity theorem and does not identify the optimizer distribution with static odds.</p>
+<h3 id="e11-rule-30-train-validation-gradient-alignment-across-dataset-size">E11 · <a href="experiments/e11.html">Rule-30 Train/Validation Gradient Alignment across Dataset Size</a></h3>
+<p><strong>Purpose.</strong> Measure how more rule-consistent data changes the direction of loss descent at matched training-loss levels.</p>
+<p>One-step 30-bit Rule 30 is trained with nested datasets from 256 to 4,096 examples using a <code>1024 x 3</code> GELU–LayerNorm MLP and five paired seeds. At fixed raw-BCE levels, the experiment computes the cosine alignment between the training gradient and an independent validation gradient.</p>
+<p>If increasing data makes the empirical objective a more faithful estimate of the full rule objective, the train and validation gradients should remain aligned to deeper loss. This directly tests the idea that additional examples extend the rule-aligned descent channel rather than merely changing the endpoint.</p>
+<p>Across BCE levels from 0.3 to 0.003, gradient alignment followed a strict dataset-size ordering in all five seeds. Larger datasets maintained positive rule-aligned descent at deeper loss, while small datasets diverged earlier.</p>
+<p><strong>Conclusion.</strong> More data changes the geometry of the descent direction throughout training and pushes the train/validation separation point deeper. This supports, but does not by itself prove, a monotone increase of target-function mass at every fixed raw-loss threshold.</p>
+<h3 id="e12-and-shortcut-static-geometry-and-a-one-example-balance-intervention">E12 · <a href="experiments/e12.html">AND Shortcut Static Geometry and a One-Example Balance Intervention</a></h3>
+<p><strong>Purpose.</strong> Determine whether the apparent failure of AND under lower loss is caused by loss geometry or by an imbalanced training set.</p>
+<p>The task is 4-bit AND with ten training examples and a panel of compatible hard functions. Static prior samples are sorted by raw training BCE to track function odds over the full accessible loss range. A minimally modified dataset replaces one example to balance the four local AND patterns.</p>
+<p>The initial dataset appeared to contradict the claim that lower loss favors the obvious simple AND rule. Because the pattern counts were strongly imbalanced, the correct intervention was to change one example while preserving as much of the original dataset as possible.</p>
+<p>In the original data, a conditional shortcut gained mass at intermediate loss and AND did not dominate throughout. Candidate odds crossed. After the one-example balance intervention, deep-loss AND mass increased substantially and the corresponding long-run optimizer ensemble moved much closer to AND.</p>
+<p><strong>Conclusion.</strong> The training set itself defines which compatible explanation is economical. A simple generator is not automatically the preferred extension of an imbalanced finite sample. The experiment also rejects permanent function ordering across loss depth.</p>
+<h3 id="e13-sgd-dynamics-of-the-and-shortcut-and-balanced-intervention">E13 · <a href="experiments/e13.html">SGD Dynamics of the AND Shortcut and Balanced Intervention</a></h3>
+<p><strong>Purpose.</strong> Test whether static loss-stage reordering appears in actual optimizer trajectories and whether one sample causally changes the long-run function distribution.</p>
+<p>Thousands of small tanh networks are trained on the original and minimally balanced ten-example AND datasets. Complete 16-bit hard functions are logged throughout long training, together with AND and shortcut masses, function entropy, agreement, and exception counts. Checkpointing and interrupt-safe saving support very long runs.</p>
+<p>Static odds alone do not prove that an optimizer follows the same ordering. The paired data intervention allows a causal test: if the training-set geometry matters, one example should alter both the static tail and the optimizer ensemble.</p>
+<p>The original dataset entered the shortcut family and reduced exceptions without concentrating on AND. The balanced dataset shifted dramatically: at step 32,000, about 64.3% of models were AND and the preregistered shortcuts had disappeared; the final audited distribution assigned roughly 64.9% to AND.</p>
+<p>Static and optimizer distributions were related but not identical, and the optimizer did not simply sample one static slice.</p>
+<p><strong>Conclusion.</strong> A one-example intervention can change the long-run function ensemble, confirming that sample composition is causal. The result supports static geometry as an important influence while preserving an independent optimizer layer.</p>
+<h3 id="e14-weighted-rule-bit-function-switching-across-loss-scales">E14 · <a href="experiments/e14.html">Weighted Rule-Bit Function Switching across Loss Scales</a></h3>
+<p><strong>Purpose.</strong> Construct an explicit dataset in which one fixed complete function is suppressed at shallow loss and rises only when rare constraints become unavoidable.</p>
+<p>A rule bit selects Rule 110 or Rule 30, but training weights the majority and minority branches at ratios from 1:1 to 10,000:1. Each ratio uses 512 paired seeds with plain full-batch SGD, zero momentum, and zero weight decay. Complete local rule functions are recorded at matched weighted raw-BCE crossings.</p>
+<p>The experiment is designed to reject the strongest monotonic claim. At high loss, fitting the majority Rule-110 branch removes nearly all objective value; only at very low loss do the rare Rule-30 conflicts force the complete composite rule.</p>
+<p>The fixed <code>Rule110-both</code> hard function rose to peaks near 52%–55% and then fell as the minority constraints took over. Under the 10,000:1 ratio, total loss initially decreased while the Rule-30 branch loss was actively made worse, before the trajectory returned to the full composite map in the deep tail.</p>
+<p>After rescaling by minority weight, extreme-ratio curves approximately collapsed, and takeover occurred near the theoretical loss floor of the majority-only solution.</p>
+<p><strong>Conclusion.</strong> One complete hard function can rise and fall as loss is tightened. Training follows the weighted objective rather than a researcher-designated “true composite rule.” The construction proves possible nonmonotonicity; it does not claim every natural dataset follows this path.</p>
+<h3 id="e15-complete-functions-versus-marginal-concentration-in-modular-97-grokking">E15 · <a href="experiments/e15.html">Complete Functions versus Marginal Concentration in Modular-97 Grokking</a></h3>
+<p><strong>Purpose.</strong> Distinguish a shared complete shortcut from a shared target skeleton with seed-specific residual errors before grokking.</p>
+<p>Modular-97 division is trained with nested 60%, 70%, 80%, and 90% datasets, 32 seeds per fraction. Every model is evaluated on the full 9,312-input map. The experiment records exact target-function mass, complete-function entropy, pointwise agreement, coordinate-wise modal function, train/validation cross-entropy, and accuracy.</p>
+<p>Low agreement and zero exact-target seeds do not reveal whether all models share one complete shortcut or whether they share a mostly correct rule skeleton but make different residual mistakes. Exact function IDs and coordinate-wise marginals must be measured together.</p>
+<p>At 60% and 70%, no final seed exactly recovered the full target; at 80%, only 1/32 did. At 90%, target mass began appearing around step 12,500 and reached 18/32. Yet the coordinate-wise modal function became the complete target much earlier: step 18,000 at 80% and step 2,000 at 90%.</p>
+<p>Even the 70% group ended with zero exact target seeds while its modal accuracy reached 95.41%.</p>
+<p><strong>Conclusion.</strong> Pre-grokking models need not share one complete shortcut. They can share a target-aligned skeleton while retaining different off-training residuals. Complete-function mass, entropy, agreement, and coordinate-wise modal behavior are distinct observables.</p>
+<h3 id="e16-parity-reachability-half-space-generalization-and-scaffold-recovery">E16 · <a href="experiments/e16.html">Parity Reachability, Half-Space Generalization, and Scaffold Recovery</a></h3>
+<p><strong>Purpose.</strong> Separate intrinsic low-loss parity preference from global optimization barriers and holdout-symmetry artifacts.</p>
+<p>The unit combines a leave-one-out dimension scan, a 12-bit half-space and holdout-structure study, a 14-bit 50/50 train-test experiment, targeted error-reveal interventions, and a 16-bit scaffold–perturb–recovery test with wider networks.</p>
+<p>Parity is short in human algebra yet difficult for ordinary gradient descent. Poor leave-one-out prediction could mean the parity endpoint has tiny static support, or it could reflect special symmetry breaking and an entrance barrier that appears before endpoint preference can be measured.</p>
+<p>Leave-one-out behavior changed qualitatively with dimension and holdout structure. In a balanced 14-bit half-space, all 64 models escaped the <code>ln 2</code> plateau, fit 8,192 training states, and reached mean test accuracy about 99.935%, although none was exactly correct over all 16,384 states. Revealing an average of 6.22 targeted errors recovered the exact function in 23/64 models; equally many random correct points recovered 0/64.</p>
+<p>For 16-bit parity, endpoint-only random starts recovered 0/8. A prefix scaffold produced 5/8 exact models, and after removing all auxiliary supervision, pure endpoint training reached 7/8. Strong perturbations destroyed every exact function, yet endpoint-only retraining recovered most models.</p>
+<p><strong>Conclusion.</strong> The dominant obstacle is global entrance, not absence of a locally supported endpoint. Holdout symmetry, information content, sample weight, and optimization accessibility must be separated.</p>
+<h3 id="e17-static-deep-loss-mass-versus-optimizer-transport">E17 · <a href="experiments/e17.html">Static Deep-Loss Mass versus Optimizer Transport</a></h3>
+<p><strong>Purpose.</strong> Measure how closely static constrained-SMC function distributions predict AdamW/SGD ensembles and identify conditions where optimizer history dominates.</p>
+<p>The reference task is balanced AND with ten examples and a <code>4 -&gt; 16 x 2 -&gt; 1 tanh</code> network. The unit includes a 33.5-million-network brute-force prior, calibrated constrained SMC, AdamW/SGD/momentum crossings, a 32,768-seed AdamW retraining experiment, training from SMC deep-tail states, projection controls, and an 8-bit seed-versus-time mixing audit.</p>
+<p>Static volume can be an important first-order influence without being the optimizer distribution. A decisive test must compare both at matched loss, start optimization from real SMC states, and distinguish multi-seed ensembles from one trajectory sampled over time.</p>
+<p>At BCE 0.60, the static top-100 functions covered 98.7%–100% of optimizer mass, showing strong first-order relevance. SMC also matched brute-force prior distributions at accessible thresholds with very small JSD. In the deep tail, however, static mass concentrated on D440-like candidates while 32,768-seed AdamW concentrated roughly 76.5% on AND; the final JSD was about 0.760.</p>
+<p>Starting 4,096 models from real SMC D440 states and training with AdamW did not produce AND, whereas projected controls retained D440. The same hard ID had different futures depending on continuous state and history. One long trajectory covered only a small local set of functions and did not reproduce the IID multi-seed distribution.</p>
+<p><strong>Conclusion.</strong> Static volume can strongly constrain candidates yet fail to determine optimizer endpoints. Function cells contain nonexchangeable continuous states, and a time series is not an IID Bayesian posterior sample.</p>
+<h3 id="e18-teacher-free-consensus-and-symbolic-readability">E18 · <a href="experiments/e18.html">Teacher-Free Consensus and Symbolic Readability</a></h3>
+<p><strong>Purpose.</strong> Test whether training sets that induce near-deterministic complete-function agreement also induce short human-readable symbolic rules.</p>
+<p>The unit first scans 540 8-bit datasets with 64 seeds, intervenes on network width and additional samples, then scales to 8,192 random n=12 datasets. Candidate high-consensus endpoints are re-evaluated with up to 4,096 fresh seeds and audited using essential variables, ANF, decision trees, ROBDDs, and linear-threshold tests.</p>
+<p>Agreement does not require knowledge of a teacher, so it can detect function concentration on unknown datasets. The nontrivial question is whether the concentrated function is symbolically simple or a neural-only, high-complexity lookup map.</p>
+<p>The pilot found one teacher-free n=12 dataset with 61/64 seeds on the same complete function and collision 0.908. Its modal rule used four variables and admitted a short signed-threshold/2-CNF description.</p>
+<p>The large scan produced 46 strict high-consensus endpoints after fresh-seed confirmation. A unified post-hoc audit found all 46 to be equal-magnitude signed threshold functions; 120 broader candidates were also linearly separable. No high-consensus random lookup-table counterexample was observed.</p>
+<p><strong>Conclusion.</strong> Under this 8-bit MLP protocol, strict high consensus systematically coincided with human-readable low symbolic complexity. The signed-threshold family was discovered post hoc and is not a preregistered theorem over architectures or all functions.</p>
+<h3 id="e19-full-truth-table-rule-volume">E19 · <a href="experiments/e19.html">Full-Truth-Table Rule Volume</a></h3>
+<p><strong>Purpose.</strong> Measure target-specific low-loss volume directly under complete truth tables, avoiding ambiguity about which rule a partial dataset induces.</p>
+<p>A <code>4 -&gt; 16 x 2 -&gt; 1 tanh</code> reference network is evaluated with constrained SMC on full 16-state targets: parity1–4, majority3, and a preregistered balanced random function. Eight independent replicas track volume over shared loss thresholds.</p>
+<p>Partial datasets can favor unexpected extensions. Complete targets provide an unambiguous object for testing whether loss-volume contraction differs across rules and whether human logical length agrees with the network’s representational language.</p>
+<p>Over the common reliable BCE range, parity1 had the largest volume and parity4 the smallest, with nonoverlapping replica ranges. Majority3 and the random target were nearly tied at shallow loss, but majority3 gained an advantage of roughly 5.6 thousand at BCE 0.40 and about 1.5×10^18 at BCE 0.30.</p>
+<p>Parity2, although short in ordinary XOR notation, could have lower prior and target volume than the random function under this tanh architecture.</p>
+<p><strong>Conclusion.</strong> Different complete targets have genuinely different and scale-dependent volume curves. Human formula length is not a universal neural complexity ordering; architecture and encoding define the effective language.</p>
+<h3 id="e20-measure-closure-between-full-rules-fixed-datasets-and-margin-cores">E20 · <a href="experiments/e20.html">Measure Closure between Full Rules, Fixed Datasets, and Margin Cores</a></h3>
+<p><strong>Purpose.</strong> Establish a strict bridge between full-target volume and candidate-function mass under a fixed partial training set.</p>
+<p>Three linked tests are used: a 15-of-16 constant leave-one-out closure, a balanced-AND ten-example closure for four candidate functions, and a hard-to-margin bridge that fixes training loss and hard function while tightening margins on six held-out inputs.</p>
+<p>Full-rule self-loss volume and fixed-dataset candidate mass are related but distinct. Without a conditional-measure bridge, exponential full-rule differences could not legitimately explain competition inside a partial-dataset posterior.</p>
+<p>For constant leave-one-out, independent full-rule volume ratios and conditional crossing-event ratios closed over seven measurable thresholds with maximum log residual about 0.071. The four-candidate AND experiment closed with maximum residual about 0.049.</p>
+<p>At the hard-cell boundary, the four branch masses reproduced the parent hard posterior with TV about 0.0086. Tightening only held-out margin then separated the cells by large continuous factors while hard IDs remained fixed.</p>
+<p><strong>Conclusion.</strong> Full-rule volume and fixed-dataset mass are not the same number, but they obey exact set inclusion and conditional-probability identities. Hard functions are coarse macrostates with substantial internal margin geometry.</p>
+<h3 id="e21-agreement-control-and-a-consensus-complexity-frontier">E21 · <a href="experiments/e21.html">Agreement Control and a Consensus Complexity Frontier</a></h3>
+<p><strong>Purpose.</strong> Turn agreement from a passive statistic into an intervention tool that can induce concentration or preserve competing extensions.</p>
+<p>Starting from random balanced n=8 datasets, each round queries the unseen input with committee prediction closest to 50:50. Paired branches are retrained under labels zero and one. Anti-consensus chooses the lower-agreement branch, pro-consensus the higher-agreement branch, and a random-label control chooses randomly among fit branches. Longer anti prefixes are later switched to pro completion and audited with 512 fresh seeds.</p>
+<p>The design is related to <a href="https://doi.org/10.1145/130385.130417" target="_blank" rel="noopener">Query by Committee</a>, but the committee is an empirical neural function ensemble. It tests whether disagreement is causally informative and whether longer resistance to concentration leads to more complex final functions.</p>
+<p>At n=24, median unseen agreement was about 0.970 for anti, 0.999 for pro, and 0.976 for random. Under a strict narrow-posterior criterion, 15/16 pro paths concentrated, while 0/16 anti and 0/16 random paths did. Stable pro endpoints were linear threshold functions.</p>
+<p>Across 96 anti-prefix/pro-completion endpoints, 80 passed fresh narrowness. Longer anti prefixes required more pro examples and increased essential-variable, ANF, ROBDD, and quadratic-threshold complexity. All 80 narrow endpoints were representable by degree-at-most-two polynomial thresholds, whereas none of 64 random balanced functions were.</p>
+<p><strong>Conclusion.</strong> Labels chosen at high-disagreement inputs can causally control concentration and trace a symbolic complexity frontier. The procedure is greedy, agreement is not truth, and quadratic-PTF unification was discovered post hoc.</p>
+<h3 id="e22-per-example-free-energy-and-an-information-invariant">E22 · <a href="experiments/e22.html">Per-Example Free Energy and an Information Invariant</a></h3>
+<p><strong>Purpose.</strong> Determine whether order-dependent per-example surprise sums to an order-independent complete-rule endpoint cost under one static measure.</p>
+<p>The experiment stores logits from 2,097,152 prior 3-bit networks, evaluates all 6,561 partial label states, all 256 complete rules, and all 40,320 sample orders per rule. Hard-conditioned and multiple Gibbs-beta measures are computed together with Shapley allocations and microcanonical full-rule volumes.</p>
+<p>Earlier sequential-sample experiments found that each sample’s information contribution depended strongly on order. A coherent partition function predicts that increments are path dependent but their sum telescopes to one endpoint free-energy difference.</p>
+<p>Maximum path-invariance error was 2.84×10^-14 bits, stage-decomposition error 1.42×10^-14 bits, and Shapley-efficiency error 5.68×10^-14 bits. Rule 150/parity3 had hard endpoint cost about 29 bits and ranked hardest; under beta=1 it ranked second.</p>
+<p>The result connects per-example surprise, endpoint difficulty, <a href="https://proceedings.neurips.cc/paper_files/paper/2018/hash/3b712de48137572f3849aabd5666a4e3-Abstract.html" target="_blank" rel="noopener">prequential coding</a>, and the <a href="https://mlanthology.org/colt/1989/levin1989colt-statistical/" target="_blank" rel="noopener">Levin–Tishby–Solla statistical-mechanics framework</a>.</p>
+<p><strong>Conclusion.</strong> Generalized surprise is a difference of one static potential and totals are path independent. This algebraic closure does not imply that real SGD is a Gibbs/Bayesian sampler or that its trajectory conserves the same quantity.</p>
+<h3 id="e23-prospective-prediction-from-full-rule-volume-to-data-transition">E23 · <a href="experiments/e23.html">Prospective Prediction from Full-Rule Volume to Data Transition</a></h3>
+<p><strong>Purpose.</strong> Freeze static full-rule volume predictions before training random subsets, then test whether they predict n50/n90 recovery transitions.</p>
+<p>Stage A uses full 256-state truth tables and constrained SMC for eight balanced 8-bit rules under a <code>8 -&gt; 16 x 2 -&gt; 1 tanh</code> network. A preregistered contraction score and rank are hashed before Stage B. Stage B trains 19 nonfull sample sizes × 8 rules × 64 random datasets, plus full-data qualification controls, with 24 paired seeds per dataset.</p>
+<p>Defining low volume as difficulty is not predictive by itself. An independent sample-complexity measurement is required. The nested parity family is the confirmatory target; all eight rules form a cross-family stress test.</p>
+<p>The frozen parity ranking exactly predicted transition order: n50 values 24, 64, 96, 160 and n90 values 48, 80, 112, 160 for parity1–4. Transition intervals did not overlap; within-family Spearman correlation was 1.</p>
+<p>Across all eight rules, Spearman correlations were 0.898 and 0.868, but three pairwise reversals appeared. The balanced random target’s local contraction accelerated with depth and crossed several parity targets; deeper profile information raised the transition correlation to about 0.97/0.95.</p>
+<p><strong>Conclusion.</strong> Full-rule volume prospectively predicts data transitions in a preregistered family, but one shallow slope is not a universal cross-family scalar. Difficulty is better represented by a loss-resolved profile plus the candidate-disagreement structure of sampled datasets.</p>
+<h3 id="e24-deep-neural-k-crossing-of-parity4-and-a-one-point-exception">E24 · <a href="experiments/e24.html">Deep Neural K Crossing of Parity4 and a One-Point Exception</a></h3>
+<p><strong>Purpose.</strong> Test whether absolute target-volume rankings can reverse after both hard functions are already fixed and far inside the low-loss tail.</p>
+<p>The first stage runs Gaussian-prior pCN SMC on 54 complete 4-bit targets under a 97-parameter tanh network: six structured rules, all parity4 one-point exceptions, balanced two-point exceptions, and preregistered random functions. The sole credible challenger, parity4 with input 0000 flipped, is then compared with parity4 in a 32,768-particle-per-replica shared-parent lockstep bridge.</p>
+<p>E23 showed scale-dependent slopes and rankings at shallow loss. The deep experiment asks whether the ordering stabilizes beyond the hard-exact boundary or whether continuous within-cell geometry can still reverse it.</p>
+<p>Parity4 had the smallest volume over all 25 thresholds in the 54-target panel. The 0000-flip target remained larger at BCE 0.01913 but contracted reliably faster, predicting a crossing near 0.0025.</p>
+<p>The shared-parent run observed median crossing at approximately 0.002308. At the deepest threshold, median volume of the exception was about 2×10^7 times smaller. Seven of eight replicas had crossed in absolute volume and all eight retained positive relative contraction-rate differences. The stricter eight-of-eight five-window stop rule was not met.</p>
+<p><strong>Conclusion.</strong> Complete-function ranking can reverse inside a hard-exact tail through accumulated continuous contraction. Hard ID is not a sufficient complexity state, and the result should be reported with the 7/8 replica boundary intact.</p>
+<h3 id="e25-mnist-sample-complexity-and-static-branch-prediction">E25 · <a href="experiments/e25.html">MNIST Sample Complexity and Static Branch Prediction</a></h3>
+<p><strong>Purpose.</strong> Move the static-volume framework from enumerable Boolean maps to real images and test whether it predicts labels and validation-NLL turning points.</p>
+<p>Stage 0 average-pools MNIST to 7×7 and trains a 1,633-parameter tanh MLP on 0/1 and 3/8 classification for sample sizes 4–512, four datasets per size, and eight seeds. Stage 1 freezes one n=4 dataset per task and nine train-BCE thresholds, then uses six-replica Gaussian-pCN SMC to compare the two label branches of each unseen image before scoring.</p>
+<p>The Boolean framework would remain a toy unless a fixed training set’s static low-loss mass could predict unseen natural inputs. The 0/1 versus 3/8 pair supplies a same-architecture, same-sample-count contrast with radically different data sufficiency.</p>
+<p>At n=4, median best-validation checkpoints reached 98.31% test accuracy for 0/1 and 69.66% for 3/8. Under a 95% validation threshold, 0/1 crossed at n=4 and 3/8 at n=512.</p>
+<p>Static hard prediction rose from 92.97% to 96.35% for 0/1 and from 76.69% to about 78.13% for 3/8. Static soft NLL formed a U-shape whose minimum aligned within one preregistered grid cell of AdamW for 0/1 and directly covered the 3/8 training-loss turning interval. Prediction concentration continued after accuracy plateaued, while persistent mistakes became more confident.</p>
+<p>The deep-loss mass disadvantage of 3/8 relative to 0/1 expanded from 0.56 to 55.43 decimal orders, aligned with the four-versus-512 sample requirement.</p>
+<p><strong>Conclusion.</strong> Static loss-conditioned volume has strong sample-level predictive power on real images and contains a geometric source of the validation-NLL U-shape. The tasks and loss range were calibration-selected, so a new digit pair is still required for a fully blind test.</p>
+<h2 id="4-final-integrated-picture">4. Final integrated picture</h2>
+<h3 id="4-1-two-static-empirical-principles">4.1 Two static empirical principles</h3>
+<ol>
+<li>The parameter-to-function map is highly nonuniform: a fixed neural protocol gives some functions much more reference mass than others.</li>
+<li>Tightening raw training loss contracts functions and within-function implementations at different, scale-dependent rates.</li>
+</ol>
+<p>These are weaker than saying that every prespecified simple function rises monotonically. They are compatible with mid-loss shortcuts, nonmonotone candidate mass, and deep ranking reversals.</p>
+<h3 id="4-2-data-amount-and-loss-depth">4.2 Data amount and loss depth</h3>
+<p>Under pure hard conditioning, adding an example consistent with a complete target retains that target cell and deletes some competitors, so normalized target mass cannot decrease. Fixed raw-BCE sublevels have no equally unconditional monotonic theorem because the new example also changes the average loss and margin constraints.</p>
+<p>Empirically, more balanced rule-consistent data extends the rule-aligned descent channel to deeper loss. Small datasets support large but often generator-misaligned extensions. Near a transition, the rule wins only in a deep tail and appears as grokking. With abundant data, the rule dominates from shallow loss and training and validation fall together. Any finite dataset still supports only finite extrapolation precision.</p>
+<h3 id="4-3-grokking-overfitting-and-noise">4.3 Grokking, overfitting, and noise</h3>
+<p>Interpolation fixes training signs, not the complete function or internal representation. Continued raw-loss reduction changes margins and relative masses. An early shortcut can be the most economical solution at its loss scale; the reusable rule can take over later.</p>
+<p>Overfitting occurs when deeper training resolves distinctions specific to the finite dataset rather than the external generator. Agreement can keep rising while calibration or external accuracy stops improving. Under label noise, shared structure is learned first and example-specific corrupt residuals later.</p>
+<h3 id="4-4-feature-reuse-and-symbolic-structure">4.4 Feature reuse and symbolic structure</h3>
+<p>Shared computation gives a direct route from one explicit loss objective to economical representation. E08 shows that reusable intermediate computation can reach deeper loss with less capacity and data. E05 shows that representation change can occur even when a fixed kernel already generalizes, so feature learning is a mechanism, not a synonym for generalization.</p>
+<p>Rule-code OOD behavior and the consensus-symbolicity experiments support a candidate bridge from connectionist computation to symbolic macrostates: reusable bindings can be cheaper than separate lookup programs. The evidence is behavioral and protocol-specific, not a proof about brains or all LLMs.</p>
+<h3 id="4-5-agreement">4.5 Agreement</h3>
+<p>Agreement measures concentration, not recovery of a hidden teacher. High agreement can identify a narrow empirical function ensemble without knowing a generator, including a constant rule that is wrong relative to that generator but remains short and human-readable. Single-example constant concentration is therefore not a counterexample to the readability conjecture; it only refutes the claim that agreement automatically recovers the external target. Low agreement indicates unresolved extension competition but does not diagnose whether the cause is insufficient data, noise, multimodality, or inaccessible optimization.</p>
+<p>The open conjecture is one-way: in the measured settings, strict high complete-function agreement repeatedly led to short extractable threshold programs. This suggests partial alignment between neural and human symbolic complexity, but does not establish a universal theorem.</p>
+<p>If the correspondence persists across more architectures and larger spaces, it would suggest more than an accidental preference for readable functions. Neural and human complexity may both track robustly compressible structure such as locality, symmetry, compositionality, and shared computation. “Objective” here would not mean one absolute code, but broad agreement among multiple effective representation languages over a class of reusable regularities. Parity and architecture-dependent reversals already show that such alignment can only be partial. The one-hundred-plus deterministic rule tasks add breadth because sufficient data often produced both very low unseen-example loss and high function consistency, but they did not all use the same fresh-seed symbolic audit and therefore do not replace E18/E21.</p>
+<h2 id="5-relation-to-external-theory">5. Relation to external theory</h2>
+<p>The static foundation comes from the function-prior and simplicity-bias work of <a href="https://www.nature.com/articles/s41467-018-03101-6" target="_blank" rel="noopener">Dingle et al.</a>, <a href="https://arxiv.org/abs/1805.08522" target="_blank" rel="noopener">Valle-Pérez et al.</a>, and <a href="https://www.jmlr.org/papers/v22/20-676.html" target="_blank" rel="noopener">Mingard et al.</a>. The present experiments add continuous loss, complete-function transport, deep-tail volume flow, and prospective sample-transition prediction.</p>
+<p>The algorithmic-information and coding background includes <a href="https://mlanthology.org/misc/1964/solomonoff1964misc-formal/" target="_blank" rel="noopener">Solomonoff</a>, <a href="https://www.mathnet.ru/eng/ppi68" target="_blank" rel="noopener">Kolmogorov</a>, <a href="https://arxiv.org/abs/math/0406077" target="_blank" rel="noopener">MDL</a>, and <a href="https://proceedings.neurips.cc/paper_files/paper/2018/hash/3b712de48137572f3849aabd5666a4e3-Abstract.html" target="_blank" rel="noopener">prequential coding in deep models</a>. Neural K is not identified with any one of these quantities.</p>
+<p>The relation is nevertheless precise enough to test. Standard MDL separates hypothesis codelength from residual-data codelength. In this framework, <code>-log2 V_full(f; epsilon)</code> is the protocol-relative implementation codelength for realizing a complete target to precision <code>epsilon</code>, and the full Neural K-profile is that codelength as residual tolerance changes. Training usually minimizes loss alone; MDL-like selection emerges from nonuniform architectural reference mass and loss geometry. E22's endpoint-codelength closure and E23's prospective <code>profile -&gt; n50/n90</code> prediction are independent empirical anchors beyond terminology.</p>
+<p>The statistical-mechanics lineage begins at least with <a href="https://mlanthology.org/colt/1989/levin1989colt-statistical/" target="_blank" rel="noopener">Levin, Tishby, and Solla (1989)</a> and includes modern finite-width analyses such as <a href="https://www.nature.com/articles/s42256-023-00767-6" target="_blank" rel="noopener">Pacelli et al. (2023)</a>. Flat minima, local entropy, SLT/RLCT, and LLC are adjacent mass-based approaches with different objects and assumptions.</p>
+<h2 id="6-evidence-boundaries-and-next-falsifiable-tests">6. Evidence boundaries and next falsifiable tests</h2>
+<p>The project has not derived profile shape from architecture, proved finite crossing counts, or made optimizer transport analytically predictable. It has not proven that all high-agreement functions are human-readable or that finite data can support arbitrarily deep correct extrapolation.</p>
+<p>The MNIST turning-point result is calibration-assisted, not yet blind. The deepest SMC magnitudes require independent implementation and larger particle/replica audits. Cross-architecture profile-to-transition predictions and a new digit-pair prediction are the clearest next tests.</p>
+<p>The evidence supports a unified experimental framework over the tested Boolean, cellular-automaton, modular-arithmetic, small-MLP, and binary-MNIST protocols. It does not establish one universal quantitative law for all modern architectures or real-world datasets.</p></div>
+        
+      </article>
+    </main>
+  </div>
+</body>
+</html>

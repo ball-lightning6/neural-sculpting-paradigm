@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="实验组成">
+  <title>E03：函数系综动力学与网络参考语言 · Neural K 研究档案</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="../assets/site.js"></script>
+</head>
+<body data-page-kind="experiment">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+  
+    <header class="topbar">
+      <a class="site-mark" href="../index.html" aria-label="返回研究主文">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K 研究档案</span>
+      </a>
+      <nav class="top-nav" aria-label="全站导航"><a class="top-link" href="../index.html">研究主文</a><a class="top-link" href="../theory-core.html">理论核心</a><a class="top-link active" href="../experiments/index.html">实验索引</a><a class="top-link" href="../references.html">参考文献</a><a class="top-link" href="../evidence-ledger.html">证据总账</a></nav>
+      <nav class="language-switch" aria-label="语言"><span class="active" lang="zh-CN">中文</span><a href="../en/experiments/e03.html" lang="en">EN</a></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>目录</span>
+      </button>
+    </header>
+    
+  <div class="page-shell">
+    
+    <aside class="sidebar" id="sidebar" aria-label="本页目录">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">本页目录</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#overview">实验概览</a></li>
+<li><a href="#实验组成">实验组成</a></li>
+<li><a href="#文件">文件</a></li>
+<li><a href="#冻结来源与-sha256">冻结来源与 SHA256</a></li>
+<li><a href="#motivation">为什么做、怎样判决</a></li>
+<li><a href="#1-循环论证问题">1. 循环论证问题</a></li>
+<li><a href="#2-e03a-设计">2. E03a 设计</a></li>
+<li><a href="#3-e03b-设计">3. E03b 设计</a></li>
+<li><a href="#4-竞争预测">4. 竞争预测</a></li>
+<li><a href="#5-结果前边界">5. 结果前边界</a></li>
+<li><a href="#results">结果、解读与边界</a></li>
+<li><a href="#1-e03a-一次更新即重写完整函数">1. E03a：一次更新即重写完整函数</a></li>
+<li><a href="#2-迁移方向不是随机-也不等于人类最短公式">2. 迁移方向不是随机，也不等于人类最短公式</a></li>
+<li><a href="#3-首次拟合后仍有大量配对迁移">3. 首次拟合后仍有大量配对迁移</a></li>
+<li><a href="#4-e03b-迁移稳健-具体后验依赖网络族">4. E03b：迁移稳健，具体后验依赖网络族</a><ul>
+<li><a href="#tanh-宽度族">tanh 宽度族</a></li>
+<li><a href="#与1024-3-gelu-layernorm-比较">与1024×3 GELU+LayerNorm 比较</a></li>
+</ul>
+</li>
+<li><a href="#5-阶段裁决">5. 阶段裁决</a></li>
+</ul>
+</div>
+</nav>
+        <div class="sidebar-label experiment-label">全部实验</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>静态硬条件化不足以描述训练函数分布</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-bit 反事实不变性与训练 loss 中心原则</span></a><a class="experiment-nav-link active" href="e03.html"><span>E03</span><span>函数系综动力学与网络参考语言</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>在 Mingard 2025协议中延长 post-fit 观察</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>固定 NTK 足够时的特征学习</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>连续 loss 条件下的静态函数质量</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>函数 ID 迁移与 matched-loss 静态对照</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>共享中间表示与有限容量压力</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>MNIST 80%隐藏标签噪声长训</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>4-bit raw-BCE 简单/复杂规则竞争</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule30 数据量与训练/验证梯度对齐</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND shortcut 的静态 loss 几何</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>AND shortcut 的 SGD 运输与单样本干预</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>加权 Rule-bit 的 loss 阶段函数换序</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Mod97 grokking 的完整函数与边缘凝聚</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity 终点偏好、全局入口与局部恢复</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>静态低-loss 质量与 optimizer 运输</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>高函数共识与符号可读性</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>完整真值表规则的 loss-resolved 体积</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Full-rule、固定 D 与 hard-margin 测度闭环</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement 控制与共识复杂度前沿</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>逐样本自由能与信息不变量</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>完整目标体积前瞻预测数据相变</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>深尾 Neural K-profile 与排序交叉</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST 样本复杂度与静态体积分支预测</span></a></nav>
+      </div>
+    </aside>
+    
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">E03 · 实验详情</div>
+          <h1>E03：函数系综动力学与网络参考语言</h1>
+          <p class="article-description">实验组成</p>
+        </header>
+        <div class="article-body"><div class="source-bar"><span>复现脚本</span><div><a href="../../experiments/experiment_03_function_posterior_dynamics/experiment_boolean_function_posterior_dynamics.py">experiment_boolean_function_posterior_dynamics.py</a><a href="../../experiments/experiment_03_function_posterior_dynamics/experiment_boolean_posterior_width_scan.py">experiment_boolean_posterior_width_scan.py</a></div></div><h2 id="overview">实验概览</h2>
+<h2 id="实验组成">实验组成</h2>
+<ul>
+<li><strong>E03a</strong>：从 ordinary 与 prior-consistent 初始化出发，跟踪1/2/4样本约束下的完整 Boolean 函数分布到 post-fit 5,000步；</li>
+<li><strong>E03b</strong>：用 Oxford 同族<code>tanh</code>网络扫描 width 16/32/64/128，检验 E03a 的定性现象是否依赖1024×3 GELU+LayerNorm 大网络。</li>
+</ul>
+<h2 id="文件">文件</h2>
+<ul>
+<li><a href="#motivation">动机与预注册判据</a></li>
+<li><a href="#results">完整结果与阶段裁决</a></li>
+<li><a href="../../experiments/experiment_03_function_posterior_dynamics/experiment_boolean_function_posterior_dynamics.py"><code>E03a</code>脚本</a></li>
+<li><a href="../../experiments/experiment_03_function_posterior_dynamics/experiment_boolean_posterior_width_scan.py"><code>E03b</code>脚本</a></li>
+</ul>
+<p>运行：</p>
+<pre><code class="language-bash">python experiment_boolean_function_posterior_dynamics.py
+python experiment_boolean_posterior_width_scan.py
+</code></pre>
+<p>E03b 若要自动加载1024参考结果，应把 E03a 结果解压到脚本配置的<code>REFERENCE_RESULT_DIR</code>；否则它仍会完成16--128同族扫描，跨架构比较可离线做。</p>
+<h2 id="冻结来源与-sha256">冻结来源与 SHA256</h2>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>开发版来源</th>
+<th>SHA256</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>experiment_boolean_function_posterior_dynamics.py</code></td>
+<td><code>research/function_information_conservation/experiment_boolean_function_posterior_dynamics.py</code></td>
+<td><code>05090cf48e83c097178b76f5c591dc8c25d6f018e37c93ac8db36adf53889942</code></td>
+</tr>
+<tr>
+<td><code>experiment_boolean_posterior_width_scan.py</code></td>
+<td><code>research/function_information_conservation/experiment_boolean_posterior_width_scan.py</code></td>
+<td><code>f76facc59caa017af58346ae43d675ea0e598bd46c0b1fda017fed0a48c9c7fa</code></td>
+</tr>
+</tbody>
+</table>
+<p>本地结果缓存：</p>
+<ul>
+<li><code>results/results_boolean_function_posterior_dynamics.zip</code>，SHA256<code>7e015ccd6c5951b06cea727c92a03fba2052e4ecc14f03ff596170e629930404</code>；</li>
+<li><code>results/results_boolean_posterior_tanh_width_scan.zip</code>，SHA256<code>999ecfe84e6a0ec7d0195bf02ecbeed854ba17d026479c4e47f1c006e33d7a88</code>。</li>
+</ul>
+<p>ZIP 只作本地核验，不进入最终发布包。</p>
+<h2 id="motivation">为什么做、怎样判决</h2>
+<h2 id="1-循环论证问题">1. 循环论证问题</h2>
+<p>原计划曾试图给256个 Boolean 函数构造手写 DSL 最短长度，再检验训练是否向最低复杂度函数迁移。该方案被主动放弃，因为：</p>
+<ol>
+<li>DSL 最短长度只代表人为参考语言，不等于神经网络实际程序复杂度；</li>
+<li>用训练后函数惊讶度定义“神经复杂度”，再用它解释同一后验，会形成循环；</li>
+<li>ANF、BDD、DNF 等指标可以作独立结构坐标，但没有单项足以冒充真实 K。</li>
+</ol>
+<p>因此 E03 不测 K，也不把迁移方向预先命名为“压缩”。它只回答更基础的事实问题：固定训练约束后，优化是否继续系统改变完整函数？</p>
+<h2 id="2-e03a-设计">2. E03a 设计</h2>
+<ul>
+<li><code>3-bit -&gt; 1-bit</code>，完整256个 hard function；</li>
+<li>网络：<code>3 -&gt; 1024 x 3 -&gt; 1</code>，GELU+LayerNorm，Adam，<code>weight_decay=0</code>；</li>
+<li>prior：65,536个初始化网络；</li>
+<li>三个部分训练集：1、2、4样本，分别留下128、64、16个 hard 兼容函数；</li>
+<li>ordinary cohort：每条件128个普通初始化；</li>
+<li>prior-consistent cohort：每条件512个初始化时已满足全部训练标签的网络；</li>
+<li>post-fit 年龄：0到5,000步，共13个截面；</li>
+<li>同时保存 hard function ID 与完整 logits；</li>
+<li>soft likelihood 温度族仅作基线，不作为事后自由调参的解释器。</li>
+</ul>
+<p>主判据：prior-consistent 模型在没有新增 hard 约束时是否改变完整函数，以及 ordinary 模型在首次拟合后是否继续迁移。</p>
+<h2 id="3-e03b-设计">3. E03b 设计</h2>
+<ul>
+<li>与 Oxford 同族：<code>3 -&gt; width x 2 -&gt; 1 tanh</code>，无归一化；</li>
+<li><code>sigma_w=1</code>、<code>sigma_b=0.2</code>、Adam、<code>weight_decay=0</code>；</li>
+<li>width 16/32/64/128；</li>
+<li>复用 E03a 完全相同的三组训练约束、prior/ordinary/consistent 样本量和年龄；</li>
+<li>width 128作为同族锚点，1024×3仅作跨架构行为参照，不伪装成纯宽度消融。</li>
+</ul>
+<h2 id="4-竞争预测">4. 竞争预测</h2>
+<ul>
+<li>若 hard-conditioned prior 足够，prior-consistent cohort 应保持初始函数分布；</li>
+<li>若优化主动运输函数质量，一次更新即可产生超过抽样噪声的函数迁移；</li>
+<li>若迁移只是大网络/LayerNorm 特例，tanh 小网络中应显著减弱或消失；</li>
+<li>若网络协议定义有效参考语言，具体吸引函数和概率应随架构改变，即使“post-fit 仍迁移”的定性现象保留。</li>
+</ul>
+<h2 id="5-结果前边界">5. 结果前边界</h2>
+<ul>
+<li>不测量 Kolmogorov complexity；</li>
+<li>不用后验本身给函数贴复杂度标签；</li>
+<li>不预言人类看来最短公式一定胜出；</li>
+<li>所有主体优化仍是 Adam，不能自动推广到任意优化器；</li>
+<li>aggregate 分布近似稳定不代表配对 seed 没有大量相反方向迁移。</li>
+</ul>
+<h2 id="results">结果、解读与边界</h2>
+<h2 id="1-e03a-一次更新即重写完整函数">1. E03a：一次更新即重写完整函数</h2>
+<p>实验仍是3-bit 而非4-bit；65,536表示 prior 网络数量，不是训练了65,536个目标函数。三个训练集分别留下128、64、16个兼容函数，总训练模型为<code>3 × (128 ordinary + 512 prior-consistent) = 1,920</code>。</p>
+<p>prior-consistent cohort 训练前已经满足全部 hard 标签，并且函数分布与条件先验相容。仅一次 Adam 更新：</p>
+<table>
+<thead>
+<tr>
+<th>条件</th>
+<th style="text-align: right;">改变完整函数的模型</th>
+<th style="text-align: right;">最大函数质量变化</th>
+<th style="text-align: right;">训练后相对hard prior TV</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1样本</td>
+<td style="text-align: right;">72.7%</td>
+<td style="text-align: right;">27.3% -&gt; 100%</td>
+<td style="text-align: right;">0.717</td>
+</tr>
+<tr>
+<td>2样本</td>
+<td style="text-align: right;">99.0%</td>
+<td style="text-align: right;">7.2% -&gt; 77.3%</td>
+<td style="text-align: right;">0.826</td>
+</tr>
+<tr>
+<td>4样本</td>
+<td style="text-align: right;">97.9%</td>
+<td style="text-align: right;">17.4% -&gt; 39.3%</td>
+<td style="text-align: right;">0.553</td>
+</tr>
+</tbody>
+</table>
+<p>对应有限样本 null p95 约0.156、0.132和0.058，迁移远超抽样波动。</p>
+<h2 id="2-迁移方向不是随机-也不等于人类最短公式">2. 迁移方向不是随机，也不等于人类最短公式</h2>
+<p>二样本训练点为立方体对角点，训练后约81%的模型集中到对称最大间隔阈值函数：</p>
+<pre><code class="language-text">majority(not x0, not x1, x2)
+</code></pre>
+<p>四样本条件主要集中到：</p>
+<pre><code class="language-text">x2 AND (not x1)
+x2 OR  (not x1)
+</code></pre>
+<p>初始化条件先验中大量存在更短的一变量解<code>x2</code>和<code>not x1</code>，却被训练主动挤走。因此“人类 Boolean 公式更短”不是当前网络选择的充分解释；对称、margin、范数与优化几何都可能参与。</p>
+<h2 id="3-首次拟合后仍有大量配对迁移">3. 首次拟合后仍有大量配对迁移</h2>
+<p>ordinary cohort 从首次拟合继续到 age 5,000：</p>
+<ul>
+<li>单样本：32.8%的 seed 改变完整函数；</li>
+<li>二样本：50.8%；</li>
+<li>四样本：47.7%。</li>
+</ul>
+<p>四样本总体分布 TV 仅0.125，但47.7%的 seed 已换函数，说明相反方向迁移会在边缘直方图中抵消。仅看总体分布“看似稳定”会严重低估动力学。</p>
+<p>prior-consistent cohort 到 age 5,000仍有：</p>
+<ul>
+<li>二样本10.5%的模型改变函数；</li>
+<li>四样本27.0%。</li>
+</ul>
+<h2 id="4-e03b-迁移稳健-具体后验依赖网络族">4. E03b：迁移稳健，具体后验依赖网络族</h2>
+<h3 id="tanh-宽度族">tanh 宽度族</h3>
+<ul>
+<li>width 16/32/64/128的初始化 hard prior 非常接近；相对128的 TV 约0.025/0.023/0.022；</li>
+<li>width 64与128的最终主模式6/6一致，差异处于 bootstrap 噪声内；</li>
+<li>width 16保留同一迁移方向，但改变集中速度和近并列函数排名；</li>
+<li>width 16没有比64更快，六个训练块约122秒 vs119 秒。</li>
+</ul>
+<p>所有宽度均保留大规模 post-fit 迁移。width 16的 prior-consistent cohort 在 age 5,000相对各自 hard prior 的 TV，single/k2/k4 约为0.828/0.850/0.565。</p>
+<h3 id="与1024-3-gelu-layernorm-比较">与1024×3 GELU+LayerNorm 比较</h3>
+<ul>
+<li>两个网络族初始化 prior 的 TV 已经约0.29；</li>
+<li>具体主导函数和概率显著不同，全部关键比较超过抽样噪声；</li>
+<li>1024网络相应 TV 约0.717/0.840/0.471。</li>
+</ul>
+<p>所以小网络没有复现大网络的具体后验，但“训练集拟合后函数质量仍被大规模运输”跨网络族保留。架构既影响 prior，也影响动力学吸引子。</p>
+<h2 id="5-阶段裁决">5. 阶段裁决</h2>
+<p>E03 在完全不使用 K 复杂度标签的情况下建立：</p>
+<ol>
+<li>hard-conditioned initialization prior 不是训练后函数分布；</li>
+<li>已经 hard-fit 的初始化函数会被一次更新大规模重写；</li>
+<li>post-fit 长期仍有配对函数迁移；</li>
+<li>迁移方向结构化但依赖网络参考协议；</li>
+<li>aggregate agreement/TV 不能替代逐 seed 函数轨迹。</li>
+</ol>
+<p>该实验没有证明迁移就是 Kolmogorov 压缩，也没有裁决“<a href="https://mlanthology.org/misc/1964/solomonoff1964misc-formal/" target="_blank" rel="noopener">Solomonoff（1964）算法概率</a>的宽层级 vs 最低复杂度薄壳”。它为后续复杂度理论提供了必须解释的无循环经验事实。</p></div>
+        <footer class="experiment-pager"><a href="e02.html">← E02 Rule-bit 反事实不变性与训练 loss 中心原则</a><a href="e04.html">E04 在 Mingard 2025协议中延长 post-fit 观察 →</a></footer>
+      </article>
+    </main>
+  </div>
+</body>
+</html>

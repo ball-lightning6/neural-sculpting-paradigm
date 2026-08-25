@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="E20 检验完整规则 self-loss 体积与固定部分训练集候选函数质量之间的严格关系，避免把不同测量对象凭直觉互换。它由 constant leave-one-out、AND 四候选 full-rule 和 hard-cell margin bridge 三步组成。">
+  <title>E20：Full-rule、固定 D 与 hard-margin 测度闭环 · Neural K 研究档案</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="../assets/site.js"></script>
+</head>
+<body data-page-kind="experiment">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+  
+    <header class="topbar">
+      <a class="site-mark" href="../index.html" aria-label="返回研究主文">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K 研究档案</span>
+      </a>
+      <nav class="top-nav" aria-label="全站导航"><a class="top-link" href="../index.html">研究主文</a><a class="top-link" href="../theory-core.html">理论核心</a><a class="top-link active" href="../experiments/index.html">实验索引</a><a class="top-link" href="../references.html">参考文献</a><a class="top-link" href="../evidence-ledger.html">证据总账</a></nav>
+      <nav class="language-switch" aria-label="语言"><span class="active" lang="zh-CN">中文</span><a href="../en/experiments/e20.html" lang="en">EN</a></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>目录</span>
+      </button>
+    </header>
+    
+  <div class="page-shell">
+    
+    <aside class="sidebar" id="sidebar" aria-label="本页目录">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">本页目录</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#overview">实验概览</a></li>
+<li><a href="#目的">目的</a></li>
+<li><a href="#运行顺序">运行顺序</a></li>
+<li><a href="#脚本-sha256">脚本 SHA256</a></li>
+<li><a href="#motivation">为什么做、怎样判决</a></li>
+<li><a href="#1-两个不同对象">1. 两个不同对象</a></li>
+<li><a href="#2-leave-one-out-恒等式">2. Leave-one-out 恒等式</a></li>
+<li><a href="#3-and-四候选与-margin-bridge">3. AND 四候选与 margin bridge</a></li>
+<li><a href="#4-边界">4. 边界</a></li>
+<li><a href="#results">结果、解读与边界</a></li>
+<li><a href="#1-constant-leave-one-out-三路闭合">1. Constant leave-one-out 三路闭合</a></li>
+<li><a href="#2-and-四候选闭合">2. AND 四候选闭合</a></li>
+<li><a href="#3-hard-to-margin-连续桥">3. Hard-to-margin 连续桥</a></li>
+<li><a href="#4-裁决">4. 裁决</a></li>
+</ul>
+</div>
+</nav>
+        <div class="sidebar-label experiment-label">全部实验</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>静态硬条件化不足以描述训练函数分布</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-bit 反事实不变性与训练 loss 中心原则</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>函数系综动力学与网络参考语言</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>在 Mingard 2025协议中延长 post-fit 观察</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>固定 NTK 足够时的特征学习</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>连续 loss 条件下的静态函数质量</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>函数 ID 迁移与 matched-loss 静态对照</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>共享中间表示与有限容量压力</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>MNIST 80%隐藏标签噪声长训</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>4-bit raw-BCE 简单/复杂规则竞争</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule30 数据量与训练/验证梯度对齐</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND shortcut 的静态 loss 几何</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>AND shortcut 的 SGD 运输与单样本干预</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>加权 Rule-bit 的 loss 阶段函数换序</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Mod97 grokking 的完整函数与边缘凝聚</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity 终点偏好、全局入口与局部恢复</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>静态低-loss 质量与 optimizer 运输</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>高函数共识与符号可读性</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>完整真值表规则的 loss-resolved 体积</span></a><a class="experiment-nav-link active" href="e20.html"><span>E20</span><span>Full-rule、固定 D 与 hard-margin 测度闭环</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement 控制与共识复杂度前沿</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>逐样本自由能与信息不变量</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>完整目标体积前瞻预测数据相变</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>深尾 Neural K-profile 与排序交叉</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST 样本复杂度与静态体积分支预测</span></a></nav>
+      </div>
+    </aside>
+    
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">E20 · 实验详情</div>
+          <h1>E20：Full-rule、固定 D 与 hard-margin 测度闭环</h1>
+          <p class="article-description">E20 检验完整规则 self-loss 体积与固定部分训练集候选函数质量之间的严格关系，避免把不同测量对象凭直觉互换。它由 constant leave-one-out、AND 四候选 full-rule 和 hard-cell margin bridge 三步组成。</p>
+        </header>
+        <div class="article-body"><div class="source-bar"><span>复现脚本</span><div><a href="../../experiments/experiment_20_measure_closure/experiment_and_n10_candidate_full_rule_smc.py">experiment_and_n10_candidate_full_rule_smc.py</a><a href="../../experiments/experiment_20_measure_closure/experiment_and_n10_hard_margin_bridge_smc.py">experiment_and_n10_hard_margin_bridge_smc.py</a><a href="../../experiments/experiment_20_measure_closure/experiment_constant_leave_one_out_smc_consistency.py">experiment_constant_leave_one_out_smc_consistency.py</a></div></div><h2 id="overview">实验概览</h2>
+<h2 id="目的">目的</h2>
+<p>E20 检验完整规则 self-loss 体积与固定部分训练集候选函数质量之间的严格关系，避免把不同测量对象凭直觉互换。它由 constant leave-one-out、AND 四候选 full-rule 和 hard-cell margin bridge 三步组成。</p>
+<h2 id="运行顺序">运行顺序</h2>
+<pre><code class="language-bash">python experiment_constant_leave_one_out_smc_consistency.py
+python experiment_and_n10_candidate_full_rule_smc.py
+python experiment_and_n10_hard_margin_bridge_smc.py
+</code></pre>
+<ul>
+<li><a href="#motivation">实验动机与恒等式</a></li>
+<li><a href="#results">结果与裁决</a></li>
+</ul>
+<h2 id="脚本-sha256">脚本 SHA256</h2>
+<pre><code class="language-text">0f89290cf946abdc1d0a11503951479bac5006f12d0f4a1f2a201228d4eb1201  constant LOO
+d9df0de87a02a62266d715c3265e3977a2137037917929ae13458eb2841dfb34  AND full-rule
+836a9ea573cafebd400700fbfe0203dbbd9314921c474a2ae7a3ef7e27dbe76a  hard-margin bridge
+</code></pre>
+<p>关键 ZIP SHA256：</p>
+<pre><code class="language-text">1d8da6adf54480e717c72f1b1399d2d5ea6ef3d7e9edaafb9c211a1c73f3dd2  constant LOO
+a29339e94df29e5501e6f9624daa349454d7aad1b8010bba4b6cc61559549ec0  AND full-rule
+3c244b05801e1e2e1893fc6bc8b111a536647b80f850d0bf2072c4de7ae5558f  margin bridge
+</code></pre>
+<p>哈希不区分大小写。原始 ZIP 不进入发布包。</p>
+<h2 id="motivation">为什么做、怎样判决</h2>
+<h2 id="1-两个不同对象">1. 两个不同对象</h2>
+<p>完整目标体积：</p>
+<div class="math-display">$$
+V_g^{full}(\epsilon)=\mu\{L_{full,g}\le\epsilon\}.
+$$</div>
+<p>固定部分训练集下的候选函数质量：</p>
+<div class="math-display">$$
+\Omega_D(g;\delta)=\mu\{L_D\le\delta,h_\theta=g\}.
+$$</div>
+<p>二者相关但不相等，不能未经桥接互证。</p>
+<h2 id="2-leave-one-out-恒等式">2. Leave-one-out 恒等式</h2>
+<p>15个常数0训练点留出状态0110，比较完整常数0与该点单例外规则。令：</p>
+<div class="math-display">$$
+A_\delta=\{L_{15}\le\delta\},\quad
+B_{y,\epsilon}=\{L_{16,y}\le\epsilon\},\quad
+\delta=16\epsilon/15.
+$$</div>
+<p>因 BCE 非负，<code>B subset A</code>，严格有：</p>
+<div class="math-display">$$
+\mu(B)=\mu(A)P(B\mid A).
+$$</div>
+<p>两个独立 full SMC 的体积比必须等于 subset 粒子的交叉事件比。</p>
+<h2 id="3-and-四候选与-margin-bridge">3. AND 四候选与 margin bridge</h2>
+<p>对平衡 AND n=10的 D440/F040/D040/F440 重复：<code>delta=16epsilon/10</code>。独立运行一个 subset SMC 和四个完整规则 SMC；随后从同一 subset parent 按 hard ID 分支，在保持<code>L10&lt;=0.065</code>和 hard cell 不变时，仅收紧6个 heldout 点的最大 BCE margin 门槛 tau。</p>
+<p><code>tau=ln2</code>是 hard-cell 边界，四分支归一化质量必须复现父 hard posterior；之后的变化只来自同一 hard function 内部的连续 margin 核心收缩。</p>
+<h2 id="4-边界">4. 边界</h2>
+<p>交叉事件为0只能给有限粒子上界；分支 tau 停止下降表示当前采样配置触及可达下界，不是数学零体积。Hard odds 只看 sign，不等于完整 soft-margin 事件体积。</p>
+<h2 id="results">结果、解读与边界</h2>
+<h2 id="1-constant-leave-one-out-三路闭合">1. Constant leave-one-out 三路闭合</h2>
+<p>在7个两个 full 事件均可测的阈值上，独立 full-rule 体积比与 subset 条件交叉事件比闭合，最大自然对数 ratio residual 约0.071。Hard sign odds 可与 full-rule 体积比显著不同，但 soft-margin 条件概率补上后恒等式成立。</p>
+<h2 id="2-and-四候选闭合">2. AND 四候选闭合</h2>
+<p>四个候选的独立 full-rule SMC 与 subset 交叉事件在可共同测量区最大 closure residual 约0.049。由此确认 full-rule 与固定 D 不是同一量，却属于同一参数测度并满足严格条件分解；先前“体积差百个数量级而 hard 函数仍竞争”的表面矛盾不是 SMC 失真。</p>
+<h2 id="3-hard-to-margin-连续桥">3. Hard-to-margin 连续桥</h2>
+<p>父 subset 推进到<code>L10&lt;=0.065</code>后全部 hard-exact。四个 hard-cell 分支在<code>tau=ln2</code>起点以 TV 约0.0086复现父 hard posterior；只收紧 heldout margin，四个 cell 的绝对核心质量随后连续分离，D440 最终取得压倒性优势。分离发生在 hard ID 不变的 cell 内部，证明 hard function 并非复杂度流的最细粒度。</p>
+<p>个别分支在更深 tau 附近停止推进，按预注册只报告可达下界或上界，不伪装成零体积。</p>
+<h2 id="4-裁决">4. 裁决</h2>
+<p>E20 建立了静态测量闭环：</p>
+<ol>
+<li><code>V_full</code>与<code>Omega_D</code>不是同一个量；</li>
+<li>它们通过集合包含和条件概率严格关联；</li>
+<li>full-rule 体积可作为有桥接依据的测量，而非事后类比；</li>
+<li>固定 D 的 hard 函数竞争与完整规则极深体积差异可以同时成立；</li>
+<li>同一 hard cell 内部的 margin/连续实现仍可发生巨量体积收缩。</li>
+</ol>
+<p>它没有证明独立定义的复杂函数在所有固定 D 下必然收缩更快；复杂度方向仍需 Neural K-profile 及独立样本相变预测提供外部判据。</p></div>
+        <footer class="experiment-pager"><a href="e19.html">← E19 完整真值表规则的 loss-resolved 体积</a><a href="e21.html">E21 Agreement 控制与共识复杂度前沿 →</a></footer>
+      </article>
+    </main>
+  </div>
+</body>
+</html>

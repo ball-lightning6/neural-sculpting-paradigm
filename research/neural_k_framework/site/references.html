@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="当前网页明确提及的外部研究、正式书目信息、原文入口与本站引用关系。">
+  <title>参考文献与本站引用关系 · Neural K 研究档案</title>
+  <link rel="stylesheet" href="assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="assets/site.js"></script>
+</head>
+<body data-page-kind="references">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+  
+    <header class="topbar">
+      <a class="site-mark" href="index.html" aria-label="返回研究主文">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K 研究档案</span>
+      </a>
+      <nav class="top-nav" aria-label="全站导航"><a class="top-link" href="index.html">研究主文</a><a class="top-link" href="theory-core.html">理论核心</a><a class="top-link" href="experiments/index.html">实验索引</a><a class="top-link active" href="references.html">参考文献</a><a class="top-link" href="evidence-ledger.html">证据总账</a></nav>
+      <nav class="language-switch" aria-label="语言"><span class="active" lang="zh-CN">中文</span><a href="en/references.html" lang="en">EN</a></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>目录</span>
+      </button>
+    </header>
+    
+  <div class="page-shell">
+    
+    <aside class="sidebar" id="sidebar" aria-label="本页目录">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">本页目录</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#一-函数先验-参数到函数映射与简单性偏置">一、函数先验、参数到函数映射与简单性偏置</a><ul>
+<li><a href="#r01-dingle-camargo-与-louis-2018">R01 · Dingle、Camargo 与 Louis（2018）</a></li>
+<li><a href="#r02-valle-pérez-camargo-与-louis-2019">R02 · Valle-Pérez、Camargo 与 Louis（2019）</a></li>
+<li><a href="#r03-mingard-等-2019">R03 · Mingard 等（2019）</a></li>
+<li><a href="#r04-mingard-等-2021">R04 · Mingard 等（2021）</a></li>
+<li><a href="#r05-mingard-等-2025">R05 · Mingard 等（2025）</a></li>
+<li><a href="#r06-mingard-等-2025">R06 · Mingard 等（2025）</a></li>
+</ul>
+</li>
+<li><a href="#二-grokking-核极限与特征学习">二、Grokking、核极限与特征学习</a><ul>
+<li><a href="#r07-power-等-2022">R07 · Power 等（2022）</a></li>
+<li><a href="#r08-nanda-等-2023">R08 · Nanda 等（2023）</a></li>
+<li><a href="#r09-jacot-gabriel-与-hongler-2018">R09 · Jacot、Gabriel 与 Hongler（2018）</a></li>
+<li><a href="#r10-soudry-等-2018">R10 · Soudry 等（2018）</a></li>
+<li><a href="#r11-göring-等-2025">R11 · Göring 等（2025）</a></li>
+<li><a href="#r12-kornblith-等-2019">R12 · Kornblith 等（2019）</a></li>
+</ul>
+</li>
+<li><a href="#三-算法信息-mdl-pac-bayes-与自由能">三、算法信息、MDL、PAC-Bayes 与自由能</a><ul>
+<li><a href="#r13-solomonoff-1964">R13 · Solomonoff（1964）</a></li>
+<li><a href="#r14-kolmogorov-1965">R14 · Kolmogorov（1965）</a></li>
+<li><a href="#r15-grünwald-2004">R15 · Grünwald（2004）</a></li>
+<li><a href="#r16-blier-与-ollivier-2018">R16 · Blier 与 Ollivier（2018）</a></li>
+<li><a href="#r17-mcallester-1999">R17 · McAllester（1999）</a></li>
+<li><a href="#r18-levin-tishby-与-solla-1989">R18 · Levin、Tishby 与 Solla（1989）</a></li>
+</ul>
+</li>
+<li><a href="#四-平坦性-局部熵与奇异学习理论">四、平坦性、局部熵与奇异学习理论</a><ul>
+<li><a href="#r19-hochreiter-与-schmidhuber-1997">R19 · Hochreiter 与 Schmidhuber（1997）</a></li>
+<li><a href="#r20-chaudhari-等-2017">R20 · Chaudhari 等（2017）</a></li>
+<li><a href="#r21-watanabe-2009">R21 · Watanabe（2009）</a></li>
+<li><a href="#r22-lau-等-2025">R22 · Lau 等（2025）</a></li>
+</ul>
+</li>
+<li><a href="#五-主动学习的经典来源">五、主动学习的经典来源</a><ul>
+<li><a href="#r23-seung-opper-与-sompolinsky-1992">R23 · Seung、Opper 与 Sompolinsky（1992）</a></li>
+</ul>
+</li>
+<li><a href="#六-有限宽神经网络的现代统计力学">六、有限宽神经网络的现代统计力学</a><ul>
+<li><a href="#r24-pacelli-等-2023">R24 · Pacelli 等（2023）</a></li>
+</ul>
+</li>
+<li><a href="#七-agi-自由能与认知理论">七、AGI、自由能与认知理论</a><ul>
+<li><a href="#r25-hutter-2007">R25 · Hutter（2007）</a></li>
+<li><a href="#r26-schmidhuber-2008">R26 · Schmidhuber（2008）</a></li>
+<li><a href="#r27-friston-与-kiebel-2009">R27 · Friston 与 Kiebel（2009）</a></li>
+<li><a href="#r28-catoni-2007">R28 · Catoni（2007）</a></li>
+<li><a href="#r29-watanabe-2013">R29 · Watanabe（2013）</a></li>
+<li><a href="#r30-seung-sompolinsky-与-tishby-1992">R30 · Seung、Sompolinsky 与 Tishby（1992）</a></li>
+<li><a href="#r31-voita-与-titov-2020">R31 · Voita 与 Titov（2020）</a></li>
+<li><a href="#r32-tishby-pereira-与-bialek-2000">R32 · Tishby、Pereira 与 Bialek（2000）</a></li>
+<li><a href="#r33-saxe-等-2018">R33 · Saxe 等（2018）</a></li>
+<li><a href="#r34-kolchinsky-tracey-与-van-kuyk-2018">R34 · Kolchinsky、Tracey 与 Van Kuyk（2018）</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</nav>
+        <a class="sidebar-action" href="index.html">返回研究主文 →</a>
+      </div>
+    </aside>
+    
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">外部研究 · 原始论文入口</div>
+          <h1>参考文献与本站引用关系</h1>
+          <p class="article-description">当前网页明确提及的外部研究、正式书目信息、原文入口与本站引用关系。</p>
+        </header>
+        <div class="article-body">
+    <div class="reference-summary">
+      <strong>34</strong>
+      <span>条明确书目，按函数先验、Grokking/特征学习、算法信息/MDL、平坦性/SLT和主动学习分组。</span>
+    </div>
+    <blockquote>
+<p>本页只收录当前网页明确提及或直接依赖的方法与理论工作。论文地址优先使用期刊、会议、PMLR、JMLR、OpenReview、ML Anthology 或 arXiv 原始页面。</p>
+</blockquote>
+<h2 id="一-函数先验-参数到函数映射与简单性偏置">一、函数先验、参数到函数映射与简单性偏置</h2>
+<h3 id="r01-dingle-camargo-与-louis-2018">R01 · Dingle、Camargo 与 Louis（2018）</h3>
+<p>Kamaludin Dingle, Chico Q. Camargo, Ard A. Louis. <strong>Input–Output Maps Are Strongly Biased Towards Simple Outputs.</strong> <em>Nature Communications</em> 9, 761 (2018). DOI: 10.1038/s41467-018-03101-6.</p>
+<ul>
+<li><a href="https://www.nature.com/articles/s41467-018-03101-6" target="_blank" rel="noopener">Nature Communications 原文</a></li>
+<li><strong>本站引用关系</strong>：一般 input-output map 的简单输出偏置前史；同时提醒这种关系主要给出概率上界，简单输出不保证一定高概率。</li>
+</ul>
+<h3 id="r02-valle-pérez-camargo-与-louis-2019">R02 · Valle-Pérez、Camargo 与 Louis（2019）</h3>
+<p>Guillermo Valle-Pérez, Chico Q. Camargo, Ard A. Louis. <strong>Deep Learning Generalizes Because the Parameter-Function Map Is Biased Towards Simple Functions.</strong> <em>ICLR 2019</em>.</p>
+<ul>
+<li><a href="https://arxiv.org/abs/1805.08522" target="_blank" rel="noopener">arXiv:1805.08522</a></li>
+<li><strong>本站引用关系</strong>：神经网络参数到函数映射产生非均匀函数先验的直接前作；也是函数空间 PAC-Bayes 解释的重要来源。</li>
+</ul>
+<h3 id="r03-mingard-等-2019">R03 · Mingard 等（2019）</h3>
+<p>Chris Mingard, Joar Skalse, Guillermo Valle-Pérez, David Martínez-Rubio, Vladimir Mikulik, Ard A. Louis. <strong>Neural Networks Are a Priori Biased Towards Boolean Functions with Low Entropy.</strong> arXiv (2019).</p>
+<ul>
+<li><a href="https://arxiv.org/abs/1909.11522" target="_blank" rel="noopener">arXiv:1909.11522</a></li>
+<li><strong>本站引用关系</strong>：说明 Boolean 函数先验的低熵偏置，并在固定输出熵后继续观察结构复杂度偏好。</li>
+</ul>
+<h3 id="r04-mingard-等-2021">R04 · Mingard 等（2021）</h3>
+<p>Chris Mingard, Guillermo Valle-Pérez, Joar Skalse, Ard A. Louis. <strong>Is SGD a Bayesian Sampler? Well, Almost.</strong> <em>Journal of Machine Learning Research</em> 22(79):1–64 (2021).</p>
+<ul>
+<li><a href="https://www.jmlr.org/papers/v22/20-676.html" target="_blank" rel="noopener">JMLR 正式页面</a></li>
+<li><strong>本站引用关系</strong>：与本站多 seed 函数分布最直接的前作；支持静态 Bayesian function posterior 的一阶预测力，同时明确保留 optimizer 和超参数造成的二阶偏差。</li>
+</ul>
+<h3 id="r05-mingard-等-2025">R05 · Mingard 等（2025）</h3>
+<p>Chris Mingard, Henry Rees, Guillermo Valle-Pérez, Ard A. Louis. <strong>Deep Neural Networks Have an Inbuilt Occam’s Razor.</strong> <em>Nature Communications</em> 16, 220 (2025).</p>
+<ul>
+<li><a href="https://www.nature.com/articles/s41467-024-54813-x" target="_blank" rel="noopener">Nature Communications 原文</a></li>
+<li><strong>本站引用关系</strong>：E04 复用其 7-bit Boolean、深层 tanh 与 advSGD 核心协议，并延长首次零训练错误后的观察时间。</li>
+</ul>
+<h3 id="r06-mingard-等-2025">R06 · Mingard 等（2025）</h3>
+<p>Chris Mingard, Lukas Seier, Niclas Göring, Andrei-Vlad Badelita, Charles London, Ard A. Louis. <strong>Characterising the Inductive Biases of Neural Networks on Boolean Data.</strong> arXiv (2025).</p>
+<ul>
+<li><a href="https://arxiv.org/abs/2505.24060" target="_blank" rel="noopener">arXiv:2505.24060</a></li>
+<li><strong>本站引用关系</strong>：最接近“架构是一种程序语言”的近期布尔函数工作；其离散网络与 DNF 对应为 Neural K 的架构相对性提供直接对照。</li>
+</ul>
+<h2 id="二-grokking-核极限与特征学习">二、Grokking、核极限与特征学习</h2>
+<h3 id="r07-power-等-2022">R07 · Power 等（2022）</h3>
+<p>Alethea Power, Yuri Burda, Harri Edwards, Igor Babuschkin, Vedant Misra. <strong>Grokking: Generalization Beyond Overfitting on Small Algorithmic Datasets.</strong> arXiv (2022).</p>
+<ul>
+<li><a href="https://arxiv.org/abs/2201.02177" target="_blank" rel="noopener">arXiv:2201.02177</a></li>
+<li><strong>本站引用关系</strong>：确立小型算法数据上“先记忆、后延迟泛化”的原始现象和数据量轴。</li>
+</ul>
+<h3 id="r08-nanda-等-2023">R08 · Nanda 等（2023）</h3>
+<p>Neel Nanda, Lawrence Chan, Tom Lieberum, Jess Smith, Jacob Steinhardt. <strong>Progress Measures for Grokking via Mechanistic Interpretability.</strong> arXiv (2023).</p>
+<ul>
+<li><a href="https://arxiv.org/abs/2301.05217" target="_blank" rel="noopener">arXiv:2301.05217</a></li>
+<li><strong>本站引用关系</strong>：把模加法 grokking 分解为记忆、Fourier 电路形成和 cleanup 的连续过程；是本站“表面突变可以有连续内部坐标”的重要对照。</li>
+</ul>
+<h3 id="r09-jacot-gabriel-与-hongler-2018">R09 · Jacot、Gabriel 与 Hongler（2018）</h3>
+<p>Arthur Jacot, Franck Gabriel, Clément Hongler. <strong>Neural Tangent Kernel: Convergence and Generalization in Neural Networks.</strong> <em>NeurIPS 2018</em>.</p>
+<ul>
+<li><a href="https://arxiv.org/abs/1806.07572" target="_blank" rel="noopener">arXiv:1806.07572</a></li>
+<li><strong>本站引用关系</strong>：E05 的解析无限宽固定核基线；用于判断固定 kernel 已足够时，真实有限网络是否仍会重组特征。</li>
+</ul>
+<h3 id="r10-soudry-等-2018">R10 · Soudry 等（2018）</h3>
+<p>Daniel Soudry, Elad Hoffer, Mor Shpigel Nacson, Suriya Gunasekar, Nathan Srebro. <strong>The Implicit Bias of Gradient Descent on Separable Data.</strong> <em>Journal of Machine Learning Research</em> 19(70):1–57 (2018).</p>
+<ul>
+<li><a href="https://www.jmlr.org/papers/v19/18-188.html" target="_blank" rel="noopener">JMLR 正式页面</a></li>
+<li><strong>本站引用关系</strong>：说明零分类错误以后 logistic/cross-entropy 仍会推动 margin 方向；它是“post-fit loss 继续下降”必须区分的窄机制。</li>
+</ul>
+<h3 id="r11-göring-等-2025">R11 · Göring 等（2025）</h3>
+<p>Niclas Alexander Göring, Charles London, Abdurrahman Hadi Erturk, Chris Mingard, Yoonsoo Nam, Ard A. Louis. <strong>Feature Learning Is Decoupled from Generalization in High Capacity Neural Networks.</strong> arXiv (2025).</p>
+<ul>
+<li><a href="https://arxiv.org/abs/2507.19680" target="_blank" rel="noopener">arXiv:2507.19680</a></li>
+<li><strong>本站引用关系</strong>：直接触发 E05 对 feature-learning strength 与泛化收益的拆分；提醒表示变化大不等于变化对目标有用。</li>
+</ul>
+<h3 id="r12-kornblith-等-2019">R12 · Kornblith 等（2019）</h3>
+<p>Simon Kornblith, Mohammad Norouzi, Honglak Lee, Geoffrey Hinton. <strong>Similarity of Neural Network Representations Revisited.</strong> <em>ICML 2019</em>, PMLR 97:3519–3529.</p>
+<ul>
+<li><a href="https://proceedings.mlr.press/v97/kornblith19a.html" target="_blank" rel="noopener">PMLR 正式页面</a></li>
+<li><strong>本站引用关系</strong>：E05 使用 centered kernel alignment（CKA）比较隐藏表示和经验 NTK；CKA 只是相似性仪器，不自动等于压缩或任务相关性。</li>
+</ul>
+<h2 id="三-算法信息-mdl-pac-bayes-与自由能">三、算法信息、MDL、PAC-Bayes 与自由能</h2>
+<h3 id="r13-solomonoff-1964">R13 · Solomonoff（1964）</h3>
+<p>Ray J. Solomonoff. <strong>A Formal Theory of Inductive Inference, Part I and Part II.</strong> <em>Information and Control</em> 7 (1964).</p>
+<ul>
+<li><a href="https://mlanthology.org/misc/1964/solomonoff1964misc-formal/" target="_blank" rel="noopener">ML Anthology 原文入口</a></li>
+<li><strong>本站引用关系</strong>：为“有限证据下偏好短程序”提供理想化算法概率参照；本站不主张有限神经网络或 SGD 实现 Solomonoff mixture。</li>
+</ul>
+<h3 id="r14-kolmogorov-1965">R14 · Kolmogorov（1965）</h3>
+<p>A. N. Kolmogorov. <strong>Three Approaches to the Quantitative Definition of Information.</strong> <em>Problems of Information Transmission</em> 1(1):1–7 (1965; Russian original 3–11).</p>
+<ul>
+<li><a href="https://www.mathnet.ru/eng/ppi68" target="_blank" rel="noopener">MathNet 原文页面</a></li>
+<li><strong>本站引用关系</strong>：提供参考机相对的描述复杂度与不变性定理背景；Neural K 只被称为协议相对候选量。</li>
+</ul>
+<h3 id="r15-grünwald-2004">R15 · Grünwald（2004）</h3>
+<p>Peter Grünwald. <strong>A Tutorial Introduction to the Minimum Description Length Principle.</strong> arXiv (2004).</p>
+<ul>
+<li><a href="https://arxiv.org/abs/math/0406077" target="_blank" rel="noopener">arXiv:math/0406077</a></li>
+<li><strong>本站引用关系</strong>：用于区分 two-part code、NML、prequential coding 与 Bayesian 方法，避免把 MDL 当成“SGD 自动最小化程序长度”的口号。</li>
+</ul>
+<h3 id="r16-blier-与-ollivier-2018">R16 · Blier 与 Ollivier（2018）</h3>
+<p>Léonard Blier, Yann Ollivier. <strong>The Description Length of Deep Learning Models.</strong> <em>NeurIPS 2018</em>.</p>
+<ul>
+<li><a href="https://proceedings.neurips.cc/paper_files/paper/2018/hash/3b712de48137572f3849aabd5666a4e3-Abstract.html" target="_blank" rel="noopener">NeurIPS 正式页面</a></li>
+<li><strong>本站引用关系</strong>：用 variational 与 prequential code 实测深网描述长度；是 E22 把逐样本 surprise 与端点成本连接时的重要方法参照。</li>
+</ul>
+<h3 id="r17-mcallester-1999">R17 · McAllester（1999）</h3>
+<p>David A. McAllester. <strong>PAC-Bayesian Model Averaging.</strong> <em>COLT 1999</em>.</p>
+<ul>
+<li><a href="https://doi.org/10.1145/307400.307435" target="_blank" rel="noopener">ACM DOI 页面</a></li>
+<li><strong>本站引用关系</strong>：函数先验路线用 PAC-Bayes 把先验/后验质量与泛化界连接起来；本站没有从该界推出 loss-profile 排名。</li>
+</ul>
+<h3 id="r18-levin-tishby-与-solla-1989">R18 · Levin、Tishby 与 Solla（1989）</h3>
+<p>Esther Levin, Naftali Tishby, Sara A. Solla. <strong>A Statistical Approach to Learning and Generalization in Layered Neural Networks.</strong> <em>COLT 1989</em>, pp. 245–260. DOI: 10.1016/B978-0-08-094829-4.50020-9.</p>
+<ul>
+<li><a href="https://mlanthology.org/colt/1989/levin1989colt-statistical/" target="_blank" rel="noopener">ML Anthology 正式条目与原文</a></li>
+<li><strong>本站引用关系</strong>：早已把固定架构网络写成 Gibbs ensemble，并连接预测、自由能和 predictive MDL；本站不把“神经网络自由能”作为首创。</li>
+</ul>
+<h2 id="四-平坦性-局部熵与奇异学习理论">四、平坦性、局部熵与奇异学习理论</h2>
+<h3 id="r19-hochreiter-与-schmidhuber-1997">R19 · Hochreiter 与 Schmidhuber（1997）</h3>
+<p>Sepp Hochreiter, Jürgen Schmidhuber. <strong>Flat Minima.</strong> <em>Neural Computation</em> 9(1):1–42 (1997). DOI: 10.1162/neco.1997.9.1.1.</p>
+<ul>
+<li><a href="https://doi.org/10.1162/neco.1997.9.1.1" target="_blank" rel="noopener">DOI / MIT Press 页面</a></li>
+<li><strong>本站引用关系</strong>：把宽低误差权重区域与 MDL/泛化联系起来；本站强调参数平坦度具有坐标依赖性，不能直接替代函数体积。</li>
+</ul>
+<h3 id="r20-chaudhari-等-2017">R20 · Chaudhari 等（2017）</h3>
+<p>Pratik Chaudhari, Anna Choromanska, Stefano Soatto, Yann LeCun, Carlo Baldassi, Christian Borgs, Jennifer Chayes, Levent Sagun, Riccardo Zecchina. <strong>Entropy-SGD: Biasing Gradient Descent Into Wide Valleys.</strong> <em>ICLR 2017</em>.</p>
+<ul>
+<li><a href="https://arxiv.org/abs/1611.01838" target="_blank" rel="noopener">arXiv:1611.01838</a></li>
+<li><strong>本站引用关系</strong>：以 local entropy 偏好宽谷；与本站静态参数质量相邻，但测量对象和优化协议不同。</li>
+</ul>
+<h3 id="r21-watanabe-2009">R21 · Watanabe（2009）</h3>
+<p>Sumio Watanabe. <strong>Algebraic Geometry and Statistical Learning Theory.</strong> Cambridge University Press (2009). DOI: 10.1017/CBO9780511800474.</p>
+<ul>
+<li><a href="https://doi.org/10.1017/CBO9780511800474" target="_blank" rel="noopener">Cambridge DOI 页面</a></li>
+<li><strong>本站引用关系</strong>：Singular Learning Theory / RLCT 的基础来源；用于比较奇异模型证据和自由能渐近，不被等同为函数 Kolmogorov complexity。</li>
+</ul>
+<h3 id="r22-lau-等-2025">R22 · Lau 等（2025）</h3>
+<p>Edmund Lau, Zach Furman, George Wang, Daniel Murfet, Susan Wei. <strong>The Local Learning Coefficient: A Singularity-Aware Complexity Measure.</strong> <em>AISTATS 2025</em>, PMLR 258:244–252.</p>
+<ul>
+<li><a href="https://proceedings.mlr.press/v258/lau25a.html" target="_blank" rel="noopener">PMLR 正式页面</a></li>
+<li><strong>本站引用关系</strong>：提供可扩展估计的局部学习系数；是未来比较 Neural K-profile 局部斜率、RLCT/LLC 与 margin core 的直接方法邻居。</li>
+</ul>
+<h2 id="五-主动学习的经典来源">五、主动学习的经典来源</h2>
+<h3 id="r23-seung-opper-与-sompolinsky-1992">R23 · Seung、Opper 与 Sompolinsky（1992）</h3>
+<p>H. Sebastian Seung, Manfred Opper, Haim Sompolinsky. <strong>Query by Committee.</strong> <em>COLT 1992</em>. DOI: 10.1145/130385.130417.</p>
+<ul>
+<li><a href="https://doi.org/10.1145/130385.130417" target="_blank" rel="noopener">ACM DOI 页面</a></li>
+<li><strong>本站引用关系</strong>：E21 以多 seed 分歧选择信息量高的未见输入，是版本空间 committee 查询思想的神经函数分布版本。</li>
+</ul>
+<h2 id="六-有限宽神经网络的现代统计力学">六、有限宽神经网络的现代统计力学</h2>
+<h3 id="r24-pacelli-等-2023">R24 · Pacelli 等（2023）</h3>
+<p>R. Pacelli, S. Ariosto, M. Pastore, F. Ginelli, M. Gherardi, P. Rotondo. <strong>A Statistical Mechanics Framework for Bayesian Deep Neural Networks Beyond the Infinite-Width Limit.</strong> <em>Nature Machine Intelligence</em> 5 (2023).</p>
+<ul>
+<li><a href="https://www.nature.com/articles/s42256-023-00767-6" target="_blank" rel="noopener">Nature Machine Intelligence 原文</a></li>
+<li><strong>本站引用关系</strong>：给出有限宽 Bayesian 深网超越 NNGP/无限宽极限的统计力学修正；用于说明现代定量理论可以解析特定模型，但不能自动替代本站对普通优化器和完整函数分布的实验测量。</li>
+</ul>
+<h2 id="七-agi-自由能与认知理论">七、AGI、自由能与认知理论</h2>
+<h3 id="r25-hutter-2007">R25 · Hutter（2007）</h3>
+<p>Marcus Hutter. <strong>Universal Algorithmic Intelligence: A Mathematical Top-Down Approach.</strong> In <em>Artificial General Intelligence</em>, Springer, pp. 227–290 (2007).</p>
+<ul>
+<li><a href="https://arxiv.org/abs/cs/0701125" target="_blank" rel="noopener">arXiv:cs/0701125</a></li>
+<li><strong>本站引用关系</strong>：AIXI 把 Solomonoff 通用归纳与序贯行动、奖励最大化结合；用于说明本站目前只有归纳层，没有完整智能体闭环。</li>
+</ul>
+<h3 id="r26-schmidhuber-2008">R26 · Schmidhuber（2008）</h3>
+<p>Jürgen Schmidhuber. <strong>Driven by Compression Progress: A Simple Principle Explains Essential Aspects of Subjective Beauty, Novelty, Surprise, Interestingness, Attention, Curiosity, Creativity, Art, Science, Music, Jokes.</strong> arXiv preprint (2008).</p>
+<ul>
+<li><a href="https://people.idsia.ch/~juergen/driven2008.pdf" target="_blank" rel="noopener">作者提供的原始 PDF</a></li>
+<li><strong>本站引用关系</strong>：把好奇心奖励定义为压缩能力的进步，而非静态可压缩度；与本站的逐样本自由能增量和主动 disagreement 查询相邻。</li>
+</ul>
+<h3 id="r27-friston-与-kiebel-2009">R27 · Friston 与 Kiebel（2009）</h3>
+<p>Karl Friston, Stefan Kiebel. <strong>Predictive Coding under the Free-Energy Principle.</strong> <em>Philosophical Transactions of the Royal Society B</em> 364:1211–1221 (2009). DOI: 10.1098/rstb.2008.0300.</p>
+<ul>
+<li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2666703/" target="_blank" rel="noopener">PubMed Central 原文</a></li>
+<li><strong>本站引用关系</strong>：Free Energy Principle / predictive coding 的代表性入口；与本站共享 variational free-energy 数学，但隐藏变量、感知与行动对象不同。</li>
+</ul>
+<h3 id="r28-catoni-2007">R28 · Catoni（2007）</h3>
+<p>Olivier Catoni. <strong>PAC-Bayesian Supervised Classification: The Thermodynamics of Statistical Learning.</strong> IMS Lecture Notes–Monograph Series 56 (2007).</p>
+<ul>
+<li><a href="https://arxiv.org/abs/0712.0248" target="_blank" rel="noopener">arXiv:0712.0248</a></li>
+<li><strong>本站引用关系</strong>：用 Gibbs posterior、温度和 KL 复杂度连接经验风险与泛化；本站进一步做完整函数分解，但不由 PAC-Bayes 自动推出 profile。</li>
+</ul>
+<h3 id="r29-watanabe-2013">R29 · Watanabe（2013）</h3>
+<p>Sumio Watanabe. <strong>A Widely Applicable Bayesian Information Criterion.</strong> <em>Journal of Machine Learning Research</em> 14:867–897 (2013).</p>
+<ul>
+<li><a href="https://jmlr.csail.mit.edu/papers/volume14/watanabe13a/watanabe13a.pdf" target="_blank" rel="noopener">JMLR 原文 PDF</a></li>
+<li><strong>本站引用关系</strong>：WBIC/RLCT 是奇异模型自由能渐近的可计算入口；可能用于未来推导低-loss 体积收缩指数。</li>
+</ul>
+<h3 id="r30-seung-sompolinsky-与-tishby-1992">R30 · Seung、Sompolinsky 与 Tishby（1992）</h3>
+<p>H. Sebastian Seung, Haim Sompolinsky, Naftali Tishby. <strong>Statistical Mechanics of Learning from Examples.</strong> <em>Physical Review A</em> 45:6056–6091 (1992). DOI: 10.1103/PhysRevA.45.6056.</p>
+<ul>
+<li><a href="https://journals.aps.org/pra/abstract/10.1103/PhysRevA.45.6056" target="_blank" rel="noopener">Physical Review A 原文页面</a></li>
+<li><strong>本站引用关系</strong>：经典 teacher–student 学习统计力学；用于界定“温度、样本数与泛化相变”早已有严格先例。</li>
+</ul>
+<h3 id="r31-voita-与-titov-2020">R31 · Voita 与 Titov（2020）</h3>
+<p>Elena Voita, Ivan Titov. <strong>Information-Theoretic Probing with Minimum Description Length.</strong> <em>EMNLP 2020</em>.</p>
+<ul>
+<li><a href="https://aclanthology.org/2020.emnlp-main.14/" target="_blank" rel="noopener">ACL Anthology 原文</a></li>
+<li><strong>本站引用关系</strong>：用 online codelength 代替单点 probe accuracy；与未来按隐藏层测条件自由能/计算压力的路线相邻。</li>
+</ul>
+<h3 id="r32-tishby-pereira-与-bialek-2000">R32 · Tishby、Pereira 与 Bialek（2000）</h3>
+<p>Naftali Tishby, Fernando C. Pereira, William Bialek. <strong>The Information Bottleneck Method.</strong> Allerton Conference / arXiv (2000).</p>
+<ul>
+<li><a href="https://arxiv.org/abs/physics/0004057" target="_blank" rel="noopener">arXiv:physics/0004057</a></li>
+<li><strong>本站引用关系</strong>：定义输入信息压缩与目标相关信息保留的互信息权衡；压缩对象不同于完整函数参数体积。</li>
+</ul>
+<h3 id="r33-saxe-等-2018">R33 · Saxe 等（2018）</h3>
+<p>Andrew M. Saxe et al. <strong>On the Information Bottleneck Theory of Deep Learning.</strong> <em>ICLR 2018</em>.</p>
+<ul>
+<li><a href="https://openreview.net/forum?id=ry_WPG-A-" target="_blank" rel="noopener">OpenReview 原文</a></li>
+<li><strong>本站引用关系</strong>：说明所谓逐层“压缩阶段”依赖激活和测量条件，不是所有深网训练的普适现象。</li>
+</ul>
+<h3 id="r34-kolchinsky-tracey-与-van-kuyk-2018">R34 · Kolchinsky、Tracey 与 Van Kuyk（2018）</h3>
+<p>Artemy Kolchinsky, Brendan D. Tracey, Steven Van Kuyk. <strong>Caveats for Information Bottleneck in Deterministic Scenarios.</strong> arXiv (2018).</p>
+<ul>
+<li><a href="https://arxiv.org/abs/1808.07593" target="_blank" rel="noopener">arXiv:1808.07593</a></li>
+<li><strong>本站引用关系</strong>：指出确定性连续映射和确定性标签下 Information Bottleneck 可退化；本项目的精确规则任务正需要这一边界。</li>
+</ul></div>
+        
+      </article>
+    </main>
+  </div>
+</body>
+</html>

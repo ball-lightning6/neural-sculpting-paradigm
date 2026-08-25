@@ -1,0 +1,681 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="用实验转折讲清训练 loss、函数体积、优化器运输与 Neural K-profile。">
+  <title>从训练集约束到 Neural K-profile：这项研究是怎么一步步走到这里的 · Neural K 研究档案</title>
+  <link rel="stylesheet" href="assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="assets/site.js"></script>
+</head>
+<body data-page-kind="paper">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+  
+    <header class="topbar">
+      <a class="site-mark" href="index.html" aria-label="返回研究主文">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K 研究档案</span>
+      </a>
+      <nav class="top-nav" aria-label="全站导航"><a class="top-link active" href="index.html">研究主文</a><a class="top-link" href="theory-core.html">理论核心</a><a class="top-link" href="experiments/index.html">实验索引</a><a class="top-link" href="references.html">参考文献</a><a class="top-link" href="evidence-ledger.html">证据总账</a></nav>
+      <nav class="language-switch" aria-label="语言"><span class="active" lang="zh-CN">中文</span><a href="en/index.html" lang="en">EN</a></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>目录</span>
+      </button>
+    </header>
+    
+  <div class="page-shell">
+    
+    <aside class="sidebar" id="sidebar" aria-label="本页目录">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">本页目录</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#先说最后的结论">先说最后的结论</a></li>
+<li><a href="#在提出这套理论以前-我们先看到了什么">在提出这套理论以前，我们先看到了什么</a></li>
+<li><a href="#1-最初的问题-只靠初始化先验-能不能解释训练后的函数选择">1. 最初的问题：只靠初始化先验，能不能解释训练后的函数选择</a><ul>
+<li><a href="#实验一-在-3-bit-空间直接数完整函数">实验一：在 3-bit 空间直接数完整函数</a></li>
+<li><a href="#实验二-首次拟合以后-函数真的还会继续变吗">实验二：首次拟合以后，函数真的还会继续变吗</a></li>
+</ul>
+</li>
+<li><a href="#2-第一次真正的理论转折-关键变量可能不是时间-而是-loss-深度">2. 第一次真正的理论转折：关键变量可能不是时间，而是 Loss 深度</a><ul>
+<li><a href="#实验三-一次采样-按-raw-bce-把参数空间一层层切开">实验三：一次采样，按 raw BCE 把参数空间一层层切开</a></li>
+<li><a href="#实验四-怎样避免看见赢家以后才说它简单">实验四：怎样避免看见赢家以后才说它简单</a></li>
+</ul>
+</li>
+<li><a href="#3-第二次理论转折-所谓简单答案-必须相对于训练集来谈">3. 第二次理论转折：所谓简单答案，必须相对于训练集来谈</a><ul>
+<li><a href="#实验五-十个-and-样本为什么先学到-shortcut">实验五：十个 AND 样本为什么先学到 shortcut</a></li>
+<li><a href="#实验六-一个函数可以随-loss-先被排斥-后重新增加">实验六：一个函数可以随 Loss 先被排斥、后重新增加</a></li>
+</ul>
+</li>
+<li><a href="#4-第三次理论转折-静态终点与优化入口是两个问题">4. 第三次理论转折：静态终点与优化入口是两个问题</a><ul>
+<li><a href="#实验七-先把网络送进去-再看它能不能留下来">实验七：先把网络送进去，再看它能不能留下来</a></li>
+<li><a href="#实验八-同一个-loss-smc-和-adamw-会选择同样的函数吗">实验八：同一个 Loss，SMC 和 AdamW 会选择同样的函数吗</a></li>
+</ul>
+</li>
+<li><a href="#5-怎样直接测一条完整规则的难度">5. 怎样直接测一条完整规则的难度</a><ul>
+<li><a href="#实验九-完整真值表下-简单和复杂目标怎样分开">实验九：完整真值表下，简单和复杂目标怎样分开</a></li>
+<li><a href="#实验十-完整规则体积和部分训练集候选体积到底是什么关系">实验十：完整规则体积和部分训练集候选体积到底是什么关系</a></li>
+<li><a href="#实验十一-逐个加入样本的信息量能不能变成一个不变量">实验十一：逐个加入样本的信息量能不能变成一个不变量</a></li>
+</ul>
+</li>
+<li><a href="#6-最重要的前瞻判决-体积曲线能否预测需要多少训练数据">6. 最重要的前瞻判决：体积曲线能否预测需要多少训练数据</a><ul>
+<li><a href="#实验十二-先冻结体积排序-再训练-9-736-个数据条件">实验十二：先冻结体积排序，再训练 9,736 个数据条件</a></li>
+</ul>
+</li>
+<li><a href="#7-深尾反转-hard-function-已经固定-复杂度仍然会换序">7. 深尾反转：Hard Function 已经固定，复杂度仍然会换序</a><ul>
+<li><a href="#实验十三-先从-54-条规则里寻找真正可能交叉的函数对">实验十三：先从 54 条规则里寻找真正可能交叉的函数对</a></li>
+<li><a href="#实验十四-让两条规则共享同一个父系综-直接看谁反超">实验十四：让两条规则共享同一个父系综，直接看谁反超</a></li>
+</ul>
+</li>
+<li><a href="#8-这套方法能不能离开布尔真值表">8. 这套方法能不能离开布尔真值表</a><ul>
+<li><a href="#实验十五-先确认同样四张图-对不同任务到底够不够">实验十五：先确认同样四张图，对不同任务到底够不够</a></li>
+<li><a href="#实验十六-不重新训练-直接比较一张未见图片的两个标签分支">实验十六：不重新训练，直接比较一张未见图片的两个标签分支</a></li>
+</ul>
+</li>
+<li><a href="#9-agreement-这条支线最后告诉了我们什么">9. Agreement 这条支线最后告诉了我们什么</a><ul>
+<li><a href="#实验十七-没有-teacher-的高共识函数-最后都是什么">实验十七：没有 teacher 的高共识函数，最后都是什么</a></li>
+<li><a href="#实验十八-能不能主动让函数凝聚-或者故意不让它凝聚">实验十八：能不能主动让函数凝聚，或者故意不让它凝聚</a></li>
+</ul>
+</li>
+<li><a href="#10-现在怎样统一理解以前那些现象">10. 现在怎样统一理解以前那些现象</a><ul>
+<li><a href="#10-1-直接泛化">10.1 直接泛化</a></li>
+<li><a href="#10-2-grokking">10.2 Grokking</a></li>
+<li><a href="#10-3-为什么增加数据会让-grokking-变成直接学习">10.3 为什么增加数据会让 Grokking 变成直接学习</a></li>
+<li><a href="#10-4-过拟合与经典-u-形">10.4 过拟合与经典 U 形</a></li>
+<li><a href="#10-5-标签噪声和-early-stopping">10.5 标签噪声和 Early Stopping</a></li>
+<li><a href="#10-6-特征学习-计算复用和压缩">10.6 特征学习、计算复用和压缩</a></li>
+<li><a href="#10-7-符号语义与-ood-组合">10.7 符号语义与 OOD 组合</a></li>
+<li><a href="#10-8-能力涌现">10.8 能力涌现</a></li>
+<li><a href="#10-9-dead-bit-为什么不需要额外补丁">10.9 Dead Bit 为什么不需要额外补丁</a></li>
+</ul>
+</li>
+<li><a href="#11-最后的理论框架-到这里再给公式">11. 最后的理论框架：到这里再给公式</a><ul>
+<li><a href="#11-1-固定一套神经参考协议">11.1 固定一套神经参考协议</a></li>
+<li><a href="#11-2-固定训练集下-每个完整函数还剩多少质量">11.2 固定训练集下，每个完整函数还剩多少质量</a></li>
+<li><a href="#11-3-完整目标体积与-neural-k-profile">11.3 完整目标体积与 Neural K-profile</a></li>
+<li><a href="#11-4-优化器诱导的真实训练分布">11.4 优化器诱导的真实训练分布</a></li>
+<li><a href="#11-5-未见样本的标签分支与自由能">11.5 未见样本的标签分支与自由能</a></li>
+<li><a href="#11-6-操作性的样本复杂度">11.6 操作性的样本复杂度</a></li>
+<li><a href="#11-7-整个框架最终只需要两条静态经验原则">11.7 整个框架最终只需要两条静态经验原则</a></li>
+</ul>
+</li>
+<li><a href="#12-这套框架和已有理论是什么关系">12. 这套框架和已有理论是什么关系</a></li>
+<li><a href="#13-哪些话现在还不能说">13. 哪些话现在还不能说</a></li>
+<li><a href="#14-总结">14. 总结</a></li>
+<li><a href="#附录-e01-e25-证据地图">附录：E01--E25 证据地图</a></li>
+</ul>
+</div>
+</nav>
+        <a class="sidebar-action" href="experiments/index.html">查看全部实验 →</a>
+      </div>
+    </aside>
+    
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">研究主文 · 可读叙事版</div>
+          <h1>从训练集约束到 Neural K-profile：这项研究是怎么一步步走到这里的</h1>
+          <p class="article-description">用实验转折讲清训练 loss、函数体积、优化器运输与 Neural K-profile。</p>
+        </header>
+        <div class="article-body">
+    <aside class="research-disclosure" role="note" aria-labelledby="research-disclosure-title">
+      <div class="disclosure-kicker" id="research-disclosure-title">研究状态说明</div>
+      <p>本网页汇总的是作者近期密集完成的大量研究与实验。把这些材料整理成严谨、完整的论文，需要投入非常大的额外工作量；限于作者目前的精力，现阶段暂时由 AI 对研究进行总结和网页化整理。</p>
+      <p><strong>除“理论核心”外，本站主文、研究证据总账和实验说明的具体文字均由 AI 撰写，仍有不少表达不清、结构不成熟和细节解释不足之处。</strong>研究问题、理论判断和实验工作来自作者；AI 负责整理现有对话、脚本、结果包与文档，不应把当前网页视为已经完成的正式论文。</p>
+      <p><strong><a href="theory-core.html">“理论核心”页</a>是唯一的文字写作例外：</strong>作者对该页进行了逐段审阅和深度修改，因此它是目前对核心研究主张相对更准确的表述。除该页外，作者没有参与本站其他页面的具体文字写作。</p>
+      <p>需要核查或寻找更详细解释时，请优先查看研究证据总账、各实验详情页、原始实验脚本及其完整说明。作者之后会继续修改当前网页，并推进正式论文写作。</p>
+      <div class="disclosure-links">
+        <a href="evidence-ledger.html">查看研究证据总账</a>
+        <a href="experiments/index.html">查看 E01–E25 实验与脚本</a>
+      </div>
+    </aside>
+    
+    <div class="core-entry-banner">
+      <div><strong>想直接看核心研究主张？</strong><span>可跳过探索叙事，直接阅读简单性原则、Neural K-profile、统计物理、预测、agreement 与 AGI 理论关系。</span></div>
+      <a href="theory-core.html">打开理论核心 →</a>
+    </div>
+    
+    <div class="metric-strip" aria-label="文档概览">
+      <div><strong>25</strong><span>组证据单元</span></div>
+      <div><strong>18</strong><span>组关键实验展开</span></div>
+      <div><strong>4</strong><span>张关键结果图</span></div>
+    </div>
+    <blockquote>
+<p>这是一份研究叙事稿，不追求投稿格式。它要做的是把思想转折、实验对象、测量方法、结果和解读说清楚。</p>
+<p>完整数值、脚本与边界见<a href="experiments/index.html">实验目录</a>；此前的详细版本保存在<a href="evidence-ledger.html">证据总账</a>。</p>
+</blockquote>
+<h2 id="先说最后的结论">先说最后的结论</h2>
+<p>神经网络训练时真正被要求做的事情只有一件：降低训练目标。它并不知道数据来自哪个“真实规则”，也不会额外收到“请泛化”“请压缩”“请形成概念”这样的命令。</p>
+<p>但不同参数实现训练集的方式并不一样。有些实现只能勉强把几个训练点答对，有些实现可以复用同一个规则处理大量输入；有些实现需要很多彼此独立的例外，有些实现只需要一套共享计算。网络结构和参数化使这些实现占据不同大小的参数空间。继续降低训练 loss 时，它们失去参数体积的速度也不同。</p>
+<p>因此，训练 loss 不只是“答对训练样本没有”的开关。它还是一个连续的分辨率旋钮：要求越严格，某些函数和实现就越容易被淘汰，另一些函数相对变得更有优势。这个过程不是对每个函数都单调，也不是只由一个复杂度分数决定。更合适的对象是一条曲线：某个目标在不同 loss 精度下还剩下多少参数体积。我们后来把它叫作 Neural K-profile。</p>
+<p>优化器则是另一层。静态体积告诉我们地形里有什么、各部分有多大；SGD 或 AdamW 决定从随机初始化出发实际会进入哪里、会不会被入口挡住、会沿哪条路移动。两者关系很大，但不是同一个东西。</p>
+<p>下面按我们真正形成这些结论的顺序讲。</p>
+<h2 id="在提出这套理论以前-我们先看到了什么">在提出这套理论以前，我们先看到了什么</h2>
+<p>这项研究并不是从 3-bit 玩具任务开始的。更早的一年多里，仓库已经积累了百余个方向和实验变体。它们的复现完整度并不相同：有些保存了正式曲线、权重和多 seed 结果，有些只有部分结果，还有一些只是生成器或失败尝试。因此不能把“百余实验”理解成百余个都达到论文标准的成功案例。</p>
+<p>但它们共同形成了一个很难忽略的现象族。</p>
+<ul>
+<li>一维和二维元胞自动机包括 Rule30、Rule90、Rule110、多步演化、逆规则和可编程 rule code；</li>
+<li>多进制加法、位置打乱、乘法、逻辑表达式、模运算和 RSA 数据生成器；</li>
+<li>接雨水、编辑距离、图传播、迷宫、汉诺塔、Lights Out 和若干动态规划任务；</li>
+<li>表盘、几何轨迹、折射、旋转和图像变换；</li>
+<li>MNIST 与规则执行耦合、类别条件规则、rule bit、mask、prefix 和未见规则组合；</li>
+<li>MLP、CNN、Transformer、ConvNeXt、Swin、MLP-Mixer 等多种架构 pilot；</li>
+<li>以及 Mod3、parity、递归和深层规则等明确失败或需要 scaffold 的任务。</li>
+</ul>
+<p>在数据干净、信息通路存在而且优化能够到达的条件下，普通神经网络经常可以从远少于完整输入空间的样本中恢复精确确定性变换。很多充分数据任务中，train 和 validation 从一开始同步下降，最后在巨大未见空间中保持接近完整正确。网络表现出的不只是传统图像相似性插值，也包括离散规则、组合语义和多步骤计算。</p>
+<p>与此同时，失败边界也很稳定：某些表示会把信息耦合得很难优化；训练样本不足时完整函数不收束；parity 和 Mod3 会出现明显入口屏障；增加网络容量有时改善、有时恶化；同一个任务换架构后相变位置和偏好顺序会改变。</p>
+<p>这些实验先给了我们三条不能绕过的事实：神经网络确实能学会广泛的精确规则；数据辨识性、网络表示能力和优化可达性不是同一件事；任何理论都必须同时解释大规模成功和结构化失败。后面的微型 Boolean 与 SMC 实验，不是用几个玩具现象替代这批结果，而是为了在可完全测量的空间中拆解它们背后的机制。</p>
+<h2 id="1-最初的问题-只靠初始化先验-能不能解释训练后的函数选择">1. 最初的问题：只靠初始化先验，能不能解释训练后的函数选择</h2>
+<p>我们一开始面对的是一个很强也很诱人的静态图景。</p>
+<p>随机初始化的神经网络并不会均匀地产生所有函数。某些简单函数本来就有更高概率。于是可以设想：训练并没有创造新的偏好，它只是把不符合训练样本的函数删掉。剩下函数的相对概率，仍由初始化先验决定。</p>
+<p>这个解释很接近 <a href="https://www.nature.com/articles/s41467-018-03101-6" target="_blank" rel="noopener">Dingle、Camargo 与 Louis（2018）</a>、<a href="https://arxiv.org/abs/1805.08522" target="_blank" rel="noopener">Valle-Pérez、Camargo 与 Louis（2019）</a>、<a href="https://arxiv.org/abs/1909.11522" target="_blank" rel="noopener">Mingard 等（2019）</a>以及<a href="https://www.jmlr.org/papers/v22/20-676.html" target="_blank" rel="noopener">Mingard 等（2021）</a>建立的函数先验路线，而且它确实能解释很多一阶泛化现象。真正的问题是：它到底只是一个好近似，还是训练机制本身？</p>
+<p>要判断这一点，不能只比较测试准确率。我们必须知道网络训练前后到底选择了哪个完整函数。</p>
+<h3 id="实验一-在-3-bit-空间直接数完整函数">实验一：在 3-bit 空间直接数完整函数</h3>
+<p><strong>想区分什么？</strong></p>
+<p>如果训练只是在初始化先验上做硬过滤，那么固定训练集以后，真实训练得到的完整函数分布应该接近“随机网络中所有答对训练样本者”的分布。训练样本已经全部答对后，继续训练也不应再系统改变未见输入。</p>
+<p><strong>具体做了什么？</strong></p>
+<p><a href="experiments/e01.html">E01</a>使用 3-bit 输入、1-bit 输出。完整输入只有 8 个，所以总共只有 256 种函数。每个网络都可以在八个输入上跑一遍，得到准确的完整真值表。</p>
+<p>我们先生成 1,048,576 个未训练网络，统计初始化函数先验。然后给出几个很小的训练集，用两种方法得到函数分布：</p>
+<ol>
+<li>不训练，只从随机网络里筛出所有答对训练样本的网络；</li>
+<li>从大量随机初始化真正训练，并在首次拟合、继续训练 100 步和 1,000 步后读取完整函数。</li>
+</ol>
+<p><strong>测了什么？</strong></p>
+<p>不是只测准确率，而是直接比较 256 个完整函数各占多少比例，并测两个分布之间的 TV 距离、函数排名和逐 seed 的函数变化。</p>
+<p><strong>出现了什么？</strong></p>
+<p>真实训练分布和静态硬过滤分布差得远大于采样噪声。有些训练集里，静态分布最偏好的函数在真实训练后失去优势，另一个函数反而成为主导。训练集不变，继续优化 100 步后，两者距离还进一步增大。</p>
+<p>一个更直观的单样本版本使用三层宽网络。初始化网络在答对那一个训练样本以后，约 72% 仍然不是目标常数函数，所以静态过滤只给目标常数约 28% 概率。真实训练却在第一步让 128/128 个网络全部变成目标常数。即使只看初始化时已经答对训练样本的网络，它们也全部迁移。</p>
+<p><strong>这迫使我们怎么改？</strong></p>
+<p>初始化先验仍然重要，但训练不只是删除不兼容函数。优化器会把已经符合训练集的参数从一个完整函数搬到另一个完整函数。我们必须把“静态参数质量”和“优化器实际运输”分开。</p>
+<h3 id="实验二-首次拟合以后-函数真的还会继续变吗">实验二：首次拟合以后，函数真的还会继续变吗</h3>
+<p>微型 Boolean 任务可能过于特殊，所以 <a href="experiments/e04.html">E04</a>把问题放到 7-bit 输入、128 个完整状态和十层 tanh 网络中。六个条件总共训练 12,288 条轨迹。</p>
+<p><strong>具体怎么测？</strong></p>
+<p>与原设置在首次零训练分类错误处停止不同，我们让网络继续优化 100 和 1,000 步。每个时刻都保存完整 128-bit 输出函数。训练集始终保持全部分类正确。</p>
+<p><strong>结果是什么？</strong></p>
+<p>继续训练以后，大约 60% 到 99.8% 的模型改变了完整函数。初始化尺度较大的条件中，每个模型平均会翻转约 15 个未见输入。</p>
+<p><strong>怎么解读？</strong></p>
+<p>“训练集分类全对”只是一个很粗的阈值。BCE 还在下降，logit margin 还在变化，完整函数也还在迁移。<a href="https://arxiv.org/abs/2201.02177" target="_blank" rel="noopener">Power 等（2022）的原始 Grokking 工作</a>和插值后训练不可能只用一次硬过滤解释。</p>
+<h2 id="2-第一次真正的理论转折-关键变量可能不是时间-而是-loss-深度">2. 第一次真正的理论转折：关键变量可能不是时间，而是 Loss 深度</h2>
+<p>确认函数在插值后继续变化以后，我们最初很自然地把它归因于 SGD 动力学：也许优化器在函数之间游走，最后更容易停在简单函数。</p>
+<p>但这里有一个更基本的事实：无论优化器怎样运动，它一直在做的事情都是降低训练 loss。于是问题可以先静态化：<strong>即使完全不训练，只看参数空间本身，不同函数在更低训练 loss 区域中的相对体积会不会变化？</strong></p>
+<p>如果不会变化，那么训练到很低 loss 在函数选择上几乎是多余的；在首次满足训练标签以后，函数赔率就已经定了。反过来，如果复杂函数的低 loss 区域收缩得更快，那么继续降低 loss 本身就会产生新的函数偏好。</p>
+<h3 id="实验三-一次采样-按-raw-bce-把参数空间一层层切开">实验三：一次采样，按 raw BCE 把参数空间一层层切开</h3>
+<p><a href="experiments/e06.html">E06</a>采样 4,194,304 个 3-bit 网络，保存每个网络在八个输入上的 logits。这样无需为每个训练集重新采样，就能离线计算任意训练集上的 raw BCE，并知道每个网络属于哪个完整 hard function。</p>
+<p><strong>具体看什么？</strong></p>
+<p>先保留所有 hard prediction 都符合训练样本的网络，然后再按 raw BCE 从高到低逐渐收紧。每进入更低 loss 尾部，就重新统计 256 个完整函数的比例。</p>
+<p><strong>结果是什么？</strong></p>
+<p>双样本条件给出很强的正面结果：一个真实 SGD 也会偏好的对称阈值函数，在全部 hard-exact 网络里只占约 1.6%，进入最低 loss 尾部后上升到约 23% 到 51%。这说明 loss 的确包含硬约束之外的函数选择信息。</p>
+<p>但四样本条件同时给出反例：两个主要函数的总质量先增加，进入更深尾部后又下降，其他函数接管。真实 SGD 的分布也不等于相同 loss 下的静态分布。</p>
+<p><strong>这次怎么改理论？</strong></p>
+<p>我们保留“连续 loss 会重排函数质量”，但放弃“某个预先指定的简单函数会从头到尾单调增加”。不同 loss 区间可能偏好不同函数。</p>
+<h3 id="实验四-怎样避免看见赢家以后才说它简单">实验四：怎样避免看见赢家以后才说它简单</h3>
+<p>这时出现了一个很危险的循环论证：如果网络选择哪个函数，我们就说它是“网络认为的简单函数”，那么任何结果都能被解释。</p>
+<p><a href="experiments/e10.html">E10</a>因此预先构造严格有序的函数对。</p>
+<p><strong>函数对怎么构造？</strong></p>
+<p>简单函数是 projection、AND 或 OR，可以由一个线性阈值单元表示。复杂函数和它拥有相同训练样本、相同训练标签和相同完整输出平衡，只在未见点增加例外；线性规划可以预先证明它已经不再线性可分。两个函数都完全符合训练集，所以比较的不是谁能拟合。</p>
+<p><strong>测什么？</strong></p>
+<p>在同一批随机网络中，看进入更低 raw BCE 尾部以后，简单函数相对于复杂函数的赔率怎样变化。为了避免极低尾部只有零星样本造成假结论，最终分析要求两个函数的期望计数都达到可靠阈值。</p>
+<p><strong>结果是什么？</strong></p>
+<p>12/12 个可靠函数对都提高了简单函数赔率，并且全部显著。GELU 网络平均增强约 10.6 倍，tanh 网络约 5.1 倍。</p>
+<p><strong>它证明了什么？</strong></p>
+<p>它证明在这些实验前就能严格排序的函数对上，更低 raw BCE 确实对简单兼容函数更友好。它没有证明所有数据集、所有 loss 区间都服从同一个永久顺序。</p>
+<h2 id="3-第二次理论转折-所谓简单答案-必须相对于训练集来谈">3. 第二次理论转折：所谓简单答案，必须相对于训练集来谈</h2>
+<p>到这里，我们仍然很容易把数据生成器当作应当胜出的规则。但对于有限训练集，生成器只是许多兼容延拓中的一个。</p>
+<h3 id="实验五-十个-and-样本为什么先学到-shortcut">实验五：十个 AND 样本为什么先学到 shortcut</h3>
+<p><a href="experiments/e12.html">E12</a>研究 4-bit 输入中的 AND 规则。训练集有 10 个样本，但 AND 的四种局部模式覆盖很不平衡。</p>
+<p><strong>原本期待什么？</strong></p>
+<p>AND 很短，也完全符合训练集。如果“低 loss 越来越偏向人类明显的简单规则”是强定律，那么 AND 应当一路增加。</p>
+<p><strong>实际发生什么？</strong></p>
+<p>静态采样在中间 loss 更偏好一个带额外条件的 shortcut，真实训练也先大量进入这个函数。不同候选的赔率会随 loss 换序。</p>
+<p><strong>干预怎么做？</strong></p>
+<p>我们只替换一个训练样本，使 AND 的四类模式大致平衡，其余设置尽量不变。重新采样和长训以后，深 loss 中 AND 的质量明显提高，约 64% 的真实训练终点成为 AND。</p>
+<p><strong>怎么解读？</strong></p>
+<p>问题不在于网络“拒绝了真正简单的 AND”，而在于原训练集根本没有均衡地表达 AND。只改一个样本就大幅改变静态几何和训练终点，说明所谓简单函数由网络语言和训练约束共同决定。</p>
+<h3 id="实验六-一个函数可以随-loss-先被排斥-后重新增加">实验六：一个函数可以随 Loss 先被排斥、后重新增加</h3>
+<p><a href="experiments/e14.html">E14</a>构造一个加权复合任务：训练集中绝大多数样本遵从 Rule110，极少数冲突区域需要 Rule30。完整规则必须同时处理两部分。</p>
+<p><strong>为什么做这个实验？</strong></p>
+<p>它故意制造两个 loss 尺度。高 loss 时，只学 Rule110 就能消灭几乎全部误差；只有把 loss 压得非常低，少数 Rule30 冲突才不可忽略。</p>
+<p><strong>测到什么？</strong></p>
+<p>真实复合函数在较高 loss 区域并不占优，进入深 loss 后才明显增加。它不是从初始化开始就沿一个方向单调上升。</p>
+<p><strong>理论修正是什么？</strong></p>
+<p>网络不是一直朝研究者知道的完整规则走。它在每个 loss 尺度上优先解决当前最能降低训练目标的部分。Shortcut、分阶段学习和后期规则接管都可以是合理结果。</p>
+<h2 id="4-第三次理论转折-静态终点与优化入口是两个问题">4. 第三次理论转折：静态终点与优化入口是两个问题</h2>
+<p>Parity 给了我们一个很好的压力测试。人类可以用一句“所有 bit 异或”描述它，但普通 MLP 从随机初始化出发会在维度升高后卡在接近 0.693 的平台。</p>
+<p>这里有两种完全不同的解释：</p>
+<ol>
+<li>低 loss parity 解本来就极少、极不稳定，因此网络不偏好它；</li>
+<li>低 loss parity 解存在并且稳定，只是随机初始化很难跨过最初屏障。</li>
+</ol>
+<h3 id="实验七-先把网络送进去-再看它能不能留下来">实验七：先把网络送进去，再看它能不能留下来</h3>
+<p><a href="experiments/e16.html">E16</a>先在 12-bit 和 14-bit parity 上使用一半真值表训练。只要训练 loss 成功离开初始平台，测试准确率就迅速升到 96% 到 99.9%，并随着 loss 继续降低而改善。</p>
+<p>更关键的 16-bit 实验先提供额外分解信息，把网络送到低 loss parity 解；然后撤掉辅助信息，对参数做强扰动，再只训练原始 parity 端点任务。较宽网络能够回到 parity 解。</p>
+<p><strong>这说明什么？</strong></p>
+<p>至少在这个设置中，主要困难是全局入口，不是低 loss parity 终点不存在或局部不稳定。静态体积与优化可达性必须分开。</p>
+<h3 id="实验八-同一个-loss-smc-和-adamw-会选择同样的函数吗">实验八：同一个 Loss，SMC 和 AdamW 会选择同样的函数吗</h3>
+<p><a href="experiments/e17.html">E17</a>在平衡 AND 数据上比较 constrained SMC 的低 loss 分布与大量 AdamW 训练终点。还从 SMC 深尾里选出某个高质量函数作为初始化，再继续用 AdamW 训练。</p>
+<p><strong>结果是什么？</strong></p>
+<p>即使 loss 相近，SMC 与 AdamW 的主导函数也可以不同。从 SMC 选出的深尾函数出发，AdamW 还会很快离开并流向自己的吸引区域。</p>
+<p><strong>怎么解读？</strong></p>
+<p>静态体积像地形给各种解的一阶权重；优化器还根据入口、梯度、连通性和历史重新加权。数据非常充分、目标函数在整个相关 loss 区间已经占压倒性体积时，优化器差异可能不再改变 hard 规则；在欠约束或稀有尾部中，动力学可能主导。</p>
+<h2 id="5-怎样直接测一条完整规则的难度">5. 怎样直接测一条完整规则的难度</h2>
+<p>部分训练集会诱导许多候选函数，而且我们经常事先不知道哪一个是网络眼中的简单答案。一个更干净的办法是：给某条规则完整真值表，然后直接测网络把整条规则做到不同 loss 精度时，还剩下多少参数体积。</p>
+<h3 id="实验九-完整真值表下-简单和复杂目标怎样分开">实验九：完整真值表下，简单和复杂目标怎样分开</h3>
+<p><a href="experiments/e19.html">E19</a>使用 4-bit 输入，所以每条规则有 16 个完整样本。网络固定为两层 tanh MLP。对 parity1 到 parity4、majority3 和一条预注册随机平衡函数分别运行 SMC。</p>
+<p><strong>具体测什么？</strong></p>
+<p>对每条规则，从较高 loss 开始逐步收紧阈值，记录参数群每向下走一层还剩多少比例。把所有层的存活率连乘，就得到规则的低 loss 参数体积曲线。</p>
+<p><strong>结果是什么？</strong></p>
+<p>Parity1 到 parity4 在共同可测区间保持严格顺序：参与异或的 bit 越多，低 loss 体积越小。更有信息量的是 majority3 和随机规则。浅 loss 时两者体积接近；继续降低 loss 后，majority3 逐渐取得巨大优势，差距从数千倍扩大到约十的十八次方倍。</p>
+<p><strong>这告诉我们什么？</strong></p>
+<p>规则难度不只体现在初始化概率上。两个目标在粗略拟合时可以差不多容易，在要求更高精度后才快速分开。复杂规则之所以训练更慢，也可能部分因为它可用的深尾区域更小、更难碰到。</p>
+<p>这个实验还给了一个重要警告：人类看来很短的 parity2，在该 tanh MLP 中可以比预注册随机函数更难。网络复杂度不是人类逻辑公式长度的直接复制，它取决于架构使用的表示语言。</p>
+<h3 id="实验十-完整规则体积和部分训练集候选体积到底是什么关系">实验十：完整规则体积和部分训练集候选体积到底是什么关系</h3>
+<p>这里出现过一次真正的方法疑问。</p>
+<p>完整规则体积测的是“把 16 个点全部拟合到给定 loss 有多大空间”。部分训练集下的函数竞争测的是“只要求 10 个训练点达到给定 loss 时，剩下参数会延拓成哪个完整函数”。这显然不是同一个量。如果两者之间没有严格关系，我们就不能拿完整规则体积解释训练集里的候选竞争。</p>
+<p><a href="experiments/e20.html">E20</a>专门做了三层闭环。</p>
+<p><strong>第一层：常数函数留一。</strong> 训练 15 个标签为 0 的点，留出最后一个点。完整常数函数和“只在留出点为 1”的单例外函数都可以独立运行 full-rule SMC。与此同时，也可以直接在 15 点训练集的粒子里数：有多少粒子在留出点上走向两种标签，并满足对应的完整 loss 条件。两条路线算出的体积比在七个可测阈值上闭合，最大对数残差约 0.071。</p>
+<p><strong>第二层：AND 四候选。</strong> 对平衡 AND 的十个训练点，分别测四个主要完整候选函数，再从同一个十点 parent 中数条件事件。最大闭合残差约 0.049。</p>
+<p><strong>第三层：从 hard function 继续收紧 margin。</strong> 先把训练 loss 和完整 hard 输出都固定，再逐渐要求六个未见点的预测离零阈值更远。四个 hard function 的内部体积仍然连续分离。</p>
+<p><strong>怎么解读？</strong></p>
+<p>完整规则体积和固定训练集候选质量不是同一个数，但它们属于同一个参数测度，可以通过条件概率严格连接。几十乃至上百个数量级的差距，也完全可能发生在 hard 真值表已经固定之后的 logit 和 margin 几何中。</p>
+<h3 id="实验十一-逐个加入样本的信息量能不能变成一个不变量">实验十一：逐个加入样本的信息量能不能变成一个不变量</h3>
+<p>我们早期曾对 3-bit 规则逐个加入样本，用当前模型对新标签有多意外来估计信息增益。不同加入顺序会得到不同的中间过程，一直找不到一个可靠总量。</p>
+<p><a href="experiments/e22.html">E22</a>把这件事完整穷举了。</p>
+<p><strong>具体做什么？</strong></p>
+<p>一次保存 2,097,152 个网络在八个输入上的 logits。每个输入可以处于未加入、标签 0、标签 1 三种状态，所以一共有 6,561 个部分训练集。对 256 条完整规则，穷举每条规则全部 40,320 个样本加入顺序。</p>
+<p>每加入一个样本，就计算它让剩余参数质量缩小了多少，把这个变化称为该步的广义惊讶度。</p>
+<p><strong>结果是什么？</strong></p>
+<p>每一步的惊讶度会随顺序变化，但八步加总以后只取决于最终规则。全部顺序的最大数值误差约为十的负十四次方 bit。Rule150，也就是 parity3，在 hard 口径下是 256 条规则中端点成本最高者。</p>
+<p><strong>怎么解读？</strong></p>
+<p>这不是说真实 SGD 沿路守恒。它说明在同一个静态参数测度中，逐样本预测代价和完整规则端点难度确实来自同一个势函数。它把我们早期的 agreement、surprise 和规则难度直觉，接到了 <a href="https://proceedings.neurips.cc/paper_files/paper/2018/hash/3b712de48137572f3849aabd5666a4e3-Abstract.html" target="_blank" rel="noopener">Blier 与 Ollivier（2018）的 prequential coding 测量</a>以及<a href="https://mlanthology.org/colt/1989/levin1989colt-statistical/" target="_blank" rel="noopener">Levin、Tishby 与 Solla（1989）的神经网络统计力学框架</a>上。</p>
+<figure class="result-figure"><a href="assets/figures/e22_free_energy.png" target="_blank" rel="noopener"><img src="assets/figures/e22_free_energy.png" alt="不同完整规则的静态自由能成本随 beta 增长而分离" loading="lazy"></a><figcaption>图 1：E22 中部分代表规则的静态端点成本。这里展示的是同一参考测度下，规则成本怎样随精度压力增大而分离。</figcaption></figure>
+<h2 id="6-最重要的前瞻判决-体积曲线能否预测需要多少训练数据">6. 最重要的前瞻判决：体积曲线能否预测需要多少训练数据</h2>
+<p>到这里仍有一个循环风险：我们用体积小定义“难”，再说困难函数体积小，这并没有产生新知识。</p>
+<p>真正可证伪的做法是，先测完整规则体积，冻结难度顺序，然后去预测另一个独立实验：从随机部分真值表中恢复这条规则，需要多少样本。</p>
+<h3 id="实验十二-先冻结体积排序-再训练-9-736-个数据条件">实验十二：先冻结体积排序，再训练 9,736 个数据条件</h3>
+<p><a href="experiments/e23.html">E23</a>使用 8-bit 输入，完整真值表有 256 个状态。网络固定为两层、每层 16 个 tanh 单元。目标有八条：parity1 到 parity4、majority3、majority5、MUX3 和一条随机平衡规则。</p>
+<p><strong>阶段 A 做什么？</strong></p>
+<p>只给每条规则完整真值表，用 SMC 测量它在预先指定 loss 区间中的体积收缩速度。此时不运行、不读取任何随机训练集结果。八条规则的排序和文件哈希先被冻结。</p>
+<p><strong>阶段 B 做什么？</strong></p>
+<p>对每条规则和每个样本数，随机抽取 64 份训练集；每份使用 24 个配对初始化训练。只有当模型拟合训练集、目标完整函数成为主模态，并且不同 seed 已经明显集中时，这份训练集才算恢复成功。然后记录恢复率第一次达到 50% 和 90% 需要多少样本。</p>
+<p><strong>Parity 的结果是什么？</strong></p>
+<table>
+<thead>
+<tr>
+<th>规则</th>
+<th style="text-align: right;">冻结的体积收缩分数</th>
+<th style="text-align: right;">50% 恢复所需样本</th>
+<th style="text-align: right;">90% 恢复所需样本</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>parity1</td>
+<td style="text-align: right;">125.21</td>
+<td style="text-align: right;">24</td>
+<td style="text-align: right;">48</td>
+</tr>
+<tr>
+<td>parity2</td>
+<td style="text-align: right;">3266.21</td>
+<td style="text-align: right;">64</td>
+<td style="text-align: right;">80</td>
+</tr>
+<tr>
+<td>parity3</td>
+<td style="text-align: right;">4618.60</td>
+<td style="text-align: right;">96</td>
+<td style="text-align: right;">112</td>
+</tr>
+<tr>
+<td>parity4</td>
+<td style="text-align: right;">6719.58</td>
+<td style="text-align: right;">160</td>
+<td style="text-align: right;">160</td>
+</tr>
+</tbody>
+</table>
+<p>四个相变区间互不重叠，排序相关为 1。也就是说，完整规则体积在训练前就严格预测了 parity 家族的随机样本相变顺序。</p>
+<figure class="result-figure"><a href="assets/figures/e23_volume_to_transition.png" target="_blank" rel="noopener"><img src="assets/figures/e23_volume_to_transition.png" alt="完整目标体积得分与随机训练集恢复相变" loading="lazy"></a><figcaption>图 2：左上为不同规则随训练样本数增加的完整函数恢复率；右上为未见输入 agreement；下方比较冻结的体积得分与 n50/n90。</figcaption></figure>
+<p><strong>跨全部规则呢？</strong></p>
+<p>总体相关仍很高，但有三组明确反转：MUX3 与 parity2 的顺序不符，随机规则也比浅层分数预言的更难恢复。</p>
+<p>进一步检查完整曲线后发现，随机规则的收缩速度会随着 loss 深入急剧加快，并先后超过 parity2、parity3 和 parity4。越使用更深 loss 区间的信息，体积测量与最终样本相变越一致。</p>
+<p><strong>这次理论怎样更新？</strong></p>
+<p>一个规则不能只配一个永久不变的难度分数。初始化概率、某个固定 loss 的体积和某一小段斜率都只看到了局部。真正对象是一整条随要求精度变化的曲线：规则在粗略拟合时可能容易，在深 loss 时突然变得昂贵。我们把这条曲线称为 Neural K-profile。</p>
+<h2 id="7-深尾反转-hard-function-已经固定-复杂度仍然会换序">7. 深尾反转：Hard Function 已经固定，复杂度仍然会换序</h2>
+<p>E23 说明浅层斜率不够，但还留下一个问题：进入极低 loss 后，函数排序会不会稳定下来？我们不知道，也不能靠直觉宣布。</p>
+<h3 id="实验十三-先从-54-条规则里寻找真正可能交叉的函数对">实验十三：先从 54 条规则里寻找真正可能交叉的函数对</h3>
+<p><a href="experiments/e24.html">E24</a>使用 4-bit 输入、单隐藏层 tanh 网络和标准 Gaussian 参考测度。目标包括六条结构规则、parity4 的全部 16 条单点例外、16 条双点例外和 16 条随机平衡函数。</p>
+<p>SMC 从 loss 0.7 一直推进到 0.019，早已穿过“所有输出 hard sign 都正确”的边界。</p>
+<p><strong>看到什么？</strong></p>
+<p>在已经测到的全部阈值里，parity4 始终是 54 条规则中绝对体积最小者。大多数随机和例外规则也都收缩得更慢。唯一持续追赶的是把输入 0000 标签翻转的单点例外规则。</p>
+<p>在最后几个窗口，它的绝对体积仍比 parity4 大，但收缩速度稳定更快。按当时速度外推，两条曲线应在 loss 大约 0.0025 附近交叉。</p>
+<h3 id="实验十四-让两条规则共享同一个父系综-直接看谁反超">实验十四：让两条规则共享同一个父系综，直接看谁反超</h3>
+<p>两次独立 SMC 可能有不同的绝对归一化偏差，所以第二轮不再分别从头采样。两条规则从同一个父粒子群分叉，并在相同 loss 阈值下并行推进，直接测体积比。</p>
+<p><strong>结果是什么？</strong></p>
+<p>中位体积比在 loss 约 0.002308 处真正反转，与前一轮外推非常接近。到最深阈值，单点例外规则的中位体积已经比 parity4 小约两千万倍。八个副本中七个完成绝对反超，八个副本的局部速度都仍朝同一方向。预注册要求的八个副本全部连续反超尚未满足，因此结果保守写成 7/8，而不是假装完全结束。</p>
+<figure class="result-figure"><a href="assets/figures/e24_deep_crossing.png" target="_blank" rel="noopener"><img src="assets/figures/e24_deep_crossing.png" alt="Parity4 与单点例外规则的共享父系综深尾交叉" loading="lazy"></a><figcaption>图 3：左上曲线穿过零线表示两条规则的绝对体积中位排序反转；右上显示交叉后单点例外仍收缩得更快。</figcaption></figure>
+<p><strong>为什么这个结果重要？</strong></p>
+<p>两条规则在很早以前就已经各自 100% hard-exact，交叉附近的表示指标也没有突然跳变。相对复杂度换序来自长期连续收缩差的积累，而不是 hard function 突然改变。</p>
+<p>所以 hard 真值表仍然太粗。同一个 hard function 内部，从勉强过零到大 margin、从一种表示到另一种表示，还有很大的连续结构。Neural K 必须是一条 profile，而不是 hard function ID、先验概率或单个收缩速度。</p>
+<h2 id="8-这套方法能不能离开布尔真值表">8. 这套方法能不能离开布尔真值表</h2>
+<p>如果函数体积只能在 3-bit、4-bit 空间里使用，它更像一个漂亮的玩具。于是我们把同样思路搬到 MNIST。</p>
+<h3 id="实验十五-先确认同样四张图-对不同任务到底够不够">实验十五：先确认同样四张图，对不同任务到底够不够</h3>
+<p><a href="experiments/e25.html">E25</a>把 28×28 图像平均池化为 7×7，使用一个只有 1,633 个参数的 tanh MLP。比较 0/1 与 3/8 两个二分类任务。训练样本从 4 增加到 512，每个条件使用四份随机训练集和八个 seed。</p>
+<p>只给四个平衡样本时，0/1 在最低 validation loss 处的中位测试准确率已经达到 98.31%，3/8 只有 69.66%。按 validation accuracy 至少 95% 的操作标准，0/1 在四个样本时就跨过，3/8 要到 512 个样本。</p>
+<p>所以同样的网络、样本数和训练预算，可以对应完全不同的数据充分性。这正适合检验静态体积是不是只会在简单合成规则上讲故事。</p>
+<h3 id="实验十六-不重新训练-直接比较一张未见图片的两个标签分支">实验十六：不重新训练，直接比较一张未见图片的两个标签分支</h3>
+<p>第二阶段固定两份各有四张图的训练集，以及九个训练 loss 阈值。SMC 先采样所有能把这四张图拟合到相应 loss 的参数。</p>
+<p>面对一张未见图片，再把这群参数分成两支：一支预测标签 0，另一支预测标签 1。哪一支保留的参数质量更大，静态方法就预测哪个标签。Soft 版本则比较两支给出的平均概率。</p>
+<p>这一步没有训练新的分类器，也没有把测试图加入训练集。它只问：固定训练集的低 loss 参数空间，天然更支持这个新样本的哪个标签？</p>
+<p><strong>结果是什么？</strong></p>
+<p>0/1 的静态 hard 准确率从浅 loss 的 92.97% 上升到峰值 96.35%；3/8 从 76.69% 上升到约 78.13%。四张训练图已经让静态参数体积对数百张未见图片产生强预测。</p>
+<figure class="result-figure"><a href="assets/figures/e25_mnist_static_prediction.png" target="_blank" rel="noopener"><img src="assets/figures/e25_mnist_static_prediction.png" alt="MNIST 静态分支预测、matched SGD 与预测集中度" loading="lazy"></a><figcaption>图 4：左图比较静态 hard/soft 分支与 matched-loss SGD；右图显示 loss 深入时预测分布持续集中。</figcaption></figure>
+<p>Soft NLL 更有意思。随着训练 loss 阈值下降，未见图像 NLL 先改善，达到最低点，再恶化。0/1 的静态最低区间与真实 AdamW validation 最低点相差一个预注册 loss 网格；3/8 的静态最低区间直接覆盖真实训练转折。</p>
+<p>这个实验在选择任务和 loss 覆盖范围时使用过 validation，因此它是校准后的确认实验，不是对全新数字对的完全盲预测。真正的下一步是冻结现有规则后，换一组数字做盲测。</p>
+<p><strong>为什么 accuracy 还在，NLL 却已经变坏？</strong></p>
+<p>逐图分析显示，深 loss 仍会把少量边界图像从错修正为对，同时让那些持续错误的图像变得更自信。Hard accuracy、概率校准和 agreement 因而可以在不同位置转折。</p>
+<p>同样四个样本下，3/8 相对 0/1 的低 loss 参数质量劣势从浅层约半个十进制数量级，扩大到深尾约 55 个数量级。这与四个样本和 512 个样本的辨识差距完全同向。到这里，规则体积、真实图像预测和所需数据量第一次在同一个实验里接上了。</p>
+<h2 id="9-agreement-这条支线最后告诉了我们什么">9. Agreement 这条支线最后告诉了我们什么</h2>
+<p>我们早期的过拟合实验会训练很多随机初始化，然后在大量 probe 输入上比较它们的预测。如果不同 seed 在某个输入上几乎都给出同样答案，就说这个点 agreement 高；如果完整 probe 真值表也大量相同，说明函数分布已经真正收束。</p>
+<p>最初我们容易把低 agreement 的过拟合状态想成“网络找到了某个特殊但人类看不懂的简单规则”。后来意识到，这个说法没有证据。低 agreement 更直接的含义是：完整函数根本还没有收束，仍有许多延拓在竞争。</p>
+<p>反过来，高 agreement 也不等于恢复了研究者预设的外部生成规则。只有一个训练样本时，网络可能非常一致地选择常数函数，agreement 接近 1，却与隐藏 generator 无关。但常数函数本身就是极短且人类可读的规则，所以这个现象并不反驳后面的可读性猜想；它只说明 agreement 测量的是训练集与网络协议共同选出的规则，而不是研究者心中的 teacher。</p>
+<h3 id="实验十七-没有-teacher-的高共识函数-最后都是什么">实验十七：没有 teacher 的高共识函数，最后都是什么</h3>
+<p><a href="experiments/e18.html">E18</a>在 8-bit 输入中随机生成训练集，每份训练集训练 64 个 seed。先找出完整函数高度集中的候选，再用多达 4,096 个 fresh seeds 重新确认，并对最终函数做符号复杂度审计。</p>
+<p>大规模扫描 8,192 份随机训练集后，得到 46 个严格高共识终点。事后统一审计发现，它们全部可以写成 signed linear threshold；更宽松的高共识候选也全部线性可分。没有发现高共识随机查表函数。</p>
+<p>这不是一个预注册的“全部阈值函数”命中，因为阈值结构是在看到候选后才统一发现的。但实验至少说明，在这个 MLP 协议里，少量随机样本能够稳定收束出的函数，确实落在人类可以严格写出的短规则族中。</p>
+<h3 id="实验十八-能不能主动让函数凝聚-或者故意不让它凝聚">实验十八：能不能主动让函数凝聚，或者故意不让它凝聚</h3>
+<p><a href="experiments/e21.html">E21</a>从很小的随机训练集开始，每轮先找当前 committee 最分歧的未见输入，再分别尝试标签 0 和 1。</p>
+<p>如果选择让最终 agreement 更高的标签，函数分布会迅速凝聚；如果选择让 agreement 更低的标签，就能持续维持分叉。随后再切换回促凝聚策略，网络仍会收束，但前面维持分叉越久，重新收束平均需要越多样本，最终函数也从简单线性阈值逐渐走向更复杂的二次 polynomial threshold。</p>
+<p>这个实验给 agreement 两个比较扎实的身份：它可以衡量当前训练集把完整函数压窄到什么程度，也可以作为主动选样的反馈信号。它不告诉我们哪个标签是真理；标签仍需由外部 oracle 提供。</p>
+<p>我们因此保留一个明确但尚未证明的猜想：<strong>在适当大的问题空间中，若少量训练样本就能让完整函数 agreement 接近 1，那么这个训练集通常对应某个可被提取为短程序的人类可读规则。</strong> 这个猜想真正检验的是神经网络复杂度与人类符号复杂度是否大体对齐，而不是高 agreement 是否等于正确。</p>
+<p>它更深的含义是：如果这种对应能跨任务和架构重复，神经网络与人类或许并不是碰巧喜欢同一批函数，而是在共同利用局部性、对称性、组合性和计算复用等稳健的可压缩结构。这不要求存在唯一绝对的编码语言，却可能意味着多种有效表示语言会对一批“客观上容易压缩”的规律给出大体相似的排序。Parity 等反例说明这种对齐只能是部分的、架构相对的。</p>
+<p>最初百余确定性规则实验提供了同方向的广度旁证：当数据确实来自精确、可复用的规则，且样本与优化可达性充分时，网络往往能把未见样本 loss 和跨 seed 函数分歧一起压得很低。它们没有全部采用 E18/E21 的严格 fresh-seed 符号审计，因此不能单独证明这个猜想，但说明高精度规则恢复与函数凝聚并非只出现在后来的微型判决任务中。</p>
+<h2 id="10-现在怎样统一理解以前那些现象">10. 现在怎样统一理解以前那些现象</h2>
+<h3 id="10-1-直接泛化">10.1 直接泛化</h3>
+<p>数据很多、覆盖均衡时，不符合共同规则的延拓在较高 loss 就已经被大量排除。网络刚开始降低训练 loss，生成规则方向便占优势，所以 train 和 validation loss 从头同步下降。</p>
+<p>我们最初一百多个合成任务大多处于这个区域。这些实验不是理论出现以后挑出来的例子，而是理论必须解释的原始事实：大量不同规则、不同架构和不同输入输出设置，网络都能从有限样本直接恢复完整映射。它们说明“数据充分时规则方向可以压倒其他延拓”是真实、稳定、可复现的现象。</p>
+<h3 id="10-2-grokking">10.2 Grokking</h3>
+<p>在数据相变附近，训练集已经允许恢复规则，但规则还没有在较浅 loss 中压倒所有 shortcut 和记忆方案。网络先用当前最容易降低训练目标的办法拟合训练样本；继续压低 raw loss 后，先前方案逐渐不够用，规则实现才接管，validation 性能延迟上升。</p>
+<p>这不要求网络从第一步就在秘密追逐真实规则。早期 shortcut 可以是当时 loss 尺度下最合理的选择。Grokking 更像函数竞争在深 loss 中换手，而不是网络突然“理解了真理”。</p>
+<h3 id="10-3-为什么增加数据会让-grokking-变成直接学习">10.3 为什么增加数据会让 Grokking 变成直接学习</h3>
+<p>每加入一个与目标规则一致的样本，都会排除一批竞争延拓。样本较少时，只有在很深 loss 才能看出目标规则的优势；样本增加后，这个优势会逐渐向更浅 loss 扩展。最终，网络从训练早期就沿规则方向下降，看不到明显记忆平台。</p>
+<p>这里要保留一个边界：在纯 hard 条件下，加入一致样本确实只会排除竞争函数；在固定 raw BCE 阈值下，新样本还会改变平均 loss 和 margin 要求，因此不能无条件声称目标函数在每个 loss 截面的比例都严格增加。我们把它作为由实验支持的宏观趋势，而不是已经证明的连续定理。</p>
+<h3 id="10-4-过拟合与经典-u-形">10.4 过拟合与经典 U 形</h3>
+<p>任何有限训练集都只能把外推函数约束到有限精度。跨过某个 grokking 阈值，只表示目标规则在当前要求下已经占优势，不表示继续把 loss 压到任意小都永远不会分叉。</p>
+<p>当训练集无法区分的细节开始主导剩余误差时，静态分支可以继续收束，却收束到训练集特异方向。Validation NLL 会先于 hard accuracy 恶化，因为模型可以保持分类边界大致正确，同时在持续错误的点上越来越自信。</p>
+<p>增加数据，尤其是当前模型分歧大的样本，会把 train/validation 分离点推到更深 loss。它不会让有限数据突然拥有无限约束精度。</p>
+<h3 id="10-5-标签噪声和-early-stopping">10.5 标签噪声和 Early Stopping</h3>
+<p><a href="experiments/e09.html">E09</a>把 MNIST 训练标签中的 80% 固定替换成错误标签，但不告诉网络哪些样本被污染。两个 CNN 都先学会跨样本一致的数字结构，此时测试准确率约 92% 到 94%，对错误标签几乎还没开始记忆。</p>
+<p>继续降低 noisy train loss 后，网络逐渐拟合不可复用的样本级残差，测试准确率下降到约 23% 到 32%。这里 Early stopping 的作用很清楚：在共享规律仍占优势、错误标签尚未接管剩余 loss 的位置停止。</p>
+<p>所以“持续训练是否健康”不是只由时间决定，而取决于训练集里有没有与外部目标冲突的约束，以及当前 loss 已经深入到哪一层。</p>
+<h3 id="10-6-特征学习-计算复用和压缩">10.6 特征学习、计算复用和压缩</h3>
+<p>特征学习不是泛化的同义词；这一测量区分直接受到 <a href="https://arxiv.org/abs/2507.19680" target="_blank" rel="noopener">Göring 等（2025）</a>的启发。<a href="experiments/e05.html">E05</a>先用 <a href="https://arxiv.org/abs/1806.07572" target="_blank" rel="noopener">Jacot、Gabriel 与 Hongler（2018）提出的 NTK</a>证明固定核已经足以解决 Rule110，再观察真实有限网络。即使固定 kernel 解已经存在，网络仍然重组隐藏表示、改变门控和经验 NTK。</p>
+<p><a href="experiments/e08.html">E08</a>进一步构造两个需要共同中间计算的任务。允许共享中间表示时，网络能用更小容量和更少样本达到相同低 loss；共同计算越深，收益越大；网络越宽，分别保存两套计算越容易，共享收益越弱。</p>
+<p>这给“压缩为什么会出现”一个不神秘的解释。网络不是因为追求优雅而压缩，而是因为在有限容量中，复用特征和中间计算往往更容易继续降低 loss。压缩、概念和共享表示是这项压力下的经济实现。</p>
+<h3 id="10-7-符号语义与-ood-组合">10.7 符号语义与 OOD 组合</h3>
+<p>在 rule-bit OOD 实验中，同一控制位要在许多任务中反复使用。把它学成稳定语义，再复用同一个解释器，比为每种组合保存一套独立查表程序更经济。</p>
+<p>这给连接主义网络为什么会出现近似符号的宏观结构提供了一个自然桥梁：符号不必预先写进神经元，也可以因为跨任务复用而形成。我们的 OOD 实验证明了网络确实能组合未见规则，计算复用实验提供了为什么这样做有利于低 loss 的机制证据；它们还没有证明人脑和 LLM 使用完全相同的微观机制。</p>
+<h3 id="10-8-能力涌现">10.8 能力涌现</h3>
+<p>一种能力出现至少需要三件事：网络容量足以表示它，数据足以把它与竞争方案区分开，训练又真正进入它占优势的 loss 区域。评测最后常用一个离散阈值，把连续概率变化切成“会”与“不会”。</p>
+<p>因此，许多涌现可以被理解为容量、数据、loss 深度和读出阈值共同造成的表面突变。这个图景与大模型通过压缩 token 和概念关系获得能力相容，但本文没有直接在 LLM 上测出完整 Neural K-profile。</p>
+<h3 id="10-9-dead-bit-为什么不需要额外补丁">10.9 Dead Bit 为什么不需要额外补丁</h3>
+<p>若某个二进制输入维度在训练集中始终为 0，它连接第一层的权重不会参与当前计算，相当于自由方向；若始终为 1，它又可以和 bias 合并。两种常数 bit 在参数空间里本来就不等价。</p>
+<p>训练集没有展示该 bit 的变化，也就没有要求网络在这个方向保持不变。把架构、编码和参数质量都放进框架后，dead bit 的行为会自然反映在体积中，不需要另外规定“神经网络应该忽略它”。</p>
+<h2 id="11-最后的理论框架-到这里再给公式">11. 最后的理论框架：到这里再给公式</h2>
+<p>前面已经说明每个量想回答什么。现在把它们集中写成最小形式。</p>
+<h3 id="11-1-固定一套神经参考协议">11.1 固定一套神经参考协议</h3>
+<p>把网络架构和参数化、输入输出编码、参数参考测度以及逐样本 loss 合在一起：</p>
+<div class="math-display">$$
+\Pi=(\mathcal A,\varphi,\mu,\ell).
+$$</div>
+<p>给定训练集：</p>
+<div class="math-display">$$
+D=\{(x_i,y_i)\}_{i=1}^{n},
+\qquad
+L_D(\theta)=\frac1n\sum_{i=1}^{n}\ell(h_\theta(x_i),y_i).
+$$</div>
+<p>低于某个训练 loss 的全部参数组成亚水平集合：</p>
+<div class="math-display">$$
+A_D(\epsilon)=\{\theta:L_D(\theta)\le\epsilon\}.
+$$</div>
+<p>架构、编码、loss 和数据决定这片地形；参考测度决定我们怎样给其中不同区域计量。</p>
+<h3 id="11-2-固定训练集下-每个完整函数还剩多少质量">11.2 固定训练集下，每个完整函数还剩多少质量</h3>
+<p>在完整有限输入或固定 probe 上，把网络 hard 输出记成函数。函数 <span class="math-inline">$f$</span> 在给定训练 loss 以下拥有的参数质量是：</p>
+<div class="math-display">$$
+\Omega_{\Pi,D}(f;\epsilon)
+=
+\mu_\Pi\{\theta:L_D(\theta)\le\epsilon,\ h_\theta=f\}.
+$$</div>
+<p>归一化以后得到静态函数分布：</p>
+<div class="math-display">$$
+Q^{\mathrm{static}}_{\Pi,D,\epsilon}(f)
+=
+\frac{\Omega_{\Pi,D}(f;\epsilon)}
+{\sum_g\Omega_{\Pi,D}(g;\epsilon)}.
+$$</div>
+<p>如果所有函数只乘同一个 loss 因子，它们的相对赔率就不会变化。我们的实验直接排除了这个强命题。</p>
+<h3 id="11-3-完整目标体积与-neural-k-profile">11.3 完整目标体积与 Neural K-profile</h3>
+<p>若函数完整真值表可以给出，定义把整条规则做到给定精度的参数质量：</p>
+<div class="math-display">$$
+V^{\mathrm{full}}_\Pi(f;\epsilon)
+=
+\mu_\Pi\{\theta:L_{D_{\mathrm{full}}(f)}(\theta)\le\epsilon\}.
+$$</div>
+<p>相应的协议相对码长是：</p>
+<div class="math-display">$$
+K^N_\Pi(f;\epsilon)
+=
+-\log_2V^{\mathrm{full}}_\Pi(f;\epsilon).
+$$</div>
+<p>整条曲线就是 Neural K-profile。若用 <span class="math-inline">$s=-\log\epsilon$</span> 表示不断深入的 loss 尺度，局部收缩率可以写成：</p>
+<div class="math-display">$$
+\kappa_f(s)=\frac{dK^N_\Pi(f;e^{-s})}{ds}.
+$$</div>
+<p>不同函数的体积、局部斜率和曲率都可能交叉，因此任何单个先验概率或浅层斜率都只是 profile 的一部分。</p>
+<h3 id="11-4-优化器诱导的真实训练分布">11.4 优化器诱导的真实训练分布</h3>
+<p>给定初始化分布和训练算法，训练到时刻 <span class="math-inline">$t$</span> 相当于把初始化参数通过动力学映射送到新位置：</p>
+<div class="math-display">$$
+Q^{\mathrm{opt}}_{\Pi,D,t}
+=
+(T_{\Pi,D,t})_\#\mu_\Pi.
+$$</div>
+<p>静态体积会影响它，但入口、梯度、连通性、优化器状态、batch noise 和历史也会影响它。因此 <span class="math-inline">$Q^{\mathrm{opt}}$</span> 不能被当成 <span class="math-inline">$Q^{\mathrm{static}}$</span> 的同义词。</p>
+<h3 id="11-5-未见样本的标签分支与自由能">11.5 未见样本的标签分支与自由能</h3>
+<p>对未见输入 <span class="math-inline">$x$</span>，固定训练集和 loss parent 中预测标签 <span class="math-inline">$y$</span> 的 hard 分支质量为：</p>
+<div class="math-display">$$
+P_{\mathrm{hard}}(y\mid x,D,\epsilon)
+=
+\frac{\mu_\Pi\{\theta\in A_D(\epsilon):h_\theta(x)=y\}}
+{\mu_\Pi(A_D(\epsilon))}.
+$$</div>
+<p>Canonical 形式的配分函数与自由能为：</p>
+<div class="math-display">$$
+Z_{\Pi,D}(\beta)
+=
+\int \exp[-\beta nL_D(\theta)]\,d\mu_\Pi(\theta),
+\qquad
+F_{\Pi,D}(\beta)=-\frac1\beta\log Z_{\Pi,D}(\beta).
+$$</div>
+<p>加入一个新样本造成的广义惊讶度，就是两个训练集状态的自由能差。沿任意样本顺序累加时，中间项相消，只剩完整规则终点与空训练集起点之差。</p>
+<h3 id="11-6-操作性的样本复杂度">11.6 操作性的样本复杂度</h3>
+<p>对规则 <span class="math-inline">$f$</span> 随机抽取 <span class="math-inline">$n$</span> 个训练样本，固定网络、优化器、训练预算和恢复判据。恢复概率第一次达到 <span class="math-inline">$q$</span> 所需的最小样本数定义为：</p>
+<div class="math-display">$$
+n_q^\Pi(f)
+=
+\min\left\{n:
+\Pr_{D_n\sim f}[\mathrm{Recover}_\Pi(f\mid D_n)]\ge q
+\right\}.
+$$</div>
+<p>E23 的 <code>n50/n90</code> 是这个量的实例。它不是机器无关 Kolmogorov complexity，但可以作为当前神经语言下可复现的辨识样本复杂度。</p>
+<h3 id="11-7-整个框架最终只需要两条静态经验原则">11.7 整个框架最终只需要两条静态经验原则</h3>
+<ol>
+<li>参数到函数的映射高度不均匀，固定神经参考协议本来就偏好某些函数。</li>
+<li>收紧训练 loss 会让不同函数及其内部实现以不同、且随尺度变化的速度收缩。</li>
+</ol>
+<p>训练集决定竞争集合和约束权重，Neural K-profile 描述静态体积怎样变化，优化器决定真实运输。Grokking、直接泛化、过拟合和特征复用都在这三层上解释。</p>
+<h2 id="12-这套框架和已有理论是什么关系">12. 这套框架和已有理论是什么关系</h2>
+<p>参数到函数映射与简单性先验来自 <a href="https://www.nature.com/articles/s41467-018-03101-6" target="_blank" rel="noopener">Dingle 等（2018）</a>、<a href="https://arxiv.org/abs/1805.08522" target="_blank" rel="noopener">Valle-Pérez 等（2019）</a>、<a href="https://arxiv.org/abs/1909.11522" target="_blank" rel="noopener">Mingard 等（2019）</a>、<a href="https://www.jmlr.org/papers/v22/20-676.html" target="_blank" rel="noopener">Mingard 等（2021）</a>和<a href="https://www.nature.com/articles/s41467-024-54813-x" target="_blank" rel="noopener">Mingard 等（2025）</a>的核心贡献。我们接受这个静态底座，但加入连续 loss，并用真实训练说明初始化先验的硬条件化不是完整动力学。</p>
+<p><a href="https://mlanthology.org/misc/1964/solomonoff1964misc-formal/" target="_blank" rel="noopener">Solomonoff（1964）的算法概率</a>、<a href="https://www.mathnet.ru/eng/ppi68" target="_blank" rel="noopener">Kolmogorov（1965）的描述复杂度</a>、<a href="https://arxiv.org/abs/math/0406077" target="_blank" rel="noopener">Grünwald（2004）的 MDL 教程</a>与<a href="https://proceedings.neurips.cc/paper_files/paper/2018/hash/3b712de48137572f3849aabd5666a4e3-Abstract.html" target="_blank" rel="noopener">Blier、Ollivier（2018）的 prequential coding 实验</a>都把概率质量、描述长度和预测编码联系起来。Neural K 与它们形式相近，但依赖具体神经协议，没有声称等于机器无关 Kolmogorov complexity，也没有建立神经 coding theorem。</p>
+<p>更具体地说，MDL 的两部分码长是“描述假设”与“编码剩余误差”；本框架中的 <code>-log</code> full-target volume 是当前神经语言在指定精度下的实现码长，逐样本自由能增量则是预测编码成本。训练程序本身通常仍只优化 loss，并没有暗中加入第二个程序长度目标。MDL 式偏好来自架构参考测度和 loss 几何，而 <a href="experiments/e22.html">E22</a>与 <a href="experiments/e23.html">E23</a>分别把它接到了顺序无关端点码长和独立样本辨识阈值。</p>
+<p>统计力学连接也不是我们首先提出。Levin、Tishby 和 Solla 在 1989 年的 <a href="https://mlanthology.org/colt/1989/levin1989colt-statistical/" target="_blank" rel="noopener"><em>A Statistical Approach to Learning and Generalization in Layered Neural Networks</em></a> 已经把固定架构网络写成 Gibbs ensemble，并把预测、自由能和 predictive MDL 联系起来。我们新增的是现代非线性网络上的函数级、loss-resolved 实验：完整函数、固定训练集候选 cell、margin 核心、optimizer 运输和数据相变被放进同一条测量链。</p>
+<p><a href="https://doi.org/10.1162/neco.1997.9.1.1" target="_blank" rel="noopener">Hochreiter 与 Schmidhuber（1997）的 Flat Minima</a>、<a href="https://arxiv.org/abs/1611.01838" target="_blank" rel="noopener">Chaudhari 等（2017）的 Entropy-SGD/局部熵</a>、<a href="https://doi.org/10.1017/CBO9780511800474" target="_blank" rel="noopener">Watanabe（2009）的 Singular Learning Theory</a>和<a href="https://proceedings.mlr.press/v258/lau25a.html" target="_blank" rel="noopener">Lau 等（2025）的 Local Learning Coefficient</a>同样强调不能只看一个最优参数点。我们的区别是坚持函数分辨与 loss 分辨，不把参数范数、Hessian 平坦度或某个局部极小值直接等同于完整函数体积。</p>
+<h2 id="13-哪些话现在还不能说">13. 哪些话现在还不能说</h2>
+<p>我们还不能从网络架构解析推导某条具体 Neural K-profile。为什么普通 MLP 给 parity、3/8 或共享程序分配当前体积，仍是更深的数学问题。</p>
+<p>我们没有证明任意两条 profile 最终只交叉有限次，没有证明所有高 agreement 函数都人类可读，也没有证明静态体积决定所有 optimizer 终点。</p>
+<p>MNIST 目前只有两个二分类任务，而且任务和 loss 范围经过校准；下一次必须换全新数字对做真正盲测。深尾 SMC 的数量级也需要更多粒子、副本和独立实现复核。</p>
+<p>当前证据主要来自有限 Boolean 规则、元胞自动机、模运算、tiny MLP 和两个 MNIST 二分类。它可以支持一个统一候选框架，但不能直接宣布已经证明所有 Transformer、LLM 或真实模式识别任务都服从同一定量规律。</p>
+<h2 id="14-总结">14. 总结</h2>
+<p>这项研究最初是在问：初始化函数先验加训练集硬过滤，是否已经足以解释神经网络为什么泛化。实验给出的答案是“不够”，但初始化先验也没有被抛弃。它仍然是重要零阶项；连续训练 loss 会继续重排函数质量，优化器又会在静态几何之上施加路径依赖的运输。</p>
+<p>真正需要的新对象不是一个万能复杂度分数，而是一条 Neural K-profile。它允许同一函数在不同精度下呈现不同难度，允许 shortcut 在中间 loss 合理占优，也允许 hard function 固定以后内部实现继续变化。它还能在受控实验中前瞻预测需要多少数据，并在 MNIST 上对未见图像和过拟合转折给出静态预测。</p>
+<p>用这套语言，网络不必知道研究者心中的真实规则。它只是在当前网络语言和训练集约束下不断降低 loss。数据充分时，这个过程很早便指向可复用规则；数据临界时，它表现为 grokking；数据不足或有噪声时，它会继续收束到训练集特异延拓。泛化不是另一个隐藏目标，而是训练集、网络语言、loss 深度和优化路径共同选择了可迁移函数。</p>
+<h2 id="附录-e01-e25-证据地图">附录：E01--E25 证据地图</h2>
+<p>主文只展开承担关键转折的实验。其余实验并没有被删除，下面说明每个编号究竟在测什么。</p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>实验在做什么</th>
+<th>它解决的问题</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="experiments/e01.html">E01</a></td>
+<td>在可穷举 Boolean 空间比较初始化硬过滤和真实训练的完整函数分布</td>
+<td>训练是否只是删除不兼容先验函数</td>
+</tr>
+<tr>
+<td><a href="experiments/e02.html">E02</a></td>
+<td>固定 rule bit 训练，再翻转该 bit 并加入不同数量反事实样本</td>
+<td>网络会不会自动恢复研究者预设的不变语义</td>
+</tr>
+<tr>
+<td><a href="experiments/e03.html">E03</a></td>
+<td>跟踪已经符合训练集的初始化在一步更新和长期训练中的完整函数</td>
+<td>函数运输是否只来自修复训练错误，以及是否跨宽度存在</td>
+</tr>
+<tr>
+<td><a href="experiments/e04.html">E04</a></td>
+<td>在 7-bit 十层网络中延长首次零错误后的训练</td>
+<td>插值后完整函数是否真的冻结</td>
+</tr>
+<tr>
+<td><a href="experiments/e05.html">E05</a></td>
+<td>先证明固定 NTK 足够解题，再测有限网络表示是否仍变化</td>
+<td>特征学习是否只在固定 kernel 不够时发生</td>
+</tr>
+<tr>
+<td><a href="experiments/e06.html">E06</a></td>
+<td>对 419 万个网络按 raw BCE 深度重建完整函数分布</td>
+<td>连续 loss 是否具有硬过滤之外的函数选择作用</td>
+</tr>
+<tr>
+<td><a href="experiments/e07.html">E07</a></td>
+<td>跟踪 4-bit 网络插值后的逐函数跳转，并比较 matched-loss 静态分布</td>
+<td>相同 loss 是否决定相同函数分布</td>
+</tr>
+<tr>
+<td><a href="experiments/e08.html">E08</a></td>
+<td>比较可以共享或不能共享共同中间计算的配平任务</td>
+<td>复用表示为什么有利于达到更深 loss</td>
+</tr>
+<tr>
+<td><a href="experiments/e09.html">E09</a></td>
+<td>在 80% 隐藏错误标签下长训两个 CNN</td>
+<td>规则学习和噪声记忆在训练中怎样先后发生</td>
+</tr>
+<tr>
+<td><a href="experiments/e10.html">E10</a></td>
+<td>比较训练约束相同、线性可分性严格有序的函数对</td>
+<td>如何避免事后把任何赢家都叫作简单函数</td>
+</tr>
+<tr>
+<td><a href="experiments/e11.html">E11</a></td>
+<td>比较 Rule30 不同样本数在相同 loss 的训练/验证梯度对齐</td>
+<td>增加数据是否把规则方向延伸到更深 loss</td>
+</tr>
+<tr>
+<td><a href="experiments/e12.html">E12</a></td>
+<td>扫描 AND 与 shortcut 的静态赔率，并只改一个样本做平衡干预</td>
+<td>训练集覆盖如何改变不同 loss 区域的赢家</td>
+</tr>
+<tr>
+<td><a href="experiments/e13.html">E13</a></td>
+<td>长期训练原始与平衡 AND 数据集</td>
+<td>静态换序是否会反映到真实 SGD</td>
+</tr>
+<tr>
+<td><a href="experiments/e14.html">E14</a></td>
+<td>构造绝大多数 Rule110、极少数 Rule30 的加权任务</td>
+<td>单个完整函数能否随 loss 先被压制后增加</td>
+</tr>
+<tr>
+<td><a href="experiments/e15.html">E15</a></td>
+<td>在模运算 grokking 中同时记录完整函数和逐点边缘</td>
+<td>完整函数尚未碰撞时，边缘预测能否先凝聚到目标</td>
+</tr>
+<tr>
+<td><a href="experiments/e16.html">E16</a></td>
+<td>做 parity 留出、半空间泛化和 scaffold 撤除后的扰动恢复</td>
+<td>低 loss 终点偏好与随机初始化入口是否独立</td>
+</tr>
+<tr>
+<td><a href="experiments/e17.html">E17</a></td>
+<td>比较低 loss SMC、多个 optimizer 和 SMC 起点再训练</td>
+<td>静态体积是否等于 optimizer 终点分布</td>
+</tr>
+<tr>
+<td><a href="experiments/e18.html">E18</a></td>
+<td>搜索 teacher-free 高完整函数共识训练集并做符号审计</td>
+<td>高 agreement 是否系统对应人类可提取短规则</td>
+</tr>
+<tr>
+<td><a href="experiments/e19.html">E19</a></td>
+<td>对完整 4-bit 真值表直接做多规则 SMC</td>
+<td>不同完整目标的低 loss 体积怎样分离</td>
+</tr>
+<tr>
+<td><a href="experiments/e20.html">E20</a></td>
+<td>用常数留一、AND 四候选和 margin bridge 对齐三种体积</td>
+<td>完整目标体积与固定训练集候选质量能否严格连接</td>
+</tr>
+<tr>
+<td><a href="experiments/e21.html">E21</a></td>
+<td>主动选择最大分歧输入，并用标签控制凝聚或分叉</td>
+<td>Agreement 能否成为主动选样和复杂度前沿工具</td>
+</tr>
+<tr>
+<td><a href="experiments/e22.html">E22</a></td>
+<td>穷举 3-bit 全部部分训练集、规则和样本顺序</td>
+<td>逐样本惊讶度能否累加为路径无关端点成本</td>
+</tr>
+<tr>
+<td><a href="experiments/e23.html">E23</a></td>
+<td>先冻结完整规则体积排序，再训练 9,736 个随机数据条件</td>
+<td>体积测量能否前瞻预测数据相变</td>
+</tr>
+<tr>
+<td><a href="experiments/e24.html">E24</a></td>
+<td>扫描 54 条深尾规则，再共享父系综比较两条候选</td>
+<td>Hard-exact 深尾中的绝对体积排名能否反转</td>
+</tr>
+<tr>
+<td><a href="experiments/e25.html">E25</a></td>
+<td>先校准两个 MNIST 任务，再用静态分支预测未见图像</td>
+<td>Neural K 测量能否推广到真实数据和 NLL U 形</td>
+</tr>
+</tbody>
+</table></div>
+        <footer class="article-footer"><a href="experiments/index.html">继续查看 E01–E25 实验索引 →</a></footer>
+      </article>
+    </main>
+  </div>
+</body>
+</html>

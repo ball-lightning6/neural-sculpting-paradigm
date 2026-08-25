@@ -1,0 +1,463 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="科学问题">
+  <title>Experiment 1：静态硬条件化不足以描述训练函数分布 · Neural K 研究档案</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="../assets/site.js"></script>
+</head>
+<body data-page-kind="experiment">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+  
+    <header class="topbar">
+      <a class="site-mark" href="../index.html" aria-label="返回研究主文">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K 研究档案</span>
+      </a>
+      <nav class="top-nav" aria-label="全站导航"><a class="top-link" href="../index.html">研究主文</a><a class="top-link" href="../theory-core.html">理论核心</a><a class="top-link active" href="../experiments/index.html">实验索引</a><a class="top-link" href="../references.html">参考文献</a><a class="top-link" href="../evidence-ledger.html">证据总账</a></nav>
+      <nav class="language-switch" aria-label="语言"><span class="active" lang="zh-CN">中文</span><a href="../en/experiments/e01.html" lang="en">EN</a></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>目录</span>
+      </button>
+    </header>
+    
+  <div class="page-shell">
+    
+    <aside class="sidebar" id="sidebar" aria-label="本页目录">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">本页目录</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#overview">实验概览</a></li>
+<li><a href="#科学问题">科学问题</a></li>
+<li><a href="#文件与顺序">文件与顺序</a><ul>
+<li><a href="#e01a-逐函数分布-排名反转与路径依赖">E01a：逐函数分布、排名反转与路径依赖</a></li>
+<li><a href="#e01b-单样本极简函数质量运输">E01b：单样本极简函数质量运输</a></li>
+</ul>
+</li>
+<li><a href="#预期复现结果">预期复现结果</a></li>
+<li><a href="#理论裁决边界">理论裁决边界</a></li>
+<li><a href="#冻结来源与-sha256">冻结来源与 SHA256</a></li>
+<li><a href="#相关文档与本地结果缓存">相关文档与本地结果缓存</a></li>
+<li><a href="#motivation">为什么做、怎样判决</a></li>
+<li><a href="#1-为什么做">1. 为什么做</a></li>
+<li><a href="#2-竞争假说">2. 竞争假说</a><ul>
+<li><a href="#h-static-硬条件化">H-static：硬条件化</a></li>
+<li><a href="#h-transport-优化诱导运输">H-transport：优化诱导运输</a></li>
+</ul>
+</li>
+<li><a href="#3-e01a-判决设计">3. E01a 判决设计</a></li>
+<li><a href="#4-e01b-判决设计">4. E01b 判决设计</a></li>
+<li><a href="#5-结果前明确保留的边界">5. 结果前明确保留的边界</a></li>
+<li><a href="#results">结果、解读与边界</a></li>
+<li><a href="#1-e01a-完整性">1. E01a 完整性</a><ul>
+<li><a href="#1-1-逐函数-tv-远超抽样噪声">1.1 逐函数 TV 远超抽样噪声</a></li>
+<li><a href="#1-2-具体函数排名反转">1.2 具体函数排名反转</a></li>
+<li><a href="#1-3-训练历史没有被2-000步完全洗掉">1.3 训练历史没有被2,000步完全洗掉</a></li>
+</ul>
+</li>
+<li><a href="#2-e01b-完整性与结果">2. E01b 完整性与结果</a></li>
+<li><a href="#3-阶段裁决">3. 阶段裁决</a></li>
+<li><a href="#4-不能声称什么">4. 不能声称什么</a></li>
+<li><a href="#5-本地原始结果包">5. 本地原始结果包</a></li>
+</ul>
+</div>
+</nav>
+        <div class="sidebar-label experiment-label">全部实验</div><nav class="experiment-nav"><a class="experiment-nav-link active" href="e01.html"><span>E01</span><span>静态硬条件化不足以描述训练函数分布</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-bit 反事实不变性与训练 loss 中心原则</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>函数系综动力学与网络参考语言</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>在 Mingard 2025协议中延长 post-fit 观察</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>固定 NTK 足够时的特征学习</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>连续 loss 条件下的静态函数质量</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>函数 ID 迁移与 matched-loss 静态对照</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>共享中间表示与有限容量压力</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>MNIST 80%隐藏标签噪声长训</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>4-bit raw-BCE 简单/复杂规则竞争</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule30 数据量与训练/验证梯度对齐</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND shortcut 的静态 loss 几何</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>AND shortcut 的 SGD 运输与单样本干预</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>加权 Rule-bit 的 loss 阶段函数换序</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Mod97 grokking 的完整函数与边缘凝聚</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity 终点偏好、全局入口与局部恢复</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>静态低-loss 质量与 optimizer 运输</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>高函数共识与符号可读性</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>完整真值表规则的 loss-resolved 体积</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Full-rule、固定 D 与 hard-margin 测度闭环</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement 控制与共识复杂度前沿</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>逐样本自由能与信息不变量</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>完整目标体积前瞻预测数据相变</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>深尾 Neural K-profile 与排序交叉</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST 样本复杂度与静态体积分支预测</span></a></nav>
+      </div>
+    </aside>
+    
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">E01 · 实验详情</div>
+          <h1>Experiment 1：静态硬条件化不足以描述训练函数分布</h1>
+          <p class="article-description">科学问题</p>
+        </header>
+        <div class="article-body"><div class="source-bar"><span>复现脚本</span><div><a href="../../experiments/experiment_01_static_conditioning_failure/experiment_single_sample_prior_dynamics_1024.py">experiment_single_sample_prior_dynamics_1024.py</a><a href="../../experiments/experiment_01_static_conditioning_failure/experiment_static_prior_vs_sgd_posterior.py">experiment_static_prior_vs_sgd_posterior.py</a></div></div><h2 id="overview">实验概览</h2>
+<h2 id="科学问题">科学问题</h2>
+<p>检验强命题：</p>
+<div class="math-display">$$
+P_{\mathrm{trained}}(f\mid D)
+\stackrel{?}{=}
+P_{\mathrm{init}}(f\mid f\models D).
+$$</div>
+<p>本实验不否定初始化函数先验的简单性偏置，而是判断真实优化是否只是删除不符合训练标签的初始化函数，再从剩余函数中按原比例采样。</p>
+<h2 id="文件与顺序">文件与顺序</h2>
+<h3 id="e01a-逐函数分布-排名反转与路径依赖">E01a：逐函数分布、排名反转与路径依赖</h3>
+<pre><code class="language-bash">python experiment_static_prior_vs_sgd_posterior.py
+</code></pre>
+<p>核心设置：</p>
+<ul>
+<li><code>3-bit -&gt; 1-bit</code>，完整256个 hard function 可逐一编号；</li>
+<li><code>3 -&gt; 64 x 10 -&gt; 1 tanh</code>；</li>
+<li>1,048,576个初始化 prior 样本；</li>
+<li>每个训练条件8,192个初始化；</li>
+<li>两个单样本条件和 Rule30 的<code>k=2/3/4</code>嵌套条件；</li>
+<li>首次拟合、post-fit 100/1,000步；</li>
+<li>direct/forward/reverse 三条路径，各4,096个初始化。</li>
+</ul>
+<p><strong>实现边界：脚本历史名称写作<code>SGD posterior</code>，实际优化器是 full-batch Adam。</strong>正文和结果不得把它误写成所有 SGD 变体的无条件结论。</p>
+<p>默认输出目录：</p>
+<pre><code class="language-text">results_static_prior_vs_sgd_posterior/
+</code></pre>
+<h3 id="e01b-单样本极简函数质量运输">E01b：单样本极简函数质量运输</h3>
+<pre><code class="language-bash">python experiment_single_sample_prior_dynamics_1024.py
+</code></pre>
+<p>核心设置：</p>
+<ul>
+<li><code>3 -&gt; 1024 -&gt; 1024 -&gt; 1024 -&gt; 1</code>；</li>
+<li>GELU + LayerNorm，Adam，<code>weight_decay=0</code>；</li>
+<li>4,096个初始化 prior 样本；</li>
+<li><code>000/111 -&gt; 0/1</code>四个条件，每个128个配对初始化；</li>
+<li>保存首次拟合和其后1、2步的完整8点 hard function 与 logits。</li>
+</ul>
+<p>默认输出目录：</p>
+<pre><code class="language-text">results_single_sample_prior_dynamics_1024/
+</code></pre>
+<h2 id="预期复现结果">预期复现结果</h2>
+<p>Experiment 1a：</p>
+<ul>
+<li>首次拟合时，训练分布与 hard-conditioned prior 的 TV 约0.10--0.31；</li>
+<li>post-fit 100步后约0.54--0.64，抽样噪声基线约0.01--0.04；</li>
+<li><code>rule30_k3</code>中主导函数发生排名反转；</li>
+<li>相同初始化与最终训练集、不同训练历史，post-final 2,000步后仍有约19.5%--28.2%的完整函数不同。</li>
+</ul>
+<p>Experiment 1b：</p>
+<ul>
+<li>初始化 prior 中常数0/1分别约14.01%/13.72%，非常数函数约72.27%；</li>
+<li>单样本 hard-conditioned prior 给目标常数约27.5%--28.0%；</li>
+<li>真实训练四组均为128/128在一步后成为目标常数；</li>
+<li>初始化时已经满足训练点的兼容非常数 seed 也以45/45、47/47全部迁移；</li>
+<li>训练分布相对静态条件先验 TV 约0.72、JS 约0.52 bit，hard-function 熵约<code>5 bit -&gt; 0 bit</code>。</li>
+</ul>
+<h2 id="理论裁决边界">理论裁决边界</h2>
+<p>可以声称：</p>
+<blockquote>
+<p>在这些明确协议中，优化器会系统运输已经满足训练集的函数质量；训练后函数分布不是初始化 hard-function prior 的一次被动条件化。</p>
+</blockquote>
+<p>不能据此声称：</p>
+<ul>
+<li>初始化先验不重要；</li>
+<li>一切 Bayesian 描述都错误；</li>
+<li>所有优化器、网络与任务都具有相同坍缩；</li>
+<li>无限训练时间后不同路径必然永不汇合；</li>
+<li>hard function 稳定意味着 logits 或内部表示停止变化。</li>
+</ul>
+<h2 id="冻结来源与-sha256">冻结来源与 SHA256</h2>
+<table>
+<thead>
+<tr>
+<th>冻结文件</th>
+<th>开发版来源</th>
+<th>SHA256</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>experiment_static_prior_vs_sgd_posterior.py</code></td>
+<td><code>research/function_information_conservation/experiment_static_prior_vs_sgd_posterior.py</code></td>
+<td><code>c24388482df5dfb53a6fdcff27a566d9b9b03827b62d7b718b021d9196d44edf</code></td>
+</tr>
+<tr>
+<td><code>experiment_single_sample_prior_dynamics_1024.py</code></td>
+<td><code>research/function_information_conservation/experiment_single_sample_prior_dynamics_1024.py</code></td>
+<td><code>7e339772fd3263bfed4e0eacfdfef28ee05d23ef3aad9af3225b4134c53d99ca</code></td>
+</tr>
+</tbody>
+</table>
+<p>复制时间：2026-08-25。两份冻结副本与上述开发版源文件逐字一致。</p>
+<h2 id="相关文档与本地结果缓存">相关文档与本地结果缓存</h2>
+<ul>
+<li><a href="#motivation">实验动机与预注册判据</a></li>
+<li><a href="#results">完整结果与阶段裁决</a></li>
+<li><code>E01a</code>原始结果包本地留存在<code>results/results_static_prior_vs_sgd_posterior.zip</code>，SHA256：<code>ddfd912adb0581d174a88401dc7391267c89650752d0fcf30821fa3000b2e2eb</code></li>
+<li><code>E01b</code>原始结果包本地留存在<code>results/results_single_sample_prior_dynamics_1024.zip</code>，SHA256：<code>e75fa3084824ab7fc553d4d20861af3135512838bd4c22ead6708e021f28a6b5</code></li>
+</ul>
+<p>两份 ZIP 只用于本地复核本文数值，不进入最终上传包；实验运行很快，发布内容以脚本、配置说明和关键结果表为准。</p>
+<h2 id="motivation">为什么做、怎样判决</h2>
+<h2 id="1-为什么做">1. 为什么做</h2>
+<p>早期百余合成任务中，训练数据只覆盖巨大输入空间的极小部分，网络却常跨 seed 稳定收敛到生成规则。<a href="https://www.nature.com/articles/s41467-018-03101-6" target="_blank" rel="noopener">Dingle 等（2018）</a>、<a href="https://arxiv.org/abs/1805.08522" target="_blank" rel="noopener">Valle-Pérez 等（2019）</a>与 <a href="https://www.jmlr.org/papers/v22/20-676.html" target="_blank" rel="noopener">Mingard 等（2021）</a>提供了最接近的解释：网络架构在初始化时已经诱导非均匀函数先验，训练主要删除不符合标签的函数，因此</p>
+<div class="math-display">$$
+P_{\mathrm{trained}}(f\mid D)
+\approx
+\frac{P_0(f)\mathbf1[f\models D]}
+{\sum_gP_0(g)\mathbf1[g\models D]}.
+$$</div>
+<p>严重欠约束却稳定泛化迫使这一图景承担一个很强的定量预言：所有偏离生成规则、但仍满足有限训练集的候选函数，其<strong>总条件先验质量</strong>必须远小于目标规则。这个要求虽然反直觉，却不能仅凭直觉排除，因为单个函数的指数小概率可能被指数多候选数量抵消。必须在可枚举空间直接测量。</p>
+<h2 id="2-竞争假说">2. 竞争假说</h2>
+<h3 id="h-static-硬条件化">H-static：硬条件化</h3>
+<ol>
+<li>训练分布应在有限采样误差内接近 hard-conditioned initialization prior；</li>
+<li>训练集不变后，post-fit 年龄不应系统改变 hard-function 赔率；</li>
+<li>静态后验只依赖最终训练集，样本加入顺序不应留下持久差异；</li>
+<li>已经满足训练标签的初始化函数不需要再发生系统迁移。</li>
+</ol>
+<h3 id="h-transport-优化诱导运输">H-transport：优化诱导运输</h3>
+<ol>
+<li>训练函数分布可以显著超出条件先验抽样噪声；</li>
+<li>post-fit 继续优化仍可改变具体函数赔率；</li>
+<li>同一最终训练集的不同训练历史可以产生不同函数；</li>
+<li>即使初始化函数已满足全部训练标签，优化仍可把它运输到另一兼容函数。</li>
+</ol>
+<p>H-transport 不预言迁移一定朝人类定义的最低复杂度函数，也不否定初始化先验提供零阶偏置。</p>
+<h2 id="3-e01a-判决设计">3. E01a 判决设计</h2>
+<ul>
+<li>完整函数空间：<code>3-bit -&gt; 1-bit</code>，共256个 hard function；</li>
+<li>网络：<code>3 -&gt; 64 x 10 -&gt; 1 tanh</code>，<code>sigma_w=1</code>、<code>sigma_b=0.2</code>；</li>
+<li>prior：1,048,576个初始化网络；</li>
+<li>训练：每条件8,192个初始化，full-batch Adam，学习率<code>1e-3</code>；</li>
+<li>条件：<code>000-&gt;0/1</code>及 Rule30 的<code>k=2/3/4</code>嵌套样本；</li>
+<li>时间：首次拟合、post-fit 100/1,000步、margin 2/4/8；</li>
+<li>路径：direct、forward、reverse，各4,096个配对初始化；</li>
+<li>零分布：从同一静态后验重复采样并 bootstrap 1,000次。</li>
+</ul>
+<p>主判据：逐函数 TV/JS 必须显著超过 prior 与训练样本量产生的抽样波动。复杂度直方图、平均准确率或 LZ 不作为核心判据。</p>
+<h2 id="4-e01b-判决设计">4. E01b 判决设计</h2>
+<ul>
+<li>网络：<code>3 -&gt; 1024 x 3 -&gt; 1</code>，GELU+LayerNorm、Adam、无 weight decay；</li>
+<li>prior：4,096个初始化网络；</li>
+<li>条件：<code>000/111 -&gt; 0/1</code>四种单样本；</li>
+<li>每条件128个配对初始化；</li>
+<li>快照：初始化、首次拟合、post-fit 1/2步；</li>
+<li>公平对照：单独统计初始化时已经满足该训练标签、但完整函数非常数的 seed。</li>
+</ul>
+<p>主判据：若目标常数在 hard-conditioned prior 中并不占压倒性质量，而训练仍使全部 seed 坍缩到目标常数，且 prior-compatible 非常数 seed 也全部迁移，则硬条件化抽样模型被直接拒绝。</p>
+<h2 id="5-结果前明确保留的边界">5. 结果前明确保留的边界</h2>
+<ul>
+<li>E01a 实际使用 Adam，不能把结果自动推广到所有 SGD；</li>
+<li>hard function 相同不等于 logits、margin 和表示相同；</li>
+<li>有限时间路径依赖不等于无限时间永不汇合；</li>
+<li>结果只能反驳 hard-function prior 的被动筛选强版本，不反驳所有连续 Bayesian 或含 optimizer 动力学的概率描述。</li>
+</ul>
+<h2 id="results">结果、解读与边界</h2>
+<h2 id="1-e01a-完整性">1. E01a 完整性</h2>
+<ul>
+<li>协议版本：<code>static_prior_vs_sgd_function_posterior_v1</code>；</li>
+<li>1,048,576个 prior 样本；</li>
+<li>5个条件各8,192条训练轨迹；</li>
+<li>path test 三协议各4,096个初始化；</li>
+<li>全部条件达到训练集 hard exact；</li>
+<li>总运行时间约693.9秒；</li>
+<li>原始函数分布、logits、bootstrap、路径统计和绘图均在 ZIP 中。</li>
+</ul>
+<h3 id="1-1-逐函数-tv-远超抽样噪声">1.1 逐函数 TV 远超抽样噪声</h3>
+<table>
+<thead>
+<tr>
+<th>条件</th>
+<th style="text-align: right;">首次拟合TV</th>
+<th style="text-align: right;">post-fit 100 TV</th>
+<th style="text-align: right;">post-fit 1,000 TV</th>
+<th style="text-align: right;">age 1,000 null p95</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>single_x0_y0</code></td>
+<td style="text-align: right;">0.104</td>
+<td style="text-align: right;">0.539</td>
+<td style="text-align: right;">0.538</td>
+<td style="text-align: right;">0.037</td>
+</tr>
+<tr>
+<td><code>single_x0_y1</code></td>
+<td style="text-align: right;">0.102</td>
+<td style="text-align: right;">0.535</td>
+<td style="text-align: right;">0.534</td>
+<td style="text-align: right;">0.037</td>
+</tr>
+<tr>
+<td><code>rule30_k2</code></td>
+<td style="text-align: right;">0.309</td>
+<td style="text-align: right;">0.638</td>
+<td style="text-align: right;">0.640</td>
+<td style="text-align: right;">0.028</td>
+</tr>
+<tr>
+<td><code>rule30_k3</code></td>
+<td style="text-align: right;">0.308</td>
+<td style="text-align: right;">0.616</td>
+<td style="text-align: right;">0.620</td>
+<td style="text-align: right;">0.019</td>
+</tr>
+<tr>
+<td><code>rule30_k4</code></td>
+<td style="text-align: right;">0.309</td>
+<td style="text-align: right;">0.602</td>
+<td style="text-align: right;">0.607</td>
+<td style="text-align: right;">0.017</td>
+</tr>
+</tbody>
+</table>
+<p>所有 bootstrap 检验达到当前1,000次重复可分辨的最小<code>p≈0.001</code>。训练集不变时，分布在 post-fit 100步内继续远离固定静态后验。</p>
+<h3 id="1-2-具体函数排名反转">1.2 具体函数排名反转</h3>
+<p><code>rule30_k3</code>在 age 1,000：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">function ID</th>
+<th style="text-align: right;">静态条件先验</th>
+<th style="text-align: right;">Adam训练分布</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">254</td>
+<td style="text-align: right;">43.61%</td>
+<td style="text-align: right;">16.53%</td>
+</tr>
+<tr>
+<td style="text-align: right;">238</td>
+<td style="text-align: right;">17.32%</td>
+<td style="text-align: right;">79.32%</td>
+</tr>
+</tbody>
+</table>
+<p>这不是公共温度下降对原排序的简单锐化，而是具体延拓函数换序。</p>
+<h3 id="1-3-训练历史没有被2-000步完全洗掉">1.3 训练历史没有被2,000步完全洗掉</h3>
+<p>到最终训练集后再训练2,000步，同初始化模型的 hard function 不同率为：</p>
+<table>
+<thead>
+<tr>
+<th>配对路径</th>
+<th style="text-align: right;">函数不同率</th>
+<th style="text-align: right;">两个经验分布TV</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>direct vs forward</td>
+<td style="text-align: right;">28.20%</td>
+<td style="text-align: right;">0.197</td>
+</tr>
+<tr>
+<td>direct vs reverse</td>
+<td style="text-align: right;">19.51%</td>
+<td style="text-align: right;">0.046</td>
+</tr>
+<tr>
+<td>forward vs reverse</td>
+<td style="text-align: right;">27.08%</td>
+<td style="text-align: right;">0.158</td>
+</tr>
+</tbody>
+</table>
+<p>forward 与 reverse 的阶段大小和总步数匹配，因此二者是最干净的顺序效应；direct 从一开始就看见最终训练集，不能把它与增量路径的全部差异只归因于顺序。</p>
+<h2 id="2-e01b-完整性与结果">2. E01b 完整性与结果</h2>
+<ul>
+<li>协议版本：<code>single_sample_prior_dynamics_1024_v1</code>；</li>
+<li>prior 覆盖186/256个观测 hard function；</li>
+<li>四条件各128个模型，全部一步拟合；</li>
+<li>age 0/1/2全部保存，hard function 无任何短暂反转。</li>
+</ul>
+<p>初始化 prior：</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th style="text-align: right;">质量</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>常数0</td>
+<td style="text-align: right;">14.01%</td>
+</tr>
+<tr>
+<td>常数1</td>
+<td style="text-align: right;">13.72%</td>
+</tr>
+<tr>
+<td>非常数函数合计</td>
+<td style="text-align: right;">72.27%</td>
+</tr>
+</tbody>
+</table>
+<p>单样本条件化后，目标常数静态质量为：</p>
+<table>
+<thead>
+<tr>
+<th>条件</th>
+<th style="text-align: right;">静态目标常数质量</th>
+<th style="text-align: right;">训练后目标常数质量</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>000 -&gt; 0</code></td>
+<td style="text-align: right;">27.49%</td>
+<td style="text-align: right;">100%</td>
+</tr>
+<tr>
+<td><code>000 -&gt; 1</code></td>
+<td style="text-align: right;">27.99%</td>
+<td style="text-align: right;">100%</td>
+</tr>
+<tr>
+<td><code>111 -&gt; 0</code></td>
+<td style="text-align: right;">27.76%</td>
+<td style="text-align: right;">100%</td>
+</tr>
+<tr>
+<td><code>111 -&gt; 1</code></td>
+<td style="text-align: right;">27.71%</td>
+<td style="text-align: right;">100%</td>
+</tr>
+</tbody>
+</table>
+<p>四组128/128均在第一次 Adam 更新后成为目标常数。初始化时已经满足训练点、但仍为非常数函数的 seed，也以45/45和47/47全部迁移到目标常数。若按静态条件先验独立采样，单组128次全部命中目标常数的概率约<code>10^-71</code>。</p>
+<p>四条件最终 TV 约0.720--0.725，JS 约0.515--0.521 bit；静态 hard-function 熵约4.96--5.01 bit，训练后为0。age 2时平均训练 margin 约11.3--11.5，平均未见输入绝对 logit 约10.8--11.1，不是阈值附近偶然翻转。</p>
+<h2 id="3-阶段裁决">3. 阶段裁决</h2>
+<p>两项实验共同拒绝：</p>
+<blockquote>
+<p>全部简单性偏置在初始化时已经确定；训练只删除与标签不一致的 hard function，并按剩余先验比例抽样。</p>
+</blockquote>
+<p>保留的结论是：</p>
+<blockquote>
+<p>初始化函数先验是重要零阶项，但优化器能够系统运输已经满足训练集的函数质量，使具体函数赔率依赖训练年龄和历史。</p>
+</blockquote>
+<h2 id="4-不能声称什么">4. 不能声称什么</h2>
+<ol>
+<li>没有否定初始化先验的简单性偏置；</li>
+<li>没有否定连续 logit、soft likelihood 或显式动力学 Bayesian 模型；</li>
+<li>E01a/E01b 均为 Adam，尚不能自动推广到任意 optimizer；</li>
+<li>没有证明迁移方向等于机器无关 Kolmogorov complexity 下降；</li>
+<li>没有证明路径在无限时间后仍不汇合；</li>
+<li>hard function 稳定后 logits 仍变化，不能把两者混为同一对象。</li>
+</ol>
+<h2 id="5-本地原始结果包">5. 本地原始结果包</h2>
+<table>
+<thead>
+<tr>
+<th>包</th>
+<th>SHA256</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>results/results_static_prior_vs_sgd_posterior.zip</code></td>
+<td><code>ddfd912adb0581d174a88401dc7391267c89650752d0fcf30821fa3000b2e2eb</code></td>
+</tr>
+<tr>
+<td><code>results/results_single_sample_prior_dynamics_1024.zip</code></td>
+<td><code>e75fa3084824ab7fc553d4d20861af3135512838bd4c22ead6708e021f28a6b5</code></td>
+</tr>
+</tbody>
+</table>
+<p>这些 ZIP 用于本地数字核验，不进入最终上传包。发布版保留本报告中的关键表格、冻结脚本和配置，读者可以直接重跑生成完整结果。</p></div>
+        <footer class="experiment-pager"><span></span><a href="e02.html">E02 Rule-bit 反事实不变性与训练 loss 中心原则 →</a></footer>
+      </article>
+    </main>
+  </div>
+</body>
+</html>

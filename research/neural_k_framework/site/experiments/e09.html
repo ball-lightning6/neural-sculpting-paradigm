@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="该实验区分两个经常被混写的命题：">
+  <title>E09：MNIST 80%隐藏标签噪声长训 · Neural K 研究档案</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="../assets/site.js"></script>
+</head>
+<body data-page-kind="experiment">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+  
+    <header class="topbar">
+      <a class="site-mark" href="../index.html" aria-label="返回研究主文">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K 研究档案</span>
+      </a>
+      <nav class="top-nav" aria-label="全站导航"><a class="top-link" href="../index.html">研究主文</a><a class="top-link" href="../theory-core.html">理论核心</a><a class="top-link active" href="../experiments/index.html">实验索引</a><a class="top-link" href="../references.html">参考文献</a><a class="top-link" href="../evidence-ledger.html">证据总账</a></nav>
+      <nav class="language-switch" aria-label="语言"><span class="active" lang="zh-CN">中文</span><a href="../en/experiments/e09.html" lang="en">EN</a></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>目录</span>
+      </button>
+    </header>
+    
+  <div class="page-shell">
+    
+    <aside class="sidebar" id="sidebar" aria-label="本页目录">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">本页目录</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#overview">实验概览</a></li>
+<li><a href="#目的">目的</a></li>
+<li><a href="#文件">文件</a></li>
+<li><a href="#冻结来源">冻结来源</a></li>
+<li><a href="#motivation">为什么做、怎样判决</a></li>
+<li><a href="#1-争议命题">1. 争议命题</a></li>
+<li><a href="#2-实验设计">2. 实验设计</a></li>
+<li><a href="#3-三个冻结判决点">3. 三个冻结判决点</a></li>
+<li><a href="#4-预先声明的边界">4. 预先声明的边界</a></li>
+<li><a href="#results">结果、解读与边界</a></li>
+<li><a href="#1-最佳验证点几乎精确复现91-现象">1. 最佳验证点几乎精确复现91%现象</a></li>
+<li><a href="#2-继续降低-noisy-训练-loss-会破坏规则">2. 继续降低 noisy 训练 loss 会破坏规则</a></li>
+<li><a href="#3-严谨边界">3. 严谨边界</a></li>
+<li><a href="#4-理论作用">4. 理论作用</a></li>
+</ul>
+</div>
+</nav>
+        <div class="sidebar-label experiment-label">全部实验</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>静态硬条件化不足以描述训练函数分布</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-bit 反事实不变性与训练 loss 中心原则</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>函数系综动力学与网络参考语言</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>在 Mingard 2025协议中延长 post-fit 观察</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>固定 NTK 足够时的特征学习</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>连续 loss 条件下的静态函数质量</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>函数 ID 迁移与 matched-loss 静态对照</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>共享中间表示与有限容量压力</span></a><a class="experiment-nav-link active" href="e09.html"><span>E09</span><span>MNIST 80%隐藏标签噪声长训</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>4-bit raw-BCE 简单/复杂规则竞争</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule30 数据量与训练/验证梯度对齐</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND shortcut 的静态 loss 几何</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>AND shortcut 的 SGD 运输与单样本干预</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>加权 Rule-bit 的 loss 阶段函数换序</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Mod97 grokking 的完整函数与边缘凝聚</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity 终点偏好、全局入口与局部恢复</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>静态低-loss 质量与 optimizer 运输</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>高函数共识与符号可读性</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>完整真值表规则的 loss-resolved 体积</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Full-rule、固定 D 与 hard-margin 测度闭环</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement 控制与共识复杂度前沿</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>逐样本自由能与信息不变量</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>完整目标体积前瞻预测数据相变</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>深尾 Neural K-profile 与排序交叉</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST 样本复杂度与静态体积分支预测</span></a></nav>
+      </div>
+    </aside>
+    
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">E09 · 实验详情</div>
+          <h1>E09：MNIST 80%隐藏标签噪声长训</h1>
+          <p class="article-description">该实验区分两个经常被混写的命题：</p>
+        </header>
+        <div class="article-body"><div class="source-bar"><span>复现脚本</span><div><a href="../../experiments/experiment_09_mnist_hidden_noise_long_training/experiment_mnist_hidden_noise_long_training.py">experiment_mnist_hidden_noise_long_training.py</a></div></div><h2 id="overview">实验概览</h2>
+<h2 id="目的">目的</h2>
+<p>该实验区分两个经常被混写的命题：</p>
+<ol>
+<li>含80%错误标签的 MNIST 训练集仍能在早期学到真实数字规则；</li>
+<li>网络已经充分记忆80%错误标签后，是否仍保持约91%的干净测试准确率。</li>
+</ol>
+<p>实验固定一次标签污染，不向网络提供噪声身份，并把最佳验证点、首次近完全插值和长训终点严格分开。</p>
+<h2 id="文件">文件</h2>
+<ul>
+<li><a href="#motivation">实验动机与预注册判据</a></li>
+<li><a href="#results">完整结果与阶段裁决</a></li>
+<li><a href="../../experiments/experiment_09_mnist_hidden_noise_long_training/experiment_mnist_hidden_noise_long_training.py"><code>experiment_mnist_hidden_noise_long_training.py</code></a></li>
+</ul>
+<p>运行：</p>
+<pre><code class="language-bash">python experiment_mnist_hidden_noise_long_training.py
+</code></pre>
+<h2 id="冻结来源">冻结来源</h2>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>开发版来源</th>
+<th>SHA256</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>experiment_mnist_hidden_noise_long_training.py</code></td>
+<td><code>research/overfitting_related_research/scripts/experiment_mnist_hidden_noise_long_training.py</code></td>
+<td><code>1985627d1c8f81d288aba30ad1337c6f852eff096f882aa4731598cc2ef712ac</code></td>
+</tr>
+</tbody>
+</table>
+<p>本地结果包：<code>E:\Downloads\results_mnist_hidden_noise_long_training.zip</code>SHA256：<code>1f54d164256b4df403b5306dd559078f08e372c7f8f87c9f3fca4a7274a9988f</code>。</p>
+<p>ZIP 可快速重建，不进入最终发布包。</p>
+<h2 id="motivation">为什么做、怎样判决</h2>
+<h2 id="1-争议命题">1. 争议命题</h2>
+<p>相关公开说法常被转述成：MNIST 训练标签即使80%错误，学生网络仍可达到约91%测试准确率。真正需要区分的是：该数字出现在模型只学习20%相干信号的早期，还是已经充分记忆错误标签后的插值终态。</p>
+<p>若是前者，现象只是“强共享信号先于噪声记忆”；若是后者，则要求 optimizer 形成一种训练点局部记忆而未见输入默认使用规则的特殊分解。</p>
+<h2 id="2-实验设计">2. 实验设计</h2>
+<ul>
+<li>MNIST：50,000训练、10,000干净 validation、10,000干净 test；</li>
+<li>固定污染40,000个训练标签，不向输入添加任何噪声标记；</li>
+<li>clean/noise80 采用逐元素相同初始化和相同数据顺序；</li>
+<li>每种架构3 seeds；</li>
+<li><code>overparam_cnn</code>：约1,260,810参数；</li>
+<li><code>hinton_small</code>：约23,603参数；</li>
+<li>Adam，weight decay 为0，最多300 epochs。</li>
+</ul>
+<h2 id="3-三个冻结判决点">3. 三个冻结判决点</h2>
+<ol>
+<li><code>best_validation</code>：干净 validation 选择的早停点；</li>
+<li><code>first_interpolation</code>：noisy train accuracy 首次达到99.99%；</li>
+<li><code>final</code>：插值后继续40 epochs，或300 epochs 预算终点。</li>
+</ol>
+<p>同时记录：</p>
+<ul>
+<li>noisy 训练标签准确率；</li>
+<li>同一训练图片相对隐藏真值的准确率；</li>
+<li>污染子集上对错误标签和真实标签的分别准确率；</li>
+<li>干净 validation/test 准确率；</li>
+<li>noise 模型与配对 clean 模型在 test 上的 agreement。</li>
+</ul>
+<h2 id="4-预先声明的边界">4. 预先声明的边界</h2>
+<ul>
+<li>如果300 epochs 内未达到99.99% noisy interpolation，实验不能裁决完整插值终态；</li>
+<li>干净 validation 用于人类模型选择，不属于网络训练目标；</li>
+<li>固定随机标签噪声是不可复用残差的受控放大，不等同于所有现实数据噪声；</li>
+<li>测试准确率下降只说明外部真值被破坏，不表示训练目标恶化。</li>
+</ul>
+<h2 id="results">结果、解读与边界</h2>
+<h2 id="1-最佳验证点几乎精确复现91-现象">1. 最佳验证点几乎精确复现91%现象</h2>
+<table>
+<thead>
+<tr>
+<th>架构</th>
+<th style="text-align: right;">最佳epoch</th>
+<th style="text-align: right;">最佳test</th>
+<th style="text-align: right;">当时noisy train</th>
+<th style="text-align: right;">污染子集拟合错误标签</th>
+<th style="text-align: right;">污染子集遵循真值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>overparam CNN</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">91.890%</td>
+<td style="text-align: right;">19.441%</td>
+<td style="text-align: right;">约1.26%</td>
+<td style="text-align: right;">约90.63%</td>
+</tr>
+<tr>
+<td>Hinton small</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">93.893%</td>
+<td style="text-align: right;">19.621%</td>
+<td style="text-align: right;">约1.03%</td>
+<td style="text-align: right;">约92.5%</td>
+</tr>
+</tbody>
+</table>
+<p>最佳点的 noisy train accuracy 约19.5%，基本就是20%未污染标签与随机碰巧正确的贡献；污染子集几乎仍在遵循真实数字标签。约91%的现象因此位于规则已学会、噪声尚未实质记忆的早期阶段。</p>
+<h2 id="2-继续降低-noisy-训练-loss-会破坏规则">2. 继续降低 noisy 训练 loss 会破坏规则</h2>
+<table>
+<thead>
+<tr>
+<th>架构</th>
+<th style="text-align: right;">最终noisy train</th>
+<th style="text-align: right;">最终test</th>
+<th style="text-align: right;">clean对照最终test</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>overparam CNN</td>
+<td style="text-align: right;">62.512%</td>
+<td style="text-align: right;">22.793%</td>
+<td style="text-align: right;">约99.29%</td>
+</tr>
+<tr>
+<td>Hinton small</td>
+<td style="text-align: right;">33.456%</td>
+<td style="text-align: right;">32.423%</td>
+<td style="text-align: right;">约99.25%</td>
+</tr>
+</tbody>
+</table>
+<p>overparam 模型到 epoch 300时，污染子集对错误标签准确率约59.42%，对真实标签只剩约11.47%。其 test 准确率22.79%，与配对 clean 模型的 test agreement 22.80%几乎重合。从 epoch 5以后，noisy train accuracy 与 clean test accuracy 的相关系数为<code>-0.941</code>，小模型为<code>-0.980</code>。</p>
+<p>clean 对照同样长训仍维持约99.3%，排除了“训练时间本身必然损害测试性能”。损害来自继续满足固定错误训练标签。</p>
+<h2 id="3-严谨边界">3. 严谨边界</h2>
+<p>两个架构在300 epochs 内都没有达到99.99% noisy interpolation。因此不能声称本实验已经测得“完整记忆80%噪声后的最终测试准确率”。可以稳健声称的是：</p>
+<blockquote>
+<p>噪声拟合远未完成时，外部规则性能已经从约92%--94%降至约23%--32%，且整条300-epoch 轨迹没有后期恢复迹象。</p>
+</blockquote>
+<h2 id="4-理论作用">4. 理论作用</h2>
+<p>E09 将普通过拟合放大为两个清晰阶段：</p>
+<pre><code class="language-text">通过共享结构同时降低许多样本loss
+-&gt; 共享信号基本耗尽
+-&gt; 通过样本级残差继续降低训练loss
+-&gt; 整体函数被持续改写
+</code></pre>
+<p>它直接支持“loss 是显式目标，压缩是条件性路径，泛化是外部结果”。网络没有获得“哪些标签是真值、哪些是噪声”的 oracle；干净 validation 之所以有用，是研究者把真正关心的外部语义重新注入模型选择。</p>
+<p>该实验同时否定任何普适的<code>loss 下降 =&gt; 外部规则或程序复杂度持续改善</code>命题。</p></div>
+        <footer class="experiment-pager"><a href="e08.html">← E08 共享中间表示与有限容量压力</a><a href="e10.html">E10 4-bit raw-BCE 简单/复杂规则竞争 →</a></footer>
+      </article>
+    </main>
+  </div>
+</body>
+</html>

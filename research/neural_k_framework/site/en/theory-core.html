@@ -1,0 +1,584 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="The minimal framework for simplicity, Neural K-profiles, static versus dynamical selection, statistical physics, prediction, information gain, agreement, and symbolic emergence.">
+  <title>The Core Neural K Framework · Neural K Research Archive</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="../assets/site.js"></script>
+</head>
+<body data-page-kind="core">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+  
+    <header class="topbar">
+      <a class="site-mark" href="index.html" aria-label="Back to the research narrative">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K Research Archive</span>
+      </a>
+      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="index.html">Research</a><a class="top-link active" href="theory-core.html">Core Theory</a><a class="top-link" href="experiments/index.html">Experiments</a><a class="top-link" href="references.html">References</a><a class="top-link" href="evidence-ledger.html">Evidence</a></nav>
+      <nav class="language-switch" aria-label="Language"><a href="../theory-core.html" lang="zh-CN">中文</a><span class="active" lang="en">EN</span></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>Contents</span>
+      </button>
+    </header>
+    
+  <div class="page-shell">
+    
+    <aside class="sidebar" id="sidebar" aria-label="On this page">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">On this page</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#one-sentence-version">One-sentence version</a></li>
+<li><a href="#1-two-forms-of-simplicity-at-two-scales">1. Two forms of simplicity at two scales</a><ul>
+<li><a href="#1-1-prior-simplicity">1.1 Prior simplicity</a></li>
+<li><a href="#1-2-loss-resolved-simplicity">1.2 Loss-resolved simplicity</a></li>
+<li><a href="#1-3-relation-to-compression-is-intelligence">1.3 Relation to “compression is intelligence”</a></li>
+</ul>
+</li>
+<li><a href="#2-complexity-is-an-architecture-relative-profile">2. Complexity is an architecture-relative profile</a><ul>
+<li><a href="#relation-to-mdl-and-algorithmic-information-theory">Relation to MDL and algorithmic information theory</a></li>
+</ul>
+</li>
+<li><a href="#3-static-geometry-and-optimization-dynamics-must-remain-separate">3. Static geometry and optimization dynamics must remain separate</a><ul>
+<li><a href="#decoupling-scaffolding-and-optimization-accessibility-are-not-complexity">Decoupling, scaffolding, and optimization accessibility are not complexity</a></li>
+</ul>
+</li>
+<li><a href="#4-statistical-physics-language">4. Statistical-physics language</a><ul>
+<li><a href="#4-1-dictionary">4.1 Dictionary</a></li>
+<li><a href="#4-2-canonical-ensemble-partition-function-and-free-energy">4.2 Canonical ensemble, partition function, and free energy</a></li>
+<li><a href="#4-3-what-this-is-not">4.3 What this is not</a></li>
+</ul>
+</li>
+<li><a href="#5-predicting-an-unseen-label-from-volume">5. Predicting an unseen label from volume</a></li>
+<li><a href="#6-surprise-information-gain-and-order-invariance">6. Surprise, information gain, and order invariance</a><ul>
+<li><a href="#6-1-surprise-of-an-observed-label">6.1 Surprise of an observed label</a></li>
+<li><a href="#6-2-surprise-is-not-expected-information-gain">6.2 Surprise is not expected information gain</a></li>
+</ul>
+</li>
+<li><a href="#7-the-agreement-conjecture">7. The agreement conjecture</a></li>
+<li><a href="#8-why-symbolic-concepts-may-emerge">8. Why symbolic concepts may emerge</a></li>
+<li><a href="#9-relation-to-existing-agi-and-deep-learning-theories">9. Relation to existing AGI and deep-learning theories</a><ul>
+<li><a href="#9-1-a-shared-mathematical-core-the-gibbs-variational-principle">9.1 A shared mathematical core: the Gibbs variational principle</a></li>
+<li><a href="#9-2-solomonoff-induction-and-aixi-a-resource-bounded-analogue">9.2 Solomonoff induction and AIXI: a resource-bounded analogue</a></li>
+<li><a href="#9-3-schmidhuber-s-compression-progress-from-static-compression-to-curiosity">9.3 Schmidhuber’s compression progress: from static compression to curiosity</a></li>
+<li><a href="#9-4-free-energy-principle-predictive-coding-and-active-inference">9.4 Free Energy Principle, predictive coding, and active inference</a></li>
+<li><a href="#9-5-pac-bayes-and-gibbs-posteriors">9.5 PAC-Bayes and Gibbs posteriors</a></li>
+<li><a href="#9-6-singular-learning-theory">9.6 Singular Learning Theory</a></li>
+<li><a href="#9-7-classical-statistical-mechanics-of-learning-flat-minima-and-local-entropy">9.7 Classical statistical mechanics of learning, flat minima, and local entropy</a></li>
+<li><a href="#9-8-information-bottleneck-and-mdl-probing">9.8 Information Bottleneck and MDL probing</a></li>
+<li><a href="#9-9-why-this-is-still-not-a-complete-agi-theory">9.9 Why this is still not a complete AGI theory</a></li>
+<li><a href="#9-10-the-potentially-new-connection">9.10 The potentially new connection</a></li>
+</ul>
+</li>
+<li><a href="#10-why-the-framework-is-not-circular">10. Why the framework is not circular</a></li>
+<li><a href="#11-dataset-size-loss-depth-and-regimes">11. Dataset size, loss depth, and regimes</a></li>
+<li><a href="#12-current-boundaries">12. Current boundaries</a></li>
+</ul>
+</div>
+</nav>
+        <a class="sidebar-action" href="index.html">Return to the research narrative →</a>
+      </div>
+    </aside>
+    
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">Standalone framework · Core theory only</div>
+          <h1>The Core Neural K Framework</h1>
+          <p class="article-description">The minimal framework for simplicity, Neural K-profiles, static versus dynamical selection, statistical physics, prediction, information gain, agreement, and symbolic emergence.</p>
+        </header>
+        <div class="article-body"><blockquote>
+<p>This page contains only the final theoretical framework. Experiment IDs are evidence anchors, not a reconstruction of the research timeline.</p>
+</blockquote>
+<h2 id="one-sentence-version">One-sentence version</h2>
+<p>Once architecture, encoding, parameter measure, and loss are fixed, a neural network already represents some simple functions with more parameter mass than others. Tightening training loss then removes the mass of different functions and within-function implementations at different rates, typically favoring lower neural-relative complexity and greater reuse. On structured data, lower training loss therefore often acts like pressure for a more economical program describing the training set. Data determines which programs remain compatible, architecture determines what counts as economical, and optimization determines whether those low-loss programs can actually be reached.</p>
+<h2 id="1-two-forms-of-simplicity-at-two-scales">1. Two forms of simplicity at two scales</h2>
+<h3 id="1-1-prior-simplicity">1.1 Prior simplicity</h3>
+<p>Random parameter sampling induces a highly nonuniform function distribution. A function that can be implemented by more parameter configurations receives more mass. Prior work and the project’s own sampling experiments show that structurally simple and architecture-aligned functions often receive greater prior mass.</p>
+<p>This does not mean every function simple to humans is easy for every network. Parity is the standard counterexample: it is short in an XOR language but can be expensive in the language of an ordinary tanh MLP.</p>
+<h3 id="1-2-loss-resolved-simplicity">1.2 Loss-resolved simplicity</h3>
+<p>The cleanest definition and direct evidence for loss-resolved simplicity use <strong>all input-output examples of each candidate function</strong> and measure a separate full-target loss-volume profile for that function. In a finite Boolean space this means the complete truth table. In a non-enumerable space, one must preregister a sufficiently comprehensive target set applied consistently to every candidate. A small partial training set does not automatically grant privileged status to the generator known by the researcher.</p>
+<p>Under a complete target, parameters can have every correct hard output and still occupy very different loss depths.</p>
+<blockquote>
+<p><strong>Core claim: as raw loss is tightened, available parameter volumes of different functions do not shrink proportionally. Implementations requiring many nonreusable exceptions, or poorly aligned with the architecture, often contract faster in the deep tail; more economical implementations gain relative mass.</strong></p>
+</blockquote>
+<p>With only a partial training set <span class="math-inline">$D$</span>, the measured object is instead the mass of each complete extension inside the low-loss parameters compatible with <span class="math-inline">$D$</span>. This fixed-<span class="math-inline">$D$</span> candidate mass is rigorously related to, but is not identical with, full-target volume. <a href="experiments/e20.html">E20</a> connects them through conditional probability and a margin bridge. Under partial data, the preferred extension also depends on coverage, imbalance, and the competing compatible functions; full-target rankings cannot be transferred without that bridge.</p>
+<p>This empirical rule cannot be written as “one prespecified simple function rises monotonically at every loss.” <a href="experiments/e12.html">E12</a>, <a href="experiments/e14.html">E14</a>, and <a href="experiments/e24.html">E24</a> show that winners and local contraction rates can change with depth. The correct object is a full complexity profile, not a permanent scalar.</p>
+<h3 id="1-3-relation-to-compression-is-intelligence">1.3 Relation to “compression is intelligence”</h3>
+<p>Ordinary training explicitly optimizes training loss, not a second machine-independent program-complexity term. Compression emerges from architecture, parameter measure, and loss geometry. If feature, rule, or intermediate-computation reuse allows one mechanism to satisfy many examples with fewer independent degrees of freedom, it is often the cheaper route to deeper loss.</p>
+<p>On clean, structured, data-sufficient tasks, reducing loss can therefore be interpreted as searching for a more economical description of the training set. This directly connects to “compression is intelligence”: intelligent behavior comes from reusable regularities rather than independent answers for every input. <a href="experiments/e08.html">E08</a> provides a causal shared-computation test, while the original one-hundred-plus rule experiments provide breadth.</p>
+<p>The relation is not unconditional. Absolute program complexity may rise during early learning, and deeper loss on random or corrupted labels can increase exception memory.</p>
+<blockquote>
+<p><strong>Core boundary: loss is the explicit objective; compression is a common economical path under structured data and a finite neural language.</strong></p>
+</blockquote>
+<h2 id="2-complexity-is-an-architecture-relative-profile">2. Complexity is an architecture-relative profile</h2>
+<p>Bundle architecture and parameterization, input-output encoding, parameter reference measure, and per-example loss into one neural protocol:</p>
+<div class="math-display">$$
+\Pi=(\mathcal A,\varphi,\mu,\ell).
+$$</div>
+<p>For a complete target function <span class="math-inline">$f$</span>, define its parameter volume below loss <span class="math-inline">$\epsilon$</span>:</p>
+<div class="math-display">$$
+V^{\mathrm{full}}_\Pi(f;\epsilon)
+=
+\mu_\Pi\{\theta:L_{D_{\mathrm{full}}(f)}(\theta)\le\epsilon\}.
+$$</div>
+<p>The Neural K-profile is</p>
+<div class="math-display">$$
+K^N_\Pi(f;\epsilon)
+=
+-\log_2V^{\mathrm{full}}_\Pi(f;\epsilon).
+$$</div>
+<p>It is not machine-independent Kolmogorov complexity. It measures how rare it is for the current neural language to implement <span class="math-inline">$f$</span> to precision <span class="math-inline">$\epsilon$</span>. Changing architecture, activation, width, encoding, initialization scale, or loss can change the curve.</p>
+<p>Complexity is primarily a profile. Prior probability is only a shallow starting point, volume at one loss is one slice, and local contraction rate is one slope. Curves can cross. Hard function identity is still too coarse: margins, logits, and internal representations can continue contracting and changing order after all hard signs are fixed. <a href="experiments/e24.html">E24</a> is the direct demonstration.</p>
+<p>When one operational scalar is needed, a random-dataset recovery threshold such as n50 or n90 can be used, but it still depends on recovery criterion, training budget, and architecture.</p>
+<h3 id="relation-to-mdl-and-algorithmic-information-theory">Relation to MDL and algorithmic information theory</h3>
+<p>Standard MDL writes learning as two code lengths:</p>
+<div class="math-display">$$
+L_{\mathrm{MDL}}(H,D)=L(H)+L(D\mid H).
+$$</div>
+<p><span class="math-inline">$L(H)$</span> is the cost of describing a hypothesis or program, and <span class="math-inline">$L(D\mid H)$</span> is the cost of encoding the residual data not explained by it. Algorithmic probability and Kolmogorov complexity express the same simplicity principle from another direction: shorter programs receive greater prior mass.</p>
+<p>Neural K turns this language into a measurable but protocol-dependent object. The reference measure <span class="math-inline">$\mu_\Pi$</span> already assigns nonuniform mass to implementations. The full-target volume <span class="math-inline">$V^{\mathrm{full}}_\Pi(f;\epsilon)$</span> of a complete function at precision <span class="math-inline">$\epsilon$</span> induces the codelength <span class="math-inline">$-\log_2V^{\mathrm{full}}_\Pi(f;\epsilon)$</span>. The Neural K-profile can therefore be read as <strong>the precision-dependent codelength paid by the current neural language to describe a target at different residual tolerances.</strong></p>
+<p>This does not mean that training explicitly minimizes “loss plus program length.” Ordinary code usually minimizes empirical loss alone; MDL-like selection emerges from the interaction between the architectural reference measure and loss-sublevel geometry. Nor is Neural K machine-independent Kolmogorov complexity: changing the network, encoding, parameterization, or reference measure changes the codelength. No neural coding theorem currently makes the two equivalent.</p>
+<p>The falsifiable content goes beyond renaming volume. <a href="experiments/e22.html">E22</a> makes per-example generalized surprise telescope exactly into an order-invariant endpoint codelength, while <a href="experiments/e23.html">E23</a> uses preregistered full-target profiles to predict n50/n90 on independent random datasets. Together they connect parameter mass, predictive coding, and identification sample complexity empirically.</p>
+<h2 id="3-static-geometry-and-optimization-dynamics-must-remain-separate">3. Static geometry and optimization dynamics must remain separate</h2>
+<p>For a fixed dataset <span class="math-inline">$D$</span> and loss threshold <span class="math-inline">$\epsilon$</span>, the static mass of a complete function is</p>
+<div class="math-display">$$
+\Omega_{\Pi,D}(f;\epsilon)
+=
+\mu_\Pi\{\theta:L_D(\theta)\le\epsilon,\ h_\theta=f\}.
+$$</div>
+<p>The normalized static function distribution is</p>
+<div class="math-display">$$
+Q^{\mathrm{static}}_{\Pi,D,\epsilon}(f)
+=
+\frac{\Omega_{\Pi,D}(f;\epsilon)}
+{\sum_g\Omega_{\Pi,D}(g;\epsilon)}.
+$$</div>
+<p>An optimizer pushes the initialization distribution through a training map and induces another distribution:</p>
+<div class="math-display">$$
+Q^{\mathrm{opt}}_{\Pi,D,t}
+=
+(T_{\Pi,D,t})_\#\mu_\Pi.
+$$</div>
+<blockquote>
+<p><strong>Key separation: static volume determines which candidate regions are large and which remain robust under deeper loss. It is an important first-order influence. Optimization additionally determines entrances, flow channels, speed, connectivity, numerical noise, and history. Static mass must not simply be called the SGD posterior.</strong></p>
+</blockquote>
+<p>The parity scaffold shows that a low-loss endpoint can exist and be locally stable while remaining unreachable from random initialization. <a href="experiments/e17.html">E17</a> shows that SMC and AdamW can select very different functions under the same architecture, dataset, and comparable loss.</p>
+<p>Every task therefore requires three separate checks: can the network represent the target, does the data identify it, and can the optimizer reach it?</p>
+<h3 id="decoupling-scaffolding-and-optimization-accessibility-are-not-complexity">Decoupling, scaffolding, and optimization accessibility are not complexity</h3>
+<p>Let the original endpoint objective be <span class="math-inline">$L_{\mathrm{end}}(\theta)$</span>. Decoupled training, intermediate supervision, or scaffolding typically adds an auxiliary objective:</p>
+<div class="math-display">$$
+L_{\lambda}(\theta)
+=
+L_{\mathrm{end}}(\theta)
++
+\lambda L_{\mathrm{aux}}(\theta),
+$$</div>
+<p>with <span class="math-inline">$\lambda$</span> annealed to zero later or with auxiliary inputs and intermediate labels removed entirely. The first effect is to change the gradient vector field and the path into the low-loss region:</p>
+<div class="math-display">$$
+-\nabla L_{\lambda}
+=
+-\nabla L_{\mathrm{end}}
+-
+\lambda\nabla L_{\mathrm{aux}}.
+$$</div>
+<p>Near random initialization, the original endpoint loss may provide almost no useful direction, or gradients associated with different computational stages may cancel. Auxiliary objectives factor a distant, compositional, or symmetric computation into locally learnable steps. The network can first form intermediate representations and later internalize them into endpoint computation. This improves search without implying that the original target function has lower Neural K.</p>
+<p>If the scaffold is removed and the network still remains correct under <span class="math-inline">$L_{\mathrm{end}}$</span> alone, or recovers after perturbation, then the original endpoint task has a stable low-loss region supported by its own loss. The initial failure was primarily an entrance or gradient-accessibility problem. The parity scaffold–removal–perturbation experiment in <a href="experiments/e16.html">E16</a> is such a test. Earlier Mod 3, multiplication, recursive/search, and Towers-of-Hanoi experiments show the same qualitative separation.</p>
+<p>Conversely, success with auxiliary supervision does not by itself prove that the endpoint function is simple, and endpoint-only failure does not prove that it is complex. Four objects must be separated:</p>
+<ol>
+<li><strong>Representational capacity:</strong> do parameters implementing the target exist?</li>
+<li><strong>Data identifiability:</strong> do the examples eliminate competing extensions?</li>
+<li><strong>Protocol-relative complexity:</strong> what is the target’s Neural K-profile under the original neural protocol?</li>
+<li><strong>Optimization accessibility:</strong> can the specified initialization and optimizer enter that region?</li>
+</ol>
+<p>If auxiliary variables, modules, or inputs remain permanently in the final system, the neural protocol <span class="math-inline">$\Pi$</span> has changed and the target may genuinely be simpler in the new language. If auxiliary information is used only during training and fully removed, it primarily supplies a continuation or curriculum path; final complexity should still be measured under the original endpoint protocol. Any comparison between decoupled and endpoint-only training must state which case applies.</p>
+<h2 id="4-statistical-physics-language">4. Statistical-physics language</h2>
+<h3 id="4-1-dictionary">4.1 Dictionary</h3>
+<table>
+<thead>
+<tr>
+<th>Statistical physics</th>
+<th>Neural-network object</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Microstate</td>
+<td>One concrete parameter setting <span class="math-inline">$\theta$</span></td>
+</tr>
+<tr>
+<td>Macrostate</td>
+<td>A complete hard function, or a finer function-margin/representation cell</td>
+</tr>
+<tr>
+<td>Energy</td>
+<td>Total training loss</td>
+</tr>
+<tr>
+<td>Density of states</td>
+<td>Number or measure of parameter microstates near one energy</td>
+</tr>
+<tr>
+<td>Entropy</td>
+<td>Log density or log cumulative volume</td>
+</tr>
+<tr>
+<td>Temperature</td>
+<td>Tolerance for training error; not physical temperature</td>
+</tr>
+<tr>
+<td>Free energy</td>
+<td>Combined cost of energy requirements and parameter entropy</td>
+</tr>
+<tr>
+<td>Phase change</td>
+<td>A change in the dominant function macrostate as data, temperature, or loss depth varies</td>
+</tr>
+</tbody>
+</table>
+<p>Use the additive total energy</p>
+<div class="math-display">$$
+E_D(\theta)=\sum_{i=1}^{n}\ell(h_\theta(x_i),y_i)=nL_D(\theta).
+$$</div>
+<p>For function <span class="math-inline">$f$</span>, define the energy density of states</p>
+<div class="math-display">$$
+\rho_{D,f}(E)
+=
+\int \delta(E-E_D(\theta))\,\mathbf 1[h_\theta=f],d\mu_\Pi(\theta).
+$$</div>
+<p>The microcanonical view takes the cumulative volume below a loss threshold:</p>
+<div class="math-display">$$
+\Omega_{D,f}(\epsilon)
+=
+\int_{-\infty}^{n\epsilon}\rho_{D,f}(E),dE.
+$$</div>
+<p>Its logarithm acts as a cumulative parameter entropy. A function with more implementations at the same loss has greater parameter entropy and greater static mass.</p>
+<h3 id="4-2-canonical-ensemble-partition-function-and-free-energy">4.2 Canonical ensemble, partition function, and free energy</h3>
+<p>For inverse temperature <span class="math-inline">$\beta$</span>,</p>
+<div class="math-display">$$
+Z_D(\beta)=\int e^{-\beta E_D(\theta)}d\mu_\Pi(\theta),
+$$</div>
+<p>with function-restricted partition function</p>
+<div class="math-display">$$
+Z_{D,f}(\beta)
+=
+\int \mathbf 1[h_\theta=f]e^{-\beta E_D(\theta)}d\mu_\Pi(\theta).
+$$</div>
+<p>The Gibbs mass of a function macrostate is</p>
+<div class="math-display">$$
+Q_\beta(f\mid D)=\frac{Z_{D,f}(\beta)}{Z_D(\beta)}.
+$$</div>
+<p>Define total and restricted free energies by</p>
+<div class="math-display">$$
+F_D(\beta)=-\frac1\beta\log Z_D(\beta),
+\qquad
+F_{D,f}(\beta)=-\frac1\beta\log Z_{D,f}(\beta).
+$$</div>
+<p>Function odds are controlled by restricted free-energy differences:</p>
+<div class="math-display">$$
+\log\frac{Q_\beta(f\mid D)}{Q_\beta(g\mid D)}
+=
+-\beta\bigl(F_{D,f}-F_{D,g}\bigr).
+$$</div>
+<p>Larger <span class="math-inline">$\beta$</span> emphasizes lower energy, hence lower training loss. If a complex function has fewer low-energy microstates, its restricted free energy deteriorates faster and its mass falls. This is the statistical-physics expression of faster deep-loss contraction for complex functions.</p>
+<p>Microcanonical loss slices and canonical Gibbs weighting summarize the same density of states; the canonical quantity is a Laplace-type aggregation of the former. Both have been measured in this project.</p>
+<h3 id="4-3-what-this-is-not">4.3 What this is not</h3>
+<p>Training is not automatically an equilibrium thermal system, and <span class="math-inline">$\beta$</span> is not GPU temperature. Without additional Langevin or equilibrium assumptions, SGD and AdamW are not Gibbs samplers. Statistical physics is used first as a mathematical language for state density, energy–entropy competition, and changes in dominant macrostates.</p>
+<p>Grokking can appear as rule-macrostate takeover at deeper loss or larger dataset size, but a finite-network crossover need not be a strict thermodynamic singularity. The project has not derived <span class="math-inline">$\rho_{D,f}(E)$</span> analytically from architecture; that is the deeper “why simplicity?” question and is currently out of scope.</p>
+<h2 id="5-predicting-an-unseen-label-from-volume">5. Predicting an unseen label from volume</h2>
+<p>Given training set <span class="math-inline">$D$</span>, unseen input <span class="math-inline">$x$</span>, and candidate label <span class="math-inline">$y$</span>, define</p>
+<div class="math-display">$$
+D_y=D\cup\{(x,y)\}.
+$$</div>
+<p>The microcanonical label-branch mass is</p>
+<div class="math-display">$$
+P_{\mathrm{hard}}(y\mid x,D,\epsilon)
+=
+\frac{\mu_\Pi\{\theta\in A_D(\epsilon):h_\theta(x)=y\}}
+{\mu_\Pi(A_D(\epsilon))}.
+$$</div>
+<p>It asks: among all parameters already fitting the training set to the current loss, how many predict label <span class="math-inline">$y$</span> on the new input? The larger branch is the current static prediction.</p>
+<p>One can instead compare partition functions of label-augmented datasets:</p>
+<div class="math-display">$$
+\widetilde P_\beta(y\mid x,D)
+=
+\frac{Z_{D_y}(\beta)}{Z_D(\beta)},
+$$</div>
+<p>and normalize across labels:</p>
+<div class="math-display">$$
+P_\beta(y\mid x,D)
+=
+\frac{Z_{D_y}(\beta)}{\sum_{y'}Z_{D_{y'}}(\beta)}.
+$$</div>
+<p>With standard negative log likelihood and <span class="math-inline">$\beta=1$</span>, this is the ordinary posterior-predictive evidence. More generally it is a protocol-relative Gibbs branch score.</p>
+<blockquote>
+<p><strong>Prediction principle: if the volume associated with one label contracts more slowly as loss deepens, that label retains more compatible implementations under stricter training precision and gains predictive support.</strong></p>
+</blockquote>
+<p>Label profiles can still cross, so prediction must state the chosen loss depth or <span class="math-inline">$\beta$</span>. MNIST <a href="experiments/e25.html">E25</a> directly tests this branch prediction.</p>
+<h2 id="6-surprise-information-gain-and-order-invariance">6. Surprise, information gain, and order invariance</h2>
+<h3 id="6-1-surprise-of-an-observed-label">6.1 Surprise of an observed label</h3>
+<p>For an observed label <span class="math-inline">$y$</span>,</p>
+<div class="math-display">$$
+s(y\mid x,D)=-\log_2P(y\mid x,D).
+$$</div>
+<p>Define dataset-state cost</p>
+<div class="math-display">$$
+C(D)=-\log_2Z(D).
+$$</div>
+<p>The generalized surprise of adding one example is</p>
+<div class="math-display">$$
+\Delta C_t=C(D_t)-C(D_{t-1})
+=
+-\log_2\frac{Z(D_t)}{Z(D_{t-1})}.
+$$</div>
+<p>Summing over any sample order gives</p>
+<div class="math-display">$$
+\sum_{t=1}^{m}\Delta C_t=C(D_m)-C(D_0).
+$$</div>
+<p>Intermediate terms telescope, so total cost depends only on the starting and final datasets. <strong>Each increment remains order-dependent; only the total is invariant.</strong> <a href="experiments/e22.html">E22</a> numerically closes this identity for all 256 rules and all 40,320 orders per rule.</p>
+<p>The invariant belongs to one static partition function. It is not a conserved quantity along an SGD trajectory.</p>
+<h3 id="6-2-surprise-is-not-expected-information-gain">6.2 Surprise is not expected information gain</h3>
+<p>Surprise is the realized coding cost after a label is observed. Before querying an unlabeled input, the relevant object is expected information gain: the average shrinkage of the function or parameter distribution after observing the label.</p>
+<div class="math-display">$$
+\mathrm{IG}(x\mid D)
+=
+\mathbb E_{y\sim P(y\mid x,D)}
+\left[
+\mathrm{KL}\bigl(q(\theta\mid D,x,y)\,\|\,q(\theta\mid D)\bigr)
+\right]
+=
+I(\Theta;Y_x\mid D).
+$$</div>
+<p>The equivalent BALD form is</p>
+<div class="math-display">$$
+I(\Theta;Y_x\mid D)
+=
+H[Y_x\mid D]
+-
+\mathbb E_{\theta\sim q(\theta\mid D)}H[Y_x\mid\theta].
+$$</div>
+<p>If each hard function deterministically labels <span class="math-inline">$x$</span>, the second term vanishes and expected information gain equals predictive label entropy. Inputs closest to 50:50, and therefore with lowest agreement, are maximally informative on average. This motivates the active-disagreement experiment <a href="experiments/e21.html">E21</a>.</p>
+<p>A practical caveat remains: zero hard-posterior information does not guarantee that retraining with an agreed-upon sample has no effect. Soft margins can differ, and the sample changes the optimizer path from initialization.</p>
+<h2 id="7-the-agreement-conjecture">7. The agreement conjecture</h2>
+<p>For one input <span class="math-inline">$x$</span>, pairwise agreement between two independent function draws is</p>
+<div class="math-display">$$
+A(x\mid D)=\sum_yP(y\mid x,D)^2.
+$$</div>
+<p>For the complete function distribution,</p>
+<div class="math-display">$$
+C(D)=\sum_fQ(f\mid D)^2.
+$$</div>
+<p>High mean pointwise agreement does not imply high complete-function collision; many functions can differ only on a few locations. Applications should report representative pointwise agreement together with complete-function modal mass, collision, or Hamming-ball mass.</p>
+<blockquote>
+<p><strong>Agreement is valuable because it does not require knowledge of an external generator. It measures whether the empirical function distribution induced by the current dataset and protocol has concentrated. Agreement below one indicates competing extensions; agreement near one indicates high confidence in one dataset-induced complete rule. In the early rule experiments that motivated this conjecture, agreement was clearly below one only in overfitting regimes where the sample count lay below the grokking transition, whereas agreement near one occurred precisely when the training data were already sufficient for rule generalization. This paired observation motivated the conjecture that, in a sufficiently large problem space and for a nontrivial dataset, the complete function distribution approaches concentration only after the data stably identify a rule and cross the corresponding transition. A near-one-agreement dataset should therefore be likely to contain a human-readable rule that can in principle be discovered and extracted.</strong></p>
+</blockquote>
+<p>High agreement does not guarantee recovery of the external generator prespecified by the researcher. One example can make networks converge unanimously to a constant extension, but a constant function is itself an extremely short and human-readable rule. It is therefore not a counterexample to the conjecture that high agreement selects readable rules. It only shows why the conjecture must be teacher-free: agreement identifies the rule jointly selected by the dataset and neural protocol, not necessarily the generator hidden behind the data. The conjecture is more specific:</p>
+<blockquote>
+<p>In a sufficiently large problem space, if a nontrivial training set makes the <strong>complete function distribution</strong> concentrate near one under strict fresh-seed auditing, the dataset usually corresponds to a shorter, human-readable logical rule. Discovering that rule can still be difficult.</p>
+</blockquote>
+<p>Requiring more samples before concentration usually indicates a more complex identifiable rule or harder-to-eliminate competitors. The sample count needed for high agreement can therefore serve as another protocol-relative complexity measure.</p>
+<p>The conjecture has survived two initial tests. Strict high-consensus endpoints in <a href="experiments/e18.html">E18</a> all belonged to a signed-threshold family. In <a href="experiments/e21.html">E21</a>, longer anti-consensus prefixes increased sample requirements and moved endpoints from linear thresholds to more complex but still readable quadratic polynomial thresholds. These results support the conjecture but do not prove that every high-agreement function is human-readable.</p>
+<p>The conjecture has a deeper implication. If high agreement continues to select human-readable short rules across more tasks, architectures, and larger spaces, then neural complexity and intuitive human complexity are not unrelated orderings. Both may exploit the same reusable structures: locality, symmetry, compositionality, low-order interactions, and shared computation. The original one-hundred-plus deterministic rule experiments provide broad evidence in the same direction: when an exact reusable generator exists and data and optimization access are sufficient, networks often drive both unseen-example loss and cross-seed function disagreement very low; underdetermination and noise do not automatically yield the same complete concentration.</p>
+<blockquote>
+<p><strong>If this survives broader stress tests, the implication is not one unique absolute “universal code,” but a class of robustly compressible structures that remain economical in many effective representation languages. Neural systems and humans may partly converge on similar complexity judgments because they face the same structure under finite computational resources.</strong></p>
+</blockquote>
+<p>This remains a strong conjecture, not a conclusion. Architecture dependence and examples such as parity already show that the two complexity orderings do not coincide perfectly. The original rule matrix also did not apply the strict fresh-seed symbolic audit of E18/E21 throughout, so it is supporting breadth rather than a substitute for preregistered cross-architecture tests.</p>
+<p>A possible application is rule discovery and data-sufficiency diagnosis. Once agreement approaches one, the dataset has likely constrained a stable rule; symbolic regression, program search, interpretable models, or human analysis can then attempt to extract it. When agreement remains low, arguing over one unique rule is premature.</p>
+<h2 id="8-why-symbolic-concepts-may-emerge">8. Why symbolic concepts may emerge</h2>
+<p>OOD rule-composition experiments show that a network can interpret a rule code or role bit as reusable semantics and execute unseen combinations. The shared-computation experiment <a href="experiments/e08.html">E08</a> shows that when several tasks require one expensive intermediate state, representation reuse reaches lower loss with less capacity and data.</p>
+<p>Symbols and concepts may therefore be economical macroscopic representations under multi-task compression pressure, rather than structures imposed from outside connectionism. A stable symbol can bind roles, compose rules, and avoid storing a complete separate computation for each task.</p>
+<p>The current evidence is behavioral and economic. It does not show one unique discrete hidden variable corresponding to each human symbol, nor that every semantic representation forms by the same mechanism.</p>
+<h2 id="9-relation-to-existing-agi-and-deep-learning-theories">9. Relation to existing AGI and deep-learning theories</h2>
+<h3 id="9-1-a-shared-mathematical-core-the-gibbs-variational-principle">9.1 A shared mathematical core: the Gibbs variational principle</h3>
+<p>Let <span class="math-inline">$\mu_\Pi$</span> be the architecture-induced reference measure and <span class="math-inline">$E_D(\theta)$</span> the training-data energy. Then</p>
+<div class="math-display">$$
+\Phi_{\Pi,\beta}(D)
+=
+-\log Z_{\Pi,\beta}(D)
+=
+\min_q
+\left[
+\beta\,\mathbb E_qE_D(\theta)
++
+D_{\mathrm{KL}}(q\Vert\mu_\Pi)
+\right].
+$$</div>
+<p>The first term fits the data and lowers loss; the second measures the complexity cost of moving <span class="math-inline">$q$</span> away from the architectural reference measure. This “data fit plus descriptive deviation” is the genuine mathematical core shared with several AGI, cognitive, and statistical-learning frameworks.</p>
+<p>Further decomposing parameter space by complete function <span class="math-inline">$f$</span> yields function-restricted partition functions and free energies. That is the resolution emphasized here: not only total evidence, but competition among complete-function macrostates as loss, data, and architecture change.</p>
+<h3 id="9-2-solomonoff-induction-and-aixi-a-resource-bounded-analogue">9.2 Solomonoff induction and AIXI: a resource-bounded analogue</h3>
+<p><a href="https://mlanthology.org/misc/1964/solomonoff1964misc-formal/" target="_blank" rel="noopener">Solomonoff induction</a> gives shorter programs greater prior weight. <a href="https://arxiv.org/abs/cs/0701125" target="_blank" rel="noopener">Hutter’s AIXI</a> combines universal sequence induction with action and reward maximization to define an incomputable ideal agent.</p>
+<p>The corresponding neural object is</p>
+<div class="math-display">$$
+P_\Pi(f)\propto e^{-C_\Pi(f)},
+\qquad
+C_\Pi(f)=-\log P_\Pi(f),
+$$</div>
+<p>where <span class="math-inline">$\Pi$</span> is a concrete finite neural protocol rather than a universal Turing machine. It can be sampled and tested, but it loses the universal optimality claims of Solomonoff induction and AIXI.</p>
+<p>The accurate connection is that a neural network can be viewed as a <strong>computable, resource-bounded, architecture-relative induction system</strong>. The present framework selects functions from data; it has no state–action–future-history–reward loop and is therefore not an AIXI-like agent theory.</p>
+<h3 id="9-3-schmidhuber-s-compression-progress-from-static-compression-to-curiosity">9.3 Schmidhuber’s compression progress: from static compression to curiosity</h3>
+<p><a href="https://people.idsia.ch/~juergen/driven2008.pdf" target="_blank" rel="noopener">Schmidhuber’s compression-progress theory</a> argues that curiosity should reward improvement in a compressor, not merely data that are already compressible. Interesting experience is both surprising and learnably regular.</p>
+<p>This framework measures a sample’s free-energy increment:</p>
+<div class="math-display">$$
+\Delta\Phi(z\mid D)=\Phi(D\cup\{z\})-\Phi(D).
+$$</div>
+<p>An already predicted sample has small increment. A sample eliminating many candidate functions has a large increment. If learning it also makes many future samples unsurprising, it produces genuine compression progress.</p>
+<p>E21’s disagreement querying is a passive-learning version of this idea: search for samples most likely to change the current function distribution. A curiosity-driven agent would additionally choose environment actions and reward expected future compression progress.</p>
+<h3 id="9-4-free-energy-principle-predictive-coding-and-active-inference">9.4 Free Energy Principle, predictive coding, and active inference</h3>
+<p><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2666703/" target="_blank" rel="noopener">Friston and Kiebel (2009)</a> formulate predictive coding and the Free Energy Principle as approximate Bayesian inversion of hidden causes using variational free energy. The mathematical structure is closely related, but the variables differ:</p>
+<table>
+<thead>
+<tr>
+<th>This framework</th>
+<th>Free Energy Principle / Active Inference</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="math-inline">$q(\theta)$</span> is a distribution over parameters or program implementations</td>
+<td><span class="math-inline">$q(z)$</span> is an approximate posterior over hidden environmental causes</td>
+</tr>
+<tr>
+<td>Data are training examples</td>
+<td>Data are sensory observations</td>
+</tr>
+<tr>
+<td>Function free energy measures rule-implementation mass</td>
+<td>Variational free energy measures how well an internal generative model explains observations</td>
+</tr>
+<tr>
+<td>Disagreement locates informative training samples</td>
+<td>Prediction error drives perceptual updating</td>
+</tr>
+<tr>
+<td>No action loop yet</td>
+<td>Active inference changes future observations through action</td>
+</tr>
+</tbody>
+</table>
+<p>Here <span class="math-inline">$-\log Z$</span> is evidence under a specified measure; FEP typically minimizes a tractable variational upper bound on surprise. Introducing an approximate <span class="math-inline">$q$</span> connects the two through the Gibbs variational identity above.</p>
+<p>This is a mathematical and functional relation, not evidence for the biological version of FEP or proof that brains organize states by the complete-function macrostates measured here.</p>
+<h3 id="9-5-pac-bayes-and-gibbs-posteriors">9.5 PAC-Bayes and Gibbs posteriors</h3>
+<p><a href="https://arxiv.org/abs/0712.0248" target="_blank" rel="noopener">Catoni (2007)</a> explicitly uses temperature, Gibbs posteriors, and relative entropy to connect empirical risk with generalization bounds:</p>
+<div class="math-display">$$
+q_\beta(\theta\mid D)
+\propto
+\mu_\Pi(\theta)e^{-\beta E_D(\theta)}.
+$$</div>
+<p>PAC-Bayes primarily asks how empirical risk and KL complexity control test risk for a chosen posterior. This project additionally decomposes <span class="math-inline">$q$</span> by complete function, measures <span class="math-inline">$Z_f(\beta)$</span> and function-rank changes, and compares the static distribution with real optimizer ensembles.</p>
+<p>The mathematics is shared, but the resolution and question differ. A PAC-Bayes bound does not determine a Neural K-profile or prove that SGD samples the Gibbs posterior without bias.</p>
+<h3 id="9-6-singular-learning-theory">9.6 Singular Learning Theory</h3>
+<p><a href="https://doi.org/10.1017/CBO9780511800474" target="_blank" rel="noopener">Watanabe’s Singular Learning Theory</a> replaces ordinary parameter counting with RLCT to describe Bayesian evidence and free-energy asymptotics in singular models. <a href="https://jmlr.csail.mit.edu/papers/volume14/watanabe13a/watanabe13a.pdf" target="_blank" rel="noopener">WBIC</a> and the later <a href="https://proceedings.mlr.press/v258/lau25a.html" target="_blank" rel="noopener">Local Learning Coefficient</a> move this complexity toward estimable quantities.</p>
+<p>A direct candidate relation is</p>
+<div class="math-display">$$
+\text{RLCT / LLC}
+\quad\longleftrightarrow\quad
+\text{local or asymptotic contraction exponent of low-loss volume}.
+$$</div>
+<p>SLT mainly studies large-sample Bayesian asymptotics and local singular structure. This project measures finite data, finite networks, named complete-function macrostates, profile crossings, and optimizer accessibility. SLT may eventually derive volume slopes but does not currently replace the experiments.</p>
+<h3 id="9-7-classical-statistical-mechanics-of-learning-flat-minima-and-local-entropy">9.7 Classical statistical mechanics of learning, flat minima, and local entropy</h3>
+<p><a href="https://journals.aps.org/pra/abstract/10.1103/PhysRevA.45.6056" target="_blank" rel="noopener">Seung, Sompolinsky, and Tishby (1992)</a> already used Gibbs ensembles to study sample count, temperature, generalization curves, and learning transitions. Classical work focused primarily on teacher–student perceptrons, thermodynamic averages, and a few analytic order parameters.</p>
+<p><a href="https://doi.org/10.1162/neco.1997.9.1.1" target="_blank" rel="noopener">Flat Minima</a> and <a href="https://arxiv.org/abs/1611.01838" target="_blank" rel="noopener">Entropy-SGD</a> study width or local entropy near one parameter solution. The present framework groups all parameter regions implementing one complete function and asks how the global mass of that macrostate contracts with loss.</p>
+<p>Function volume is therefore coarser than one minimum and closer to program selection, but it remains reference-measure and parameterization dependent rather than an absolute coordinate-free complexity.</p>
+<h3 id="9-8-information-bottleneck-and-mdl-probing">9.8 Information Bottleneck and MDL probing</h3>
+<p>The <a href="https://arxiv.org/abs/physics/0004057" target="_blank" rel="noopener">Information Bottleneck</a> compresses input-irrelevant information in a representation while retaining target-relevant information. It is adjacent to “compression is intelligence,” but its object is mutual information between random variables, not parameter volume of a complete function. <a href="https://openreview.net/forum?id=ry_WPG-A-" target="_blank" rel="noopener">Saxe et al. (2018)</a> and <a href="https://arxiv.org/abs/1808.07593" target="_blank" rel="noopener">Kolchinsky, Tracey, and Van Kuyk (2018)</a> identify important limits of the claimed deep-network compression phase and degeneracies in deterministic settings.</p>
+<p><a href="https://aclanthology.org/2020.emnlp-main.14/" target="_blank" rel="noopener">Voita and Titov’s MDL probing</a> asks not only whether a layer linearly predicts a label, but how much online codelength is required to learn the label from that representation. This is closely related to treating a hidden representation as input and measuring the remaining free energy of the label map.</p>
+<p>Both can serve as representation-level auxiliary measurements, but probe codelength, mutual information, parameter norm, Neural K, and machine-independent Kolmogorov complexity must not be equated.</p>
+<h3 id="9-9-why-this-is-still-not-a-complete-agi-theory">9.9 Why this is still not a complete AGI theory</h3>
+<blockquote>
+<p><strong>AGI positioning: the current framework explains induction over functions under a given dataset and neural protocol. It is presently a theory of learning and induction, not a complete AGI theory.</strong></p>
+</blockquote>
+<p>A complete agent theory additionally needs</p>
+<div class="math-display">$$
+\text{state}
++
+\text{action}
++
+\text{future prediction}
++
+\text{reward}.
+$$</div>
+<p>One possible extension would choose actions by expected free-energy reduction, information gain, and external reward:</p>
+<div class="math-display">$$
+a^*
+=
+\arg\max_a
+\mathbb E
+\left[
+\Phi(D)-\Phi(D\cup z_a)
++
+\lambda R(a)
+\right].
+$$</div>
+<p>This would approach AIXI-style sequential decision making, active inference’s expected free energy, compression-progress curiosity, and active-learning information gain. No current experiment establishes this action loop, so it remains an extension path.</p>
+<h3 id="9-10-the-potentially-new-connection">9.10 The potentially new connection</h3>
+<p>The project cannot claim to have invented free energy, Gibbs posteriors, MDL, AIXI, or the statistical mechanics of learning. Its more specific combination is:</p>
+<ol>
+<li>decompose parameter space by complete-function macrostates;</li>
+<li>measure each function’s full low-loss density of states / Neural K-profile;</li>
+<li>connect per-example surprise to the same endpoint free energy;</li>
+<li>prospectively predict random-dataset transitions from full-rule profiles;</li>
+<li>treat optimizer deviation from static volume as nonequilibrium transport;</li>
+<li>use agreement to measure teacher-free function concentration and test symbolic readability.</li>
+</ol>
+<p>It is best understood as an experimentally measurable common coordinate system:</p>
+<div class="theory-link-chain" aria-label="Shared theoretical coordinate system">
+  <span>Solomonoff / MDL</span>
+  <span>Bayesian evidence / PAC-Bayes</span>
+  <span>statistical-physics free energy</span>
+  <span>predictive coding</span>
+  <span>neural function volume</span>
+</div>
+
+<h2 id="10-why-the-framework-is-not-circular">10. Why the framework is not circular</h2>
+<p>Defining</p>
+<div class="math-display">$$
+K^N_\Pi(f;\epsilon)=-\log_2V^{\mathrm{full}}_\Pi(f;\epsilon)
+$$</div>
+<p>as protocol-relative volume complexity is not itself falsifiable; it names a measurement. The scientific claim is whether that measurement predicts quantities outside its own definition.</p>
+<p>Four independent anchors currently provide that test:</p>
+<ol>
+<li><a href="experiments/e10.html">E10</a> preregisters strictly ordered simple/complex pairs by linear separability before measuring low-loss odds.</li>
+<li><a href="experiments/e23.html">E23</a> measures and hashes full-rule volume scores before predicting random-dataset n50/n90 transitions; the parity ordering is exact.</li>
+<li><a href="experiments/e25.html">E25</a> uses static branches to predict unseen MNIST labels and NLL turning points.</li>
+<li><a href="experiments/e18.html">E18</a> and <a href="experiments/e21.html">E21</a> use independent symbolic audits to test whether high-agreement endpoints are human-readable.</li>
+</ol>
+<p>Counterexamples have changed the theory rather than being renamed away. The AND shortcut rejected a prespecified winner, weighted rule bits rejected all-range monotonicity, random/parity reversals rejected a shallow scalar, and deep crossing rejected hard-function identity as sufficient. The framework is therefore not “whatever the network selects is simple.”</p>
+<h2 id="11-dataset-size-loss-depth-and-regimes">11. Dataset size, loss depth, and regimes</h2>
+<p>For one rule, four common regimes appear:</p>
+<ol>
+<li><strong>Underconstrained.</strong> Too few examples leave many large extensions. Agreement can be low or can be misleadingly high on a constant or shortcut.</li>
+<li><strong>Critical/grokking.</strong> Data permits rule identification, but the rule dominates only at deep loss. Training fits first and the rule takes over later.</li>
+<li><strong>Data-sufficient/direct learning.</strong> The rule overwhelms alternatives at shallow loss, and training and validation fall together from early training. Most of the original successful rule experiments lie here.</li>
+<li><strong>Finite precision and noise.</strong> Any finite dataset supports only finite extrapolation precision. Deeper loss can emphasize dataset-specific residuals or incorrect labels, separating NLL, accuracy, or external rule performance.</li>
+</ol>
+<p>Under pure hard conditioning, adding an example consistent with the target preserves the target cell while deleting competitors, so normalized hard target mass cannot decrease. No equally unconditional theorem holds at a fixed raw-BCE slice because the new example also changes the average loss and margin constraint.</p>
+<p>Dataset size, model capacity, and training time play different roles: capacity controls representation, data controls identifiability, and dynamics controls accessibility. Collapsing all three into one “task difficulty” obscures the real differences among parity, Mod 3, grokking, and overfitting.</p>
+<h2 id="12-current-boundaries">12. Current boundaries</h2>
+<p>The framework does not yet explain or derive:</p>
+<ul>
+<li>why broad neural architectures exhibit prior simplicity bias;</li>
+<li>why a specific function has its measured low-loss density of states;</li>
+<li>how to derive a complete Neural K-profile analytically from architecture;</li>
+<li>whether every pair of profiles eventually stabilizes or crosses finitely many times;</li>
+<li>whether high complete-function agreement generally implies a human-readable rule;</li>
+<li>or a closed quantitative relation between static volume and SGD/AdamW transport.</li>
+</ul>
+<p>The current result is therefore an experimentally supported static–dynamic framework, not a completed unified law of deep learning.</p>
+<blockquote>
+<p><strong>Strongest claim: continuous reduction of training loss has function-selection meaning, and that selection can be measured through protocol-relative function volume, free energy, predictive branches, and sample transitions.</strong></p>
+</blockquote></div>
+        
+      </article>
+    </main>
+  </div>
+</body>
+</html>

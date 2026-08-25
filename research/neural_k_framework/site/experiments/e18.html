@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="E18 在不知道数据生成规则的 teacher-free 随机部分真值表上，寻找跨初始化高度收束的完整函数，并审计这些函数是否属于人类可读的低复杂度符号族；随后进行跨容量、样本干预和8,192数据集大规模复核。">
+  <title>E18：高函数共识与符号可读性 · Neural K 研究档案</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="../assets/site.js"></script>
+</head>
+<body data-page-kind="experiment">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+  
+    <header class="topbar">
+      <a class="site-mark" href="../index.html" aria-label="返回研究主文">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K 研究档案</span>
+      </a>
+      <nav class="top-nav" aria-label="全站导航"><a class="top-link" href="../index.html">研究主文</a><a class="top-link" href="../theory-core.html">理论核心</a><a class="top-link active" href="../experiments/index.html">实验索引</a><a class="top-link" href="../references.html">参考文献</a><a class="top-link" href="../evidence-ledger.html">证据总账</a></nav>
+      <nav class="language-switch" aria-label="语言"><span class="active" lang="zh-CN">中文</span><a href="../en/experiments/e18.html" lang="en">EN</a></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>目录</span>
+      </button>
+    </header>
+    
+  <div class="page-shell">
+    
+    <aside class="sidebar" id="sidebar" aria-label="本页目录">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">本页目录</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#overview">实验概览</a></li>
+<li><a href="#目的">目的</a></li>
+<li><a href="#文件与运行顺序">文件与运行顺序</a></li>
+<li><a href="#脚本-sha256">脚本 SHA256</a></li>
+<li><a href="#motivation">为什么做、怎样判决</a></li>
+<li><a href="#1-猜想">1. 猜想</a></li>
+<li><a href="#2-pilot">2. Pilot</a></li>
+<li><a href="#3-干预与大规模确认">3. 干预与大规模确认</a></li>
+<li><a href="#4-边界">4. 边界</a></li>
+<li><a href="#results">结果、解读与边界</a></li>
+<li><a href="#1-pilot-发现-teacher-free-高共识可读规则">1. Pilot 发现 teacher-free 高共识可读规则</a></li>
+<li><a href="#2-跨容量与样本干预">2. 跨容量与样本干预</a></li>
+<li><a href="#3-大规模结果">3. 大规模结果</a></li>
+<li><a href="#4-裁决">4. 裁决</a></li>
+</ul>
+</div>
+</nav>
+        <div class="sidebar-label experiment-label">全部实验</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>静态硬条件化不足以描述训练函数分布</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-bit 反事实不变性与训练 loss 中心原则</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>函数系综动力学与网络参考语言</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>在 Mingard 2025协议中延长 post-fit 观察</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>固定 NTK 足够时的特征学习</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>连续 loss 条件下的静态函数质量</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>函数 ID 迁移与 matched-loss 静态对照</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>共享中间表示与有限容量压力</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>MNIST 80%隐藏标签噪声长训</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>4-bit raw-BCE 简单/复杂规则竞争</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule30 数据量与训练/验证梯度对齐</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND shortcut 的静态 loss 几何</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>AND shortcut 的 SGD 运输与单样本干预</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>加权 Rule-bit 的 loss 阶段函数换序</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Mod97 grokking 的完整函数与边缘凝聚</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity 终点偏好、全局入口与局部恢复</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>静态低-loss 质量与 optimizer 运输</span></a><a class="experiment-nav-link active" href="e18.html"><span>E18</span><span>高函数共识与符号可读性</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>完整真值表规则的 loss-resolved 体积</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Full-rule、固定 D 与 hard-margin 测度闭环</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement 控制与共识复杂度前沿</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>逐样本自由能与信息不变量</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>完整目标体积前瞻预测数据相变</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>深尾 Neural K-profile 与排序交叉</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST 样本复杂度与静态体积分支预测</span></a></nav>
+      </div>
+    </aside>
+    
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">E18 · 实验详情</div>
+          <h1>E18：高函数共识与符号可读性</h1>
+          <p class="article-description">E18 在不知道数据生成规则的 teacher-free 随机部分真值表上，寻找跨初始化高度收束的完整函数，并审计这些函数是否属于人类可读的低复杂度符号族；随后进行跨容量、样本干预和8,192数据集大规模复核。</p>
+        </header>
+        <div class="article-body"><div class="source-bar"><span>复现脚本</span><div><a href="../../experiments/experiment_18_consensus_symbolicity/experiment_8bit_consensus_large_scale.py">experiment_8bit_consensus_large_scale.py</a><a href="../../experiments/experiment_18_consensus_symbolicity/experiment_8bit_consensus_symbolicity.py">experiment_8bit_consensus_symbolicity.py</a><a href="../../experiments/experiment_18_consensus_symbolicity/experiment_8bit_consensus_width_intervention.py">experiment_8bit_consensus_width_intervention.py</a></div></div><h2 id="overview">实验概览</h2>
+<h2 id="目的">目的</h2>
+<p>E18 在不知道数据生成规则的 teacher-free 随机部分真值表上，寻找跨初始化高度收束的完整函数，并审计这些函数是否属于人类可读的低复杂度符号族；随后进行跨容量、样本干预和8,192数据集大规模复核。</p>
+<h2 id="文件与运行顺序">文件与运行顺序</h2>
+<pre><code class="language-bash">python experiment_8bit_consensus_symbolicity.py
+python experiment_8bit_consensus_width_intervention.py
+python experiment_8bit_consensus_large_scale.py
+</code></pre>
+<ul>
+<li><a href="#motivation">实验动机与判据</a></li>
+<li><a href="#results">结果与边界</a></li>
+</ul>
+<h2 id="脚本-sha256">脚本 SHA256</h2>
+<pre><code class="language-text">ed04dfd5c7c78407124776b6e829abfa73e0832f025964d0afb30c9606e8d561  pilot
+5073de1c3d9d1ad870cce02a462ad3fa2814406a2e6a7c793b684907a13e6905  intervention
+e7f08889e7e56329bfe207a8ce7168392cbe594316863d878c07aeda72710e9b  large-scale
+</code></pre>
+<p>关键 ZIP SHA256：</p>
+<pre><code class="language-text">cc7da4ce381295672ac18b54ef9a39b31b7eab946f754cf218684c8890959375  pilot
+4720d2d073119cca52d8654ec6f316514ef99b43f40da229d95b6640884a2fa2  intervention
+958e51fc7339810f2783fea46e8f07486f018560aea15ae40660affebfc03845  large-scale
+</code></pre>
+<p>原始 ZIP 不发布。</p>
+<h2 id="motivation">为什么做、怎样判决</h2>
+<h2 id="1-猜想">1. 猜想</h2>
+<p>Agreement 不依赖研究者预设 teacher。若一个部分训练集使许多独立初始化收束到近乎同一个完整函数，它是否通常意味着 version space 中存在一个网络偏好、且人类可读的短规则？反例应是<code>high consensus + 无法由预注册符号语言压缩</code>。</p>
+<h2 id="2-pilot">2. Pilot</h2>
+<ul>
+<li>8-bit 完整输入空间256点；</li>
+<li>540个数据集，其中512个随机平衡部分真值表、28个隐藏符号 teacher；</li>
+<li>每集64 seeds，<code>8 -&gt; 16 x 2 -&gt; 1 tanh</code>，20,000步；</li>
+<li>高共识要求 fit rate 不低于0.95、modal 完整函数质量不低于0.95、完整函数 collision 不低于0.90。</li>
+</ul>
+<p>符号审计预注册 essential variables、ANF、decision tree、ROBDD 和 influence，不在看到候选后只凭自然语言判断。</p>
+<h2 id="3-干预与大规模确认">3. 干预与大规模确认</h2>
+<ul>
+<li>对 teacher-free 高共识集加入高分歧一致点、同点冲突标签和低分歧一致点；</li>
+<li>扫宽度16--1024、深度和 tanh/GELU；</li>
+<li>大规模扫描8,192个新随机 n=12训练集，64 seeds 筛选，4,096 fresh seeds 确认；</li>
+<li>预注册 Tier 审计与事后线性阈值 LP 审计严格分栏。</li>
+</ul>
+<h2 id="4-边界">4. 边界</h2>
+<p>高共识只定义函数凝聚，不保证外部正确；符号复杂度必须在训练集相容候选中比较。实验检验单向命题<code>high consensus -&gt; low readable complexity</code>，不检验其逆命题。</p>
+<h2 id="results">结果、解读与边界</h2>
+<h2 id="1-pilot-发现-teacher-free-高共识可读规则">1. Pilot 发现 teacher-free 高共识可读规则</h2>
+<p>540个数据集中4个达到严格高共识：copy、NOT、majority3，以及一个随机平衡 n=12训练集。该随机集61/64 seeds 收束到同一完整256-bit 函数，collision 0.908；训练集在 step 200已全部拟合，modal 质量随后从0.281升至0.953，属于 post-interpolation 函数收缩。</p>
+<p>主模态只依赖4个变量，可写成短2-CNF 或 signed threshold 式规则；穷举审计表明当前训练集不存在相容0--3变量 junta，故它达到最低 essential-variable count。</p>
+<p>在全部512个随机训练集上，collision 与 essential variables、ANF、decision tree、ROBDD 和 influence 均显著负相关；控制样本数和输出平衡后仍保留，ROBDD partial Spearman 约-0.526。</p>
+<h2 id="2-跨容量与样本干预">2. 跨容量与样本干预</h2>
+<p>规范规则在六种容量/激活基线中均为第一模态，但 exact 质量从0.963降至0.596，说明符号骨架较稳、精确函数云高度协议相关。</p>
+<p>加入原系综高分歧且一致的一个样本后，五个 tanh 设置规范质量达到0.998--1.000；大量原非规范 paired seeds 被因果运输到规范函数。GELU 是明确例外，显示信息价值仍依赖优化协议。</p>
+<p>低分歧一致样本虽然被 base 终态所有函数 hard 预测正确，重新训练仍显著改变 exact 分布，证明“最终 hard posterior 再做零一条件化”不是训练过程。冲突标签排除规范函数后，六架构均未选择“规范函数只翻转该点”，而形成宽协议相关函数云。</p>
+<h2 id="3-大规模结果">3. 大规模结果</h2>
+<p>8,192个随机训练集中筛出120个宽松候选；fresh 4,096-seed 确认得到46个严格高共识。预注册 Tier 分布为4/31/11/0，没有 Tier-4 候选。事后 LP 审计发现：</p>
+<ul>
+<li>46/46严格高共识函数都是线性阈值函数；</li>
+<li>46/46具有等绝对值权重；</li>
+<li>120/120宽松候选均线性可分，119/120属于等权 signed-threshold 族。</li>
+</ul>
+<p>Tier-3 不是复杂反例，而是预注册语言漏掉了标准 signed-cardinality threshold。</p>
+<h2 id="4-裁决">4. 裁决</h2>
+<p>E18 没有证明所有神经高共识函数都人类可读，但给出强 teacher-free 正证据：在该8-bit MLP 协议中，高完整函数共识系统性对应训练集相容候选中的短符号规则；神经复杂度与人类符号复杂度至少在该自然规则族上显著对齐。</p>
+<p>结果不支持逆命题，也不支持跨任意架构必然高共识。阈值族的统一识别属于事后发现，必须与预注册零 Tier-4 结果分开报告。</p></div>
+        <footer class="experiment-pager"><a href="e17.html">← E17 静态低-loss 质量与 optimizer 运输</a><a href="e19.html">E19 完整真值表规则的 loss-resolved 体积 →</a></footer>
+      </article>
+    </main>
+  </div>
+</body>
+</html>

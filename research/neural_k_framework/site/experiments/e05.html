@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="该实验检验一个容易被混淆的命题：若匹配架构的初始化固定 NTK 已经足以学习一层 Rule 110，有限宽网络进行端到端训练时是否仍会改变经验 NTK、隐藏表示和 ReLU 门控。">
+  <title>E05：固定 NTK 足够时的特征学习 · Neural K 研究档案</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="../assets/site.js"></script>
+</head>
+<body data-page-kind="experiment">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+  
+    <header class="topbar">
+      <a class="site-mark" href="../index.html" aria-label="返回研究主文">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K 研究档案</span>
+      </a>
+      <nav class="top-nav" aria-label="全站导航"><a class="top-link" href="../index.html">研究主文</a><a class="top-link" href="../theory-core.html">理论核心</a><a class="top-link active" href="../experiments/index.html">实验索引</a><a class="top-link" href="../references.html">参考文献</a><a class="top-link" href="../evidence-ledger.html">证据总账</a></nav>
+      <nav class="language-switch" aria-label="语言"><span class="active" lang="zh-CN">中文</span><a href="../en/experiments/e05.html" lang="en">EN</a></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>目录</span>
+      </button>
+    </header>
+    
+  <div class="page-shell">
+    
+    <aside class="sidebar" id="sidebar" aria-label="本页目录">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">本页目录</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#overview">实验概览</a></li>
+<li><a href="#目的">目的</a></li>
+<li><a href="#文件">文件</a></li>
+<li><a href="#冻结来源">冻结来源</a></li>
+<li><a href="#motivation">为什么做、怎样判决</a></li>
+<li><a href="#1-当时的问题">1. 当时的问题</a></li>
+<li><a href="#2-竞争预测">2. 竞争预测</a><ul>
+<li><a href="#h1-kernel-充分性导致-lazy-停留">H1：kernel 充分性导致 lazy 停留</a></li>
+<li><a href="#h2-特征学习与-kernel-充分性-泛化可分离">H2：特征学习与 kernel 充分性、泛化可分离</a></li>
+</ul>
+</li>
+<li><a href="#3-三个必须分开的-ntk-对象">3. 三个必须分开的 NTK 对象</a></li>
+<li><a href="#4-正式配置">4. 正式配置</a></li>
+<li><a href="#5-预注册主指标">5. 预注册主指标</a></li>
+<li><a href="#6-预先声明的边界">6. 预先声明的边界</a></li>
+<li><a href="#results">结果、解读与边界</a></li>
+<li><a href="#1-测量审计与固定-kernel-前提">1. 测量审计与固定 kernel 前提</a></li>
+<li><a href="#2-初始化到最终的结构变化">2. 初始化到最终的结构变化</a></li>
+<li><a href="#3-完整函数已经正确以后">3. 完整函数已经正确以后</a></li>
+<li><a href="#4-阶段裁决">4. 阶段裁决</a></li>
+</ul>
+</div>
+</nav>
+        <div class="sidebar-label experiment-label">全部实验</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>静态硬条件化不足以描述训练函数分布</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-bit 反事实不变性与训练 loss 中心原则</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>函数系综动力学与网络参考语言</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>在 Mingard 2025协议中延长 post-fit 观察</span></a><a class="experiment-nav-link active" href="e05.html"><span>E05</span><span>固定 NTK 足够时的特征学习</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>连续 loss 条件下的静态函数质量</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>函数 ID 迁移与 matched-loss 静态对照</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>共享中间表示与有限容量压力</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>MNIST 80%隐藏标签噪声长训</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>4-bit raw-BCE 简单/复杂规则竞争</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule30 数据量与训练/验证梯度对齐</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND shortcut 的静态 loss 几何</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>AND shortcut 的 SGD 运输与单样本干预</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>加权 Rule-bit 的 loss 阶段函数换序</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Mod97 grokking 的完整函数与边缘凝聚</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity 终点偏好、全局入口与局部恢复</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>静态低-loss 质量与 optimizer 运输</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>高函数共识与符号可读性</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>完整真值表规则的 loss-resolved 体积</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Full-rule、固定 D 与 hard-margin 测度闭环</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement 控制与共识复杂度前沿</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>逐样本自由能与信息不变量</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>完整目标体积前瞻预测数据相变</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>深尾 Neural K-profile 与排序交叉</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST 样本复杂度与静态体积分支预测</span></a></nav>
+      </div>
+    </aside>
+    
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">E05 · 实验详情</div>
+          <h1>E05：固定 NTK 足够时的特征学习</h1>
+          <p class="article-description">该实验检验一个容易被混淆的命题：若匹配架构的初始化固定 NTK 已经足以学习一层 Rule 110，有限宽网络进行端到端训练时是否仍会改变经验 NTK、隐藏表示和 ReLU 门控。</p>
+        </header>
+        <div class="article-body"><div class="source-bar"><span>复现脚本</span><div><a href="../../experiments/experiment_05_ntk_sufficient_feature_learning/rule110_ntk_sufficient_feature_learning.py">rule110_ntk_sufficient_feature_learning.py</a></div></div><h2 id="overview">实验概览</h2>
+<h2 id="目的">目的</h2>
+<p>该实验检验一个容易被混淆的命题：若匹配架构的初始化固定 NTK 已经足以学习一层 Rule 110，有限宽网络进行端到端训练时是否仍会改变经验 NTK、隐藏表示和 ReLU 门控。</p>
+<p>实验并不试图证明特征学习是泛化的必要条件。恰恰相反，它把两件事拆开：固定 kernel 可以泛化，不等于真实网络必然停留在 lazy regime；发生特征学习，也不自动等于获得额外泛化收益。</p>
+<h2 id="文件">文件</h2>
+<ul>
+<li><a href="#motivation">实验动机与预注册判据</a></li>
+<li><a href="#results">完整结果与阶段裁决</a></li>
+<li><a href="../../experiments/experiment_05_ntk_sufficient_feature_learning/rule110_ntk_sufficient_feature_learning.py"><code>rule110_ntk_sufficient_feature_learning.py</code></a></li>
+</ul>
+<p>运行：</p>
+<pre><code class="language-bash">python rule110_ntk_sufficient_feature_learning.py
+</code></pre>
+<p>默认结果写入：</p>
+<pre><code class="language-text">/root/results_rule110_ntk_sufficient_feature_learning_v1/
+</code></pre>
+<h2 id="冻结来源">冻结来源</h2>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>开发版来源</th>
+<th>SHA256</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>rule110_ntk_sufficient_feature_learning.py</code></td>
+<td><code>research/ntk_feature_learning/rule110_ntk_sufficient_feature_learning.py</code></td>
+<td><code>163a13ca0ed1ba5337141cd78603ff3d1b3ce825372ead780e27183693708480</code></td>
+</tr>
+</tbody>
+</table>
+<p>本地原始结果包：</p>
+<pre><code class="language-text">E:\Downloads\results_rule110_ntk_sufficient_feature_learning_v1.zip
+</code></pre>
+<p>SHA256：</p>
+<pre><code class="language-text">df6b29a4c0d22d77a64877c6d7bf608e6d47c16ef8f984a93e4836857805425d
+</code></pre>
+<p>原始 ZIP 约49 MB 且可在消费级 GPU 上快速重建，不进入最终发布包。</p>
+<h2 id="motivation">为什么做、怎样判决</h2>
+<h2 id="1-当时的问题">1. 当时的问题</h2>
+<p>阅读 <a href="https://arxiv.org/abs/2507.19680" target="_blank" rel="noopener">Göring 等（2025），<em>Feature Learning Is Decoupled from Generalization in High Capacity Neural Networks</em></a>时，研究首先接受了一个概念区分：表示或 kernel 变化很大，不等于这些变化必然改善泛化。随后提出更直接的反向问题：</p>
+<blockquote>
+<p>如果初始化固定 NTK 已经足以学习规则，真实有限宽网络是否仍会发生特征学习？</p>
+</blockquote>
+<p>这能区分“特征学习只是固定 kernel 能力不足时的补丁”和“特征学习是降低训练目标时可以独立出现的表示运输”两种图景。</p>
+<h2 id="2-竞争预测">2. 竞争预测</h2>
+<h3 id="h1-kernel-充分性导致-lazy-停留">H1：kernel 充分性导致 lazy 停留</h3>
+<p>若初始化 kernel 已经给出零错误规则解，端到端训练没有必要显著改变归一化经验 NTK、隐藏特征 Gram 或 ReLU 激活门控。网络达到完整训练/测试零错误后，结构变化更应接近数值噪声。</p>
+<h3 id="h2-特征学习与-kernel-充分性-泛化可分离">H2：特征学习与 kernel 充分性、泛化可分离</h3>
+<p>网络只直接优化训练目标。即使固定 kernel 已经能泛化，有限网络仍可能沿训练 loss 重组表示；这种变化可以发生在完整函数已经正确以后，也不必等价于额外泛化收益。</p>
+<h2 id="3-三个必须分开的-ntk-对象">3. 三个必须分开的 NTK 对象</h2>
+<ol>
+<li><strong>解析无限宽 NTK</strong>：采用 <a href="https://arxiv.org/abs/1806.07572" target="_blank" rel="noopener">Jacot、Gabriel 与 Hongler（2018）</a>提出的 NTK，按同一三隐藏层 He-ReLU 参数化递推，在8,000个 Rule 110状态上做 KRR，并用20,000个未见状态检查完整30-bit 输出。</li>
+<li><strong>初始化有限宽经验 NTK</strong>：对<code>30 -&gt; 1024 x 3 -&gt; 30</code>具体初始化计算精确 Jacobian Gram，并在输出位0、15、29上分别做 KRR。它只是无限宽核的有限宽采样，不要求恰好零错误。</li>
+<li><strong>训练中多输出 block NTK</strong>：在固定128状态 probe 上追踪三个输出位及交叉输出 block，用于测量端到端训练中的结构变化。</li>
+</ol>
+<p>经验 NTK 的闭式快速算法必须先在微型网络上与逐参数 autograd Jacobian Gram 比较，误差通过审计后才允许正式运行。</p>
+<h2 id="4-正式配置">4. 正式配置</h2>
+<ul>
+<li>任务：30-bit 一维元胞自动机 Rule 110单步更新，输出30 bit；</li>
+<li>数据：8,000训练状态、20,000固定未见状态；</li>
+<li>网络：无 bias 的<code>30 -&gt; 1024 x 3 ReLU -&gt; 30</code>；</li>
+<li>seeds：0、1、2；</li>
+<li>优化器：Adam，学习率<code>1e-3</code>，weight decay 为0；</li>
+<li>batch：1,024；训练30,000步；</li>
+<li>loss：BCE 与 MSE 各三条轨迹；</li>
+<li>快照：0、10、30、100、300、1,000、3,000、10,000、30,000步。</li>
+</ul>
+<p>MSE 是必要对照：它避免把 BCE 在零分类错误后持续增大 logit/margin 所引起的纯尺度变化误判成特征学习。</p>
+<h2 id="5-预注册主指标">5. 预注册主指标</h2>
+<ul>
+<li><code>block_ntk_cka_to_init</code>：使用 <a href="https://proceedings.mlr.press/v97/kornblith19a.html" target="_blank" rel="noopener">Kornblith 等（2019）</a>系统化的 centered CKA，比较经验 block NTK 与初始化；</li>
+<li><code>ck_cka_to_init</code>：隐藏激活 Gram 相对初始化的 CKA；</li>
+<li><code>gate_flip_fraction_from_init</code>：固定 probe 上的 ReLU 门控翻转率；</li>
+<li><code>block_ntk_target_alignment</code>与隐藏 CK target alignment：变化是否具有任务方向；</li>
+<li><code>*_to_first_perfect</code>：第一次训练集与20,000测试集同时零错误后是否继续变化。</li>
+</ul>
+<p>只看 kernel 范数不构成证据。核心判据是归一化 CKA、门控和任务对齐共同变化；“全对以后继续变化”作为更强的补充判据单独报告。</p>
+<h2 id="6-预先声明的边界">6. 预先声明的边界</h2>
+<ul>
+<li>解析无限宽 NTK 零错误与某个宽度1,024经验 NTK 零错误不是同一命题；</li>
+<li>特征学习不自动等于泛化改善、程序压缩或计算压力重分配；</li>
+<li>该实验只检验有限宽、该参数化和该优化协议；</li>
+<li>快照过疏可能把真实首次全对时刻登记得偏晚，使 post-fit 变化量被低估。</li>
+</ul>
+<h2 id="results">结果、解读与边界</h2>
+<h2 id="1-测量审计与固定-kernel-前提">1. 测量审计与固定 kernel 前提</h2>
+<p>经验 NTK 快速公式与逐参数 autograd Jacobian Gram 的最大绝对误差为<code>3.55e-15</code>，最大相对误差为<code>2.72e-16</code>。</p>
+<p>匹配三隐藏层 ReLU 网络的解析无限宽 NTK 在20,000个未见状态上得到：</p>
+<ul>
+<li>600,000个输出 bit 零错误；</li>
+<li>20,000个完整30-bit 输出零 exact error；</li>
+<li>bit accuracy 与 exact accuracy 均为100%。</li>
+</ul>
+<p>宽度1,024的初始化经验 NTK 只测输出位0、15、29。三个 seed 合计180,000个预测 bit 错误220个，平均 bit accuracy 为99.8778%；三位联合 exact accuracy 分别为99.5800%、99.7500%和99.5750%。因此有限宽经验核已接近解析极限，但没有被偷写成严格零错误。</p>
+<h2 id="2-初始化到最终的结构变化">2. 初始化到最终的结构变化</h2>
+<p>六条端到端轨迹最终都达到训练集与20,000测试集完整30-bit 零错误。三 seed 平均：</p>
+<table>
+<thead>
+<tr>
+<th>loss</th>
+<th style="text-align: right;">隐藏表示<code>1-CKA</code></th>
+<th style="text-align: right;">block NTK <code>1-CKA</code></th>
+<th style="text-align: right;">ReLU门控翻转</th>
+<th style="text-align: right;">隐藏表示目标对齐</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BCE</td>
+<td style="text-align: right;">0.2400</td>
+<td style="text-align: right;">0.01556</td>
+<td style="text-align: right;">37.85%</td>
+<td style="text-align: right;">0.1305 -&gt; 0.2472</td>
+</tr>
+<tr>
+<td>MSE</td>
+<td style="text-align: right;">0.0920</td>
+<td style="text-align: right;">0.00728</td>
+<td style="text-align: right;">25.76%</td>
+<td style="text-align: right;">0.1305 -&gt; 0.1666</td>
+</tr>
+</tbody>
+</table>
+<p>MSE 下仍有约四分之一门控改变、明显的隐藏表示 CKA 变化和稳定的任务对齐提升，所以结果不能只归因于 BCE 无限增大 margin。BCE 的 kernel 范数确实增长数百倍；MSE 下范数也增长约3.7--5.1倍，但主判据使用的是归一化结构指标。</p>
+<h2 id="3-完整函数已经正确以后">3. 完整函数已经正确以后</h2>
+<p>六条轨迹中五条通过脚本预设的“CKA 变化与门控翻转同时超过<code>0.001</code>”判据。<code>mse_seed2</code>未通过自动布尔判决，但从登记的首次全对快照到30,000步仍有：</p>
+<ul>
+<li>1.145%的门控继续翻转；</li>
+<li>block NTK <code>1-CKA=0.000169</code>；</li>
+<li>隐藏 CK <code>1-CKA=0.000464</code>。</li>
+</ul>
+<p>该 seed 在3,000步只剩一个 exact error，下一快照直接跳到10,000步全对，因此真实首次全对后的主要变化可能落在未记录区间。结果应如实写成“五条跨过预注册双阈值；第六条仍有门控变化但归一化 kernel 变化低于阈值”，不能写成六条全部通过。</p>
+<h2 id="4-阶段裁决">4. 阶段裁决</h2>
+<p>可以声称：</p>
+<blockquote>
+<p>匹配架构的固定无限宽 NTK 已经能够零错误学习 Rule 110，但真实有限宽网络在端到端训练中仍发生跨 seed、跨 BCE/MSE 的任务相关特征学习。kernel 充分性并不迫使网络停留在初始化 kernel 或 lazy-training 机制中。</p>
+</blockquote>
+<p>该结果还支持一个概念分离：固定 NTK 本身已经泛化，而真实网络仍改变特征，故“发生特征学习”与“特征学习为泛化所必需”不是同一命题。</p>
+<p>在本文框架中，特征学习是优化器沿训练目标运输参数与表示的一种机制；泛化则取决于训练集与协议定义的低-loss 质量是否在未见输入上集中到共同延拓。因此：</p>
+<ul>
+<li>结构化且可辨识的数据上，特征学习可以与泛化同时出现；</li>
+<li>欠约束或随机标签数据上，也可以发生表示变化而不产生规则泛化；</li>
+<li>一个合适的固定 kernel 可以在没有 kernel 变化时泛化。</li>
+</ul>
+<p>不能声称：</p>
+<ul>
+<li>固定 NTK 本身发生了特征学习；</li>
+<li>宽度1,024的每个初始化经验 NTK 已经完整零错误；</li>
+<li>特征学习必然提高泛化；</li>
+<li>CKA 或门控变化已经证明程序复杂度下降；</li>
+<li>六条轨迹都通过了 post-fit 预注册双阈值。</li>
+</ul></div>
+        <footer class="experiment-pager"><a href="e04.html">← E04 在 Mingard 2025协议中延长 post-fit 观察</a><a href="e06.html">E06 连续 loss 条件下的静态函数质量 →</a></footer>
+      </article>
+    </main>
+  </div>
+</body>
+</html>

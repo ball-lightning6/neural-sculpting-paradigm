@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="E13 检验 E12 的静态函数换序是否会在真实训练中出现，并用相同初始化、只替换一个训练样本的配对干预判断数据几何能否因果改写长期函数分布。">
+  <title>E13：AND shortcut 的 SGD 运输与单样本干预 · Neural K 研究档案</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="../assets/site.js"></script>
+</head>
+<body data-page-kind="experiment">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+  
+    <header class="topbar">
+      <a class="site-mark" href="../index.html" aria-label="返回研究主文">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K 研究档案</span>
+      </a>
+      <nav class="top-nav" aria-label="全站导航"><a class="top-link" href="../index.html">研究主文</a><a class="top-link" href="../theory-core.html">理论核心</a><a class="top-link active" href="../experiments/index.html">实验索引</a><a class="top-link" href="../references.html">参考文献</a><a class="top-link" href="../evidence-ledger.html">证据总账</a></nav>
+      <nav class="language-switch" aria-label="语言"><span class="active" lang="zh-CN">中文</span><a href="../en/experiments/e13.html" lang="en">EN</a></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>目录</span>
+      </button>
+    </header>
+    
+  <div class="page-shell">
+    
+    <aside class="sidebar" id="sidebar" aria-label="本页目录">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">本页目录</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#overview">实验概览</a></li>
+<li><a href="#目的">目的</a></li>
+<li><a href="#文件">文件</a></li>
+<li><a href="#冻结来源">冻结来源</a></li>
+<li><a href="#motivation">为什么做、怎样判决</a></li>
+<li><a href="#1-竞争解释">1. 竞争解释</a></li>
+<li><a href="#2-配置">2. 配置</a></li>
+<li><a href="#3-判据">3. 判据</a></li>
+<li><a href="#4-边界">4. 边界</a></li>
+<li><a href="#results">结果、解读与边界</a></li>
+<li><a href="#1-原始缺口快速进入-shortcut-家族">1. 原始缺口快速进入 shortcut 家族</a></li>
+<li><a href="#2-长训不会自动恢复唯一-and">2. 长训不会自动恢复唯一 AND</a></li>
+<li><a href="#3-一个样本替换系统性改变长期分布">3. 一个样本替换系统性改变长期分布</a></li>
+<li><a href="#4-静态与动态的共同结构及差异">4. 静态与动态的共同结构及差异</a></li>
+<li><a href="#5-阶段裁决">5. 阶段裁决</a></li>
+</ul>
+</div>
+</nav>
+        <div class="sidebar-label experiment-label">全部实验</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>静态硬条件化不足以描述训练函数分布</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-bit 反事实不变性与训练 loss 中心原则</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>函数系综动力学与网络参考语言</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>在 Mingard 2025协议中延长 post-fit 观察</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>固定 NTK 足够时的特征学习</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>连续 loss 条件下的静态函数质量</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>函数 ID 迁移与 matched-loss 静态对照</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>共享中间表示与有限容量压力</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>MNIST 80%隐藏标签噪声长训</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>4-bit raw-BCE 简单/复杂规则竞争</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule30 数据量与训练/验证梯度对齐</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND shortcut 的静态 loss 几何</span></a><a class="experiment-nav-link active" href="e13.html"><span>E13</span><span>AND shortcut 的 SGD 运输与单样本干预</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>加权 Rule-bit 的 loss 阶段函数换序</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Mod97 grokking 的完整函数与边缘凝聚</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity 终点偏好、全局入口与局部恢复</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>静态低-loss 质量与 optimizer 运输</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>高函数共识与符号可读性</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>完整真值表规则的 loss-resolved 体积</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Full-rule、固定 D 与 hard-margin 测度闭环</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement 控制与共识复杂度前沿</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>逐样本自由能与信息不变量</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>完整目标体积前瞻预测数据相变</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>深尾 Neural K-profile 与排序交叉</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST 样本复杂度与静态体积分支预测</span></a></nav>
+      </div>
+    </aside>
+    
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">E13 · 实验详情</div>
+          <h1>E13：AND shortcut 的 SGD 运输与单样本干预</h1>
+          <p class="article-description">E13 检验 E12 的静态函数换序是否会在真实训练中出现，并用相同初始化、只替换一个训练样本的配对干预判断数据几何能否因果改写长期函数分布。</p>
+        </header>
+        <div class="article-body"><div class="source-bar"><span>复现脚本</span><div><a href="../../experiments/experiment_13_and_shortcut_sgd_intervention/experiment_and_shortcut_sgd_dynamics.py">experiment_and_shortcut_sgd_dynamics.py</a></div></div><h2 id="overview">实验概览</h2>
+<h2 id="目的">目的</h2>
+<p>E13 检验 E12 的静态函数换序是否会在真实训练中出现，并用相同初始化、只替换一个训练样本的配对干预判断数据几何能否因果改写长期函数分布。</p>
+<h2 id="文件">文件</h2>
+<ul>
+<li><a href="#motivation">实验动机与预注册判据</a></li>
+<li><a href="#results">完整结果与阶段裁决</a></li>
+<li><a href="../../experiments/experiment_13_and_shortcut_sgd_intervention/experiment_and_shortcut_sgd_dynamics.py"><code>experiment_and_shortcut_sgd_dynamics.py</code></a></li>
+</ul>
+<p>运行：</p>
+<pre><code class="language-bash">python experiment_and_shortcut_sgd_dynamics.py
+</code></pre>
+<p>发布副本默认同时训练原始缺口与最小平衡条件，各2,048个 paired seeds 到50,000步。</p>
+<h2 id="冻结来源">冻结来源</h2>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>来源</th>
+<th>SHA256</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>experiment_and_shortcut_sgd_dynamics.py</code></td>
+<td>开发版合并条件并冻结50k预算后的副本</td>
+<td><code>c65c4c075a2af7eb203c73d10b578bfd5ffcb578eedb9ff63c50d6b3ac6ab73f</code></td>
+</tr>
+</tbody>
+</table>
+<p>本地结果：</p>
+<table>
+<thead>
+<tr>
+<th>结果包</th>
+<th>SHA256</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>results_and_shortcut_sgd_dynamics_package.zip</code></td>
+<td><code>7e46ed6a90786399df388c7c83129ad2d0465f3cf0972097ee6e53b34e84f4eb</code></td>
+</tr>
+<tr>
+<td><code>results_and_shortcut_sgd_long_package.zip</code></td>
+<td><code>29e98821174ec378ddf2c69e74bf35750ae43227f55331afe32bf6746d5687a1</code></td>
+</tr>
+<tr>
+<td><code>results_and_shortcut_sgd_balanced_n10_long_package.zip</code></td>
+<td><code>2f3d0929938f3d844ccea2c3c7bf11e58cfd081650e2012d12f709a48a8432ea</code></td>
+</tr>
+</tbody>
+</table>
+<p>原始 ZIP 位于<code>E:\Downloads</code>，包含大模型 checkpoint，故不进入发布包。</p>
+<h2 id="motivation">为什么做、怎样判决</h2>
+<h2 id="1-竞争解释">1. 竞争解释</h2>
+<p>E12 发现原始 AND、n=10的静态低-loss 区域偏向 F500/F550 shortcut。可能解释包括：</p>
+<ol>
+<li>静态质量会预测 SGD 进入同一 shortcut 家族；</li>
+<li>optimizer 完全忽略该静态结构；</li>
+<li>初始 seed 预先决定终点，与数据缺口无关；</li>
+<li>继续训练最终总会恢复 AND，数据不足只影响速度。</li>
+</ol>
+<h2 id="2-配置">2. 配置</h2>
+<ul>
+<li>网络：<code>4 -&gt; 64 x 3 -&gt; 1</code> GELU+LayerNorm；</li>
+<li>full-batch AdamW，学习率<code>1e-3</code>，weight decay 为0；</li>
+<li>每条件2,048个 seed；</li>
+<li>完整枚举16点 hard function；</li>
+<li>原始缺口与最小平衡 n=10使用相同初始化 seed；</li>
+<li>发布复现固定50,000步；原始归档另延长至127,458步验证平台。</li>
+</ul>
+<p>最小干预只做：</p>
+<pre><code class="language-text">删除 1101 -&gt; 1
+加入 1000 -&gt; 0
+</code></pre>
+<p>其余9个样本不变。</p>
+<h2 id="3-判据">3. 判据</h2>
+<ul>
+<li>训练集首次100% hard-exact 时刻；</li>
+<li>AND、F100、F500、F510、F550 及单点邻居的质量轨迹；</li>
+<li>平均未见例外数、函数熵和 agreement；</li>
+<li>插值后迁移来源；</li>
+<li>50k 以后分布平台稳定性；</li>
+<li>相同 seed 在数据干预前后的函数和例外数变化。</li>
+</ul>
+<h2 id="4-边界">4. 边界</h2>
+<ul>
+<li>optimizer 分布不应与 E12 静态体积数值等同；</li>
+<li>原始数据未唯一辨识 AND，因此长期混合平台不是“没有学会正确答案”的内部定义；</li>
+<li>50k 复现预算用于核心配对，127k 只验证原始平台不会继续自动收束；</li>
+<li>小型4-bit 空间放大单样本影响，跨规模普遍性需其他实验支持。</li>
+</ul>
+<h2 id="results">结果、解读与边界</h2>
+<h2 id="1-原始缺口快速进入-shortcut-家族">1. 原始缺口快速进入 shortcut 家族</h2>
+<p>首轮四条件共8,192个模型在 step 20前后全部拟合训练集。原始 n=10中：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">step</th>
+<th style="text-align: right;">AND</th>
+<th style="text-align: right;">F100</th>
+<th style="text-align: right;">F500</th>
+<th style="text-align: right;">F510</th>
+<th style="text-align: right;">F550</th>
+<th style="text-align: right;">平均例外数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">0.83%</td>
+<td style="text-align: right;">10.94%</td>
+<td style="text-align: right;">6.84%</td>
+<td style="text-align: right;">26.71%</td>
+<td style="text-align: right;">19.43%</td>
+<td style="text-align: right;">2.870</td>
+</tr>
+<tr>
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">0.63%</td>
+<td style="text-align: right;">12.16%</td>
+<td style="text-align: right;">8.45%</td>
+<td style="text-align: right;">34.81%</td>
+<td style="text-align: right;">22.71%</td>
+<td style="text-align: right;">2.783</td>
+</tr>
+<tr>
+<td style="text-align: right;">5,000</td>
+<td style="text-align: right;">8.35%</td>
+<td style="text-align: right;">22.41%</td>
+<td style="text-align: right;">11.87%</td>
+<td style="text-align: right;">21.24%</td>
+<td style="text-align: right;">20.41%</td>
+<td style="text-align: right;">2.300</td>
+</tr>
+<tr>
+<td style="text-align: right;">20,000</td>
+<td style="text-align: right;">21.19%</td>
+<td style="text-align: right;">26.12%</td>
+<td style="text-align: right;">11.33%</td>
+<td style="text-align: right;">13.92%</td>
+<td style="text-align: right;">12.55%</td>
+<td style="text-align: right;">1.767</td>
+</tr>
+</tbody>
+</table>
+<p>SGD 复现了静态预测的 shortcut 家族，但具体权重不同：F510 是早期主要赢家，F100 在深训练后成为第一名。静态几何识别候选方向，optimizer 决定族内运输。</p>
+<h2 id="2-长训不会自动恢复唯一-and">2. 长训不会自动恢复唯一 AND</h2>
+<p>原始条件延长至127,458步：</p>
+<ul>
+<li>AND 22.51%；</li>
+<li>F100 25.29%；</li>
+<li>F550 14.21%；</li>
+<li>平均例外1.771；</li>
+<li>函数熵约2.83 bit；</li>
+<li>未见准确率约70.5%。</li>
+</ul>
+<p>50k 以后各指标进入窄平台；100k 到终点98.3%的模型 hard function 不变。loss 仍降至<code>2.06e-9</code>，但函数分布不再向唯一 AND 收束。因此无限延长训练不能替代缺失数据。</p>
+<h2 id="3-一个样本替换系统性改变长期分布">3. 一个样本替换系统性改变长期分布</h2>
+<p>平衡条件 step 50,288：</p>
+<pre><code class="language-text">AND             64.94%
+D000            16.02%
+F040             8.35%
+F050             5.62%
+平均例外          0.450
+函数熵            1.711 bit
+未见准确率        92.50%
+</code></pre>
+<p>网络在 step 20已完全拟合，此时 F050 为42.58%、AND 为21.58%；随后 F050 降至5.62%，AND 升至64.94%。最终1,330个 AND 模型中72.1%是在插值后由 shortcut 迁移而来。</p>
+<p>与原始条件同 seed 比较到50k：69.97%的 seed 例外减少，21.73%不变，8.30%增加，平均减少1.337个错误点。原始 F100/F500/F510/F550 终点中，平衡后成为 AND 的比例分别约75.1%/66.4%/56.3%/52.8%。初始化没有预先固定终点。</p>
+<h2 id="4-静态与动态的共同结构及差异">4. 静态与动态的共同结构及差异</h2>
+<p>平衡静态几何已经显示中等 loss 先提高 F050 相对优势、深 loss 再提高 AND；SGD 沿同一阶段方向产生更强烈换序。静态最低0.2%中 AND 为28.10%，SGD 最终为64.94%，且真实训练进入的 BCE 远低于直接 prior 采样覆盖范围。</p>
+<h2 id="5-阶段裁决">5. 阶段裁决</h2>
+<p>E13 建立：</p>
+<ol>
+<li>lower loss 的优势函数会随训练阶段换序；</li>
+<li>插值后继续训练可将概率质量从多例外 shortcut 运向较少例外规则；</li>
+<li>数据欠定时，该压缩会停在稳定混合平台而非唯一生成器；</li>
+<li>只替换一个有判别力样本即可因果改变早期 shortcut 和长期分布；</li>
+<li>静态 loss 几何与 SGD 方向相关，但 optimizer 不是静态采样器。</li>
+</ol>
+<p>这直接否定“同一预定简单函数在整个 loss 轴上始终占优”，并促使最终理论采用 loss-resolved Neural K-profile，而非单一复杂度排序。</p></div>
+        <footer class="experiment-pager"><a href="e12.html">← E12 AND shortcut 的静态 loss 几何</a><a href="e14.html">E14 加权 Rule-bit 的 loss 阶段函数换序 →</a></footer>
+      </article>
+    </main>
+  </div>
+</body>
+</html>

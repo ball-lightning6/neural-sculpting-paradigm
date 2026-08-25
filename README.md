@@ -8,9 +8,11 @@
 
 ---
 
-**[🎮 在线交互 Demo](https://www.modelscope.cn/studios/raven316/neural-network-rule-learning-lab)** | **[📜 中文论文](./paper_zh.pdf)** | **[📜 English Paper](./paper.pdf)** | **🚀 Zenodo** [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20446430.svg)](https://zenodo.org/records/20446430)
+**[🎮 在线交互 Demo](https://www.modelscope.cn/studios/raven316/neural-network-rule-learning-lab)** | **[🔬 Neural K 后续研究](./research/neural_k_framework/README.md)** | **[📜 中文论文](./paper_zh.pdf)** | **[📜 English Paper](./paper.pdf)** | **🚀 Zenodo** [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20446430.svg)](https://zenodo.org/records/20446430)
 
 </div>
+
+> **最新理论核心（建议先读）：[Neural K 理论核心](./research/neural_k_framework/theory_core_zh.md)。** 该页由作者逐段审阅并深度修改；完整研究主文、证据总账与复现材料见 [Neural K 研究子目录](./research/neural_k_framework/README.md)。
 
 ## 🌟 简介 (Introduction)
 
@@ -25,7 +27,7 @@
 **三项核心发现：**
 1.  **精确规则学习**：标准神经网络可以在受控条件下学习并近乎精确地执行规则、算法和程序化变换。
 2.  **模式识别与规则学习的统一性**：元胞自动机插值与 MNIST+元胞自动机实验强烈暗示，模式识别与规则学习可能都是神经网络的内生能力，甚至可能是同一种能力。
-3.  **压缩即智能的理论解释**：这些实验可以在“压缩即智能”与最小描述长度（MDL）的框架下得到解释。训练过程可能倾向于逼近更低 Kolmogorov 复杂度的生成规则。
+3.  **压缩即智能的 Neural K 解释**：固定网络、编码、损失和参数测度以后，函数先验高度不均匀；继续降低完整目标 loss 时，不同函数体积又会差异收缩，通常使更经济、可复用的实现获得相对优势。这与 MDL 和算法信息论自然相连，但复杂度是神经协议相对的 Neural K-profile，不直接等同机器无关 Kolmogorov complexity。
 
 **核心特性：**
 1.  **高度通用**：不依赖特定架构，标准 Transformer/MLP/CNN 均可适用；不限于特定领域，从数学规则到物理模拟均可掌握。
@@ -94,6 +96,7 @@ python train_tiny_transformer.py
 ### 后续研究
 
 *   `research/`: 围绕神经网络学习机制展开的进一步实验
+    *   `research/neural_k_framework/`: 最新 Neural K 理论核心、研究主文、证据总账、E01--E25 复现实验和中英文静态网站
     *   `research/ntk_batch_solver/`: NTK 对照实验，用于研究特征学习与懒惰学习的区别
     *   `research/rule_preference/`: 规则偏好相变实验，探索神经网络对低复杂度解释的偏好
     *   `research/rule_ood_generalization/`: 规则 OOD 泛化实验，研究模型能否执行未见过的新规则
@@ -112,6 +115,7 @@ python train_tiny_transformer.py
 
 本项目包含大量实验脚本。为了方便查阅，我们提供了完整的在线文档：
 
+*   **[🧭 Neural K 理论与证据包](./research/neural_k_framework/README.md)**: 最新理论核心、完整判决链、E01--E25 实验说明和复现脚本。
 *   **[🌐 在线文档 (Interactive Docs)](https://ball-lightning6.github.io/neural-sculpting-paradigm/)**: **强烈推荐**。覆盖全部公开脚本，支持快速索引、中英切换与详情展开。
 *   **[🎮 在线交互 Demo (ModelScope)](https://www.modelscope.cn/studios/raven316/neural-network-rule-learning-lab)**: 可以随机生成样本或手动输入，直接对比训练后神经网络的一次前向传播输出与程序生成的 ground truth。
 *   **[🔬 过拟合相关研究](./research/overfitting_related_research/index.html)**: 一个后续实验页面，展示不同数据量、不同规则复杂度与随机标签条件下，训练后模型在 probe 集上的跨 seed 一致性、熵、共同错误结构等指标。

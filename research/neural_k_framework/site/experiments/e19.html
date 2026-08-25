@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="E19 用完整16点训练集直接指定每条4-bit 规则，避免部分训练集究竟诱导哪个函数的歧义，并用 constrained SMC 比较不同完整目标达到相同 loss 的参数质量。">
+  <title>E19：完整真值表规则的 loss-resolved 体积 · Neural K 研究档案</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="../assets/site.js"></script>
+</head>
+<body data-page-kind="experiment">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+  
+    <header class="topbar">
+      <a class="site-mark" href="../index.html" aria-label="返回研究主文">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K 研究档案</span>
+      </a>
+      <nav class="top-nav" aria-label="全站导航"><a class="top-link" href="../index.html">研究主文</a><a class="top-link" href="../theory-core.html">理论核心</a><a class="top-link active" href="../experiments/index.html">实验索引</a><a class="top-link" href="../references.html">参考文献</a><a class="top-link" href="../evidence-ledger.html">证据总账</a></nav>
+      <nav class="language-switch" aria-label="语言"><span class="active" lang="zh-CN">中文</span><a href="../en/experiments/e19.html" lang="en">EN</a></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>目录</span>
+      </button>
+    </header>
+    
+  <div class="page-shell">
+    
+    <aside class="sidebar" id="sidebar" aria-label="本页目录">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">本页目录</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#overview">实验概览</a></li>
+<li><a href="#目的">目的</a></li>
+<li><a href="#motivation">为什么做、怎样判决</a></li>
+<li><a href="#1-问题">1. 问题</a></li>
+<li><a href="#2-设置">2. 设置</a></li>
+<li><a href="#3-边界">3. 边界</a></li>
+<li><a href="#results">结果、解读与边界</a></li>
+<li><a href="#1-smc-校准">1. SMC 校准</a></li>
+<li><a href="#2-parity-族严格排序">2. Parity 族严格排序</a></li>
+<li><a href="#3-majority-与随机目标从近似到指数分离">3. Majority 与随机目标从近似到指数分离</a></li>
+<li><a href="#4-人类公式复杂度不是统一跨族排序">4. 人类公式复杂度不是统一跨族排序</a></li>
+<li><a href="#5-裁决">5. 裁决</a></li>
+</ul>
+</div>
+</nav>
+        <div class="sidebar-label experiment-label">全部实验</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>静态硬条件化不足以描述训练函数分布</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-bit 反事实不变性与训练 loss 中心原则</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>函数系综动力学与网络参考语言</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>在 Mingard 2025协议中延长 post-fit 观察</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>固定 NTK 足够时的特征学习</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>连续 loss 条件下的静态函数质量</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>函数 ID 迁移与 matched-loss 静态对照</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>共享中间表示与有限容量压力</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>MNIST 80%隐藏标签噪声长训</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>4-bit raw-BCE 简单/复杂规则竞争</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule30 数据量与训练/验证梯度对齐</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND shortcut 的静态 loss 几何</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>AND shortcut 的 SGD 运输与单样本干预</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>加权 Rule-bit 的 loss 阶段函数换序</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Mod97 grokking 的完整函数与边缘凝聚</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity 终点偏好、全局入口与局部恢复</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>静态低-loss 质量与 optimizer 运输</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>高函数共识与符号可读性</span></a><a class="experiment-nav-link active" href="e19.html"><span>E19</span><span>完整真值表规则的 loss-resolved 体积</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Full-rule、固定 D 与 hard-margin 测度闭环</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement 控制与共识复杂度前沿</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>逐样本自由能与信息不变量</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>完整目标体积前瞻预测数据相变</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>深尾 Neural K-profile 与排序交叉</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST 样本复杂度与静态体积分支预测</span></a></nav>
+      </div>
+    </aside>
+    
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">E19 · 实验详情</div>
+          <h1>E19：完整真值表规则的 loss-resolved 体积</h1>
+          <p class="article-description">E19 用完整16点训练集直接指定每条4-bit 规则，避免部分训练集究竟诱导哪个函数的歧义，并用 constrained SMC 比较不同完整目标达到相同 loss 的参数质量。</p>
+        </header>
+        <div class="article-body"><div class="source-bar"><span>复现脚本</span><div><a href="../../experiments/experiment_19_full_truth_rule_volume/experiment_full_truth_rule_volume_smc.py">experiment_full_truth_rule_volume_smc.py</a></div></div><h2 id="overview">实验概览</h2>
+<h2 id="目的">目的</h2>
+<p>E19 用完整16点训练集直接指定每条4-bit 规则，避免部分训练集究竟诱导哪个函数的歧义，并用 constrained SMC 比较不同完整目标达到相同 loss 的参数质量。</p>
+<p>运行：</p>
+<pre><code class="language-bash">python experiment_full_truth_rule_volume_smc.py
+</code></pre>
+<ul>
+<li><a href="#motivation">实验动机与判据</a></li>
+<li><a href="#results">结果与边界</a></li>
+</ul>
+<p>脚本 SHA256：<code>3c15b71d1ac7bc96b2770100adf13642ec82f058ae54c595496f164d29ca813c</code>。结果 ZIP SHA256：<code>5dfcdcd7c680f5eb2eef1d2c604ec2e81b72655b4355de969e9627c03781c573</code>。</p>
+<h2 id="motivation">为什么做、怎样判决</h2>
+<h2 id="1-问题">1. 问题</h2>
+<p>部分训练集下的赢家可能不是研究者 generator；用完整真值表作为训练目标则唯一指定规则。若复杂规则低-loss 质量收缩更快，应在同一参考机和相同 loss 阈值看到规则间体积比随 loss 系统放大。</p>
+<h2 id="2-设置">2. 设置</h2>
+<ul>
+<li>网络：<code>4 -&gt; 16 x 2 -&gt; 1 tanh</code>，369参数；</li>
+<li>测度：PyTorch 默认均匀初始化参数立方体；</li>
+<li>目标：parity1--4、majority3、预注册随机平衡函数；</li>
+<li>每条完整16点、输出严格8/8平衡；</li>
+<li>8个 SMC 副本，每副本4,096粒子；</li>
+<li>4,194,304次直接 prior 校准高 loss 重叠区；</li>
+<li>不使用 loss 梯度。</li>
+</ul>
+<h2 id="3-边界">3. 边界</h2>
+<p>完整目标体积<code>V_full(f,epsilon)</code>与固定部分训练集下候选 cell 质量不是同一个量；E19 只测前者。复杂 parity 深尾 lineage 退化，正式结论限制在副本区间稳定的共同 loss 范围，不假装完成0.04以下预注册斜率。</p>
+<h2 id="results">结果、解读与边界</h2>
+<h2 id="1-smc-校准">1. SMC 校准</h2>
+<p>与暴力 prior 均有非零计数的7个重叠点，最大绝对 log-volume 误差0.119，最大比例误差约12.6%；简单目标的重叠区校准通过。</p>
+<h2 id="2-parity-族严格排序">2. Parity 族严格排序</h2>
+<p>四条 parity 共同完成的0.68、0.65、0.60、0.55均满足：</p>
+<div class="math-display">$$
+V_{p1}&gt;V_{p2}&gt;V_{p3}&gt;V_{p4},
+$$</div>
+<p>且8副本最不利区间也不重叠。每增加一个 parity 参与 bit，<code>-log V</code>成本在固定 loss 上近似线性，四点拟合<code>R^2=0.981--0.994</code>；该关系只视为族内探索性公式。</p>
+<h2 id="3-majority-与随机目标从近似到指数分离">3. Majority 与随机目标从近似到指数分离</h2>
+<p>两者在 BCE 0.68--0.55体积近似，随机甚至略大；从0.50起 majority 反超，比例在0.45约34.6倍、0.40约<code>5.6e3</code>、0.30约<code>1.5e18</code>。在仍有12--51条 lineage 的0.50--0.30区间，方向和巨大效应不依赖最深尾退化。</p>
+<p>这直接证明不同完整目标的体积不是<code>函数常数 x 公共 loss 因子</code>：lower loss 会系统放大结构差异。</p>
+<h2 id="4-人类公式复杂度不是统一跨族排序">4. 人类公式复杂度不是统一跨族排序</h2>
+<p>Parity2 在人类逻辑语言中远短于随机真值表，但该 tanh 参考机中其 prior 与目标 loss 体积反而更小。Parity 的频谱和梯度不对齐使机器相对难度与门电路长度反序。因此“简单”必须是协议相对对象，不能直接宣称测得机器无关 Kolmogorov complexity。</p>
+<h2 id="5-裁决">5. 裁决</h2>
+<p>E19 强力支持：完整目标的低-loss 参数质量具有规则特异、尺度依赖的收缩曲线；同族结构难度可给稳定排序，跨族则需要完整 profile 和协议特征。它尚未证明这些 full-rule 体积可未经桥接直接预测任意部分训练集的候选函数赔率。</p></div>
+        <footer class="experiment-pager"><a href="e18.html">← E18 高函数共识与符号可读性</a><a href="e20.html">E20 Full-rule、固定 D 与 hard-margin 测度闭环 →</a></footer>
+      </article>
+    </main>
+  </div>
+</body>
+</html>

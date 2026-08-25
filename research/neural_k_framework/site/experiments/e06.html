@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="该实验第一次直接测量：在网络、初始化分布和有限训练集都固定，并且所有参数已经满足相同 hard labels 后，继续收紧训练集 raw BCE 是否会改变完整函数的相对参数质量。">
+  <title>E06：连续 loss 条件下的静态函数质量 · Neural K 研究档案</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="../assets/site.js"></script>
+</head>
+<body data-page-kind="experiment">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+  
+    <header class="topbar">
+      <a class="site-mark" href="../index.html" aria-label="返回研究主文">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K 研究档案</span>
+      </a>
+      <nav class="top-nav" aria-label="全站导航"><a class="top-link" href="../index.html">研究主文</a><a class="top-link" href="../theory-core.html">理论核心</a><a class="top-link active" href="../experiments/index.html">实验索引</a><a class="top-link" href="../references.html">参考文献</a><a class="top-link" href="../evidence-ledger.html">证据总账</a></nav>
+      <nav class="language-switch" aria-label="语言"><span class="active" lang="zh-CN">中文</span><a href="../en/experiments/e06.html" lang="en">EN</a></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>目录</span>
+      </button>
+    </header>
+    
+  <div class="page-shell">
+    
+    <aside class="sidebar" id="sidebar" aria-label="本页目录">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">本页目录</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#overview">实验概览</a></li>
+<li><a href="#目的">目的</a></li>
+<li><a href="#文件">文件</a></li>
+<li><a href="#冻结来源">冻结来源</a></li>
+<li><a href="#motivation">为什么做、怎样判决</a></li>
+<li><a href="#1-理论转折">1. 理论转折</a></li>
+<li><a href="#2-竞争预测">2. 竞争预测</a><ul>
+<li><a href="#h1-hard-条件化已经足够">H1：hard 条件化已经足够</a></li>
+<li><a href="#h2-loss-resolved-静态几何">H2：loss-resolved 静态几何</a></li>
+<li><a href="#h3-sgd-等于静态退火">H3：SGD 等于静态退火</a></li>
+</ul>
+</li>
+<li><a href="#3-测量对象">3. 测量对象</a></li>
+<li><a href="#4-三组训练约束">4. 三组训练约束</a></li>
+<li><a href="#5-预先声明的边界">5. 预先声明的边界</a></li>
+<li><a href="#results">结果、解读与边界</a></li>
+<li><a href="#1-完整性">1. 完整性</a></li>
+<li><a href="#2-单样本-raw-效应主要受-logit-scale-驱动">2. 单样本：raw 效应主要受 logit scale 驱动</a></li>
+<li><a href="#3-双样本-排除尺度后的稳健函数选择">3. 双样本：排除尺度后的稳健函数选择</a></li>
+<li><a href="#4-四样本-静态退火与-sgd-不可等同">4. 四样本：静态退火与 SGD 不可等同</a></li>
+<li><a href="#5-阶段裁决及后来的修正">5. 阶段裁决及后来的修正</a></li>
+</ul>
+</div>
+</nav>
+        <div class="sidebar-label experiment-label">全部实验</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>静态硬条件化不足以描述训练函数分布</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-bit 反事实不变性与训练 loss 中心原则</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>函数系综动力学与网络参考语言</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>在 Mingard 2025协议中延长 post-fit 观察</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>固定 NTK 足够时的特征学习</span></a><a class="experiment-nav-link active" href="e06.html"><span>E06</span><span>连续 loss 条件下的静态函数质量</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>函数 ID 迁移与 matched-loss 静态对照</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>共享中间表示与有限容量压力</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>MNIST 80%隐藏标签噪声长训</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>4-bit raw-BCE 简单/复杂规则竞争</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule30 数据量与训练/验证梯度对齐</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND shortcut 的静态 loss 几何</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>AND shortcut 的 SGD 运输与单样本干预</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>加权 Rule-bit 的 loss 阶段函数换序</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Mod97 grokking 的完整函数与边缘凝聚</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity 终点偏好、全局入口与局部恢复</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>静态低-loss 质量与 optimizer 运输</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>高函数共识与符号可读性</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>完整真值表规则的 loss-resolved 体积</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Full-rule、固定 D 与 hard-margin 测度闭环</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement 控制与共识复杂度前沿</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>逐样本自由能与信息不变量</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>完整目标体积前瞻预测数据相变</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>深尾 Neural K-profile 与排序交叉</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST 样本复杂度与静态体积分支预测</span></a></nav>
+      </div>
+    </aside>
+    
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">E06 · 实验详情</div>
+          <h1>E06：连续 loss 条件下的静态函数质量</h1>
+          <p class="article-description">该实验第一次直接测量：在网络、初始化分布和有限训练集都固定，并且所有参数已经满足相同 hard labels 后，继续收紧训练集 raw BCE 是否会改变完整函数的相对参数质量。</p>
+        </header>
+        <div class="article-body"><div class="source-bar"><span>复现脚本</span><div><a href="../../experiments/experiment_06_loss_conditioned_prior_annealing/experiment_loss_conditioned_prior_annealing.py">experiment_loss_conditioned_prior_annealing.py</a></div></div><h2 id="overview">实验概览</h2>
+<h2 id="目的">目的</h2>
+<p>该实验第一次直接测量：在网络、初始化分布和有限训练集都固定，并且所有参数已经满足相同 hard labels 后，继续收紧训练集 raw BCE 是否会改变完整函数的相对参数质量。</p>
+<p>它是本文从“hard-conditioned 函数先验”转向“loss-resolved 函数体积”的第一项静态实验。它同时检验静态低-loss 质量能解释真实 SGD 方向的多少，以及两者是否可以等同。</p>
+<h2 id="文件">文件</h2>
+<ul>
+<li><a href="#motivation">实验动机与预注册判据</a></li>
+<li><a href="#results">完整结果与阶段裁决</a></li>
+<li><a href="../../experiments/experiment_06_loss_conditioned_prior_annealing/experiment_loss_conditioned_prior_annealing.py"><code>experiment_loss_conditioned_prior_annealing.py</code></a></li>
+</ul>
+<p>运行：</p>
+<pre><code class="language-bash">python experiment_loss_conditioned_prior_annealing.py
+</code></pre>
+<p>默认脚本为<code>PROFILE="pilot"</code>。复现正文低-loss 尾部时改成：</p>
+<pre><code class="language-python">PROFILE = &quot;full&quot;
+</code></pre>
+<h2 id="冻结来源">冻结来源</h2>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>开发版来源</th>
+<th>SHA256</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>experiment_loss_conditioned_prior_annealing.py</code></td>
+<td><code>research/function_information_conservation/experiment_loss_conditioned_prior_annealing.py</code></td>
+<td><code>a66b973f118555812728b234ad5f02cb20f38d11b78b848722beff03c3a84310</code></td>
+</tr>
+</tbody>
+</table>
+<p>本地原始结果：</p>
+<table>
+<thead>
+<tr>
+<th>结果包</th>
+<th>作用</th>
+<th>SHA256</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>E:\Downloads\results_loss_conditioned_prior_annealing.zip</code></td>
+<td>262,144网络pilot</td>
+<td><code>35573b995520ed868e1141bb408426395a04c91ec89e90b756c74b9c2a1c12fc</code></td>
+</tr>
+<tr>
+<td><code>E:\Downloads\results_loss_conditioned_prior_annealing (1).zip</code></td>
+<td>4,194,304网络full裁决</td>
+<td><code>42c70ffe74a4f751c9be47f36ee94edf9fdf97b7089f017c48648dca71538381</code></td>
+</tr>
+</tbody>
+</table>
+<p>两个 ZIP 均可快速重建，不进入最终发布包；正文数字以 full 结果为准。</p>
+<h2 id="motivation">为什么做、怎样判决</h2>
+<h2 id="1-理论转折">1. 理论转折</h2>
+<p>训练集 hard accuracy 达到100%不表示训练 loss 为0。BCE 仍可继续降低，logit margin 仍可继续增长，完整函数也已经被 E01--E04 证明会继续改变。因此当时提出：</p>
+<blockquote>
+<p>在同一批满足 hard 约束的简单和复杂函数之间，更深的连续低-loss 区域是否给架构相对经济的函数分配更大参数质量？</p>
+</blockquote>
+<p>重要反驳随即出现：简单函数和复杂函数都可能把有限训练集 loss 压到任意低，故“某类函数存在低-loss 实现”本身不能区分它们。需要比较的是，在明确参数测度下，各函数低-loss 实现的<strong>相对质量</strong>怎样随 loss 阈值变化，而不是只问解是否存在。</p>
+<h2 id="2-竞争预测">2. 竞争预测</h2>
+<h3 id="h1-hard-条件化已经足够">H1：hard 条件化已经足够</h3>
+<p>满足相同 hard labels 以后，进一步降低连续 loss 只改变 margin 或公共 logit scale；所有兼容 hard function 近似按同一因子收缩，相对函数质量不发生稳定重排。</p>
+<h3 id="h2-loss-resolved-静态几何">H2：loss-resolved 静态几何</h3>
+<p>不同完整函数的参数质量会随训练 loss 以不同速度变化。静态低-loss 截面可以预示真实 SGD 的部分吸引方向，但不必给出相同强度。</p>
+<h3 id="h3-sgd-等于静态退火">H3：SGD 等于静态退火</h3>
+<p>更强的候选解释认为，真实 SGD 在某个时刻的函数分布近似等于初始化测度按相同 loss 阈值截取或按<code>exp(-beta L)</code>重加权后的分布。若四样本等条件中静态与 SGD 函数排序、质量和迁移方向明显分离，该等同关系即失败。</p>
+<h2 id="3-测量对象">3. 测量对象</h2>
+<p>实验固定<code>3 -&gt; 1024 x 3 -&gt; 1</code> GELU+LayerNorm 网络及其初始化分布，完整枚举8个输入上的256种 hard function。对每个条件先保留训练点 hard prediction 全部正确的参数，再采用两种互补测量：</p>
+<ol>
+<li><strong>微正则子水平集</strong>：在 hard-exact 样本中保留 raw BCE 最低的<code>50% ... 0.1%</code>；</li>
+<li><strong>正则退火</strong>：按<code>exp(-beta L_D)</code>连续重加权，并报告有效样本量 ESS。</li>
+</ol>
+<p>为排除整体 logit 尺度混杂，还报告 RMS-normalized BCE 与固定 logit-scale 子群。所有 loss 只在有限训练集<code>D</code>上计算；function ID 则由全部8个输入上的 hard 输出定义。</p>
+<h2 id="4-三组训练约束">4. 三组训练约束</h2>
+<table>
+<thead>
+<tr>
+<th>条件</th>
+<th>训练样本</th>
+<th style="text-align: right;">hard-exact后兼容函数数</th>
+<th>E03中的SGD主要吸引子</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>单样本</td>
+<td><code>000 -&gt; 0</code></td>
+<td style="text-align: right;">128</td>
+<td>常量0，ID 0</td>
+</tr>
+<tr>
+<td>双样本</td>
+<td><code>110 -&gt; 0, 001 -&gt; 1</code></td>
+<td style="text-align: right;">64</td>
+<td>对称阈值函数ID 113</td>
+</tr>
+<tr>
+<td>四样本</td>
+<td>四个平衡点，标签<code>0011</code></td>
+<td style="text-align: right;">16</td>
+<td>ID 48与243</td>
+</tr>
+</tbody>
+</table>
+<p>full 运行采样4,194,304个未训练网络。四样本 hard-exact 仍有365,248个，最低0.1%尾部有366个样本，达到预设可靠性要求。</p>
+<h2 id="5-预先声明的边界">5. 预先声明的边界</h2>
+<ul>
+<li>raw BCE 同时包含 hard function、margin 布局和整体 logit scale；</li>
+<li>Boolean 公式长度、ANF、Walsh 或 influence 都不是架构相对复杂度真值；</li>
+<li>参数“体积”始终指给定初始化分布下的概率质量，不是坐标无关裸体积；</li>
+<li>本实验完全不训练，不能测 SGD 流入率、逃逸率、混合或动态稳定性；</li>
+<li>三组训练集只能裁决强等同关系，不能建立所有数据集上的普适单调定律。</li>
+</ul>
+<h2 id="results">结果、解读与边界</h2>
+<h2 id="1-完整性">1. 完整性</h2>
+<ul>
+<li>full 采样4,194,304个<code>1024x3</code>未训练网络；</li>
+<li>观察到255/256个 hard function；</li>
+<li>GPU 先验前向耗时65.9秒；</li>
+<li>单/双/四样本 hard-exact 数量分别为2,096,325、867,458、365,248；</li>
+<li>四样本最低0.1%尾部仍有366个样本。</li>
+</ul>
+<h2 id="2-单样本-raw-效应主要受-logit-scale-驱动">2. 单样本：raw 效应主要受 logit scale 驱动</h2>
+<p>从 hard-exact 总体到 raw BCE 最低0.1%：</p>
+<ul>
+<li>函数熵：<code>5.021 -&gt; 1.098 bit</code>；</li>
+<li>常量0质量：<code>28.1% -&gt; 86.4%</code>；</li>
+<li>agreement：<code>0.610 -&gt; 0.946</code>。</li>
+</ul>
+<p>但在 normalized 和 fixed-scale 控制中，常量0质量下降或反转。因此该条件证明 raw loss 会强烈重排函数质量，却不能把这次重排全部解释成纯 hard-function 几何。</p>
+<h2 id="3-双样本-排除尺度后的稳健函数选择">3. 双样本：排除尺度后的稳健函数选择</h2>
+<p>真实 SGD 主要吸引子 ID 113可写成：</p>
+<pre><code class="language-text">majority(not x0, not x1, x2)
+</code></pre>
+<p>其参数质量为：</p>
+<ul>
+<li>hard-exact 静态质量：1.57%；</li>
+<li>raw BCE 最低0.1%：23.0%；</li>
+<li>normalized BCE 最低0.1%：50.7%；</li>
+<li>fixed-scale 最低0.5%：44.1%。</li>
+</ul>
+<p>因此，在相同 hard constraints 下，连续 loss 确实会对完整函数进行强烈、非公共因子的重排，而且方向与真实 SGD 后来选择的函数一致。ID 113在普通 AND/OR 公式语言中并非最短，却是 MLP 自然表达的对称线性阈值，这同时暴露了架构相对复杂度问题。</p>
+<p>真实 SGD 一步后曾把 ID 113推到77.3%，高于静态可靠区间。静态几何给出方向，但没有完整给出 optimizer 运输强度。</p>
+<h2 id="4-四样本-静态退火与-sgd-不可等同">4. 四样本：静态退火与 SGD 不可等同</h2>
+<p>SGD 吸引子 ID 48/243的总质量：</p>
+<ul>
+<li>hard-exact：21.4%；</li>
+<li>raw 中间低-loss 区最高约29.0%；</li>
+<li>raw 最低0.1%又降至23.0%；</li>
+<li>normalized 深尾消失并向其他函数偏移。</li>
+</ul>
+<p>函数熵也没有持续下降：hard-exact 为3.715 bit，raw 最低0.1%为3.724 bit，normalized 最低0.1%为3.959 bit。真实 SGD 一步后却把 ID 48/243推至约77.2%。</p>
+<p>因此真实 SGD 函数分布不能写成初始化测度在相同 loss 截面的静态条件分布，也不能写成简单的平衡退火系综。</p>
+<h2 id="5-阶段裁决及后来的修正">5. 阶段裁决及后来的修正</h2>
+<p>E06 直接建立了本文后续理论的第一个静态事实：</p>
+<blockquote>
+<p>在网络、参数测度、有限训练集和 hard constraints 固定后，继续收紧连续训练 loss 会以函数特异的方式重排完整函数质量；函数常数乘公共 loss 因子的可分离图景不成立。</p>
+</blockquote>
+<p>它还建立了第二个分层事实：</p>
+<blockquote>
+<p>静态低-loss 质量与真实多 seed 训练分布可以方向相近，但真实优化器是初始化分布的路径依赖 pushforward，不是该静态质量的无偏 Bayesian 样本。</p>
+</blockquote>
+<p>在8月18日当时，“更低 loss 通常提高简单函数质量”被保留为高可信倾向；E06 本身尚不足以把它提升为定律。后来的 full-truth SMC、固定 D 测度闭环、体积到样本相变和深尾交叉实验，才把“简单”替换为可测的 Neural K-profile，并进一步证明排序依赖 loss 尺度、可以发生交叉。</p>
+<p>不能声称：</p>
+<ul>
+<li>每个数据集上 function entropy 都随 loss 单调下降；</li>
+<li>任意预先指定的“真实函数”质量都随 loss 单调增加；</li>
+<li>raw BCE 效应都独立于 logit scale；</li>
+<li>SGD 等于静态 loss-conditioned posterior；</li>
+<li>E06 已经测量了动态逃逸率、稳定性或 Kolmogorov complexity。</li>
+</ul></div>
+        <footer class="experiment-pager"><a href="e05.html">← E05 固定 NTK 足够时的特征学习</a><a href="e07.html">E07 函数 ID 迁移与 matched-loss 静态对照 →</a></footer>
+      </article>
+    </main>
+  </div>
+</body>
+</html>

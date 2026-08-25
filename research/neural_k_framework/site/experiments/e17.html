@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="E17 用暴力 prior、rare-event constrained SMC、三种 optimizer crossing、32,768-seed AdamW、SMC 深尾起点续训和 seed/time 混合实验，系统检验：静态 loss 体积对真实训练有多强预测力，以及 optimizer 是否只是该静态分布的无偏或二阶采样修正。">
+  <title>E17：静态低-loss 质量与 optimizer 运输 · Neural K 研究档案</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="../assets/site.js"></script>
+</head>
+<body data-page-kind="experiment">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+  
+    <header class="topbar">
+      <a class="site-mark" href="../index.html" aria-label="返回研究主文">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K 研究档案</span>
+      </a>
+      <nav class="top-nav" aria-label="全站导航"><a class="top-link" href="../index.html">研究主文</a><a class="top-link" href="../theory-core.html">理论核心</a><a class="top-link active" href="../experiments/index.html">实验索引</a><a class="top-link" href="../references.html">参考文献</a><a class="top-link" href="../evidence-ledger.html">证据总账</a></nav>
+      <nav class="language-switch" aria-label="语言"><span class="active" lang="zh-CN">中文</span><a href="../en/experiments/e17.html" lang="en">EN</a></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>目录</span>
+      </button>
+    </header>
+    
+  <div class="page-shell">
+    
+    <aside class="sidebar" id="sidebar" aria-label="本页目录">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">本页目录</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#overview">实验概览</a></li>
+<li><a href="#目的">目的</a></li>
+<li><a href="#文件">文件</a></li>
+<li><a href="#冻结脚本-sha256">冻结脚本 SHA256</a></li>
+<li><a href="#关键结果包-sha256">关键结果包 SHA256</a></li>
+<li><a href="#motivation">为什么做、怎样判决</a></li>
+<li><a href="#1-两层体积假说">1. 两层体积假说</a></li>
+<li><a href="#2-实验链">2. 实验链</a><ul>
+<li><a href="#a-暴力-prior-与-optimizer-crossing">A. 暴力 prior 与 optimizer crossing</a></li>
+<li><a href="#b-constrained-smc">B. Constrained SMC</a></li>
+<li><a href="#c-深尾真实训练">C. 深尾真实训练</a></li>
+<li><a href="#d-时间混合">D. 时间混合</a></li>
+</ul>
+</li>
+<li><a href="#3-预先边界">3. 预先边界</a></li>
+<li><a href="#results">结果、解读与边界</a></li>
+<li><a href="#1-浅层静态质量具有强一阶预测力">1. 浅层静态质量具有强一阶预测力</a></li>
+<li><a href="#2-smc-通过暴力重叠区校准并揭示深尾换序">2. SMC 通过暴力重叠区校准并揭示深尾换序</a></li>
+<li><a href="#3-optimizer-与静态几何存在-loss-dependent-滞后">3. Optimizer 与静态几何存在 loss-dependent 滞后</a></li>
+<li><a href="#4-深尾-adamw-可完全推翻静态赢家">4. 深尾 AdamW 可完全推翻静态赢家</a></li>
+<li><a href="#5-从-smc-深尾出发显示路径历史不可约">5. 从 SMC 深尾出发显示路径历史不可约</a></li>
+<li><a href="#6-单轨迹时间采样不等于多-seed-分布">6. 单轨迹时间采样不等于多 seed 分布</a></li>
+<li><a href="#7-最终裁决">7. 最终裁决</a></li>
+</ul>
+</div>
+</nav>
+        <div class="sidebar-label experiment-label">全部实验</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>静态硬条件化不足以描述训练函数分布</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-bit 反事实不变性与训练 loss 中心原则</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>函数系综动力学与网络参考语言</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>在 Mingard 2025协议中延长 post-fit 观察</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>固定 NTK 足够时的特征学习</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>连续 loss 条件下的静态函数质量</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>函数 ID 迁移与 matched-loss 静态对照</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>共享中间表示与有限容量压力</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>MNIST 80%隐藏标签噪声长训</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>4-bit raw-BCE 简单/复杂规则竞争</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule30 数据量与训练/验证梯度对齐</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND shortcut 的静态 loss 几何</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>AND shortcut 的 SGD 运输与单样本干预</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>加权 Rule-bit 的 loss 阶段函数换序</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Mod97 grokking 的完整函数与边缘凝聚</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity 终点偏好、全局入口与局部恢复</span></a><a class="experiment-nav-link active" href="e17.html"><span>E17</span><span>静态低-loss 质量与 optimizer 运输</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>高函数共识与符号可读性</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>完整真值表规则的 loss-resolved 体积</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Full-rule、固定 D 与 hard-margin 测度闭环</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement 控制与共识复杂度前沿</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>逐样本自由能与信息不变量</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>完整目标体积前瞻预测数据相变</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>深尾 Neural K-profile 与排序交叉</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST 样本复杂度与静态体积分支预测</span></a></nav>
+      </div>
+    </aside>
+    
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">E17 · 实验详情</div>
+          <h1>E17：静态低-loss 质量与 optimizer 运输</h1>
+          <p class="article-description">E17 用暴力 prior、rare-event constrained SMC、三种 optimizer crossing、32,768-seed AdamW、SMC 深尾起点续训和 seed/time 混合实验，系统检验：静态 loss 体积对真实训练有多强预测力，以及 optimizer 是否只是该静态分布的无偏或二阶采样修正。</p>
+        </header>
+        <div class="article-body"><div class="source-bar"><span>复现脚本</span><div><a href="../../experiments/experiment_17_static_vs_optimizer/experiment_8bit_seed_time_mixing.py">experiment_8bit_seed_time_mixing.py</a><a href="../../experiments/experiment_17_static_vs_optimizer/experiment_balanced_n10_tanh16_many_seed_retrain.py">experiment_balanced_n10_tanh16_many_seed_retrain.py</a><a href="../../experiments/experiment_17_static_vs_optimizer/experiment_static_loss_vs_optimizer_distribution.py">experiment_static_loss_vs_optimizer_distribution.py</a><a href="../../experiments/experiment_17_static_vs_optimizer/experiment_static_low_loss_constrained_smc.py">experiment_static_low_loss_constrained_smc.py</a><a href="../../experiments/experiment_17_static_vs_optimizer/experiment_train_from_smc_deep_tail.py">experiment_train_from_smc_deep_tail.py</a></div></div><h2 id="overview">实验概览</h2>
+<h2 id="目的">目的</h2>
+<p>E17 用暴力 prior、rare-event constrained SMC、三种 optimizer crossing、32,768-seed AdamW、SMC 深尾起点续训和 seed/time 混合实验，系统检验：静态 loss 体积对真实训练有多强预测力，以及 optimizer 是否只是该静态分布的无偏或二阶采样修正。</p>
+<h2 id="文件">文件</h2>
+<ul>
+<li><a href="#motivation">实验动机与预注册判据</a></li>
+<li><a href="#results">完整结果与阶段裁决</a></li>
+<li><code>experiment_static_loss_vs_optimizer_distribution.py</code></li>
+<li><code>experiment_static_low_loss_constrained_smc.py</code></li>
+<li><code>experiment_balanced_n10_tanh16_many_seed_retrain.py</code></li>
+<li><code>experiment_train_from_smc_deep_tail.py</code></li>
+<li><code>experiment_8bit_seed_time_mixing.py</code></li>
+</ul>
+<p>推荐运行顺序：</p>
+<pre><code class="language-bash">python experiment_static_loss_vs_optimizer_distribution.py
+python experiment_static_low_loss_constrained_smc.py
+python experiment_balanced_n10_tanh16_many_seed_retrain.py
+python experiment_train_from_smc_deep_tail.py
+python experiment_8bit_seed_time_mixing.py
+</code></pre>
+<p><code>train_from_smc_deep_tail</code>读取 constrained SMC 的 checkpoint；其余脚本可以独立运行。SMC 达到层数上限后可保持同一结果目录重跑，自动从 checkpoint 续接。</p>
+<h2 id="冻结脚本-sha256">冻结脚本 SHA256</h2>
+<pre><code class="language-text">f11398741e099168de115cc26795174f4079589f729749f742e710b42a7aa6a2  static/optimizer
+22e1dfefe45848de3c5aff5c25163d53f164e18b523b4d48949ab538a72d018c  constrained SMC
+4a39fe18290803c4de3a0065be05ccd2b307fbd93b6d09bcd2ace7770079b50f  many-seed retrain
+8fca65f0ca1a893276ac5163906d3310e2c365b7a6ff0f6290aefb9634221f74  train from SMC
+bfcf7625c6cd8025034b81f4a1320084350348052ab1eb05d2d9996ff796cde7  seed/time mixing
+</code></pre>
+<h2 id="关键结果包-sha256">关键结果包 SHA256</h2>
+<pre><code class="language-text">368a94da2e539d96af907cd38bab368e4df4c25a6c9f51dda211a16c5ee01228  static vs optimizer
+e68026823ee36de37ec8ac7e0eaa113a439b8c86edb49acca3971e2693f57af8  SMC final continuation
+77da455af559a0e11296f0e923be140d2370a8e494df80637353b48c2e1e2f11  32768-seed AdamW
+2c6f21f4b6479b75d89eae6b516bb83c9166ccef1e2c4781e17c3f62916f0e0e  train from SMC
+a1b344a1094a1cfb8ec2d0bb2b6d6f0c121abf3fb149dfa788ac8ef56e92a6b1  seed/time mixing
+</code></pre>
+<p>SMC 多次 ZIP 只是同一 checkpoint 续跑，不分别计为独立实验。原始包位于<code>E:\Downloads</code>，不进入发布包。</p>
+<h2 id="motivation">为什么做、怎样判决</h2>
+<h2 id="1-两层体积假说">1. 两层体积假说</h2>
+<p>当时区分：</p>
+<ol>
+<li>静态层：lower loss 是否改变函数质量并偏向经济实现；</li>
+<li>训练层：真实泛化是否主要由该静态质量决定，使 optimizer 只剩二阶影响。</li>
+</ol>
+<p>E17 专门压力测试第二层，同时校准第一层的 rare-event 测量。</p>
+<h2 id="2-实验链">2. 实验链</h2>
+<h3 id="a-暴力-prior-与-optimizer-crossing">A. 暴力 prior 与 optimizer crossing</h3>
+<p>4-bit 平衡 AND、<code>4 -&gt; 16 x 2 -&gt; 1 tanh</code>；33,554,432个未训练网络与4,096个 paired 初始权重，比较 AdamW、full-batch SGD 和 momentum SGD 首次跨越相同 raw BCE 时的函数分布。</p>
+<h3 id="b-constrained-smc">B. Constrained SMC</h3>
+<p>32,768粒子、8副本，通过 prior-preserving MCMC 逐层压低 BCE；在0.68/0.65/0.60与暴力 prior 交叉校准，再推进到0.07以下 hard-exact 深尾。</p>
+<h3 id="c-深尾真实训练">C. 深尾真实训练</h3>
+<ul>
+<li>同网络、同训练集的32,768-seed AdamW 真实训练；</li>
+<li>从 SMC 深尾 D440 权重抽取4,096个起点，配对正常 AdamW 与每步投影回初始化盒的 AdamW，检验静态深尾是否流回 AND。</li>
+</ul>
+<h3 id="d-时间混合">D. 时间混合</h3>
+<p>8-bit AND 与随机标签，2,048 seeds；比较单条轨迹64个晚期 checkpoint、IID-64 seed 样本和32条轨迹 pool，判断时间采样能否替代多 seed 分布。</p>
+<h2 id="3-预先边界">3. 预先边界</h2>
+<ul>
+<li>静态质量与 optimizer crossing 必须在相同 loss 并有足够 prior/SMC 支持时比较；</li>
+<li>top 函数一致不等于完整分布相同；</li>
+<li>SMC 测量指定参数测度，不是坐标无关体积；</li>
+<li>hard ID 相同仍可能处于不同连续流管；</li>
+<li>单个 agreement 相似不能证明完整分布混合。</li>
+</ul>
+<h2 id="results">结果、解读与边界</h2>
+<h2 id="1-浅层静态质量具有强一阶预测力">1. 浅层静态质量具有强一阶预测力</h2>
+<p>在暴力 prior 可靠的 BCE 0.68/0.65/0.60三层，静态分布与三种 optimizer 第一名始终同为常数零。静态 top-100 函数覆盖 optimizer 质量随 loss 深入达到：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">BCE</th>
+<th style="text-align: right;">Adam</th>
+<th style="text-align: right;">SGD</th>
+<th style="text-align: right;">Momentum</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">0.68</td>
+<td style="text-align: right;">66.4%</td>
+<td style="text-align: right;">74.5%</td>
+<td style="text-align: right;">77.4%</td>
+</tr>
+<tr>
+<td style="text-align: right;">0.65</td>
+<td style="text-align: right;">88.7%</td>
+<td style="text-align: right;">95.7%</td>
+<td style="text-align: right;">97.1%</td>
+</tr>
+<tr>
+<td style="text-align: right;">0.60</td>
+<td style="text-align: right;">98.7%</td>
+<td style="text-align: right;">100%</td>
+<td style="text-align: right;">100%</td>
+</tr>
+</tbody>
+</table>
+<p>但全部 JSD/TV 偏离超过有限样本噪声；optimizer 并非无偏静态采样器。</p>
+<h2 id="2-smc-通过暴力重叠区校准并揭示深尾换序">2. SMC 通过暴力重叠区校准并揭示深尾换序</h2>
+<p>SMC 在0.68/0.65/0.60复现暴力体积分数及65,536维函数分布，JSD 分别约0.00677/0.00297/0.00144。深尾静态主导态依次经历：</p>
+<pre><code class="language-text">高loss常数零
+-&gt; 0x5000 shortcut
+-&gt; D000/D040
+-&gt; F040/D440
+</code></pre>
+<p>全部粒子在0.20以下已 hard-exact，但继续降低 soft BCE 仍强烈重排未见延拓。到0.07，D440 50.99%、F040 27.20%、D040 16.35%，AND 为0%。静态地形自身包含丰富阶段结构，却不按人类 AND 公式长度排序。</p>
+<h2 id="3-optimizer-与静态几何存在-loss-dependent-滞后">3. Optimizer 与静态几何存在 loss-dependent 滞后</h2>
+<p>在0.50静态 shell 中0x5000 为42.33%，Adam 仅13.62%，SGD/Momentum 仍以常数零为83.42%/97.80%；到0.40，SGD/Momentum 的0x5000 升到78.39%/69.12%，重新接近静态70.04%。关系不是固定“哪个 optimizer 最接近平衡”，而是静态换序先发生、不同优化器按各自时间滞后追随。</p>
+<h2 id="4-深尾-adamw-可完全推翻静态赢家">4. 深尾 AdamW 可完全推翻静态赢家</h2>
+<p>同训练集32,768-seed AdamW 在 step 11,444得到 AND 76.52%、F040 23.48%；静态 SMC 在 BCE 不高于0.065时 AND 为0%，D440 为55.70%。约 BCE 0.10的同 loss 比较已经有 JSD 0.301、TV 0.438；最终分布 JSD 0.760、TV 0.765。</p>
+<p>因此 optimizer 重加权不总是温和二阶项，它足以主导最终函数选择。</p>
+<h2 id="5-从-smc-深尾出发显示路径历史不可约">5. 从 SMC 深尾出发显示路径历史不可约</h2>
+<p>从 D440 抽4,096个真实权重点继续训练：正常 AdamW 把 loss 降低约四百万倍，最终 D040 51.56%、F040 48.44%、AND 0%；投影组保持 D440 100%。随机初始化路径中的 F040 会迁移到 AND，SMC 路径中的同一 hard ID 却迁移到 D040。相同 hard function、训练集和 optimizer 仍不足以预测未来，cell 内部连续状态与进入历史不可交换。</p>
+<h2 id="6-单轨迹时间采样不等于多-seed-分布">6. 单轨迹时间采样不等于多 seed 分布</h2>
+<p>8-bit AND 的单链64个晚期 checkpoint 通常只访问5--6个函数，而 IID-64 会覆盖约28--60个；随机标签单链14个，IID 为64个。单链 agreement 约0.995，seed 参考可低至0.951或0.800。32条轨迹 pool 可逼近部分低阶 agreement，但完整指纹和协方差仍不等价。</p>
+<h2 id="7-最终裁决">7. 最终裁决</h2>
+<p>E17 排除两个极端：</p>
+<ul>
+<li>静态体积并非无关背景，它强烈约束候选家族和换序结构；</li>
+<li>optimizer 也绝非透明或必然二阶的采样器，它可产生巨大、历史依赖的重加权。</li>
+</ul>
+<p>经验分解可写成：</p>
+<div class="math-display">$$
+Q_O(f\mid D,L)\propto V_\mu(f;D,L)R_O(f;D,L),
+$$</div>
+<p>但这只是分层记账，不是已知乘法定律。<code>R_O</code>包含入口、流管、速度和停留历史，其微观理论不属于本文目标。多 seed 是 optimizer-induced ensemble；单轨迹 checkpoint 不能冒充独立 Bayesian posterior samples。</p></div>
+        <footer class="experiment-pager"><a href="e16.html">← E16 Parity 终点偏好、全局入口与局部恢复</a><a href="e18.html">E18 高函数共识与符号可读性 →</a></footer>
+      </article>
+    </main>
+  </div>
+</body>
+</html>

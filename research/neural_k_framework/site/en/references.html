@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="External research cited by this website, with full metadata, primary-paper links, and the role of each citation.">
+  <title>References and Their Role in This Archive · Neural K Research Archive</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="../assets/site.js"></script>
+</head>
+<body data-page-kind="references">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+  
+    <header class="topbar">
+      <a class="site-mark" href="index.html" aria-label="Back to the research narrative">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K Research Archive</span>
+      </a>
+      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="index.html">Research</a><a class="top-link" href="theory-core.html">Core Theory</a><a class="top-link" href="experiments/index.html">Experiments</a><a class="top-link active" href="references.html">References</a><a class="top-link" href="evidence-ledger.html">Evidence</a></nav>
+      <nav class="language-switch" aria-label="Language"><a href="../references.html" lang="zh-CN">中文</a><span class="active" lang="en">EN</span></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>Contents</span>
+      </button>
+    </header>
+    
+  <div class="page-shell">
+    
+    <aside class="sidebar" id="sidebar" aria-label="On this page">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">On this page</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#1-function-priors-parameter-function-maps-and-simplicity-bias">1. Function priors, parameter–function maps, and simplicity bias</a><ul>
+<li><a href="#r01-dingle-camargo-and-louis-2018">R01 · Dingle, Camargo, and Louis (2018)</a></li>
+<li><a href="#r02-valle-pérez-camargo-and-louis-2019">R02 · Valle-Pérez, Camargo, and Louis (2019)</a></li>
+<li><a href="#r03-mingard-et-al-2019">R03 · Mingard et al. (2019)</a></li>
+<li><a href="#r04-mingard-et-al-2021">R04 · Mingard et al. (2021)</a></li>
+<li><a href="#r05-mingard-et-al-2025">R05 · Mingard et al. (2025)</a></li>
+<li><a href="#r06-mingard-et-al-2025">R06 · Mingard et al. (2025)</a></li>
+</ul>
+</li>
+<li><a href="#2-grokking-kernel-limits-and-feature-learning">2. Grokking, kernel limits, and feature learning</a><ul>
+<li><a href="#r07-power-et-al-2022">R07 · Power et al. (2022)</a></li>
+<li><a href="#r08-nanda-et-al-2023">R08 · Nanda et al. (2023)</a></li>
+<li><a href="#r09-jacot-gabriel-and-hongler-2018">R09 · Jacot, Gabriel, and Hongler (2018)</a></li>
+<li><a href="#r10-soudry-et-al-2018">R10 · Soudry et al. (2018)</a></li>
+<li><a href="#r11-göring-et-al-2025">R11 · Göring et al. (2025)</a></li>
+<li><a href="#r12-kornblith-et-al-2019">R12 · Kornblith et al. (2019)</a></li>
+</ul>
+</li>
+<li><a href="#3-algorithmic-information-mdl-pac-bayes-and-free-energy">3. Algorithmic information, MDL, PAC-Bayes, and free energy</a><ul>
+<li><a href="#r13-solomonoff-1964">R13 · Solomonoff (1964)</a></li>
+<li><a href="#r14-kolmogorov-1965">R14 · Kolmogorov (1965)</a></li>
+<li><a href="#r15-grünwald-2004">R15 · Grünwald (2004)</a></li>
+<li><a href="#r16-blier-and-ollivier-2018">R16 · Blier and Ollivier (2018)</a></li>
+<li><a href="#r17-mcallester-1999">R17 · McAllester (1999)</a></li>
+<li><a href="#r18-levin-tishby-and-solla-1989">R18 · Levin, Tishby, and Solla (1989)</a></li>
+</ul>
+</li>
+<li><a href="#4-flatness-local-entropy-and-singular-learning-theory">4. Flatness, local entropy, and singular learning theory</a><ul>
+<li><a href="#r19-hochreiter-and-schmidhuber-1997">R19 · Hochreiter and Schmidhuber (1997)</a></li>
+<li><a href="#r20-chaudhari-et-al-2017">R20 · Chaudhari et al. (2017)</a></li>
+<li><a href="#r21-watanabe-2009">R21 · Watanabe (2009)</a></li>
+<li><a href="#r22-lau-et-al-2025">R22 · Lau et al. (2025)</a></li>
+</ul>
+</li>
+<li><a href="#5-active-learning">5. Active learning</a><ul>
+<li><a href="#r23-seung-opper-and-sompolinsky-1992">R23 · Seung, Opper, and Sompolinsky (1992)</a></li>
+</ul>
+</li>
+<li><a href="#6-modern-finite-width-statistical-mechanics">6. Modern finite-width statistical mechanics</a><ul>
+<li><a href="#r24-pacelli-et-al-2023">R24 · Pacelli et al. (2023)</a></li>
+</ul>
+</li>
+<li><a href="#7-agi-free-energy-and-cognitive-theories">7. AGI, free energy, and cognitive theories</a><ul>
+<li><a href="#r25-hutter-2007">R25 · Hutter (2007)</a></li>
+<li><a href="#r26-schmidhuber-2008">R26 · Schmidhuber (2008)</a></li>
+<li><a href="#r27-friston-and-kiebel-2009">R27 · Friston and Kiebel (2009)</a></li>
+<li><a href="#r28-catoni-2007">R28 · Catoni (2007)</a></li>
+<li><a href="#r29-watanabe-2013">R29 · Watanabe (2013)</a></li>
+<li><a href="#r30-seung-sompolinsky-and-tishby-1992">R30 · Seung, Sompolinsky, and Tishby (1992)</a></li>
+<li><a href="#r31-voita-and-titov-2020">R31 · Voita and Titov (2020)</a></li>
+<li><a href="#r32-tishby-pereira-and-bialek-2000">R32 · Tishby, Pereira, and Bialek (2000)</a></li>
+<li><a href="#r33-saxe-et-al-2018">R33 · Saxe et al. (2018)</a></li>
+<li><a href="#r34-kolchinsky-tracey-and-van-kuyk-2018">R34 · Kolchinsky, Tracey, and Van Kuyk (2018)</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</nav>
+        <a class="sidebar-action" href="index.html">Return to the research narrative →</a>
+      </div>
+    </aside>
+    
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">External research · English references</div>
+          <h1>References and Their Role in This Archive</h1>
+          <p class="article-description">External research cited by this website, with full metadata, primary-paper links, and the role of each citation.</p>
+        </header>
+        <div class="article-body"><div class="reference-summary"><strong>34</strong><span>explicit bibliographic entries grouped by their role in this archive.</span></div><blockquote>
+<p>This page lists the external works explicitly mentioned or directly used by the current website. Links prioritize journal, conference, PMLR, JMLR, OpenReview, ML Anthology, or arXiv primary pages.</p>
+</blockquote>
+<h2 id="1-function-priors-parameter-function-maps-and-simplicity-bias">1. Function priors, parameter–function maps, and simplicity bias</h2>
+<h3 id="r01-dingle-camargo-and-louis-2018">R01 · Dingle, Camargo, and Louis (2018)</h3>
+<p>Kamaludin Dingle, Chico Q. Camargo, Ard A. Louis. <strong>Input–Output Maps Are Strongly Biased Towards Simple Outputs.</strong> <em>Nature Communications</em> 9, 761 (2018). DOI: 10.1038/s41467-018-03101-6.</p>
+<ul>
+<li><a href="https://www.nature.com/articles/s41467-018-03101-6" target="_blank" rel="noopener">Nature Communications</a></li>
+<li><strong>Role here:</strong> General background for simplicity bias in input–output maps; also an important reminder that the result is primarily an upper-bound relation and does not make every simple output probable.</li>
+</ul>
+<h3 id="r02-valle-pérez-camargo-and-louis-2019">R02 · Valle-Pérez, Camargo, and Louis (2019)</h3>
+<p>Guillermo Valle-Pérez, Chico Q. Camargo, Ard A. Louis. <strong>Deep Learning Generalizes Because the Parameter-Function Map Is Biased Towards Simple Functions.</strong> <em>ICLR 2019</em>.</p>
+<ul>
+<li><a href="https://arxiv.org/abs/1805.08522" target="_blank" rel="noopener">arXiv:1805.08522</a></li>
+<li><strong>Role here:</strong> A direct precursor for nonuniform neural function priors and a key source of function-space PAC-Bayes reasoning.</li>
+</ul>
+<h3 id="r03-mingard-et-al-2019">R03 · Mingard et al. (2019)</h3>
+<p>Chris Mingard, Joar Skalse, Guillermo Valle-Pérez, David Martínez-Rubio, Vladimir Mikulik, Ard A. Louis. <strong>Neural Networks Are a Priori Biased Towards Boolean Functions with Low Entropy.</strong> arXiv (2019).</p>
+<ul>
+<li><a href="https://arxiv.org/abs/1909.11522" target="_blank" rel="noopener">arXiv:1909.11522</a></li>
+<li><strong>Role here:</strong> Separates low-output-entropy bias from additional structural-complexity bias within Boolean functions.</li>
+</ul>
+<h3 id="r04-mingard-et-al-2021">R04 · Mingard et al. (2021)</h3>
+<p>Chris Mingard, Guillermo Valle-Pérez, Joar Skalse, Ard A. Louis. <strong>Is SGD a Bayesian Sampler? Well, Almost.</strong> <em>Journal of Machine Learning Research</em> 22(79):1–64 (2021).</p>
+<ul>
+<li><a href="https://www.jmlr.org/papers/v22/20-676.html" target="_blank" rel="noopener">JMLR</a></li>
+<li><strong>Role here:</strong> The closest prior work to the multi-seed empirical function distribution. It supports first-order predictive power of a Bayesian function posterior while retaining optimizer- and hyperparameter-dependent second-order deviations.</li>
+</ul>
+<h3 id="r05-mingard-et-al-2025">R05 · Mingard et al. (2025)</h3>
+<p>Chris Mingard, Henry Rees, Guillermo Valle-Pérez, Ard A. Louis. <strong>Deep Neural Networks Have an Inbuilt Occam’s Razor.</strong> <em>Nature Communications</em> 16, 220 (2025).</p>
+<ul>
+<li><a href="https://www.nature.com/articles/s41467-024-54813-x" target="_blank" rel="noopener">Nature Communications</a></li>
+<li><strong>Role here:</strong> E04 reuses its core 7-bit Boolean, deep-tanh, and advSGD protocol while extending observation beyond first zero training error.</li>
+</ul>
+<h3 id="r06-mingard-et-al-2025">R06 · Mingard et al. (2025)</h3>
+<p>Chris Mingard, Lukas Seier, Niclas Göring, Andrei-Vlad Badelita, Charles London, Ard A. Louis. <strong>Characterising the Inductive Biases of Neural Networks on Boolean Data.</strong> arXiv (2025).</p>
+<ul>
+<li><a href="https://arxiv.org/abs/2505.24060" target="_blank" rel="noopener">arXiv:2505.24060</a></li>
+<li><strong>Role here:</strong> A close modern example of architecture as a program language; its discrete-network/DNF correspondence is a useful comparison for the architecture relativity of Neural K.</li>
+</ul>
+<h2 id="2-grokking-kernel-limits-and-feature-learning">2. Grokking, kernel limits, and feature learning</h2>
+<h3 id="r07-power-et-al-2022">R07 · Power et al. (2022)</h3>
+<p>Alethea Power, Yuri Burda, Harri Edwards, Igor Babuschkin, Vedant Misra. <strong>Grokking: Generalization Beyond Overfitting on Small Algorithmic Datasets.</strong> arXiv (2022).</p>
+<ul>
+<li><a href="https://arxiv.org/abs/2201.02177" target="_blank" rel="noopener">arXiv:2201.02177</a></li>
+<li><strong>Role here:</strong> Establishes delayed generalization after memorization on small algorithmic datasets and the dataset-size axis of grokking.</li>
+</ul>
+<h3 id="r08-nanda-et-al-2023">R08 · Nanda et al. (2023)</h3>
+<p>Neel Nanda, Lawrence Chan, Tom Lieberum, Jess Smith, Jacob Steinhardt. <strong>Progress Measures for Grokking via Mechanistic Interpretability.</strong> arXiv (2023).</p>
+<ul>
+<li><a href="https://arxiv.org/abs/2301.05217" target="_blank" rel="noopener">arXiv:2301.05217</a></li>
+<li><strong>Role here:</strong> Decomposes modular-addition grokking into memorization, Fourier-circuit formation, and cleanup, providing a direct comparison for continuous coordinates beneath an apparently abrupt transition.</li>
+</ul>
+<h3 id="r09-jacot-gabriel-and-hongler-2018">R09 · Jacot, Gabriel, and Hongler (2018)</h3>
+<p>Arthur Jacot, Franck Gabriel, Clément Hongler. <strong>Neural Tangent Kernel: Convergence and Generalization in Neural Networks.</strong> <em>NeurIPS 2018</em>.</p>
+<ul>
+<li><a href="https://arxiv.org/abs/1806.07572" target="_blank" rel="noopener">arXiv:1806.07572</a></li>
+<li><strong>Role here:</strong> Supplies E05’s infinite-width fixed-kernel baseline for asking whether a finite network still reorganizes features when kernel learning is already sufficient.</li>
+</ul>
+<h3 id="r10-soudry-et-al-2018">R10 · Soudry et al. (2018)</h3>
+<p>Daniel Soudry, Elad Hoffer, Mor Shpigel Nacson, Suriya Gunasekar, Nathan Srebro. <strong>The Implicit Bias of Gradient Descent on Separable Data.</strong> <em>Journal of Machine Learning Research</em> 19(70):1–57 (2018).</p>
+<ul>
+<li><a href="https://www.jmlr.org/papers/v19/18-188.html" target="_blank" rel="noopener">JMLR</a></li>
+<li><strong>Role here:</strong> Shows that logistic/cross-entropy optimization continues to drive the max-margin direction after zero classification error; this is a narrow mechanism that must be separated from complete-function drift.</li>
+</ul>
+<h3 id="r11-göring-et-al-2025">R11 · Göring et al. (2025)</h3>
+<p>Niclas Alexander Göring, Charles London, Abdurrahman Hadi Erturk, Chris Mingard, Yoonsoo Nam, Ard A. Louis. <strong>Feature Learning Is Decoupled from Generalization in High Capacity Neural Networks.</strong> arXiv (2025).</p>
+<ul>
+<li><a href="https://arxiv.org/abs/2507.19680" target="_blank" rel="noopener">arXiv:2507.19680</a></li>
+<li><strong>Role here:</strong> Directly motivated E05’s separation between feature-learning strength and generalization benefit.</li>
+</ul>
+<h3 id="r12-kornblith-et-al-2019">R12 · Kornblith et al. (2019)</h3>
+<p>Simon Kornblith, Mohammad Norouzi, Honglak Lee, Geoffrey Hinton. <strong>Similarity of Neural Network Representations Revisited.</strong> <em>ICML 2019</em>, PMLR 97:3519–3529.</p>
+<ul>
+<li><a href="https://proceedings.mlr.press/v97/kornblith19a.html" target="_blank" rel="noopener">PMLR</a></li>
+<li><strong>Role here:</strong> Source of centered kernel alignment (CKA), used in E05 as a representation-similarity instrument rather than as a direct measure of compression or usefulness.</li>
+</ul>
+<h2 id="3-algorithmic-information-mdl-pac-bayes-and-free-energy">3. Algorithmic information, MDL, PAC-Bayes, and free energy</h2>
+<h3 id="r13-solomonoff-1964">R13 · Solomonoff (1964)</h3>
+<p>Ray J. Solomonoff. <strong>A Formal Theory of Inductive Inference, Part I and Part II.</strong> <em>Information and Control</em> 7 (1964).</p>
+<ul>
+<li><a href="https://mlanthology.org/misc/1964/solomonoff1964misc-formal/" target="_blank" rel="noopener">ML Anthology</a></li>
+<li><strong>Role here:</strong> An idealized algorithmic-probability reference for preferring short programs under finite evidence. This archive does not claim that finite neural networks or SGD implement the Solomonoff mixture.</li>
+</ul>
+<h3 id="r14-kolmogorov-1965">R14 · Kolmogorov (1965)</h3>
+<p>A. N. Kolmogorov. <strong>Three Approaches to the Quantitative Definition of Information.</strong> <em>Problems of Information Transmission</em> 1(1):1–7 (1965; Russian original 3–11).</p>
+<ul>
+<li><a href="https://www.mathnet.ru/eng/ppi68" target="_blank" rel="noopener">MathNet</a></li>
+<li><strong>Role here:</strong> Background for reference-machine-dependent description complexity and the invariance theorem. Neural K is explicitly protocol-relative.</li>
+</ul>
+<h3 id="r15-grünwald-2004">R15 · Grünwald (2004)</h3>
+<p>Peter Grünwald. <strong>A Tutorial Introduction to the Minimum Description Length Principle.</strong> arXiv (2004).</p>
+<ul>
+<li><a href="https://arxiv.org/abs/math/0406077" target="_blank" rel="noopener">arXiv:math/0406077</a></li>
+<li><strong>Role here:</strong> Distinguishes two-part coding, NML, prequential coding, and Bayesian methods, preventing “SGD minimizes program length” from being used as an unsupported slogan.</li>
+</ul>
+<h3 id="r16-blier-and-ollivier-2018">R16 · Blier and Ollivier (2018)</h3>
+<p>Léonard Blier, Yann Ollivier. <strong>The Description Length of Deep Learning Models.</strong> <em>NeurIPS 2018</em>.</p>
+<ul>
+<li><a href="https://proceedings.neurips.cc/paper_files/paper/2018/hash/3b712de48137572f3849aabd5666a4e3-Abstract.html" target="_blank" rel="noopener">NeurIPS</a></li>
+<li><strong>Role here:</strong> Empirically measures variational and prequential codelengths in deep networks; an important methodological comparison for E22.</li>
+</ul>
+<h3 id="r17-mcallester-1999">R17 · McAllester (1999)</h3>
+<p>David A. McAllester. <strong>PAC-Bayesian Model Averaging.</strong> <em>COLT 1999</em>.</p>
+<ul>
+<li><a href="https://doi.org/10.1145/307400.307435" target="_blank" rel="noopener">ACM DOI</a></li>
+<li><strong>Role here:</strong> Background for connecting prior-to-posterior complexity with generalization bounds. This archive does not derive loss-profile rankings from PAC-Bayes.</li>
+</ul>
+<h3 id="r18-levin-tishby-and-solla-1989">R18 · Levin, Tishby, and Solla (1989)</h3>
+<p>Esther Levin, Naftali Tishby, Sara A. Solla. <strong>A Statistical Approach to Learning and Generalization in Layered Neural Networks.</strong> <em>COLT 1989</em>, pp. 245–260. DOI: 10.1016/B978-0-08-094829-4.50020-9.</p>
+<ul>
+<li><a href="https://mlanthology.org/colt/1989/levin1989colt-statistical/" target="_blank" rel="noopener">ML Anthology</a></li>
+<li><strong>Role here:</strong> An early fixed-architecture Gibbs-ensemble treatment connecting prediction, free energy, and predictive MDL. “Neural-network free energy” is not claimed as a novelty here.</li>
+</ul>
+<h2 id="4-flatness-local-entropy-and-singular-learning-theory">4. Flatness, local entropy, and singular learning theory</h2>
+<h3 id="r19-hochreiter-and-schmidhuber-1997">R19 · Hochreiter and Schmidhuber (1997)</h3>
+<p>Sepp Hochreiter, Jürgen Schmidhuber. <strong>Flat Minima.</strong> <em>Neural Computation</em> 9(1):1–42 (1997). DOI: 10.1162/neco.1997.9.1.1.</p>
+<ul>
+<li><a href="https://doi.org/10.1162/neco.1997.9.1.1" target="_blank" rel="noopener">DOI / MIT Press</a></li>
+<li><strong>Role here:</strong> Connects wide low-error parameter regions with MDL and generalization. Parameter-space flatness is coordinate-dependent and is not treated as complete-function volume.</li>
+</ul>
+<h3 id="r20-chaudhari-et-al-2017">R20 · Chaudhari et al. (2017)</h3>
+<p>Pratik Chaudhari, Anna Choromanska, Stefano Soatto, Yann LeCun, Carlo Baldassi, Christian Borgs, Jennifer Chayes, Levent Sagun, Riccardo Zecchina. <strong>Entropy-SGD: Biasing Gradient Descent Into Wide Valleys.</strong> <em>ICLR 2017</em>.</p>
+<ul>
+<li><a href="https://arxiv.org/abs/1611.01838" target="_blank" rel="noopener">arXiv:1611.01838</a></li>
+<li><strong>Role here:</strong> Uses local entropy to favor wide valleys. It is adjacent to static parameter mass but uses a different object and optimization protocol.</li>
+</ul>
+<h3 id="r21-watanabe-2009">R21 · Watanabe (2009)</h3>
+<p>Sumio Watanabe. <strong>Algebraic Geometry and Statistical Learning Theory.</strong> Cambridge University Press (2009). DOI: 10.1017/CBO9780511800474.</p>
+<ul>
+<li><a href="https://doi.org/10.1017/CBO9780511800474" target="_blank" rel="noopener">Cambridge DOI</a></li>
+<li><strong>Role here:</strong> Foundational source for Singular Learning Theory and RLCT; used as a comparison for singular evidence and free-energy asymptotics, not as function Kolmogorov complexity.</li>
+</ul>
+<h3 id="r22-lau-et-al-2025">R22 · Lau et al. (2025)</h3>
+<p>Edmund Lau, Zach Furman, George Wang, Daniel Murfet, Susan Wei. <strong>The Local Learning Coefficient: A Singularity-Aware Complexity Measure.</strong> <em>AISTATS 2025</em>, PMLR 258:244–252.</p>
+<ul>
+<li><a href="https://proceedings.mlr.press/v258/lau25a.html" target="_blank" rel="noopener">PMLR</a></li>
+<li><strong>Role here:</strong> Provides a scalable estimator of local learning coefficients, a direct future comparison for Neural K-profile slopes, RLCT/LLC, and margin cores.</li>
+</ul>
+<h2 id="5-active-learning">5. Active learning</h2>
+<h3 id="r23-seung-opper-and-sompolinsky-1992">R23 · Seung, Opper, and Sompolinsky (1992)</h3>
+<p>H. Sebastian Seung, Manfred Opper, Haim Sompolinsky. <strong>Query by Committee.</strong> <em>COLT 1992</em>. DOI: 10.1145/130385.130417.</p>
+<ul>
+<li><a href="https://doi.org/10.1145/130385.130417" target="_blank" rel="noopener">ACM DOI</a></li>
+<li><strong>Role here:</strong> E21’s use of multi-seed disagreement to select informative unseen inputs is a neural-function-ensemble version of version-space committee querying.</li>
+</ul>
+<h2 id="6-modern-finite-width-statistical-mechanics">6. Modern finite-width statistical mechanics</h2>
+<h3 id="r24-pacelli-et-al-2023">R24 · Pacelli et al. (2023)</h3>
+<p>R. Pacelli, S. Ariosto, M. Pastore, F. Ginelli, M. Gherardi, P. Rotondo. <strong>A Statistical Mechanics Framework for Bayesian Deep Neural Networks Beyond the Infinite-Width Limit.</strong> <em>Nature Machine Intelligence</em> 5:1497–1507 (2023).</p>
+<ul>
+<li><a href="https://www.nature.com/articles/s42256-023-00767-6" target="_blank" rel="noopener">Nature Machine Intelligence</a></li>
+<li><strong>Role here:</strong> Derives finite-width Bayesian corrections beyond the NNGP/infinite-width limit. It shows what modern quantitative theory can solve under explicit assumptions, but does not replace empirical measurement of ordinary optimizers and complete-function distributions.</li>
+</ul>
+<h2 id="7-agi-free-energy-and-cognitive-theories">7. AGI, free energy, and cognitive theories</h2>
+<h3 id="r25-hutter-2007">R25 · Hutter (2007)</h3>
+<p>Marcus Hutter. <strong>Universal Algorithmic Intelligence: A Mathematical Top-Down Approach.</strong> In <em>Artificial General Intelligence</em>, Springer, pp. 227–290 (2007).</p>
+<ul>
+<li><a href="https://arxiv.org/abs/cs/0701125" target="_blank" rel="noopener">arXiv:cs/0701125</a></li>
+<li><strong>Role here:</strong> AIXI combines Solomonoff induction with sequential action and reward maximization; it clarifies why the present framework is an induction theory rather than a complete agent loop.</li>
+</ul>
+<h3 id="r26-schmidhuber-2008">R26 · Schmidhuber (2008)</h3>
+<p>Jürgen Schmidhuber. <strong>Driven by Compression Progress: A Simple Principle Explains Essential Aspects of Subjective Beauty, Novelty, Surprise, Interestingness, Attention, Curiosity, Creativity, Art, Science, Music, Jokes.</strong> arXiv preprint (2008).</p>
+<ul>
+<li><a href="https://people.idsia.ch/~juergen/driven2008.pdf" target="_blank" rel="noopener">Author-hosted original PDF</a></li>
+<li><strong>Role here:</strong> Defines curiosity reward through improvement in compression rather than static compressibility; adjacent to per-example free-energy increments and active disagreement querying.</li>
+</ul>
+<h3 id="r27-friston-and-kiebel-2009">R27 · Friston and Kiebel (2009)</h3>
+<p>Karl Friston, Stefan Kiebel. <strong>Predictive Coding under the Free-Energy Principle.</strong> <em>Philosophical Transactions of the Royal Society B</em> 364:1211–1221 (2009). DOI: 10.1098/rstb.2008.0300.</p>
+<ul>
+<li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2666703/" target="_blank" rel="noopener">PubMed Central</a></li>
+<li><strong>Role here:</strong> A representative entry for predictive coding and the Free Energy Principle. It shares variational-free-energy mathematics but uses different hidden-state, perception, and action objects.</li>
+</ul>
+<h3 id="r28-catoni-2007">R28 · Catoni (2007)</h3>
+<p>Olivier Catoni. <strong>PAC-Bayesian Supervised Classification: The Thermodynamics of Statistical Learning.</strong> IMS Lecture Notes–Monograph Series 56 (2007).</p>
+<ul>
+<li><a href="https://arxiv.org/abs/0712.0248" target="_blank" rel="noopener">arXiv:0712.0248</a></li>
+<li><strong>Role here:</strong> Connects empirical risk, Gibbs posteriors, temperature, and KL complexity. This project adds complete-function resolution but does not derive profiles automatically from PAC-Bayes.</li>
+</ul>
+<h3 id="r29-watanabe-2013">R29 · Watanabe (2013)</h3>
+<p>Sumio Watanabe. <strong>A Widely Applicable Bayesian Information Criterion.</strong> <em>Journal of Machine Learning Research</em> 14:867–897 (2013).</p>
+<ul>
+<li><a href="https://jmlr.csail.mit.edu/papers/volume14/watanabe13a/watanabe13a.pdf" target="_blank" rel="noopener">JMLR PDF</a></li>
+<li><strong>Role here:</strong> WBIC/RLCT provides a computable entry to free-energy asymptotics in singular models and may help derive low-loss contraction exponents.</li>
+</ul>
+<h3 id="r30-seung-sompolinsky-and-tishby-1992">R30 · Seung, Sompolinsky, and Tishby (1992)</h3>
+<p>H. Sebastian Seung, Haim Sompolinsky, Naftali Tishby. <strong>Statistical Mechanics of Learning from Examples.</strong> <em>Physical Review A</em> 45:6056–6091 (1992). DOI: 10.1103/PhysRevA.45.6056.</p>
+<ul>
+<li><a href="https://journals.aps.org/pra/abstract/10.1103/PhysRevA.45.6056" target="_blank" rel="noopener">Physical Review A</a></li>
+<li><strong>Role here:</strong> A classical teacher–student statistical mechanics of learning, establishing that temperature-, sample-, and generalization-transition analyses long predate this project.</li>
+</ul>
+<h3 id="r31-voita-and-titov-2020">R31 · Voita and Titov (2020)</h3>
+<p>Elena Voita, Ivan Titov. <strong>Information-Theoretic Probing with Minimum Description Length.</strong> <em>EMNLP 2020</em>.</p>
+<ul>
+<li><a href="https://aclanthology.org/2020.emnlp-main.14/" target="_blank" rel="noopener">ACL Anthology</a></li>
+<li><strong>Role here:</strong> Replaces single-point probe accuracy with online codelength; adjacent to future hidden-layer conditional-free-energy measurements.</li>
+</ul>
+<h3 id="r32-tishby-pereira-and-bialek-2000">R32 · Tishby, Pereira, and Bialek (2000)</h3>
+<p>Naftali Tishby, Fernando C. Pereira, William Bialek. <strong>The Information Bottleneck Method.</strong> Allerton Conference / arXiv (2000).</p>
+<ul>
+<li><a href="https://arxiv.org/abs/physics/0004057" target="_blank" rel="noopener">arXiv:physics/0004057</a></li>
+<li><strong>Role here:</strong> Defines a mutual-information tradeoff between compressing input information and retaining target-relevant information. Its object differs from complete-function parameter volume.</li>
+</ul>
+<h3 id="r33-saxe-et-al-2018">R33 · Saxe et al. (2018)</h3>
+<p>Andrew M. Saxe et al. <strong>On the Information Bottleneck Theory of Deep Learning.</strong> <em>ICLR 2018</em>.</p>
+<ul>
+<li><a href="https://openreview.net/forum?id=ry_WPG-A-" target="_blank" rel="noopener">OpenReview</a></li>
+<li><strong>Role here:</strong> Shows that a representational “compression phase” depends on activation and measurement conditions rather than being universal across deep-network training.</li>
+</ul>
+<h3 id="r34-kolchinsky-tracey-and-van-kuyk-2018">R34 · Kolchinsky, Tracey, and Van Kuyk (2018)</h3>
+<p>Artemy Kolchinsky, Brendan D. Tracey, Steven Van Kuyk. <strong>Caveats for Information Bottleneck in Deterministic Scenarios.</strong> arXiv (2018).</p>
+<ul>
+<li><a href="https://arxiv.org/abs/1808.07593" target="_blank" rel="noopener">arXiv:1808.07593</a></li>
+<li><strong>Role here:</strong> Identifies degeneracies of Information Bottleneck objectives under deterministic continuous mappings and labels, a direct boundary for exact-rule tasks.</li>
+</ul></div>
+        
+      </article>
+    </main>
+  </div>
+</body>
+</html>
