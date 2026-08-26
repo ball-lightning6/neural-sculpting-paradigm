@@ -116,6 +116,8 @@ $$</div>
 $$</div>
 <p>处穿过零点，与独立外推高度一致。最深阈值<code>epsilon=0.000952</code>时，中位<code>R=16.82</code>，即 flip 体积约比 parity4 小<code>2.0e7</code>倍。7/8副本已绝对反超，8/8副本的局部相对收缩率均为正，交叉后差距仍在扩大。</p>
 <p>预注册严格停止标准要求8/8副本连续五窗绝对反超，当前未满足；因此只能写“中位及7/8副本已反超，全部副本继续向同一方向”，不能写成“全副本稳健标准通过”。</p>
+<p>交叉后的排序与此前 leave-one-out 训练偏好同向：从 parity4 真值表留出<code>0000</code>时，缺失标签的多数预测偏向 parity4，而不是<code>flip0000</code>，尽管没有达到100%。这构成 full-rule 深尾体积与 fixed-<span class="math-inline">$D$</span> 局部预测之间的一致性旁证。</p>
+<p>它不是4-bit grokking 相变的直接测量。Leave-one-out 只对应 <span class="math-inline">$n=15$</span> 的一个固定训练集分支；随机训练集恢复率和<code>n50/n90</code>必须像 E23 那样另行扫描。E24 的作用是证明 profile 自身会换序，并检验 E20 条件测度链的前半段。</p>
 <figure class="result-figure"><a href="../assets/figures/e24_deep_crossing.png" target="_blank" rel="noopener"><img src="../assets/figures/e24_deep_crossing.png" alt="共享父系综中的深尾体积交叉" loading="lazy"></a><figcaption>共享父系综中的深尾体积交叉</figcaption></figure>
 <h2 id="3-交叉不是-hard-function-切换">3. 交叉不是 hard function 切换</h2>
 <p>二者从很早开始就各自100%固定为不同 hard function，交叉发生在 hard-exact 深尾。表示和 margin 指标在交叉点附近平滑变化，没有同步的离散跳跃。这说明相对复杂度换序可以由长期连续收缩率差累积产生，而不要求 hard ID 或某个表示指标突然相变。</p>

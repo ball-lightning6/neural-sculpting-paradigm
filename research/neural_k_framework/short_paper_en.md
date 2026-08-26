@@ -221,11 +221,17 @@ Stage B drew 64 random training sets for each target and sample size, with 24 pa
 
 The four transition intervals did not overlap, and the rank correlation was 1. Complete-rule volume predicted the random-dataset transition ordering of the parity family before the training results were known.
 
+The n50/n90 readings are grid-limited, but the original experiment already contains 64 random datasets at every shared sample count. A post-hoc 0.99-agreement interpolation on the target-aligned reconcentration branch, with 2,000 dataset-bootstrap replicates, gives approximately 59.98 for parity2, 69.47 for MUX3, 88.94 for parity3, 151.93 for parity4, and above 240 for the right-censored random target. The parity2/MUX3 95% intervals, [58.77,61.07] and [65.02,72.40], are disjoint. This does not replace the preregistered decision; it shows that repeated same-n agreement can refine a coarse sample grid.
+
 ![Complete-rule volume scores and random-dataset recovery transitions](assets/figures/e23_volume_to_transition.png)
 
 *Figure 2. Top left: complete-function recovery versus training-set size. Top right: unseen-input agreement. Bottom: frozen volume score versus n50 and n90.*
 
-Across all eight targets the correlation remained strong, but three clear reversals appeared: MUX3 versus parity2, and the random target versus parity3 and parity4. Inspecting the full curves showed that the random target’s contraction accelerated sharply with loss depth and eventually exceeded the parity targets. Deeper local information correlated better with final sample transitions.
+Across all eight targets the correlation remained strong, but the preregistered shallow secant score had three rank mismatches with `n50/n90`: MUX3 versus parity2, and the random target versus parity3 and parity4. Deeper profiles resolved the random-versus-parity3/4 pairs. The MUX3/parity2 pair remained different: matched-variance Gaussian deep-tail SMC still gave MUX3 much larger complete-target volume, while uniform-random partial datasets recovered parity2 earlier. This shows that complete-target Neural K-profile and random-dataset recovery transition are related but distinct quantities; the latter also includes the fixed-$D$ competition denominator, effective pattern coverage, and optimizer reachability.
+
+A causal sampling intervention made this distinction explicit. Under uniform sampling, parity2/MUX3 had `n50=64/80`; strict eight-cell balancing changed the values to `56/72` without changing their order. Raising MUX selector-conflict examples to 75% changed them to `72/56`, fully reversing the order. Relative to uniform sampling, MUX3 moved 24/32 examples earlier at `n50/n90`, while parity2 moved eight later at both thresholds, and the direction remained stable from 500 through 40,000 steps. Operational transition location is therefore not a single-variable function of complete-target difficulty; how efficiently the data eliminate target-specific competing extensions is also first-order.
+
+Gaussian SMC at fixed `n=32` reproduced the reversal without an optimizer. At `epsilon=0.02`, uniform parity2/MUX3 target masses were 0.266/0.000214, cell masses were 0.469/0.284, and conflict masses were 0.498/0.782. Uniform-MUX3 had agreement 0.959 while almost never selecting the true target. Its errors localized to selector-conflict cells, where posterior target accuracy rose from 0.777 under uniform sampling to 0.995 under conflict enrichment. The fixed-$D$ competing denominator is therefore directly measured as a first-order static source of the transition reversal.
 
 The theory therefore changed again. A rule should not be assigned one precision-independent score. Initialization probability, volume at one loss, and one local slope are all partial views. The relevant object is an entire precision-dependent curve: a target can be easy to fit coarsely and expensive in the deep tail. This curve became the Neural K-profile.
 
@@ -244,6 +250,10 @@ Parity4 had the smallest absolute volume among all 54 targets over the measured 
 To remove independent-SMC normalization offsets, the second experiment branched both targets from one parent particle population and advanced them at identical thresholds.
 
 The median volume ratio crossed at approximately 0.002308, close to the preregistered extrapolation. At the deepest threshold, the one-point exception had about twenty million times less median volume than parity4. Seven of eight replicas had crossed in absolute volume, while all eight still had contraction-rate differences in the same direction. The stricter preregistered condition—eight of eight replicas remaining crossed for five consecutive windows—was not met, so the result is reported as 7/8 rather than complete convergence.
+
+The deep-tail ordering also agrees with an independent real-training observation. When `0000` was held out from the parity4 truth table, the majority prediction for the missing label favored parity4 over the compatible `flip0000` extension, although not with 100% probability. After the deep-tail crossing, parity4 likewise had the larger complete-target volume.
+
+An important boundary remains: 4-bit full-rule SMC does not itself yield a random-dataset `n50/n90`, and leave-one-out is not a complete grokking-transition measurement. It is one local prediction at $n=15$ along the same conditional-measure chain. E20 connects full-rule volume to fixed-$D$ candidate branches, while E23 directly compares the full profile with random-dataset transitions. E24 therefore supports consistency between the two complexity readings but does not directly measure a 4-bit transition.
 
 ![Shared-parent deep-tail crossing of parity4 and its one-point exception](assets/figures/e24_deep_crossing.png)
 
@@ -490,12 +500,12 @@ Draw $n$ random examples from a rule $f$ while fixing architecture, optimizer, t
 $$
 n_q^\Pi(f)
 =
-\min\left\{n:
+\min\left\{n\in\mathcal G,\ n<N:
 \Pr_{D_n\sim f}[\mathrm{Recover}_\Pi(f\mid D_n)]\ge q
 \right\}.
 $$
 
-The n50 and n90 values in E23 are instances. They are not machine-independent Kolmogorov complexity, but they are reproducible sample-identification complexities for the chosen neural language.
+The n50 and n90 values in E23 are instances. They are grid crossings, so the underlying transition is only bracketed between adjacent sample counts and should be reported with bootstrap intervals. If no crossing occurs by $N-1$, the value is right-censored; full-data fitting at $n=N$ checks reachability rather than generalization. This is especially limiting in a 4-bit space with only sixteen states, where hard rules can hit the full-space ceiling before a transition is identifiable. The quantity is not machine-independent Kolmogorov complexity, but in sufficiently large spaces it is a reproducible identification-sample complexity for the chosen neural language.
 
 ### 11.7 Two minimal static empirical principles
 

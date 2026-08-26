@@ -130,6 +130,21 @@ def rewrite_experiment_links(markdown_text: str, experiment: Experiment) -> str:
     text = text.replace("(MOTIVATION_AND_PREREGISTRATION.md)", "(#motivation)")
     text = text.replace("(RESULTS_AND_CONCLUSION.md)", "(#results)")
     text = text.replace("(../../assets/figures/", "(../assets/figures/")
+    text = text.replace(
+        "(results/",
+        f"(../../experiments/{experiment.directory.name}/results/",
+    )
+    for document in experiment.directory.glob("*.md"):
+        if document.name in {
+            "README.md",
+            "MOTIVATION_AND_PREREGISTRATION.md",
+            "RESULTS_AND_CONCLUSION.md",
+        }:
+            continue
+        text = text.replace(
+            f"({document.name})",
+            f"(../../experiments/{experiment.directory.name}/{document.name})",
+        )
     for script in experiment.scripts:
         text = text.replace(
             f"({script.name})",
@@ -645,6 +660,15 @@ def english_experiment_markdown(experiment: Experiment) -> str:
     if experiment.number in figure_map:
         filename, caption = figure_map[experiment.number]
         results += f"\n\n![{caption}](../../assets/figures/{filename})"
+    if experiment.number == 23:
+        results += """
+
+![Five-target Gaussian deep-tail SMC](../../../experiments/experiment_23_volume_to_data_transition/results/deep_tail/deep_mismatch_bridge.png)
+
+![Uniform/cell/conflict optimizer intervention](../../../experiments/experiment_23_volume_to_data_transition/results/coverage_intervention/coverage_shortcut_intervention_curves.png)
+
+![Uniform/cell/conflict fixed-D static SMC](../../../experiments/experiment_23_volume_to_data_transition/results/fixed_d_smc/fixed_d_static_smc_curves.png)
+"""
     return "\n\n".join(
         [
             "## Experiment overview {#overview}",

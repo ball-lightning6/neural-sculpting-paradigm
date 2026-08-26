@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="E23 在读取任何随机子集训练结果前，先用完整真值表 SMC 冻结八条8-bit 规则的局部体积收缩分数；随后训练9,736个随机数据集条件，检验静态体积能否前瞻预测n50/n90样本相变，并用跨函数族反例压力测试单标量复杂度假说。">
+  <meta name="description" content="E23 在读取任何随机子集训练结果前，先用完整真值表 SMC 冻结八条8-bit 规则的局部体积收缩分数；随后训练9,736个随机数据集条件，检验静态体积能否前瞻预测n50/n90样本相变。2026-08-26 的三项补充实验继续追踪唯一稳定的 parity2/MUX3 跨族错序，并把缺失变量定位到 fixed-$D$ 竞争函数分母和采样辨识效率。">
   <title>E23：完整目标体积前瞻预测数据相变 · Neural K 研究档案</title>
   <link rel="stylesheet" href="../assets/site.css">
   <script>
@@ -39,6 +39,7 @@
 <ul>
 <li><a href="#overview">实验概览</a></li>
 <li><a href="#目的">目的</a></li>
+<li><a href="#三项补充实验的闭环">三项补充实验的闭环</a></li>
 <li><a href="#运行顺序">运行顺序</a></li>
 <li><a href="#sha256">SHA256</a></li>
 <li><a href="#motivation">为什么做、怎样判决</a></li>
@@ -48,10 +49,13 @@
 <li><a href="#4-判决">4. 判决</a></li>
 <li><a href="#results">结果、解读与边界</a></li>
 <li><a href="#1-确认性-parity-预测严格命中">1. 确认性 parity 预测严格命中</a></li>
-<li><a href="#2-跨族关系很强-但单标量定律失败">2. 跨族关系很强，但单标量定律失败</a></li>
+<li><a href="#2-跨族关系很强-但浅层单标量不够">2. 跨族关系很强，但浅层单标量不够</a></li>
 <li><a href="#3-复杂度排序本身随-loss-改变">3. 复杂度排序本身随 loss 改变</a></li>
 <li><a href="#4-agreement-复现分叉再凝聚">4. Agreement 复现分叉再凝聚</a></li>
-<li><a href="#5-边界">5. 边界</a></li>
+<li><a href="#5-gaussian-深尾把唯一稳定错序留给-mux3-parity2">5. Gaussian 深尾把唯一稳定错序留给 MUX3/parity2</a></li>
+<li><a href="#6-定向采样把真实训练相变完全翻转">6. 定向采样把真实训练相变完全翻转</a></li>
+<li><a href="#7-fixed-d-静态-smc-复现反转并定位竞争函数">7. Fixed-D 静态 SMC 复现反转并定位竞争函数</a></li>
+<li><a href="#8-最终分层与边界">8. 最终分层与边界</a></li>
 </ul>
 </div>
 </nav>
@@ -64,22 +68,56 @@
         <header class="article-header">
           <div class="eyebrow">E23 · 实验详情</div>
           <h1>E23：完整目标体积前瞻预测数据相变</h1>
-          <p class="article-description">E23 在读取任何随机子集训练结果前，先用完整真值表 SMC 冻结八条8-bit 规则的局部体积收缩分数；随后训练9,736个随机数据集条件，检验静态体积能否前瞻预测n50/n90样本相变，并用跨函数族反例压力测试单标量复杂度假说。</p>
+          <p class="article-description">E23 在读取任何随机子集训练结果前，先用完整真值表 SMC 冻结八条8-bit 规则的局部体积收缩分数；随后训练9,736个随机数据集条件，检验静态体积能否前瞻预测n50/n90样本相变。2026-08-26 的三项补充实验继续追踪唯一稳定的 parity2/MUX3 跨族错序，并把缺失变量定位到 fixed-$D$ 竞争函数分母和采样辨识效率。</p>
         </header>
-        <div class="article-body"><div class="source-bar"><span>复现脚本</span><div><a href="../../experiments/experiment_23_volume_to_data_transition/experiment_8bit_rule_volume_preregister.py">experiment_8bit_rule_volume_preregister.py</a><a href="../../experiments/experiment_23_volume_to_data_transition/experiment_8bit_volume_to_data_transition.py">experiment_8bit_volume_to_data_transition.py</a></div></div><h2 id="overview">实验概览</h2>
+        <div class="article-body"><div class="source-bar"><span>复现脚本</span><div><a href="../../experiments/experiment_23_volume_to_data_transition/experiment_8bit_mismatch_joint_deep_bridge.py">experiment_8bit_mismatch_joint_deep_bridge.py</a><a href="../../experiments/experiment_23_volume_to_data_transition/experiment_8bit_rule_volume_preregister.py">experiment_8bit_rule_volume_preregister.py</a><a href="../../experiments/experiment_23_volume_to_data_transition/experiment_8bit_volume_to_data_transition.py">experiment_8bit_volume_to_data_transition.py</a><a href="../../experiments/experiment_23_volume_to_data_transition/experiment_parity2_mux3_coverage_shortcut_intervention.py">experiment_parity2_mux3_coverage_shortcut_intervention.py</a><a href="../../experiments/experiment_23_volume_to_data_transition/experiment_parity2_mux3_fixed_d_static_smc.py">experiment_parity2_mux3_fixed_d_static_smc.py</a></div></div><h2 id="overview">实验概览</h2>
 <h2 id="目的">目的</h2>
-<p>E23 在读取任何随机子集训练结果前，先用完整真值表 SMC 冻结八条8-bit 规则的局部体积收缩分数；随后训练9,736个随机数据集条件，检验静态体积能否前瞻预测<code>n50/n90</code>样本相变，并用跨函数族反例压力测试单标量复杂度假说。</p>
+<p>E23 在读取任何随机子集训练结果前，先用完整真值表 SMC 冻结八条8-bit 规则的局部体积收缩分数；随后训练9,736个随机数据集条件，检验静态体积能否前瞻预测<code>n50/n90</code>样本相变。2026-08-26 的三项补充实验继续追踪唯一稳定的 parity2/MUX3 跨族错序，并把缺失变量定位到 fixed-<span class="math-inline">$D$</span> 竞争函数分母和采样辨识效率。</p>
+<h2 id="三项补充实验的闭环">三项补充实验的闭环</h2>
+<ol>
+<li><strong>多目标 Gaussian 深尾 SMC</strong>：random 相对 parity3/4 的浅层错序在深尾换序；MUX3 的完整目标体积则始终远大于 parity2，说明这组差异不能继续归因于 profile 读得不够深。</li>
+<li><strong>Cell/conflict 真实训练干预</strong>：uniform 和八格均衡都由 parity2 更早恢复；只提高 MUX selector 冲突样本权重，<code>n50</code> 从 parity2/MUX3=<code>64/80</code>翻转为<code>72/56</code>。</li>
+<li><strong>Cell/conflict fixed-<span class="math-inline">$D$</span> 静态 SMC</strong>：无 optimizer 时复现同一排序。<code>epsilon=0.02</code>下，uniform、cell、conflict 的 parity2/MUX3 exact-target mass 分别为<code>0.266/0.000214</code>、<code>0.469/0.284</code>和<code>0.498/0.782</code>。</li>
+</ol>
+<p>因此，full-target Neural K-profile 是强一阶预测量，但 grokking 相变还取决于特定训练集如何排除目标相关的竞争延拓；<code>n50/n90</code>是独立的协议相对辨识/恢复复杂度，不是静态 Neural K 的普遍同义定义。</p>
+<figure class="result-figure"><a href="../../experiments/experiment_23_volume_to_data_transition/results/coverage_intervention/coverage_shortcut_intervention_curves.png" target="_blank" rel="noopener"><img src="../../experiments/experiment_23_volume_to_data_transition/results/coverage_intervention/coverage_shortcut_intervention_curves.png" alt="Cell/conflict 真实训练相变" loading="lazy"></a><figcaption>Cell/conflict 真实训练相变</figcaption></figure>
+<figure class="result-figure"><a href="../../experiments/experiment_23_volume_to_data_transition/results/fixed_d_smc/fixed_d_static_smc_curves.png" target="_blank" rel="noopener"><img src="../../experiments/experiment_23_volume_to_data_transition/results/fixed_d_smc/fixed_d_static_smc_curves.png" alt="Cell/conflict fixed-D 静态 SMC" loading="lazy"></a><figcaption>Cell/conflict fixed-D 静态 SMC</figcaption></figure>
 <h2 id="运行顺序">运行顺序</h2>
 <pre><code class="language-bash">python experiment_8bit_rule_volume_preregister.py
 python experiment_8bit_volume_to_data_transition.py
 </code></pre>
+<p>针对阶段 A 浅层分数与跨族相变排序的三组错序，另有一个预注册的五分支共享父系综深尾确认实验。由于原 <code>Uniform[-1,1]</code> 参数立方体存在非零 BCE 下界，该后续实验采用同方差的无界 Gaussian 参考测度；它检验跨协议排序稳健性，不是原体积曲线的无缝续接：</p>
+<pre><code class="language-bash">python experiment_8bit_mismatch_joint_deep_bridge.py
+</code></pre>
+<p>原阶段 B 已包含每个 <code>n</code> 的 64 份随机训练集和每份 24 个 seed。可用连续 agreement 重新凝聚曲线细化粗网格相变位置：</p>
+<pre><code class="language-bash">python analysis_tools/analyze_agreement_subgrid_transitions.py \
+  --result-dir /root/results_8bit_volume_to_data_transition
+</code></pre>
+<p>为判别 parity2/MUX3 的跨族错序究竟来自完整规则难度，还是来自相关格点数量和 MUX copy 捷径，另有一个固定 AdamW 的因果数据干预：</p>
+<pre><code class="language-bash">python experiment_parity2_mux3_coverage_shortcut_intervention.py
+</code></pre>
+<p>它比较均匀随机、八格均衡和 selector 冲突富集三种嵌套抽样协议，并把 parity2 作为冲突富集的负对照。</p>
+<p>为直接测量这三种部分训练集下的静态竞争分母，而不是再借助 optimizer 轨迹，运行：</p>
+<pre><code class="language-bash">python experiment_parity2_mux3_fixed_d_static_smc.py
+</code></pre>
+<p>该实验固定<code>n=32</code>，对每种协议取8份数据集，在与 Gaussian full-target 深尾实验相同的参考测度下并行运行48个 fixed-D 条件。</p>
 <ul>
 <li><a href="#motivation">实验动机与预注册</a></li>
 <li><a href="#results">结果与边界</a></li>
+<li><a href="../../experiments/experiment_23_volume_to_data_transition/DEEP_TAIL_FOLLOWUP_PREREGISTRATION.md">深尾错序确认预注册</a></li>
+<li><a href="../../experiments/experiment_23_volume_to_data_transition/DEEP_TAIL_FOLLOWUP_RESULTS.md">Gaussian 深尾后续结果</a></li>
+<li><a href="../../experiments/experiment_23_volume_to_data_transition/COVERAGE_SHORTCUT_INTERVENTION_PREREGISTRATION.md">Parity2/MUX3 覆盖与捷径干预预注册</a></li>
+<li><a href="../../experiments/experiment_23_volume_to_data_transition/COVERAGE_SHORTCUT_INTERVENTION_RESULTS.md">Parity2/MUX3 覆盖与捷径干预结果</a></li>
+<li><a href="../../experiments/experiment_23_volume_to_data_transition/FIXED_D_STATIC_SMC_PREREGISTRATION.md">Parity2/MUX3 fixed-D 静态 SMC 预注册</a></li>
+<li><a href="../../experiments/experiment_23_volume_to_data_transition/FIXED_D_STATIC_SMC_RESULTS.md">Parity2/MUX3 fixed-D 静态 SMC 结果</a></li>
+<li><a href="../../experiments/experiment_23_volume_to_data_transition/results/README.md">三项补充实验精简结果资产</a></li>
 </ul>
 <h2 id="sha256">SHA256</h2>
 <pre><code class="language-text">466a59d8e0a2243a9040d328dfef5e6f11c4ecb9893452b72024c6ecbe02fbb7  volume script
 7b14e28ffd97a50da0af424e1bf755e72e82ad894e613cd129bcf00e5f742331  transition script
+5df789c3976f59224b38ef63649a7ba9ce931cfa2c92c3d22098bd64d7e42f0c  Gaussian deep-tail script
+234b87d39454d7fca35d7502ad76aa48329e8abece57f18aee8cbb81cd7812ce  coverage/conflict intervention script
+fab1a8f12acb6c21d2396b0d9ecea8e6c4cfa23806d7f1ce513a5e7fb6a2c40d  fixed-D static SMC script
 ebf266355364f25a0e694ea41863190cbf8a546025c1c49fda309fcb5c1172c5  volume ZIP
 6e4075cae4fbd7072ab53f1e2764e65bbbf1934ced35f0301da965e8e0cd834d  transition ZIP
 </code></pre>
@@ -148,11 +186,12 @@ $$</div>
 </table>
 <p>四个<code>n50</code>和<code>n90</code>网格区间均互不重叠；Spearman 为1.0/1.0。该顺序从5,000步起已经稳定，不是40,000步截止点偶然产生。由此获得从完整目标静态体积到随机训练集辨识样本量的直接前瞻证据。</p>
 <figure class="result-figure"><a href="../assets/figures/e23_volume_to_transition.png" target="_blank" rel="noopener"><img src="../assets/figures/e23_volume_to_transition.png" alt="完整目标体积与数据相变" loading="lazy"></a><figcaption>完整目标体积与数据相变</figcaption></figure>
-<h2 id="2-跨族关系很强-但单标量定律失败">2. 跨族关系很强，但单标量定律失败</h2>
-<p>全部八规则上，volume score 对<code>n50/n90</code>的 Spearman 为0.898/0.868；去掉随机规则后七条结构规则为0.955/0.927。但出现三组明确反转：MUX3/parity2、random/parity3、random/parity4。random 到<code>n=240</code>仍未恢复完整映射。</p>
-<p>因此浅层单区间斜率是强一阶预测量，却不是跨任意函数族的充分统计量。固定训练集中的竞争分母、样本覆盖结构和 optimizer 可达性仍可贡献差异。</p>
+<h2 id="2-跨族关系很强-但浅层单标量不够">2. 跨族关系很强，但浅层单标量不够</h2>
+<p>全部八规则上，volume score 对<code>n50/n90</code>的 Spearman 为0.898/0.868；去掉随机规则后七条结构规则为0.955/0.927。预注册浅层割线分数相对于相变排序出现三组错序：MUX3/parity2、random/parity3、random/parity4。random 到<code>n=240</code>仍未恢复完整映射。</p>
+<p>阶段 A 冻结的 score 只是一段浅 loss 割线。它是强一阶预测量，却不是跨任意函数族的充分统计量。后续深尾实验解决了 random 相对 parity3/4 的错序，但 MUX3/parity2 在 Gaussian 深尾仍稳定保持“完整 MUX3 体积更大、uniform 数据相变却更晚”的方向。这证明 full-target profile 与<code>n50/n90</code>本来就是相关但不同的对象，中间还包含固定训练集竞争分母、样本覆盖结构和 optimizer 可达性。</p>
 <h2 id="3-复杂度排序本身随-loss-改变">3. 复杂度排序本身随 loss 改变</h2>
 <p>random-balanced 的局部收缩率随 loss 深入急剧加速，并依次超过 parity2、parity3 和 parity4。绝对体积排名也发生交叉。用更深局部窗口预测<code>n50/n90</code>时，Spearman 从约0.73/0.71上升到0.97/0.95；用单截面<code>-log V</code>预测时也从约0.83/0.77升到0.95/0.93。</p>
+<p>因此真正发生反转的是体积和局部速度在 profile 内部的排序；<code>n50/n90</code>相变本身没有反转，而是作为外部操作量指出浅层 score 读早了。</p>
 <p>这迫使复杂度对象从单个数修正为完整 profile：</p>
 <div class="math-display">$$
 K_f^N(\epsilon)=-\log V_f(\epsilon),\quad
@@ -162,11 +201,119 @@ $$</div>
 <p>局部斜率、曲率和交叉都携带信息；任一浅层切片都可能遗漏深尾成本。</p>
 <h2 id="4-agreement-复现分叉再凝聚">4. Agreement 复现分叉再凝聚</h2>
 <p>所有规则在<code>n=1</code>时 agreement 都接近1而目标函数质量为0。parity 随 n 增加先分叉，再按<code>parity1 -&gt; parity4</code>的次序重新凝聚到目标函数；random 的 agreement 则持续降到约0.656且目标质量始终为0。高 agreement 只代表当前函数分布窄，不代表外部正确。</p>
-<h2 id="5-边界">5. 边界</h2>
+<p>每个相同 <span class="math-inline">$n$</span> 已随机重复64份训练集，每份24个seed，因此 agreement 还能细化<code>n50/n90</code>的粗网格。后验诊断从每条曲线的 agreement 最低点后开始，要求 unseen target accuracy 至少0.90，并对 mean unseen agreement=0.99 做 isotonic 拟合和线性亚网格插值。2,000次 dataset bootstrap 结果为：</p>
+<table>
+<thead>
+<tr>
+<th>规则</th>
+<th style="text-align: right;">agreement=0.99估计</th>
+<th style="text-align: right;">95% bootstrap区间</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>parity2</td>
+<td style="text-align: right;">59.98</td>
+<td style="text-align: right;">[58.77,61.07]</td>
+</tr>
+<tr>
+<td>MUX3</td>
+<td style="text-align: right;">69.47</td>
+<td style="text-align: right;">[65.02,72.40]</td>
+</tr>
+<tr>
+<td>parity3</td>
+<td style="text-align: right;">88.94</td>
+<td style="text-align: right;">[85.72,91.05]</td>
+</tr>
+<tr>
+<td>parity4</td>
+<td style="text-align: right;">151.93</td>
+<td style="text-align: right;">[149.65,153.81]</td>
+</tr>
+<tr>
+<td>random-balanced</td>
+<td style="text-align: right;">&gt;240</td>
+<td style="text-align: right;">100%右删失</td>
+</tr>
+</tbody>
+</table>
+<p>在相同<code>n=64</code>的配对随机子集上，parity2 agreement 比 MUX3 平均高0.0106，paired-bootstrap 95%区间[0.0078,0.0134]。这支持用“同 n 多随机几次”的 agreement 比较相对复杂度，但该阈值和插值是在看到原数据后增加的诊断，不能冒充预注册结果。</p>
+<h2 id="5-gaussian-深尾把唯一稳定错序留给-mux3-parity2">5. Gaussian 深尾把唯一稳定错序留给 MUX3/parity2</h2>
+<p>五目标共享父系综的 Gaussian SMC 推进到最深共同阈值约<code>0.0004635</code>。Random-balanced 相对 parity3/4 的体积比和相对收缩速度均在8/8 replica 中支持操作性相变方向。Parity2/MUX3 则没有交叉：最深处</p>
+<div class="math-display">$$
+\log\frac{V(\mathrm{parity2})}{V(\mathrm{MUX3})}\approx-96.9,
+$$</div>
+<p>即 MUX3 完整目标体积约大 <span class="math-inline">$10^{42}$</span> 倍。这个结果否定“所有跨族错序只需读取更深 full profile 就会消失”。</p>
+<figure class="result-figure"><a href="../../experiments/experiment_23_volume_to_data_transition/results/deep_tail/deep_mismatch_bridge.png" target="_blank" rel="noopener"><img src="../../experiments/experiment_23_volume_to_data_transition/results/deep_tail/deep_mismatch_bridge.png" alt="五目标 Gaussian 深尾 SMC" loading="lazy"></a><figcaption>五目标 Gaussian 深尾 SMC</figcaption></figure>
+<h2 id="6-定向采样把真实训练相变完全翻转">6. 定向采样把真实训练相变完全翻转</h2>
+<p>固定网络、AdamW、训练预算和目标函数，只改变训练样本分布：</p>
+<table>
+<thead>
+<tr>
+<th>协议</th>
+<th style="text-align: right;">parity2 <code>n50/n90</code></th>
+<th style="text-align: right;">MUX3 <code>n50/n90</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>uniform</td>
+<td style="text-align: right;">64 / 80</td>
+<td style="text-align: right;">80 / 104</td>
+</tr>
+<tr>
+<td>cell-balanced</td>
+<td style="text-align: right;">56 / 64</td>
+<td style="text-align: right;">72 / 88</td>
+</tr>
+<tr>
+<td>conflict-enriched</td>
+<td style="text-align: right;">72 / 88</td>
+<td style="text-align: right;"><strong>56 / 72</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Cell balancing 同时帮助两条规则，却保留准确率75%的 <code>copy x1/x2</code> 捷径，因此 MUX3 仍较晚。把 selector 冲突样本提高到75%后，MUX3 的<code>n50/n90</code>相对 uniform 提前24/32个样本，parity2反而各推迟8个。2,000次配对 bootstrap 和500--40,000步的逐时刻分析都保留该方向。</p>
+<h2 id="7-fixed-d-静态-smc-复现反转并定位竞争函数">7. Fixed-D 静态 SMC 复现反转并定位竞争函数</h2>
+<p>固定<code>n=32</code>，对三协议、两目标、每协议8份数据集运行 Gaussian constrained SMC。全部条件 hard-fit 后，<code>epsilon=0.02</code>的 exact-target mass 为：</p>
+<table>
+<thead>
+<tr>
+<th>协议</th>
+<th style="text-align: right;">parity2</th>
+<th style="text-align: right;">MUX3</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>uniform</td>
+<td style="text-align: right;">0.266</td>
+<td style="text-align: right;">0.000214</td>
+</tr>
+<tr>
+<td>cell-balanced</td>
+<td style="text-align: right;">0.469</td>
+<td style="text-align: right;">0.284</td>
+</tr>
+<tr>
+<td>conflict-enriched</td>
+<td style="text-align: right;">0.498</td>
+<td style="text-align: right;"><strong>0.782</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Uniform-MUX3 的 agreement 已达0.959却几乎不选择真实目标；conflict-MUX3 的目标在8/8数据集中都是 modal function。按未见语义格分解，uniform 在普通格的目标准确率为0.993，在 selector冲突格仅0.777；conflict将冲突格提高到0.995。</p>
+<p>所以真实训练中的相变反转已经存在于 fixed-<span class="math-inline">$D$</span> 静态竞争分母，AdamW 不是制造定性顺序的必要条件。Optimizer 仍影响幅度和 parity2 等局部效应。</p>
+<h2 id="8-最终分层与边界">8. 最终分层与边界</h2>
 <ul>
 <li>parity 是预注册确认性家族，跨族曲线诊断包含事后分析；</li>
+<li><code>n50/n90</code>是样本数网格上的区间 crossing，不是无限精度点；接近规则必须同时看相邻网格和 bootstrap 区间；</li>
+<li>未在 <span class="math-inline">$n&lt;N$</span> crossing 的目标只能记为右删失；<code>n=256</code>完整数据仅作可达性对照；</li>
 <li><code>n50/n90</code>是协议相对的操作阈值，不是机器无关样本复杂度；</li>
 <li>full-rule profile 强烈预测数据相变，但并未单独决定所有跨族排序；</li>
+<li><code>n50/n90</code>应称为协议相对辨识/恢复样本复杂度，而不是 full-target Neural K 的同义标量；</li>
+<li>fixed-<span class="math-inline">$D$</span> 深尾 lineage 多数降到每 replica 约1--2条，绝对 target-mass 小数只作粗略估计；主判决依赖跨 loss、8份数据集、replica、定向干预和真实训练外部对照；</li>
 <li>profile 为何具有特定形状仍是本文明确不求解的微观数学问题。</li>
 </ul></div>
         <footer class="experiment-pager"><a href="e22.html">← E22 逐样本自由能与信息不变量</a><a href="e24.html">E24 深尾 Neural K-profile 与排序交叉 →</a></footer>

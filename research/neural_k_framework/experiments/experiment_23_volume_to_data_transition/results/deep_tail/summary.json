@@ -1,0 +1,9 @@
+{
+  "status": "interrupted",
+  "device": "cuda",
+  "gpu": "NVIDIA GeForce RTX 5090",
+  "parameter_count": 433,
+  "target_count": 5,
+  "completed_threshold_index_min": 62,
+  "last_common_threshold": 0.00041109963828219387
+}

@@ -45,6 +45,8 @@
 </ul>
 </li>
 <li><a href="#2-复杂度是网络相对的-profile">2. 复杂度是网络相对的 Profile</a><ul>
+<li><a href="#独立操作量-随机训练集的辨识与恢复相变">独立操作量：随机训练集的辨识与恢复相变</a></li>
+<li><a href="#这些实验怎样修正了原来的结论">这些实验怎样修正了原来的结论</a></li>
 <li><a href="#与-mdl-和算法信息论的关系">与 MDL 和算法信息论的关系</a></li>
 </ul>
 </li>
@@ -61,7 +63,9 @@
 <li><a href="#5-怎样用体积预测一个未见样本">5. 怎样用体积预测一个未见样本</a></li>
 <li><a href="#6-surprise-信息增益与样本顺序不变量">6. Surprise、信息增益与样本顺序不变量</a><ul>
 <li><a href="#6-1-已观察标签的-surprise">6.1 已观察标签的 Surprise</a></li>
-<li><a href="#6-2-surprise-不等于期望信息增益">6.2 Surprise 不等于期望信息增益</a></li>
+<li><a href="#6-2-hard-conditioning-下-实际-surprise-精确等于函数分布信息增益">6.2 Hard-conditioning 下：实际 Surprise 精确等于函数分布信息增益</a></li>
+<li><a href="#6-3-实际-surprise-不等于标签未知时的期望信息增益">6.3 实际 Surprise 不等于标签未知时的期望信息增益</a></li>
+<li><a href="#6-4-加入样本以后-查询点收束-不代表全局-agreement-单调">6.4 加入样本以后：查询点收束，不代表全局 Agreement 单调</a></li>
 </ul>
 </li>
 <li><a href="#7-agreement-猜想">7. Agreement 猜想</a></li>
@@ -139,7 +143,50 @@ K^N_\Pi(f;\epsilon)
 $$</div>
 <p>它不是机器无关 Kolmogorov complexity，而是“当前神经语言把函数 <span class="math-inline">$f$</span> 实现到精度 <span class="math-inline">$\epsilon$</span> 有多稀有”。更换架构、激活、宽度、编码、初始化尺度或损失，都会改变这条曲线。</p>
 <p>复杂度首先是一条 profile：先验概率只是浅层起点，某个固定 loss 的体积只是一个截面，局部收缩率只是斜率。不同曲线可以交叉。并且 hard function 仍然太粗；即使所有输出符号已经相同，margin、logit 与内部表示的连续几何仍可继续收缩和换序。<a href="experiments/e24.html">E24</a>是直接证据。</p>
-<p>如果需要一个操作性标量，可以使用固定协议下随机训练集的恢复阈值，例如 <code>n50/n90</code>。但它仍然依赖恢复标准、训练预算和架构。</p>
+<h3 id="独立操作量-随机训练集的辨识与恢复相变">独立操作量：随机训练集的辨识与恢复相变</h3>
+<p>Neural K-profile 是完整目标的静态几何对象。实际训练还可以定义一个直接可测、但<strong>不能与 Neural K-profile 偷换</strong>的样本复杂度。为此固定神经参考协议 <span class="math-inline">$\Pi$</span>、训练集抽样分布 <span class="math-inline">$q$</span>，再固定完整训练审计协议 <span class="math-inline">$\mathcal T$</span>：网络容量、初始化、optimizer、训练预算、seed 数、完整 probe 范围和恢复阈值都必须预先写定。</p>
+<p>对完整目标函数 <span class="math-inline">$f$</span> 和样本数 <span class="math-inline">$n$</span>，从 <span class="math-inline">$D_{\mathrm{full}}(f)$</span> 中均匀随机抽取多份大小为 <span class="math-inline">$n$</span> 的训练集 <span class="math-inline">$D_j$</span>，每份训练多个独立 seed。定义数据集级恢复判据 <span class="math-inline">$\mathcal R_{\Pi,\mathcal T}(D_j,f)$</span>；它不能只看 validation accuracy，而应同时要求：</p>
+<ol>
+<li>绝大多数 seed 已拟合训练集；</li>
+<li>已拟合 seed 中，目标完整函数占足够高质量；</li>
+<li>目标函数是 modal hard function；</li>
+<li>完整函数 collision / agreement 已超过预注册阈值。</li>
+</ol>
+<p>样本数 <span class="math-inline">$n$</span> 下的恢复率为：</p>
+<div class="math-display">$$
+\widehat r_{\Pi,\mathcal T}(f,n)
+=
+\frac{1}{M}
+\sum_{j=1}^{M}
+\mathbf 1\!\left[
+\mathcal R_{\Pi,\mathcal T}(D_j,f)=1
+\right].
+$$</div>
+<p>对恢复率做单调估计后，定义：</p>
+<div class="math-display">$$
+n_q^{\mathrm{id}}(f;\Pi,q,\mathcal T)
+=
+\min\left\{
+n\in\mathcal G,\ n&lt;N:
+\widehat r_{\Pi,\mathcal T}^{\,\uparrow}(f,n)\ge q
+\right\},
+\qquad q\in\{0.5,0.9\}.
+$$</div>
+<p>这里 <span class="math-inline">$N=|D_{\mathrm{full}}(f)|$</span>，<span class="math-inline">$\mathcal G$</span> 是预注册的非完整样本数网格。<code>n50</code> 和 <code>n90</code> 分别是网格上随机训练集有 50% 和 90% 概率稳定恢复完整规则的首次 crossing。点估计 <code>n_q=n_k</code> 实际只把连续相变定位到区间 <span class="math-inline">$(n_{k-1},n_k]$</span>；应同时报告 bootstrap 区间。若直到最大非完整样本数 <span class="math-inline">$N-1$</span> 仍未 crossing，则记为 <code>n_q&gt;N-1</code> 或 right-censored，不能把 <span class="math-inline">$n=N$</span> 的完整真值表拟合当作泛化相变。</p>
+<p>因此它给出的是数据量轴上的 grokking / 规则恢复相变<strong>区间</strong>。网格相邻、置信区间重叠的规则出现 tie 或一个档位错序，不足以否定统计关系。尤其在 4-bit 这类只有 16 个状态的空间里，一个样本已占 6.25%，holdout 位置和对称性影响很大，最难规则还会直接撞到全空间上限；这时 <code>n50/n90</code> 往往不可辨识，只能依靠 full profile 与局部 leave-one-out 旁证。</p>
+<p>这个量更准确的名称是<strong>协议相对辨识/恢复样本复杂度</strong>。它以“样本数”为单位，并直接回答“在抽样分布 <span class="math-inline">$q$</span> 下，当前训练系统需要多少随机约束，才会稳定选择这条完整规则”。它同时包含至少四项：完整目标本身的 Neural K-profile、固定部分训练集下竞争延拓的分母、样本覆盖/捷径造成的可辨识性，以及 optimizer 的可达性。因此它可以作为 Neural K 的外部判据和经验锚点，却不能未经额外假设直接定义为同一个量。</p>
+<p>更明确地说，完整目标体积测量的是分子；随机训练集相变测量的是这个分子在 target-dependent 竞争分母和 optimizer 运输中何时占优。只有当这些额外因素跨任务受控，或者已经证明保持单调时，<code>n50/n90</code> 排序才能被当作 full-target Neural K 排序的代理。</p>
+<h3 id="这些实验怎样修正了原来的结论">这些实验怎样修正了原来的结论</h3>
+<p>我们最初有一个很自然的猜想：<strong>网络认为越复杂的规则，就需要越多训练样本才能被稳定识别。</strong> 对 parity1 到 parity4 的预注册实验严格符合这个顺序，说明完整规则的 Neural K 确实具有前瞻预测力，而不只是看完结果后的重新命名。</p>
+<p>随后，parity2 和 MUX3 出现了一个无法忽略的反例。按完整规则体积看，MUX3 更容易；但用普通随机样本训练时，它反而需要更多数据。这迫使我们承认：只知道目标规则本身有多难，还不够。</p>
+<p>关键缺失项是<strong>当前训练集还允许哪些替代解释</strong>。对 MUX3 来说，大量样本既符合真实 selector 规则，也符合“复制某一位，再记住少数例外”的捷径。这样的样本虽然数量不少，却没有真正帮助网络区分这些函数。</p>
+<p>第一个补充实验只改变采样方式。当我们增加那些恰好能区分真实 MUX3 和 copy 捷径的样本时，MUX3 立刻变得比 parity2 更早恢复。目标规则和网络都没有改变，改变的只是样本有没有击中竞争函数真正分歧的位置。</p>
+<p>第二个补充实验完全拿掉 optimizer，直接观察同一批训练样本允许的低-loss 函数。结果仍然相同：普通样本留下大量错误捷径，而冲突样本会系统地排除它们，让真实 MUX3 成为主导。这说明上述现象首先来自训练集本身塑造的静态函数竞争，optimizer 主要影响到达速度和具体路径。</p>
+<blockquote>
+<p><strong>修正后的结论：一个规则需要多少数据，不只取决于规则本身有多难，还取决于当前有哪些函数在和它竞争，以及采到的样本能否有效排除这些竞争函数。完整规则的 Neural K 仍是重要的一阶预测量，但它不等于 grokking 相变点。</strong></p>
+</blockquote>
+<p>详细数字、三项补充实验和数值边界都放在 <a href="experiments/e23.html">E23</a>，理论核心只保留这个修正后的因果关系。</p>
+<p><a href="experiments/e24.html">E24</a>还补充了另一种情况：即使两个完整映射已经固定，随着 loss 继续降低，它们的相对体积仍可能换序。这说明“规则难度”本身也应看整条 loss profile，而不是某一个浅层截面。</p>
 <h3 id="与-mdl-和算法信息论的关系">与 MDL 和算法信息论的关系</h3>
 <p>标准 MDL 把学习写成两部分码长：</p>
 <div class="math-display">$$
@@ -350,7 +397,41 @@ C(D_m)-C(D_0).
 $$</div>
 <p>中间项望远镜消去，因此总成本只依赖起点和最终训练集，不依赖样本添加顺序。<strong>每一步的 surprise 仍然依赖顺序；不变的是总和。</strong> <a href="experiments/e22.html">E22</a>对 256 条规则和每条规则全部 40,320 个顺序进行了数值闭合。</p>
 <p>这个不变量属于同一个静态配分函数，不代表 SGD 轨迹守恒。</p>
-<h3 id="6-2-surprise-不等于期望信息增益">6.2 Surprise 不等于期望信息增益</h3>
+<h3 id="6-2-hard-conditioning-下-实际-surprise-精确等于函数分布信息增益">6.2 Hard-conditioning 下：实际 Surprise 精确等于函数分布信息增益</h3>
+<p>这里的概率不要求样本本身来自一个随机生成器。令当前完整函数为随机变量</p>
+<div class="math-display">$$
+F\sim Q_D(f),
+$$</div>
+<p>而候选输入 <span class="math-inline">$x$</span> 上的标签只是这个函数随机变量的投影：</p>
+<div class="math-display">$$
+Y_x=F(x),
+\qquad
+P_D(y\mid x)
+=
+\sum_fQ_D(f)\mathbf 1[f(x)=y].
+$$</div>
+<p>观察标签 <span class="math-inline">$y$</span> 并做纯 hard conditioning 后，新的函数分布为：</p>
+<div class="math-display">$$
+Q_{D'}(f)
+=
+\frac{Q_D(f)\mathbf 1[f(x)=y]}
+{P_D(y\mid x)},
+\qquad
+D'=D\cup\{(x,y)\}.
+$$</div>
+<p>因此，以2为底计算 KL 时有精确恒等式：</p>
+<div class="math-display">$$
+D_{\mathrm{KL},2}\!\left(Q_{D'}\Vert Q_D\right)
+=
+-\log_2P_D(y\mid x)
+=
+s(y\mid x,D).
+$$</div>
+<blockquote>
+<p><strong>Hard-conditioning 精确定理：真实标签在当前函数分布下越不可能，它删除的候选函数质量越多；已观察标签的预测 surprise，精确等于函数 posterior 更新的信息增益。</strong></p>
+</blockquote>
+<p>这就是 <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2782645/" target="_blank" rel="noopener">Itti 与 Baldi 的 Bayesian surprise</a> 在完整函数空间中的具体化：改变的不是“样本分布”，而是我们对哪个完整函数仍可能成立的信念分布。该等式要求同一个静态 <span class="math-inline">$Q_D$</span> 上的连贯 hard 更新；把多 seed optimizer 终点分布重新训练一遍，并不自动满足这个 Bayes 公式。</p>
+<h3 id="6-3-实际-surprise-不等于标签未知时的期望信息增益">6.3 实际 Surprise 不等于标签未知时的期望信息增益</h3>
 <p>Surprise 是标签已经观察以后产生的实际编码代价。选择下一个尚未标注的输入时，更相关的是期望信息增益：观察其标签以后，函数或参数分布平均缩小多少。</p>
 <p>一般定义为：</p>
 <div class="math-display">$$
@@ -363,7 +444,7 @@ $$</div>
 =
 I(\Theta;Y_x\mid D).
 $$</div>
-<p>等价的 BALD 形式为：</p>
+<p>等价的 <a href="https://arxiv.org/abs/1112.5745" target="_blank" rel="noopener">BALD</a> 形式为：</p>
 <div class="math-display">$$
 I(\Theta;Y_x\mid D)
 =
@@ -372,7 +453,38 @@ H[Y_x\mid D]
 \mathbb E_{\theta\sim q(\theta\mid D)}H[Y_x\mid\theta].
 $$</div>
 <p>若每个 hard function 对 <span class="math-inline">$x$</span> 给出确定标签，第二项为零，期望信息增益就等于候选标签分布的预测熵。此时最接近 50:50、agreement 最低的输入，平均最有信息量。这是主动 disagreement 实验 <a href="experiments/e21.html">E21</a>的理论基础。</p>
+<p>二分类时，若 <span class="math-inline">$p=P_D(Y_x=1)$</span>，则</p>
+<div class="math-display">$$
+A(x\mid D)=p^2+(1-p)^2.
+$$</div>
+<p>所以在标签尚未知时，低 agreement 与高预测熵、从而高<strong>期望</strong>信息增益单调对应。但标签一旦观察，读数变成 <span class="math-inline">$-\log_2P_D(y\mid x)$</span>：一个原本接近50:50的标签平均很有信息；一个 agreement 极高却与共识相反的标签，则可能产生更大的<strong>实际</strong> surprise。两种选样直觉并不冲突，它们分别回答“查询前平均能学到多少”和“这个已经发生的标签究竟排除了多少函数”。</p>
 <p>需要保留一个实际边界：hard function 后验中“所有模型都答对”并不保证重新训练时该样本完全没有作用。它的 soft margin 仍可不同，加入样本也会从初始化开始改变优化路径。</p>
+<p>在 soft Gibbs 更新中，这个边界可以写得更明确。若</p>
+<div class="math-display">$$
+q'_{D}(\theta)
+\propto
+q_D(\theta)e^{-\beta\ell(\theta;x,y)},
+$$</div>
+<p>则广义 surprise 是</p>
+<div class="math-display">$$
+\Delta C
+=
+-\log\mathbb E_{q_D}
+\left[e^{-\beta\ell(\theta;x,y)}\right],
+$$</div>
+<p>而 posterior KL 为</p>
+<div class="math-display">$$
+D_{\mathrm{KL}}(q'_D\Vert q_D)
+=
+\Delta C
+-
+\beta\,\mathbb E_{q'_D}\ell.
+$$</div>
+<p>因此 soft loss 下“样本编码代价”“posterior KL”和单网络 BCE 彼此相关但不相等；hard indicator 极限才恢复上一小节的精确等式。</p>
+<h3 id="6-4-加入样本以后-查询点收束-不代表全局-agreement-单调">6.4 加入样本以后：查询点收束，不代表全局 Agreement 单调</h3>
+<p>Hard conditioning 后，所有幸存函数都在已加入的查询点 <span class="math-inline">$x$</span> 上给出标签 <span class="math-inline">$y$</span>，所以该点的局部 agreement 立即变为1。但在另一个 probe 点 <span class="math-inline">$x'$</span> 上，agreement 可以上升，也可以下降：被删除的函数簇可能原本维持某个全局共识，也可能正是造成分歧的来源。于是全局平均 agreement、完整函数 collision 和目标函数质量都没有逐样本单调定理。</p>
+<p>这给“收束—分叉—再次收束”一个直接解释：一个高 surprise 标签可能先摧毁原来的主导函数簇，使剩余簇暂时更加均衡、全局 agreement 下降；后续信息样本再继续删除竞争簇，函数分布才凝聚到新规则。局部 KL 信息增益始终非负，不等于全局 agreement 必须上升。</p>
+<p>MUX3 的 cell/conflict 实验把这一区分变成了可见机制。普通格 <span class="math-inline">$x_1=x_2$</span> 上，真实 MUX3、<code>copy x1</code> 和 <code>copy x2</code> 给出相同标签，因而这些样本几乎不能区分三者；selector 冲突格 <span class="math-inline">$x_1\ne x_2$</span> 才把捷径与真实规则分开。Uniform fixed-<span class="math-inline">$D$</span> SMC 在普通格上的后验目标准确率为0.993，在冲突格仅0.777；把冲突样本提高到75%后，冲突格准确率升至0.995，完整 MUX3 目标质量从0.000214升至0.782。这个干预提高的不是抽象“样本数量”，而是单位样本削减当前竞争函数分母的效率。</p>
 <h2 id="7-agreement-猜想">7. Agreement 猜想</h2>
 <p>对某个输入 <span class="math-inline">$x$</span>，若候选标签概率为 <span class="math-inline">$P(y\mid x,D)$</span>，两次独立函数抽样给出同一标签的 pairwise agreement 为：</p>
 <div class="math-display">$$
@@ -558,7 +670,7 @@ $$</div>
 <li><a href="experiments/e25.html">E25</a>用静态分支预测未见 MNIST 标签和 NLL 转折，而不是只解释训练目标自身。</li>
 <li><a href="experiments/e18.html">E18</a>与 <a href="experiments/e21.html">E21</a>用独立的符号复杂度审计检查高 agreement 终点是否人类可读。</li>
 </ol>
-<p>反例也真实改变了理论：AND shortcut 否定预设赢家，weighted rule-bit 否定单函数全程单调，random/parity 反转否定浅层单标量，deep crossing 否定 hard ID 足够。正因为理论会被这些结果迫使修改，它不是“网络选了什么，什么就叫简单”的循环解释。</p>
+<p>反例也真实改变了理论：AND shortcut 否定预设赢家，weighted rule-bit 否定单函数全程单调，random/parity 的浅层错序否定单截面标量，deep crossing 否定 hard ID 足够，MUX3/parity2 又否定“完整规则难度单独决定样本相变”。正因为理论会被这些结果迫使修改，它不是“网络选了什么，什么就叫简单”的循环解释。</p>
 <h2 id="11-数据量-loss-深度与相区">11. 数据量、Loss 深度与相区</h2>
 <p>同一规则在不同数据量下可以出现四个典型区域：</p>
 <ol>

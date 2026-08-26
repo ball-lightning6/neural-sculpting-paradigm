@@ -1,0 +1,264 @@
+{
+  "hard_exact_sufficient_threshold": 0.0027076061740622863,
+  "pair_summaries": [
+    {
+      "easy": "parity2",
+      "hard": "mux3",
+      "easy_transition": [
+        64,
+        80
+      ],
+      "hard_transition": [
+        80,
+        112
+      ],
+      "easy_transition_brackets": {
+        "n50": [
+          48,
+          64
+        ],
+        "n90": [
+          64,
+          80
+        ]
+      },
+      "hard_transition_brackets": {
+        "n50": [
+          64,
+          80
+        ],
+        "n90": [
+          96,
+          112
+        ]
+      },
+      "first_median_crossing_threshold": 0.7,
+      "first_all_replica_crossing_threshold": 0.7,
+      "deep_ratio_windows_pass": false,
+      "deep_rate_windows_pass": false,
+      "pair_robust": false,
+      "last_ratio": {
+        "easy": "parity2",
+        "hard": "mux3",
+        "easy_transition": [
+          64,
+          80
+        ],
+        "hard_transition": [
+          80,
+          112
+        ],
+        "easy_transition_brackets": {
+          "n50": [
+            48,
+            64
+          ],
+          "n90": [
+            64,
+            80
+          ]
+        },
+        "hard_transition_brackets": {
+          "n50": [
+            64,
+            80
+          ],
+          "n90": [
+            96,
+            112
+          ]
+        },
+        "threshold": 0.00046351354785,
+        "depth": 7.676674943935698,
+        "log_volume_ratio_easy_over_hard_median": -96.91845523562608,
+        "log_volume_ratio_min": -109.59990504271127,
+        "log_volume_ratio_max": -94.67738136303615,
+        "fraction_replicas_ratio_positive": 0.0
+      },
+      "last_rate": {
+        "easy": "parity2",
+        "hard": "mux3",
+        "threshold_high": 0.00052261006586,
+        "threshold_low": 0.00046351354785,
+        "depth_mid": 7.6166749439407315,
+        "ratio_growth_rate_median": -3.446057831099515,
+        "ratio_growth_rate_min": -5.0518428193937925,
+        "ratio_growth_rate_max": -2.7763990114397648,
+        "fraction_replicas_rate_positive": 0.0
+      }
+    },
+    {
+      "easy": "parity3",
+      "hard": "random_balanced",
+      "easy_transition": [
+        96,
+        112
+      ],
+      "hard_transition": [
+        241,
+        241
+      ],
+      "easy_transition_brackets": {
+        "n50": [
+          80,
+          96
+        ],
+        "n90": [
+          96,
+          112
+        ]
+      },
+      "hard_transition_brackets": {
+        "n50": [
+          240,
+          null
+        ],
+        "n90": [
+          240,
+          null
+        ]
+      },
+      "first_median_crossing_threshold": 0.7,
+      "first_all_replica_crossing_threshold": 0.7,
+      "deep_ratio_windows_pass": true,
+      "deep_rate_windows_pass": true,
+      "pair_robust": true,
+      "last_ratio": {
+        "easy": "parity3",
+        "hard": "random_balanced",
+        "easy_transition": [
+          96,
+          112
+        ],
+        "hard_transition": [
+          241,
+          241
+        ],
+        "easy_transition_brackets": {
+          "n50": [
+            80,
+            96
+          ],
+          "n90": [
+            96,
+            112
+          ]
+        },
+        "hard_transition_brackets": {
+          "n50": [
+            240,
+            null
+          ],
+          "n90": [
+            240,
+            null
+          ]
+        },
+        "threshold": 0.00046351354785,
+        "depth": 7.676674943935698,
+        "log_volume_ratio_easy_over_hard_median": 5513.724497402138,
+        "log_volume_ratio_min": 5186.254178788653,
+        "log_volume_ratio_max": 5987.51701444523,
+        "fraction_replicas_ratio_positive": 1.0
+      },
+      "last_rate": {
+        "easy": "parity3",
+        "hard": "random_balanced",
+        "threshold_high": 0.00052261006586,
+        "threshold_low": 0.00046351354785,
+        "depth_mid": 7.6166749439407315,
+        "ratio_growth_rate_median": 444.3502896196121,
+        "ratio_growth_rate_min": 409.5172053866087,
+        "ratio_growth_rate_max": 545.5448101611239,
+        "fraction_replicas_rate_positive": 1.0
+      }
+    },
+    {
+      "easy": "parity4",
+      "hard": "random_balanced",
+      "easy_transition": [
+        160,
+        160
+      ],
+      "hard_transition": [
+        241,
+        241
+      ],
+      "easy_transition_brackets": {
+        "n50": [
+          128,
+          160
+        ],
+        "n90": [
+          128,
+          160
+        ]
+      },
+      "hard_transition_brackets": {
+        "n50": [
+          240,
+          null
+        ],
+        "n90": [
+          240,
+          null
+        ]
+      },
+      "first_median_crossing_threshold": 0.7,
+      "first_all_replica_crossing_threshold": 0.7,
+      "deep_ratio_windows_pass": true,
+      "deep_rate_windows_pass": true,
+      "pair_robust": true,
+      "last_ratio": {
+        "easy": "parity4",
+        "hard": "random_balanced",
+        "easy_transition": [
+          160,
+          160
+        ],
+        "hard_transition": [
+          241,
+          241
+        ],
+        "easy_transition_brackets": {
+          "n50": [
+            128,
+            160
+          ],
+          "n90": [
+            128,
+            160
+          ]
+        },
+        "hard_transition_brackets": {
+          "n50": [
+            240,
+            null
+          ],
+          "n90": [
+            240,
+            null
+          ]
+        },
+        "threshold": 0.00046351354785,
+        "depth": 7.676674943935698,
+        "log_volume_ratio_easy_over_hard_median": 3203.3590342402304,
+        "log_volume_ratio_min": 2940.7547407679895,
+        "log_volume_ratio_max": 3705.9590437672177,
+        "fraction_replicas_ratio_positive": 1.0
+      },
+      "last_rate": {
+        "easy": "parity4",
+        "hard": "random_balanced",
+        "threshold_high": 0.00052261006586,
+        "threshold_low": 0.00046351354785,
+        "depth_mid": 7.6166749439407315,
+        "ratio_growth_rate_median": 161.40290064292236,
+        "ratio_growth_rate_min": 135.77523135361713,
+        "ratio_growth_rate_max": 258.636069015278,
+        "fraction_replicas_rate_positive": 1.0
+      }
+    }
+  ],
+  "all_pairs_robust": false
+}

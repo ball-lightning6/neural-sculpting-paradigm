@@ -253,3 +253,19 @@ Artemy Kolchinsky, Brendan D. Tracey, Steven Van Kuyk. **Caveats for Information
 
 - [arXiv:1808.07593](https://arxiv.org/abs/1808.07593)
 - **Role here:** Identifies degeneracies of Information Bottleneck objectives under deterministic continuous mappings and labels, a direct boundary for exact-rule tasks.
+
+## 8. Bayesian surprise and active information gain
+
+### R35 · Itti and Baldi (2009)
+
+Laurent Itti, Pierre Baldi. **Bayesian Surprise Attracts Human Attention.** *Vision Research* 49(10):1295–1306 (2009). DOI: 10.1016/j.visres.2008.09.007.
+
+- [PubMed Central](https://pmc.ncbi.nlm.nih.gov/articles/PMC2782645/)
+- **Role here:** Defines Bayesian surprise through KL between posterior and prior model distributions. Section 6 specializes this to complete hard-function distributions and proves equality between realized label surprisal and hard-posterior information gain.
+
+### R36 · Houlsby et al. (2011)
+
+Neil Houlsby, Ferenc Huszár, Zoubin Ghahramani, Máté Lengyel. **Bayesian Active Learning for Classification and Preference Learning.** arXiv (2011).
+
+- [arXiv:1112.5745](https://arxiv.org/abs/1112.5745)
+- **Role here:** BALD queries labels by their mutual information with parameters or hypotheses. In the deterministic-function limit, this archive connects BALD to predictive entropy, low agreement, and E21 disagreement sampling.

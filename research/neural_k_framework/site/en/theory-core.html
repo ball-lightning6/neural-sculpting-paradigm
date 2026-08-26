@@ -45,6 +45,8 @@
 </ul>
 </li>
 <li><a href="#2-complexity-is-an-architecture-relative-profile">2. Complexity is an architecture-relative profile</a><ul>
+<li><a href="#independent-operational-quantity-identification-and-recovery-transitions">Independent operational quantity: identification and recovery transitions</a></li>
+<li><a href="#how-these-experiments-corrected-the-original-claim">How these experiments corrected the original claim</a></li>
 <li><a href="#relation-to-mdl-and-algorithmic-information-theory">Relation to MDL and algorithmic information theory</a></li>
 </ul>
 </li>
@@ -61,7 +63,9 @@
 <li><a href="#5-predicting-an-unseen-label-from-volume">5. Predicting an unseen label from volume</a></li>
 <li><a href="#6-surprise-information-gain-and-order-invariance">6. Surprise, information gain, and order invariance</a><ul>
 <li><a href="#6-1-surprise-of-an-observed-label">6.1 Surprise of an observed label</a></li>
-<li><a href="#6-2-surprise-is-not-expected-information-gain">6.2 Surprise is not expected information gain</a></li>
+<li><a href="#6-2-under-hard-conditioning-realized-surprise-exactly-equals-function-distribution-information-gain">6.2 Under hard conditioning, realized surprise exactly equals function-distribution information gain</a></li>
+<li><a href="#6-3-realized-surprise-is-not-expected-information-gain-before-the-label-is-known">6.3 Realized surprise is not expected information gain before the label is known</a></li>
+<li><a href="#6-4-after-adding-a-sample-local-concentration-does-not-imply-monotone-global-agreement">6.4 After adding a sample: local concentration does not imply monotone global agreement</a></li>
 </ul>
 </li>
 <li><a href="#7-the-agreement-conjecture">7. The agreement conjecture</a></li>
@@ -139,7 +143,50 @@ K^N_\Pi(f;\epsilon)
 $$</div>
 <p>It is not machine-independent Kolmogorov complexity. It measures how rare it is for the current neural language to implement <span class="math-inline">$f$</span> to precision <span class="math-inline">$\epsilon$</span>. Changing architecture, activation, width, encoding, initialization scale, or loss can change the curve.</p>
 <p>Complexity is primarily a profile. Prior probability is only a shallow starting point, volume at one loss is one slice, and local contraction rate is one slope. Curves can cross. Hard function identity is still too coarse: margins, logits, and internal representations can continue contracting and changing order after all hard signs are fixed. <a href="experiments/e24.html">E24</a> is the direct demonstration.</p>
-<p>When one operational scalar is needed, a random-dataset recovery threshold such as n50 or n90 can be used, but it still depends on recovery criterion, training budget, and architecture.</p>
+<h3 id="independent-operational-quantity-identification-and-recovery-transitions">Independent operational quantity: identification and recovery transitions</h3>
+<p>The Neural K-profile is the static geometric object for a complete target. Real training also permits a directly measurable sample complexity, but it must <strong>not be identified with the Neural K-profile</strong>. Fix the neural reference protocol <span class="math-inline">$\Pi$</span>, a training-set sampling distribution <span class="math-inline">$q$</span>, and a complete audit protocol <span class="math-inline">$\mathcal T$</span>: capacity, initialization, optimizer, training budget, seed count, complete probe range, and recovery thresholds must all be preregistered.</p>
+<p>For a complete target <span class="math-inline">$f$</span> and sample count <span class="math-inline">$n$</span>, draw many size-<span class="math-inline">$n$</span> training sets <span class="math-inline">$D_j$</span> uniformly from <span class="math-inline">$D_{\mathrm{full}}(f)$</span> and train an independent seed committee on each. A dataset-level recovery predicate <span class="math-inline">$\mathcal R_{\Pi,\mathcal T}(D_j,f)$</span> should not use validation accuracy alone. It should jointly require:</p>
+<ol>
+<li>most seeds fit the training set;</li>
+<li>the complete target function has sufficient mass among fitted seeds;</li>
+<li>the target is the modal hard function;</li>
+<li>complete-function collision / agreement exceeds a preregistered threshold.</li>
+</ol>
+<p>The recovery rate at sample count <span class="math-inline">$n$</span> is</p>
+<div class="math-display">$$
+\widehat r_{\Pi,\mathcal T}(f,n)
+=
+\frac{1}{M}
+\sum_{j=1}^{M}
+\mathbf 1\!\left[
+\mathcal R_{\Pi,\mathcal T}(D_j,f)=1
+\right].
+$$</div>
+<p>After monotone estimation of this curve, define</p>
+<div class="math-display">$$
+n_q^{\mathrm{id}}(f;\Pi,q,\mathcal T)
+=
+\min\left\{
+n\in\mathcal G,\ n&lt;N:
+\widehat r_{\Pi,\mathcal T}^{\,\uparrow}(f,n)\ge q
+\right\},
+\qquad q\in\{0.5,0.9\}.
+$$</div>
+<p>Here <span class="math-inline">$N=|D_{\mathrm{full}}(f)|$</span> and <span class="math-inline">$\mathcal G$</span> is a preregistered grid of non-full sample counts. <code>n50</code> and <code>n90</code> are the first grid crossings at which 50% and 90% of random datasets stably recover the complete rule. A point estimate <code>n_q=n_k</code> only localizes the continuous transition to <span class="math-inline">$(n_{k-1},n_k]$</span> and should be reported with bootstrap intervals. If no crossing occurs by <span class="math-inline">$N-1$</span>, report <code>n_q&gt;N-1</code> or right-censored; fitting the full truth table at <span class="math-inline">$n=N$</span> is a reachability check, not a generalization transition.</p>
+<p>These quantities therefore bracket a data-axis grokking / rule-recovery transition rather than locating an infinitely precise point. A tie, one-grid reversal, or overlapping confidence intervals for nearby rules is not evidence against a statistical relationship. This limitation is severe in a 4-bit space with only sixteen states: each example occupies 6.25% of the domain, holdout position and symmetry dominate, and hard rules can hit the full-space ceiling before a transition is identifiable. In that regime <code>n50/n90</code> may be unresolvable and only full profiles plus local leave-one-out evidence remain available.</p>
+<p>The more accurate name for this quantity is <strong>protocol-relative identification/recovery sample complexity</strong>. Its unit is examples, and it asks how many random constraints the current training system needs before it stably selects the complete rule under <span class="math-inline">$q$</span>. It contains at least four ingredients: the complete target's Neural K-profile, the denominator of competing extensions under a fixed partial dataset, identifiability induced by sample coverage and shortcuts, and optimizer reachability. It can therefore serve as an external empirical anchor for Neural K, but not as an equivalent definition without additional assumptions.</p>
+<p>Put differently, complete-target volume measures a numerator. A random-dataset transition measures when that numerator dominates a target-dependent denominator under optimizer transport. Only when these extra factors are controlled across tasks, or proved to preserve order, can <code>n50/n90</code> rank be used as a proxy for full-target Neural K rank.</p>
+<h3 id="how-these-experiments-corrected-the-original-claim">How these experiments corrected the original claim</h3>
+<p>Our initial hypothesis was natural: <strong>rules that the network finds more complex should require more training examples before they are stably identified.</strong> A preregistered parity1-to-parity4 experiment followed this order exactly. Complete-rule Neural K therefore has genuine prospective predictive power; it is not merely a label assigned after seeing the result.</p>
+<p>Parity2 and MUX3 then produced a counterexample that could not be ignored. Complete-rule volume made MUX3 look easier, yet ordinary random training required more data to recover it. Target difficulty alone was therefore insufficient.</p>
+<p>The missing quantity was <strong>which alternative explanations remain compatible with the current training set</strong>. For MUX3, many examples agree both with the true selector rule and with a shortcut that copies one bit and memorizes a few exceptions. Such examples add data without actually distinguishing the competing functions.</p>
+<p>The first follow-up changed only the sampling distribution. Once training emphasized inputs that separate true MUX3 from the copy shortcuts, MUX3 recovered earlier than parity2. Neither the target rule nor the network changed; only whether the examples struck the places where the competing functions disagree.</p>
+<p>The second follow-up removed the optimizer entirely and directly sampled the low-loss functions allowed by the same datasets. The result remained: ordinary samples left a large shortcut population, while conflict examples eliminated it and made true MUX3 dominant. The effect therefore begins in the static function competition created by the dataset; the optimizer mainly changes how quickly and by which path that distribution is reached.</p>
+<blockquote>
+<p><strong>Corrected claim: the amount of data needed for a rule depends not only on the rule's own difficulty, but also on which functions compete with it and whether the sampled examples efficiently eliminate those competitors. Complete-rule Neural K remains an important first-order predictor, but it is not identical to the grokking transition.</strong></p>
+</blockquote>
+<p>Detailed numbers, all three follow-ups, and numerical boundaries are on the <a href="experiments/e23.html">E23 page</a>. The core page keeps only the corrected causal relation.</p>
+<p><a href="experiments/e24.html">E24</a> adds a different lesson: even after two complete mappings are fixed, their relative volume can change as loss deepens. Rule difficulty therefore belongs to a full loss profile rather than one shallow slice.</p>
 <h3 id="relation-to-mdl-and-algorithmic-information-theory">Relation to MDL and algorithmic information theory</h3>
 <p>Standard MDL writes learning as two code lengths:</p>
 <div class="math-display">$$
@@ -346,7 +393,41 @@ $$</div>
 $$</div>
 <p>Intermediate terms telescope, so total cost depends only on the starting and final datasets. <strong>Each increment remains order-dependent; only the total is invariant.</strong> <a href="experiments/e22.html">E22</a> numerically closes this identity for all 256 rules and all 40,320 orders per rule.</p>
 <p>The invariant belongs to one static partition function. It is not a conserved quantity along an SGD trajectory.</p>
-<h3 id="6-2-surprise-is-not-expected-information-gain">6.2 Surprise is not expected information gain</h3>
+<h3 id="6-2-under-hard-conditioning-realized-surprise-exactly-equals-function-distribution-information-gain">6.2 Under hard conditioning, realized surprise exactly equals function-distribution information gain</h3>
+<p>The data point itself need not be sampled from a random generator. Let the current complete function be the random variable</p>
+<div class="math-display">$$
+F\sim Q_D(f),
+$$</div>
+<p>and let the label at candidate input <span class="math-inline">$x$</span> be the projection</p>
+<div class="math-display">$$
+Y_x=F(x),
+\qquad
+P_D(y\mid x)
+=
+\sum_fQ_D(f)\mathbf 1[f(x)=y].
+$$</div>
+<p>After observing <span class="math-inline">$y$</span> and applying pure hard conditioning,</p>
+<div class="math-display">$$
+Q_{D'}(f)
+=
+\frac{Q_D(f)\mathbf 1[f(x)=y]}
+{P_D(y\mid x)},
+\qquad
+D'=D\cup\{(x,y)\}.
+$$</div>
+<p>With base-two KL, this gives the exact identity</p>
+<div class="math-display">$$
+D_{\mathrm{KL},2}\!\left(Q_{D'}\Vert Q_D\right)
+=
+-\log_2P_D(y\mid x)
+=
+s(y\mid x,D).
+$$</div>
+<blockquote>
+<p><strong>Hard-conditioning identity: the less probable the true label is under the current function distribution, the more candidate-function mass it deletes. Realized predictive surprise is exactly the information gain in the function posterior.</strong></p>
+</blockquote>
+<p>This is <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2782645/" target="_blank" rel="noopener">Itti and Baldi's Bayesian surprise</a> instantiated over complete functions. What changes is not a presumed sample-generating distribution but the belief distribution over which complete function remains possible. The identity requires coherent hard updating of one static <span class="math-inline">$Q_D$</span>; retraining a multi-seed optimizer ensemble does not automatically obey this Bayes formula.</p>
+<h3 id="6-3-realized-surprise-is-not-expected-information-gain-before-the-label-is-known">6.3 Realized surprise is not expected information gain before the label is known</h3>
 <p>Surprise is the realized coding cost after a label is observed. Before querying an unlabeled input, the relevant object is expected information gain: the average shrinkage of the function or parameter distribution after observing the label.</p>
 <div class="math-display">$$
 \mathrm{IG}(x\mid D)
@@ -358,7 +439,7 @@ $$</div>
 =
 I(\Theta;Y_x\mid D).
 $$</div>
-<p>The equivalent BALD form is</p>
+<p>The equivalent <a href="https://arxiv.org/abs/1112.5745" target="_blank" rel="noopener">BALD</a> form is</p>
 <div class="math-display">$$
 I(\Theta;Y_x\mid D)
 =
@@ -367,7 +448,38 @@ H[Y_x\mid D]
 \mathbb E_{\theta\sim q(\theta\mid D)}H[Y_x\mid\theta].
 $$</div>
 <p>If each hard function deterministically labels <span class="math-inline">$x$</span>, the second term vanishes and expected information gain equals predictive label entropy. Inputs closest to 50:50, and therefore with lowest agreement, are maximally informative on average. This motivates the active-disagreement experiment <a href="experiments/e21.html">E21</a>.</p>
+<p>For binary labels, if <span class="math-inline">$p=P_D(Y_x=1)$</span>, then</p>
+<div class="math-display">$$
+A(x\mid D)=p^2+(1-p)^2.
+$$</div>
+<p>Before the label is known, low agreement therefore corresponds monotonically to high predictive entropy and high <strong>expected</strong> information gain. Once the label is observed, however, the relevant quantity is <span class="math-inline">$-\log_2P_D(y\mid x)$</span>. A roughly 50:50 query is informative on average; a high-agreement label that contradicts the consensus can produce even larger <strong>realized</strong> surprise. These intuitions answer different questions: expected learning before a query versus the amount of function mass eliminated by an observed outcome.</p>
 <p>A practical caveat remains: zero hard-posterior information does not guarantee that retraining with an agreed-upon sample has no effect. Soft margins can differ, and the sample changes the optimizer path from initialization.</p>
+<p>For a soft Gibbs update,</p>
+<div class="math-display">$$
+q'_D(\theta)
+\propto
+q_D(\theta)e^{-\beta\ell(\theta;x,y)},
+$$</div>
+<p>the generalized surprise is</p>
+<div class="math-display">$$
+\Delta C
+=
+-\log\mathbb E_{q_D}
+\left[e^{-\beta\ell(\theta;x,y)}\right],
+$$</div>
+<p>whereas posterior KL is</p>
+<div class="math-display">$$
+D_{\mathrm{KL}}(q'_D\Vert q_D)
+=
+\Delta C
+-
+\beta\,\mathbb E_{q'_D}\ell.
+$$</div>
+<p>Thus sample codelength, posterior KL, and one-network BCE are related but not identical under soft loss. The exact identity of the previous subsection is recovered in the hard-indicator limit.</p>
+<h3 id="6-4-after-adding-a-sample-local-concentration-does-not-imply-monotone-global-agreement">6.4 After adding a sample: local concentration does not imply monotone global agreement</h3>
+<p>After hard conditioning, all surviving functions assign <span class="math-inline">$y$</span> at the queried point <span class="math-inline">$x$</span>, so local agreement at that point immediately becomes one. Agreement at another probe <span class="math-inline">$x'$</span> may rise or fall: the removed function cluster might have maintained a global consensus or might have caused the disagreement. Global mean agreement, complete-function collision, and target-function mass therefore have no per-example monotonic theorem.</p>
+<p>This explains concentration, branching, and reconcentration. A highly surprising label can first destroy the dominant function cluster, leave several smaller clusters more evenly weighted, and reduce global agreement. Later informative examples remove more competitors and reconcentrate the distribution. Local KL information gain remains nonnegative; global agreement need not increase.</p>
+<p>The MUX3 cell/conflict experiment makes this distinction concrete. On ordinary cells <span class="math-inline">$x_1=x_2$</span>, true MUX3, <code>copy x1</code>, and <code>copy x2</code> give the same label, so such examples barely distinguish them. Selector-conflict cells <span class="math-inline">$x_1\ne x_2$</span> separate the shortcuts from the true rule. Under uniform fixed-<span class="math-inline">$D$</span> SMC, posterior target accuracy was 0.993 on ordinary cells but only 0.777 on conflict cells. Raising conflict examples to 75% increased conflict-cell accuracy to 0.995 and complete MUX3 target mass from 0.000214 to 0.782. The intervention increases not an abstract sample count but the amount of current competitor mass removed per example.</p>
 <h2 id="7-the-agreement-conjecture">7. The agreement conjecture</h2>
 <p>For one input <span class="math-inline">$x$</span>, pairwise agreement between two independent function draws is</p>
 <div class="math-display">$$
@@ -551,7 +663,7 @@ $$</div>
 <li><a href="experiments/e25.html">E25</a> uses static branches to predict unseen MNIST labels and NLL turning points.</li>
 <li><a href="experiments/e18.html">E18</a> and <a href="experiments/e21.html">E21</a> use independent symbolic audits to test whether high-agreement endpoints are human-readable.</li>
 </ol>
-<p>Counterexamples have changed the theory rather than being renamed away. The AND shortcut rejected a prespecified winner, weighted rule bits rejected all-range monotonicity, random/parity reversals rejected a shallow scalar, and deep crossing rejected hard-function identity as sufficient. The framework is therefore not “whatever the network selects is simple.”</p>
+<p>Counterexamples have changed the theory rather than being renamed away. The AND shortcut rejected a prespecified winner, weighted rule bits rejected all-range monotonicity, shallow random/parity mismatches rejected a one-slice scalar, deep crossing rejected hard-function identity as sufficient, and MUX3/parity2 rejected the claim that complete-rule difficulty alone determines the sample transition. The framework is therefore not “whatever the network selects is simple.”</p>
 <h2 id="11-dataset-size-loss-depth-and-regimes">11. Dataset size, loss depth, and regimes</h2>
 <p>For one rule, four common regimes appear:</p>
 <ol>

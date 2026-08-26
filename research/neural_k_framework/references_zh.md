@@ -253,3 +253,19 @@ Artemy Kolchinsky, Brendan D. Tracey, Steven Van Kuyk. **Caveats for Information
 
 - [arXiv:1808.07593](https://arxiv.org/abs/1808.07593)
 - **本站引用关系**：指出确定性连续映射和确定性标签下 Information Bottleneck 可退化；本项目的精确规则任务正需要这一边界。
+
+## 八、Bayesian Surprise 与主动信息增益
+
+### R35 · Itti 与 Baldi（2009）
+
+Laurent Itti, Pierre Baldi. **Bayesian Surprise Attracts Human Attention.** *Vision Research* 49(10):1295–1306 (2009). DOI: 10.1016/j.visres.2008.09.007.
+
+- [PubMed Central 原文](https://pmc.ncbi.nlm.nih.gov/articles/PMC2782645/)
+- **本站引用关系**：用更新前后模型分布的 KL 定义 Bayesian surprise；理论核心第6节把它具体化为完整 hard-function 分布，并证明实际标签 surprisal 等于 hard posterior 信息增益。
+
+### R36 · Houlsby 等（2011）
+
+Neil Houlsby, Ferenc Huszár, Zoubin Ghahramani, Máté Lengyel. **Bayesian Active Learning for Classification and Preference Learning.** arXiv (2011).
+
+- [arXiv:1112.5745](https://arxiv.org/abs/1112.5745)
+- **本站引用关系**：BALD 用标签与参数/假设之间的互信息选择查询；本站在确定性函数极限下把它连接到 predictive entropy、低 agreement 与 E21 的 disagreement 选样。
