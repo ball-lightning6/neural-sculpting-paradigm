@@ -1,5 +1,5 @@
-# 本地结果包体积较大，仓库只保留脚本、结论和关键图。
-experiments/**/results/*.zip
+# 实验目录只保留脚本和文档；结果表与结果包不进入仓库。
+experiments/**/results/
 experiments/**/_smoke_*/
 
 __pycache__/

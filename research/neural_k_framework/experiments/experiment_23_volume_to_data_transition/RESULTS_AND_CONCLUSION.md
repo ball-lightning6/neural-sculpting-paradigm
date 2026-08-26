@@ -63,7 +63,7 @@ $$
 
 即 MUX3 完整目标体积约大 $10^{42}$ 倍。这个结果否定“所有跨族错序只需读取更深 full profile 就会消失”。
 
-![五目标 Gaussian 深尾 SMC](results/deep_tail/deep_mismatch_bridge.png)
+![五目标 Gaussian 深尾 SMC](../../assets/figures/e23_gaussian_deep_tail.png)
 
 ## 6. 定向采样把真实训练相变完全翻转
 

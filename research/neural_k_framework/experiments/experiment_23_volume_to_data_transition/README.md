@@ -12,9 +12,9 @@ E23 在读取任何随机子集训练结果前，先用完整真值表 SMC 冻�
 
 因此，full-target Neural K-profile 是强一阶预测量，但 grokking 相变还取决于特定训练集如何排除目标相关的竞争延拓；`n50/n90`是独立的协议相对辨识/恢复复杂度，不是静态 Neural K 的普遍同义定义。
 
-![Cell/conflict 真实训练相变](results/coverage_intervention/coverage_shortcut_intervention_curves.png)
+![Cell/conflict 真实训练相变](../../assets/figures/e23_sampling_intervention.png)
 
-![Cell/conflict fixed-D 静态 SMC](results/fixed_d_smc/fixed_d_static_smc_curves.png)
+![Cell/conflict fixed-D 静态 SMC](../../assets/figures/e23_fixed_d_static_smc.png)
 
 ## 运行顺序
 
@@ -60,7 +60,6 @@ python experiment_parity2_mux3_fixed_d_static_smc.py
 - [Parity2/MUX3 覆盖与捷径干预结果](COVERAGE_SHORTCUT_INTERVENTION_RESULTS.md)
 - [Parity2/MUX3 fixed-D 静态 SMC 预注册](FIXED_D_STATIC_SMC_PREREGISTRATION.md)
 - [Parity2/MUX3 fixed-D 静态 SMC 结果](FIXED_D_STATIC_SMC_RESULTS.md)
-- [三项补充实验精简结果资产](results/README.md)
 
 ## SHA256
 

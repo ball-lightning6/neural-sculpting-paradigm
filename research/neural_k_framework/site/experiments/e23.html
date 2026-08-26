@@ -80,8 +80,8 @@
 <li><strong>Cell/conflict fixed-<span class="math-inline">$D$</span> 静态 SMC</strong>：无 optimizer 时复现同一排序。<code>epsilon=0.02</code>下，uniform、cell、conflict 的 parity2/MUX3 exact-target mass 分别为<code>0.266/0.000214</code>、<code>0.469/0.284</code>和<code>0.498/0.782</code>。</li>
 </ol>
 <p>因此，full-target Neural K-profile 是强一阶预测量，但 grokking 相变还取决于特定训练集如何排除目标相关的竞争延拓；<code>n50/n90</code>是独立的协议相对辨识/恢复复杂度，不是静态 Neural K 的普遍同义定义。</p>
-<figure class="result-figure"><a href="../../experiments/experiment_23_volume_to_data_transition/results/coverage_intervention/coverage_shortcut_intervention_curves.png" target="_blank" rel="noopener"><img src="../../experiments/experiment_23_volume_to_data_transition/results/coverage_intervention/coverage_shortcut_intervention_curves.png" alt="Cell/conflict 真实训练相变" loading="lazy"></a><figcaption>Cell/conflict 真实训练相变</figcaption></figure>
-<figure class="result-figure"><a href="../../experiments/experiment_23_volume_to_data_transition/results/fixed_d_smc/fixed_d_static_smc_curves.png" target="_blank" rel="noopener"><img src="../../experiments/experiment_23_volume_to_data_transition/results/fixed_d_smc/fixed_d_static_smc_curves.png" alt="Cell/conflict fixed-D 静态 SMC" loading="lazy"></a><figcaption>Cell/conflict fixed-D 静态 SMC</figcaption></figure>
+<figure class="result-figure"><a href="../assets/figures/e23_sampling_intervention.png" target="_blank" rel="noopener"><img src="../assets/figures/e23_sampling_intervention.png" alt="Cell/conflict 真实训练相变" loading="lazy"></a><figcaption>Cell/conflict 真实训练相变</figcaption></figure>
+<figure class="result-figure"><a href="../assets/figures/e23_fixed_d_static_smc.png" target="_blank" rel="noopener"><img src="../assets/figures/e23_fixed_d_static_smc.png" alt="Cell/conflict fixed-D 静态 SMC" loading="lazy"></a><figcaption>Cell/conflict fixed-D 静态 SMC</figcaption></figure>
 <h2 id="运行顺序">运行顺序</h2>
 <pre><code class="language-bash">python experiment_8bit_rule_volume_preregister.py
 python experiment_8bit_volume_to_data_transition.py
@@ -110,7 +110,6 @@ python experiment_8bit_volume_to_data_transition.py
 <li><a href="../../experiments/experiment_23_volume_to_data_transition/COVERAGE_SHORTCUT_INTERVENTION_RESULTS.md">Parity2/MUX3 覆盖与捷径干预结果</a></li>
 <li><a href="../../experiments/experiment_23_volume_to_data_transition/FIXED_D_STATIC_SMC_PREREGISTRATION.md">Parity2/MUX3 fixed-D 静态 SMC 预注册</a></li>
 <li><a href="../../experiments/experiment_23_volume_to_data_transition/FIXED_D_STATIC_SMC_RESULTS.md">Parity2/MUX3 fixed-D 静态 SMC 结果</a></li>
-<li><a href="../../experiments/experiment_23_volume_to_data_transition/results/README.md">三项补充实验精简结果资产</a></li>
 </ul>
 <h2 id="sha256">SHA256</h2>
 <pre><code class="language-text">466a59d8e0a2243a9040d328dfef5e6f11c4ecb9893452b72024c6ecbe02fbb7  volume script
@@ -245,7 +244,7 @@ $$</div>
 \log\frac{V(\mathrm{parity2})}{V(\mathrm{MUX3})}\approx-96.9,
 $$</div>
 <p>即 MUX3 完整目标体积约大 <span class="math-inline">$10^{42}$</span> 倍。这个结果否定“所有跨族错序只需读取更深 full profile 就会消失”。</p>
-<figure class="result-figure"><a href="../../experiments/experiment_23_volume_to_data_transition/results/deep_tail/deep_mismatch_bridge.png" target="_blank" rel="noopener"><img src="../../experiments/experiment_23_volume_to_data_transition/results/deep_tail/deep_mismatch_bridge.png" alt="五目标 Gaussian 深尾 SMC" loading="lazy"></a><figcaption>五目标 Gaussian 深尾 SMC</figcaption></figure>
+<figure class="result-figure"><a href="../assets/figures/e23_gaussian_deep_tail.png" target="_blank" rel="noopener"><img src="../assets/figures/e23_gaussian_deep_tail.png" alt="五目标 Gaussian 深尾 SMC" loading="lazy"></a><figcaption>五目标 Gaussian 深尾 SMC</figcaption></figure>
 <h2 id="6-定向采样把真实训练相变完全翻转">6. 定向采样把真实训练相变完全翻转</h2>
 <p>固定网络、AdamW、训练预算和目标函数，只改变训练样本分布：</p>
 <table>
