@@ -12,7 +12,7 @@ site/index.html
 
 - `site/index.html`：研究主文；
 - `site/theory-core.html`：只保留最终命题与必要公式的独立理论核心；
-- `site/experiments/index.html`：E01–E25 实验索引；
+- `site/experiments/index.html`：E01–E29 实验索引；
 - `site/experiments/e01.html` 至 `e25.html`：实验详情；
 - `site/references.html`：明确引用、完整书目信息与论文原文入口；
 - `site/evidence-ledger.html`：完整证据总账。
@@ -38,5 +38,5 @@ python validate_site.py
 - 28 个 HTML 页面是否齐全；
 - 本地链接、图片、脚本和页内锚点是否存在；
 - 实验索引是否包含 25 张卡片；
-- 主文是否链接 E01–E25，并包含四张关键结果图；
+- 主文是否链接 E01–E29，并包含四张关键结果图；
 - 每个实验页是否包含概览、动机和结果三个主要分区。

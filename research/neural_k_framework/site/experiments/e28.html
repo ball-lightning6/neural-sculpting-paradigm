@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="检验Gaussian参考测度下的完整有限宽静态HMC系综，能否在完整50,000样本 MNIST十分类任务上达到真实Adam训练的预测水平，并测量函数agreement与残余 链间差异。">
+  <title>E28：MNIST 50k整网HMC与同协议Adam · Neural K 研究档案</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="../assets/site.js"></script>
+</head>
+<body data-page-kind="experiment">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+  
+    <header class="topbar">
+      <a class="site-mark" href="../index.html" aria-label="返回研究主文">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K 研究档案</span>
+      </a>
+      <nav class="top-nav" aria-label="全站导航"><a class="top-link" href="../index.html">研究主文</a><a class="top-link" href="../theory-core.html">理论核心</a><a class="top-link active" href="../experiments/index.html">实验索引</a><a class="top-link" href="../references.html">参考文献</a><a class="top-link" href="../evidence-ledger.html">证据总账</a></nav>
+      <nav class="language-switch" aria-label="语言"><span class="active" lang="zh-CN">中文</span><a href="../en/experiments/e28.html" lang="en">EN</a></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>目录</span>
+      </button>
+    </header>
+    
+  <div class="page-shell">
+    
+    <aside class="sidebar" id="sidebar" aria-label="本页目录">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">本页目录</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#overview">实验概览</a></li>
+<li><a href="#目的">目的</a></li>
+<li><a href="#入口">入口</a></li>
+<li><a href="#冻结来源">冻结来源</a></li>
+<li><a href="#motivation">为什么做、怎样判决</a></li>
+<li><a href="#1-问题">1. 问题</a></li>
+<li><a href="#2-协议">2. 协议</a></li>
+<li><a href="#3-判决">3. 判决</a></li>
+<li><a href="#results">结果、解读与边界</a></li>
+<li><a href="#1-预测质量">1. 预测质量</a></li>
+<li><a href="#2-成员数与时间平均">2. 成员数与时间平均</a></li>
+<li><a href="#3-静态系综凝聚">3. 静态系综凝聚</a></li>
+<li><a href="#4-计算与解释边界">4. 计算与解释边界</a></li>
+<li><a href="#5-文件">5. 文件</a></li>
+</ul>
+</div>
+</nav>
+        <div class="sidebar-label experiment-label">全部实验</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>静态硬条件化不足以描述训练函数分布</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-bit 反事实不变性与训练 loss 中心原则</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>函数系综动力学与网络参考语言</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>在 Mingard 2025协议中延长 post-fit 观察</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>固定 NTK 足够时的特征学习</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>连续 loss 条件下的静态函数质量</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>函数 ID 迁移与 matched-loss 静态对照</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>共享中间表示与有限容量压力</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>MNIST 80%隐藏标签噪声长训</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>4-bit raw-BCE 简单/复杂规则竞争</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule30 数据量与训练/验证梯度对齐</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND shortcut 的静态 loss 几何</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>AND shortcut 的 SGD 运输与单样本干预</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>加权 Rule-bit 的 loss 阶段函数换序</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Mod97 grokking 的完整函数与边缘凝聚</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity 终点偏好、全局入口与局部恢复</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>静态低-loss 质量与 optimizer 运输</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>高函数共识与符号可读性</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>完整真值表规则的 loss-resolved 体积</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Full-rule、固定 D 与 hard-margin 测度闭环</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement 控制与共识复杂度前沿</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>逐样本自由能与信息不变量</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>完整目标体积前瞻预测数据相变</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>深尾 Neural K-profile 与排序交叉</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST 样本复杂度与静态体积分支预测</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>MNIST平衡无标签划分的静态体积</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Grokking前后的未见函数Agreement</span></a><a class="experiment-nav-link active" href="e28.html"><span>E28</span><span>MNIST 50k整网HMC与同协议Adam</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Dead bit的loss-resolved静态预测</span></a></nav>
+      </div>
+    </aside>
+    
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">E28 · 实验详情</div>
+          <h1>E28：MNIST 50k整网HMC与同协议Adam</h1>
+          <p class="article-description">检验Gaussian参考测度下的完整有限宽静态HMC系综，能否在完整50,000样本 MNIST十分类任务上达到真实Adam训练的预测水平，并测量函数agreement与残余 链间差异。</p>
+        </header>
+        <div class="article-body"><div class="source-bar"><span>复现脚本</span><div><a href="../../experiments/experiment_28_mnist50k_hmc_adam/experiment_mnist10_small_cnn_adam_same_protocol.py">experiment_mnist10_small_cnn_adam_same_protocol.py</a><a href="../../experiments/experiment_28_mnist50k_hmc_adam/experiment_mnist10_small_cnn_full_hmc_demo.py">experiment_mnist10_small_cnn_full_hmc_demo.py</a></div></div><h2 id="overview">实验概览</h2>
+<h2 id="目的">目的</h2>
+<p>检验Gaussian参考测度下的完整有限宽静态HMC系综，能否在完整50,000样本
+MNIST十分类任务上达到真实Adam训练的预测水平，并测量函数agreement与残余
+链间差异。</p>
+<h2 id="入口">入口</h2>
+<ul>
+<li>experiment_mnist10_small_cnn_full_hmc_demo.py</li>
+<li>experiment_mnist10_small_cnn_adam_same_protocol.py</li>
+<li>MOTIVATION_AND_PREREGISTRATION.md</li>
+<li>RESULTS_AND_CONCLUSION.md</li>
+</ul>
+<p>HMC脚本默认profile为50k。Adam脚本保留8k复现profile，但本单元只报告50k
+HMC、plain Adam和MAP Adam。</p>
+<h2 id="冻结来源">冻结来源</h2>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>开发版来源</th>
+<th>SHA256</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>experiment_mnist10_small_cnn_full_hmc_demo.py</td>
+<td>research/function_information_conservation</td>
+<td>24d09f6ef8e5b227dcce2a8992f413d25a6ee6542cfc6252782de376c6377ae1</td>
+</tr>
+<tr>
+<td>experiment_mnist10_small_cnn_adam_same_protocol.py</td>
+<td>research/function_information_conservation</td>
+<td>af56b60af8ab59f3416a0a21047a8264dff48abae832b256001f0b5994538858</td>
+</tr>
+</tbody>
+</table>
+<p>原始50k HMC与Adam包的SHA256分别为：</p>
+<ul>
+<li>fdb11e1ad74df89ae349aaef0cec6b795097ccaac409dcac4c71d7e335fa1c96</li>
+<li>118559b4b5177c9ab593111923c653a1bb80f03bb9b45696940b56705db2a42d</li>
+</ul>
+<h2 id="motivation">为什么做、怎样判决</h2>
+<h2 id="1-问题">1. 问题</h2>
+<p>小型Boolean任务中的静态体积可能只是玩具现象。E28把完整网络参数全部纳入
+HMC，在50,000张真实图像上构造静态函数系综，并与相同架构、切分和初始函数
+分布的Adam比较。</p>
+<h2 id="2-协议">2. 协议</h2>
+<ul>
+<li>网络：Conv(1,4)-&gt;Conv(4,8)-&gt;Linear(392,10)，4,266参数；</li>
+<li>HMC：16条chain，beta=n=50,000，30个冻结步长后快照，共480个样本；</li>
+<li>Adam：32 seed、batch 256、50 epochs；</li>
+<li>plain与对应Gaussian prior的MAP两种Adam；</li>
+<li>无数据增强，validation/test标签不参与训练和停止。</li>
+</ul>
+<h2 id="3-判决">3. 判决</h2>
+<p>主问题是静态HMC能否达到与真实optimizer相同的预测量级，而不是预设HMC必须
+显著胜出。还必须报告成员数配平、逐样本配对误差、完整函数多样性和链内/链间
+分歧。高accuracy不能自动证明全局MCMC混合。</p>
+<h2 id="results">结果、解读与边界</h2>
+<h2 id="1-预测质量">1. 预测质量</h2>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th style="text-align: right;">HMC</th>
+<th style="text-align: right;">plain Adam</th>
+<th style="text-align: right;">MAP Adam</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ensemble test accuracy</td>
+<td style="text-align: right;">99.03%</td>
+<td style="text-align: right;">98.95%</td>
+<td style="text-align: right;">98.82%</td>
+</tr>
+<tr>
+<td>ensemble test NLL</td>
+<td style="text-align: right;">0.03291</td>
+<td style="text-align: right;">0.03415</td>
+<td style="text-align: right;">0.03775</td>
+</tr>
+<tr>
+<td>单参数/单seed平均accuracy</td>
+<td style="text-align: right;">98.363%</td>
+<td style="text-align: right;">98.180%</td>
+<td style="text-align: right;">98.315%</td>
+</tr>
+<tr>
+<td>train-test gap</td>
+<td style="text-align: right;">0.442 pp</td>
+<td style="text-align: right;">0.768 pp</td>
+<td style="text-align: right;">0.466 pp</td>
+</tr>
+<tr>
+<td>平均函数分歧</td>
+<td style="text-align: right;">0.01820</td>
+<td style="text-align: right;">0.02049</td>
+<td style="text-align: right;">0.01646</td>
+</tr>
+</tbody>
+</table>
+<p>HMC与plain Adam只相差8个测试样本。逐样本McNemar检验中，仅HMC正确19张、
+仅Adam正确11张，双侧p=0.2005。因此应表述为同一性能水平，HMC有微弱但不
+显著的数值优势。</p>
+<h2 id="2-成员数与时间平均">2. 成员数与时间平均</h2>
+<p>HMC有480个参数样本，Adam有32个seed。把HMC分成15个互不重叠的32成员组：</p>
+<ul>
+<li>32-member HMC accuracy均值99.012%；</li>
+<li>标准差0.033个百分点；</li>
+<li>范围98.96%--99.08%；</li>
+<li>Adam 32-seed ensemble为98.95%。</li>
+</ul>
+<p>15/15个HMC组的hard-modal accuracy均高于plain Adam，但优势只有约0.06个
+百分点。只取最后一个16-chain HMC快照时，HMC为98.93%、Adam为98.95%，说明
+完整HMC收益部分来自跨时间posterior averaging。</p>
+<h2 id="3-静态系综凝聚">3. 静态系综凝聚</h2>
+<p>HMC 480个样本在10,000张测试图上产生480个不同完整函数，但逐点平均agreement
+达到0.9877：</p>
+<ul>
+<li>agreement不低于0.99覆盖91.32%测试集，准确率99.989%；</li>
+<li>agreement等于1覆盖87.32%，准确率99.989%。</li>
+</ul>
+<p>高agreement是极强可靠性信号，但不是逻辑保证：有一张测试图被全部480个样本
+一致预测错误。</p>
+<p>按正确的snapshot-major保存顺序，同链平均函数分歧为0.01190，异链为0.01860。
+异链仍系统性更远，因此结果支持高质量预测与函数凝聚，不证明HMC已在全局权重
+空间完全混合。</p>
+<h2 id="4-计算与解释边界">4. 计算与解释边界</h2>
+<ul>
+<li>50k HMC约5,590秒；</li>
+<li>全部四个Adam条件约141秒，其中50k plain Adam约57秒；</li>
+<li>HMC是测量静态函数系综的工具，不是更实用的训练算法。</li>
+</ul>
+<p>本实验建立：整网静态HMC在真实50k十分类任务上可达到99.03%，并与同架构
+真实Adam达到相同水平。</p>
+<p>本实验不建立：</p>
+<ul>
+<li>HMC普遍优于Adam；</li>
+<li>HMC已全局精确混合；</li>
+<li>静态分布等于optimizer终点分布；</li>
+<li>该结果相对NNGP或其他kernel具有独占accuracy优势。</li>
+</ul>
+<h2 id="5-文件">5. 文件</h2>
+<ul>
+<li>experiment_mnist10_small_cnn_full_hmc_demo.py</li>
+<li>experiment_mnist10_small_cnn_adam_same_protocol.py</li>
+<li>README.md</li>
+<li>RESULTS_AND_CONCLUSION.md</li>
+</ul></div>
+        <footer class="experiment-pager"><a href="e27.html">← E27 Grokking前后的未见函数Agreement</a><a href="e29.html">E29 Dead bit的loss-resolved静态预测 →</a></footer>
+      </article>
+    </main>
+  </div>
+</body>
+</html>

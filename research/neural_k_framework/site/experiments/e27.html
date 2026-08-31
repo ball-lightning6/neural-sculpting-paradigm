@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="检验模型已经完全拟合训练集但尚未grokking时，不同seed是否共享同一个错误 函数，还是仍在未见输入上保持分散；并测量Agreement怎样随规则泛化变化。">
+  <title>E27：Grokking前后的未见函数Agreement · Neural K 研究档案</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="../assets/site.js"></script>
+</head>
+<body data-page-kind="experiment">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+  
+    <header class="topbar">
+      <a class="site-mark" href="../index.html" aria-label="返回研究主文">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K 研究档案</span>
+      </a>
+      <nav class="top-nav" aria-label="全站导航"><a class="top-link" href="../index.html">研究主文</a><a class="top-link" href="../theory-core.html">理论核心</a><a class="top-link active" href="../experiments/index.html">实验索引</a><a class="top-link" href="../references.html">参考文献</a><a class="top-link" href="../evidence-ledger.html">证据总账</a></nav>
+      <nav class="language-switch" aria-label="语言"><span class="active" lang="zh-CN">中文</span><a href="../en/experiments/e27.html" lang="en">EN</a></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>目录</span>
+      </button>
+    </header>
+    
+  <div class="page-shell">
+    
+    <aside class="sidebar" id="sidebar" aria-label="本页目录">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">本页目录</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#overview">实验概览</a></li>
+<li><a href="#目的">目的</a></li>
+<li><a href="#入口">入口</a></li>
+<li><a href="#冻结来源">冻结来源</a></li>
+<li><a href="#motivation">为什么做、怎样判决</a></li>
+<li><a href="#1-竞争解释">1. 竞争解释</a></li>
+<li><a href="#2-冻结口径">2. 冻结口径</a></li>
+<li><a href="#3-判决">3. 判决</a></li>
+<li><a href="#results">结果、解读与边界</a></li>
+<li><a href="#1-问题">1. 问题</a></li>
+<li><a href="#2-预先固定的口径">2. 预先固定的口径</a></li>
+<li><a href="#3-结果">3. 结果</a></li>
+<li><a href="#4-裁决">4. 裁决</a></li>
+<li><a href="#5-范围">5. 范围</a></li>
+</ul>
+</div>
+</nav>
+        <div class="sidebar-label experiment-label">全部实验</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>静态硬条件化不足以描述训练函数分布</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-bit 反事实不变性与训练 loss 中心原则</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>函数系综动力学与网络参考语言</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>在 Mingard 2025协议中延长 post-fit 观察</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>固定 NTK 足够时的特征学习</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>连续 loss 条件下的静态函数质量</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>函数 ID 迁移与 matched-loss 静态对照</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>共享中间表示与有限容量压力</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>MNIST 80%隐藏标签噪声长训</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>4-bit raw-BCE 简单/复杂规则竞争</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule30 数据量与训练/验证梯度对齐</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND shortcut 的静态 loss 几何</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>AND shortcut 的 SGD 运输与单样本干预</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>加权 Rule-bit 的 loss 阶段函数换序</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Mod97 grokking 的完整函数与边缘凝聚</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity 终点偏好、全局入口与局部恢复</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>静态低-loss 质量与 optimizer 运输</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>高函数共识与符号可读性</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>完整真值表规则的 loss-resolved 体积</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Full-rule、固定 D 与 hard-margin 测度闭环</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement 控制与共识复杂度前沿</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>逐样本自由能与信息不变量</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>完整目标体积前瞻预测数据相变</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>深尾 Neural K-profile 与排序交叉</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST 样本复杂度与静态体积分支预测</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>MNIST平衡无标签划分的静态体积</span></a><a class="experiment-nav-link active" href="e27.html"><span>E27</span><span>Grokking前后的未见函数Agreement</span></a><a class="experiment-nav-link" href="e28.html"><span>E28</span><span>MNIST 50k整网HMC与同协议Adam</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Dead bit的loss-resolved静态预测</span></a></nav>
+      </div>
+    </aside>
+    
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">E27 · 实验详情</div>
+          <h1>E27：Grokking前后的未见函数Agreement</h1>
+          <p class="article-description">检验模型已经完全拟合训练集但尚未grokking时，不同seed是否共享同一个错误 函数，还是仍在未见输入上保持分散；并测量Agreement怎样随规则泛化变化。</p>
+        </header>
+        <div class="article-body"><div class="source-bar"><span>复现脚本</span><div><a href="../../experiments/experiment_27_grokking_agreement/analyze_agreement_around_grokking.py">analyze_agreement_around_grokking.py</a><a href="../../experiments/experiment_27_grokking_agreement/experiment_mod97_matched_loss_function_distribution.py">experiment_mod97_matched_loss_function_distribution.py</a></div></div><h2 id="overview">实验概览</h2>
+<h2 id="目的">目的</h2>
+<p>检验模型已经完全拟合训练集但尚未grokking时，不同seed是否共享同一个错误
+函数，还是仍在未见输入上保持分散；并测量Agreement怎样随规则泛化变化。</p>
+<h2 id="入口">入口</h2>
+<ul>
+<li>experiment_mod97_matched_loss_function_distribution.py</li>
+<li>analyze_agreement_around_grokking.py</li>
+<li>MOTIVATION_AND_PREREGISTRATION.md</li>
+<li>RESULTS_AND_CONCLUSION.md</li>
+</ul>
+<p>分析脚本读取原E15的trajectory.csv，不需要重新训练。主口径只在当前训练比例
+的未见Mod97输入上计算pairwise seed Agreement。</p>
+<h2 id="冻结来源">冻结来源</h2>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>来源</th>
+<th>SHA256</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>experiment_mod97_matched_loss_function_distribution.py</td>
+<td>E15冻结脚本</td>
+<td>f87700c439929ce1e5dbc6cf0600ac88b71c453598646054b9758472ed110faf</td>
+</tr>
+<tr>
+<td>analyze_agreement_around_grokking.py</td>
+<td>E15补充分析</td>
+<td>52e45aa9086cdc24887713694c2c7d6d36fd8e522bf41ff3d81770000aaa8d79</td>
+</tr>
+</tbody>
+</table>
+<p>原始结果包results_mod97_matched_loss_function_distribution_package.zip的SHA256为
+4bf8e597268411c2c7dc483862ab871cfa22b4fe0fb1a1a0c899b4ea709381c8。</p>
+<h2 id="motivation">为什么做、怎样判决</h2>
+<h2 id="1-竞争解释">1. 竞争解释</h2>
+<p>Grokking前的低验证准确率可能对应两种完全不同的函数人口：</p>
+<ol>
+<li>不同seed已经稳定形成同一个错误shortcut；</li>
+<li>不同seed只有训练集记忆相同，未见输入上的残余错误仍各不相同。</li>
+</ol>
+<p>普通平均验证准确率无法区分二者。</p>
+<h2 id="2-冻结口径">2. 冻结口径</h2>
+<ul>
+<li>Hard fit：全部seed训练准确率首次不低于0.999；</li>
+<li>主Agreement：只在未见输入上计算pairwise seed Agreement；</li>
+<li>Grokking里程碑：平均未见准确率首次达到0.90；</li>
+<li>同时报告只由各seed独立答对目标所产生的Agreement基线。</li>
+</ul>
+<p>包含训练输入的全域Agreement只作为偏差示范，不能承担主判决。</p>
+<h2 id="3-判决">3. 判决</h2>
+<p>若hard fit时未见Agreement已接近1，则支持共享错误函数；若其接近随机、随后
+只随未见准确率共同上升，则支持seed特异残余错误逐渐被共同目标替代。</p>
+<h2 id="results">结果、解读与边界</h2>
+<h2 id="1-问题">1. 问题</h2>
+<p>检验以下直觉：在模型已经记住训练集、但尚未 Grokking 时，不同 seed 在未见输入上的预测是否仍然分散；Grokking 后，Agreement 是否才随目标规则恢复而接近1。</p>
+<p>本分析不重新训练模型，只读取既有 E15 <code>trajectory.csv</code>。E15 使用 Mod97 除法任务、多档嵌套训练比例和32个 paired seeds，并在训练过程中保存逐 seed 预测及跨 seed Agreement。</p>
+<h2 id="2-预先固定的口径">2. 预先固定的口径</h2>
+<ul>
+<li><strong>主 Agreement</strong>：只在当前训练比例的未见 validation 输入上计算 pairwise seed Agreement。</li>
+<li><strong>Hard fit</strong>：全部 seed 的训练准确率首次不低于0.999。</li>
+<li><strong>Grokking位置</strong>：平均未见准确率首次达到0.90，仅作描述性里程碑。</li>
+<li><strong>准确率基线</strong>：若每个 seed 以概率 <span class="math-inline">$a$</span> 给出同一个正确标签，错误时在其余96类上独立均匀选择，则</li>
+</ul>
+<div class="math-display">$$
+A_{\mathrm{base}}(a)=a^2+\frac{(1-a)^2}{96}.
+$$</div>
+<p>该基线用于判断 Agreement 的增长是否超出“各 seed 逐渐答对同一个目标”本身。</p>
+<p>不能使用包含训练输入的 full-domain Agreement 作主判决。Hard fit 后，所有 seed 在训练输入上已经一致；若训练集覆盖90%的输入，全域 Agreement 即使在未见输入上近乎随机，也会被机械抬到接近0.9。</p>
+<h2 id="3-结果">3. 结果</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">训练比例</th>
+<th style="text-align: right;">Hard fit 时未见 Agreement</th>
+<th style="text-align: right;">Hard fit 时全域 Agreement</th>
+<th style="text-align: right;">最终未见准确率</th>
+<th style="text-align: right;">最终未见 Agreement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">60%</td>
+<td style="text-align: right;">0.033</td>
+<td style="text-align: right;">0.613</td>
+<td style="text-align: right;">0.028</td>
+<td style="text-align: right;">0.027</td>
+</tr>
+<tr>
+<td style="text-align: right;">70%</td>
+<td style="text-align: right;">0.029</td>
+<td style="text-align: right;">0.709</td>
+<td style="text-align: right;">0.164</td>
+<td style="text-align: right;">0.046</td>
+</tr>
+<tr>
+<td style="text-align: right;">80%</td>
+<td style="text-align: right;">0.027</td>
+<td style="text-align: right;">0.805</td>
+<td style="text-align: right;">0.520</td>
+<td style="text-align: right;">0.273</td>
+</tr>
+<tr>
+<td style="text-align: right;">90%</td>
+<td style="text-align: right;">0.027</td>
+<td style="text-align: right;">0.903</td>
+<td style="text-align: right;">0.916</td>
+<td style="text-align: right;">0.839</td>
+</tr>
+</tbody>
+</table>
+<p>97分类的随机 pairwise Agreement 为约0.010。四档数据在 hard fit 时的未见 Agreement 都远离1，只略高于随机基线；全域 Agreement 的高值主要来自已经记住的训练输入。</p>
+<p>90%训练条件实际跨过了预设的0.90未见准确率阈值。在越过前后的相邻 checkpoint：</p>
+<ul>
+<li>未见准确率约从0.900变为0.901；</li>
+<li>未见 Agreement 约从0.809变为0.811；</li>
+<li>最终未见准确率约0.916，Agreement约0.839。</li>
+</ul>
+<p>Agreement 没有在某个独立时刻突然跳到1，而是随未见准确率共同增长。进入中后期后，观测 Agreement 几乎完全贴合 <span class="math-inline">$A_{\mathrm{base}}(a)$</span>；也就是说，不同 seed 主要共享正确的目标预测，而剩余错误大多是 seed 特异的。</p>
+<p>早期训练存在一次短暂 Agreement 峰值，但此时准确率仍接近随机，反映多个 seed 共享某种简单而错误的输出偏置。该峰值随后消退，不能被解释为规则收束。</p>
+<h2 id="4-裁决">4. 裁决</h2>
+<p>现有 E15 结果支持用户提出的核心直觉：</p>
+<blockquote>
+<p>在训练集已经完全拟合、但尚未发生规则泛化时，未见输入 Agreement 不接近1；随着 Grokking 恢复共同目标规则，Agreement 才向1上升。</p>
+</blockquote>
+<p>需要增加两个限定：</p>
+<ol>
+<li>Agreement 的上升不是独立于泛化准确率的第二次突变；在当前实验中，它主要由不同 seed 同时恢复正确标签解释。</li>
+<li>“Grokking 后接近1”要求各 seed 的未见准确率本身接近1。E15 的90%条件最终未完全泛化，因此 Agreement 也停在低于1的位置。</li>
+</ol>
+<p>另一个重要结果是，ensemble modal function 可以在单 seed 高准确率和高 Agreement 之前就成为目标函数：不同 seed 已共享目标骨架，但各自仍带有不同残余错误。因此完整函数质量、modal function、未见准确率和 Agreement 仍需分开报告。</p>
+<h2 id="5-范围">5. 范围</h2>
+<p>E15复现的是经典 Mod97 除法任务，但使用 MLP、无 weight decay 和更高训练比例，不是 Power 等人原始两层 Transformer 协议的逐项复刻。它已经直接回答函数系综中的 Agreement 直觉；原版 Transformer 复现可作为确认性外部对照，而不是建立该现象的必要前提。</p>
+<p>分析脚本：<code>analyze_agreement_around_grokking.py</code>。</p></div>
+        <footer class="experiment-pager"><a href="e26.html">← E26 MNIST平衡无标签划分的静态体积</a><a href="e28.html">E28 MNIST 50k整网HMC与同协议Adam →</a></footer>
+      </article>
+    </main>
+  </div>
+</body>
+</html>

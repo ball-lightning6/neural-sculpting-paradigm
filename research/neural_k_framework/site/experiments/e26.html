@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="检验在只知道二分类、5:5类别比例和一个标签anchor时，低-loss参数体积能否 在126种候选标签组合中盲选出自然的数字0/1划分。">
+  <title>E26：MNIST平衡无标签划分的静态体积 · Neural K 研究档案</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="../assets/site.js"></script>
+</head>
+<body data-page-kind="experiment">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+  
+    <header class="topbar">
+      <a class="site-mark" href="../index.html" aria-label="返回研究主文">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K 研究档案</span>
+      </a>
+      <nav class="top-nav" aria-label="全站导航"><a class="top-link" href="../index.html">研究主文</a><a class="top-link" href="../theory-core.html">理论核心</a><a class="top-link active" href="../experiments/index.html">实验索引</a><a class="top-link" href="../references.html">参考文献</a><a class="top-link" href="../evidence-ledger.html">证据总账</a></nav>
+      <nav class="language-switch" aria-label="语言"><span class="active" lang="zh-CN">中文</span><a href="../en/experiments/e26.html" lang="en">EN</a></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>目录</span>
+      </button>
+    </header>
+    
+  <div class="page-shell">
+    
+    <aside class="sidebar" id="sidebar" aria-label="本页目录">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">本页目录</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#overview">实验概览</a></li>
+<li><a href="#目的">目的</a></li>
+<li><a href="#入口">入口</a></li>
+<li><a href="#冻结来源">冻结来源</a></li>
+<li><a href="#上传边界">上传边界</a></li>
+<li><a href="#motivation">为什么做、怎样判决</a></li>
+<li><a href="#1-问题">1. 问题</a></li>
+<li><a href="#2-防止标签泄漏">2. 防止标签泄漏</a></li>
+<li><a href="#3-判决">3. 判决</a></li>
+<li><a href="#results">结果、解读与边界</a></li>
+<li><a href="#1-冻结问题">1. 冻结问题</a></li>
+<li><a href="#2-两个盲测panel">2. 两个盲测panel</a></li>
+<li><a href="#3-结论">3. 结论</a></li>
+<li><a href="#4-文件">4. 文件</a></li>
+</ul>
+</div>
+</nav>
+        <div class="sidebar-label experiment-label">全部实验</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>静态硬条件化不足以描述训练函数分布</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-bit 反事实不变性与训练 loss 中心原则</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>函数系综动力学与网络参考语言</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>在 Mingard 2025协议中延长 post-fit 观察</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>固定 NTK 足够时的特征学习</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>连续 loss 条件下的静态函数质量</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>函数 ID 迁移与 matched-loss 静态对照</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>共享中间表示与有限容量压力</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>MNIST 80%隐藏标签噪声长训</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>4-bit raw-BCE 简单/复杂规则竞争</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule30 数据量与训练/验证梯度对齐</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND shortcut 的静态 loss 几何</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>AND shortcut 的 SGD 运输与单样本干预</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>加权 Rule-bit 的 loss 阶段函数换序</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Mod97 grokking 的完整函数与边缘凝聚</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity 终点偏好、全局入口与局部恢复</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>静态低-loss 质量与 optimizer 运输</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>高函数共识与符号可读性</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>完整真值表规则的 loss-resolved 体积</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Full-rule、固定 D 与 hard-margin 测度闭环</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement 控制与共识复杂度前沿</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>逐样本自由能与信息不变量</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>完整目标体积前瞻预测数据相变</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>深尾 Neural K-profile 与排序交叉</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST 样本复杂度与静态体积分支预测</span></a><a class="experiment-nav-link active" href="e26.html"><span>E26</span><span>MNIST平衡无标签划分的静态体积</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Grokking前后的未见函数Agreement</span></a><a class="experiment-nav-link" href="e28.html"><span>E28</span><span>MNIST 50k整网HMC与同协议Adam</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Dead bit的loss-resolved静态预测</span></a></nav>
+      </div>
+    </aside>
+    
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">E26 · 实验详情</div>
+          <h1>E26：MNIST平衡无标签划分的静态体积</h1>
+          <p class="article-description">检验在只知道二分类、5:5类别比例和一个标签anchor时，低-loss参数体积能否 在126种候选标签组合中盲选出自然的数字0/1划分。</p>
+        </header>
+        <div class="article-body"><div class="source-bar"><span>复现脚本</span><div><a href="../../experiments/experiment_26_mnist_balanced_label_volume/experiment_mnist_unlabeled_label_volume.py">experiment_mnist_unlabeled_label_volume.py</a></div></div><h2 id="overview">实验概览</h2>
+<h2 id="目的">目的</h2>
+<p>检验在只知道二分类、5:5类别比例和一个标签anchor时，低-loss参数体积能否
+在126种候选标签组合中盲选出自然的数字0/1划分。</p>
+<h2 id="入口">入口</h2>
+<ul>
+<li>experiment_mnist_unlabeled_label_volume.py</li>
+<li>MOTIVATION_AND_PREREGISTRATION.md</li>
+<li>RESULTS_AND_CONCLUSION.md</li>
+</ul>
+<p>脚本需要本地MNIST IDX文件，默认目录为/root/mnist_dataset。输出目录可用
+NSP_MNIST_LABEL_VOLUME_RESULT_DIR覆盖。</p>
+<h2 id="冻结来源">冻结来源</h2>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>开发版来源</th>
+<th>SHA256</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>experiment_mnist_unlabeled_label_volume.py</td>
+<td>research/consensus_symbolicity/experiment_mnist_unlabeled_label_volume.py</td>
+<td>1b1d34211b669d0c70c21fdb0345e8df75f048bc2ec94d9ae9664da5e092bee6</td>
+</tr>
+</tbody>
+</table>
+<p>本地原始结果包为results_mnist_unlabeled_label_volume_package.zip，SHA256：
+86b8f81f375509d4bcc44086aefa708fdd5639e0c3c8e175a01f6b1413ee72ec。
+原始ZIP不进入发布包。</p>
+<h2 id="上传边界">上传边界</h2>
+<p>本单元只收录5个0、5个1的平衡候选实验。后续取消类别比例约束的512候选实验
+及其深尾跟进不进入本次上传。</p>
+<h2 id="motivation">为什么做、怎样判决</h2>
+<h2 id="1-问题">1. 问题</h2>
+<p>2017年的随机标签实验说明网络既能拟合自然标签，也能拟合随机标签。E26反过来
+固定十张未标注图像，比较所有可行平衡标签组合在同一架构和参考测度下的低-loss
+参数体积。</p>
+<p>每个panel包含5张数字0和5张数字1。第一张图像固定为标签0，其余标签未知，
+候选必须保持5:5，因此共有C(9,4)=126种划分。</p>
+<h2 id="2-防止标签泄漏">2. 防止标签泄漏</h2>
+<p>SGD与SMC calibration使用独立panel。两个正式evaluation panel在真实标签隐藏
+状态下完成全部候选体积写盘并计算SHA256，之后才揭晓自然划分并排名。</p>
+<h2 id="3-判决">3. 判决</h2>
+<p>若自然划分在两个独立panel的可靠共同loss层都成为top1，且其归一化体积质量
+随loss下降系统上升，则支持网络静态几何偏好自然数字分组。</p>
+<p>失败不能自动归因于采样器；也可能表示当前预处理或架构更偏好亮度、位置等其他
+划分。成功只针对已知二分类、5:5比例和一个anchor的协议，不等于完全无监督
+聚类。</p>
+<h2 id="results">结果、解读与边界</h2>
+<h2 id="1-冻结问题">1. 冻结问题</h2>
+<p>每个正式panel包含5张数字0和5张数字1。第一张图像固定为标签0，其余标签
+未知，但候选划分必须保持5:5，因此共有C(9,4)=126种候选。真实数字标签在
+全部静态体积写盘并计算SHA256之前隐藏。</p>
+<p>网络为49-&gt;32-&gt;1 tanh MLP；输入是固定下采样到7x7并映射到[-1,1]的MNIST；
+参数参考测度是标准Gaussian，SMC mutation使用保持该测度的pCN proposal。
+calibration panel与两个正式evaluation panel互不重叠。</p>
+<h2 id="2-两个盲测panel">2. 两个盲测panel</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">loss阈值</th>
+<th style="text-align: right;">自然划分top1数</th>
+<th style="text-align: right;">自然划分中位排名</th>
+<th style="text-align: right;">自然划分平均体积质量</th>
+<th style="text-align: right;">体积加权预期标签准确率</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">0.8</td>
+<td style="text-align: right;">0/2</td>
+<td style="text-align: right;">126</td>
+<td style="text-align: right;">0.00723</td>
+<td style="text-align: right;">0.5534</td>
+</tr>
+<tr>
+<td style="text-align: right;">0.6</td>
+<td style="text-align: right;">2/2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.11858</td>
+<td style="text-align: right;">0.7198</td>
+</tr>
+<tr>
+<td style="text-align: right;">0.4</td>
+<td style="text-align: right;">2/2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.97427</td>
+<td style="text-align: right;">0.9945</td>
+</tr>
+<tr>
+<td style="text-align: right;">0.3</td>
+<td style="text-align: right;">2/2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.99972</td>
+<td style="text-align: right;">0.99994</td>
+</tr>
+</tbody>
+</table>
+<p>在浅loss层，自然标签甚至在两个panel中都排最后；随着loss下降，它在两个
+独立panel中同时反超全部125个平衡竞争划分，并在0.3层占据约99.97%的归一化
+体积质量。</p>
+<p>panel 1的自然候选ID为22，panel 2为57。二者未评分体积表的SHA256分别为：</p>
+<ul>
+<li>7be87b1a3b7cd65e4ef742d8df19c63ad02baf538f0b6a938527d65a50daf467</li>
+<li>7482f33cdd8cc40ace9b977725bd428a323fdc0486dd3f85c03070347fc7cba9</li>
+</ul>
+<h2 id="3-结论">3. 结论</h2>
+<p>本实验直接支持：</p>
+<ol>
+<li>在类别数、5:5比例和一个anchor固定后，有限宽MLP的低-loss静态参数体积
+   系统偏好自然0/1数字划分；</li>
+<li>这种偏好不是固定prior排序，而是沿loss轴从末位变为首位并最终垄断；</li>
+<li>低-loss体积可以在不读取九个隐藏标签的情况下恢复自然分类。</li>
+</ol>
+<p>不能声称：</p>
+<ol>
+<li>这是完全无约束的无监督学习；</li>
+<li>不知道类别比例时自然标签仍会胜出；</li>
+<li>该结果普遍适用于其他数字、架构、预处理或真实聚类任务；</li>
+<li>静态体积计算在成本上优于常规监督或聚类算法。</li>
+</ol>
+<p>本上传单元按发布范围只记录5个0、5个1的平衡实验，不纳入后续无比例约束
+分支。</p>
+<h2 id="4-文件">4. 文件</h2>
+<ul>
+<li>experiment_mnist_unlabeled_label_volume.py</li>
+<li>README.md</li>
+<li>RESULTS_AND_CONCLUSION.md</li>
+</ul></div>
+        <footer class="experiment-pager"><a href="e25.html">← E25 MNIST 样本复杂度与静态体积分支预测</a><a href="e27.html">E27 Grokking前后的未见函数Agreement →</a></footer>
+      </article>
+    </main>
+  </div>
+</body>
+</html>

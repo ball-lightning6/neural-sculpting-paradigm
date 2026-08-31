@@ -399,11 +399,17 @@ Soft NLL 更有意思。随着训练 loss 阈值下降，未见图像 NLL 先改
 
 同样四个样本下，3/8 相对 0/1 的低 loss 参数质量劣势从浅层约半个十进制数量级，扩大到深尾约 55 个数量级。这与四个样本和 512 个样本的辨识差距完全同向。到这里，规则体积、真实图像预测和所需数据量第一次在同一个实验里接上了。
 
+两个后续实验把这条真实图像桥再向前推进。[E26](experiments/experiment_26_mnist_balanced_label_volume/README.md)不再逐图二选一，而是在两个盲测panel的126种平衡标签组合中比较完整划分。自然0/1划分在浅loss均排最后，到loss 0.6同时成为top1，在0.3占据约99.97%的归一化体积。这个结果依赖5:5比例和一个anchor，因此是受约束的无标签划分，不是一般聚类。
+
+[E28](experiments/experiment_28_mnist50k_hmc_adam/README.md)则把训练集扩大到完整50k MNIST，并让4,266个网络参数全部进入HMC。静态HMC、plain Adam、MAP Adam的ensemble accuracy分别为99.03%、98.95%、98.82%；HMC与plain Adam统计上应判为同一水平。480个HMC样本仍是480个不同完整测试函数，却在绝大多数单张图像上高度一致。这说明真实规模上的函数系综可以“完整函数仍分散、逐点预测已凝聚”。
+
 ## 9. Agreement 这条支线最后告诉了我们什么
 
 我们早期的过拟合实验会训练很多随机初始化，然后在大量 probe 输入上比较它们的预测。如果不同 seed 在某个输入上几乎都给出同样答案，就说这个点 agreement 高；如果完整 probe 真值表也大量相同，说明函数分布已经真正收束。
 
 最初我们容易把低 agreement 的过拟合状态想成“网络找到了某个特殊但人类看不懂的简单规则”。后来意识到，这个说法没有证据。低 agreement 更直接的含义是：完整函数根本还没有收束，仍有许多延拓在竞争。
+
+[E27](experiments/experiment_27_grokking_agreement/README.md)进一步检查了hard fit与grokking之间的时间段。Mod97四档数据在全部seed已经记住训练集时，未见Agreement仍只有0.027--0.033；它没有稳定在某个共享错误函数上。随后Agreement主要随seed共同恢复正确目标而上升，剩余错误仍各不相同。因而grokking在该实验中不是“一个错误共识突然换成正确共识”，而是分散残余函数逐渐共享更多目标骨架。
 
 反过来，高 agreement 也不等于恢复了研究者预设的外部生成规则。只有一个训练样本时，网络可能非常一致地选择常数函数，agreement 接近 1，却与隐藏 generator 无关。但常数函数本身就是极短且人类可读的规则，所以这个现象并不反驳后面的可读性猜想；它只说明 agreement 测量的是训练集与网络协议共同选出的规则，而不是研究者心中的 teacher。
 
@@ -490,6 +496,8 @@ Soft NLL 更有意思。随着训练 loss 阈值下降，未见图像 NLL 先改
 若某个二进制输入维度在训练集中始终为 0，它连接第一层的权重不会参与当前计算，相当于自由方向；若始终为 1，它又可以和 bias 合并。两种常数 bit 在参数空间里本来就不等价。
 
 训练集没有展示该 bit 的变化，也就没有要求网络在这个方向保持不变。把架构、编码和参数质量都放进框架后，dead bit 的行为会自然反映在体积中，不需要另外规定“神经网络应该忽略它”。
+
+[E29](experiments/experiment_29_dead_bit_loss_resolved/README.md)给出了直接定量检验。dead列在静态SMC和无衰减Adam中都保持方差约1，但当loss降到约0.001时，五种函数在标准z=1翻转上的严格正确质量达到99.59%--100%；与真正matched-loss Adam的平均差只有0.0010。鲁棒性不是来自识别并删除dead权重，而是有效分支margin随loss深入后压过prior尺度扰动。显式L2把dead列压到0，标准温度1posterior则因8样本下收缩过浅而失败；更强z=2外推又重新暴露静态与optimizer差异。
 
 ## 11. 最后的理论框架：到这里再给公式
 
@@ -652,7 +660,7 @@ MNIST 目前只有两个二分类任务，而且任务和 loss 范围经过校�
 
 用这套语言，网络不必知道研究者心中的真实规则。它只是在当前网络语言和训练集约束下不断降低 loss。数据充分时，这个过程很早便指向可复用规则；数据临界时，它表现为 grokking；数据不足或有噪声时，它会继续收束到训练集特异延拓。泛化不是另一个隐藏目标，而是训练集、网络语言、loss 深度和优化路径共同选择了可迁移函数。
 
-## 附录：E01--E25 证据地图
+## 附录：E01--E29 证据地图
 
 主文只展开承担关键转折的实验。其余实验并没有被删除，下面说明每个编号究竟在测什么。
 
@@ -683,3 +691,7 @@ MNIST 目前只有两个二分类任务，而且任务和 loss 范围经过校�
 | [E23](experiments/experiment_23_volume_to_data_transition/README.md) | 先冻结完整规则体积排序，再训练 9,736 个随机数据条件 | 体积测量能否前瞻预测数据相变 |
 | [E24](experiments/experiment_24_deep_neural_k_crossing/README.md) | 扫描 54 条深尾规则，再共享父系综比较两条候选 | Hard-exact 深尾中的绝对体积排名能否反转 |
 | [E25](experiments/experiment_25_mnist_static_prediction/README.md) | 先校准两个 MNIST 任务，再用静态分支预测未见图像 | Neural K 测量能否推广到真实数据和 NLL U 形 |
+| [E26](experiments/experiment_26_mnist_balanced_label_volume/README.md) | 在126种平衡标签组合中盲测自然MNIST 0/1划分的静态体积 | 低-loss体积能否从极少先验标签信息中恢复自然分组 |
+| [E27](experiments/experiment_27_grokking_agreement/README.md) | 重析Mod97逐seed轨迹，只在未见输入上测hard fit前后Agreement | Grokking前是否已经形成共享错误函数 |
+| [E28](experiments/experiment_28_mnist50k_hmc_adam/README.md) | 在50k MNIST上比较整网HMC、plain Adam与MAP Adam | 静态有限宽系综能否达到真实optimizer的自然任务性能 |
+| [E29](experiments/experiment_29_dead_bit_loss_resolved/README.md) | 比较dead-bit静态profile、无衰减Adam、L2、NNGP与温度1posterior | 未约束方向保持prior时，深loss margin能否恢复反事实稳定性 |

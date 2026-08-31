@@ -172,6 +172,8 @@ $$
 
 The parity scaffold shows that a low-loss endpoint can exist and be locally stable while remaining unreachable from random initialization. [E17](experiments/e17.html) shows that SMC and AdamW can select very different functions under the same architecture, dataset, and comparable loss.
 
+[E28](experiments/e28.html) supplies the complementary real-task anchor. On the same small CNN and all 50k MNIST training images, whole-network HMC and plain Adam reached 99.03% and 98.95%, respectively, while retaining different diversity and time-averaging behavior. [E29](experiments/e29.html) gives a stricter matched-loss counterfactual: across five dead-bit functions, no-decay Adam and static SMC differed by only 0.0010 on average, whereas L2/MAP created a distinct mechanism by shrinking the unidentified weights. Together these results show that static geometry can be a strong predictive base map without making static and optimizer distributions identical.
+
 Every task therefore requires three separate checks: can the network represent the target, does the data identify it, and can the optimizer reach it?
 
 ### Decoupling, scaffolding, and optimization accessibility are not complexity
@@ -336,6 +338,8 @@ With standard negative log likelihood and $\beta=1$, this is the ordinary poster
 > **Prediction principle: if the volume associated with one label contracts more slowly as loss deepens, that label retains more compatible implementations under stricter training precision and gains predictive support.**
 
 Label profiles can still cross, so prediction must state the chosen loss depth or $\beta$. MNIST [E25](experiments/e25.html) directly tests this branch prediction.
+
+[E26](experiments/e26.html) extends the same principle from one unseen label to a complete labeling. Given one anchor and a 5:5 balance constraint, the natural MNIST 0/1 split moved from last place at shallow loss to top one in both blinded panels and held about 99.97% normalized mass at BCE 0.3. This supports volume-based prediction of unseen label combinations, not unconstrained clustering after removing class-balance information.
 
 ## 6. Surprise, information gain, and order invariance
 
@@ -505,6 +509,8 @@ $$
 High mean pointwise agreement does not imply high complete-function collision; many functions can differ only on a few locations. Applications should report representative pointwise agreement together with complete-function modal mass, collision, or Hamming-ball mass.
 
 > **Agreement is valuable because it does not require knowledge of an external generator. It measures whether the empirical function distribution induced by the current dataset and protocol has concentrated. Agreement below one indicates competing extensions; agreement near one indicates high confidence in one dataset-induced complete rule. In the early rule experiments that motivated this conjecture, agreement was clearly below one only in overfitting regimes where the sample count lay below the grokking transition, whereas agreement near one occurred precisely when the training data were already sufficient for rule generalization. This paired observation motivated the conjecture that, in a sufficiently large problem space and for a nontrivial dataset, the complete function distribution approaches concentration only after the data stably identify a rule and cross the corresponding transition. A near-one-agreement dataset should therefore be likely to contain a human-readable rule that can in principle be discovered and extracted.**
+
+[E27](experiments/e27.html) directly checks the temporal ambiguity in this intuition. Across four Mod97 data fractions, agreement on unseen inputs was only 0.027–0.033 at hard fit; memorizing the training set did not make it approach one. During grokking, agreement rose mainly because seeds recovered the same correct targets, while residual errors remained seed-specific. The current evidence therefore does not support one shared complete wrong function before grokking, nor a second agreement jump independent of accuracy.
 
 High agreement does not guarantee recovery of the external generator prespecified by the researcher. One example can make networks converge unanimously to a constant extension, but a constant function is itself an extremely short and human-readable rule. It is therefore not a counterexample to the conjecture that high agreement selects readable rules. It only shows why the conjecture must be teacher-free: agreement identifies the rule jointly selected by the dataset and neural protocol, not necessarily the generator hidden behind the data. The conjecture is more specific:
 

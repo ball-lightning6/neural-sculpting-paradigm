@@ -293,11 +293,17 @@ Why can hard accuracy remain high while NLL worsens? Per-image analysis showed t
 
 Under the same four-example condition, the deep-loss mass disadvantage of 3/8 relative to 0/1 grew from about half a decimal order to roughly 55 decimal orders, in the same direction as the four-versus-512 sample requirement. Rule volume, real-image prediction, and data requirement were connected in one experiment.
 
+Two follow-ups extend this bridge. [E26](experiments/e26.html) ranks complete labelings rather than one image at a time. Among 126 balanced assignments in two blinded panels, the natural 0/1 split ranked last at shallow loss, became top one at BCE 0.6, and held about 99.97% normalized mass at 0.3. Because it uses a 5:5 balance constraint and one anchor, it is constrained unlabeled partitioning rather than general clustering.
+
+[E28](experiments/e28.html) uses all 50k MNIST training images and places all 4,266 CNN parameters in HMC. Static HMC, plain Adam, and MAP Adam reached ensemble accuracies of 99.03%, 98.95%, and 98.82%; HMC and plain Adam are statistically at the same level. All 480 HMC samples represented different complete test functions while agreeing on most individual images. Real-scale function ensembles can therefore remain globally diverse while becoming highly concentrated pointwise.
+
 ## 9. What the agreement line of work ultimately established
 
 Early overfitting experiments trained many random initializations and compared predictions over large probe sets. If nearly all seeds gave the same answer at one probe input, that point had high agreement. If many seeds shared the entire probe truth table, the complete function distribution had genuinely concentrated.
 
 It was tempting to interpret low-agreement overfitting as one strange but humanly unreadable simple rule. That conclusion was unsupported. The direct meaning of low agreement is that the complete function has not concentrated and many extensions remain in competition.
+
+[E27](experiments/e27.html) examines the interval between hard fit and grokking directly. Across four Mod97 data fractions, unseen agreement was only 0.027–0.033 after every seed had memorized the training set; the population had not stabilized on one shared wrong function. Agreement later rose mainly because seeds recovered the same correct targets while retaining different residual errors. In this experiment, grokking is not a sudden swap from one wrong consensus to one correct consensus.
 
 High agreement does not imply recovery of the researcher’s external generator. With one training example, networks may unanimously choose a constant function and achieve near-perfect agreement while ignoring that hidden generator. Yet the constant is itself an extremely short, human-readable rule, so this does not contradict the readability conjecture below. It shows that agreement measures the rule jointly selected by the dataset and neural protocol, not the researcher’s teacher.
 
@@ -384,6 +390,8 @@ Many emergence phenomena can therefore be understood as the joint effect of capa
 If a binary input dimension is always zero in the training set, its first-layer weights never contribute to the current computation and become free directions. If it is always one, the same weights can merge with the bias. Constant-zero and constant-one bits are not geometrically equivalent.
 
 The training set never displays variation along that bit and therefore never requests off-support invariance. Once architecture, encoding, and parameter mass are included, dead-bit behavior is represented naturally rather than repaired by an extra rule saying the network ought to ignore it.
+
+[E29](experiments/e29.html) tests this quantitatively. The dead column retained variance near one under both static SMC and no-decay Adam, yet at training loss near 0.001 the strict-correct mass under a standard z=1 flip reached 99.59%–100% across five functions. The mean error against genuinely loss-matched Adam was only 0.0010. Robustness came from active-path margins overwhelming prior-scale perturbations, not from identifying and deleting the dead weights. Explicit L2 drove the dead column to zero, while the standard temperature-one posterior remained too shallow with eight examples; a stronger z=2 shift reopened static/optimizer gaps.
 
 ## 11. The final framework: formulas only after the objects are clear
 
@@ -544,7 +552,7 @@ The new object is not one universal complexity score but a measurable Neural K-p
 
 The network need not know the researcher’s true rule. It continually lowers loss under its current neural language and training constraints. With sufficient data, this process points early toward a reusable rule. Near the data transition, it appears as grokking. With insufficient or noisy data, it can concentrate on a training-specific extension. Generalization is not a second hidden objective; it is the outcome when dataset, neural language, loss depth, and optimization path jointly select a transferable function.
 
-## Appendix: E01–E25 evidence map
+## Appendix: E01–E29 evidence map
 
 | ID | What the experiment does | Question it resolves |
 |---|---|---|
@@ -573,3 +581,7 @@ The network need not know the researcher’s true rule. It continually lowers lo
 | [E23](experiments/e23.html) | Freezes complete-rule volume ranking, then trains 9,736 random-dataset conditions | Can volume prospectively predict data transitions? |
 | [E24](experiments/e24.html) | Scans 54 deep-tail rules and then compares a paired crossing candidate from one parent | Can absolute-volume ranking reverse inside the hard-exact tail? |
 | [E25](experiments/e25.html) | Calibrates two MNIST tasks and predicts unseen images with static branches | Can Neural K measurements extend to real data and the NLL U-shape? |
+| [E26](experiments/e26.html) | Blindly ranks the natural MNIST 0/1 split among 126 balanced labelings | Can low-loss volume recover a natural grouping from minimal label information? |
+| [E27](experiments/e27.html) | Reanalyzes Mod97 seed trajectories using agreement only on unseen inputs | Is there already one shared wrong function before grokking? |
+| [E28](experiments/e28.html) | Compares whole-network HMC, plain Adam, and MAP Adam on 50k MNIST | Can a finite-width static ensemble reach optimizer-level performance on natural data? |
+| [E29](experiments/e29.html) | Compares dead-bit static profiles, Adam, L2, NNGP, and the temperature-one posterior | Can deep-loss margins restore counterfactual stability while the dead direction remains at the prior? |

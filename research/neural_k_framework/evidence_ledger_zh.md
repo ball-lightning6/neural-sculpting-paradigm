@@ -1017,6 +1017,42 @@ Stage 1冻结两个`n=4,dataset0`条件和九个 raw-BCE 截面，再从同一�
 
 该实验是校准后冻结而非全新任务盲测，只覆盖两个二分类和 tiny MLP；但它证明 loss-resolved 静态体积可以对真实图像做逐样本预测，并且经典 validation-loss U 形至少存在一个 optimizer 之前就已形成的几何来源。
 
+#### 3.14.6 [E26] 平衡无标签MNIST划分
+
+[E26](experiments/experiment_26_mnist_balanced_label_volume/README.md)固定5张数字0、
+5张数字1、一个标签0 anchor和5:5比例，在126种候选划分中盲测静态体积。
+两个独立evaluation panel中，自然划分在loss 0.8时均排126；到0.6同时升至
+top1；在0.3时平均归一化体积质量达到0.99972。它证明自然分组偏好可以沿loss
+轴从末位反转到垄断，但类别比例本身已提供信息，不能称为完全无监督学习。
+
+#### 3.14.7 [E27] Grokking前后的未见Agreement
+
+[E27](experiments/experiment_27_grokking_agreement/README.md)重新分析E15 Mod97的
+32-seed轨迹，把训练输入排除后再测Agreement。四档数据在hard fit时的未见
+Agreement只有0.027--0.033，远离1；90%训练条件最终未见准确率0.916、
+Agreement 0.839。中后期Agreement几乎由不同seed共同答对目标解释，剩余错误
+主要seed特异。结果否定了“grokking前已稳定共享同一个完整错误函数”的简单
+版本，同时保留早期短暂共享输出偏置这一局部现象。
+
+#### 3.14.8 [E28] 50k MNIST整网HMC与Adam
+
+[E28](experiments/experiment_28_mnist50k_hmc_adam/README.md)在4,266参数小CNN
+上对全部50,000张MNIST训练图像运行16-chain整网HMC，并与32-seed plain/MAP
+Adam比较。HMC、plain Adam、MAP Adam的ensemble test accuracy分别为99.03%、
+98.95%、98.82%；HMC与plain Adam只差8张测试图，McNemar p=0.2005，应判为
+同一性能水平。480个HMC样本对应480个不同完整测试函数，但逐点agreement达到
+0.9877。异链函数分歧仍高于同链，故预测成功不等于全局混合证明。
+
+#### 3.14.9 [E29] Dead bit的loss-resolved稳定性
+
+[E29](experiments/experiment_29_dead_bit_loss_resolved/README.md)让一个输入bit在
+全部8个训练状态中恒为0，再在五种Boolean函数上比较静态SMC、512-seed无衰减
+Adam、L2/MAP、NNGP和温度1posterior。dead列在静态SMC和无衰减Adam中均保持
+方差约1；但静态z=1严格正确质量随loss深入升至0.9959--1.0000，并以平均
+0.0010、最坏0.0042的绝对差命中matched-loss Adam。L2通过把dead权重压到0
+获得另一种鲁棒性。标准温度1posterior在8样本下没有充分收缩，NNGP则在小ridge
+下通过z=1。更强z=2 shift重新暴露0.15--0.18的静态/optimizer差异。
+
 ## 4. 实验链最终收敛出的理论图景
 
 ### 4.1 最小原则：网络只优化写进目标函数的量

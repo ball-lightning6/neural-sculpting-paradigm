@@ -9,7 +9,7 @@
     "zh-CN": "theory-core.html",
     "en": "en/theory-core.html"
   },
-  "experiment_count": 25,
+  "experiment_count": 29,
   "experiments": [
     {
       "id": "E01",
@@ -185,6 +185,34 @@
       "title_en": "MNIST Sample Complexity and Static Branch Prediction",
       "page_zh": "experiments/e25.html",
       "page_en": "en/experiments/e25.html"
+    },
+    {
+      "id": "E26",
+      "title_zh": "E26：MNIST平衡无标签划分的静态体积",
+      "title_en": "Balanced Unlabeled MNIST Label Volume",
+      "page_zh": "experiments/e26.html",
+      "page_en": "en/experiments/e26.html"
+    },
+    {
+      "id": "E27",
+      "title_zh": "E27：Grokking前后的未见函数Agreement",
+      "title_en": "Agreement Before and During Grokking",
+      "page_zh": "experiments/e27.html",
+      "page_en": "en/experiments/e27.html"
+    },
+    {
+      "id": "E28",
+      "title_zh": "E28：MNIST 50k整网HMC与同协议Adam",
+      "title_en": "Whole-Network HMC versus Adam on 50k MNIST",
+      "page_zh": "experiments/e28.html",
+      "page_en": "en/experiments/e28.html"
+    },
+    {
+      "id": "E29",
+      "title_zh": "E29：Dead bit的loss-resolved静态预测",
+      "title_en": "Loss-Resolved Robustness to a Dead Input Bit",
+      "page_zh": "experiments/e29.html",
+      "page_en": "en/experiments/e29.html"
     }
   ]
 }

@@ -7,6 +7,17 @@
 - 源文件位置与 SHA256；
 - 该实验能支持和不能支持的主张。
 
+## 论文中的编号与阅读方法
+
+正文统一使用 `E01`--`E29` 指向本页，不在每次引用时重复配置和数值。阅读某个实验时按以下顺序进入对应目录：
+
+1. `README.md`：实验目的、入口脚本、文件来源与哈希；
+2. `MOTIVATION_AND_PREREGISTRATION.md`：实验前问题、竞争解释和判决标准；
+3. `RESULTS_AND_CONCLUSION.md`：完整数值、可靠性审计、支持与不能支持的主张；
+4. 冻结 Python 脚本：复现实验的实际入口。
+
+正文负责说明实验做了什么、观察到什么以及它怎样修正理论。精确超参数、逐阶段数字、停止条件、负结果和后续修正均以相应实验目录为准。原始大体积结果包不进入仓库；关键数值和 SHA256 已写入文档，脚本可重新生成结果。
+
 开发版脚本仍位于 `research/`。论文目录副本用于复现与归档，不应在没有同步源码哈希、正文方法和结果说明的情况下单独修改。
 
 当前进度：
@@ -40,5 +51,10 @@
 | E23 | 完整目标体积前瞻预测数据相变 | [`experiment_23_volume_to_data_transition`](experiment_23_volume_to_data_transition/README.md) |
 | E24 | 深尾Neural K-profile与排序交叉 | [`experiment_24_deep_neural_k_crossing`](experiment_24_deep_neural_k_crossing/README.md) |
 | E25 | MNIST样本复杂度与静态体积分支预测 | [`experiment_25_mnist_static_prediction`](experiment_25_mnist_static_prediction/README.md) |
+| E26 | MNIST平衡无标签划分的静态体积 | [`experiment_26_mnist_balanced_label_volume`](experiment_26_mnist_balanced_label_volume/README.md) |
+| E27 | Grokking前后的未见函数Agreement | [`experiment_27_grokking_agreement`](experiment_27_grokking_agreement/README.md) |
+| E28 | MNIST 50k整网HMC与同协议Adam | [`experiment_28_mnist50k_hmc_adam`](experiment_28_mnist50k_hmc_adam/README.md) |
+| E29 | Dead bit的loss-resolved静态预测 | [`experiment_29_dead_bit_loss_resolved`](experiment_29_dead_bit_loss_resolved/README.md) |
 
-当前时间线主实验已整理至2026年8月25日。后续实验仍按同一规则逐项加入，不提前收纳尚未完成论文定位的脚本。
+当前选择性上传时间线已整理至2026年8月31日。E26--E29只收录本轮明确选择
+进入Zenodo更新的四个实验；同期其他探索仍保留在开发目录，不自动进入本证据包。

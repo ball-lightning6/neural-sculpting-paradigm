@@ -109,7 +109,7 @@ E22 verifies that per-example generalized-surprise increments telescope to the c
 
 ## 3. Experimental evidence chain
 
-The following sections are generated from the same English experiment records used by the E01–E25 detail pages. Each preserves the motivation, actual measurement, decisive result, and limitation.
+The following sections are generated from the same English experiment records used by the E01–E29 detail pages. Each preserves the motivation, actual measurement, decisive result, and limitation.
 
 ## 4. Final integrated picture
 

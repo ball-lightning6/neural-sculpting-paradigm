@@ -109,7 +109,7 @@
 <li><a href="#12-这套框架和已有理论是什么关系">12. 这套框架和已有理论是什么关系</a></li>
 <li><a href="#13-哪些话现在还不能说">13. 哪些话现在还不能说</a></li>
 <li><a href="#14-总结">14. 总结</a></li>
-<li><a href="#附录-e01-e25-证据地图">附录：E01--E25 证据地图</a></li>
+<li><a href="#附录-e01-e29-证据地图">附录：E01--E29 证据地图</a></li>
 </ul>
 </div>
 </nav>
@@ -133,7 +133,7 @@
       <p>需要核查或寻找更详细解释时，请优先查看研究证据总账、各实验详情页、原始实验脚本及其完整说明。作者之后会继续修改当前网页，并推进正式论文写作。</p>
       <div class="disclosure-links">
         <a href="evidence-ledger.html">查看研究证据总账</a>
-        <a href="experiments/index.html">查看 E01–E25 实验与脚本</a>
+        <a href="experiments/index.html">查看 E01–E29 实验与脚本</a>
       </div>
     </aside>
     
@@ -143,8 +143,8 @@
     </div>
     
     <div class="metric-strip" aria-label="文档概览">
-      <div><strong>25</strong><span>组证据单元</span></div>
-      <div><strong>18</strong><span>组关键实验展开</span></div>
+      <div><strong>29</strong><span>组证据单元</span></div>
+      <div><strong>22</strong><span>组关键实验展开</span></div>
       <div><strong>4</strong><span>张关键结果图</span></div>
     </div>
     <blockquote>
@@ -387,9 +387,12 @@
 <p><strong>为什么 accuracy 还在，NLL 却已经变坏？</strong></p>
 <p>逐图分析显示，深 loss 仍会把少量边界图像从错修正为对，同时让那些持续错误的图像变得更自信。Hard accuracy、概率校准和 agreement 因而可以在不同位置转折。</p>
 <p>同样四个样本下，3/8 相对 0/1 的低 loss 参数质量劣势从浅层约半个十进制数量级，扩大到深尾约 55 个数量级。这与四个样本和 512 个样本的辨识差距完全同向。到这里，规则体积、真实图像预测和所需数据量第一次在同一个实验里接上了。</p>
+<p>两个后续实验把这条真实图像桥再向前推进。<a href="experiments/e26.html">E26</a>不再逐图二选一，而是在两个盲测panel的126种平衡标签组合中比较完整划分。自然0/1划分在浅loss均排最后，到loss 0.6同时成为top1，在0.3占据约99.97%的归一化体积。这个结果依赖5:5比例和一个anchor，因此是受约束的无标签划分，不是一般聚类。</p>
+<p><a href="experiments/e28.html">E28</a>则把训练集扩大到完整50k MNIST，并让4,266个网络参数全部进入HMC。静态HMC、plain Adam、MAP Adam的ensemble accuracy分别为99.03%、98.95%、98.82%；HMC与plain Adam统计上应判为同一水平。480个HMC样本仍是480个不同完整测试函数，却在绝大多数单张图像上高度一致。这说明真实规模上的函数系综可以“完整函数仍分散、逐点预测已凝聚”。</p>
 <h2 id="9-agreement-这条支线最后告诉了我们什么">9. Agreement 这条支线最后告诉了我们什么</h2>
 <p>我们早期的过拟合实验会训练很多随机初始化，然后在大量 probe 输入上比较它们的预测。如果不同 seed 在某个输入上几乎都给出同样答案，就说这个点 agreement 高；如果完整 probe 真值表也大量相同，说明函数分布已经真正收束。</p>
 <p>最初我们容易把低 agreement 的过拟合状态想成“网络找到了某个特殊但人类看不懂的简单规则”。后来意识到，这个说法没有证据。低 agreement 更直接的含义是：完整函数根本还没有收束，仍有许多延拓在竞争。</p>
+<p><a href="experiments/e27.html">E27</a>进一步检查了hard fit与grokking之间的时间段。Mod97四档数据在全部seed已经记住训练集时，未见Agreement仍只有0.027--0.033；它没有稳定在某个共享错误函数上。随后Agreement主要随seed共同恢复正确目标而上升，剩余错误仍各不相同。因而grokking在该实验中不是“一个错误共识突然换成正确共识”，而是分散残余函数逐渐共享更多目标骨架。</p>
 <p>反过来，高 agreement 也不等于恢复了研究者预设的外部生成规则。只有一个训练样本时，网络可能非常一致地选择常数函数，agreement 接近 1，却与隐藏 generator 无关。但常数函数本身就是极短且人类可读的规则，所以这个现象并不反驳后面的可读性猜想；它只说明 agreement 测量的是训练集与网络协议共同选出的规则，而不是研究者心中的 teacher。</p>
 <h3 id="实验十七-没有-teacher-的高共识函数-最后都是什么">实验十七：没有 teacher 的高共识函数，最后都是什么</h3>
 <p><a href="experiments/e18.html">E18</a>在 8-bit 输入中随机生成训练集，每份训练集训练 64 个 seed。先找出完整函数高度集中的候选，再用多达 4,096 个 fresh seeds 重新确认，并对最终函数做符号复杂度审计。</p>
@@ -433,6 +436,7 @@
 <h3 id="10-9-dead-bit-为什么不需要额外补丁">10.9 Dead Bit 为什么不需要额外补丁</h3>
 <p>若某个二进制输入维度在训练集中始终为 0，它连接第一层的权重不会参与当前计算，相当于自由方向；若始终为 1，它又可以和 bias 合并。两种常数 bit 在参数空间里本来就不等价。</p>
 <p>训练集没有展示该 bit 的变化，也就没有要求网络在这个方向保持不变。把架构、编码和参数质量都放进框架后，dead bit 的行为会自然反映在体积中，不需要另外规定“神经网络应该忽略它”。</p>
+<p><a href="experiments/e29.html">E29</a>给出了直接定量检验。dead列在静态SMC和无衰减Adam中都保持方差约1，但当loss降到约0.001时，五种函数在标准z=1翻转上的严格正确质量达到99.59%--100%；与真正matched-loss Adam的平均差只有0.0010。鲁棒性不是来自识别并删除dead权重，而是有效分支margin随loss深入后压过prior尺度扰动。显式L2把dead列压到0，标准温度1posterior则因8样本下收缩过浅而失败；更强z=2外推又重新暴露静态与optimizer差异。</p>
 <h2 id="11-最后的理论框架-到这里再给公式">11. 最后的理论框架：到这里再给公式</h2>
 <p>前面已经说明每个量想回答什么。现在把它们集中写成最小形式。</p>
 <h3 id="11-1-固定一套神经参考协议">11.1 固定一套神经参考协议</h3>
@@ -540,7 +544,7 @@ $$</div>
 <p>这项研究最初是在问：初始化函数先验加训练集硬过滤，是否已经足以解释神经网络为什么泛化。实验给出的答案是“不够”，但初始化先验也没有被抛弃。它仍然是重要零阶项；连续训练 loss 会继续重排函数质量，优化器又会在静态几何之上施加路径依赖的运输。</p>
 <p>真正需要的新对象不是一个万能复杂度分数，而是一条 Neural K-profile。它允许同一函数在不同精度下呈现不同难度，允许 shortcut 在中间 loss 合理占优，也允许 hard function 固定以后内部实现继续变化。它还能在受控实验中前瞻预测需要多少数据，并在 MNIST 上对未见图像和过拟合转折给出静态预测。</p>
 <p>用这套语言，网络不必知道研究者心中的真实规则。它只是在当前网络语言和训练集约束下不断降低 loss。数据充分时，这个过程很早便指向可复用规则；数据临界时，它表现为 grokking；数据不足或有噪声时，它会继续收束到训练集特异延拓。泛化不是另一个隐藏目标，而是训练集、网络语言、loss 深度和优化路径共同选择了可迁移函数。</p>
-<h2 id="附录-e01-e25-证据地图">附录：E01--E25 证据地图</h2>
+<h2 id="附录-e01-e29-证据地图">附录：E01--E29 证据地图</h2>
 <p>主文只展开承担关键转折的实验。其余实验并没有被删除，下面说明每个编号究竟在测什么。</p>
 <table>
 <thead>
@@ -676,9 +680,29 @@ $$</div>
 <td>先校准两个 MNIST 任务，再用静态分支预测未见图像</td>
 <td>Neural K 测量能否推广到真实数据和 NLL U 形</td>
 </tr>
+<tr>
+<td><a href="experiments/e26.html">E26</a></td>
+<td>在126种平衡标签组合中盲测自然MNIST 0/1划分的静态体积</td>
+<td>低-loss体积能否从极少先验标签信息中恢复自然分组</td>
+</tr>
+<tr>
+<td><a href="experiments/e27.html">E27</a></td>
+<td>重析Mod97逐seed轨迹，只在未见输入上测hard fit前后Agreement</td>
+<td>Grokking前是否已经形成共享错误函数</td>
+</tr>
+<tr>
+<td><a href="experiments/e28.html">E28</a></td>
+<td>在50k MNIST上比较整网HMC、plain Adam与MAP Adam</td>
+<td>静态有限宽系综能否达到真实optimizer的自然任务性能</td>
+</tr>
+<tr>
+<td><a href="experiments/e29.html">E29</a></td>
+<td>比较dead-bit静态profile、无衰减Adam、L2、NNGP与温度1posterior</td>
+<td>未约束方向保持prior时，深loss margin能否恢复反事实稳定性</td>
+</tr>
 </tbody>
 </table></div>
-        <footer class="article-footer"><a href="experiments/index.html">继续查看 E01–E25 实验索引 →</a></footer>
+        <footer class="article-footer"><a href="experiments/index.html">继续查看 E01–E29 实验索引 →</a></footer>
       </article>
     </main>
   </div>

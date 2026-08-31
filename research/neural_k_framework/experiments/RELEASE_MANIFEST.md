@@ -203,6 +203,37 @@
 - `experiment_25_mnist_static_prediction/experiment_mnist_loss_calibration.py`
 - `experiment_25_mnist_static_prediction/experiment_mnist_static_branch_prediction.py`
 
+## Experiment 26
+
+- `experiment_26_mnist_balanced_label_volume/README.md`
+- `experiment_26_mnist_balanced_label_volume/MOTIVATION_AND_PREREGISTRATION.md`
+- `experiment_26_mnist_balanced_label_volume/RESULTS_AND_CONCLUSION.md`
+- `experiment_26_mnist_balanced_label_volume/experiment_mnist_unlabeled_label_volume.py`
+
+## Experiment 27
+
+- `experiment_27_grokking_agreement/README.md`
+- `experiment_27_grokking_agreement/MOTIVATION_AND_PREREGISTRATION.md`
+- `experiment_27_grokking_agreement/RESULTS_AND_CONCLUSION.md`
+- `experiment_27_grokking_agreement/experiment_mod97_matched_loss_function_distribution.py`
+- `experiment_27_grokking_agreement/analyze_agreement_around_grokking.py`
+
+## Experiment 28
+
+- `experiment_28_mnist50k_hmc_adam/README.md`
+- `experiment_28_mnist50k_hmc_adam/MOTIVATION_AND_PREREGISTRATION.md`
+- `experiment_28_mnist50k_hmc_adam/RESULTS_AND_CONCLUSION.md`
+- `experiment_28_mnist50k_hmc_adam/experiment_mnist10_small_cnn_full_hmc_demo.py`
+- `experiment_28_mnist50k_hmc_adam/experiment_mnist10_small_cnn_adam_same_protocol.py`
+
+## Experiment 29
+
+- `experiment_29_dead_bit_loss_resolved/README.md`
+- `experiment_29_dead_bit_loss_resolved/MOTIVATION_AND_PREREGISTRATION.md`
+- `experiment_29_dead_bit_loss_resolved/RESULTS_AND_CONCLUSION.md`
+- `experiment_29_dead_bit_loss_resolved/experiment_dead_bit_static_sgd_nngp.py`
+- `experiment_29_dead_bit_loss_resolved/analyze_dead_bit_temperature1_importance.py`
+
 最终打包前机器检查：
 
 1. 所有脚本可编译；

@@ -73,6 +73,10 @@
 <li><a href="#e23-prospective-prediction-from-full-rule-volume-to-data-transition">E23 · Prospective Prediction from Full-Rule Volume to Data Transition</a></li>
 <li><a href="#e24-deep-neural-k-crossing-of-parity4-and-a-one-point-exception">E24 · Deep Neural K Crossing of Parity4 and a One-Point Exception</a></li>
 <li><a href="#e25-mnist-sample-complexity-and-static-branch-prediction">E25 · MNIST Sample Complexity and Static Branch Prediction</a></li>
+<li><a href="#e26-balanced-unlabeled-mnist-label-volume">E26 · Balanced Unlabeled MNIST Label Volume</a></li>
+<li><a href="#e27-agreement-before-and-during-grokking">E27 · Agreement Before and During Grokking</a></li>
+<li><a href="#e28-whole-network-hmc-versus-adam-on-50k-mnist">E28 · Whole-Network HMC versus Adam on 50k MNIST</a></li>
+<li><a href="#e29-loss-resolved-robustness-to-a-dead-input-bit">E29 · Loss-Resolved Robustness to a Dead Input Bit</a></li>
 </ul>
 </li>
 <li><a href="#4-final-integrated-picture">4. Final integrated picture</a><ul>
@@ -180,7 +184,7 @@ F_{\Pi,D}(\beta)=-\beta^{-1}\log Z_{\Pi,D}(\beta).
 $$</div>
 <p>E22 verifies that per-example generalized-surprise increments telescope to the complete-rule endpoint cost under one coherent static measure. It does not claim that real SGD samples the Gibbs ensemble.</p>
 <h2 id="3-experimental-evidence-chain">3. Experimental evidence chain</h2>
-<p>The following sections are generated from the same English experiment records used by the E01–E25 detail pages. Each preserves the motivation, actual measurement, decisive result, and limitation.</p>
+<p>The following sections are generated from the same English experiment records used by the E01–E29 detail pages. Each preserves the motivation, actual measurement, decisive result, and limitation.</p>
 <h3 id="e01-static-hard-conditioning-versus-optimizer-induced-function-transport">E01 · <a href="experiments/e01.html">Static Hard Conditioning versus Optimizer-Induced Function Transport</a></h3>
 <p><strong>Purpose.</strong> Test whether repeated neural-network training merely samples the initialization function prior conditioned on training-label consistency.</p>
 <p>This unit contains two direct tests in a fully enumerable 3-bit Boolean space. E01a compares the initialization prior, the hard-conditioned prior, and the complete-function distribution produced by Adam. E01b uses a much wider network and a single training example to make the transport effect visually and statistically unmistakable.</p>
@@ -362,6 +366,30 @@ $$</div>
 <p>Static hard prediction rose from 92.97% to 96.35% for 0/1 and from 76.69% to about 78.13% for 3/8. Static soft NLL formed a U-shape whose minimum aligned within one preregistered grid cell of AdamW for 0/1 and directly covered the 3/8 training-loss turning interval. Prediction concentration continued after accuracy plateaued, while persistent mistakes became more confident.</p>
 <p>The deep-loss mass disadvantage of 3/8 relative to 0/1 expanded from 0.56 to 55.43 decimal orders, aligned with the four-versus-512 sample requirement.</p>
 <p><strong>Conclusion.</strong> Static loss-conditioned volume has strong sample-level predictive power on real images and contains a geometric source of the validation-NLL U-shape. The tasks and loss range were calibration-selected, so a new digit pair is still required for a fully blind test.</p>
+<h3 id="e26-balanced-unlabeled-mnist-label-volume">E26 · <a href="experiments/e26.html">Balanced Unlabeled MNIST Label Volume</a></h3>
+<p><strong>Purpose.</strong> Test whether low-loss parameter volume can blindly recover the natural MNIST 0/1 grouping among all 126 balanced labelings.</p>
+<p>Each evaluation panel contains five zeros and five ones. One image is anchored to label zero, and all candidate assignments must remain 5:5 balanced. The 126 candidates share paired Gaussian-prior particles under a 49-to-32-to-1 tanh MLP. Calibration and the two blinded evaluation panels use disjoint images.</p>
+<p>Random-label experiments show that networks can fit both natural and arbitrary labels. E26 asks a different question: when fit is possible for every balanced assignment, which labeling retains the most low-loss parameter mass? All candidate volumes are written and hashed before the natural labels are revealed.</p>
+<p>At BCE 0.8 the natural split ranked last in both panels. At 0.6 it became top one in both; its mean normalized mass then rose to 0.9743 at 0.4 and 0.99972 at 0.3. Volume-weighted expected hidden-label accuracy reached 0.99994.</p>
+<p><strong>Conclusion.</strong> Under a fixed class count, 5:5 balance constraint, one anchor, preprocessing, architecture, and Gaussian reference measure, the natural digit split changes from least favored to overwhelmingly dominant as loss is tightened. This is not unconstrained unsupervised learning.</p>
+<h3 id="e27-agreement-before-and-during-grokking">E27 · <a href="experiments/e27.html">Agreement Before and During Grokking</a></h3>
+<p><strong>Purpose.</strong> Determine whether seeds already share one stable wrong function after hard fit but before rule generalization.</p>
+<p>This supplemental analysis reuses the 32-seed Mod97 trajectories from E15. Pairwise agreement is recomputed only on unseen inputs. Hard fit requires every seed to reach at least 0.999 training accuracy; 0.90 mean unseen accuracy is used as a descriptive grokking milestone.</p>
+<p>Low validation accuracy before grokking could hide either one shared shortcut function or seed-specific residual functions that agree only on memorized training inputs. Full-domain agreement is biased upward after hard fit, so the held-out-only statistic is required.</p>
+<p>Across the 60%, 70%, 80%, and 90% training conditions, unseen agreement at hard fit was only 0.027–0.033. In the 90% condition, final unseen accuracy was 0.916 and agreement 0.839. Through the middle and late trajectory, observed agreement was almost completely explained by seeds independently recovering the same correct targets; remaining errors were largely seed-specific.</p>
+<p><strong>Conclusion.</strong> The experiment rejects a simple picture in which one complete wrong function is already shared before grokking. Agreement rises with recovery of the target rule rather than in a separate function-condensation jump.</p>
+<h3 id="e28-whole-network-hmc-versus-adam-on-50k-mnist">E28 · <a href="experiments/e28.html">Whole-Network HMC versus Adam on 50k MNIST</a></h3>
+<p><strong>Purpose.</strong> Test whether a finite-width static HMC ensemble can reach optimizer-level prediction quality on the full MNIST training set.</p>
+<p>A 4,266-parameter small CNN is sampled with 16 full-batch HMC chains at beta equal to 50,000. Thirty retained snapshots yield 480 parameter samples. Plain Adam and Gaussian-prior MAP Adam use 32 matched initializations, batch size 256, and 50 epochs on the identical split without augmentation.</p>
+<p>Boolean and tiny-image results would remain scale-limited unless the complete static parameter ensemble could be constructed on a standard natural classification task and compared directly with practical optimization.</p>
+<p>HMC, plain Adam, and MAP Adam reached ensemble test accuracies of 99.03%, 98.95%, and 98.82%. HMC and plain Adam differed on only eight net test examples; exact McNemar p was 0.2005. HMC mean pointwise agreement was 0.9877, although all 480 retained samples represented different complete 10,000-image functions. Between-chain function distance remained above within-chain distance.</p>
+<p><strong>Conclusion.</strong> Whole-network HMC and Adam reach the same performance level at 50k MNIST, with a small nonsignificant HMC advantage under the frozen protocol. Strong prediction and pointwise concentration do not prove global MCMC mixing or equality of static and optimizer distributions.</p>
+<h3 id="e29-loss-resolved-robustness-to-a-dead-input-bit">E29 · <a href="experiments/e29.html">Loss-Resolved Robustness to a Dead Input Bit</a></h3>
+<p><strong>Purpose.</strong> Test whether deep-loss margins can restore counterfactual stability while an unobserved input direction remains distributed as the prior.</p>
+<p>Training covers all eight states of three active bits while a fourth dead bit is always zero. Counterfactual tests set the dead bit to 0.25, 0.5, 1, or 2 for five Boolean targets. Gaussian constrained SMC, 512-seed no-decay Adam, L2/MAP Adam, an MC prior-covariance kernel, and direct temperature-one posterior integration are compared.</p>
+<p>Exact Bayesian model averaging can be fragile when training features are linearly dependent because unidentifiable weights retain their prior. E29 asks whether loss depth supplies a second mechanism: active-path margins may grow until prior-scale dead-direction perturbations no longer flip hard predictions.</p>
+<p>The dead column retained variance near one and squared norm near sixteen under both SMC and no-decay Adam. Nevertheless, at the deepest measured loss the z=1 strict-correct mass reached 0.9959–1.0000. Against genuinely loss-matched no-decay Adam, mean absolute error was 0.0010 and the worst function error 0.0042, passing the preregistered 0.10/0.20 limits. L2 drove the dead column to zero and supplied a distinct MAP robustness mechanism. Low-ridge NNGP also passed z=1, while z=2 exposed larger static/optimizer gaps. Direct integration showed that the standard temperature-one posterior remained too shallow in this eight-example task.</p>
+<p><strong>Conclusion.</strong> Deep-loss static mass accurately predicts ordinary binary dead-bit behavior without contracting the dead direction. The result is protocol- and shift-scale-specific and does not overturn real-image covariate-shift failures of Bayesian model averaging.</p>
 <h2 id="4-final-integrated-picture">4. Final integrated picture</h2>
 <h3 id="4-1-two-static-empirical-principles">4.1 Two static empirical principles</h3>
 <ol>

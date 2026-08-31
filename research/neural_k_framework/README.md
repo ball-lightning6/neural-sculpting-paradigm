@@ -1,13 +1,17 @@
 # Neural K 理论框架与证据包
 
-本目录汇总 Neural K 理论框架、研究主文、证据总账、E01--E25 实验说明与复现脚本，以及可直接浏览的中英文静态网站。
+本目录汇总 Neural K 理论框架、研究主文、证据总账、E01--E29 实验说明与复现脚本，以及可直接浏览的中英文静态网站。
 
 ## 快速入口
 
 - **当前最准确的核心主张：**[理论核心](theory_core_zh.md)
+- **统计语言逐层教程：**[从参数测度到函数系综](statistical_language_tutorial_zh.md)
 - **按研究转折展开的说明：**[研究主文](short_paper_zh.md)
+- **正式短论文中文工作稿：**[Loss-Resolved 函数选择](short_paper_draft_zh.md)
+- **短论文主张与证据材料：**[核心主张、实验链与证据边界](short_paper_claim_evidence_materials_zh.md)
+- **短论文写作规划：**[叙事结构、图表、引用与工期](short_paper_writing_blueprint_zh.md)
 - **完整实验与理论审计：**[研究证据总账](evidence_ledger_zh.md)
-- **E01--E25 实验索引：**[实验与复现材料](experiments/README.md)
+- **E01--E29 实验索引：**[实验与复现材料](experiments/README.md)
 - **引用文献：**[参考文献](references_zh.md)
 - **网页入口：**[中文网站](site/index.html) / [英文网站](site/en/index.html)
 
@@ -26,10 +30,11 @@
 ```text
 neural_k_framework/
 ├── theory_core_zh.md       # 中文理论核心
+├── statistical_language_tutorial_zh.md # 统计、信息论与统计物理逐层教程
 ├── short_paper_zh.md       # 中文研究主文
 ├── evidence_ledger_zh.md   # 中文证据总账
 ├── references_zh.md        # 中文参考文献
-├── experiments/            # E01--E25 文档与复现脚本
+├── experiments/            # E01--E29 文档与复现脚本
 ├── assets/figures/         # 关键结果图
 ├── site/                   # 已生成的中英文静态网站
 ├── build_site.py           # 网站生成器
