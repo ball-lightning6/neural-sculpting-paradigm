@@ -17,7 +17,7 @@
 </head>
 <body data-page-kind="ledger">
   <div class="reading-progress" aria-hidden="true"><span></span></div>
-  
+
     <header class="topbar">
       <a class="site-mark" href="index.html" aria-label="Back to the research narrative">
         <span class="mark-block">NK</span>
@@ -29,9 +29,9 @@
         <span aria-hidden="true">☰</span><span>Contents</span>
       </button>
     </header>
-    
+
   <div class="page-shell">
-    
+
     <aside class="sidebar" id="sidebar" aria-label="On this page">
       <div class="sidebar-inner">
         <div class="sidebar-label">On this page</div>
@@ -77,6 +77,7 @@
 <li><a href="#e27-agreement-before-and-during-grokking">E27 · Agreement Before and During Grokking</a></li>
 <li><a href="#e28-whole-network-hmc-versus-adam-on-50k-mnist">E28 · Whole-Network HMC versus Adam on 50k MNIST</a></li>
 <li><a href="#e29-loss-resolved-robustness-to-a-dead-input-bit">E29 · Loss-Resolved Robustness to a Dead Input Bit</a></li>
+<li><a href="#e30-weight-decay-reshapes-the-static-complete-function-landscape">E30 · Weight Decay Reshapes the Static Complete-Function Landscape</a></li>
 </ul>
 </li>
 <li><a href="#4-final-integrated-picture">4. Final integrated picture</a><ul>
@@ -95,7 +96,7 @@
         <a class="sidebar-action" href="index.html">Return to the narrative →</a>
       </div>
     </aside>
-    
+
     <main class="main-content" id="main-content">
       <article class="article">
         <header class="article-header">
@@ -151,6 +152,11 @@ Q^{\mathrm{static}}_{\Pi,D,\epsilon}(f)
 \frac{\Omega_{\Pi,D}(f;\epsilon)}{\sum_g\Omega_{\Pi,D}(g;\epsilon)}.
 $$</div>
 <p>The rejected separable hypothesis is that every function receives one fixed factor multiplied by a common loss-dependent factor. E06, E10, E12, E14, E19, and E24 show genuine function-specific reweighting and ordering changes.</p>
+<p>E30 adds a clarification rather than a new theoretical component. The unregularized landscape
+already gives AND majority static mass, so grokking-like rule recovery does not require weight decay.
+A coupled regularizer written into the scalar loss simply reshapes that same landscape: under
+approximately raw-BCE-matched conditions, exact-AND mass rises from 53.68% to 58.42% and
+73.32%.</p>
 <h3 id="2-3-full-target-volume-and-neural-k">2.3 Full-target volume and Neural K</h3>
 <p>For a complete finite target,</p>
 <div class="math-display">$$
@@ -184,7 +190,7 @@ F_{\Pi,D}(\beta)=-\beta^{-1}\log Z_{\Pi,D}(\beta).
 $$</div>
 <p>E22 verifies that per-example generalized-surprise increments telescope to the complete-rule endpoint cost under one coherent static measure. It does not claim that real SGD samples the Gibbs ensemble.</p>
 <h2 id="3-experimental-evidence-chain">3. Experimental evidence chain</h2>
-<p>The following sections are generated from the same English experiment records used by the E01–E29 detail pages. Each preserves the motivation, actual measurement, decisive result, and limitation.</p>
+<p>The following sections are generated from the same English experiment records used by the E01–E30 detail pages. Each preserves the motivation, actual measurement, decisive result, and limitation.</p>
 <h3 id="e01-static-hard-conditioning-versus-optimizer-induced-function-transport">E01 · <a href="experiments/e01.html">Static Hard Conditioning versus Optimizer-Induced Function Transport</a></h3>
 <p><strong>Purpose.</strong> Test whether repeated neural-network training merely samples the initialization function prior conditioned on training-label consistency.</p>
 <p>This unit contains two direct tests in a fully enumerable 3-bit Boolean space. E01a compares the initialization prior, the hard-conditioned prior, and the complete-function distribution produced by Adam. E01b uses a much wider network and a single training example to make the transport effect visually and statistically unmistakable.</p>
@@ -390,6 +396,13 @@ $$</div>
 <p>Exact Bayesian model averaging can be fragile when training features are linearly dependent because unidentifiable weights retain their prior. E29 asks whether loss depth supplies a second mechanism: active-path margins may grow until prior-scale dead-direction perturbations no longer flip hard predictions.</p>
 <p>The dead column retained variance near one and squared norm near sixteen under both SMC and no-decay Adam. Nevertheless, at the deepest measured loss the z=1 strict-correct mass reached 0.9959–1.0000. Against genuinely loss-matched no-decay Adam, mean absolute error was 0.0010 and the worst function error 0.0042, passing the preregistered 0.10/0.20 limits. L2 drove the dead column to zero and supplied a distinct MAP robustness mechanism. Low-ridge NNGP also passed z=1, while z=2 exposed larger static/optimizer gaps. Direct integration showed that the standard temperature-one posterior remained too shallow in this eight-example task.</p>
 <p><strong>Conclusion.</strong> Deep-loss static mass accurately predicts ordinary binary dead-bit behavior without contracting the dead direction. The result is protocol- and shift-scale-specific and does not overturn real-image covariate-shift failures of Bayesian model averaging.</p>
+<h3 id="e30-weight-decay-reshapes-the-static-complete-function-landscape">E30 · <a href="experiments/e30.html">Weight Decay Reshapes the Static Complete-Function Landscape</a></h3>
+<p><strong>Purpose.</strong> Clarify that grokking does not require weight decay and that explicit L2 helps by reshaping the same static function landscape rather than introducing a special mechanism.</p>
+<p>The frozen task is balanced AND with 40 examples under an exact finite-width 8-to-16-to-16-to-1 tanh network and an iid Gaussian reference measure. Direct constrained SMC uses 16 replicas of 8,192 particles. Complete functions are recomputed on all 256 inputs. Three approximately raw-BCE-matched conditions use lambda 0, 5e-5, and 1e-4.</p>
+<p>The unregularized raw-loss landscape can already make a reusable rule the leading extension, so weight decay is not necessary for grokking. For explicit L2, the optimizer receives the gradient of one scalar objective, J = BCE + lambda ||theta||^2/2. The regularizer should therefore be understandable as a deformation of the same static landscape, not as a mysterious optimizer-specific mechanism.</p>
+<p>The raw-BCE means were 0.0025815, 0.0025105, and 0.0025898. Exact AND mass increased from 53.683% to 58.423% to 73.318%, while the number of observed complete functions fell from 4,190 to 1,246 to 86. The endpoint lambda=0 versus lambda=1e-4 difference was 19.635 percentage points, positive in all 16 replicas; the replica bootstrap 95% interval was 17.508--21.570 points.</p>
+<p>All three conditions hard-fit the training set. The no-decay and middle-dose samplers passed all automated gates. The lambda=1e-4 raw archive exceeded an old float32 boundary check by 8.9e-10; all substantive diagnostics and saved samples passed, and the frozen code now audits relative tolerance plus float32 ULP error. A deeper lambda=1e-4 layer observed only AND but did not converge in absolute log volume, so it remains supplementary.</p>
+<p><strong>Conclusion.</strong> The no-decay landscape already gives AND majority static mass, while explicit L2 strengthens that preference at nearly matched training fit. Weight decay is neither required nor theoretically special; its present effect is explained by reshaping the same static function competition. This controlled result does not establish the same quantitative mechanism for decoupled AdamW or the original Mod97 Transformer.</p>
 <h2 id="4-final-integrated-picture">4. Final integrated picture</h2>
 <h3 id="4-1-two-static-empirical-principles">4.1 Two static empirical principles</h3>
 <ol>
@@ -422,7 +435,7 @@ $$</div>
 <p>The project has not derived profile shape from architecture, proved finite crossing counts, or made optimizer transport analytically predictable. It has not proven that all high-agreement functions are human-readable or that finite data can support arbitrarily deep correct extrapolation.</p>
 <p>The MNIST turning-point result is calibration-assisted, not yet blind. The deepest SMC magnitudes require independent implementation and larger particle/replica audits. Cross-architecture profile-to-transition predictions and a new digit-pair prediction are the clearest next tests.</p>
 <p>The evidence supports a unified experimental framework over the tested Boolean, cellular-automaton, modular-arithmetic, small-MLP, and binary-MNIST protocols. It does not establish one universal quantitative law for all modern architectures or real-world datasets.</p></div>
-        
+
       </article>
     </main>
   </div>

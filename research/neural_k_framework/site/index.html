@@ -17,7 +17,7 @@
 </head>
 <body data-page-kind="paper">
   <div class="reading-progress" aria-hidden="true"><span></span></div>
-  
+
     <header class="topbar">
       <a class="site-mark" href="index.html" aria-label="返回研究主文">
         <span class="mark-block">NK</span>
@@ -29,9 +29,9 @@
         <span aria-hidden="true">☰</span><span>目录</span>
       </button>
     </header>
-    
+
   <div class="page-shell">
-    
+
     <aside class="sidebar" id="sidebar" aria-label="本页目录">
       <div class="sidebar-inner">
         <div class="sidebar-label">本页目录</div>
@@ -109,14 +109,14 @@
 <li><a href="#12-这套框架和已有理论是什么关系">12. 这套框架和已有理论是什么关系</a></li>
 <li><a href="#13-哪些话现在还不能说">13. 哪些话现在还不能说</a></li>
 <li><a href="#14-总结">14. 总结</a></li>
-<li><a href="#附录-e01-e29-证据地图">附录：E01--E29 证据地图</a></li>
+<li><a href="#附录-e01-e30-证据地图">附录：E01--E30 证据地图</a></li>
 </ul>
 </div>
 </nav>
         <a class="sidebar-action" href="experiments/index.html">查看全部实验 →</a>
       </div>
     </aside>
-    
+
     <main class="main-content" id="main-content">
       <article class="article">
         <header class="article-header">
@@ -133,17 +133,17 @@
       <p>需要核查或寻找更详细解释时，请优先查看研究证据总账、各实验详情页、原始实验脚本及其完整说明。作者之后会继续修改当前网页，并推进正式论文写作。</p>
       <div class="disclosure-links">
         <a href="evidence-ledger.html">查看研究证据总账</a>
-        <a href="experiments/index.html">查看 E01–E29 实验与脚本</a>
+        <a href="experiments/index.html">查看 E01–E30 实验与脚本</a>
       </div>
     </aside>
-    
+
     <div class="core-entry-banner">
       <div><strong>想直接看核心研究主张？</strong><span>可跳过探索叙事，直接阅读简单性原则、Neural K-profile、统计物理、预测、agreement 与 AGI 理论关系。</span></div>
       <a href="theory-core.html">打开理论核心 →</a>
     </div>
-    
+
     <div class="metric-strip" aria-label="文档概览">
-      <div><strong>29</strong><span>组证据单元</span></div>
+      <div><strong>30</strong><span>组证据单元</span></div>
       <div><strong>22</strong><span>组关键实验展开</span></div>
       <div><strong>4</strong><span>张关键结果图</span></div>
     </div>
@@ -544,7 +544,7 @@ $$</div>
 <p>这项研究最初是在问：初始化函数先验加训练集硬过滤，是否已经足以解释神经网络为什么泛化。实验给出的答案是“不够”，但初始化先验也没有被抛弃。它仍然是重要零阶项；连续训练 loss 会继续重排函数质量，优化器又会在静态几何之上施加路径依赖的运输。</p>
 <p>真正需要的新对象不是一个万能复杂度分数，而是一条 Neural K-profile。它允许同一函数在不同精度下呈现不同难度，允许 shortcut 在中间 loss 合理占优，也允许 hard function 固定以后内部实现继续变化。它还能在受控实验中前瞻预测需要多少数据，并在 MNIST 上对未见图像和过拟合转折给出静态预测。</p>
 <p>用这套语言，网络不必知道研究者心中的真实规则。它只是在当前网络语言和训练集约束下不断降低 loss。数据充分时，这个过程很早便指向可复用规则；数据临界时，它表现为 grokking；数据不足或有噪声时，它会继续收束到训练集特异延拓。泛化不是另一个隐藏目标，而是训练集、网络语言、loss 深度和优化路径共同选择了可迁移函数。</p>
-<h2 id="附录-e01-e29-证据地图">附录：E01--E29 证据地图</h2>
+<h2 id="附录-e01-e30-证据地图">附录：E01--E30 证据地图</h2>
 <p>主文只展开承担关键转折的实验。其余实验并没有被删除，下面说明每个编号究竟在测什么。</p>
 <table>
 <thead>
@@ -700,9 +700,14 @@ $$</div>
 <td>比较dead-bit静态profile、无衰减Adam、L2、NNGP与温度1posterior</td>
 <td>未约束方向保持prior时，深loss margin能否恢复反事实稳定性</td>
 </tr>
+<tr>
+<td><a href="experiments/e30.html">E30</a></td>
+<td>在近似matched-BCE下比较三个显式L2系数的静态完整函数质量</td>
+<td>写进loss的正则项能否用同一静态地形语言理解</td>
+</tr>
 </tbody>
 </table></div>
-        <footer class="article-footer"><a href="experiments/index.html">继续查看 E01–E29 实验索引 →</a></footer>
+        <footer class="article-footer"><a href="experiments/index.html">继续查看 E01–E30 实验索引 →</a></footer>
       </article>
     </main>
   </div>

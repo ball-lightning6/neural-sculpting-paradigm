@@ -269,3 +269,13 @@ Neil Houlsby, Ferenc Huszár, Zoubin Ghahramani, Máté Lengyel. **Bayesian Acti
 
 - [arXiv:1112.5745](https://arxiv.org/abs/1112.5745)
 - **本站引用关系**：BALD 用标签与参数/假设之间的互信息选择查询；本站在确定性函数极限下把它连接到 predictive entropy、低 agreement 与 E21 的 disagreement 选样。
+
+## 九、Grokking熵地形补充
+
+### R37 · Zhang 等（2025）
+
+Xiaotian Zhang, Yue Shang, Entao Yang, Ge Zhang. **Is Grokking a Computational Glass Relaxation?** *NeurIPS 2025*.
+
+- [NeurIPS正式论文](https://proceedings.neurips.cc/paper_files/paper/2025/file/92f67b9047fa7a43d7506054b5f0ec6a-Paper-Conference.pdf)
+- [arXiv:2505.11411](https://arxiv.org/abs/2505.11411)
+- **本站引用关系**：用Wang--Landau方法观测模运算Transformer的训练loss--测试准确率熵图，并用无显式正则的WanD找到高范数泛化解；支持“grokking不需要weight decay、泛化态可具有静态熵优势”的外部对照。E30只在更小系统中澄清显式L2如何改变同一静态函数竞争。

@@ -424,7 +424,7 @@ def build_paper(experiments: list[Experiment]) -> None:
     body, toc = render_markdown(strip_first_h1(source))
     metrics = """
     <div class="metric-strip" aria-label="文档概览">
-      <div><strong>29</strong><span>组证据单元</span></div>
+      <div><strong>30</strong><span>组证据单元</span></div>
       <div><strong>22</strong><span>组关键实验展开</span></div>
       <div><strong>4</strong><span>张关键结果图</span></div>
     </div>
@@ -438,7 +438,7 @@ def build_paper(experiments: list[Experiment]) -> None:
       <p>需要核查或寻找更详细解释时，请优先查看研究证据总账、各实验详情页、原始实验脚本及其完整说明。作者之后会继续修改当前网页，并推进正式论文写作。</p>
       <div class="disclosure-links">
         <a href="evidence-ledger.html">查看研究证据总账</a>
-        <a href="experiments/index.html">查看 E01–E29 实验与脚本</a>
+        <a href="experiments/index.html">查看 E01–E30 实验与脚本</a>
       </div>
     </aside>
     """
@@ -459,7 +459,7 @@ def build_paper(experiments: list[Experiment]) -> None:
         active="paper",
         page_kind="paper",
         switch_href="en/index.html",
-        article_footer='<footer class="article-footer"><a href="experiments/index.html">继续查看 E01–E29 实验索引 →</a></footer>',
+        article_footer='<footer class="article-footer"><a href="experiments/index.html">继续查看 E01–E30 实验索引 →</a></footer>',
     )
     (SITE_ROOT / "index.html").write_text(page, encoding="utf-8")
 
@@ -604,9 +604,9 @@ def build_experiment_pages(experiments: list[Experiment]) -> None:
     <p class="empty-search" data-empty-search hidden>没有匹配的实验。</p>
     """
     index_page = page_template(
-        title="E01–E29 实验索引",
+        title="E01–E30 实验索引",
         description="每页合并实验目的、具体操作、判决标准、结果、边界和复现脚本。",
-        eyebrow="实验档案 · 29 组证据单元",
+        eyebrow="实验档案 · 30 组证据单元",
         body=index_body,
         sidebar=toc_sidebar("", sidebar_list),
         prefix="../",
@@ -696,7 +696,7 @@ def build_paper_en(experiments: list[Experiment], output: Path) -> None:
     body, toc = render_markdown(strip_first_h1(source))
     metrics = """
     <div class="metric-strip" aria-label="Document overview">
-      <div><strong>29</strong><span>evidence units</span></div>
+      <div><strong>30</strong><span>evidence units</span></div>
       <div><strong>22</strong><span>key experiments explained</span></div>
       <div><strong>4</strong><span>result figures</span></div>
     </div>
@@ -710,7 +710,7 @@ def build_paper_en(experiments: list[Experiment], output: Path) -> None:
       <p>For verification or fuller context, consult the evidence ledger, experiment detail pages, original scripts, and preserved result notes. The author intends to continue revising the website and developing a formal paper.</p>
       <div class="disclosure-links">
         <a href="evidence-ledger.html">Open the evidence ledger</a>
-        <a href="experiments/index.html">Browse E01–E29 and scripts</a>
+        <a href="experiments/index.html">Browse E01–E30 and scripts</a>
       </div>
     </aside>
     """
@@ -732,7 +732,7 @@ def build_paper_en(experiments: list[Experiment], output: Path) -> None:
         page_kind="paper",
         language="en",
         switch_href="../index.html",
-        article_footer='<footer class="article-footer"><a href="experiments/index.html">Continue to the E01–E29 experiment index →</a></footer>',
+        article_footer='<footer class="article-footer"><a href="experiments/index.html">Continue to the E01–E30 experiment index →</a></footer>',
     )
     (output / "index.html").write_text(page, encoding="utf-8")
 
@@ -855,7 +855,7 @@ def build_experiment_pages_en(experiments: list[Experiment], output: Path) -> No
     <p class="empty-search" data-empty-search hidden>No matching experiment.</p>
     """
     index_page = page_template(
-        title="E01–E29 Experiment Index",
+        title="E01–E30 Experiment Index",
         description="Each page combines the motivation, actual design, decision criteria, results, limits, and source-script links.",
         eyebrow="Experiment archive · 29 evidence units",
         body=index_body,
@@ -895,8 +895,8 @@ def build_experiment_pages_en(experiments: list[Experiment], output: Path) -> No
 
 
 def build_english_site(experiments: list[Experiment]) -> None:
-    if set(EXPERIMENTS_EN) != set(range(1, 30)):
-        raise RuntimeError("English experiment translations must cover E01–E29 exactly.")
+    if set(EXPERIMENTS_EN) != set(range(1, 31)):
+        raise RuntimeError("English experiment translations must cover E01–E30 exactly.")
     output = SITE_ROOT / "en"
     output.mkdir(parents=True, exist_ok=True)
     build_paper_en(experiments, output)
@@ -950,10 +950,17 @@ def write_manifest(experiments: list[Experiment]) -> None:
     )
 
 
+def normalize_generated_html() -> None:
+    for path in SITE_ROOT.rglob("*.html"):
+        source = path.read_text(encoding="utf-8")
+        normalized = "\n".join(line.rstrip() for line in source.splitlines()) + "\n"
+        path.write_text(normalized, encoding="utf-8")
+
+
 def main() -> None:
     experiments = load_experiments()
-    if len(experiments) != 29:
-        raise RuntimeError(f"预期 29 个实验目录，实际得到 {len(experiments)} 个。")
+    if len(experiments) != 30:
+        raise RuntimeError(f"预期 30 个实验目录，实际得到 {len(experiments)} 个。")
     prepare_site_root()
     copy_assets()
     build_paper(experiments)
@@ -963,6 +970,7 @@ def main() -> None:
     build_experiment_pages(experiments)
     build_english_site(experiments)
     write_manifest(experiments)
+    normalize_generated_html()
     html_count = len(list(SITE_ROOT.rglob("*.html")))
     print(f"Built {html_count} HTML pages in {SITE_ROOT}")
 

@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="说明grokking并不需要weight decay；显式L2之所以能够帮助grokking，是因为它 改变了同一套函数竞争的静态loss地形，而不是引入一种神秘或特殊的学习机制。">
+  <title>E30：Weight decay重塑完整静态函数地形 · Neural K 研究档案</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="../assets/site.js"></script>
+</head>
+<body data-page-kind="experiment">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+
+    <header class="topbar">
+      <a class="site-mark" href="../index.html" aria-label="返回研究主文">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K 研究档案</span>
+      </a>
+      <nav class="top-nav" aria-label="全站导航"><a class="top-link" href="../index.html">研究主文</a><a class="top-link" href="../theory-core.html">理论核心</a><a class="top-link active" href="../experiments/index.html">实验索引</a><a class="top-link" href="../references.html">参考文献</a><a class="top-link" href="../evidence-ledger.html">证据总账</a></nav>
+      <nav class="language-switch" aria-label="语言"><span class="active" lang="zh-CN">中文</span><a href="../en/experiments/e30.html" lang="en">EN</a></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>目录</span>
+      </button>
+    </header>
+
+  <div class="page-shell">
+
+    <aside class="sidebar" id="sidebar" aria-label="本页目录">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">本页目录</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#overview">实验概览</a></li>
+<li><a href="#目的">目的</a></li>
+<li><a href="#入口">入口</a></li>
+<li><a href="#冻结来源">冻结来源</a></li>
+<li><a href="#原始结果包">原始结果包</a></li>
+<li><a href="#主运行模式">主运行模式</a></li>
+<li><a href="#motivation">为什么做、怎样判决</a></li>
+<li><a href="#1-问题">1. 问题</a></li>
+<li><a href="#2-竞争解释">2. 竞争解释</a></li>
+<li><a href="#3-固定任务与测度">3. 固定任务与测度</a></li>
+<li><a href="#4-分阶段阈值冻结">4. 分阶段阈值冻结</a></li>
+<li><a href="#5-质量门槛">5. 质量门槛</a></li>
+<li><a href="#6-外部关联">6. 外部关联</a></li>
+<li><a href="#results">结果、解读与边界</a></li>
+<li><a href="#1-三点主结果">1. 三点主结果</a></li>
+<li><a href="#2-replica级统计">2. Replica级统计</a></li>
+<li><a href="#3-采样诊断">3. 采样诊断</a></li>
+<li><a href="#4-概念判决">4. 概念判决</a></li>
+<li><a href="#5-为什么不是-and本来总范数更低">5. 为什么不是“AND本来总范数更低”</a></li>
+<li><a href="#6-深层与更强系数边界">6. 深层与更强系数边界</a></li>
+<li><a href="#7-可以与不能声称什么">7. 可以与不能声称什么</a></li>
+</ul>
+</div>
+</nav>
+        <div class="sidebar-label experiment-label">全部实验</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>静态硬条件化不足以描述训练函数分布</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-bit 反事实不变性与训练 loss 中心原则</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>函数系综动力学与网络参考语言</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>在 Mingard 2025协议中延长 post-fit 观察</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>固定 NTK 足够时的特征学习</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>连续 loss 条件下的静态函数质量</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>函数 ID 迁移与 matched-loss 静态对照</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>共享中间表示与有限容量压力</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>MNIST 80%隐藏标签噪声长训</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>4-bit raw-BCE 简单/复杂规则竞争</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule30 数据量与训练/验证梯度对齐</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND shortcut 的静态 loss 几何</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>AND shortcut 的 SGD 运输与单样本干预</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>加权 Rule-bit 的 loss 阶段函数换序</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Mod97 grokking 的完整函数与边缘凝聚</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity 终点偏好、全局入口与局部恢复</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>静态低-loss 质量与 optimizer 运输</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>高函数共识与符号可读性</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>完整真值表规则的 loss-resolved 体积</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Full-rule、固定 D 与 hard-margin 测度闭环</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement 控制与共识复杂度前沿</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>逐样本自由能与信息不变量</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>完整目标体积前瞻预测数据相变</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>深尾 Neural K-profile 与排序交叉</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST 样本复杂度与静态体积分支预测</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>MNIST平衡无标签划分的静态体积</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Grokking前后的未见函数Agreement</span></a><a class="experiment-nav-link" href="e28.html"><span>E28</span><span>MNIST 50k整网HMC与同协议Adam</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Dead bit的loss-resolved静态预测</span></a><a class="experiment-nav-link active" href="e30.html"><span>E30</span><span>Weight decay重塑完整静态函数地形</span></a></nav>
+      </div>
+    </aside>
+
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">E30 · 实验详情</div>
+          <h1>E30：Weight decay重塑完整静态函数地形</h1>
+          <p class="article-description">说明grokking并不需要weight decay；显式L2之所以能够帮助grokking，是因为它 改变了同一套函数竞争的静态loss地形，而不是引入一种神秘或特殊的学习机制。</p>
+        </header>
+        <div class="article-body"><div class="source-bar"><span>复现脚本</span><div><a href="../../experiments/experiment_30_weight_decay_static_landscape/experiment_weight_decay_static_landscape.py">experiment_weight_decay_static_landscape.py</a></div></div><h2 id="overview">实验概览</h2>
+<h2 id="目的">目的</h2>
+<p>说明grokking并不需要weight decay；显式L2之所以能够帮助grokking，是因为它
+改变了同一套函数竞争的静态loss地形，而不是引入一种神秘或特殊的学习机制。</p>
+<h2 id="入口">入口</h2>
+<ul>
+<li><a href="../../experiments/experiment_30_weight_decay_static_landscape/experiment_weight_decay_static_landscape.py">experiment_weight_decay_static_landscape.py</a></li>
+<li><a href="#motivation">MOTIVATION_AND_PREREGISTRATION.md</a></li>
+<li><a href="#results">RESULTS_AND_CONCLUSION.md</a></li>
+<li><a href="../../experiments/experiment_30_weight_decay_static_landscape/NUMERICAL_TOLERANCE_AUDIT.md">NUMERICAL_TOLERANCE_AUDIT.md</a></li>
+</ul>
+<h2 id="冻结来源">冻结来源</h2>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>开发版来源</th>
+<th>SHA256</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>experiment_weight_decay_static_landscape.py</td>
+<td>research/function_information_conservation/experiment_8bit_and_gaussian_blind.py</td>
+<td><code>0EE9E1118EB497997B1557EE49D69A65868CC207B38F8E3379ECA650A1797FC0</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="原始结果包">原始结果包</h2>
+<p>原始结果不进入仓库。三个主包的SHA256为：</p>
+<pre><code class="language-text">D4CB2A6CC1C65399833CB1DEBAD9F9D21CB05078ECF35B89ABE4B925DBB93CEE  lambda=0
+39F4814E814A637339D8CF8EADC72E7A2E4B141BD28E5F7F0076A2ECB09C7FFF  lambda=5e-5
+178B4A2EB108018E4B37B16DD871AA46DA9FFB83F083AED34406CCE9203255E9  lambda=1e-4
+</code></pre>
+<p>更深L2补充包SHA256：</p>
+<pre><code class="language-text">DF0756CA78AB64C83A544298728FCA892AD6ED90A9DB34F815B84F3FCFB6C8F6
+</code></pre>
+<h2 id="主运行模式">主运行模式</h2>
+<pre><code class="language-bash">python experiment_weight_decay_static_landscape.py --mode no_wd_static_matched_bce_n40
+python experiment_weight_decay_static_landscape.py --mode l2_static_half_lambda_n40
+python experiment_weight_decay_static_landscape.py --mode l2_static_reliable_n40
+</code></pre>
+<p>主结果只使用这三个近似matched-BCE条件。<code>lambda=2e-4</code>校准和
+<code>J&lt;=0.0186</code>深层结果只承担边界说明。</p>
+<h2 id="motivation">为什么做、怎样判决</h2>
+<h2 id="1-问题">1. 问题</h2>
+<p><a href="https://arxiv.org/abs/2201.02177" target="_blank" rel="noopener">Power等人的原版grokking实验</a>显示weight
+decay显著促进延迟泛化，但grokking和规则恢复并不以weight decay为必要条件。
+<a href="https://proceedings.neurips.cc/paper_files/paper/2025/file/92f67b9047fa7a43d7506054b5f0ec6a-Paper-Conference.pdf" target="_blank" rel="noopener">Zhang等（NeurIPS 2025）</a>
+也用无显式正则的WanD找到高范数泛化解。一个常见解释仍把weight decay视作
+optimizer动力学中的特殊干预；
+但对显式L2，optimizer实际只接收完整标量目标</p>
+<div class="math-display">$$
+J_\lambda(\theta)
+=
+L_D(\theta)+\lambda\lVert\theta\rVert^2/2
+$$</div>
+<p>的梯度。原框架最基本的两个对象本来就是loss地形与optimizer；显式L2只是在
+同一标量loss中加入一项，并不是新的理论机制。首选预测应当是：无L2的raw-loss
+地形本身已经可以支持规则接管，而加入L2会通过改变静态地形增强这种偏好。</p>
+<h2 id="2-竞争解释">2. 竞争解释</h2>
+<ol>
+<li><strong>完整静态地形解释。</strong> 在相近raw BCE下，提高<span class="math-inline">$\lambda$</span>会增加正确AND延拓
+   的静态质量，并压缩错误延拓的函数多样性。</li>
+<li><strong>仅拟合深度解释。</strong> L2条件只因raw BCE更低而拥有更多AND；matched-BCE后
+   差异应消失。</li>
+<li><strong>optimizer-specific解释。</strong> 静态地形近乎不变，真实训练差异主要来自路径。</li>
+</ol>
+<p>E30只直接裁决前两项。只有可靠静态测量留下明显残差后，第三项才值得检验。</p>
+<h2 id="3-固定任务与测度">3. 固定任务与测度</h2>
+<ul>
+<li>输入：全部8-bit字符串；目标为<code>x0 AND x1</code>，其余6 bit是nuisance。</li>
+<li>训练集：四个主语义格各10个样本，共40个冻结样本。</li>
+<li>网络：<code>8-&gt;16-&gt;16-&gt;1</code> tanh，433个标准化Gaussian坐标。</li>
+<li>参考测度：坐标独立<span class="math-inline">$N(0,1)$</span>，网络前向使用fan-in缩放。</li>
+<li>静态采样：direct constrained SMC；16个replica，每个8192粒子。</li>
+<li>函数审计：每个replica保存2048个参数，并在完整256点上判定hard function。</li>
+</ul>
+<h2 id="4-分阶段阈值冻结">4. 分阶段阈值冻结</h2>
+<p>本实验不是一次完全盲的单步预注册，而是只依据BCE、范数和采样诊断进行的分阶段
+校准。阈值不得依据待报告的AND质量调整。</p>
+<p>最终三个主条件是：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;"><span class="math-inline">$\lambda$</span></th>
+<th>静态约束</th>
+<th style="text-align: right;">实际raw BCE均值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">0</td>
+<td><span class="math-inline">$L_D\le0.00268$</span></td>
+<td style="text-align: right;">0.00258150</td>
+</tr>
+<tr>
+<td style="text-align: right;"><span class="math-inline">$5\times10^{-5}$</span></td>
+<td><span class="math-inline">$J_\lambda\le0.0160$</span></td>
+<td style="text-align: right;">0.00251046</td>
+</tr>
+<tr>
+<td style="text-align: right;"><span class="math-inline">$10^{-4}$</span></td>
+<td><span class="math-inline">$J_\lambda\le0.0211$</span></td>
+<td style="text-align: right;">0.00258978</td>
+</tr>
+</tbody>
+</table>
+<p>中间点的BCE比两端低约3%，因此只能称为近似matched-BCE。所有图表必须同时展示
+实际BCE，不能把三点写成精确相等。</p>
+<h2 id="5-质量门槛">5. 质量门槛</h2>
+<ul>
+<li>replica log-volume标准差不高于1 nat；</li>
+<li>最大probe跨replica标准差不高于0.03；</li>
+<li>完整AND质量的replica标准差不高于0.05；</li>
+<li>全部保存样本满足约束并100% hard-fit训练集；</li>
+<li>以replica而非粒子作为配对统计单位。</li>
+</ul>
+<p>浮点边界检查使用相对容差加16个float32 ULP；深loss最小容差仍为<span class="math-inline">$10^{-12}$</span>。</p>
+<h2 id="6-外部关联">6. 外部关联</h2>
+<p><a href="https://proceedings.neurips.cc/paper_files/paper/2025/file/92f67b9047fa7a43d7506054b5f0ec6a-Paper-Conference.pdf" target="_blank" rel="noopener">Zhang等（NeurIPS 2025）</a>
+用Wang--Landau方法在模运算Transformer上观测到低loss泛化态的高熵优势。
+E30不复现其完整Transformer熵图，而是在可严格审计的433参数系统中直接比较
+显式L2完整目标的函数级静态质量。</p>
+<h2 id="results">结果、解读与边界</h2>
+<h2 id="1-三点主结果">1. 三点主结果</h2>
+<p>三个条件的raw BCE最大相差约3.1%，所有保存网络都100% hard-fit训练集：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;"><span class="math-inline">$\lambda$</span></th>
+<th style="text-align: right;">raw BCE均值</th>
+<th style="text-align: right;">完整AND质量</th>
+<th style="text-align: right;">replica范围</th>
+<th style="text-align: right;">完整函数数</th>
+<th style="text-align: right;">half norm均值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.00258150</td>
+<td style="text-align: right;">53.683%</td>
+<td style="text-align: right;">50.391%--57.178%</td>
+<td style="text-align: right;">4190</td>
+<td style="text-align: right;">369.70</td>
+</tr>
+<tr>
+<td style="text-align: right;"><span class="math-inline">$5\times10^{-5}$</span></td>
+<td style="text-align: right;">0.00251046</td>
+<td style="text-align: right;">58.423%</td>
+<td style="text-align: right;">50.830%--66.406%</td>
+<td style="text-align: right;">1246</td>
+<td style="text-align: right;">268.76</td>
+</tr>
+<tr>
+<td style="text-align: right;"><span class="math-inline">$10^{-4}$</span></td>
+<td style="text-align: right;">0.00258978</td>
+<td style="text-align: right;">73.318%</td>
+<td style="text-align: right;">66.016%--78.125%</td>
+<td style="text-align: right;">86</td>
+<td style="text-align: right;">184.97</td>
+</tr>
+</tbody>
+</table>
+<p>完整AND质量随L2系数单调增加，完整函数多样性则从4190种降至1246种，再降至
+86种。</p>
+<h2 id="2-replica级统计">2. Replica级统计</h2>
+<pre><code class="language-text">lambda 0 -&gt; 5e-5：
+  AND +4.739个百分点
+  13/16 replica同向
+  bootstrap 95% CI：2.823--6.555个百分点
+  paired t-test p=2.35e-4
+  Wilcoxon p=1.92e-3
+
+lambda 5e-5 -&gt; 1e-4：
+  AND +14.896个百分点
+  16/16 replica同向
+  bootstrap 95% CI：12.097--17.502个百分点
+  paired t-test p=2.80e-8
+  Wilcoxon p=4.37e-4
+
+lambda 0 -&gt; 1e-4：
+  AND +19.635个百分点
+  16/16 replica同向
+  bootstrap 95% CI：17.508--21.570个百分点
+</code></pre>
+<p>中间点的raw BCE略低，这可能轻微抬高其AND质量；但<span class="math-inline">$\lambda=0$</span>与<span class="math-inline">$10^{-4}$</span>的
+BCE只差0.32%，主端点差异不受这一边界影响。</p>
+<h2 id="3-采样诊断">3. 采样诊断</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;"><span class="math-inline">$\lambda$</span></th>
+<th style="text-align: right;">logV replica std</th>
+<th style="text-align: right;">最大probe std</th>
+<th style="text-align: right;">AND质量std</th>
+<th>自动质量</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.215</td>
+<td style="text-align: right;">0.01949</td>
+<td style="text-align: right;">0.02291</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td style="text-align: right;"><span class="math-inline">$5\times10^{-5}$</span></td>
+<td style="text-align: right;">0.321</td>
+<td style="text-align: right;">0.02351</td>
+<td style="text-align: right;">0.04087</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td style="text-align: right;"><span class="math-inline">$10^{-4}$</span></td>
+<td style="text-align: right;">0.693</td>
+<td style="text-align: right;">0.00794</td>
+<td style="text-align: right;">0.03393</td>
+<td>数值审计后PASS</td>
+</tr>
+</tbody>
+</table>
+<p><span class="math-inline">$10^{-4}$</span>原始包只因最大<span class="math-inline">$J$</span>比旧float32检查上界多<span class="math-inline">$8.9\times10^{-10}$</span>而自动标为
+失败；全部保存参数及其他门槛通过。详见
+<a href="../../experiments/experiment_30_weight_decay_static_landscape/NUMERICAL_TOLERANCE_AUDIT.md">NUMERICAL_TOLERANCE_AUDIT.md</a>。</p>
+<h2 id="4-概念判决">4. 概念判决</h2>
+<p>在训练拟合深度近似匹配时，显式L2仍系统提高正确AND延拓的静态质量，并压缩
+完整函数多样性。因此当前最简解释是：</p>
+<blockquote>
+<p>weight decay通过改变完整标量目标的低<span class="math-inline">$J$</span>几何，重排训练集一致延拓的参数
+质量；其对本轮grokking式函数选择的作用不需要optimizer-specific机制兜底。</p>
+</blockquote>
+<p>无WD条件本身已经给AND约53.7%的静态质量，说明规则可以在纯raw-loss地形中
+成为主导候选；weight decay不是grokking的必要条件。它在本实验中的作用是把
+已有静态偏好进一步增强，而不是创造一种与原框架无关的新机制。</p>
+<p>这个结果不是增加新的理论元素，而是澄清原框架的直接用法：最基本的对象仍然是
+loss地形与optimizer。任何真正写进标量loss的项，无论叫正则项、辅助损失还是
+其他名字，都只是共同塑造同一张地形，并不具有特殊理论身份。分析这类干预时，
+先测相应静态函数地形；只有仍有残差时才讨论optimizer。</p>
+<h2 id="5-为什么不是-and本来总范数更低">5. 为什么不是“AND本来总范数更低”</h2>
+<p>在无WD、<code>BCE&lt;=0.01</code>的固定截面中，AND与其他延拓的总L2范数排序几乎为随机：
+loss分层低范数AUC中位数为0.5088。L2的作用不是读取一个预先存在的明显范数
+标签，而是让<code>BCE+lambda*R</code>共同定义不同的BCE--范数Pareto子集。</p>
+<h2 id="6-深层与更强系数边界">6. 深层与更强系数边界</h2>
+<ul>
+<li>在<span class="math-inline">$\lambda=10^{-4}$</span>、<span class="math-inline">$J\le0.0186$</span>的更深层，16个远距离replica发现的全部
+  低<span class="math-inline">$J$</span>完整函数都是AND；但绝对logV标准差为5.66 nat、谱系严重退化，所以只写
+  “所有观测模态均为AND”，不认证精确100%。</li>
+<li><span class="math-inline">$\lambda=2\times10^{-4}$</span>在<span class="math-inline">$J\le0.0396$</span>时BCE为0.00535、AND为73.42%；继续
+  降至<span class="math-inline">$J\le0.03545$</span>时BCE为0.00470、AND为90.79%，但logV标准差升至1.48 nat。
+  两点都不是matched-BCE主剂量，不进入主曲线。</li>
+</ul>
+<h2 id="7-可以与不能声称什么">7. 可以与不能声称什么</h2>
+<p>可以声称：</p>
+<ol>
+<li>在本任务、架构、Gaussian测度和近似matched-BCE协议下，提高显式L2系数会
+   提高AND的静态完整函数质量；</li>
+<li>无weight decay的raw-loss地形本身已经支持规则占优，weight decay并非
+   grokking必要条件；</li>
+<li>weight decay带来的增强可以由静态地形变化解释，无需额外假设optimizer识别
+   正则项；写进loss的其他项同理，并不特殊。</li>
+</ol>
+<p>不能声称：</p>
+<ol>
+<li>已经在原版Mod97 Transformer上直接证明相同机制；</li>
+<li>decoupled AdamW严格等于显式L2标量目标；</li>
+<li>AND质量对任意<span class="math-inline">$\lambda$</span>单调，或<span class="math-inline">$\lambda=2\times10^{-4}$</span>已完成matched-BCE；</li>
+<li>深层静态AND概率被严格认证为100%。</li>
+</ol></div>
+        <footer class="experiment-pager"><a href="e29.html">← E29 Dead bit的loss-resolved静态预测</a><span></span></footer>
+      </article>
+    </main>
+  </div>
+</body>
+</html>

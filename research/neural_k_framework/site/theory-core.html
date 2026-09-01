@@ -17,7 +17,7 @@
 </head>
 <body data-page-kind="core">
   <div class="reading-progress" aria-hidden="true"><span></span></div>
-  
+
     <header class="topbar">
       <a class="site-mark" href="index.html" aria-label="返回研究主文">
         <span class="mark-block">NK</span>
@@ -29,9 +29,9 @@
         <span aria-hidden="true">☰</span><span>目录</span>
       </button>
     </header>
-    
+
   <div class="page-shell">
-    
+
     <aside class="sidebar" id="sidebar" aria-label="本页目录">
       <div class="sidebar-inner">
         <div class="sidebar-label">本页目录</div>
@@ -92,7 +92,7 @@
         <a class="sidebar-action" href="index.html">返回研究主文 →</a>
       </div>
     </aside>
-    
+
     <main class="main-content" id="main-content">
       <article class="article">
         <header class="article-header">
@@ -226,6 +226,9 @@ $$</div>
 反事实中给出更严格的matched-loss判决：无衰减Adam与静态SMC的五函数平均差
 只有0.0010，而L2/MAP通过主动压缩未约束权重形成另一种运输结果。两项结果共同
 说明静态几何可以是强预测底图，但“预测接近”与“分布相等”仍是两回事。</p>
+<p><a href="experiments/e30.html">E30</a>只作补充澄清：grokking不需要weight decay；不带
+正则的raw-loss地形本身已经可以支持规则接管。写进loss的weight decay只是在
+同一静态地形中增强规则偏好，并不神秘或特殊。</p>
 <p>任何任务都应分开检查三件事：网络是否能表示目标，数据是否足以辨识目标，优化器是否能够到达目标。</p>
 <h3 id="解耦-scaffold-与优化可达性不等于复杂度">解耦、Scaffold 与优化可达性不等于复杂度</h3>
 <p>端到端任务的原始目标可以写成 <span class="math-inline">$L_{\mathrm{end}}(\theta)$</span>。解耦训练、中间监督或 scaffold 通常加入辅助目标：</p>
@@ -710,7 +713,7 @@ $$</div>
 <blockquote>
 <p><strong>最强主张：训练 loss 的连续下降具有函数选择意义；这种选择可以用协议相对的函数体积、自由能、预测分支和样本相变来测量。</strong></p>
 </blockquote></div>
-        
+
       </article>
     </main>
   </div>

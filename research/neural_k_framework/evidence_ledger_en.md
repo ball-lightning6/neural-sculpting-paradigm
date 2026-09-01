@@ -60,6 +60,12 @@ $$
 
 The rejected separable hypothesis is that every function receives one fixed factor multiplied by a common loss-dependent factor. E06, E10, E12, E14, E19, and E24 show genuine function-specific reweighting and ordering changes.
 
+E30 adds a clarification rather than a new theoretical component. The unregularized landscape
+already gives AND majority static mass, so grokking-like rule recovery does not require weight decay.
+A coupled regularizer written into the scalar loss simply reshapes that same landscape: under
+approximately raw-BCE-matched conditions, exact-AND mass rises from 53.68% to 58.42% and
+73.32%.
+
 ### 2.3 Full-target volume and Neural K
 
 For a complete finite target,
@@ -109,7 +115,7 @@ E22 verifies that per-example generalized-surprise increments telescope to the c
 
 ## 3. Experimental evidence chain
 
-The following sections are generated from the same English experiment records used by the E01–E29 detail pages. Each preserves the motivation, actual measurement, decisive result, and limitation.
+The following sections are generated from the same English experiment records used by the E01–E30 detail pages. Each preserves the motivation, actual measurement, decisive result, and limitation.
 
 ## 4. Final integrated picture
 

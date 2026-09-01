@@ -269,3 +269,13 @@ Neil Houlsby, Ferenc Huszár, Zoubin Ghahramani, Máté Lengyel. **Bayesian Acti
 
 - [arXiv:1112.5745](https://arxiv.org/abs/1112.5745)
 - **Role here:** BALD queries labels by their mutual information with parameters or hypotheses. In the deterministic-function limit, this archive connects BALD to predictive entropy, low agreement, and E21 disagreement sampling.
+
+## 9. Supplementary grokking entropy landscape
+
+### R37 · Zhang et al. (2025)
+
+Xiaotian Zhang, Yue Shang, Entao Yang, Ge Zhang. **Is Grokking a Computational Glass Relaxation?** *NeurIPS 2025*.
+
+- [NeurIPS paper](https://proceedings.neurips.cc/paper_files/paper/2025/file/92f67b9047fa7a43d7506054b5f0ec6a-Paper-Conference.pdf)
+- [arXiv:2505.11411](https://arxiv.org/abs/2505.11411)
+- **Role here:** Maps modular-arithmetic transformers in a Wang--Landau training-loss/test-accuracy entropy landscape and finds high-norm generalizing solutions with WanD and no explicit regularization. It is an external comparison for the claims that grokking does not require weight decay and that generalizing states can have a static entropy advantage; E30 only clarifies the explicit-L2 intervention in a smaller auditable system.

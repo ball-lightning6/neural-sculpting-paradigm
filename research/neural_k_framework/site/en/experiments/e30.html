@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Clarify that grokking does not require weight decay and that explicit L2 helps by reshaping the same static function landscape rather than introducing a special mechanism.">
+  <title>E30: Weight Decay Reshapes the Static Complete-Function Landscape · Neural K Research Archive</title>
+  <link rel="stylesheet" href="../../assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="../../assets/site.js"></script>
+</head>
+<body data-page-kind="experiment">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+
+    <header class="topbar">
+      <a class="site-mark" href="../index.html" aria-label="Back to the research narrative">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K Research Archive</span>
+      </a>
+      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="../index.html">Research</a><a class="top-link" href="../theory-core.html">Core Theory</a><a class="top-link active" href="../experiments/index.html">Experiments</a><a class="top-link" href="../references.html">References</a><a class="top-link" href="../evidence-ledger.html">Evidence</a></nav>
+      <nav class="language-switch" aria-label="Language"><a href="../../experiments/e30.html" lang="zh-CN">中文</a><span class="active" lang="en">EN</span></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>Contents</span>
+      </button>
+    </header>
+
+  <div class="page-shell">
+
+    <aside class="sidebar" id="sidebar" aria-label="On this page">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">On this page</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#overview">Experiment overview</a></li>
+<li><a href="#motivation">Why this experiment was run</a></li>
+<li><a href="#results">Results, interpretation, and limits</a></li>
+</ul>
+</div>
+</nav>
+        <div class="sidebar-label experiment-label">All experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>Static Hard Conditioning versus Optimizer-Induced Function Transport</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-Bit Counterfactual Invariance</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>Prior-Consistent Function Dynamics and Width Intervention</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>Post-Fit Drift in the Mingard 2025 Boolean Protocol</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>Feature Learning When a Fixed NTK Is Already Sufficient</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>Loss-Conditioned Prior Annealing</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>Function-ID Wandering and Matched-Loss Static Controls</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>Shared Intermediate Computation under Finite Capacity</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>Long Training with 80% Hidden Label Noise</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>Raw-BCE Competition between Preregistered Simple and Complex Function Pairs</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule-30 Train/Validation Gradient Alignment across Dataset Size</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND Shortcut Static Geometry and a One-Example Balance Intervention</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>SGD Dynamics of the AND Shortcut and Balanced Intervention</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>Weighted Rule-Bit Function Switching across Loss Scales</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Complete Functions versus Marginal Concentration in Modular-97 Grokking</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity Reachability, Half-Space Generalization, and Scaffold Recovery</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>Static Deep-Loss Mass versus Optimizer Transport</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>Teacher-Free Consensus and Symbolic Readability</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>Full-Truth-Table Rule Volume</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Measure Closure between Full Rules, Fixed Datasets, and Margin Cores</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement Control and a Consensus Complexity Frontier</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>Per-Example Free Energy and an Information Invariant</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>Prospective Prediction from Full-Rule Volume to Data Transition</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>Deep Neural K Crossing of Parity4 and a One-Point Exception</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST Sample Complexity and Static Branch Prediction</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>Balanced Unlabeled MNIST Label Volume</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Agreement Before and During Grokking</span></a><a class="experiment-nav-link" href="e28.html"><span>E28</span><span>Whole-Network HMC versus Adam on 50k MNIST</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Loss-Resolved Robustness to a Dead Input Bit</span></a><a class="experiment-nav-link active" href="e30.html"><span>E30</span><span>Weight Decay Reshapes the Static Complete-Function Landscape</span></a></nav>
+      </div>
+    </aside>
+
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">E30 · Experiment details</div>
+          <h1>E30: Weight Decay Reshapes the Static Complete-Function Landscape</h1>
+          <p class="article-description">Clarify that grokking does not require weight decay and that explicit L2 helps by reshaping the same static function landscape rather than introducing a special mechanism.</p>
+        </header>
+        <div class="article-body"><div class="source-bar"><span>Scripts</span><div><a href="../../../experiments/experiment_30_weight_decay_static_landscape/experiment_weight_decay_static_landscape.py">experiment_weight_decay_static_landscape.py</a></div></div><h2 id="overview">Experiment overview</h2>
+<p>The frozen task is balanced AND with 40 examples under an exact finite-width 8-to-16-to-16-to-1 tanh network and an iid Gaussian reference measure. Direct constrained SMC uses 16 replicas of 8,192 particles. Complete functions are recomputed on all 256 inputs. Three approximately raw-BCE-matched conditions use lambda 0, 5e-5, and 1e-4.</p>
+<h2 id="motivation">Why this experiment was run</h2>
+<p>The unregularized raw-loss landscape can already make a reusable rule the leading extension, so weight decay is not necessary for grokking. For explicit L2, the optimizer receives the gradient of one scalar objective, J = BCE + lambda ||theta||^2/2. The regularizer should therefore be understandable as a deformation of the same static landscape, not as a mysterious optimizer-specific mechanism.</p>
+<h2 id="results">Results, interpretation, and limits</h2>
+<p>The raw-BCE means were 0.0025815, 0.0025105, and 0.0025898. Exact AND mass increased from 53.683% to 58.423% to 73.318%, while the number of observed complete functions fell from 4,190 to 1,246 to 86. The endpoint lambda=0 versus lambda=1e-4 difference was 19.635 percentage points, positive in all 16 replicas; the replica bootstrap 95% interval was 17.508--21.570 points.</p>
+<p>All three conditions hard-fit the training set. The no-decay and middle-dose samplers passed all automated gates. The lambda=1e-4 raw archive exceeded an old float32 boundary check by 8.9e-10; all substantive diagnostics and saved samples passed, and the frozen code now audits relative tolerance plus float32 ULP error. A deeper lambda=1e-4 layer observed only AND but did not converge in absolute log volume, so it remains supplementary.</p>
+<p><strong>Conclusion.</strong> The no-decay landscape already gives AND majority static mass, while explicit L2 strengthens that preference at nearly matched training fit. Weight decay is neither required nor theoretically special; its present effect is explained by reshaping the same static function competition. This controlled result does not establish the same quantitative mechanism for decoupled AdamW or the original Mod97 Transformer.</p></div>
+        <footer class="experiment-pager"><a href="e29.html">← E29 Loss-Resolved Robustness to a Dead Input Bit</a><span></span></footer>
+      </article>
+    </main>
+  </div>
+</body>
+</html>

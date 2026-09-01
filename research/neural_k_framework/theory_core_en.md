@@ -174,6 +174,11 @@ The parity scaffold shows that a low-loss endpoint can exist and be locally stab
 
 [E28](experiments/e28.html) supplies the complementary real-task anchor. On the same small CNN and all 50k MNIST training images, whole-network HMC and plain Adam reached 99.03% and 98.95%, respectively, while retaining different diversity and time-averaging behavior. [E29](experiments/e29.html) gives a stricter matched-loss counterfactual: across five dead-bit functions, no-decay Adam and static SMC differed by only 0.0010 on average, whereas L2/MAP created a distinct mechanism by shrinking the unidentified weights. Together these results show that static geometry can be a strong predictive base map without making static and optimizer distributions identical.
 
+[E30](experiments/e30.html) adds only a supplementary clarification: grokking does not require
+weight decay, because the unregularized raw-loss landscape can already favor rule recovery. Weight
+decay strengthens that preference by reshaping the same static landscape; it is neither mysterious nor
+a special theoretical mechanism.
+
 Every task therefore requires three separate checks: can the network represent the target, does the data identify it, and can the optimizer reach it?
 
 ### Decoupling, scaffolding, and optimization accessibility are not complexity

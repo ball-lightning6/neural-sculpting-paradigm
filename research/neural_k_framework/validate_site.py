@@ -75,8 +75,8 @@ def main() -> int:
     pages = sorted(SITE.rglob("*.html"))
     parsed = {page.resolve(): parse_page(page) for page in pages}
 
-    if len(pages) != 68:
-        errors.append(f"预期 68 个 HTML 页面，实际 {len(pages)} 个。")
+    if len(pages) != 70:
+        errors.append(f"预期 70 个 HTML 页面，实际 {len(pages)} 个。")
 
     required = [
         SITE / "index.html",
@@ -131,11 +131,11 @@ def main() -> int:
                     errors.append(f"{page}: 锚点不存在 {url}")
 
     experiment_index = parsed.get((SITE / "experiments" / "index.html").resolve())
-    if experiment_index and experiment_index.cards != 29:
-        errors.append(f"实验索引卡片应为 29，实际 {experiment_index.cards}。")
+    if experiment_index and experiment_index.cards != 30:
+        errors.append(f"实验索引卡片应为 30，实际 {experiment_index.cards}。")
     experiment_index_en = parsed.get((SITE / "en" / "experiments" / "index.html").resolve())
-    if experiment_index_en and experiment_index_en.cards != 29:
-        errors.append(f"英文实验索引卡片应为 29，实际 {experiment_index_en.cards}。")
+    if experiment_index_en and experiment_index_en.cards != 30:
+        errors.append(f"英文实验索引卡片应为 30，实际 {experiment_index_en.cards}。")
 
     main_page = parsed.get((SITE / "index.html").resolve())
     if main_page:
@@ -151,8 +151,8 @@ def main() -> int:
         if len(main_page.images) != 4:
             errors.append(f"主文应有 4 张结果图，实际 {len(main_page.images)}。")
         experiment_links = {Path(urlsplit(url).path).name for url in main_page.hrefs if "experiments/e" in url}
-        if len(experiment_links) != 29:
-            errors.append(f"主文应链接全部 29 个实验页，实际 {len(experiment_links)}。")
+        if len(experiment_links) != 30:
+            errors.append(f"主文应链接全部 30 个实验页，实际 {len(experiment_links)}。")
 
     main_page_en = parsed.get((SITE / "en" / "index.html").resolve())
     if main_page_en:
@@ -198,7 +198,7 @@ def main() -> int:
         if len(external) < minimum:
             errors.append(f"{relative}: 外部原文引用至少应有 {minimum} 条，实际 {len(external)}。")
 
-    for number in range(1, 30):
+    for number in range(1, 31):
         page = (SITE / "experiments" / f"e{number:02d}.html").resolve()
         parser = parsed.get(page)
         if parser is None:
@@ -227,7 +227,7 @@ def main() -> int:
     ]
     language_pairs.extend(
         (SITE / "experiments" / f"e{number:02d}.html", SITE / "en" / "experiments" / f"e{number:02d}.html")
-        for number in range(1, 30)
+        for number in range(1, 31)
     )
 
     def html_targets(page: Path, parser: PageParser) -> set[Path]:

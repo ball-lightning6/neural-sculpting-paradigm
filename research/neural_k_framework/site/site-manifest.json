@@ -9,7 +9,7 @@
     "zh-CN": "theory-core.html",
     "en": "en/theory-core.html"
   },
-  "experiment_count": 29,
+  "experiment_count": 30,
   "experiments": [
     {
       "id": "E01",
@@ -213,6 +213,13 @@
       "title_en": "Loss-Resolved Robustness to a Dead Input Bit",
       "page_zh": "experiments/e29.html",
       "page_en": "en/experiments/e29.html"
+    },
+    {
+      "id": "E30",
+      "title_zh": "E30：Weight decay重塑完整静态函数地形",
+      "title_en": "Weight Decay Reshapes the Static Complete-Function Landscape",
+      "page_zh": "experiments/e30.html",
+      "page_en": "en/experiments/e30.html"
     }
   ]
 }

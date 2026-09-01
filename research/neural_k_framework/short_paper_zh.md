@@ -660,7 +660,7 @@ MNIST 目前只有两个二分类任务，而且任务和 loss 范围经过校�
 
 用这套语言，网络不必知道研究者心中的真实规则。它只是在当前网络语言和训练集约束下不断降低 loss。数据充分时，这个过程很早便指向可复用规则；数据临界时，它表现为 grokking；数据不足或有噪声时，它会继续收束到训练集特异延拓。泛化不是另一个隐藏目标，而是训练集、网络语言、loss 深度和优化路径共同选择了可迁移函数。
 
-## 附录：E01--E29 证据地图
+## 附录：E01--E30 证据地图
 
 主文只展开承担关键转折的实验。其余实验并没有被删除，下面说明每个编号究竟在测什么。
 
@@ -695,3 +695,4 @@ MNIST 目前只有两个二分类任务，而且任务和 loss 范围经过校�
 | [E27](experiments/experiment_27_grokking_agreement/README.md) | 重析Mod97逐seed轨迹，只在未见输入上测hard fit前后Agreement | Grokking前是否已经形成共享错误函数 |
 | [E28](experiments/experiment_28_mnist50k_hmc_adam/README.md) | 在50k MNIST上比较整网HMC、plain Adam与MAP Adam | 静态有限宽系综能否达到真实optimizer的自然任务性能 |
 | [E29](experiments/experiment_29_dead_bit_loss_resolved/README.md) | 比较dead-bit静态profile、无衰减Adam、L2、NNGP与温度1posterior | 未约束方向保持prior时，深loss margin能否恢复反事实稳定性 |
+| [E30](experiments/experiment_30_weight_decay_static_landscape/README.md) | 在近似matched-BCE下比较三个显式L2系数的静态完整函数质量 | 写进loss的正则项能否用同一静态地形语言理解 |

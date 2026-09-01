@@ -552,7 +552,7 @@ The new object is not one universal complexity score but a measurable Neural K-p
 
 The network need not know the researcher’s true rule. It continually lowers loss under its current neural language and training constraints. With sufficient data, this process points early toward a reusable rule. Near the data transition, it appears as grokking. With insufficient or noisy data, it can concentrate on a training-specific extension. Generalization is not a second hidden objective; it is the outcome when dataset, neural language, loss depth, and optimization path jointly select a transferable function.
 
-## Appendix: E01–E29 evidence map
+## Appendix: E01–E30 evidence map
 
 | ID | What the experiment does | Question it resolves |
 |---|---|---|
@@ -585,3 +585,4 @@ The network need not know the researcher’s true rule. It continually lowers lo
 | [E27](experiments/e27.html) | Reanalyzes Mod97 seed trajectories using agreement only on unseen inputs | Is there already one shared wrong function before grokking? |
 | [E28](experiments/e28.html) | Compares whole-network HMC, plain Adam, and MAP Adam on 50k MNIST | Can a finite-width static ensemble reach optimizer-level performance on natural data? |
 | [E29](experiments/e29.html) | Compares dead-bit static profiles, Adam, L2, NNGP, and the temperature-one posterior | Can deep-loss margins restore counterfactual stability while the dead direction remains at the prior? |
+| [E30](experiments/e30.html) | Compares static complete-function mass across three approximately BCE-matched explicit-L2 strengths | Can regularizers written into the loss be understood through the same static-landscape language? |

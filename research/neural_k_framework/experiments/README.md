@@ -9,7 +9,7 @@
 
 ## 论文中的编号与阅读方法
 
-正文统一使用 `E01`--`E29` 指向本页，不在每次引用时重复配置和数值。阅读某个实验时按以下顺序进入对应目录：
+正文统一使用 `E01`--`E30` 指向本页，不在每次引用时重复配置和数值。阅读某个实验时按以下顺序进入对应目录：
 
 1. `README.md`：实验目的、入口脚本、文件来源与哈希；
 2. `MOTIVATION_AND_PREREGISTRATION.md`：实验前问题、竞争解释和判决标准；
@@ -55,6 +55,7 @@
 | E27 | Grokking前后的未见函数Agreement | [`experiment_27_grokking_agreement`](experiment_27_grokking_agreement/README.md) |
 | E28 | MNIST 50k整网HMC与同协议Adam | [`experiment_28_mnist50k_hmc_adam`](experiment_28_mnist50k_hmc_adam/README.md) |
 | E29 | Dead bit的loss-resolved静态预测 | [`experiment_29_dead_bit_loss_resolved`](experiment_29_dead_bit_loss_resolved/README.md) |
+| E30 | Weight decay重塑完整静态函数地形 | [`experiment_30_weight_decay_static_landscape`](experiment_30_weight_decay_static_landscape/README.md) |
 
-当前选择性上传时间线已整理至2026年8月31日。E26--E29只收录本轮明确选择
-进入Zenodo更新的四个实验；同期其他探索仍保留在开发目录，不自动进入本证据包。
+当前选择性上传时间线已整理至2026年9月1日。E26--E30只收录本轮明确选择
+进入公开更新的五个实验单元；同期其他探索仍保留在开发目录，不自动进入本证据包。

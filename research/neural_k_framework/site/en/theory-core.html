@@ -17,7 +17,7 @@
 </head>
 <body data-page-kind="core">
   <div class="reading-progress" aria-hidden="true"><span></span></div>
-  
+
     <header class="topbar">
       <a class="site-mark" href="index.html" aria-label="Back to the research narrative">
         <span class="mark-block">NK</span>
@@ -29,9 +29,9 @@
         <span aria-hidden="true">☰</span><span>Contents</span>
       </button>
     </header>
-    
+
   <div class="page-shell">
-    
+
     <aside class="sidebar" id="sidebar" aria-label="On this page">
       <div class="sidebar-inner">
         <div class="sidebar-label">On this page</div>
@@ -92,7 +92,7 @@
         <a class="sidebar-action" href="index.html">Return to the research narrative →</a>
       </div>
     </aside>
-    
+
     <main class="main-content" id="main-content">
       <article class="article">
         <header class="article-header">
@@ -221,6 +221,10 @@ $$</div>
 </blockquote>
 <p>The parity scaffold shows that a low-loss endpoint can exist and be locally stable while remaining unreachable from random initialization. <a href="experiments/e17.html">E17</a> shows that SMC and AdamW can select very different functions under the same architecture, dataset, and comparable loss.</p>
 <p><a href="experiments/e28.html">E28</a> supplies the complementary real-task anchor. On the same small CNN and all 50k MNIST training images, whole-network HMC and plain Adam reached 99.03% and 98.95%, respectively, while retaining different diversity and time-averaging behavior. <a href="experiments/e29.html">E29</a> gives a stricter matched-loss counterfactual: across five dead-bit functions, no-decay Adam and static SMC differed by only 0.0010 on average, whereas L2/MAP created a distinct mechanism by shrinking the unidentified weights. Together these results show that static geometry can be a strong predictive base map without making static and optimizer distributions identical.</p>
+<p><a href="experiments/e30.html">E30</a> adds only a supplementary clarification: grokking does not require
+weight decay, because the unregularized raw-loss landscape can already favor rule recovery. Weight
+decay strengthens that preference by reshaping the same static landscape; it is neither mysterious nor
+a special theoretical mechanism.</p>
 <p>Every task therefore requires three separate checks: can the network represent the target, does the data identify it, and can the optimizer reach it?</p>
 <h3 id="decoupling-scaffolding-and-optimization-accessibility-are-not-complexity">Decoupling, scaffolding, and optimization accessibility are not complexity</h3>
 <p>Let the original endpoint objective be <span class="math-inline">$L_{\mathrm{end}}(\theta)$</span>. Decoupled training, intermediate supervision, or scaffolding typically adds an auxiliary objective:</p>
@@ -691,7 +695,7 @@ $$</div>
 <blockquote>
 <p><strong>Strongest claim: continuous reduction of training loss has function-selection meaning, and that selection can be measured through protocol-relative function volume, free energy, predictive branches, and sample transitions.</strong></p>
 </blockquote></div>
-        
+
       </article>
     </main>
   </div>

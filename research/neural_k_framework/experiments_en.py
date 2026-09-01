@@ -499,4 +499,21 @@ The dead column retained variance near one and squared norm near sixteen under b
 **Conclusion.** Deep-loss static mass accurately predicts ordinary binary dead-bit behavior without contracting the dead direction. The result is protocol- and shift-scale-specific and does not overturn real-image covariate-shift failures of Bayesian model averaging.
 """,
     },
+    30: {
+        "title": "Weight Decay Reshapes the Static Complete-Function Landscape",
+        "purpose": "Clarify that grokking does not require weight decay and that explicit L2 helps by reshaping the same static function landscape rather than introducing a special mechanism.",
+        "overview": """
+The frozen task is balanced AND with 40 examples under an exact finite-width 8-to-16-to-16-to-1 tanh network and an iid Gaussian reference measure. Direct constrained SMC uses 16 replicas of 8,192 particles. Complete functions are recomputed on all 256 inputs. Three approximately raw-BCE-matched conditions use lambda 0, 5e-5, and 1e-4.
+""",
+        "motivation": """
+The unregularized raw-loss landscape can already make a reusable rule the leading extension, so weight decay is not necessary for grokking. For explicit L2, the optimizer receives the gradient of one scalar objective, J = BCE + lambda ||theta||^2/2. The regularizer should therefore be understandable as a deformation of the same static landscape, not as a mysterious optimizer-specific mechanism.
+""",
+        "results": """
+The raw-BCE means were 0.0025815, 0.0025105, and 0.0025898. Exact AND mass increased from 53.683% to 58.423% to 73.318%, while the number of observed complete functions fell from 4,190 to 1,246 to 86. The endpoint lambda=0 versus lambda=1e-4 difference was 19.635 percentage points, positive in all 16 replicas; the replica bootstrap 95% interval was 17.508--21.570 points.
+
+All three conditions hard-fit the training set. The no-decay and middle-dose samplers passed all automated gates. The lambda=1e-4 raw archive exceeded an old float32 boundary check by 8.9e-10; all substantive diagnostics and saved samples passed, and the frozen code now audits relative tolerance plus float32 ULP error. A deeper lambda=1e-4 layer observed only AND but did not converge in absolute log volume, so it remains supplementary.
+
+**Conclusion.** The no-decay landscape already gives AND majority static mass, while explicit L2 strengthens that preference at nearly matched training fit. Weight decay is neither required nor theoretically special; its present effect is explained by reshaping the same static function competition. This controlled result does not establish the same quantitative mechanism for decoupled AdamW or the original Mod97 Transformer.
+""",
+    },
 }
