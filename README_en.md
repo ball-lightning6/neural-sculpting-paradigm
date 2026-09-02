@@ -14,6 +14,8 @@
 
 > **Latest core theory (recommended first): [The Neural K Core Framework](./research/neural_k_framework/theory_core_en.md).** The author reviewed and revised this page paragraph by paragraph; the full narrative, evidence ledger, and reproduction package are in the [Neural K research directory](./research/neural_k_framework/README.md).
 
+> **New research note: [*Compression Is Intelligence: Rethinking Neural Network Generalization*](./research/neural_k_framework/papers/compression_is_intelligence_en.md)** | [Chinese Markdown](./research/neural_k_framework/papers/compression_is_intelligence_zh.md) | [Zenodo PDF](https://doi.org/10.5281/zenodo.22255552)
+
 ## 🌟 Introduction
 
 This repository is the official code implementation of the paper *Neural Networks Beyond Pattern Recognition: A New Paradigm Uniting Symbolism and Connectionism*.
@@ -27,7 +29,7 @@ This challenges the common impression that neural networks can only perform stat
 **Three Core Findings:**
 1.  **Precise Rule Learning**: Under controlled conditions, standard neural networks can learn and execute rules, algorithms, and programmatic transformations with near-perfect precision.
 2.  **The Possible Unity of Pattern Recognition and Rule Learning**: Cellular automata interpolation and MNIST + cellular automata experiments strongly suggest that pattern recognition and rule learning may both be endogenous capabilities of neural networks, and may even be the same capability.
-3.  **A Neural K Account of Compression as Intelligence**: Once network, encoding, loss, and parameter measure are fixed, the function prior is highly nonuniform; tightening complete-target loss then contracts function volumes at different rates, often favoring more economical and reusable implementations. This connects naturally to MDL and algorithmic information theory, but the relevant complexity is a protocol-relative Neural K-profile rather than machine-independent Kolmogorov complexity.
+3.  **[A Neural K Account of Compression as Intelligence](./research/neural_k_framework/papers/compression_is_intelligence_en.md)**: Once network, encoding, loss, and parameter measure are fixed, the function prior is highly nonuniform; tightening complete-target loss then contracts function volumes at different rates, often favoring more economical and reusable implementations. This connects naturally to MDL and algorithmic information theory, but the relevant complexity is a protocol-relative Neural K-profile rather than machine-independent Kolmogorov complexity.
 
 **Key Features:**
 1.  **Highly General**: The paradigm does not depend on a specific architecture. Standard Transformers, MLPs, and CNNs can all be used. It is also not limited to a particular domain, ranging from mathematical rules to physical simulations.
@@ -96,7 +98,7 @@ Root-level `generate_*.py` and `train_*.py` files are the main experimental entr
 ### Subsequent Research
 
 *   `research/`: Further experiments on neural-network learning mechanisms
-    *   `research/neural_k_framework/`: Current Neural K core theory, research narrative, evidence ledger, E01--E25 reproduction package, and bilingual static website
+    *   `research/neural_k_framework/`: Current Neural K core theory, formal research note, research narrative, evidence ledger, E01--E30 reproduction package, and bilingual static website
     *   `research/ntk_batch_solver/`: NTK control experiments for studying the distinction between feature learning and lazy learning
     *   `research/rule_preference/`: Rule-preference phase-transition experiments exploring neural networks' preference for lower-complexity explanations
     *   `research/rule_ood_generalization/`: Rule OOD generalization experiments studying whether models can execute unseen rules
@@ -115,7 +117,8 @@ Root-level `generate_*.py` and `train_*.py` files are the main experimental entr
 
 This project contains a large number of experimental scripts. For convenient reference, we provide complete interactive documentation:
 
-*   **[🧭 Neural K Theory and Evidence Package](./research/neural_k_framework/README.md)**: Current core framework, full decision chain, E01--E25 experiment notes, and reproduction scripts.
+*   **[📄 *Compression Is Intelligence: Rethinking Neural Network Generalization*](./research/neural_k_framework/papers/compression_is_intelligence_en.md)**: The formal concise research note for the Neural K work; see also the [Chinese version](./research/neural_k_framework/papers/compression_is_intelligence_zh.md) and [Zenodo PDF](https://doi.org/10.5281/zenodo.22255552).
+*   **[🧭 Neural K Theory and Evidence Package](./research/neural_k_framework/README.md)**: Current core framework, full decision chain, E01--E30 experiment notes, and reproduction scripts.
 *   **[🌐 Interactive Docs](https://ball-lightning6.github.io/neural-sculpting-paradigm/)**: **Highly Recommended**. Covers all public scripts, with quick indexing, bilingual support, and expandable details.
 *   **[🎮 Interactive Demo (ModelScope)](https://www.modelscope.cn/studios/raven316/neural-network-rule-learning-lab)**: Generate random samples or enter inputs manually, then directly compare one-forward-pass neural network outputs with program-generated ground truth.
 *   **[🔬 Overfitting-Related Research](./research/overfitting_related_research/index.html)**: A follow-up experiment page showing cross-seed probe consistency, entropy, and shared-error structure under different dataset sizes, rule complexities, and random-label conditions.
