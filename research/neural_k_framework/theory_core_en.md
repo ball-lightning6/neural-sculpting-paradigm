@@ -51,6 +51,8 @@ This gives a precise explanation of the earlier observations: at the small-data 
 
 Therefore, the empirical observation that "the complexity distribution keeps narrowing" should be stated as a conditional mechanism supported by the output joint distribution and the loss cross-sections, not as "lower loss necessarily implies a monotonic decrease in complexity".
 
+This also corrects the earlier BCE-centered wording by placing the joint output distribution at the center: the architecture, encoding, and parameter reference measure first determine the continuous joint distribution over outputs on multiple examples, while BCE, MSE, and amplitude regularization cut different regions from it. The specific loss genuinely changes function odds, ordering, and contraction rates through the geometry of its cross-section, but the name of no particular loss is a universal mechanism. The theoretical claim concerns the reallocation of function mass under a specified joint-output event.
+
 ### 1.3 Relation to "compression is intelligence"
 
 Ordinary training code explicitly optimizes only the training loss; there is no second term for machine-independent program complexity. Compression is a consequence produced by the network architecture, the parameter measure, and the loss geometry: if reusing features, intermediate computations, and rules can satisfy more samples simultaneously with fewer independent degrees of freedom, it is usually easier for such a solution to keep reaching deep loss.

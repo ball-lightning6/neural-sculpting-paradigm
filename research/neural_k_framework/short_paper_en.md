@@ -662,7 +662,9 @@ In this language, the network does not need to know the true rule in the researc
 
 ## Post-submission increment: E31--E37
 
-After the short paper was submitted, five more groups of experiments with their own protocols and result boundaries were completed. They do not change the historical numbering of E01--E30; instead they enter the same research archive as consecutive new evidence units:
+After the short paper was submitted, seven more groups of experiments with their own protocols and result boundaries were completed. They do not change the historical numbering of E01--E30; instead they enter the same research archive as consecutive new evidence units.
+
+E31 introduced a framework-level correction that places the **joint output distribution** upstream of the loss: the architecture, parameterization, encoding, and reference measure first induce a continuous joint distribution over outputs on multiple examples; BCE, MSE, and amplitude regularization then define different cross-sections or selection events on that distribution, thereby changing the retained mass of each function cell. The specific loss still affects function selection through the geometry of its cross-section, but there is no unique compression mechanism carried by the name BCE itself. The theory and experiments should therefore be stated in terms of how a specified loss/amplitude event reallocates function mass within the joint output distribution.
 
 | ID | Experiment | New conclusion |
 |---|---|---|
