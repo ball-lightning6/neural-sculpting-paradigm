@@ -1,0 +1,696 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="不同网络架构下的规则联合输出体积、收缩曲线和采样可行性。">
+  <title>跨架构bit规则体积曲线 · Neural K 研究档案</title>
+  <link rel="stylesheet" href="assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="assets/site.js"></script>
+</head>
+<body data-page-kind="post-upload">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+
+    <header class="topbar">
+      <a class="site-mark" href="index.html" aria-label="返回研究主文">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K 研究档案</span>
+      </a>
+      <nav class="top-nav" aria-label="全站导航"><a class="top-link" href="index.html">研究主文</a><a class="top-link" href="theory-core.html">理论核心</a><a class="top-link" href="experiments/index.html">实验索引</a><a class="top-link active" href="post-upload.html">提交后增量</a><a class="top-link" href="references.html">参考文献</a><a class="top-link" href="evidence-ledger.html">证据总账</a></nav>
+      <nav class="language-switch" aria-label="语言"><span class="active" lang="zh-CN">中文</span><a href="en/post-upload-e33.html" lang="en">EN</a></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>目录</span>
+      </button>
+    </header>
+
+  <div class="page-shell">
+
+    <aside class="sidebar" id="sidebar" aria-label="本页目录">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">本页目录</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#默认实验">默认实验</a></li>
+<li><a href="#输出">输出</a></li>
+<li><a href="#暂停与续跑">暂停与续跑</a></li>
+<li><a href="#可靠性">可靠性</a></li>
+<li><a href="#本地验证">本地验证</a></li>
+<li><a href="#总体判断">总体判断</a></li>
+<li><a href="#覆盖与可靠性">覆盖与可靠性</a></li>
+<li><a href="#规则对的共同方向">规则对的共同方向</a></li>
+<li><a href="#架构偏好与函数凝聚">架构偏好与函数凝聚</a></li>
+<li><a href="#不是所有系数都已成为常数">不是所有系数都已成为常数</a></li>
+<li><a href="#图像输出-格点全对不等于整图全对">图像输出：格点全对不等于整图全对</a></li>
+<li><a href="#哪些部分仍不宜定量使用">哪些部分仍不宜定量使用</a></li>
+<li><a href="#数值审计">数值审计</a></li>
+<li><a href="#资产">资产</a></li>
+<li><a href="#最新修正-结构完整即可-不堆参数">最新修正：结构完整即可，不堆参数</a></li>
+<li><a href="#本轮测了什么">本轮测了什么</a></li>
+<li><a href="#实际耗时与显存">实际耗时与显存</a></li>
+<li><a href="#对5090能说多具体">对5090能说多具体</a></li>
+<li><a href="#显存与磁盘">显存与磁盘</a></li>
+<li><a href="#建议的下一步">建议的下一步</a></li>
+<li><a href="#资产_1">资产</a></li>
+</ul>
+</div>
+</nav>
+        <a class="sidebar-action" href="post-upload.html">返回增量总览 →</a>
+      </div>
+    </aside>
+
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">实验增量 · E33 跨架构联合输出</div>
+          <h1>跨架构bit规则体积曲线</h1>
+          <p class="article-description">不同网络架构下的规则联合输出体积、收缩曲线和采样可行性。</p>
+        </header>
+        <div class="article-body"><p><strong>9月12日运行中修订：最大BCE路线出现包含关系报警，先暂停。</strong>
+已有运行请Ctrl+C等待保存结束，然后使用[兼容续跑版]。
+它只继续平均BCE与native-MSE，科学配置/目录不变，不删除或重跑已有结果。
+详见[报警诊断]。
+下文保留最初全矩阵方案，最大BCE的正式测量当前不再推荐继续。</p>
+<p>直接运行[独立脚本]，或将全文放入一个Jupyter单元格。沿用已经测速的5090环境，不下载预训练权重。只需上传这一个<code>.py</code>，不需要builder或runner片段。</p>
+<p>这是新的正式运行目录，旧<code>experiment_cross_architecture_output_volume.py</code>测速版及其结果不变。</p>
+<h2 id="默认实验">默认实验</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>设置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>架构</td>
+<td>MLP、RNN、LSTM、Transformer、ViT、ConvNeXt、Swin、U-Net、改进U-Net、Swin-Unet</td>
+</tr>
+<tr>
+<td>模型大小</td>
+<td>沿用已测compact模型，9800至145250参数</td>
+</tr>
+<tr>
+<td>规则</td>
+<td>8位周期元胞自动机演化一步：Rule204恒等映射、Rule90邻位XOR</td>
+</tr>
+<tr>
+<td>训练约束输入</td>
+<td>固定随机排列的前16个8bit输入，两个规则/所有架构完全相同</td>
+</tr>
+<tr>
+<td>符号编码</td>
+<td>输入0/1，输出8bit；Transformer每bit一个token</td>
+</tr>
+<tr>
+<td>图像输入</td>
+<td>2×4黑白逻辑区域，按位序逐行排列，最近邻放大至32×32，RGB三通道相同；无灰色插值、无网格线、无样本ID水印</td>
+</tr>
+<tr>
+<td>图像输出</td>
+<td>三种U-Net类模型原生输出32×32图像；其余模型输出8个数</td>
+</tr>
+<tr>
+<td>观测</td>
+<td>所有模型测格点平均BCE及格点最大BCE；三种图像输出模型另测整图native-MSE</td>
+</tr>
+<tr>
+<td>SMC</td>
+<td>四个独立副本，各128粒子；所有可学习参数参与，不固定隐藏层</td>
+</tr>
+<tr>
+<td>目标</td>
+<td>BCE到0.001；native-MSE到0.0001</td>
+</tr>
+<tr>
+<td>默认预算</td>
+<td>每副本每次180秒；一次采样循环最多8小时，保存/打包开销另计</td>
+</tr>
+<tr>
+<td>队列</td>
+<td>先让各架构都获得第一个副本，再逐轮补齐；不把一个架构无限跑到底</td>
+</tr>
+</tbody>
+</table>
+<p>格点平均BCE为16×8个元素的平均。最大BCE严格对应这些格点的最小有符号margin下限，<strong>不是全部样本等幅的薄切片</strong>。</p>
+<p>普通U-Net沿用原训练文件的raw输出MSE；改进U-Net和Swin-Unet使用sigmoid后MSE。native-MSE约束所有像素，不能与只约束8格点的BCE绝对K混为同一个对象。
+图像模型的“完整bit映射”指全部输入上8个指定格点的解码，不是整张图像1024像素的硬映射；整图MSE和像素准确率单独记录。</p>
+<p>默认16个输入是fixed-D测量，不是全规则Neural K。每个loss节点额外在全部256个输入上观察输出，但这些额外标签<strong>不进入SMC目标、不用于停机或选择粒子</strong>。
+需要全规则约束时，把<code>POINTS=256</code>并另设<code>RUN_TAG</code>；不能把16输入的测速预算直接沿用到256输入。</p>
+<h2 id="输出">输出</h2>
+<p>默认目录：</p>
+<pre><code class="language-text">/root/autodl-tmp/results_cross_architecture_rule_volume_compact_curves_v1
+</code></pre>
+<ul>
+<li><code>task_examples.png</code>：黑白输入及规则输出示例。</li>
+<li><code>protocol.json</code>、<code>invocation_*.json</code>、<code>sources/</code>：科学配置、环境与源码记录，支持无<code>__file__</code>的Jupyter。</li>
+<li><code>training_data_rule*.npz</code>、<code>full_truth_table_rule*.npz</code>：原始bit、图像、标签和输入编号。</li>
+<li><code>models/*/parameter_prior.json</code>：完整参数形状及Gaussian参考测度；不声称等于各模型默认训练初始化。</li>
+<li><code>models/*/preflight.json</code>：2048个先验网络的真实统计及浅层直接计数。</li>
+<li><code>jobs/*/rule*/*/r*/checkpoint.pt</code>：全部粒子、RNG、K和进度，始终保留。</li>
+<li><code>points.json</code>、<code>levels.json</code>：固定loss节点与全部自适应层的体积/耗时/接受率。</li>
+<li><code>node_*.npz</code>：训练格点logits、全部256输入格点logits、完整bit映射编码、少量权重快照和原始输出图像。</li>
+<li><code>coverage.csv</code>、<code>points.csv</code>、<code>slopes.csv</code>、<code>prior_calibration.csv</code>：覆盖、K曲线、收缩系数和浅层校准。</li>
+<li><code>plots/</code>：分架构K曲线、BCE窗口斜率；副本分歧/未齐副本节点以红叉标记。</li>
+<li><code>report_zh.md</code>、<code>last_run_status.json</code>：本次状态、错误和解释边界。</li>
+</ul>
+<p>斜率先在同一副本内做K差，再取副本中位数，不把两个节点各自中位数直接相减。最大BCE另给出真实margin坐标<code>a</code>及<code>a²</code>的窗口系数；平均BCE的对应<code>a</code>只是坐标换算，不称为所有样本的共同幅度。</p>
+<h2 id="暂停与续跑">暂停与续跑</h2>
+<ul>
+<li>Ctrl+C一次：完成当前SMC层后保存并打包；第二次强制中断会恢复最后完整检查点，不保存半层。</li>
+<li>也可在结果目录创建<code>STOP</code>文件；再次运行前移除它。</li>
+<li>超过单副本预算：保存该项并换下一项。下次运行从断点继续，不从先验重新开始。</li>
+<li>已达到目标的项直接跳过，不自动recheck。</li>
+<li>已完成后仍保留检查点；把<code>STOP_BCE</code>/<code>STOP_MSE</code>改为预设网格中更低的值，可接着向深处采。</li>
+<li>可以增加<code>SECONDS_PER_REPLICA</code>、<code>MAX_RUN_HOURS</code>，或用<code>SKIP_ARCHITECTURES</code>/<code>REPLICA_IDS</code>/<code>JOB_KEYS</code>调节本次队列。</li>
+<li>改粒子数、副本总数、网络、输入数、数据种子、更新轮数或软件版本，需另设<code>RUN_TAG</code>。不混合科学配置。</li>
+</ul>
+<p>默认zip不含<code>.pt</code>，所以下载包用于分析，<strong>服务器原目录用于续跑</strong>。全部暂停粒子检查点量级约5.65GB；节点快照和日志另计。zip从几百MB到数GB取决于到达节点数与数据可压缩性。</p>
+<h2 id="可靠性">可靠性</h2>
+<p>这是一套完整自动化的<strong>有限loss初测</strong>，不是将128粒子称为精密深尾真值。</p>
+<p>独立副本、直接先验校准、接受率/步长报警、完整记录和工程测试用于发现问题；没有报警不证明充分混合。SMC粒子间存在相关性，包内agreement不是独立SGD种子的agreement。
+更高精度应只对选定规则/架构另开更高粒子或更新预算的复核，不在本版自动让全部曲线再跑一遍。</p>
+<p>原型与正式版保持同一模型/目标/参考测度。运行器额外避免全存活时无意义的重采样，并让节点判定与实际float32阈值使用同一舍入口径；名义和有效阈值同时记录。
+这些工程改动会改变随机轨迹，不将正式SMC当作测速中三层状态的续跑。</p>
+<h2 id="本地验证">本地验证</h2>
+<p>11项工程测试通过，包括Gaussian可积概率、float32阈值边界、无<code>__file__</code>的Jupyter加载、
+完整输入诊断不改变采样目标/RNG、断点恢复与不中断运行逐位一致、已完成项跳过及续深、强制半层中断恢复。
+另外实际走完十种架构、全部适用观测和两个副本的46项浅层短流程，检查了输出形状、绘图和zip不包含完整检查点。
+这些是工程测试，不是正式深尾结论；正式矩阵由用户在5090上运行。</p>
+<h1 id="跨架构规则体积-首轮完整队列分析">跨架构规则体积：首轮完整队列分析</h1>
+<p>日期：2026-09-12。来源：<code>E:\Downloads\results_cross_architecture_rule_volume_compact_curves_v1_package.zip</code>，约2.51GB。</p>
+<h2 id="总体判断">总体判断</h2>
+<p>本轮已经取得实质的跨架构测量结果，不再只是测速。
+最清楚的信号是：不同架构在相同训练约束下给出差异很大的函数偏好；若干架构的完整低loss曲线能够在四个独立副本中复现；可共同比较的规则对呈现一致方向的体积/收缩差异。
+但这仍是128粒子的有限loss初测，部分路线只有时间截断结果或明显副本分歧，不称为全部架构已通过精确深尾验证。</p>
+<p><strong>必须保留对象定义：这里测的是16个固定输入对应的<code>K_D</code>，不是以全部256输入约束得到的完整规则<code>K_f</code>。</strong>
+Rule204/90是生成两份约束标签的规则名称；每条曲线内部仍含所有满足该训练集的候选bit映射。
+图像模型的“完整bit映射”只读取每个输入图像的8个指定格点，整图指标另列。</p>
+<h2 id="覆盖与可靠性">覆盖与可靠性</h2>
+<ul>
+<li>十种compact架构，固定8bit输入/8bit输出、16个约束输入，图像编码为32×32黑白格点。</li>
+<li>平均BCE共20条曲线、80个副本；图像native-MSE共6条曲线、24个副本。</li>
+<li>104个活跃副本都已尝试，54个达到目标，50个触发单项时间限制。没有运行错误。</li>
+<li>等价为13条曲线四副本全部达到目标，Swin-Unet/Rule90/格点BCE另有2个副本达到目标。</li>
+<li>活跃任务累计记录用时3.693小时，包含运行中的诊断；另有两条已隔离最大BCE各约3分钟。</li>
+<li>50个未完成项并非漏跑或都不能达到目标，只是本次单项预算已用完。</li>
+<li>最大BCE的2条原记录保留但隔离。包含关系报警仍成立，不混入以下结论。</li>
+<li>直接先验校准未触发现有启发式报警，但这不能认证深尾混合。</li>
+</ul>
+<h2 id="规则对的共同方向">规则对的共同方向</h2>
+<p>对每个架构，只在<strong>两条规则、四个副本都到达的最深共同节点</strong>比较。
+十种架构均为<code>K_D90 &gt; K_D204</code>，而且各自四个Rule90估计全都高于四个Rule204估计。
+其中Transformer只能共同到0.6、ViT到0.3、普通U-Net到0.4，不能把这些比较说成它们的深尾结论。</p>
+<p>两规则都四副本到BCE=0.001的四个架构，最后一次减半窗口的系数为：</p>
+<p><code>c = [K_D(0.001)-K_D(0.002)] / log2(2)</code>，先在同一副本内做差，再取副本中位数；±为副本SD。</p>
+<table>
+<thead>
+<tr>
+<th>架构</th>
+<th style="text-align: right;">Rule204的c</th>
+<th style="text-align: right;">Rule90的c</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MLP</td>
+<td style="text-align: right;">348.39 ± 10.82</td>
+<td style="text-align: right;">405.43 ± 5.50</td>
+</tr>
+<tr>
+<td>RNN</td>
+<td style="text-align: right;">636.19 ± 6.34</td>
+<td style="text-align: right;">677.03 ± 7.13</td>
+</tr>
+<tr>
+<td>ConvNeXt</td>
+<td style="text-align: right;">343.12 ± 6.28</td>
+<td style="text-align: right;">370.81 ± 13.67</td>
+</tr>
+<tr>
+<td>改进U-Net</td>
+<td style="text-align: right;">17.46 ± 1.25</td>
+<td style="text-align: right;">57.16 ± 3.57</td>
+</tr>
+</tbody>
+</table>
+<p>这支持一个有限范围的跨架构结果：在这对预选规则生成的训练约束上，较复杂的Rule90条件不仅体积较小，在最后窗口也收缩得更快。
+不能把它升级为全部完整函数都满足同一复杂度定律；这里只测一对规则，且对象是训练集条件体积。</p>
+<figure class="result-figure"><a href="assets/post_upload/4face335ce_01_bce_curves.png" target="_blank" rel="noopener"><img src="assets/post_upload/4face335ce_01_bce_curves.png" alt="平均BCE曲线" loading="lazy"></a><figcaption>平均BCE曲线</figcaption></figure>
+<h2 id="架构偏好与函数凝聚">架构偏好与函数凝聚</h2>
+<p>在Rule204、平均BCE≤0.001、四副本均完成的条件下，全部约束格点都已答对：</p>
+<table>
+<thead>
+<tr>
+<th>架构</th>
+<th style="text-align: right;">K_D中位数</th>
+<th style="text-align: right;">未见逐bit准确率均值</th>
+<th style="text-align: right;">完整256输入bit映射等于Rule204的粒子比例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Swin-Unet</td>
+<td style="text-align: right;">37.13</td>
+<td style="text-align: right;">100%</td>
+<td style="text-align: right;">100%</td>
+</tr>
+<tr>
+<td>Transformer</td>
+<td style="text-align: right;">64.11</td>
+<td style="text-align: right;">约99.998%</td>
+<td style="text-align: right;">99.41%（509/512）</td>
+</tr>
+<tr>
+<td>普通U-Net</td>
+<td style="text-align: right;">96.35</td>
+<td style="text-align: right;">100%</td>
+<td style="text-align: right;">100%</td>
+</tr>
+<tr>
+<td>改进U-Net</td>
+<td style="text-align: right;">165.01</td>
+<td style="text-align: right;">98.71%</td>
+<td style="text-align: right;">0/512</td>
+</tr>
+<tr>
+<td>ConvNeXt</td>
+<td style="text-align: right;">2207.68</td>
+<td style="text-align: right;">90.87%</td>
+<td style="text-align: right;">0/512</td>
+</tr>
+<tr>
+<td>MLP</td>
+<td style="text-align: right;">2223.98</td>
+<td style="text-align: right;">87.92%</td>
+<td style="text-align: right;">0/512</td>
+</tr>
+<tr>
+<td>RNN</td>
+<td style="text-align: right;">4427.77</td>
+<td style="text-align: right;">96.12%</td>
+<td style="text-align: right;">0/512</td>
+</tr>
+</tbody>
+</table>
+<p>数字是相关SMC粒子的经验分布，不是512个独立训练模型。0/512不意味着真实条件概率严格为零。
+“改进U-Net”只是旧代码的版本名称，不表示它应在这项测量上全面优于普通U-Net。</p>
+<p>Swin-Unet在更浅的区域就发生了清楚的Rule204凝聚：</p>
+<table>
+<thead>
+<tr>
+<th>平均BCE上限</th>
+<th style="text-align: right;">完整Rule204粒子比例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0.7</td>
+<td style="text-align: right;">2.9%</td>
+</tr>
+<tr>
+<td>0.6</td>
+<td style="text-align: right;">13.3%</td>
+</tr>
+<tr>
+<td>0.5</td>
+<td style="text-align: right;">32.4%</td>
+</tr>
+<tr>
+<td>0.3</td>
+<td style="text-align: right;">78.9%</td>
+</tr>
+<tr>
+<td>0.1</td>
+<td style="text-align: right;">99.8%</td>
+</tr>
+<tr>
+<td>0.03及以下</td>
+<td style="text-align: right;">100%</td>
+</tr>
+</tbody>
+</table>
+<p>这直接展示了在所采静态条件分布中，随着约束收紧，规则簇可以凝聚。
+同时MLP、RNN等仍存在大量不同外推，说明充分拟合与函数凝聚不是同一件事。
+RNN的Rule90末端收缩系数约677且副本SD仅约7，但未见位准确率约52%、函数熵接近128粒子能显示的7bit上限，目标完整映射未被采到。
+所以稳定的宏观收缩曲线不等于函数分布已经凝聚，也不能据此推断每个候选函数的复杂度已经被逐一测定。</p>
+<figure class="result-figure"><a href="assets/post_upload/6e2f352bfe_03_copy_volume_and_function_recovery.png" target="_blank" rel="noopener"><img src="assets/post_upload/6e2f352bfe_03_copy_volume_and_function_recovery.png" alt="体积与完整规则恢复" loading="lazy"></a><figcaption>体积与完整规则恢复</figcaption></figure>
+<p>跨架构的绝对<code>K_D</code>不是泛化分数：例如RNN的<code>K_D</code>比MLP高，但其未见位准确率也更高。
+要解释泛化，仍需看该条件区域内部不同函数簇的相对质量。
+这里比较的是架构、输入编码、读出设计和明确Gaussian参考测度的组合，不是对架构普遍能力的排名。</p>
+<h2 id="不是所有系数都已成为常数">不是所有系数都已成为常数</h2>
+<p>在固定0.01至0.001区间，比较最前与最后的相邻窗口：</p>
+<ul>
+<li>MLP和ConvNeXt的系数仍增加约20%。</li>
+<li>RNN两规则增加约9%至18%，Transformer/Rule204约18%。</li>
+<li>普通U-Net与Swin-Unet的Rule204系数下降约18%至21%。</li>
+<li>改进U-Net的两条曲线变化较小，约下降2%和6%。</li>
+</ul>
+<p>因此更准确的表述是：出现了可测、通常平滑、架构相关的收缩profile，其中部分窗口系数较稳定；不是所有架构都已经到达同一种恒定斜率深尾。
+用平均BCE换算出的<code>a=-log(expm1(epsilon))</code>只是坐标重参数化，不代表所有格点真的等幅。
+固定区间的直线拟合结果保存于<code>tail_fits.csv</code>，没有把高R²当成渐近定律或混合认证。</p>
+<figure class="result-figure"><a href="assets/post_upload/f90fbc1bf1_04_local_contraction_slopes.png" target="_blank" rel="noopener"><img src="assets/post_upload/f90fbc1bf1_04_local_contraction_slopes.png" alt="局部收缩系数" loading="lazy"></a><figcaption>局部收缩系数</figcaption></figure>
+<h2 id="图像输出-格点全对不等于整图全对">图像输出：格点全对不等于整图全对</h2>
+<p>为了不混淆二者，本轮用每个副本已保存的前两个权重，在全部256输入上重新前向。
+以下每条件只有8个保存权重，指标只取240个未约束输入，<strong>不是全部512粒子的整图统计</strong>。</p>
+<table>
+<thead>
+<tr>
+<th>架构与采样约束</th>
+<th style="text-align: right;">未见像素正确率</th>
+<th style="text-align: right;">未见整张图像所有像素解码正确的比例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Swin-Unet，8格点BCE≤0.001</td>
+<td style="text-align: right;">64.78%</td>
+<td style="text-align: right;">0%</td>
+</tr>
+<tr>
+<td>Swin-Unet，整图sigmoid-MSE≤0.0001</td>
+<td style="text-align: right;">99.9994%</td>
+<td style="text-align: right;">99.43%</td>
+</tr>
+<tr>
+<td>普通U-Net，8格点BCE≤0.001</td>
+<td style="text-align: right;">96.19%</td>
+<td style="text-align: right;">0.42%</td>
+</tr>
+<tr>
+<td>普通U-Net，整图raw-MSE≤0.002</td>
+<td style="text-align: right;">99.98%</td>
+<td style="text-align: right;">82.92%</td>
+</tr>
+<tr>
+<td>改进U-Net，8格点BCE≤0.001</td>
+<td style="text-align: right;">80.54%</td>
+<td style="text-align: right;">0%</td>
+</tr>
+<tr>
+<td>改进U-Net，整图sigmoid-MSE≤0.0001</td>
+<td style="text-align: right;">98.71%</td>
+<td style="text-align: right;">72.14%</td>
+</tr>
+</tbody>
+</table>
+<p>Swin-Unet的格点BCE权重有明显网纹，而整图MSE权重几乎直接复制了整张黑白图：</p>
+<figure class="result-figure"><a href="assets/post_upload/8337437baa_05_swin_unet_saved_outputs.png" target="_blank" rel="noopener"><img src="assets/post_upload/8337437baa_05_swin_unet_saved_outputs.png" alt="保存权重的实际输出" loading="lazy"></a><figcaption>保存权重的实际输出</figcaption></figure>
+<p>图中展示预设输入0/85/170/255，以及各条件r0保存的第一个粒子；没有选择最好图像。</p>
+<p>这不是“MSE优于BCE”的公平损失比较：第三列只约束8个格点，第四列约束全部像素。
+代码结构还给出一个明确原因：当前compact Swin-Unet最后是<code>2×2、stride=2</code>的转置卷积加逐像素1×1输出层；
+8个读出格点的行列坐标均为偶数，只读取同一上采样相位，其它相位没有被格点BCE直接约束。
+因而格点曲线对8bit读出任务有效，却不能代表整图生成质量；这不是原论文原尺寸Swin-Unet的普遍结论。</p>
+<p>这里Swin-Unet/改进U-Net的MSE是sigmoid后的像素MSE，不能当作之前raw 0/1 MSE实验的重复。</p>
+<h2 id="哪些部分仍不宜定量使用">哪些部分仍不宜定量使用</h2>
+<ul>
+<li>最大BCE两条记录已隔离，不能据其巨大K讨论换序或复杂度。</li>
+<li>Swin-Unet/Rule90格点BCE只有两副本到0.001；共同0.02处K的副本相对SD约34%，存在明显分叉。</li>
+<li>普通U-Net/Rule204的raw-MSE在共同0.002处K的相对SD约59%，不宜把这条末端曲线当作可靠绝对值。</li>
+<li>Transformer/Rule90只能共同到0.6；其终点0.42至0.51不能被称为低loss极限。</li>
+<li>ViT、Swin、LSTM若干任务只是单次预算不足。时间限制本身不说明架构不能实现规则，也不单独说明采样失效。</li>
+</ul>
+<p>四副本一致的部分有较好的初步复现性，但仍可能存在共同混合偏差；尚未进行更高粒子数/更强更新预算的独立确认。
+本轮没有自动续跑50项或全体recheck。</p>
+<h2 id="数值审计">数值审计</h2>
+<ul>
+<li>包内两份Jupyter源码的物理模型、目标、采样核心与当前已审计代码AST一致；未执行包内源码。</li>
+<li>两规则的全真值表、训练输入、标签和图像均独立重建一致。</li>
+<li>1608个已提交节点快照全部通过SHA256、loss、bit映射编码、heldout统计和函数熵复算。</li>
+<li>约束违反数为0；训练格点与完整输入诊断中的对应logits差异为0；指标复算差异为0。</li>
+<li>由保存的logits/图像重算loss，最大绝对误差约9.24e-8。</li>
+<li>104个活跃副本各自末个固定节点，共208组保存权重，用CPU float64重新前向；最大原始输出差约1.87e-4，最大相对L2差约6.24e-6。逐副本第一个保存权重的约束格点无符号变化。</li>
+<li>全部level的累计K算术和单调阈值复算通过，没有未提交的孤立快照。</li>
+</ul>
+<p>这些检查支持实现与数据的一致性，不是稀有事件采样收敛证明。</p>
+<h2 id="资产">资产</h2>
+<ul>
+<li>[完整结构化分析]</li>
+<li>[每条曲线覆盖]</li>
+<li>[收缩系数]</li>
+<li>[整图前向检查]</li>
+<li>[快照审计]</li>
+<li>[包分析脚本]</li>
+<li>[已保存图像权重前向脚本]</li>
+</ul>
+<h1 id="跨架构smc的可行性与预算">跨架构SMC的可行性与预算</h1>
+<p>日期：2026-09-12。用户要求先评估5090可行性，暂不启动正式矩阵；diffusion已明确暂停。</p>
+<p><strong>后续已收到5090实测速包：</strong> 十种compact架构全部通过。实测每层MLP约0.0163秒、Transformer约0.0340秒、Swin-Unet约0.1391秒，峰值预留显存最高约1.10GB。十种架构、两规则、两种BCE、四副本、每副本1000层的工作量折算约3.62小时；这不是到达特定loss的完成时间保证。详见[5090实测分析]。下文“尚未5090实测”及倍率估计保留为此前规划记录，以新实测为准。</p>
+<h2 id="最新修正-结构完整即可-不堆参数">最新修正：结构完整即可，不堆参数</h2>
+<p>用户随后明确：先前40万至435万参数放得过大，只要求能够可靠区分架构机制。因此<strong>当前默认方案改为compact</strong>；下文较早的medium测速只保留为历史成本对照，不能再当作当前预算。</p>
+<p>当前各模型参数与实测（RTX 3080，128粒子，16个固定输入，32×32图像，整批128粒子前向）：</p>
+<table>
+<thead>
+<tr>
+<th>模型</th>
+<th style="text-align: right;">参数数</th>
+<th style="text-align: right;">完整SMC层秒数中位数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MLP，3层64宽</td>
+<td style="text-align: right;">9800</td>
+<td style="text-align: right;">0.066</td>
+</tr>
+<tr>
+<td>RNN，3层64宽</td>
+<td style="text-align: right;">26056</td>
+<td style="text-align: right;">0.096</td>
+</tr>
+<tr>
+<td>LSTM，3层32宽</td>
+<td style="text-align: right;">25896</td>
+<td style="text-align: right;">0.140</td>
+</tr>
+<tr>
+<td>Transformer，2层32宽、4头</td>
+<td style="text-align: right;">25825</td>
+<td style="text-align: right;">0.134</td>
+</tr>
+<tr>
+<td>ViT，2层32宽、4头</td>
+<td style="text-align: right;">29416</td>
+<td style="text-align: right;">0.234</td>
+</tr>
+<tr>
+<td>ConvNeXt，3级、各2块</td>
+<td style="text-align: right;">31392</td>
+<td style="text-align: right;">0.218</td>
+</tr>
+<tr>
+<td>Swin，3级、各2块</td>
+<td style="text-align: right;">37598</td>
+<td style="text-align: right;">0.441</td>
+</tr>
+<tr>
+<td>U-Net，4级8至64通道</td>
+<td style="text-align: right;">121529</td>
+<td style="text-align: right;">1.213</td>
+</tr>
+<tr>
+<td>改进U-Net</td>
+<td style="text-align: right;">145250</td>
+<td style="text-align: right;">1.319</td>
+</tr>
+<tr>
+<td>Swin-Unet</td>
+<td style="text-align: right;">69319</td>
+<td style="text-align: right;">0.706</td>
+</tr>
+</tbody>
+</table>
+<p>Swin/Swin-Unet仍有三级层次、两次patch merging、六个窗口注意力块。
+前两级特征图为16×16和8×8，窗口4×4，确实存在多个窗口及窗口平移，不是退化成一个窗口的普通注意力。
+U-Net有三次下采样及对应的跳连解码。RNN/LSTM仍进行三个时间步的共享状态演化。
+这些是保留机制的小型版本，不声称是原论文的原尺寸模型。</p>
+<p>本轮还发现小模型逐小批调度开销明显；把粒子微批从16改到128后，计算语义和Gaussian先验不变。
+这不是用更少粒子或冻结隐藏层提速。更改分块的配置被写入科学签名，避免检查点混用。</p>
+<p>所有模型实测峰值已分配显存均低于0.9GB，预留峰值最高约1.17GB。
+最大单副本检查点约74MB；整个含native-MSE的暂停矩阵粒子文件约5.65GB，不再是早期medium版本的161GB。</p>
+<p>若只选MLP、Transformer、Swin-Unet，两规则×两种BCE约束×四副本、每副本1000层，3080实测层速折算约4.03小时。
+若仅做每副本200层的先导，则相同矩阵约48分钟（未计额外IO）。5090可行性较好，但新模型尚未在5090实测，不保证具体倍数或目标loss必能在这个层数内达到。
+十种模型全部测两规则、两种BCE、四副本、1000层，3080折算约20.3小时，不含额外native-MSE；不能因为单层快就忽略矩阵乘数。</p>
+<p><strong>主脚本默认仍为benchmark：</strong> 十种模型各做结构核验、先验前向和3个浅层SMC测速，不自动开正式矩阵。
+用户可直接在5090运行单个主脚本获取本机实测；输出目录为<code>/root/autodl-tmp/results_cross_architecture_output_volume_compact_v1</code>。
+只有<code>MODE="pilot"</code>才进入限时曲线采样。默认POINTS=16是fixed-D，不是全256项的完整规则体积。</p>
+<p>最新数据：<code>tmp/results_cross_architecture_output_volume_compact_batch128_feasibility_v1/</code>。
+compact版10项工程测试再次通过，diffusion没有运行。</p>
+<hr>
+<p>以下为较早medium方案记录，已不作为默认采样规模。</p>
+<h2 id="本轮测了什么">本轮测了什么</h2>
+<p>已根据旧论文第六幕及图像任务的模型清单，接入十种确定性模型。
+它们保留对应架构的计算结构，但缩小宽度/深度，不冒充旧论文原尺寸复现。
+例如Swin-Unet采用四级Swin编码器、8个注意力块、真实shifted windows和带跳连的图像解码器。
+使用torchvision的Swin/ViT/ConvNeXt实现，没有下载预训练权重；RNN/LSTM的批量门运算已与原生torch cell做数值核对。</p>
+<p>本地RTX 3080 10GB，float32，关闭TF32/AMP。每次128个参数粒子，16个固定8bit输入，8bit输出的恒等CA规则204。
+图像输入为64×64 RGB逻辑格，U-Net/Swin-Unet输出64×64单通道图。
+本次SMC测速约束的是每格中心8个神经元的平均BCE，<strong>没有把整图MSE或全部256个输入测过一遍</strong>。</p>
+<p>每个SMC层包含重采样、2轮提案步长调整、4轮固定步长更新；每轮含全参数与末端参数块两个pCN提案。
+每模型实测2至3层，不保存完整粒子检查点，不测深尾。不把这些高loss层的接受率当作深尾混合证据。</p>
+<h2 id="实际耗时与显存">实际耗时与显存</h2>
+<table>
+<thead>
+<tr>
+<th>模型</th>
+<th style="text-align: right;">参数数</th>
+<th style="text-align: right;">3080实测秒/SMC层（中位数）</th>
+<th style="text-align: right;">峰值已分配显存GB</th>
+<th style="text-align: right;">单副本粒子检查点GB</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MLP，4层384宽</td>
+<td style="text-align: right;">453128</td>
+<td style="text-align: right;">0.52</td>
+<td style="text-align: right;">0.74</td>
+<td style="text-align: right;">0.23</td>
+</tr>
+<tr>
+<td>RNN，3层256宽、3时间步</td>
+<td style="text-align: right;">399112</td>
+<td style="text-align: right;">0.71</td>
+<td style="text-align: right;">0.65</td>
+<td style="text-align: right;">0.20</td>
+</tr>
+<tr>
+<td>LSTM，3层128宽、3时间步</td>
+<td style="text-align: right;">398472</td>
+<td style="text-align: right;">1.04</td>
+<td style="text-align: right;">0.65</td>
+<td style="text-align: right;">0.20</td>
+</tr>
+<tr>
+<td>Transformer，4层128宽、4头</td>
+<td style="text-align: right;">794753</td>
+<td style="text-align: right;">1.36</td>
+<td style="text-align: right;">1.26</td>
+<td style="text-align: right;">0.41</td>
+</tr>
+<tr>
+<td>ViT，4层128宽、4头</td>
+<td style="text-align: right;">827528</td>
+<td style="text-align: right;">1.52</td>
+<td style="text-align: right;">1.32</td>
+<td style="text-align: right;">0.42</td>
+</tr>
+<tr>
+<td>ConvNeXt，4级、各2块</td>
+<td style="text-align: right;">1625448</td>
+<td style="text-align: right;">1.73</td>
+<td style="text-align: right;">2.55</td>
+<td style="text-align: right;">0.83</td>
+</tr>
+<tr>
+<td>Swin，4级、各2块</td>
+<td style="text-align: right;">2281252</td>
+<td style="text-align: right;">3.43</td>
+<td style="text-align: right;">3.57</td>
+<td style="text-align: right;">1.17</td>
+</tr>
+<tr>
+<td>U-Net，5级16至256通道</td>
+<td style="text-align: right;">1944049</td>
+<td style="text-align: right;">11.74</td>
+<td style="text-align: right;">3.05</td>
+<td style="text-align: right;">1.00</td>
+</tr>
+<tr>
+<td>改进U-Net，步长卷积/GroupNorm/全局注意力</td>
+<td style="text-align: right;">2329698</td>
+<td style="text-align: right;">15.15</td>
+<td style="text-align: right;">3.64</td>
+<td style="text-align: right;">1.19</td>
+</tr>
+<tr>
+<td>Swin-Unet</td>
+<td style="text-align: right;">4346205</td>
+<td style="text-align: right;">7.73</td>
+<td style="text-align: right;">6.76</td>
+<td style="text-align: right;">2.23</td>
+</tr>
+</tbody>
+</table>
+<p>Swin-Unet峰值CUDA预留显存约7.60GB。十种模型的完整浅层SMC都在本机通过。
+较早的只测前向传播的数字包含额外诊断和冷启动，不能取代这张完整层测速表。
+当前耗时顺序不等于最优实现下的架构理论效率；例如vmap的卷积/池化内核仍可能有优化空间。</p>
+<h2 id="对5090能说多具体">对5090能说多具体</h2>
+<p>尚未在5090实测这批新架构，不能给精确GPU加速倍数。下表仅用<strong>5090为当前3080速度的1至3倍</strong>这一宽预算假设计算，不是已验证的性能范围或上界。
+同一台5090上，CPU调度、CUDA/PyTorch版本、算子形状也会影响速度。</p>
+<p>假定一条曲线需要1000个自适应SMC层、4个独立副本顺序执行、每副本128粒子：</p>
+<table>
+<thead>
+<tr>
+<th>模型</th>
+<th style="text-align: right;">5090预算情景（1至3倍速度）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MLP</td>
+<td style="text-align: right;">约12至35分钟</td>
+</tr>
+<tr>
+<td>RNN/LSTM</td>
+<td style="text-align: right;">约16至70分钟</td>
+</tr>
+<tr>
+<td>Transformer/ViT/ConvNeXt</td>
+<td style="text-align: right;">约0.5至1.9小时</td>
+</tr>
+<tr>
+<td>Swin</td>
+<td style="text-align: right;">约1.3至3.8小时</td>
+</tr>
+<tr>
+<td>Swin-Unet</td>
+<td style="text-align: right;">约2.9至8.6小时</td>
+</tr>
+<tr>
+<td>两种U-Net</td>
+<td style="text-align: right;">约4.3至16.8小时</td>
+</tr>
+</tbody>
+</table>
+<p>1000层不是1000个loss记录节点；它是整条自适应路径的迭代预算。
+<strong>目前不知道降到0.01、0.001需要多少层，更不知道多少层后已经充分混合。</strong>
+若只需200层，上表约乘0.2；若需要5000层则约乘5。加大粒子数、增加固定更新轮数也会增加成本。
+64×64输入图像和16个输入是本估计的组成部分，不能把它外推到原论文的224×224、数千万参数或全256输入设置。</p>
+<p>十种架构×两条规则×两种BCE约束×四副本，每副本1000层，按本次3080实测约200小时；上述5090情景约67至200小时，<strong>还没有计整图MSE、长检查点IO或更强混合预算</strong>。
+因此不建议直接按这个矩阵全部追深尾。</p>
+<h2 id="显存与磁盘">显存与磁盘</h2>
+<p>四副本顺序运行，显存不乘4。当前128粒子下最大模型已能放进10GB显卡，所以当前模型尺寸没有显存上的硬阻碍。
+但粒子数扩大到512时，Swin-Unet的粒子/提案主开销约为现在4倍，不能想当然地再扩大到几千粒子。</p>
+<p>全矩阵若保留所有未完成副本检查点，包含图像模型额外native-MSE任务时，理论粒子文件总量约161GB。
+单条Swin-Unet曲线的四副本检查点约8.9GB。因此必须分批运行和控制活跃检查点，而不是把小MLP的“小结果包”经验直接套过来。
+脚本zip排除完整<code>.pt</code>，但服务器上的原始检查点仍实际占用磁盘。完成后是否保留由配置明确决定。</p>
+<h2 id="建议的下一步">建议的下一步</h2>
+<ol>
+<li>保留模型规模，先缩小矩阵：MLP、Transformer、Swin-Unet，仍保留真正不同的全连接/注意力/层级图像编码解码。</li>
+<li>首次可取两规则、两种BCE约束、两副本、每副本最多200层，定位可达loss及明显的采样分歧。以上述5090速度情景，约1.4至4.3小时，未含额外IO。</li>
+<li>这是可测性筛查，不以128粒子、两个副本直接宣称深尾定律。先看是否有足够loss跨度与规则差异，再给少量曲线增加粒子或固定更新预算。</li>
+<li>图像模型另测整图native-MSE。格点BCE测量只约束8个格子中心，不能当作图像质量或整图体积；普通U-Net原脚本是raw-MSE，改进U-Net/Swin-Unet是sigmoid-MSE，分别保留。</li>
+<li>比较的是明确Gaussian参考测度下的架构几何。BN处于eval且运行统计固定；归一化参数和残差门的先验已单列，不宣称等同于旧训练脚本的随机初始化/SGD分布。</li>
+</ol>
+<h2 id="资产_1">资产</h2>
+<ul>
+<li>主脚本：<code>research/function_information_conservation/experiment_cross_architecture_output_volume.py</code>。默认仅benchmark，不启动长采样。</li>
+<li>完整层测速：<code>research/function_information_conservation/benchmark_cross_architecture_smc_feasibility.py</code>。此辅助入口当前固定本地cuda:1，不能直接当作单卡5090入口。</li>
+<li>完整层原始数据：<code>tmp/cross_architecture_smc_feasibility_1789168197952655900/measurements.json</code>。</li>
+<li>结构/前向测速：<code>tmp/results_cross_architecture_output_volume_local_preflight_v2/</code>。</li>
+<li>工程测试：<code>research/function_information_conservation/tests/test_cross_architecture_output_volume.py</code>，10项通过，包括原生RNN/LSTM一致性、所有架构的标量/批量前向、BCE-margin恒等式、Gaussian可积概率、恢复/跳过和Jupyter无<code>__file__</code>。</li>
+</ul>
+<p>本轮未进行正式深尾曲线测量，也没有启动diffusion。</p></div>
+
+      </article>
+    </main>
+  </div>
+</body>
+</html>

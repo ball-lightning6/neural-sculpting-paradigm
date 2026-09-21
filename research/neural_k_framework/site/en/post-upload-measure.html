@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Gaussian and fixed-ball Euclidean measures, output-center/amplitude controls, and the boundary of the training correspondence.">
+  <title>Measure Robustness, Gaussian Alignment, and the Boundary of the Training Correspondence · Neural K Research Archive</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="../assets/site.js"></script>
+</head>
+<body data-page-kind="post-upload">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+
+    <header class="topbar">
+      <a class="site-mark" href="index.html" aria-label="Back to the research narrative">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K Research Archive</span>
+      </a>
+      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="index.html">Research</a><a class="top-link" href="theory-core.html">Core Theory</a><a class="top-link" href="experiments/index.html">Experiments</a><a class="top-link active" href="post-upload.html">Updates</a><a class="top-link" href="references.html">References</a><a class="top-link" href="evidence-ledger.html">Evidence</a></nav>
+      <nav class="language-switch" aria-label="Language"><a href="../post-upload-measure.html" lang="zh-CN">中文</a><span class="active" lang="en">EN</span></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>Contents</span>
+      </button>
+    </header>
+
+  <div class="page-shell">
+
+    <aside class="sidebar" id="sidebar" aria-label="On this page">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">On this page</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#1-separate-the-questions-first">1. Separate the Questions First</a></li>
+<li><a href="#2-correction-to-the-gaussian-endpoint-experiment">2. Correction to the Gaussian Endpoint Experiment</a></li>
+<li><a href="#3-euclidean-recheck-inside-a-fixed-norm-ball">3. Euclidean Recheck inside a Fixed-Norm Ball</a></li>
+<li><a href="#4-endpoint-interaction-and-finite-window-additivity">4. Endpoint Interaction and Finite-Window Additivity</a></li>
+<li><a href="#5-output-center-amplitude-and-bias-controls">5. Output Center, Amplitude, and Bias Controls</a></li>
+<li><a href="#6-why-gaussian-measure-can-still-align-with-real-training">6. Why Gaussian Measure Can Still Align with Real Training</a></li>
+<li><a href="#7-remaining-boundaries">7. Remaining Boundaries</a></li>
+<li><a href="#8-reproducible-materials">8. Reproducible Materials</a></li>
+</ul>
+</div>
+</nav>
+        <a class="sidebar-action" href="post-upload.html">Back to the increments overview →</a>
+      </div>
+    </aside>
+
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">Theory and experiment increment · Measure robustness</div>
+          <h1>Measure Robustness, Gaussian Alignment, and the Boundary of the Training Correspondence</h1>
+          <p class="article-description">Gaussian and fixed-ball Euclidean measures, output-center/amplitude controls, and the boundary of the training correspondence.</p>
+        </header>
+        <div class="article-body"><p>Date: 2026-09-21</p>
+<p>This report closes a necessary gap: is Neural K “volume” Euclidean volume, Gaussian probability, or another reference measure? If changing the measure made the conclusion disappear, the volume picture could merely be an artifact of initialization density. If absolute values change while the complexity direction remains, measure dependence and simplicity bias are distinct layers.</p>
+<h2 id="1-separate-the-questions-first">1. Separate the Questions First</h2>
+<p>On an unbounded parameter space, ordinary Lebesgue volume is usually infinite and cannot be compared directly. A normalized reference measure must be chosen:</p>
+<ul>
+<li><strong>Gaussian measure</strong>: compatible with random initialization and pCN-style SMC proposals; parameter mass decays away from the center;</li>
+<li><strong>Uniform Lebesgue measure inside a fixed-norm ball</strong>: uniform on (\lVert\theta\rVert_2\le R), removing direct Gaussian density weighting while introducing a ball boundary;</li>
+<li><strong>Shifts of the output reference center or target amplitude</strong>: these need not change the parameter measure, but they move and reshape the joint-output event under that measure.</li>
+</ul>
+<p>Therefore one should not require identical absolute K values after changing the measure. The relevant comparisons are:</p>
+<ol>
+<li>whether simple/complex rule ordering is preserved;</li>
+<li>whether complex rules still lose relative mass faster as loss or the output cross-section is tightened;</li>
+<li>whether the measure changes only a common translation term or changes rule-dependent response coefficients.</li>
+</ol>
+<h2 id="2-correction-to-the-gaussian-endpoint-experiment">2. Correction to the Gaussian Endpoint Experiment</h2>
+<p>An early endpoint experiment moved the output endpoints from ((-9,+9)) to ((-10,+10)) or ((-9,+11)) under a Gaussian parameter measure and observed large K increases. Those increases included the prior-density penalty for moving the target away from the Gaussian center; they cannot be read directly as the amount by which a Euclidean parameter region shrank.</p>
+<p>The early Gaussian endpoint experiment is therefore no longer used as Euclidean-volume evidence. It remains a valid Gaussian-reference experiment, but it answers a different question: <strong>under the Gaussian initialization language, what probability cost is paid when the joint-output event is moved away from the prior center?</strong></p>
+<h2 id="3-euclidean-recheck-inside-a-fixed-norm-ball">3. Euclidean Recheck inside a Fixed-Norm Ball</h2>
+<p>The recheck fixed</p>
+<pre><code class="language-text">3 -&gt; 16 -&gt; 1 tanh
+R = 72, uniform Lebesgue measure inside the ball
+rules: constant 0x00, copy 0x0F, majority 0x17, parity 0x69
+4 independent SMC replicas, 2,048 particles per replica
+common node: MSE = 0.01
+</code></pre>
+<p>The common-node results were:</p>
+<table>
+<thead>
+<tr>
+<th>Rule</th>
+<th style="text-align: right;">(-9,+9)</th>
+<th style="text-align: right;">(-10,+10)</th>
+<th style="text-align: right;">(-9,+11)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Constant 0x00</td>
+<td style="text-align: right;">32.59</td>
+<td style="text-align: right;">32.84</td>
+<td style="text-align: right;">32.66</td>
+</tr>
+<tr>
+<td>Copy 0x0F</td>
+<td style="text-align: right;">46.19</td>
+<td style="text-align: right;">47.96</td>
+<td style="text-align: right;">47.78</td>
+</tr>
+<tr>
+<td>Majority 0x17</td>
+<td style="text-align: right;">58.65</td>
+<td style="text-align: right;">61.25</td>
+<td style="text-align: right;">61.18</td>
+</tr>
+<tr>
+<td>Parity 0x69</td>
+<td style="text-align: right;">77.51</td>
+<td style="text-align: right;">83.03</td>
+<td style="text-align: right;">82.86</td>
+</tr>
+</tbody>
+</table>
+<p>The increments relative to ((-9,+9)) were:</p>
+<table>
+<thead>
+<tr>
+<th>Rule</th>
+<th style="text-align: right;">Symmetric expansion</th>
+<th style="text-align: right;">Positive-side expansion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Constant</td>
+<td style="text-align: right;">+0.25 bit</td>
+<td style="text-align: right;">+0.07 bit</td>
+</tr>
+<tr>
+<td>Copy</td>
+<td style="text-align: right;">+1.77 bit</td>
+<td style="text-align: right;">+1.59 bit</td>
+</tr>
+<tr>
+<td>Majority</td>
+<td style="text-align: right;">+2.60 bit</td>
+<td style="text-align: right;">+2.54 bit</td>
+</tr>
+<tr>
+<td>Parity</td>
+<td style="text-align: right;">+5.51 bit</td>
+<td style="text-align: right;">+5.34 bit</td>
+</tr>
+</tbody>
+</table>
+<p>The key fact is that <strong>after removing Gaussian positional weighting, complex rules were still more sensitive to expansion of the output cross-section, and the basic ordering remained constant &lt; copy &lt; majority &lt; parity.</strong> Thus faster contraction of complex rules cannot be attributed solely to their being farther from the Gaussian center.</p>
+<p>This is not a strict Euclidean volume law. The difference between symmetric and one-sided expansion was only about 0.06–0.18 bit, close to replica uncertainty, and the fixed ball introduces boundary effects. The more accurate description is a finite-window response:</p>
+<div class="math-display">$$
+K_f(l,h)\approx K_f(l_0,h_0)+A_f^-(l-l_0)+A_f^+(h-h_0)+\cdots,
+$$</div>
+<p>where the response coefficients are determined by the rule's joint-output constraint geometry, rather than being universal constants of the Gaussian measure.</p>
+<h2 id="4-endpoint-interaction-and-finite-window-additivity">4. Endpoint Interaction and Finite-Window Additivity</h2>
+<p>Define the four-point interaction term:</p>
+<div class="math-display">$$
+\Gamma=K(l-1,r+1)-K(l-1,r)-K(l,r+1)+K(l,r).
+$$</div>
+<p>If (\Gamma) is close to zero, the negative-log-volume costs of adding the two endpoint constraints are approximately additive in the current window.</p>
+<p>In the fixed-ball (R=72) deep-tail grid, the maximum (|\Gamma|) over eight computable rectangles at MSE 0.01, 0.003, and 0.001 was 0.919, 0.868, and 0.931 bit, respectively. None exceeded the conservative replica-variation proxy. Repeating a four-point check at (R=96) and MSE=0.001 gave Gamma values of +0.46, -1.30, -0.46, and -0.01 bit for constant, copy, majority, and parity; these also did not exceed the corresponding replica SD sums.</p>
+<p>The current evidence is therefore compatible with a finite-window approximation:</p>
+<div class="math-display">$$
+K_f(d)\approx A_f+\lambda_f d,
+\qquad
+V_f(d)\approx C_f e^{-\lambda_f d}.
+$$</div>
+<p>The experiment measured that Gamma is compatible with zero; it did not measure a genuinely nonzero Gamma with high precision. This must not be presented as an exact law.</p>
+<h2 id="5-output-center-amplitude-and-bias-controls">5. Output Center, Amplitude, and Bias Controls</h2>
+<p>The same <code>3 -&gt; 16 -&gt; 1 tanh</code> network also compared several interventions in the Gaussian reference language:</p>
+<ul>
+<li>shifting the target and output reference center together from 0 to 10: the four rule curves nearly overlapped point by point, with rank correlation 1;</li>
+<li>shifting only the target while leaving the reference measure fixed: K increased by about 124.5–154.1 bit, showing that the cost comes from measure misalignment rather than the coordinate translation itself;</li>
+<li>removing the final output bias: rank correlation remained 1, and hidden-layer biases compensated for most of the global translation path;</li>
+<li>scanning the target half-spacing (a\in{0.01,0.1,0.5,1,3}): the four rule orderings stayed unchanged, but at (a=0.01) the K differences between rules nearly collapsed; amplitude mainly changes separability and the strength of contraction in the middle and early parts of the curve.</li>
+</ul>
+<p>These results show that the joint output distribution must record both the overall position of the distribution and the separation between functions. The absolute value of one loss curve cannot identify whether a change comes from rule geometry, output encoding, or reference-measure location.</p>
+<h2 id="6-why-gaussian-measure-can-still-align-with-real-training">6. Why Gaussian Measure Can Still Align with Real Training</h2>
+<p>These experiments do not support the claim that real training equals a Gaussian conditional distribution. They suggest a weaker and more plausible chain:</p>
+<ol>
+<li><strong>Training starts from Gaussian initialization.</strong> With finite optimization time, the initialization region, reachable paths, and local basins can retain an effect on endpoints. Gaussian is part of the training protocol, not an arbitrary measure chosen after seeing the result.</li>
+<li><strong>The parameter-to-function map can preserve a shared structural ordering.</strong> Different measures change absolute mass, but if simple rules correspond to larger feasible joint-output regions and complex rules impose more competing constraints, several smooth, non-pathological measures can retain approximately the same ordering.</li>
+<li><strong>SGD can correlate with Gaussian mass without being equal to it.</strong> If local curvature, basin multiplicity, path length, and initialization basins correlate with Gaussian mass, the training distribution and static Gaussian mass can point in the same direction. This is a dynamical correlation with the reference measure, not a theorem that training samples from equilibrium.</li>
+<li><strong>The measure-robustness checks weaken the “Gaussian coincidence” explanation.</strong> The uniform-ball experiment retained complexity-dependent endpoint responses and the same basic rule ordering, showing that the core phenomenon is not created entirely by the Gaussian center.</li>
+</ol>
+<p>The most defensible statement is therefore:</p>
+<blockquote>
+<p>Gaussian measure is a reference measure compatible with initialization and the SMC protocol, and it predicts the observed direction well. Real training need not match it numerically; it only needs to remain sufficiently correlated in complexity ordering and in the direction induced by tightening the loss. The uniform-Euclidean recheck supports this “ordering is more robust than absolute mass” interpretation, but does not show that every measure or every optimizer has the same property.</p>
+</blockquote>
+<h2 id="7-remaining-boundaries">7. Remaining Boundaries</h2>
+<ul>
+<li>Only 3-bit inputs, one small network, and four representative rules were measured; this does not establish the result for the full 4-bit space or large models;</li>
+<li>A fixed-radius ball introduces boundary effects, and uniform Euclidean measure is not unbounded Lebesgue volume;</li>
+<li>The experiments do not prove that SGD endpoints are uniquely determined by Gaussian static mass;</li>
+<li>No reference measure fully independent of Gaussian initialization, SGD, and the network parameterization has been established as a “natural measure”;</li>
+<li>The larger response of complex rules is a stable empirical observation here, but its analytic origin still requires a joint-output geometry or architecture-kernel explanation.</li>
+</ul>
+<h2 id="8-reproducible-materials">8. Reproducible Materials</h2>
+<ul>
+<li><code>experiments/experiment_37_measure_robustness/ENDPOINT_RESULTS_EUCLIDEAN.md</code>: fixed-ball recheck;</li>
+<li><code>experiments/experiment_37_measure_robustness/ENDPOINT_GRID_RECHECK.md</code>: high-budget endpoint interaction check;</li>
+<li><code>experiments/experiment_37_measure_robustness/DEEP_TAIL_RESULTS.md</code>: R=72/R=96 deep-tail Gamma checks;</li>
+<li><code>experiments/experiment_37_measure_robustness/RESULTS.md</code>: translation, output-bias, and amplitude scans;</li>
+<li><code>experiments/experiment_37_measure_robustness/run_endpoint_uniform_ball.py</code>, <code>run_output_box_experiments.py</code>, <code>experiment_3bit_cross_architecture_complexity_order.py</code>: self-contained rerunnable scripts;</li>
+<li><code>experiments/experiment_37_measure_robustness/summary.json</code>, <code>grid_analysis.json</code>: lightweight machine-readable summaries.</li>
+</ul></div>
+
+      </article>
+    </main>
+  </div>
+</body>
+</html>

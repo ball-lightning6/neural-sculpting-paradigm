@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="E36 Peleg/G&amp;C 独立验证的完整协议、结果和边界。">
+  <title>E36 Peleg/G&amp;C 独立验证 · Neural K 研究档案</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="../assets/site.js"></script>
+</head>
+<body data-page-kind="post-upload">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+
+    <header class="topbar">
+      <a class="site-mark" href="../index.html" aria-label="返回研究主文">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K 研究档案</span>
+      </a>
+      <nav class="top-nav" aria-label="全站导航"><a class="top-link" href="../index.html">研究主文</a><a class="top-link" href="../theory-core.html">理论核心</a><a class="top-link" href="../experiments/index.html">实验索引</a><a class="top-link active" href="../post-upload.html">提交后增量</a><a class="top-link" href="../references.html">参考文献</a><a class="top-link" href="../evidence-ledger.html">证据总账</a></nav>
+      <nav class="language-switch" aria-label="语言"><span class="active" lang="zh-CN">中文</span><a href="../en/experiments/e36.html" lang="en">EN</a></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>目录</span>
+      </button>
+    </header>
+
+  <div class="page-shell">
+
+    <aside class="sidebar" id="sidebar" aria-label="本页目录">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">本页目录</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#运行">运行</a></li>
+<li><a href="#核心结果">核心结果</a></li>
+<li><a href="#两个代码疑点的实际裁决">两个代码疑点的实际裁决</a><ul>
+<li><a href="#bias不是主要解释">bias不是主要解释</a></li>
+<li><a href="#学习率与初始化确有交互">学习率与初始化确有交互</a></li>
+</ul>
+</li>
+<li><a href="#bce匹配还缺哪一步">BCE匹配还缺哪一步</a></li>
+<li><a href="#质量-时间与文件">质量、时间与文件</a></li>
+</ul>
+</div>
+</nav>
+        <a class="sidebar-action" href="../post-upload.html">返回增量总览 →</a>
+      </div>
+    </aside>
+
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">实验增量 · E36</div>
+          <h1>E36 Peleg/G&amp;C 独立验证</h1>
+          <p class="article-description">E36 Peleg/G&amp;C 独立验证的完整协议、结果和边界。</p>
+        </header>
+        <div class="article-body"><p>首轮已完成。先读<a href="../../experiments/experiment_36_peleg_g_and_c_validation/CONCLUSION.md">结论</a>或<a href="../../experiments/experiment_36_peleg_g_and_c_validation/analysis/REPORT.md">完整表格</a>。不是全论文复现，只有一个16样本训练集。</p>
+<h2 id="运行">运行</h2>
+<p><code>experiment.py</code>集中实现训练与SMC，配置在顶部，无argparse。需要PyTorch GPU版、torchvision、NumPy；分析另需Matplotlib。预检还依赖同目录<code>upstream</code>中的作者数据类，因此本轮是完整目录可运行，不是已经制作好的单文件迁移包。默认物理GPU1 RTX3080，所有数学和采样设置见<a href="../../experiments/experiment_36_peleg_g_and_c_validation/PROTOCOL.md">协议</a>。</p>
+<p>在本仓库根目录运行：</p>
+<pre><code class="language-powershell">&amp; '.venv-gpu/Scripts/python.exe' -E -s -X utf8 release_20260920/experiments/E36_peleg_g_and_c_validation/experiment.py
+</code></pre>
+<p>已完成条件会跳过；配置或主源码变化时拒绝覆盖原结果，请指定新目录。数据沿用本地MNIST缓存。跨机器重跑需要修改设备和数据路径并使用新结果目录，不承诺直接续用本地metadata；当前没有制作AutoDL迁移包。</p>
+<p><code>endpoint_check.py</code>使用原120秒预算中剩余部分做最多512轮固定核更新，不重新估计K，不把快照当独立副本。<code>analyze.py</code>只在CPU离线读取结果，使用独立NumPy float64前向复核。</p>
+<p><code>results/</code>保留数据ID、初始权重、batch排列、每epoch训练输出、预定节点测试输出、SGD断点和完整终点权重、SMC断点与抽存审计权重。<code>upstream/</code>为冻结的作者代码，只用于核对；没有运行其批量训练入口。</p>
+<p>G&amp;C/SMC图示的平均准确率是单模型读数，不是集成。尚未完成高覆盖的BCE匹配及独立训练集确认。</p>
+<h1 id="第一轮结论-收紧raw-bce后-静态样本达到sgd的测试水平">第一轮结论：收紧raw BCE后，静态样本达到SGD的测试水平</h1>
+<p>2026-09-19。已在本地物理GPU1 RTX3080完成，不使用远程5090。没有改写49号或公开论文。</p>
+<h2 id="核心结果">核心结果</h2>
+<p>固定一个由作者公开逻辑重建的16样本MNIST 0/7训练集、2008测试图、3/6宽度LeNet。初始化权重U[-0.2,0.2]，静态采样bias固定0。训练使用原生两类CE，静态约束及报告使用等价的稳定raw BCE。</p>
+<table>
+<thead>
+<tr>
+<th>条件</th>
+<th style="text-align: right;">平均单模型/单粒子测试准确率</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>G&amp;C：只要求训练分类全对</td>
+<td style="text-align: right;">82.1344%</td>
+</tr>
+<tr>
+<td>SMC：训练全对且BCE≤0.3</td>
+<td style="text-align: right;">93.1083%</td>
+</tr>
+<tr>
+<td>SMC：训练全对且BCE≤0.1</td>
+<td style="text-align: right;">95.0906%</td>
+</tr>
+<tr>
+<td>SMC：训练全对且BCE≤0.01</td>
+<td style="text-align: right;">95.8853%</td>
+</tr>
+<tr>
+<td>SMC：训练全对且BCE≤0.001，首次到达</td>
+<td style="text-align: right;">96.3977%</td>
+</tr>
+<tr>
+<td>同一终点额外512轮固定核更新</td>
+<td style="text-align: right;">96.3677%</td>
+</tr>
+<tr>
+<td>SGD：bias固定0，lr=0.01，60epoch</td>
+<td style="text-align: right;">96.3588%</td>
+</tr>
+<tr>
+<td>SGD：bias可训练，其他相同</td>
+<td style="text-align: right;">96.3589%</td>
+</tr>
+</tbody>
+</table>
+<p>SGD各512个配对初始化；SMC为4个独立作业、各1024粒子，所有作业从独立G&amp;C起点开始，没有SGD预热。SMC测试标签不参与接受、目标节点或预算选择。这些是单网络准确率的平均，不是集成多数票成绩。</p>
+<p>额外更新后，各SMC副本为96.3288%至96.4150%。仍有每副本1024种不同完整测试预测向量，不能把平均性能一致误读为完整函数分布已成为一个点；存在多样性也不证明混合充分。</p>
+<p><strong>可以支持的结论：</strong>在本实验中，只按训练分类正确筛选的G&amp;C明显低于SGD；在同一零bias参考测度下继续收紧raw BCE，静态条件样本也达到相同测试水平。因此，原先的hard-fit对照不足以排除loss-resolved静态选择对泛化差距的解释。</p>
+<p><strong>不能升级为：</strong>已推翻Peleg所有实验；SGD等于静态采样；完整函数概率分布已相同；所有架构和训练集都如此。</p>
+<h2 id="两个代码疑点的实际裁决">两个代码疑点的实际裁决</h2>
+<h3 id="bias不是主要解释">bias不是主要解释</h3>
+<p>原公开代码的bias先验固定0，而SGD允许训练bias，确实值得控制。但在关键的a=0.2、lr=0.01组，可训练bias减固定bias的准确率仅约0.00010个百分点，配对初始化bootstrap 95%区间为[-0.01352,0.01362]个百分点。两组均512/512训练全对。</p>
+<p>这排除了“该主要差距很可能只由是否训练bias造成”的简单解释，不能继续只凭代码差异保留这一归因。</p>
+<h3 id="学习率与初始化确有交互">学习率与初始化确有交互</h3>
+<p>a=1、lr=0.001时约86.4%至86.5%，训练BCE已极低并很早平台；a=0.2、lr=0.001时平均约93.9%至94.2%，但仍有模型未完全拟合；a=0.2、lr=0.01时全部拟合并约96.36%。</p>
+<p>a=1、lr=0.01两组没有任何模型完整拟合；固定bias/可训练bias分别83/512、95/512出现非有限输出。它们是数值/优化失败条件，不当作静态或泛化反例。</p>
+<p>小初始化的优势并未因固定学习率而消失。不同初始化先验的raw BCE不能脱离输出尺度直接横比，尤其不能用大初始化下极低BCE反驳小初始化参考测度的条件曲线。</p>
+<h2 id="bce匹配还缺哪一步">BCE匹配还缺哪一步</h2>
+<p>在固定a=0.2、lr=0.01、bias=0的SGD终点上，做了不按准确率选箱的探索性匹配。分箱包含全部SMC源阈值，防止直接混合不同条件分布造成错误。</p>
+<ul>
+<li>log10箱宽0.1：共同支持80/512，即15.625%。SGD为96.3521%，SMC匹配后96.3797%，差值SGD-SMC=-0.02765个百分点，区间[-0.44399,0.37259]。</li>
+<li>半箱宽0.05：共同支持68/512，即13.281%。SGD为96.3711%，SMC为96.3728%。</li>
+</ul>
+<p>这是有限分箱、共同支持子集的结果，不是全体SGD的严格matched-BCE确认。终点节点0.003与0.001之间缺少足够密的中间采样，使覆盖不足。未来若需要更强结论，应依据训练BCE分布冻结密集节点并独立确认，而不是继续挑选高测试准确率点。</p>
+<p>额外终点更新前后的静态均值均约0.000889；SGD终点BCE中位数约0.00116。两者属于邻近低loss区域，但不能仅凭接近就叫作精确相同loss。</p>
+<h2 id="质量-时间与文件">质量、时间与文件</h2>
+<ul>
+<li>作者数据选择及归一化与独立重建完全一致；前向、梯度、10步SGD与普通单模型float64实现一致至约1e-16量级。</li>
+<li>原始采样源码和作者文件hash未改变。SMC固定核继续更新另存，不覆盖首轮。</li>
+<li>NumPy float64复核72组抽存权重，每组原定16模型、80输入；跳过并记录4个非有限失败模型。所有实际核查均无分类翻转；SMC训练约束无观测违例。有效主条件与SMC的最大logit绝对差约6.08e-6。失败大初始化组另有巨大数值，未混作正常误差指标。</li>
+<li>深端点初始祖先只剩5至9个；高接受率、多个副本和继续更新稳定仍不是全局混合证明。</li>
+<li>8条件共4096网络，训练循环合计20.25秒，训练侧评估35.28秒；四个G&amp;C收集29.30秒，初始SMC推进206.92秒，终点固定核更新81.69秒。含相应落盘等的主要运行约6.5分钟，不含写代码、预检和离线审计。没有仍在运行的本实验训练或采样进程。</li>
+</ul>
+<p>首轮到此结束，未自动追加新训练集、宽度扫描、幅度正则或更深采样。</p>
+<ul>
+<li><a href="../../experiments/experiment_36_peleg_g_and_c_validation/analysis/REPORT.md">完整分析报告</a></li>
+<li><a href="../../experiments/experiment_36_peleg_g_and_c_validation/analysis/summary.json">机器可读汇总</a></li>
+<li><a href="../../experiments/experiment_36_peleg_g_and_c_validation/PROTOCOL.md">预定协议</a></li>
+<li><a href="../../experiments/experiment_36_peleg_g_and_c_validation/experiment.py">主脚本，无argparse</a></li>
+<li><a href="../../experiments/experiment_36_peleg_g_and_c_validation/endpoint_check.py">终点检查</a></li>
+<li><a href="../../experiments/experiment_36_peleg_g_and_c_validation/analyze.py">独立分析</a></li>
+</ul>
+<figure class="result-figure"><a href="../../experiments/experiment_36_peleg_g_and_c_validation/analysis/overview.png" target="_blank" rel="noopener"><img src="../../experiments/experiment_36_peleg_g_and_c_validation/analysis/overview.png" alt="总览" loading="lazy"></a><figcaption>总览</figcaption></figure></div>
+
+      </article>
+    </main>
+  </div>
+</body>
+</html>

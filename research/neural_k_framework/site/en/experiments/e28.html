@@ -23,7 +23,7 @@
         <span class="mark-block">NK</span>
         <span class="mark-text">Neural K Research Archive</span>
       </a>
-      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="../index.html">Research</a><a class="top-link" href="../theory-core.html">Core Theory</a><a class="top-link active" href="../experiments/index.html">Experiments</a><a class="top-link" href="../references.html">References</a><a class="top-link" href="../evidence-ledger.html">Evidence</a></nav>
+      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="../index.html">Research</a><a class="top-link" href="../theory-core.html">Core Theory</a><a class="top-link active" href="../experiments/index.html">Experiments</a><a class="top-link" href="../post-upload.html">Updates</a><a class="top-link" href="../references.html">References</a><a class="top-link" href="../evidence-ledger.html">Evidence</a></nav>
       <nav class="language-switch" aria-label="Language"><a href="../../experiments/e28.html" lang="zh-CN">中文</a><span class="active" lang="en">EN</span></nav>
       <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
         <span aria-hidden="true">☰</span><span>Contents</span>
@@ -38,12 +38,23 @@
         <nav class="toc"><div class="toc">
 <ul>
 <li><a href="#overview">Experiment overview</a></li>
-<li><a href="#motivation">Why this experiment was run</a></li>
+<li><a href="#purpose">Purpose</a></li>
+<li><a href="#entry-points">Entry points</a></li>
+<li><a href="#frozen-sources">Frozen sources</a></li>
+<li><a href="#motivation">Why this experiment was run, and how it was judged</a></li>
+<li><a href="#1-question">1. Question</a></li>
+<li><a href="#2-protocol">2. Protocol</a></li>
+<li><a href="#3-verdict">3. Verdict</a></li>
 <li><a href="#results">Results, interpretation, and limits</a></li>
+<li><a href="#1-predictive-quality">1. Predictive quality</a></li>
+<li><a href="#2-member-count-and-time-averaging">2. Member count and time averaging</a></li>
+<li><a href="#3-static-ensemble-condensation">3. Static ensemble condensation</a></li>
+<li><a href="#4-compute-and-interpretive-boundaries">4. Compute and interpretive boundaries</a></li>
+<li><a href="#5-files">5. Files</a></li>
 </ul>
 </div>
 </nav>
-        <div class="sidebar-label experiment-label">All experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>Static Hard Conditioning versus Optimizer-Induced Function Transport</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-Bit Counterfactual Invariance</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>Prior-Consistent Function Dynamics and Width Intervention</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>Post-Fit Drift in the Mingard 2025 Boolean Protocol</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>Feature Learning When a Fixed NTK Is Already Sufficient</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>Loss-Conditioned Prior Annealing</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>Function-ID Wandering and Matched-Loss Static Controls</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>Shared Intermediate Computation under Finite Capacity</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>Long Training with 80% Hidden Label Noise</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>Raw-BCE Competition between Preregistered Simple and Complex Function Pairs</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule-30 Train/Validation Gradient Alignment across Dataset Size</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND Shortcut Static Geometry and a One-Example Balance Intervention</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>SGD Dynamics of the AND Shortcut and Balanced Intervention</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>Weighted Rule-Bit Function Switching across Loss Scales</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Complete Functions versus Marginal Concentration in Modular-97 Grokking</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity Reachability, Half-Space Generalization, and Scaffold Recovery</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>Static Deep-Loss Mass versus Optimizer Transport</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>Teacher-Free Consensus and Symbolic Readability</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>Full-Truth-Table Rule Volume</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Measure Closure between Full Rules, Fixed Datasets, and Margin Cores</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement Control and a Consensus Complexity Frontier</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>Per-Example Free Energy and an Information Invariant</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>Prospective Prediction from Full-Rule Volume to Data Transition</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>Deep Neural K Crossing of Parity4 and a One-Point Exception</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST Sample Complexity and Static Branch Prediction</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>Balanced Unlabeled MNIST Label Volume</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Agreement Before and During Grokking</span></a><a class="experiment-nav-link active" href="e28.html"><span>E28</span><span>Whole-Network HMC versus Adam on 50k MNIST</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Loss-Resolved Robustness to a Dead Input Bit</span></a><a class="experiment-nav-link" href="e30.html"><span>E30</span><span>Weight Decay Reshapes the Static Complete-Function Landscape</span></a></nav>
+        <div class="sidebar-label experiment-label">All experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>Static Hard Conditioning versus Optimizer-Induced Function Transport</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-Bit Counterfactual Invariance</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>Prior-Consistent Function Dynamics and Width Intervention</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>Post-Fit Drift in the Mingard 2025 Boolean Protocol</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>Feature Learning When a Fixed NTK Is Already Sufficient</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>Loss-Conditioned Prior Annealing</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>Function-ID Wandering and Matched-Loss Static Controls</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>Shared Intermediate Computation under Finite Capacity</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>Long Training with 80% Hidden Label Noise</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>Raw-BCE Competition between Preregistered Simple and Complex Function Pairs</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule-30 Train/Validation Gradient Alignment across Dataset Size</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND Shortcut Static Geometry and a One-Example Balance Intervention</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>SGD Dynamics of the AND Shortcut and Balanced Intervention</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>Weighted Rule-Bit Function Switching across Loss Scales</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Complete Functions versus Marginal Concentration in Modular-97 Grokking</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity Reachability, Half-Space Generalization, and Scaffold Recovery</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>Static Deep-Loss Mass versus Optimizer Transport</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>Teacher-Free Consensus and Symbolic Readability</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>Full-Truth-Table Rule Volume</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Measure Closure between Full Rules, Fixed Datasets, and Margin Cores</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement Control and a Consensus Complexity Frontier</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>Per-Example Free Energy and an Information Invariant</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>Prospective Prediction from Full-Rule Volume to Data Transition</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>Deep Neural K Crossing of Parity4 and a One-Point Exception</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST Sample Complexity and Static Branch Prediction</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>Balanced Unlabeled MNIST Label Volume</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Agreement Before and During Grokking</span></a><a class="experiment-nav-link active" href="e28.html"><span>E28</span><span>Whole-Network HMC versus Adam on 50k MNIST</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Loss-Resolved Robustness to a Dead Input Bit</span></a><a class="experiment-nav-link" href="e30.html"><span>E30</span><span>Weight Decay Reshapes the Static Complete-Function Landscape</span></a></nav><div class="sidebar-label experiment-label">Post-upload experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="../experiments/e31.html"><span>E31</span><span>Loss and output amplitude</span></a><a class="experiment-nav-link" href="../experiments/e32.html"><span>E32</span><span>Random-memory scaling</span></a><a class="experiment-nav-link" href="../experiments/e33.html"><span>E33</span><span>Cross-architecture output volume</span></a><a class="experiment-nav-link" href="../experiments/e34.html"><span>E34</span><span>Conditional rule duel</span></a><a class="experiment-nav-link" href="../experiments/e35.html"><span>E35</span><span>Frozen functions around grokking</span></a><a class="experiment-nav-link" href="../experiments/e36.html"><span>E36</span><span>Independent Peleg/G&amp;C recheck</span></a><a class="experiment-nav-link" href="../experiments/e37.html"><span>E37</span><span>Measure robustness and Gaussian alignment</span></a></nav>
       </div>
     </aside>
 
@@ -55,12 +66,166 @@
           <p class="article-description">Test whether a finite-width static HMC ensemble can reach optimizer-level prediction quality on the full MNIST training set.</p>
         </header>
         <div class="article-body"><div class="source-bar"><span>Scripts</span><div><a href="../../../experiments/experiment_28_mnist50k_hmc_adam/experiment_mnist10_small_cnn_adam_same_protocol.py">experiment_mnist10_small_cnn_adam_same_protocol.py</a><a href="../../../experiments/experiment_28_mnist50k_hmc_adam/experiment_mnist10_small_cnn_full_hmc_demo.py">experiment_mnist10_small_cnn_full_hmc_demo.py</a></div></div><h2 id="overview">Experiment overview</h2>
-<p>A 4,266-parameter small CNN is sampled with 16 full-batch HMC chains at beta equal to 50,000. Thirty retained snapshots yield 480 parameter samples. Plain Adam and Gaussian-prior MAP Adam use 32 matched initializations, batch size 256, and 50 epochs on the identical split without augmentation.</p>
-<h2 id="motivation">Why this experiment was run</h2>
-<p>Boolean and tiny-image results would remain scale-limited unless the complete static parameter ensemble could be constructed on a standard natural classification task and compared directly with practical optimization.</p>
+<h2 id="purpose">Purpose</h2>
+<p>Test whether the full finite-width static HMC ensemble under a Gaussian reference
+measure can reach the predictive level of real Adam training on the full
+50,000-sample MNIST ten-class task, and measure function agreement and residual
+inter-chain differences.</p>
+<h2 id="entry-points">Entry points</h2>
+<ul>
+<li>experiment_mnist10_small_cnn_full_hmc_demo.py</li>
+<li>experiment_mnist10_small_cnn_adam_same_protocol.py</li>
+<li>MOTIVATION_AND_PREREGISTRATION.md</li>
+<li>RESULTS_AND_CONCLUSION.md</li>
+</ul>
+<p>The HMC script's default profile is 50k. The Adam script retains the 8k
+reproduction profile, but this unit only reports 50k HMC, plain Adam, and MAP Adam.</p>
+<h2 id="frozen-sources">Frozen sources</h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Development-version source</th>
+<th>SHA256</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>experiment_mnist10_small_cnn_full_hmc_demo.py</td>
+<td>research/function_information_conservation</td>
+<td>24d09f6ef8e5b227dcce2a8992f413d25a6ee6542cfc6252782de376c6377ae1</td>
+</tr>
+<tr>
+<td>experiment_mnist10_small_cnn_adam_same_protocol.py</td>
+<td>research/function_information_conservation</td>
+<td>af56b60af8ab59f3416a0a21047a8264dff48abae832b256001f0b5994538858</td>
+</tr>
+</tbody>
+</table>
+<p>The SHA256 values of the original 50k HMC and Adam bundles are respectively:</p>
+<ul>
+<li>fdb11e1ad74df89ae349aaef0cec6b795097ccaac409dcac4c71d7e335fa1c96</li>
+<li>118559b4b5177c9ab593111923c653a1bb80f03bb9b45696940b56705db2a42d</li>
+</ul>
+<h2 id="motivation">Why this experiment was run, and how it was judged</h2>
+<h2 id="1-question">1. Question</h2>
+<p>The static volume in small Boolean tasks may merely be a toy phenomenon. E28
+places the complete network parameters entirely into HMC, constructs a static
+function ensemble on 50,000 real images, and compares it with Adam using the same
+architecture, split, and initial function distribution.</p>
+<h2 id="2-protocol">2. Protocol</h2>
+<ul>
+<li>Network: Conv(1,4)-&gt;Conv(4,8)-&gt;Linear(392,10), 4,266 parameters;</li>
+<li>HMC: 16 chains, beta=n=50,000, snapshots taken after 30 frozen step sizes, 480 samples in total;</li>
+<li>Adam: 32 seeds, batch 256, 50 epochs;</li>
+<li>Two kinds of Adam: plain and MAP with the corresponding Gaussian prior;</li>
+<li>No data augmentation; validation/test labels do not participate in training or stopping.</li>
+</ul>
+<h2 id="3-verdict">3. Verdict</h2>
+<p>The primary question is whether static HMC can reach the same predictive
+magnitude as the real optimizer, rather than presupposing that HMC must win
+significantly. Member-count matching, per-sample paired errors, full function
+diversity, and within-chain/between-chain disagreement must also be reported.
+High accuracy does not automatically prove global MCMC mixing.</p>
 <h2 id="results">Results, interpretation, and limits</h2>
-<p>HMC, plain Adam, and MAP Adam reached ensemble test accuracies of 99.03%, 98.95%, and 98.82%. HMC and plain Adam differed on only eight net test examples; exact McNemar p was 0.2005. HMC mean pointwise agreement was 0.9877, although all 480 retained samples represented different complete 10,000-image functions. Between-chain function distance remained above within-chain distance.</p>
-<p><strong>Conclusion.</strong> Whole-network HMC and Adam reach the same performance level at 50k MNIST, with a small nonsignificant HMC advantage under the frozen protocol. Strong prediction and pointwise concentration do not prove global MCMC mixing or equality of static and optimizer distributions.</p></div>
+<h2 id="1-predictive-quality">1. Predictive quality</h2>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th style="text-align: right;">HMC</th>
+<th style="text-align: right;">plain Adam</th>
+<th style="text-align: right;">MAP Adam</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ensemble test accuracy</td>
+<td style="text-align: right;">99.03%</td>
+<td style="text-align: right;">98.95%</td>
+<td style="text-align: right;">98.82%</td>
+</tr>
+<tr>
+<td>ensemble test NLL</td>
+<td style="text-align: right;">0.03291</td>
+<td style="text-align: right;">0.03415</td>
+<td style="text-align: right;">0.03775</td>
+</tr>
+<tr>
+<td>Single-parameter/single-seed mean accuracy</td>
+<td style="text-align: right;">98.363%</td>
+<td style="text-align: right;">98.180%</td>
+<td style="text-align: right;">98.315%</td>
+</tr>
+<tr>
+<td>train-test gap</td>
+<td style="text-align: right;">0.442 pp</td>
+<td style="text-align: right;">0.768 pp</td>
+<td style="text-align: right;">0.466 pp</td>
+</tr>
+<tr>
+<td>Mean function disagreement</td>
+<td style="text-align: right;">0.01820</td>
+<td style="text-align: right;">0.02049</td>
+<td style="text-align: right;">0.01646</td>
+</tr>
+</tbody>
+</table>
+<p>HMC and plain Adam differ on only 8 test samples. In the per-sample McNemar test,
+19 images are correct only under HMC and 11 only under Adam, two-sided p=0.2005.
+This should therefore be stated as the same performance level, with HMC holding a
+slight but not significant numerical advantage.</p>
+<h2 id="2-member-count-and-time-averaging">2. Member count and time averaging</h2>
+<p>HMC has 480 parameter samples and Adam has 32 seeds. Splitting HMC into 15
+mutually non-overlapping 32-member groups:</p>
+<ul>
+<li>Mean 32-member HMC accuracy 99.012%;</li>
+<li>Standard deviation 0.033 percentage points;</li>
+<li>Range 98.96%--99.08%;</li>
+<li>The Adam 32-seed ensemble is 98.95%.</li>
+</ul>
+<p>All 15/15 HMC groups have hard-modal accuracy higher than plain Adam, but the
+advantage is only about 0.06 percentage points. When only the last 16-chain HMC
+snapshot is used, HMC is 98.93% and Adam is 98.95%, showing that the full HMC
+gain comes in part from posterior averaging across time.</p>
+<h2 id="3-static-ensemble-condensation">3. Static ensemble condensation</h2>
+<p>The 480 HMC samples produce 480 distinct complete functions on the 10,000 test
+images, yet the pointwise mean agreement reaches 0.9877:</p>
+<ul>
+<li>Agreement no lower than 0.99 covers 91.32% of the test set, with accuracy 99.989%;</li>
+<li>Agreement equal to 1 covers 87.32%, with accuracy 99.989%.</li>
+</ul>
+<p>High agreement is an extremely strong reliability signal, but not a logical
+guarantee: one test image is unanimously predicted incorrectly by all 480
+samples.</p>
+<p>Following the correct snapshot-major save order, the mean function disagreement
+within the same chain is 0.01190, and across chains 0.01860. Cross-chain remains
+systematically farther apart, so the results support high-quality prediction and
+function condensation, but do not prove that HMC has fully mixed over the global
+weight space.</p>
+<h2 id="4-compute-and-interpretive-boundaries">4. Compute and interpretive boundaries</h2>
+<ul>
+<li>50k HMC takes about 5,590 seconds;</li>
+<li>All four Adam conditions take about 141 seconds in total, of which 50k plain Adam takes about 57 seconds;</li>
+<li>HMC is a tool for measuring the static function ensemble, not a more practical training algorithm.</li>
+</ul>
+<p>This experiment establishes: whole-network static HMC can reach 99.03% on the
+real 50k ten-class task, reaching the same level as real Adam with the same
+architecture.</p>
+<p>This experiment does not establish:</p>
+<ul>
+<li>HMC is generally better than Adam;</li>
+<li>HMC has already mixed exactly at the global level;</li>
+<li>The static distribution equals the optimizer's endpoint distribution;</li>
+<li>The result has an exclusive accuracy advantage over NNGP or other kernels.</li>
+</ul>
+<h2 id="5-files">5. Files</h2>
+<ul>
+<li>experiment_mnist10_small_cnn_full_hmc_demo.py</li>
+<li>experiment_mnist10_small_cnn_adam_same_protocol.py</li>
+<li>README.md</li>
+<li>RESULTS_AND_CONCLUSION.md</li>
+</ul></div>
         <footer class="experiment-pager"><a href="e27.html">← E27 Agreement Before and During Grokking</a><a href="e29.html">E29 Loss-Resolved Robustness to a Dead Input Bit →</a></footer>
       </article>
     </main>

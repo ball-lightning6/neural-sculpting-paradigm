@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="独立冻结的 4-bit Neural K 全序能否预测 8-bit 条件规则竞争中的函数人口偏好。">
+  <title>E34：8-bit 条件规则决斗（旗舰对决） · Neural K 研究档案</title>
+  <link rel="stylesheet" href="assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="assets/site.js"></script>
+</head>
+<body data-page-kind="post-upload">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+
+    <header class="topbar">
+      <a class="site-mark" href="index.html" aria-label="返回研究主文">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K 研究档案</span>
+      </a>
+      <nav class="top-nav" aria-label="全站导航"><a class="top-link" href="index.html">研究主文</a><a class="top-link" href="theory-core.html">理论核心</a><a class="top-link" href="experiments/index.html">实验索引</a><a class="top-link active" href="post-upload.html">提交后增量</a><a class="top-link" href="references.html">参考文献</a><a class="top-link" href="evidence-ledger.html">证据总账</a></nav>
+      <nav class="language-switch" aria-label="语言"><span class="active" lang="zh-CN">中文</span><a href="en/post-upload-e34.html" lang="en">EN</a></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>目录</span>
+      </button>
+    </header>
+
+  <div class="page-shell">
+
+    <aside class="sidebar" id="sidebar" aria-label="本页目录">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">本页目录</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#1-问题与设计">1. 问题与设计</a></li>
+<li><a href="#2-结果">2. 结果</a></li>
+<li><a href="#3-必须随结果保留的边界">3. 必须随结果保留的边界</a></li>
+<li><a href="#4-文件">4. 文件</a></li>
+</ul>
+</div>
+</nav>
+        <a class="sidebar-action" href="post-upload.html">返回增量总览 →</a>
+      </div>
+    </aside>
+
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">实验增量 · E34 条件规则决斗</div>
+          <h1>E34：8-bit 条件规则决斗（旗舰对决）</h1>
+          <p class="article-description">独立冻结的 4-bit Neural K 全序能否预测 8-bit 条件规则竞争中的函数人口偏好。</p>
+        </header>
+        <div class="article-body"><blockquote>
+<p>状态：高差距 pilot 与完整循环赛均完成。证据等级：预注册复杂度顺序的事前预测，单 <code>8→16→1 tanh</code> 协议。</p>
+</blockquote>
+<h2 id="1-问题与设计">1. 问题与设计</h2>
+<p><strong>独立测得的 4-bit 单规则 Neural K 顺序，能否事前预测真实 Adam 训练在直接竞争中的规则选择？</strong>（与旧版规则决斗面板同属"规则对决"家族，本实验是其中最先做、信号最强的一组。）</p>
+<p>8-bit 输入分前后两个 4-bit 块，规则 f 读前块、规则 g 读后块：</p>
+<ul>
+<li>训练集：<code>f(front) == g(back)</code> 的全部 128 个输入，标签取共同输出；</li>
+<li>冲突集：<code>f(front) != g(back)</code> 的 128 个输入，不指定外部真值，只检验竞争偏好；</li>
+<li>每对交换前后位置并按 seed 配对；<code>8→16→1 tanh</code>（161 参数）、full-batch Adam(lr=0.01, wd=0)；matched-loss 阈值 0.1/0.03/0.01/0.003/0.001。</li>
+</ul>
+<p>规则面板与顺序预期在读取训练结果<strong>之前</strong>从独立测得的 4-bit Neural K 曲线冻结：parity1 &lt; majority3 &lt; MUX3 &lt; parity2 &lt; parity3 &lt; parity4。</p>
+<h2 id="2-结果">2. 结果</h2>
+<p><strong>高差距 pilot</strong>：5 场 × 双向 × 256 seed，全部 100% 选低 K 规则。</p>
+<p><strong>完整循环赛</strong>（6 条规则的全部 15 个无序对 × 双向 × 5 个 loss 截面 = 75 次判决）：<strong>75/75 全部符合事先冻结的复杂度全序</strong>。主截面（BCE=0.001）逐对结果见 <code>FULL_TOURNAMENT_RESULTS.md</code>；代表性的非饱和读数：</p>
+<ul>
+<li>parity1 vs majority3：低 K 匹配率 0.761（其余为混合函数）；</li>
+<li><strong>MUX3 vs parity2：0.606</strong>（配对 seed 胜率 0.617，Wilson [0.556, 0.675]）——这是 15 对中唯一非压倒性的判决，方向仍符合冻结全序，但偏好随 loss 加深从 0.684 单调降到 0.606（未反转，作为开放读数保留）。</li>
+</ul>
+<h2 id="3-必须随结果保留的边界">3. 必须随结果保留的边界</h2>
+<ol>
+<li>冲突集没有外部真值；测的是训练集无法区分两条规则时优化器更常沿用哪个完整延拓，不是"哪条规则正确"；</li>
+<li>多数判决中网络形成的是混合函数（如 parity1 vs majority3 全部 256 个配对 seed 都胜但平均匹配率只有 0.761）——"偏向低 K 规则"指函数人口偏向，不要求每个网络复制完整规则；</li>
+<li>单一网络与数据协议；不宣称胜率等于 K 差的 softmax，也不宣称逐对单调；</li>
+<li>与旧版规则决斗面板的关系：旧面板在小 K 差档（20–40 bits）显示平均偏好接近 0.5，说明本实验的强信号依赖足够大的复杂度差；两者合读才是完整图景。</li>
+</ol>
+<h2 id="4-文件">4. 文件</h2>
+<ul>
+<li><code>experiment_8bit_conditional_rule_duel_high_gap.py</code>：冻结实验脚本（无 argparse，配置在顶部；pilot 与完整循环赛同一脚本不同模式）；</li>
+<li><code>README_8BIT_CONDITIONAL_RULE_DUEL_HIGH_GAP.md</code>：原始协议说明；</li>
+<li><code>FULL_TOURNAMENT_RESULTS.md</code>：完整循环赛 15 对逐对结果与解释边界；</li>
+<li>结果包：<code>E:/Downloads/results_8bit_conditional_rule_duel_high_gap_package.zip</code>（pilot）、<code>E:/Downloads/results_8bit_conditional_rule_duel_full_tournament_package.zip</code>（循环赛，含逐条件权重与图）。</li>
+</ul></div>
+
+      </article>
+    </main>
+  </div>
+</body>
+</html>

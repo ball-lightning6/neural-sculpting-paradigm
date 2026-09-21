@@ -1,0 +1,666 @@
+[
+  {
+    "kind": "sgd",
+    "name": "a0.2_lr0.001_biastrain",
+    "models": 16,
+    "actually_checked_models": 16,
+    "nonfinite_skipped": 0,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 1.2066320698167488e-06,
+    "max_relative_l2_difference": 3.3273752170428355e-07,
+    "class_flips": 0
+  },
+  {
+    "kind": "sgd",
+    "name": "a0.2_lr0.001_biaszero",
+    "models": 16,
+    "actually_checked_models": 16,
+    "nonfinite_skipped": 0,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 1.2013445577219173e-06,
+    "max_relative_l2_difference": 3.769341343207517e-07,
+    "class_flips": 0
+  },
+  {
+    "kind": "sgd",
+    "name": "a0.2_lr0.01_biastrain",
+    "models": 16,
+    "actually_checked_models": 16,
+    "nonfinite_skipped": 0,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 3.239406439092818e-06,
+    "max_relative_l2_difference": 2.3082174878608354e-07,
+    "class_flips": 0
+  },
+  {
+    "kind": "sgd",
+    "name": "a0.2_lr0.01_biaszero",
+    "models": 16,
+    "actually_checked_models": 16,
+    "nonfinite_skipped": 0,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 2.8702656216239575e-06,
+    "max_relative_l2_difference": 2.2216157667598986e-07,
+    "class_flips": 0
+  },
+  {
+    "kind": "sgd",
+    "name": "a1_lr0.001_biastrain",
+    "models": 16,
+    "actually_checked_models": 16,
+    "nonfinite_skipped": 0,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 0.0007512951679018443,
+    "max_relative_l2_difference": 4.0663650416200544e-07,
+    "class_flips": 0
+  },
+  {
+    "kind": "sgd",
+    "name": "a1_lr0.001_biaszero",
+    "models": 16,
+    "actually_checked_models": 16,
+    "nonfinite_skipped": 0,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 0.00044813570440283,
+    "max_relative_l2_difference": 5.267594377608129e-07,
+    "class_flips": 0
+  },
+  {
+    "kind": "sgd",
+    "name": "a1_lr0.01_biastrain",
+    "models": 16,
+    "actually_checked_models": 13,
+    "nonfinite_skipped": 3,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 42.97236415275256,
+    "max_relative_l2_difference": 7.958580561861639e-07,
+    "class_flips": 0
+  },
+  {
+    "kind": "sgd",
+    "name": "a1_lr0.01_biaszero",
+    "models": 16,
+    "actually_checked_models": 15,
+    "nonfinite_skipped": 1,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 8.706446865541772e+26,
+    "max_relative_l2_difference": 6.054949189232526e-07,
+    "class_flips": 0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_0/hard_start",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 3.473430672529254e-07,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_0/node_0p69",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 4.228028737257583e-07,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_0/node_0p68",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 3.1415131288015097e-07,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_0/node_0p65",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 8.881421664774791e-07,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_0/node_0p6",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 6.523492834809019e-07,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_0/node_0p5",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 7.649578026569515e-07,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_0/node_0p3",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 1.1244660476084078e-06,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_0/node_0p1",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 2.0061351027056418e-06,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_0/node_0p03",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 2.67491911021267e-06,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_0/node_0p01",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 3.7398050540815575e-06,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_0/node_0p003",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 4.116818868915573e-06,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_0/node_0p001",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 4.779453963710267e-06,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_0/endpoint",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 4.779453963710267e-06,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_0/check_0032",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 5.213106975432424e-06,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_0/check_0128",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 5.351880327353342e-06,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_0/check_0512",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 4.9838235121058005e-06,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_1/hard_start",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 7.161403347277773e-07,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_1/node_0p69",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 4.818438316053775e-07,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_1/node_0p68",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 4.863675900912412e-07,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_1/node_0p65",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 7.003407418437746e-07,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_1/node_0p6",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 4.87248354497094e-07,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_1/node_0p5",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 7.112295250417955e-07,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_1/node_0p3",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 1.4927211907656002e-06,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_1/node_0p1",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 2.031552822856497e-06,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_1/node_0p03",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 2.6368657115583005e-06,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_1/node_0p01",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 3.561479753777519e-06,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_1/node_0p003",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 4.21922564219912e-06,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_1/node_0p001",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 5.053354021122836e-06,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_1/endpoint",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 5.053354021122836e-06,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_1/check_0032",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 3.923552617024484e-06,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_1/check_0128",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 4.387648893988683e-06,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_1/check_0512",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 6.0739155767208786e-06,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_2/hard_start",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 4.507884426296904e-07,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_2/node_0p69",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 6.663375174964514e-07,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_2/node_0p68",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 4.97136927346542e-07,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_2/node_0p65",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 5.517637281515775e-07,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_2/node_0p6",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 5.398211664897623e-07,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_2/node_0p5",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 9.033278204340078e-07,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_2/node_0p3",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 1.2528107098397356e-06,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_2/node_0p1",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 2.8286763955609473e-06,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_2/node_0p03",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 2.6572752096498675e-06,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_2/node_0p01",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 3.5198902912370045e-06,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_2/node_0p003",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 4.404983211969693e-06,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_2/node_0p001",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 5.461943167084371e-06,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_2/endpoint",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 5.461943167084371e-06,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_2/check_0032",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 5.951160972017533e-06,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_2/check_0128",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 5.452254998594697e-06,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_2/check_0512",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 3.307698527521552e-06,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_3/hard_start",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 4.785053826505958e-07,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_3/node_0p69",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 4.5533483916671e-07,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_3/node_0p68",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 4.2435348113212257e-07,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_3/node_0p65",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 4.873639335434277e-07,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_3/node_0p6",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 5.989156491859049e-07,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_3/node_0p5",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 1.0876903397960547e-06,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_3/node_0p3",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 1.2824261839128326e-06,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_3/node_0p1",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 2.1616733061335935e-06,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_3/node_0p03",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 3.0605249865534034e-06,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_3/node_0p01",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 3.2673664751570186e-06,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_3/node_0p003",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 4.370782181517541e-06,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_3/node_0p001",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 4.497165442707285e-06,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_3/endpoint",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 4.497165442707285e-06,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_3/check_0032",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 4.877682696635688e-06,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_3/check_0128",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 4.438333748524315e-06,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  },
+  {
+    "kind": "smc",
+    "name": "replica_3/check_0512",
+    "models": 16,
+    "inputs_per_model": 80,
+    "max_logit_abs_difference": 5.758192219929015e-06,
+    "class_flips": 0,
+    "float64_loss_excess": 0.0
+  }
+]

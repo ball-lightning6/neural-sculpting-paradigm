@@ -23,7 +23,7 @@
         <span class="mark-block">NK</span>
         <span class="mark-text">Neural K Research Archive</span>
       </a>
-      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="../index.html">Research</a><a class="top-link" href="../theory-core.html">Core Theory</a><a class="top-link active" href="../experiments/index.html">Experiments</a><a class="top-link" href="../references.html">References</a><a class="top-link" href="../evidence-ledger.html">Evidence</a></nav>
+      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="../index.html">Research</a><a class="top-link" href="../theory-core.html">Core Theory</a><a class="top-link active" href="../experiments/index.html">Experiments</a><a class="top-link" href="../post-upload.html">Updates</a><a class="top-link" href="../references.html">References</a><a class="top-link" href="../evidence-ledger.html">Evidence</a></nav>
       <nav class="language-switch" aria-label="Language"><a href="../../experiments/e22.html" lang="zh-CN">中文</a><span class="active" lang="en">EN</span></nav>
       <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
         <span aria-hidden="true">☰</span><span>Contents</span>
@@ -38,12 +38,23 @@
         <nav class="toc"><div class="toc">
 <ul>
 <li><a href="#overview">Experiment overview</a></li>
-<li><a href="#motivation">Why this experiment was run</a></li>
+<li><a href="#purpose">Purpose</a></li>
+<li><a href="#run">Run</a></li>
+<li><a href="#sha256">SHA256</a></li>
+<li><a href="#motivation">Why this experiment was run, and how it was judged</a></li>
+<li><a href="#1-problem">1. Problem</a></li>
+<li><a href="#2-static-definition">2. Static definition</a></li>
+<li><a href="#3-exhaustive-protocol">3. Exhaustive protocol</a></li>
+<li><a href="#4-decision-boundaries">4. Decision boundaries</a></li>
 <li><a href="#results">Results, interpretation, and limits</a></li>
+<li><a href="#1-numerical-closure">1. Numerical closure</a></li>
+<li><a href="#2-rule150-remains-the-hard-endpoint">2. Rule150 remains the hard endpoint</a></li>
+<li><a href="#3-theoretical-significance">3. Theoretical significance</a></li>
+<li><a href="#4-boundaries">4. Boundaries</a></li>
 </ul>
 </div>
 </nav>
-        <div class="sidebar-label experiment-label">All experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>Static Hard Conditioning versus Optimizer-Induced Function Transport</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-Bit Counterfactual Invariance</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>Prior-Consistent Function Dynamics and Width Intervention</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>Post-Fit Drift in the Mingard 2025 Boolean Protocol</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>Feature Learning When a Fixed NTK Is Already Sufficient</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>Loss-Conditioned Prior Annealing</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>Function-ID Wandering and Matched-Loss Static Controls</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>Shared Intermediate Computation under Finite Capacity</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>Long Training with 80% Hidden Label Noise</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>Raw-BCE Competition between Preregistered Simple and Complex Function Pairs</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule-30 Train/Validation Gradient Alignment across Dataset Size</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND Shortcut Static Geometry and a One-Example Balance Intervention</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>SGD Dynamics of the AND Shortcut and Balanced Intervention</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>Weighted Rule-Bit Function Switching across Loss Scales</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Complete Functions versus Marginal Concentration in Modular-97 Grokking</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity Reachability, Half-Space Generalization, and Scaffold Recovery</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>Static Deep-Loss Mass versus Optimizer Transport</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>Teacher-Free Consensus and Symbolic Readability</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>Full-Truth-Table Rule Volume</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Measure Closure between Full Rules, Fixed Datasets, and Margin Cores</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement Control and a Consensus Complexity Frontier</span></a><a class="experiment-nav-link active" href="e22.html"><span>E22</span><span>Per-Example Free Energy and an Information Invariant</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>Prospective Prediction from Full-Rule Volume to Data Transition</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>Deep Neural K Crossing of Parity4 and a One-Point Exception</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST Sample Complexity and Static Branch Prediction</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>Balanced Unlabeled MNIST Label Volume</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Agreement Before and During Grokking</span></a><a class="experiment-nav-link" href="e28.html"><span>E28</span><span>Whole-Network HMC versus Adam on 50k MNIST</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Loss-Resolved Robustness to a Dead Input Bit</span></a><a class="experiment-nav-link" href="e30.html"><span>E30</span><span>Weight Decay Reshapes the Static Complete-Function Landscape</span></a></nav>
+        <div class="sidebar-label experiment-label">All experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>Static Hard Conditioning versus Optimizer-Induced Function Transport</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-Bit Counterfactual Invariance</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>Prior-Consistent Function Dynamics and Width Intervention</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>Post-Fit Drift in the Mingard 2025 Boolean Protocol</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>Feature Learning When a Fixed NTK Is Already Sufficient</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>Loss-Conditioned Prior Annealing</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>Function-ID Wandering and Matched-Loss Static Controls</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>Shared Intermediate Computation under Finite Capacity</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>Long Training with 80% Hidden Label Noise</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>Raw-BCE Competition between Preregistered Simple and Complex Function Pairs</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule-30 Train/Validation Gradient Alignment across Dataset Size</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND Shortcut Static Geometry and a One-Example Balance Intervention</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>SGD Dynamics of the AND Shortcut and Balanced Intervention</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>Weighted Rule-Bit Function Switching across Loss Scales</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Complete Functions versus Marginal Concentration in Modular-97 Grokking</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity Reachability, Half-Space Generalization, and Scaffold Recovery</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>Static Deep-Loss Mass versus Optimizer Transport</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>Teacher-Free Consensus and Symbolic Readability</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>Full-Truth-Table Rule Volume</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Measure Closure between Full Rules, Fixed Datasets, and Margin Cores</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement Control and a Consensus Complexity Frontier</span></a><a class="experiment-nav-link active" href="e22.html"><span>E22</span><span>Per-Example Free Energy and an Information Invariant</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>Prospective Prediction from Full-Rule Volume to Data Transition</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>Deep Neural K Crossing of Parity4 and a One-Point Exception</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST Sample Complexity and Static Branch Prediction</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>Balanced Unlabeled MNIST Label Volume</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Agreement Before and During Grokking</span></a><a class="experiment-nav-link" href="e28.html"><span>E28</span><span>Whole-Network HMC versus Adam on 50k MNIST</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Loss-Resolved Robustness to a Dead Input Bit</span></a><a class="experiment-nav-link" href="e30.html"><span>E30</span><span>Weight Decay Reshapes the Static Complete-Function Landscape</span></a></nav><div class="sidebar-label experiment-label">Post-upload experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="../experiments/e31.html"><span>E31</span><span>Loss and output amplitude</span></a><a class="experiment-nav-link" href="../experiments/e32.html"><span>E32</span><span>Random-memory scaling</span></a><a class="experiment-nav-link" href="../experiments/e33.html"><span>E33</span><span>Cross-architecture output volume</span></a><a class="experiment-nav-link" href="../experiments/e34.html"><span>E34</span><span>Conditional rule duel</span></a><a class="experiment-nav-link" href="../experiments/e35.html"><span>E35</span><span>Frozen functions around grokking</span></a><a class="experiment-nav-link" href="../experiments/e36.html"><span>E36</span><span>Independent Peleg/G&amp;C recheck</span></a><a class="experiment-nav-link" href="../experiments/e37.html"><span>E37</span><span>Measure robustness and Gaussian alignment</span></a></nav>
       </div>
     </aside>
 
@@ -55,14 +66,78 @@
           <p class="article-description">Determine whether order-dependent per-example surprise sums to an order-independent complete-rule endpoint cost under one static measure.</p>
         </header>
         <div class="article-body"><div class="source-bar"><span>Scripts</span><div><a href="../../../experiments/experiment_22_static_free_energy_information/experiment_static_free_energy_information_invariant.py">experiment_static_free_energy_information_invariant.py</a></div></div><h2 id="overview">Experiment overview</h2>
-<p>The experiment stores logits from 2,097,152 prior 3-bit networks, evaluates all 6,561 partial label states, all 256 complete rules, and all 40,320 sample orders per rule. Hard-conditioned and multiple Gibbs-beta measures are computed together with Shapley allocations and microcanonical full-rule volumes.</p>
-<h2 id="motivation">Why this experiment was run</h2>
-<p>Earlier sequential-sample experiments found that each sample’s information contribution depended strongly on order. A coherent partition function predicts that increments are path dependent but their sum telescopes to one endpoint free-energy difference.</p>
+<h2 id="purpose">Purpose</h2>
+<p>E22 reframes the question "can the surprise of adding samples one at a time accumulate into rule difficulty" as a partition-function problem under a single static parameter measure. It exhaustively enumerates all partially labeled states of 3-bit inputs, all 256 complete rules, and all sample-addition orders, testing whether the step-by-step free-energy increments form a path-independent endpoint potential difference.</p>
+<h2 id="run">Run</h2>
+<pre><code class="language-bash">python experiment_static_free_energy_information_invariant.py
+</code></pre>
+<ul>
+<li><a href="#motivation">Motivation and criteria</a></li>
+<li><a href="#results">Results and boundaries</a></li>
+</ul>
+<h2 id="sha256">SHA256</h2>
+<pre><code class="language-text">8042df5e2818145ac3a8323c6343279efa5e2a11d01269c63071cdc125980514  script
+8a7d2eb7b02a133cf1fc1a77fa807044dee7c6cdabe9cc8179d51813d55e7a12  result ZIP
+</code></pre>
+<p>The raw ZIP is located at <code>E:\Downloads</code> and is not included in the release package.</p>
+<h2 id="motivation">Why this experiment was run, and how it was judged</h2>
+<h2 id="1-problem">1. Problem</h2>
+<p>Earlier per-sample experiments used committee disagreement on new labels to estimate information gain, but the single-step increment depends strongly on the sample order. Two objects must be distinguished: the surprise of each step may depend on the path, whereas the question is whether the cumulative cost of a complete rule admits an order invariant.</p>
+<h2 id="2-static-definition">2. Static definition</h2>
+<p>Fix the network protocol and the reference measure <code>mu</code>. For a partially labeled state <code>S</code>, define the mass or partition function <code>Z(S)</code>, and let</p>
+<div class="math-display">$$
+F(S)=-\log_2 Z(S).
+$$</div>
+<p>The generalized surprise of adding sample <code>i</code> is</p>
+<div class="math-display">$$
+\Delta I(i\mid S)=F(S\cup\{i\})-F(S)
+=-\log_2\frac{Z(S\cup\{i\})}{Z(S)}.
+$$</div>
+<p>If all states are defined by the same <code>Z</code>, then any addition order <code>pi</code> must satisfy</p>
+<div class="math-display">$$
+\sum_t\Delta I(\pi_t\mid S_{t-1})=F(D_f)-F(\varnothing).
+$$</div>
+<p>The single-step surprise and the stage averages may differ; the endpoint total must be identical. The Shapley average in turn gives a symmetric allocation of the endpoint cost to each sample.</p>
+<h2 id="3-exhaustive-protocol">3. Exhaustive protocol</h2>
+<ul>
+<li>Input space: 3 bit, 8 states in total;</li>
+<li>Partially labeled states: each point can be unlabeled/0/1, <code>3^8=6,561</code> in total;</li>
+<li>Complete rules: 256;</li>
+<li>Sample orders per rule: <code>8!=40,320</code>;</li>
+<li>prior samples: 2,097,152 networks;</li>
+<li>Compute both hard-conditioned and multiple Gibbs beta variants;</li>
+<li>Also store the complete-rule microcanonical volume, for later alignment with subsequent SMC volume curves.</li>
+</ul>
+<h2 id="4-decision-boundaries">4. Decision boundaries</h2>
+<p>The path invariant itself is a telescoping identity on the same partition function and should not be packaged as a new law. What the experiment actually checks is numerical closure, the rule-level differences in endpoint cost under the network reference measure, and whether the earlier per-sample information intuition can be placed into a self-consistent static state function. It does not predict the step-by-step path of real SGD.</p>
 <h2 id="results">Results, interpretation, and limits</h2>
-<p>Maximum path-invariance error was 2.84×10^-14 bits, stage-decomposition error 1.42×10^-14 bits, and Shapley-efficiency error 5.68×10^-14 bits. Rule 150/parity3 had hard endpoint cost about 29 bits and ranked hardest; under beta=1 it ranked second.</p>
-<p>The result connects per-example surprise, endpoint difficulty, <a href="https://proceedings.neurips.cc/paper_files/paper/2018/hash/3b712de48137572f3849aabd5666a4e3-Abstract.html" target="_blank" rel="noopener">prequential coding</a>, and the <a href="https://mlanthology.org/colt/1989/levin1989colt-statistical/" target="_blank" rel="noopener">Levin–Tishby–Solla statistical-mechanics framework</a>.</p>
-<p><strong>Conclusion.</strong> Generalized surprise is a difference of one static potential and totals are path independent. This algebraic closure does not imply that real SGD is a Gibbs/Bayesian sampler or that its trajectory conserves the same quantity.</p>
-<figure class="result-figure"><a href="../../assets/figures/e22_free_energy.png" target="_blank" rel="noopener"><img src="../../assets/figures/e22_free_energy.png" alt="Representative static free-energy endpoint costs" loading="lazy"></a><figcaption>Representative static free-energy endpoint costs</figcaption></figure></div>
+<h2 id="1-numerical-closure">1. Numerical closure</h2>
+<p>All 2,097,152 prior samples, 6,561 partial states, 256 rules, and 40,320 orders per rule were completed.</p>
+<pre><code class="language-text">max path-invariance error       = 2.84e-14 bit
+max stage-decomposition error   = 1.42e-14 bit
+max Shapley-efficiency error    = 5.68e-14 bit
+hard predictive normalization  = 1.89e-15
+beta=1 normalization error      = 6.10e-08
+</code></pre>
+<p>Therefore, the per-sample generalized surprise is indeed a difference of the same static potential function; different orders redistribute the cost of each step, but the total cost is strictly equal to the complete-rule endpoint free energy.</p>
+<figure class="result-figure"><a href="../../assets/figures/e22_free_energy.png" target="_blank" rel="noopener"><img src="../../assets/figures/e22_free_energy.png" alt="Static free-energy cost of representative rules" loading="lazy"></a><figcaption>Static free-energy cost of representative rules</figcaption></figure>
+<h2 id="2-rule150-remains-the-hard-endpoint">2. Rule150 remains the hard endpoint</h2>
+<p>Rule150 is 3-bit parity. Under the hard-conditioned variant, its complete-rule cost is about 29.0000007 bit, ranking hardest among the 256 rules; under the <code>beta=1</code> Gibbs variant the cost is about 8.0625 bit, ranking second. This reproduces the direction of parity difficulty seen in the earlier per-sample heuristic, but the total no longer depends on the addition order.</p>
+<h2 id="3-theoretical-significance">3. Theoretical significance</h2>
+<p>E22 establishes a strict relationship among three objects:</p>
+<ol>
+<li>the predictive branch mass on the current training set;</li>
+<li>the generalized surprise of a new sample;</li>
+<li>the endpoint free energy or code length of a complete rule.</li>
+</ol>
+<p>It provides a common language for <a href="https://proceedings.neurips.cc/paper_files/paper/2018/hash/3b712de48137572f3849aabd5666a4e3-Abstract.html" target="_blank" rel="noopener">the prequential coding of Blier and Ollivier (2018)</a>, Bayesian evidence, and <a href="https://mlanthology.org/colt/1989/levin1989colt-statistical/" target="_blank" rel="noopener">the statistical-mechanics partition function of Levin, Tishby, and Solla (1989)</a>, and it also shows that agreement and surprise can be understood as two facets of function-ensemble condensation and free-energy increments.</p>
+<h2 id="4-boundaries">4. Boundaries</h2>
+<ul>
+<li>The invariant belongs to a static reference measure; it does not imply that SGD is a Gibbs sampler;</li>
+<li>The information content of each step still depends on the addition order; only the endpoint total and the Shapley average possess the corresponding invariance;</li>
+<li>Endpoint difficulty depends on the network, parameterization, input encoding, loss, and reference measure; it is not a machine-independent K complexity;</li>
+<li>The 3-bit exhaustion confirms the mathematical closure, but cannot by itself prove quantitative extrapolation to large networks.</li>
+</ul></div>
         <footer class="experiment-pager"><a href="e21.html">← E21 Agreement Control and a Consensus Complexity Frontier</a><a href="e23.html">E23 Prospective Prediction from Full-Rule Volume to Data Transition →</a></footer>
       </article>
     </main>

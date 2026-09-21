@@ -23,7 +23,7 @@
         <span class="mark-block">NK</span>
         <span class="mark-text">Neural K Research Archive</span>
       </a>
-      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="../index.html">Research</a><a class="top-link" href="../theory-core.html">Core Theory</a><a class="top-link active" href="../experiments/index.html">Experiments</a><a class="top-link" href="../references.html">References</a><a class="top-link" href="../evidence-ledger.html">Evidence</a></nav>
+      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="../index.html">Research</a><a class="top-link" href="../theory-core.html">Core Theory</a><a class="top-link active" href="../experiments/index.html">Experiments</a><a class="top-link" href="../post-upload.html">Updates</a><a class="top-link" href="../references.html">References</a><a class="top-link" href="../evidence-ledger.html">Evidence</a></nav>
       <nav class="language-switch" aria-label="Language"><a href="../../experiments/e21.html" lang="zh-CN">中文</a><span class="active" lang="en">EN</span></nav>
       <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
         <span aria-hidden="true">☰</span><span>Contents</span>
@@ -38,12 +38,23 @@
         <nav class="toc"><div class="toc">
 <ul>
 <li><a href="#overview">Experiment overview</a></li>
-<li><a href="#motivation">Why this experiment was run</a></li>
+<li><a href="#purpose">Purpose</a></li>
+<li><a href="#files-and-run-order">Files and run order</a></li>
+<li><a href="#sha256">SHA256</a></li>
+<li><a href="#motivation">Why this experiment was run, and how it was judged</a></li>
+<li><a href="#1-what-agreement-can-tell-us">1. What agreement can tell us</a></li>
+<li><a href="#2-three-greedy-branches">2. Three greedy branches</a></li>
+<li><a href="#3-complexity-frontier">3. Complexity frontier</a></li>
+<li><a href="#4-limits">4. Limits</a></li>
 <li><a href="#results">Results, interpretation, and limits</a></li>
+<li><a href="#1-agreement-can-be-causally-controlled-by-label-selection">1. Agreement can be causally controlled by label selection</a></li>
+<li><a href="#2-longer-anti-prefixes-raise-the-cost-of-re-condensation">2. Longer anti prefixes raise the cost of re-condensation</a></li>
+<li><a href="#3-stable-endpoint-complexity-forms-a-clear-frontier">3. Stable-endpoint complexity forms a clear frontier</a></li>
+<li><a href="#4-verdict">4. Verdict</a></li>
 </ul>
 </div>
 </nav>
-        <div class="sidebar-label experiment-label">All experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>Static Hard Conditioning versus Optimizer-Induced Function Transport</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-Bit Counterfactual Invariance</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>Prior-Consistent Function Dynamics and Width Intervention</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>Post-Fit Drift in the Mingard 2025 Boolean Protocol</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>Feature Learning When a Fixed NTK Is Already Sufficient</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>Loss-Conditioned Prior Annealing</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>Function-ID Wandering and Matched-Loss Static Controls</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>Shared Intermediate Computation under Finite Capacity</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>Long Training with 80% Hidden Label Noise</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>Raw-BCE Competition between Preregistered Simple and Complex Function Pairs</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule-30 Train/Validation Gradient Alignment across Dataset Size</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND Shortcut Static Geometry and a One-Example Balance Intervention</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>SGD Dynamics of the AND Shortcut and Balanced Intervention</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>Weighted Rule-Bit Function Switching across Loss Scales</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Complete Functions versus Marginal Concentration in Modular-97 Grokking</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity Reachability, Half-Space Generalization, and Scaffold Recovery</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>Static Deep-Loss Mass versus Optimizer Transport</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>Teacher-Free Consensus and Symbolic Readability</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>Full-Truth-Table Rule Volume</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Measure Closure between Full Rules, Fixed Datasets, and Margin Cores</span></a><a class="experiment-nav-link active" href="e21.html"><span>E21</span><span>Agreement Control and a Consensus Complexity Frontier</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>Per-Example Free Energy and an Information Invariant</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>Prospective Prediction from Full-Rule Volume to Data Transition</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>Deep Neural K Crossing of Parity4 and a One-Point Exception</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST Sample Complexity and Static Branch Prediction</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>Balanced Unlabeled MNIST Label Volume</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Agreement Before and During Grokking</span></a><a class="experiment-nav-link" href="e28.html"><span>E28</span><span>Whole-Network HMC versus Adam on 50k MNIST</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Loss-Resolved Robustness to a Dead Input Bit</span></a><a class="experiment-nav-link" href="e30.html"><span>E30</span><span>Weight Decay Reshapes the Static Complete-Function Landscape</span></a></nav>
+        <div class="sidebar-label experiment-label">All experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>Static Hard Conditioning versus Optimizer-Induced Function Transport</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-Bit Counterfactual Invariance</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>Prior-Consistent Function Dynamics and Width Intervention</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>Post-Fit Drift in the Mingard 2025 Boolean Protocol</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>Feature Learning When a Fixed NTK Is Already Sufficient</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>Loss-Conditioned Prior Annealing</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>Function-ID Wandering and Matched-Loss Static Controls</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>Shared Intermediate Computation under Finite Capacity</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>Long Training with 80% Hidden Label Noise</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>Raw-BCE Competition between Preregistered Simple and Complex Function Pairs</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule-30 Train/Validation Gradient Alignment across Dataset Size</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND Shortcut Static Geometry and a One-Example Balance Intervention</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>SGD Dynamics of the AND Shortcut and Balanced Intervention</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>Weighted Rule-Bit Function Switching across Loss Scales</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Complete Functions versus Marginal Concentration in Modular-97 Grokking</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity Reachability, Half-Space Generalization, and Scaffold Recovery</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>Static Deep-Loss Mass versus Optimizer Transport</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>Teacher-Free Consensus and Symbolic Readability</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>Full-Truth-Table Rule Volume</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Measure Closure between Full Rules, Fixed Datasets, and Margin Cores</span></a><a class="experiment-nav-link active" href="e21.html"><span>E21</span><span>Agreement Control and a Consensus Complexity Frontier</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>Per-Example Free Energy and an Information Invariant</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>Prospective Prediction from Full-Rule Volume to Data Transition</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>Deep Neural K Crossing of Parity4 and a One-Point Exception</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST Sample Complexity and Static Branch Prediction</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>Balanced Unlabeled MNIST Label Volume</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Agreement Before and During Grokking</span></a><a class="experiment-nav-link" href="e28.html"><span>E28</span><span>Whole-Network HMC versus Adam on 50k MNIST</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Loss-Resolved Robustness to a Dead Input Bit</span></a><a class="experiment-nav-link" href="e30.html"><span>E30</span><span>Weight Decay Reshapes the Static Complete-Function Landscape</span></a></nav><div class="sidebar-label experiment-label">Post-upload experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="../experiments/e31.html"><span>E31</span><span>Loss and output amplitude</span></a><a class="experiment-nav-link" href="../experiments/e32.html"><span>E32</span><span>Random-memory scaling</span></a><a class="experiment-nav-link" href="../experiments/e33.html"><span>E33</span><span>Cross-architecture output volume</span></a><a class="experiment-nav-link" href="../experiments/e34.html"><span>E34</span><span>Conditional rule duel</span></a><a class="experiment-nav-link" href="../experiments/e35.html"><span>E35</span><span>Frozen functions around grokking</span></a><a class="experiment-nav-link" href="../experiments/e36.html"><span>E36</span><span>Independent Peleg/G&amp;C recheck</span></a><a class="experiment-nav-link" href="../experiments/e37.html"><span>E37</span><span>Measure robustness and Gaussian alignment</span></a></nav>
       </div>
     </aside>
 
@@ -55,13 +66,147 @@
           <p class="article-description">Turn agreement from a passive statistic into an intervention tool that can induce concentration or preserve competing extensions.</p>
         </header>
         <div class="article-body"><div class="source-bar"><span>Scripts</span><div><a href="../../../experiments/experiment_21_agreement_complexity_frontier/experiment_adversarial_disagreement_completion_pilot.py">experiment_adversarial_disagreement_completion_pilot.py</a><a href="../../../experiments/experiment_21_agreement_complexity_frontier/experiment_consensus_complexity_frontier.py">experiment_consensus_complexity_frontier.py</a></div></div><h2 id="overview">Experiment overview</h2>
-<p>Starting from random balanced n=8 datasets, each round queries the unseen input with committee prediction closest to 50:50. Paired branches are retrained under labels zero and one. Anti-consensus chooses the lower-agreement branch, pro-consensus the higher-agreement branch, and a random-label control chooses randomly among fit branches. Longer anti prefixes are later switched to pro completion and audited with 512 fresh seeds.</p>
-<h2 id="motivation">Why this experiment was run</h2>
-<p>The design is related to <a href="https://doi.org/10.1145/130385.130417" target="_blank" rel="noopener">Query by Committee</a>, but the committee is an empirical neural function ensemble. It tests whether disagreement is causally informative and whether longer resistance to concentration leads to more complex final functions.</p>
+<h2 id="purpose">Purpose</h2>
+<p>E21 turns agreement from a passive statistic into a training-set intervention tool: it repeatedly queries the unseen input on which the current committee disagrees most, tries both labels separately, and chooses the branch that makes the function distribution contract faster or slower. It then uses a long anti-consensus prefix to exclude the early simple attractors layer by layer, before switching to pro-consensus so that the distribution re-condenses, and measures how the symbolic complexity of the stable endpoint changes.</p>
+<h2 id="files-and-run-order">Files and run order</h2>
+<pre><code class="language-bash">python experiment_adversarial_disagreement_completion_pilot.py
+python experiment_consensus_complexity_frontier.py
+</code></pre>
+<ul>
+<li><a href="#motivation">Experiment motivation and criteria</a></li>
+<li><a href="#results">Results and limits</a></li>
+</ul>
+<h2 id="sha256">SHA256</h2>
+<pre><code class="language-text">3cbe4dbeeb24aa45215d3710ec85419e117d2317f28aa2316371b855683bf9fe  adversarial pilot script
+1a0d1c21c6df3396bf035852ce361eabf29c4709abfa74d35830a3d241a71a82  frontier script
+91cb0db9c2d595cb205785af6624f18fc0dbb60abff370db424eee08e276878e  pilot ZIP
+8b917a33aa9b2aaf1606e0808e964d2fb4ec6689049353be4de556509506aa87  frontier ZIP
+</code></pre>
+<p>The raw ZIPs are located in <code>E:\Downloads</code> and are not included in the release package.</p>
+<h2 id="motivation">Why this experiment was run, and how it was judged</h2>
+<h2 id="1-what-agreement-can-tell-us">1. What agreement can tell us</h2>
+<p>For a fixed training protocol, high agreement of multiple seeds on unseen inputs indicates that the empirical function distribution is concentrated; it does not rely on the researcher knowing the teacher, so it can be used on data of unknown meaning. Low agreement only shows that extension competition remains; on its own it cannot distinguish insufficient data, label noise, optimization inaccessibility, or a multimodal landscape.</p>
+<p>High pointwise agreement still does not guarantee that the full function has settled, so the experiment also reports:</p>
+<ul>
+<li>unseen pairwise agreement;</li>
+<li>vote entropy;</li>
+<li>exact modal full-function mass;</li>
+<li>0.5% Hamming ball mass;</li>
+<li>fresh-seed fit rate.</li>
+</ul>
+<h2 id="2-three-greedy-branches">2. Three greedy branches</h2>
+<p>Starting from a random balanced n=8 training set, each round selects the unseen input on which the current committee's prediction is closest to 50:50; this shares the basic idea of "using version-space disagreement to select queries" with <a href="https://doi.org/10.1145/130385.130417" target="_blank" rel="noopener">Query by Committee by Seung, Opper, and Sompolinsky (1992)</a>. For labels 0/1, strictly paired initializations are trained from scratch separately:</p>
+<ul>
+<li>anti-consensus: choose the branch with lower final global agreement;</li>
+<li>pro-consensus: choose the branch with higher agreement;</li>
+<li>random-label: choose randomly among the fittable branches.</li>
+</ul>
+<p>Label selection does not read any symbolic complexity. The formal pilot uses 8-bit, 16 starting points, 64-seed discovery, and 512 fresh-seed audits, extending to n=24.</p>
+<h2 id="3-complexity-frontier">3. Complexity frontier</h2>
+<p>Sixteen anti trunks are shared, with frozen snapshots at <code>n=8,16,24,32,48,64</code>; each snapshot switches to pro completion, adding at most 32 samples until the discovery stage reaches a narrow posterior, and is then audited with 512 fresh seeds. Only fresh-narrow endpoints enter the symbolic complexity analysis.</p>
+<p>The pre-registered proxies include essential variables, ANF, decision tree, ROBDD, and linear threshold audits. Quadratic polynomial threshold is a post-hoc audit added after seeing the unexplained candidates and must be marked separately.</p>
+<h2 id="4-limits">4. Limits</h2>
+<ul>
+<li>pro/anti are greedy at each step and do not guarantee a globally optimal data sequence;</li>
+<li>high agreement does not equal external correctness;</li>
+<li>the pointwise majority function of a wide function distribution cannot be used for a stable program-complexity verdict;</li>
+<li>"readable" means that a short, extractable symbolic program exists; it does not mean a human can spot it at a glance;</li>
+<li>the current conclusions are limited to 8-bit tanh MLPs.</li>
+</ul>
 <h2 id="results">Results, interpretation, and limits</h2>
-<p>At n=24, median unseen agreement was about 0.970 for anti, 0.999 for pro, and 0.976 for random. Under a strict narrow-posterior criterion, 15/16 pro paths concentrated, while 0/16 anti and 0/16 random paths did. Stable pro endpoints were linear threshold functions.</p>
-<p>Across 96 anti-prefix/pro-completion endpoints, 80 passed fresh narrowness. Longer anti prefixes required more pro examples and increased essential-variable, ANF, ROBDD, and quadratic-threshold complexity. All 80 narrow endpoints were representable by degree-at-most-two polynomial thresholds, whereas none of 64 random balanced functions were.</p>
-<p><strong>Conclusion.</strong> Labels chosen at high-disagreement inputs can causally control concentration and trace a symbolic complexity frontier. The procedure is greedy, agreement is not truth, and quadratic-PTF unification was discovered post hoc.</p></div>
+<h2 id="1-agreement-can-be-causally-controlled-by-label-selection">1. Agreement can be causally controlled by label selection</h2>
+<p>Fresh-seed endpoints of the 16 8-bit starting points:</p>
+<table>
+<thead>
+<tr>
+<th>strategy</th>
+<th style="text-align: right;">unseen agreement</th>
+<th style="text-align: right;">vote entropy</th>
+<th style="text-align: right;">exact modal median</th>
+<th style="text-align: right;">0.5% ball mass</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>anti</td>
+<td style="text-align: right;">0.96977</td>
+<td style="text-align: right;">0.06913</td>
+<td style="text-align: right;">0.01563</td>
+<td style="text-align: right;">0.04883</td>
+</tr>
+<tr>
+<td>pro</td>
+<td style="text-align: right;">0.99904</td>
+<td style="text-align: right;">0.00259</td>
+<td style="text-align: right;">0.99902</td>
+<td style="text-align: right;">1.00000</td>
+</tr>
+<tr>
+<td>random</td>
+<td style="text-align: right;">0.97599</td>
+<td style="text-align: right;">0.05575</td>
+<td style="text-align: right;">0.04590</td>
+<td style="text-align: right;">0.15625</td>
+</tr>
+</tbody>
+</table>
+<p>anti is below pro in 16/16, fair sign probability <code>1.53e-5</code>; anti is below random in 12/16. Under the narrow-posterior threshold: anti 0/16, pro 15/16, random 0/16. Anti does not make agreement drop absolutely every round; rather, when both labels could contract, it chooses the one that contracts more slowly.</p>
+<p>Of the 15 stable pro functions, post-run LP audit found 15/15 to be general linear thresholds, of which 7 are equal-weight signed thresholds and 8 are small-integer weighted thresholds. The only path that failed the linear audit is also exactly the only one that did not reach a narrow posterior, so it cannot serve as a stable complex counterexample.</p>
+<h2 id="2-longer-anti-prefixes-raise-the-cost-of-re-condensation">2. Longer anti prefixes raise the cost of re-condensation</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">anti cutoff</th>
+<th style="text-align: right;">fresh narrow/16</th>
+<th style="text-align: right;">median extra pro samples</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">6.5</td>
+</tr>
+<tr>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">5.5</td>
+</tr>
+<tr>
+<td style="text-align: right;">24</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">8.5</td>
+</tr>
+<tr>
+<td style="text-align: right;">32</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">10.0</td>
+</tr>
+<tr>
+<td style="text-align: right;">48</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">17.0</td>
+</tr>
+<tr>
+<td style="text-align: right;">64</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">15.0</td>
+</tr>
+</tbody>
+</table>
+<p>Across the 80 fresh-narrow endpoints, the Spearman between cutoff and the number of extra pro samples is 0.433, <code>p=6e-5</code>.</p>
+<h2 id="3-stable-endpoint-complexity-forms-a-clear-frontier">3. Stable-endpoint complexity forms a clear frontier</h2>
+<p>From cutoff 8 to 64: mean essential variables rose from 5.06 to 7.91, median ANF terms from 24 to 100, and median ROBDD nodes from 10 to 29. The Spearmans with cutoff are about 0.786, 0.662, and 0.777 respectively, all highly significant; among the 11 jointly surviving paired starting points, all three measures increased in 11/11.</p>
+<p>The proportion of general linear thresholds fell from 100% to 0%. Of the 31 candidates not explained by the pre-registered languages, the post-hoc quadratic PTF audit found 31/31 exactly representable; all 80 narrow endpoints are PTFs of degree no higher than 2, whereas 0/64 of the 64 random balanced functions belong to this family. The median number of quadratic support terms rose with cutoff from 6.5 to 31.</p>
+<h2 id="4-verdict">4. Verdict</h2>
+<p>E21 shows:</p>
+<ol>
+<li>the training-set label path can systematically control the condensation speed of the function distribution;</li>
+<li>maximally disagreed samples have high intervention value, but the label direction decides whether to contract or to maintain competition;</li>
+<li>after excluding huge simple basins layer by layer, the samples needed for re-condensation and the endpoint program complexity rise together;</li>
+<li>no high-consensus random lookup table was observed; instead, a complexity frontier from sparse linear to denser quadratic thresholds was obtained.</li>
+</ol>
+<p>It does not prove that all high-consensus functions are human-readable; quadratic PTF is a post-hoc unifying finding. The more accurate empirical conclusion is: under the current protocol, the mappings that can induce stable full-function consensus with few samples remain highly structured, and the data budget needed for agreement convergence can serve as an operational cue of protocol-relative complexity.</p></div>
         <footer class="experiment-pager"><a href="e20.html">← E20 Measure Closure between Full Rules, Fixed Datasets, and Margin Cores</a><a href="e22.html">E22 Per-Example Free Energy and an Information Invariant →</a></footer>
       </article>
     </main>

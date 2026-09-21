@@ -23,7 +23,7 @@
         <span class="mark-block">NK</span>
         <span class="mark-text">Neural K Research Archive</span>
       </a>
-      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="../index.html">Research</a><a class="top-link" href="../theory-core.html">Core Theory</a><a class="top-link active" href="../experiments/index.html">Experiments</a><a class="top-link" href="../references.html">References</a><a class="top-link" href="../evidence-ledger.html">Evidence</a></nav>
+      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="../index.html">Research</a><a class="top-link" href="../theory-core.html">Core Theory</a><a class="top-link active" href="../experiments/index.html">Experiments</a><a class="top-link" href="../post-upload.html">Updates</a><a class="top-link" href="../references.html">References</a><a class="top-link" href="../evidence-ledger.html">Evidence</a></nav>
       <nav class="language-switch" aria-label="Language"><a href="../../experiments/e26.html" lang="zh-CN">中文</a><span class="active" lang="en">EN</span></nav>
       <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
         <span aria-hidden="true">☰</span><span>Contents</span>
@@ -38,12 +38,23 @@
         <nav class="toc"><div class="toc">
 <ul>
 <li><a href="#overview">Experiment overview</a></li>
-<li><a href="#motivation">Why this experiment was run</a></li>
+<li><a href="#objective">Objective</a></li>
+<li><a href="#entry-points">Entry points</a></li>
+<li><a href="#frozen-sources">Frozen sources</a></li>
+<li><a href="#upload-boundary">Upload boundary</a></li>
+<li><a href="#motivation">Why this experiment was run, and how it was judged</a></li>
+<li><a href="#1-question">1. Question</a></li>
+<li><a href="#2-preventing-label-leakage">2. Preventing label leakage</a></li>
+<li><a href="#3-verdict">3. Verdict</a></li>
 <li><a href="#results">Results, interpretation, and limits</a></li>
+<li><a href="#1-frozen-problem">1. Frozen problem</a></li>
+<li><a href="#2-two-blind-test-panels">2. Two blind-test panels</a></li>
+<li><a href="#3-conclusion">3. Conclusion</a></li>
+<li><a href="#4-files">4. Files</a></li>
 </ul>
 </div>
 </nav>
-        <div class="sidebar-label experiment-label">All experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>Static Hard Conditioning versus Optimizer-Induced Function Transport</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-Bit Counterfactual Invariance</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>Prior-Consistent Function Dynamics and Width Intervention</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>Post-Fit Drift in the Mingard 2025 Boolean Protocol</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>Feature Learning When a Fixed NTK Is Already Sufficient</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>Loss-Conditioned Prior Annealing</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>Function-ID Wandering and Matched-Loss Static Controls</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>Shared Intermediate Computation under Finite Capacity</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>Long Training with 80% Hidden Label Noise</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>Raw-BCE Competition between Preregistered Simple and Complex Function Pairs</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule-30 Train/Validation Gradient Alignment across Dataset Size</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND Shortcut Static Geometry and a One-Example Balance Intervention</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>SGD Dynamics of the AND Shortcut and Balanced Intervention</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>Weighted Rule-Bit Function Switching across Loss Scales</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Complete Functions versus Marginal Concentration in Modular-97 Grokking</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity Reachability, Half-Space Generalization, and Scaffold Recovery</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>Static Deep-Loss Mass versus Optimizer Transport</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>Teacher-Free Consensus and Symbolic Readability</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>Full-Truth-Table Rule Volume</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Measure Closure between Full Rules, Fixed Datasets, and Margin Cores</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement Control and a Consensus Complexity Frontier</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>Per-Example Free Energy and an Information Invariant</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>Prospective Prediction from Full-Rule Volume to Data Transition</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>Deep Neural K Crossing of Parity4 and a One-Point Exception</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST Sample Complexity and Static Branch Prediction</span></a><a class="experiment-nav-link active" href="e26.html"><span>E26</span><span>Balanced Unlabeled MNIST Label Volume</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Agreement Before and During Grokking</span></a><a class="experiment-nav-link" href="e28.html"><span>E28</span><span>Whole-Network HMC versus Adam on 50k MNIST</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Loss-Resolved Robustness to a Dead Input Bit</span></a><a class="experiment-nav-link" href="e30.html"><span>E30</span><span>Weight Decay Reshapes the Static Complete-Function Landscape</span></a></nav>
+        <div class="sidebar-label experiment-label">All experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>Static Hard Conditioning versus Optimizer-Induced Function Transport</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-Bit Counterfactual Invariance</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>Prior-Consistent Function Dynamics and Width Intervention</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>Post-Fit Drift in the Mingard 2025 Boolean Protocol</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>Feature Learning When a Fixed NTK Is Already Sufficient</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>Loss-Conditioned Prior Annealing</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>Function-ID Wandering and Matched-Loss Static Controls</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>Shared Intermediate Computation under Finite Capacity</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>Long Training with 80% Hidden Label Noise</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>Raw-BCE Competition between Preregistered Simple and Complex Function Pairs</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule-30 Train/Validation Gradient Alignment across Dataset Size</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND Shortcut Static Geometry and a One-Example Balance Intervention</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>SGD Dynamics of the AND Shortcut and Balanced Intervention</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>Weighted Rule-Bit Function Switching across Loss Scales</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Complete Functions versus Marginal Concentration in Modular-97 Grokking</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity Reachability, Half-Space Generalization, and Scaffold Recovery</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>Static Deep-Loss Mass versus Optimizer Transport</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>Teacher-Free Consensus and Symbolic Readability</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>Full-Truth-Table Rule Volume</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Measure Closure between Full Rules, Fixed Datasets, and Margin Cores</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement Control and a Consensus Complexity Frontier</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>Per-Example Free Energy and an Information Invariant</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>Prospective Prediction from Full-Rule Volume to Data Transition</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>Deep Neural K Crossing of Parity4 and a One-Point Exception</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST Sample Complexity and Static Branch Prediction</span></a><a class="experiment-nav-link active" href="e26.html"><span>E26</span><span>Balanced Unlabeled MNIST Label Volume</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Agreement Before and During Grokking</span></a><a class="experiment-nav-link" href="e28.html"><span>E28</span><span>Whole-Network HMC versus Adam on 50k MNIST</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Loss-Resolved Robustness to a Dead Input Bit</span></a><a class="experiment-nav-link" href="e30.html"><span>E30</span><span>Weight Decay Reshapes the Static Complete-Function Landscape</span></a></nav><div class="sidebar-label experiment-label">Post-upload experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="../experiments/e31.html"><span>E31</span><span>Loss and output amplitude</span></a><a class="experiment-nav-link" href="../experiments/e32.html"><span>E32</span><span>Random-memory scaling</span></a><a class="experiment-nav-link" href="../experiments/e33.html"><span>E33</span><span>Cross-architecture output volume</span></a><a class="experiment-nav-link" href="../experiments/e34.html"><span>E34</span><span>Conditional rule duel</span></a><a class="experiment-nav-link" href="../experiments/e35.html"><span>E35</span><span>Frozen functions around grokking</span></a><a class="experiment-nav-link" href="../experiments/e36.html"><span>E36</span><span>Independent Peleg/G&amp;C recheck</span></a><a class="experiment-nav-link" href="../experiments/e37.html"><span>E37</span><span>Measure robustness and Gaussian alignment</span></a></nav>
       </div>
     </aside>
 
@@ -55,12 +66,160 @@
           <p class="article-description">Test whether low-loss parameter volume can blindly recover the natural MNIST 0/1 grouping among all 126 balanced labelings.</p>
         </header>
         <div class="article-body"><div class="source-bar"><span>Scripts</span><div><a href="../../../experiments/experiment_26_mnist_balanced_label_volume/experiment_mnist_unlabeled_label_volume.py">experiment_mnist_unlabeled_label_volume.py</a></div></div><h2 id="overview">Experiment overview</h2>
-<p>Each evaluation panel contains five zeros and five ones. One image is anchored to label zero, and all candidate assignments must remain 5:5 balanced. The 126 candidates share paired Gaussian-prior particles under a 49-to-32-to-1 tanh MLP. Calibration and the two blinded evaluation panels use disjoint images.</p>
-<h2 id="motivation">Why this experiment was run</h2>
-<p>Random-label experiments show that networks can fit both natural and arbitrary labels. E26 asks a different question: when fit is possible for every balanced assignment, which labeling retains the most low-loss parameter mass? All candidate volumes are written and hashed before the natural labels are revealed.</p>
+<h2 id="objective">Objective</h2>
+<p>Test whether, knowing only that the task is binary, that the class ratio is 5:5,
+and one labeled anchor, the low-loss parameter volume can blindly select the
+natural digit 0/1 partition among 126 candidate label assignments.</p>
+<h2 id="entry-points">Entry points</h2>
+<ul>
+<li>experiment_mnist_unlabeled_label_volume.py</li>
+<li>MOTIVATION_AND_PREREGISTRATION.md</li>
+<li>RESULTS_AND_CONCLUSION.md</li>
+</ul>
+<p>The script requires local MNIST IDX files, with the default directory
+/root/mnist_dataset. The output directory can be overridden with
+NSP_MNIST_LABEL_VOLUME_RESULT_DIR.</p>
+<h2 id="frozen-sources">Frozen sources</h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Development-version source</th>
+<th>SHA256</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>experiment_mnist_unlabeled_label_volume.py</td>
+<td>research/consensus_symbolicity/experiment_mnist_unlabeled_label_volume.py</td>
+<td>1b1d34211b669d0c70c21fdb0345e8df75f048bc2ec94d9ae9664da5e092bee6</td>
+</tr>
+</tbody>
+</table>
+<p>The local raw result package is results_mnist_unlabeled_label_volume_package.zip, SHA256:
+86b8f81f375509d4bcc44086aefa708fdd5639e0c3c8e175a01f6b1413ee72ec.
+The raw ZIP is not included in the release package.</p>
+<h2 id="upload-boundary">Upload boundary</h2>
+<p>This unit only includes the balanced-candidate experiment with 5 zeros and 5 ones.
+The follow-up 512-candidate experiment that removes the class-ratio constraint,
+and its deep-tail follow-up, are not part of this upload.</p>
+<h2 id="motivation">Why this experiment was run, and how it was judged</h2>
+<h2 id="1-question">1. Question</h2>
+<p>The 2017 random-label experiment showed that networks can fit both natural labels
+and random labels. E26 does the reverse: it fixes ten unlabeled images and compares
+the low-loss parameter volume of all feasible balanced label assignments under the
+same architecture and reference measure.</p>
+<p>Each panel contains 5 images of digit 0 and 5 images of digit 1. The first image is
+fixed to label 0, the remaining labels are unknown, and candidates must keep the
+5:5 ratio, so there are C(9,4)=126 partitions.</p>
+<h2 id="2-preventing-label-leakage">2. Preventing label leakage</h2>
+<p>SGD and SMC calibration use independent panels. The two formal evaluation panels
+complete the writing of all candidate volumes to disk and compute their SHA256
+while the true labels are still hidden; only afterwards is the natural partition
+revealed and ranked.</p>
+<h2 id="3-verdict">3. Verdict</h2>
+<p>If the natural partition becomes top1 at the reliable shared loss levels of both
+independent panels, and its normalized volume mass rises systematically as loss
+decreases, this supports the claim that the network's static geometry prefers the
+natural digit grouping.</p>
+<p>Failure cannot be automatically attributed to the sampler; it could also indicate
+that the current preprocessing or architecture prefers other partitions, such as
+brightness or position. Success applies only to the protocol with a known binary
+task, a 5:5 ratio, and one anchor; it does not amount to fully unsupervised
+clustering.</p>
 <h2 id="results">Results, interpretation, and limits</h2>
-<p>At BCE 0.8 the natural split ranked last in both panels. At 0.6 it became top one in both; its mean normalized mass then rose to 0.9743 at 0.4 and 0.99972 at 0.3. Volume-weighted expected hidden-label accuracy reached 0.99994.</p>
-<p><strong>Conclusion.</strong> Under a fixed class count, 5:5 balance constraint, one anchor, preprocessing, architecture, and Gaussian reference measure, the natural digit split changes from least favored to overwhelmingly dominant as loss is tightened. This is not unconstrained unsupervised learning.</p></div>
+<h2 id="1-frozen-problem">1. Frozen problem</h2>
+<p>Each formal panel contains 5 images of digit 0 and 5 images of digit 1. The first
+image is fixed to label 0, the remaining labels are unknown, but candidate
+partitions must keep the 5:5 ratio, so there are C(9,4)=126 candidates. The true
+digit labels stay hidden until all static volumes have been written to disk and
+their SHA256 computed.</p>
+<p>The network is a 49-&gt;32-&gt;1 tanh MLP; the inputs are MNIST images fixedly
+downsampled to 7x7 and mapped to [-1,1]; the parameter reference measure is the
+standard Gaussian, and SMC mutation uses a pCN proposal that preserves this
+measure. The calibration panel and the two formal evaluation panels do not
+overlap.</p>
+<h2 id="2-two-blind-test-panels">2. Two blind-test panels</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">loss threshold</th>
+<th style="text-align: right;">panels where natural partition is top1</th>
+<th style="text-align: right;">median rank of natural partition</th>
+<th style="text-align: right;">mean volume mass of natural partition</th>
+<th style="text-align: right;">volume-weighted expected label accuracy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">0.8</td>
+<td style="text-align: right;">0/2</td>
+<td style="text-align: right;">126</td>
+<td style="text-align: right;">0.00723</td>
+<td style="text-align: right;">0.5534</td>
+</tr>
+<tr>
+<td style="text-align: right;">0.6</td>
+<td style="text-align: right;">2/2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.11858</td>
+<td style="text-align: right;">0.7198</td>
+</tr>
+<tr>
+<td style="text-align: right;">0.4</td>
+<td style="text-align: right;">2/2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.97427</td>
+<td style="text-align: right;">0.9945</td>
+</tr>
+<tr>
+<td style="text-align: right;">0.3</td>
+<td style="text-align: right;">2/2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.99972</td>
+<td style="text-align: right;">0.99994</td>
+</tr>
+</tbody>
+</table>
+<p>At shallow loss levels, the natural labeling even ranks last in both panels; as
+loss decreases, it simultaneously overtakes all 125 balanced competing partitions
+in both independent panels, and at the 0.3 level it occupies about 99.97% of the
+normalized volume mass.</p>
+<p>The natural candidate ID is 22 in panel 1 and 57 in panel 2. The SHA256 values of
+the two unscored volume tables are:</p>
+<ul>
+<li>7be87b1a3b7cd65e4ef742d8df19c63ad02baf538f0b6a938527d65a50daf467</li>
+<li>7482f33cdd8cc40ace9b977725bd428a323fdc0486dd3f85c03070347fc7cba9</li>
+</ul>
+<h2 id="3-conclusion">3. Conclusion</h2>
+<p>This experiment directly supports:</p>
+<ol>
+<li>Once the number of classes, the 5:5 ratio, and one anchor are fixed, the
+   low-loss static parameter volume of a finite-width MLP systematically prefers
+   the natural 0/1 digit partition;</li>
+<li>this preference is not a fixed prior ordering, but moves along the loss axis
+   from last place to first place and eventually monopolizes the mass;</li>
+<li>the low-loss volume can recover the natural classification without reading the
+   nine hidden labels.</li>
+</ol>
+<p>What cannot be claimed:</p>
+<ol>
+<li>that this is fully unconstrained unsupervised learning;</li>
+<li>that natural labels would still win when the class ratio is unknown;</li>
+<li>that the result generalizes to other digits, architectures, preprocessing, or
+   real clustering tasks;</li>
+<li>that static volume computation is cheaper in cost than conventional supervised
+   or clustering algorithms.</li>
+</ol>
+<p>Within the release scope, this upload unit only documents the balanced experiment
+with 5 zeros and 5 ones; the subsequent branch without the ratio constraint is
+not included.</p>
+<h2 id="4-files">4. Files</h2>
+<ul>
+<li>experiment_mnist_unlabeled_label_volume.py</li>
+<li>README.md</li>
+<li>RESULTS_AND_CONCLUSION.md</li>
+</ul></div>
         <footer class="experiment-pager"><a href="e25.html">← E25 MNIST Sample Complexity and Static Branch Prediction</a><a href="e27.html">E27 Agreement Before and During Grokking →</a></footer>
       </article>
     </main>

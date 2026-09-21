@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="E35 Mod97 冻结函数决斗的完整协议、结果和边界。">
+  <title>E35 Mod97 冻结函数决斗 · Neural K 研究档案</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="../assets/site.js"></script>
+</head>
+<body data-page-kind="post-upload">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+
+    <header class="topbar">
+      <a class="site-mark" href="../index.html" aria-label="返回研究主文">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K 研究档案</span>
+      </a>
+      <nav class="top-nav" aria-label="全站导航"><a class="top-link" href="../index.html">研究主文</a><a class="top-link" href="../theory-core.html">理论核心</a><a class="top-link" href="../experiments/index.html">实验索引</a><a class="top-link active" href="../post-upload.html">提交后增量</a><a class="top-link" href="../references.html">参考文献</a><a class="top-link" href="../evidence-ledger.html">证据总账</a></nav>
+      <nav class="language-switch" aria-label="语言"><span class="active" lang="zh-CN">中文</span><a href="../en/experiments/e35.html" lang="en">EN</a></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>目录</span>
+      </button>
+    </header>
+
+  <div class="page-shell">
+
+    <aside class="sidebar" id="sidebar" aria-label="本页目录">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">本页目录</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#1-问题">1. 问题</a></li>
+<li><a href="#2-协议">2. 协议</a></li>
+<li><a href="#3-结果">3. 结果</a></li>
+<li><a href="#4-与-多竞争者-grokking-图景的关系">4. 与"多竞争者"grokking 图景的关系</a></li>
+<li><a href="#5-边界-必须随结果保留">5. 边界（必须随结果保留）</a></li>
+<li><a href="#6-文件">6. 文件</a></li>
+</ul>
+</div>
+</nav>
+        <a class="sidebar-action" href="../post-upload.html">返回增量总览 →</a>
+      </div>
+    </aside>
+
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">实验增量 · E35</div>
+          <h1>E35 Mod97 冻结函数决斗</h1>
+          <p class="article-description">E35 Mod97 冻结函数决斗的完整协议、结果和边界。</p>
+        </header>
+        <div class="article-body"><blockquote>
+<p>状态：近档与远档均完成（各 3 例 × 2 子集 × 16 初始化 = 192 次训练）。证据等级：跨训练网络的动态偏好证据，单参考 MLP 协议。</p>
+</blockquote>
+<h2 id="1-问题">1. 问题</h2>
+<p>grokking 完成前，网络已经 100% 拟合训练集、但尚未泛化时的完整函数（记为 <strong>B</strong>），与 grokking 完成后得到的最终规则（记为 <strong>A</strong>），在一个<strong>全新的统一小网络</strong>里重新竞争时，谁更受偏好？这直接检验"后到的规则在函数空间中更受偏好"，而不依赖原训练轨迹。</p>
+<p>候选来自 Power 原版 Transformer 的 mod97 实验（两层宽 128、70% 数据、CE+0.1 幅度方差正则）：A 为最终 mod97 除法映射；B 为同一条轨迹完成前最后一个"训练全对、测试 ≤90%"的实际完整映射（与原存档函数 hash 逐条核对，不是另造"看起来更复杂"的规则）。远档 B 取完成前"训练全对、测试 ≤50%"中原始答题 CE 最高者。</p>
+<h2 id="2-协议">2. 协议</h2>
+<ul>
+<li>对决训练集：A/B 输出一致的 6,518 个输入；冲突集（A/B 不一致处）只测偏好，不指定外部真值；</li>
+<li>参考网络：<code>194→128→128→239</code> GELU+LayerNorm MLP（72,815 参数）；Adam(lr=0.001, wd=0)，固定 50,000 步；每档两份独立训练子集 × 16 初始化；</li>
+<li>每个 B 先由同架构网络拟合到全对（CE≤0.01）才允许对决——表示能力预检通过，排除"B 根本学不出"。</li>
+</ul>
+<h2 id="3-结果">3. 结果</h2>
+<table>
+<thead>
+<tr>
+<th>档位</th>
+<th style="text-align: right;">来源 CE（相对完成时倍数）</th>
+<th style="text-align: right;">冲突点符合 A</th>
+<th style="text-align: right;">冲突点符合 B</th>
+<th style="text-align: right;">完整实现 A</th>
+<th style="text-align: right;">完整实现 B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>近 0/1/2（B 偏离 A 365/337/289 点）</td>
+<td style="text-align: right;">0.0004–0.002（5–22 倍）</td>
+<td style="text-align: right;">99.89–99.95%</td>
+<td style="text-align: right;">0%</td>
+<td style="text-align: right;">15/96</td>
+<td style="text-align: right;">0/96</td>
+</tr>
+<tr>
+<td>远 3/4/5（B 偏离 A 2,713–2,731 点）</td>
+<td style="text-align: right;">0.11–0.12（1153–1630 倍）</td>
+<td style="text-align: right;">≈99.91%</td>
+<td style="text-align: right;">≈0%</td>
+<td style="text-align: right;">17/96</td>
+<td style="text-align: right;">0/96</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>全部 192 个模型都完全拟合对决训练集，且冲突点几乎一致地偏向 A</strong>；完整 9,312 点映射中恢复 A 的比例近档 15/96、远档 17/96——<strong>没有任何模型最终实现 B</strong>；</li>
+<li>其余函数不是任意分散的错误映射，而是非常接近 A 的函数（相对 A 平均仅约 2.3/9,312 个输入不同）；</li>
+<li>配对近远档比较：完整 A 恢复数 15/96 → 17/96，净增 2（区间含 0）——<strong>更大的来源 loss 差距并不提高精确恢复率</strong>；</li>
+<li>拟合后仍继续向 A 附近集中：首个完整 A 的出现明显晚于训练集硬拟合时刻。</li>
+</ul>
+<h2 id="4-与-多竞争者-grokking-图景的关系">4. 与"多竞争者"grokking 图景的关系</h2>
+<p>本轮结果与该图景一致并可作为其动态对照：原轨迹的早期候选 B（更接近训练集特异的复杂延拓）在新学习系统中完全失去人口，网络转而集中到 A 及其紧邻函数。它支持"完成后的规则更受偏好"这一动态事实；一个可检验但尚未在本轮直接测量的解释是：grokking 前竞争函数簇中存在大量收缩系数仅略高于目标规则的函数，造成缓慢筛选和迟发接管。验证这一解释还需要直接测量竞争函数簇的 loss-resolved 收缩谱；本轮不把它当作已验证结论。</p>
+<h2 id="5-边界-必须随结果保留">5. 边界（必须随结果保留）</h2>
+<ol>
+<li>这是<strong>跨训练网络的动态偏好证据</strong>：候选来自原 Transformer 轨迹，对决在另一个统一小 MLP 中进行；不是原架构的静态体积或精确 K 测量，也不建立架构无关的 K 排序；</li>
+<li>"冲突点 ≈99.9% 符合 A"不等于"≈99.9% 的模型完整实现 A"——完整 A 恢复率只有约 16%；</li>
+<li>近档的来源与 A 的 K 差没有直接测量，loss 间隔只是选阶段的依据；</li>
+<li>单任务（mod97）、单参考网络、192 模型；首轮远档 4/5 的拟合预检未做（远 3 已通过）。</li>
+</ol>
+<h2 id="6-文件">6. 文件</h2>
+<ul>
+<li><code>experiment_mod97_frozen_function_duels.py</code>：冻结实验脚本（候选、近远档与对决训练内嵌）；</li>
+<li><code>analyze_mod97_frozen_function_duels.py</code>、<code>compare_mod97_near_far_function_duels.py</code>：分析与近远对照脚本；</li>
+<li><code>RESULTS_NEAR_DUELS.md</code>：首轮近档完整结果文档（候选表、协议、逐子集结果、边界）；</li>
+<li><code>duel_curves.png</code>：逐点偏好与完整映射曲线；</li>
+<li>远档分析包：<code>tmp/mod97_far_function_duel_analysis_20260912/</code>（audit.json、final_by_dataset.json、weight_replay.json）。</li>
+</ul></div>
+
+      </article>
+    </main>
+  </div>
+</body>
+</html>

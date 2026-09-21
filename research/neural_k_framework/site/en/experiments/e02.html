@@ -23,7 +23,7 @@
         <span class="mark-block">NK</span>
         <span class="mark-text">Neural K Research Archive</span>
       </a>
-      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="../index.html">Research</a><a class="top-link" href="../theory-core.html">Core Theory</a><a class="top-link active" href="../experiments/index.html">Experiments</a><a class="top-link" href="../references.html">References</a><a class="top-link" href="../evidence-ledger.html">Evidence</a></nav>
+      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="../index.html">Research</a><a class="top-link" href="../theory-core.html">Core Theory</a><a class="top-link active" href="../experiments/index.html">Experiments</a><a class="top-link" href="../post-upload.html">Updates</a><a class="top-link" href="../references.html">References</a><a class="top-link" href="../evidence-ledger.html">Evidence</a></nav>
       <nav class="language-switch" aria-label="Language"><a href="../../experiments/e02.html" lang="zh-CN">中文</a><span class="active" lang="en">EN</span></nav>
       <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
         <span aria-hidden="true">☰</span><span>Contents</span>
@@ -38,12 +38,34 @@
         <nav class="toc"><div class="toc">
 <ul>
 <li><a href="#overview">Experiment overview</a></li>
-<li><a href="#motivation">Why this experiment was run</a></li>
+<li><a href="#purpose">Purpose</a></li>
+<li><a href="#files">Files</a></li>
+<li><a href="#frozen-source-and-sha256">Frozen source and SHA256</a></li>
+<li><a href="#motivation">Why this experiment was run, and how it was judged</a></li>
+<li><a href="#1-background-question">1. Background question</a></li>
+<li><a href="#2-pre-experiment-criteria">2. Pre-experiment criteria</a><ul>
+<li><a href="#invariance-completion">Invariance completion</a></li>
+<li><a href="#representation-reuse">Representation reuse</a></li>
+<li><a href="#encoding-parameterization">Encoding/parameterization</a></li>
+</ul>
+</li>
+<li><a href="#3-frozen-protocol">3. Frozen protocol</a></li>
+<li><a href="#4-main-measurements">4. Main measurements</a></li>
+<li><a href="#5-boundaries-reserved-in-advance">5. Boundaries reserved in advance</a></li>
 <li><a href="#results">Results, interpretation, and limits</a></li>
+<li><a href="#1-stage-1-the-original-rule-is-fully-learned-but-the-counterfactual-branch-still-depends-on-the-encoding">1. Stage 1: the original rule is fully learned, but the counterfactual branch still depends on the encoding</a></li>
+<li><a href="#2-why-all-0-and-all-1-differ">2. Why all-0 and all-1 differ</a></li>
+<li><a href="#3-counterfactual-dose-response">3. Counterfactual dose response</a><ul>
+<li><a href="#minimum-k-for-warm-strict-success-requiring-8-8-seeds">Minimum k for warm strict success (requiring 8/8 seeds)</a></li>
+<li><a href="#cold-control">Cold control</a></li>
+</ul>
+</li>
+<li><a href="#4-stage-verdicts">4. Stage verdicts</a></li>
+<li><a href="#5-revision-to-the-overall-framework">5. Revision to the overall framework</a></li>
 </ul>
 </div>
 </nav>
-        <div class="sidebar-label experiment-label">All experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>Static Hard Conditioning versus Optimizer-Induced Function Transport</span></a><a class="experiment-nav-link active" href="e02.html"><span>E02</span><span>Rule-Bit Counterfactual Invariance</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>Prior-Consistent Function Dynamics and Width Intervention</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>Post-Fit Drift in the Mingard 2025 Boolean Protocol</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>Feature Learning When a Fixed NTK Is Already Sufficient</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>Loss-Conditioned Prior Annealing</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>Function-ID Wandering and Matched-Loss Static Controls</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>Shared Intermediate Computation under Finite Capacity</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>Long Training with 80% Hidden Label Noise</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>Raw-BCE Competition between Preregistered Simple and Complex Function Pairs</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule-30 Train/Validation Gradient Alignment across Dataset Size</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND Shortcut Static Geometry and a One-Example Balance Intervention</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>SGD Dynamics of the AND Shortcut and Balanced Intervention</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>Weighted Rule-Bit Function Switching across Loss Scales</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Complete Functions versus Marginal Concentration in Modular-97 Grokking</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity Reachability, Half-Space Generalization, and Scaffold Recovery</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>Static Deep-Loss Mass versus Optimizer Transport</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>Teacher-Free Consensus and Symbolic Readability</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>Full-Truth-Table Rule Volume</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Measure Closure between Full Rules, Fixed Datasets, and Margin Cores</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement Control and a Consensus Complexity Frontier</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>Per-Example Free Energy and an Information Invariant</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>Prospective Prediction from Full-Rule Volume to Data Transition</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>Deep Neural K Crossing of Parity4 and a One-Point Exception</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST Sample Complexity and Static Branch Prediction</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>Balanced Unlabeled MNIST Label Volume</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Agreement Before and During Grokking</span></a><a class="experiment-nav-link" href="e28.html"><span>E28</span><span>Whole-Network HMC versus Adam on 50k MNIST</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Loss-Resolved Robustness to a Dead Input Bit</span></a><a class="experiment-nav-link" href="e30.html"><span>E30</span><span>Weight Decay Reshapes the Static Complete-Function Landscape</span></a></nav>
+        <div class="sidebar-label experiment-label">All experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>Static Hard Conditioning versus Optimizer-Induced Function Transport</span></a><a class="experiment-nav-link active" href="e02.html"><span>E02</span><span>Rule-Bit Counterfactual Invariance</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>Prior-Consistent Function Dynamics and Width Intervention</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>Post-Fit Drift in the Mingard 2025 Boolean Protocol</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>Feature Learning When a Fixed NTK Is Already Sufficient</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>Loss-Conditioned Prior Annealing</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>Function-ID Wandering and Matched-Loss Static Controls</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>Shared Intermediate Computation under Finite Capacity</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>Long Training with 80% Hidden Label Noise</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>Raw-BCE Competition between Preregistered Simple and Complex Function Pairs</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule-30 Train/Validation Gradient Alignment across Dataset Size</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND Shortcut Static Geometry and a One-Example Balance Intervention</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>SGD Dynamics of the AND Shortcut and Balanced Intervention</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>Weighted Rule-Bit Function Switching across Loss Scales</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Complete Functions versus Marginal Concentration in Modular-97 Grokking</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity Reachability, Half-Space Generalization, and Scaffold Recovery</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>Static Deep-Loss Mass versus Optimizer Transport</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>Teacher-Free Consensus and Symbolic Readability</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>Full-Truth-Table Rule Volume</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Measure Closure between Full Rules, Fixed Datasets, and Margin Cores</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement Control and a Consensus Complexity Frontier</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>Per-Example Free Energy and an Information Invariant</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>Prospective Prediction from Full-Rule Volume to Data Transition</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>Deep Neural K Crossing of Parity4 and a One-Point Exception</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST Sample Complexity and Static Branch Prediction</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>Balanced Unlabeled MNIST Label Volume</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Agreement Before and During Grokking</span></a><a class="experiment-nav-link" href="e28.html"><span>E28</span><span>Whole-Network HMC versus Adam on 50k MNIST</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Loss-Resolved Robustness to a Dead Input Bit</span></a><a class="experiment-nav-link" href="e30.html"><span>E30</span><span>Weight Decay Reshapes the Static Complete-Function Landscape</span></a></nav><div class="sidebar-label experiment-label">Post-upload experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="../experiments/e31.html"><span>E31</span><span>Loss and output amplitude</span></a><a class="experiment-nav-link" href="../experiments/e32.html"><span>E32</span><span>Random-memory scaling</span></a><a class="experiment-nav-link" href="../experiments/e33.html"><span>E33</span><span>Cross-architecture output volume</span></a><a class="experiment-nav-link" href="../experiments/e34.html"><span>E34</span><span>Conditional rule duel</span></a><a class="experiment-nav-link" href="../experiments/e35.html"><span>E35</span><span>Frozen functions around grokking</span></a><a class="experiment-nav-link" href="../experiments/e36.html"><span>E36</span><span>Independent Peleg/G&amp;C recheck</span></a><a class="experiment-nav-link" href="../experiments/e37.html"><span>E37</span><span>Measure robustness and Gaussian alignment</span></a></nav>
       </div>
     </aside>
 
@@ -55,13 +77,267 @@
           <p class="article-description">Determine whether a network automatically discards a control bit that is semantically irrelevant under the external rule but constant in training.</p>
         </header>
         <div class="article-body"><div class="source-bar"><span>Scripts</span><div><a href="../../../experiments/experiment_02_rule_bit_invariance/experiment_rule_bit_invariance_completion.py">experiment_rule_bit_invariance_completion.py</a></div></div><h2 id="overview">Experiment overview</h2>
-<p>Inputs contain one rule bit plus a 30-bit cellular-automaton state. The output is one step of Rule 30 or Rule 110. Stage 1 trains on only one fixed rule-bit value. Stage 2 flips the bit and adds an increasing number of counterfactual examples. Binary and centered encodings, both fixed-bit directions, warm starts, and cold controls are compared.</p>
-<h2 id="motivation">Why this experiment was run</h2>
-<p>The external generator says the trained branch should remain correct when an irrelevant control bit is flipped, but the optimizer never receives that counterfactual constraint. A strong “training recovers the cleanest semantic rule” claim predicts spontaneous invariance; a training-set-centered view predicts that constant features may be used as bias or gating resources.</p>
+<h2 id="purpose">Purpose</h2>
+<p>Test whether a fixed control bit is automatically recognized by the network as a semantically irrelevant variable, and how many counterfactual samples must be added before the two control branches strictly execute the same ECA rule. The experiment also distinguishes:</p>
+<ul>
+<li>constant 0 versus constant 1 during training;</li>
+<li>binary <code>0/1</code> versus centered <code>-1/+1</code> encoding;</li>
+<li>appending counterfactual samples after the rule has been learned (warm);</li>
+<li>training the final data from scratch (cold);</li>
+<li>continued training without adding counterfactual samples (<code>k=0</code>).</li>
+</ul>
+<h2 id="files">Files</h2>
+<ul>
+<li><a href="#motivation">Experiment motivation and preregistered criteria</a></li>
+<li><a href="#results">Full results and stage verdicts</a></li>
+<li><a href="../../../experiments/experiment_02_rule_bit_invariance/experiment_rule_bit_invariance_completion.py"><code>experiment_rule_bit_invariance_completion.py</code></a></li>
+</ul>
+<p>Run:</p>
+<pre><code class="language-bash">python experiment_rule_bit_invariance_completion.py
+</code></pre>
+<p>Default output directory:</p>
+<pre><code class="language-text">results_rule_bit_invariance_completion/
+</code></pre>
+<h2 id="frozen-source-and-sha256">Frozen source and SHA256</h2>
+<table>
+<thead>
+<tr>
+<th>Frozen file</th>
+<th>Development-version source</th>
+<th>SHA256</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>experiment_rule_bit_invariance_completion.py</code></td>
+<td><code>research/overfitting_related_research/scripts/experiment_rule_bit_invariance_completion.py</code></td>
+<td><code>6c0ee495797ed215774c37ae6b1b3f25b73b4145d8dc5ff1dda124cbe85f9210</code></td>
+</tr>
+</tbody>
+</table>
+<p>Local raw-result cache: <code>results/results_rule_bit_invariance_completion.zip</code>, SHA256 <code>2932bc1ed92c4b7e0c67f251ca0ee595f6e5f49f0cd0c66162dcc07ae279ced4</code>. This ZIP is not included in the final upload package; the key results have been copied in full into the results report.</p>
+<h2 id="motivation">Why this experiment was run, and how it was judged</h2>
+<h2 id="1-background-question">1. Background question</h2>
+<p>E01 showed that the optimizer is not a passive filter of a static hard prior, but this does not automatically imply that the network recovers the human-semantically shortest and cleanest program. In the old 31-bit experiment, training only ever presented one fixed rule bit; after flipping that bit, the output still broadly executed the learned rule, but was not strictly invariant.</p>
+<p>This yields two competing explanations:</p>
+<ol>
+<li><strong>Strong semantic-compression version</strong>: since the target rule is independent of the rule bit, training will automatically delete that variable;</li>
+<li><strong>Training loss/parameterization version</strong>: the training set provides no counterfactual invariance, so the constant bit can participate in bias, gating, and representation; the network only needs to lower the visible training loss.</li>
+</ol>
+<p>Here, the stipulation "the rule bit should be irrelevant" imposed by the external ECA generator is used only for counterfactual scoring. As far as the Stage 1 training set is concerned, every continuation that is correct on the fixed-bit branch fits the data equally well; merely because the researchers know the generation script, they cannot presume in advance that the strictly invariant function is the single true rule the network has already acquired.</p>
+<h2 id="2-pre-experiment-criteria">2. Pre-experiment criteria</h2>
+<h3 id="invariance-completion">Invariance completion</h3>
+<p>If very few counterfactual samples make the flipped branch strictly equal to the original rule across all probes, while <code>k=0</code> does not produce the same improvement, then data can complete the invariance at very small cost.</p>
+<h3 id="representation-reuse">Representation reuse</h3>
+<p>If warm requires significantly fewer samples or steps than cold to reach the same strict success rate, then the learned body representation provides positive transfer for invariance completion. If there is no consistent advantage, representation reuse is not claimed.</p>
+<h3 id="encoding-parameterization">Encoding/parameterization</h3>
+<p>If constant-0, constant-1, or binary versus centered results differ markedly, then semantic irrelevance is not a sufficient explanation, and network architecture and encoding must enter the theory.</p>
+<h2 id="3-frozen-protocol">3. Frozen protocol</h2>
+<ul>
+<li>Rule 30, Rule 110, one ECA step each;</li>
+<li>Input: 1 rule bit + 30 state bits; output 30 bits;</li>
+<li><code>31 -&gt; 1024 x 3 -&gt; 30</code>, GELU+LayerNorm;</li>
+<li>2,048 training states, 65,536 probes;</li>
+<li>8 seeds; Adam, learning rate <code>1e-3</code>, batch 512;</li>
+<li><code>dropout=0</code>, <code>weight_decay=0</code>;</li>
+<li>Stage 1 trains 8,000 steps with the rule bit fixed;</li>
+<li>warm appends nested <code>k=0,1,2,...,512</code> counterfactual samples and trains 5,000 steps;</li>
+<li>cold trains the final data for 13,000 steps from the same initialization;</li>
+<li>binary and centered encodings, with both directions of the fixed bit 0/1 swept.</li>
+</ul>
+<h2 id="4-main-measurements">4. Main measurements</h2>
+<ul>
+<li>bit accuracy and 30-bit exact accuracy on the original branch / flipped branch;</li>
+<li>output agreement between the two branches;</li>
+<li>hard strict success and the 8/8-seed strict success rate;</li>
+<li>logit difference and the L2 norm of the rule-bit input column;</li>
+<li>the minimum <code>k</code> at which warm/cold reach strict invariance.</li>
+</ul>
+<h2 id="5-boundaries-reserved-in-advance">5. Boundaries reserved in advance</h2>
+<ul>
+<li>The training objective does not contain the information of "true semantic irrelevance";</li>
+<li>constant 1 may be unidentifiable from the bias, and a constant-0 input column may receive no gradient at all;</li>
+<li>centered flipping is stronger than binary pathway deletion;</li>
+<li>success only shows that the current protocol has an invariance-completion bias; it does not prove that any arbitrary network will automatically find irrelevant variables.</li>
+</ul>
 <h2 id="results">Results, interpretation, and limits</h2>
-<p>All Stage-1 branches fit their observed data exactly, but counterfactual behavior depended strongly on encoding and fixed value. In binary encoding, training at bit 0 and testing at bit 1 often remained exact; training at bit 1 and deleting that contribution at test time could nearly destroy Rule 110. Centered encoding produced still larger reversals.</p>
-<p>Small counterfactual datasets could write invariance into the objective, but sample requirements varied from one example to hundreds. Warm starts were not uniformly superior to cold training.</p>
-<p><strong>Conclusion.</strong> Human semantic irrelevance is not the same as geometric irrelevance in a parameterized network. The experiment supports protocol-relative complexity and data-defined invariance; it does not show that clean semantic programs are always selected automatically.</p></div>
+<h2 id="1-stage-1-the-original-rule-is-fully-learned-but-the-counterfactual-branch-still-depends-on-the-encoding">1. Stage 1: the original rule is fully learned, but the counterfactual branch still depends on the encoding</h2>
+<p>After 8,000 steps, all original rule-bit branches reach exact accuracy 1 on 65,536 probes. Median results after flipping the rule bit:</p>
+<table>
+<thead>
+<tr>
+<th>Encoding</th>
+<th style="text-align: right;">Rule</th>
+<th style="text-align: right;">Training fixed bit</th>
+<th style="text-align: right;">flip bit accuracy</th>
+<th style="text-align: right;">flip exact accuracy</th>
+<th style="text-align: right;">Strict-success seeds</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>binary</td>
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1.0000</td>
+<td style="text-align: right;">1.0000</td>
+<td style="text-align: right;">8/8</td>
+</tr>
+<tr>
+<td>binary</td>
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.99952</td>
+<td style="text-align: right;">0.98561</td>
+<td style="text-align: right;">0/8</td>
+</tr>
+<tr>
+<td>binary</td>
+<td style="text-align: right;">110</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1.0000</td>
+<td style="text-align: right;">1.0000</td>
+<td style="text-align: right;">8/8</td>
+</tr>
+<tr>
+<td>binary</td>
+<td style="text-align: right;">110</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.79358</td>
+<td style="text-align: right;">0.00151</td>
+<td style="text-align: right;">0/8</td>
+</tr>
+<tr>
+<td>centered</td>
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.86071</td>
+<td style="text-align: right;">0.01517</td>
+<td style="text-align: right;">0/8</td>
+</tr>
+<tr>
+<td>centered</td>
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.85416</td>
+<td style="text-align: right;">0.01137</td>
+<td style="text-align: right;">0/8</td>
+</tr>
+<tr>
+<td>centered</td>
+<td style="text-align: right;">110</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.50286</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0/8</td>
+</tr>
+<tr>
+<td>centered</td>
+<td style="text-align: right;">110</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.49822</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0/8</td>
+</tr>
+</tbody>
+</table>
+<p>For the same semantic task, merely changing the constant encoding moves counterfactual behavior from perfect invariance to near-random, directly refuting the strong version that "semantically irrelevant variables are necessarily deleted automatically".</p>
+<h2 id="2-why-all-0-and-all-1-differ">2. Why all-0 and all-1 differ</h2>
+<p>The first layer can be written as</p>
+<div class="math-display">$$
+h=W_xx+w_zz+b.
+$$</div>
+<ul>
+<li>with binary fixed <code>z=0</code>: the <code>w_z</code> column receives no gradient in Stage 1;</li>
+<li>with binary fixed <code>z=1</code>: the data only constrain <code>w_z+b</code>, and the rule-bit column becomes an extra bias pathway;</li>
+<li>with centered flipping: the contribution is not only deleted but also applied in reverse.</li>
+</ul>
+<p>The optimizer has no semantic information that "this variable is irrelevant in the external generator". As long as exploiting the constant input helps lower the training loss, it can serve thresholds, gating, and intermediate computation.</p>
+<h2 id="3-counterfactual-dose-response">3. Counterfactual dose response</h2>
+<h3 id="minimum-k-for-warm-strict-success-requiring-8-8-seeds">Minimum k for warm strict success (requiring 8/8 seeds)</h3>
+<table>
+<thead>
+<tr>
+<th>Encoding</th>
+<th style="text-align: right;">Rule</th>
+<th style="text-align: right;">Fixed bit</th>
+<th style="text-align: right;">Minimum k</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>binary</td>
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr>
+<td>binary</td>
+<td style="text-align: right;">110</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr>
+<td>binary</td>
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">not reached within 512</td>
+</tr>
+<tr>
+<td>binary</td>
+<td style="text-align: right;">110</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">not reached within 512</td>
+</tr>
+<tr>
+<td>centered</td>
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">0/1</td>
+<td style="text-align: right;">not reached within 512</td>
+</tr>
+<tr>
+<td>centered</td>
+<td style="text-align: right;">110</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">not reached within 512</td>
+</tr>
+<tr>
+<td>centered</td>
+<td style="text-align: right;">110</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">512</td>
+</tr>
+</tbody>
+</table>
+<p>With binary fixed 0, a single counterfactual sample (about 0.049% of the original training set) suffices to make both rules strictly invariant across 8/8 seeds. But the hard directions do not show the same one-example completion; many conditions still reach only 6/8 or 7/8 strict success at 512 samples.</p>
+<h3 id="cold-control">Cold control</h3>
+<p>Cold already succeeds strictly at <code>k=0</code> with binary fixed 0; with binary fixed 1 it usually needs <code>k=64</code>; most centered conditions need <code>k=64</code>, and a few need 512. Warm does not consistently reach the same success rate with fewer samples, so this experiment does not support the strong conclusion that "a pretrained body representation generally brings a strong sample-efficiency advantage".</p>
+<h2 id="4-stage-verdicts">4. Stage verdicts</h2>
+<p>What can be claimed:</p>
+<ol>
+<li>counterfactual branches unconstrained by the training set form structured continuations rather than automatically remaining random;</li>
+<li>semantic irrelevance does not mean non-participation in computation during training;</li>
+<li>constant encodings and the network bias structure systematically change the off-support function;</li>
+<li>a small amount of counterfactual evidence can rapidly complete strict invariance in some protocols;</li>
+<li>neural networks directly optimize the training objective; generalization and semantic invariance appear only as side effects when the data and the inductive bias are aligned.</li>
+</ol>
+<p>What cannot be claimed:</p>
+<ul>
+<li>SGD/Adam automatically deletes all irrelevant variables;</li>
+<li>one counterfactual sample is universally sufficient;</li>
+<li>warm is always more sample-efficient than cold;</li>
+<li>the results prove that the program of minimal Kolmogorov complexity in human semantics was found;</li>
+<li>any off-support failure can be lumped under "dynamics" and thereby exempted from falsification.</li>
+</ul>
+<h2 id="5-revision-to-the-overall-framework">5. Revision to the overall framework</h2>
+<p>This experiment revises the theory from</p>
+<pre><code class="language-text">training recovers the semantically shortest true program
+</code></pre>
+<p>to</p>
+<pre><code class="language-text">architecture, encoding, data, and optimizer jointly define the training-loss geometry;
+the network selects a low-loss implementation under this protocol, and external semantics is not an extra objective.
+</code></pre>
+<p>This is also the direct source of the later loss-resolved volume framework taking <code>L_D</code> — rather than validation or a teacher rule — as its primitive object.</p></div>
         <footer class="experiment-pager"><a href="e01.html">← E01 Static Hard Conditioning versus Optimizer-Induced Function Transport</a><a href="e03.html">E03 Prior-Consistent Function Dynamics and Width Intervention →</a></footer>
       </article>
     </main>

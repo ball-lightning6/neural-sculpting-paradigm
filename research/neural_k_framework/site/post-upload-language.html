@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="联合输出、函数质量、信息更新和统计物理术语的严格定义。">
+  <title>严格概率语言：联合输出、函数质量与信息更新 · Neural K 研究档案</title>
+  <link rel="stylesheet" href="assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="assets/site.js"></script>
+</head>
+<body data-page-kind="post-upload">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+
+    <header class="topbar">
+      <a class="site-mark" href="index.html" aria-label="返回研究主文">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K 研究档案</span>
+      </a>
+      <nav class="top-nav" aria-label="全站导航"><a class="top-link" href="index.html">研究主文</a><a class="top-link" href="theory-core.html">理论核心</a><a class="top-link" href="experiments/index.html">实验索引</a><a class="top-link active" href="post-upload.html">提交后增量</a><a class="top-link" href="references.html">参考文献</a><a class="top-link" href="evidence-ledger.html">证据总账</a></nav>
+      <nav class="language-switch" aria-label="语言"><span class="active" lang="zh-CN">中文</span><a href="en/post-upload-language.html" lang="en">EN</a></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>目录</span>
+      </button>
+    </header>
+
+  <div class="page-shell">
+
+    <aside class="sidebar" id="sidebar" aria-label="本页目录">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">本页目录</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#1-先固定输出对象和测度">1. 先固定输出对象和测度</a></li>
+<li><a href="#2-累计loss质量不等于精确loss薄层">2. 累计loss质量不等于精确loss薄层</a></li>
+<li><a href="#3-full-target-fixed-d和训练终点是不同分布">3. Full-target、fixed-D和训练终点是不同分布</a></li>
+<li><a href="#4-添加样本有三种不同操作">4. 添加样本有三种不同操作</a></li>
+<li><a href="#5-surprise-kl和函数内部信息">5. Surprise、KL和函数内部信息</a></li>
+<li><a href="#6-复杂度分布与收窄的条件">6. 复杂度分布与收窄的条件</a></li>
+<li><a href="#7-审计与适用边界">7. 审计与适用边界</a></li>
+</ul>
+</div>
+</nav>
+        <a class="sidebar-action" href="post-upload.html">返回增量总览 →</a>
+      </div>
+    </aside>
+
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">理论增量 · 严格概率语言</div>
+          <h1>严格概率语言：联合输出、函数质量与信息更新</h1>
+          <p class="article-description">联合输出、函数质量、信息更新和统计物理术语的严格定义。</p>
+        </header>
+        <div class="article-body"><p>本页是网站理论入口，完整定义与证明边界见<a href="theory-core.html">理论核心</a>及本页列出的严格对象和审计边界。原始形式稿、教学版和核验脚本保留在发布树中；这里的公式是概率对象的定义或注明条件的恒等式，“复杂函数收缩更快”不是从这些定义自动推出的定理。</p>
+<h2 id="1-先固定输出对象和测度">1. 先固定输出对象和测度</h2>
+<p>固定协议<code>Π</code>：参数空间、网络架构、编码、参数参考概率测度<code>μ</code>、逐样本loss和hard读取规则。固定有限输入表<code>U</code>。连续联合输出<code>Z_U(θ)=(F_θ(x))_{x∈U}</code>诱导推前测度<code>ν_U=(Z_U)_#μ</code>。hard函数<code>H_U(θ)</code>是同一输入表上的完整离散输出表。</p>
+<p>每个函数的cell<code>C_U(f)={θ:H_U(θ)=f}</code>互不重叠并覆盖参数空间；其参考质量<code>p_U(f)=μ(C_U(f))</code>之和为1。这里“完整”只相对于指定的<code>U</code>；同一个hard cell内部可以有不同的logit、margin和loss。改变loss但保持网络、读取规则和参考测度不变时，改变的是对<code>ν_U</code>施加的事件，不是底层联合输出分布。</p>
+<h2 id="2-累计loss质量不等于精确loss薄层">2. 累计loss质量不等于精确loss薄层</h2>
+<p>训练集<code>D</code>上的平均loss定义事件<code>A_D(ε)={θ:L_D(θ)≤ε}</code>。函数分支的累计质量及归一化条件分布为：</p>
+<div class="math-display">$$
+Ω_{U,D}(f;ε)=μ(C_U(f)∩A_D(ε)),\qquad
+Q_{U,D,ε}(f)=\frac{Ω_{U,D}(f;ε)}{\sum_gΩ_{U,D}(g;ε)}.
+$$</div>
+<p><code>Q</code>是“loss不超过阈值”的累计系综。若要讨论一个窄loss窗口，应使用<code>Ω_f(b)-Ω_f(a)</code>；若要谈精确loss密度，必须先证明相应loss测度在该区间有密度<code>ρ_f</code>。在可微且分母为正的条件下，局部收缩指数<code>λ_f(ε)=ερ_f(ε)/Ω_f(ε)</code>，薄层函数分布是对累计<code>Q</code>再按<code>λ_f</code>加权；两者不能混为同一分布。</p>
+<h2 id="3-full-target-fixed-d和训练终点是不同分布">3. Full-target、fixed-D和训练终点是不同分布</h2>
+<p><code>K^{N,full}(f;ε)=-log₂ μ{L_{D_full(f)}≤ε}</code>测量完整目标的loss体积；<code>K^{N,FD}_{U,D}(f;ε)=-log₂ Ω_{U,D}(f;ε)</code>测量固定部分训练集和某个函数cell的交集质量。只有完整目标的阈值已强制全部hard符号正确时，相关cell因子才可省去。这两个profile一般不能共用一个没有后缀的<code>K</code>。</p>
+<p>实际SGD/Adam产生的函数分布是训练映射对初始化测度的推前分布；它不等于上述静态条件分布。静态质量可作一阶预测，入口、梯度、连通性、数值噪声和历史仍会改变终点。若更换参数测度，必须重新声明测度；不能把Gaussian概率叫作无界空间的欧式体积。</p>
+<h2 id="4-添加样本有三种不同操作">4. 添加样本有三种不同操作</h2>
+<p>固定旧事件<code>E=A_D(ε)</code>和包含新查询点的同一输入表。新增样本至少有三种操作：</p>
+<ol>
+<li><strong>hard条件化</strong>：在旧事件内保留预测标签为<code>y</code>的参数，得到<code>E∩B_y</code>；</li>
+<li><strong>旧父事件内的连续筛选</strong>：保留<code>E</code>，再要求加入该样本后的平均loss不超过新阈值，得到<code>E∩A^+_y</code>；</li>
+<li><strong>全空间重新定义新事件</strong>：只要求<code>A^+_y={L_{D∥(x*,y)}≤ε'}</code>，不额外要求旧<code>E</code>。</li>
+</ol>
+<p>第三种事件可以从旧事件之外吸收参数，所以一般不是第一或第二种的条件更新。第二种需要旧loss和查询点连续输出的联合分布；只知道查询点的hard标签不够，因为同一hard输出可有不同margin。</p>
+<h2 id="5-surprise-kl和函数内部信息">5. Surprise、KL和函数内部信息</h2>
+<p>第一种操作中，旧系综对新hard标签的预测是<code>p_E(y|x*)=μ(B_y|E)</code>。若这个概率为正，则观察标签后的信息成本严格为<code>-log₂ p_E(y|x*)</code> bit，并且方向明确的KL恒等式是：</p>
+<div class="math-display">$$
+D_{KL}(μ(\cdot|E∩B_y)\,\|\,μ(\cdot|E))=-\log p_E(y|x_*).
+$$</div>
+<p>反向KL一般发散。这是已观察标签的surprise，不等于观察标签之前的期望信息增益，也不等于重新训练SGD带来的信息。对函数分区，参数KL进一步分解为函数概率的KL加上各hard cell内条件参数分布的KL；完整hard函数分布不变，仍可发生大量内部实现重排。</p>
+<h2 id="6-复杂度分布与收窄的条件">6. 复杂度分布与收窄的条件</h2>
+<p>若用扫描前冻结的外部成本<code>c(f)</code>给候选函数分档，它的分布是<code>Q</code>经<code>c</code>推前得到的成本分布。它不同于“函数数量的直方图”，也不同于“当前<code>-log Ω_f</code>值的直方图”。固定数据集收紧loss时，令<code>r_f=Ω_f(ε₂)/Ω_f(ε₁)</code>（<code>ε₂&lt;ε₁</code>，只在旧质量为正的函数上定义），则</p>
+<div class="math-display">$$
+Q_2(f)=\frac{Q_1(f)r_f}{\sum_gQ_1(g)r_g},\qquad
+\mathbb E_{Q_2}c-\mathbb E_{Q_1}c=
+\frac{\operatorname{Cov}_{Q_1}(c,r)}{\mathbb E_{Q_1}r}.
+$$</div>
+<p>因此，复杂函数保留率更低足以令平均固定成本下降；其协方差符号是经验内容，方差下降或单一函数最终独占还需额外条件。捷径淘汰和剩余候选内的复杂函数收缩必须分别测量，不能由loss事件嵌套性推出二者都会发生。</p>
+<h2 id="7-审计与适用边界">7. 审计与适用边界</h2>
+<p>逐项审计专门检查了旧事件与新平均loss事件的偷换、hard cell内部通过率被误设为1、full-target替代fixed-D、KL方向、密度/累计混淆和幅度平移推导中的额外前提。有限核验脚本检查公式与反例，不证明一般神经网络满足“复杂函数收缩更快”。原始审计稿和脚本保留在发布树中。</p>
+<p>这套语言的作用是准确指定被测对象和概率更新；它不替代E20、E22、E23、E31等经验检验，也不证明SGD按静态测度采样。有限核验脚本和JSON结果属于发布树的可复查材料。</p></div>
+
+      </article>
+    </main>
+  </div>
+</body>
+</html>

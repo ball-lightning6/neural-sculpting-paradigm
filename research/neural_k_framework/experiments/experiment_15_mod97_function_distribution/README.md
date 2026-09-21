@@ -8,7 +8,9 @@ E15 在原版风格 Mod97 除法任务中同时跟踪完整9,312点 hard functio
 
 - [实验动机与预注册判据](MOTIVATION_AND_PREREGISTRATION.md)
 - [完整结果与阶段裁决](RESULTS_AND_CONCLUSION.md)
+- [Grokking 前后 Agreement 补充分析](AGREEMENT_AROUND_GROKKING_RESULTS.md)
 - [`experiment_mod97_matched_loss_function_distribution.py`](experiment_mod97_matched_loss_function_distribution.py)
+- [`analyze_agreement_around_grokking.py`](analyze_agreement_around_grokking.py)
 
 运行：
 

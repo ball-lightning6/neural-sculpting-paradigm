@@ -9,7 +9,7 @@
     "zh-CN": "theory-core.html",
     "en": "en/theory-core.html"
   },
-  "experiment_count": 30,
+  "experiment_count": 37,
   "experiments": [
     {
       "id": "E01",
@@ -220,6 +220,55 @@
       "title_en": "Weight Decay Reshapes the Static Complete-Function Landscape",
       "page_zh": "experiments/e30.html",
       "page_en": "en/experiments/e30.html"
+    },
+    {
+      "id": "E31",
+      "title_zh": "Loss 与幅度对齐",
+      "title_en": "Loss and output amplitude",
+      "page_zh": "experiments/e31.html",
+      "page_en": "en/experiments/e31.html"
+    },
+    {
+      "id": "E32",
+      "title_zh": "随机记忆缩放",
+      "title_en": "Random-memory scaling",
+      "page_zh": "experiments/e32.html",
+      "page_en": "en/experiments/e32.html"
+    },
+    {
+      "id": "E33",
+      "title_zh": "跨架构联合输出体积",
+      "title_en": "Cross-architecture output volume",
+      "page_zh": "experiments/e33.html",
+      "page_en": "en/experiments/e33.html"
+    },
+    {
+      "id": "E34",
+      "title_zh": "条件规则决斗",
+      "title_en": "Conditional rule duel",
+      "page_zh": "experiments/e34.html",
+      "page_en": "en/experiments/e34.html"
+    },
+    {
+      "id": "E35",
+      "title_zh": "Mod97 冻结函数决斗",
+      "title_en": "Frozen functions around grokking",
+      "page_zh": "experiments/e35.html",
+      "page_en": "en/experiments/e35.html"
+    },
+    {
+      "id": "E36",
+      "title_zh": "Peleg/G&C 独立验证",
+      "title_en": "Independent Peleg/G&C recheck",
+      "page_zh": "experiments/e36.html",
+      "page_en": "en/experiments/e36.html"
+    },
+    {
+      "id": "E37",
+      "title_zh": "测度鲁棒性与 Gaussian 对应",
+      "title_en": "Measure robustness and Gaussian alignment",
+      "page_zh": "experiments/e37.html",
+      "page_en": "en/experiments/e37.html"
     }
   ]
 }

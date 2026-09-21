@@ -23,7 +23,7 @@
         <span class="mark-block">NK</span>
         <span class="mark-text">Neural K Research Archive</span>
       </a>
-      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="../index.html">Research</a><a class="top-link" href="../theory-core.html">Core Theory</a><a class="top-link active" href="../experiments/index.html">Experiments</a><a class="top-link" href="../references.html">References</a><a class="top-link" href="../evidence-ledger.html">Evidence</a></nav>
+      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="../index.html">Research</a><a class="top-link" href="../theory-core.html">Core Theory</a><a class="top-link active" href="../experiments/index.html">Experiments</a><a class="top-link" href="../post-upload.html">Updates</a><a class="top-link" href="../references.html">References</a><a class="top-link" href="../evidence-ledger.html">Evidence</a></nav>
       <nav class="language-switch" aria-label="Language"><a href="../../experiments/e01.html" lang="zh-CN">中文</a><span class="active" lang="en">EN</span></nav>
       <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
         <span aria-hidden="true">☰</span><span>Contents</span>
@@ -38,12 +38,41 @@
         <nav class="toc"><div class="toc">
 <ul>
 <li><a href="#overview">Experiment overview</a></li>
-<li><a href="#motivation">Why this experiment was run</a></li>
+<li><a href="#scientific-question">Scientific question</a></li>
+<li><a href="#files-and-order">Files and order</a><ul>
+<li><a href="#e01a-per-function-distributions-rank-reversal-and-path-dependence">E01a: per-function distributions, rank reversal, and path dependence</a></li>
+<li><a href="#e01b-minimal-function-mass-transport-under-a-single-sample">E01b: minimal function-mass transport under a single sample</a></li>
+</ul>
+</li>
+<li><a href="#expected-reproduction-results">Expected reproduction results</a></li>
+<li><a href="#boundary-of-the-theoretical-verdict">Boundary of the theoretical verdict</a></li>
+<li><a href="#frozen-sources-and-sha256">Frozen sources and SHA256</a></li>
+<li><a href="#related-documents-and-local-result-cache">Related documents and local result cache</a></li>
+<li><a href="#motivation">Why this experiment was run, and how it was judged</a></li>
+<li><a href="#1-why-it-was-done">1. Why it was done</a></li>
+<li><a href="#2-competing-hypotheses">2. Competing hypotheses</a><ul>
+<li><a href="#h-static-hard-conditioning">H-static: hard conditioning</a></li>
+<li><a href="#h-transport-optimization-induced-transport">H-transport: optimization-induced transport</a></li>
+</ul>
+</li>
+<li><a href="#3-e01a-adjudication-design">3. E01a adjudication design</a></li>
+<li><a href="#4-e01b-adjudication-design">4. E01b adjudication design</a></li>
+<li><a href="#5-boundaries-explicitly-reserved-before-seeing-results">5. Boundaries explicitly reserved before seeing results</a></li>
 <li><a href="#results">Results, interpretation, and limits</a></li>
+<li><a href="#1-e01a-completeness">1. E01a completeness</a><ul>
+<li><a href="#1-1-per-function-tv-far-exceeds-sampling-noise">1.1 Per-function TV far exceeds sampling noise</a></li>
+<li><a href="#1-2-rank-reversal-of-specific-functions">1.2 Rank reversal of specific functions</a></li>
+<li><a href="#1-3-training-history-is-not-fully-washed-out-by-2-000-steps">1.3 Training history is not fully washed out by 2,000 steps</a></li>
+</ul>
+</li>
+<li><a href="#2-e01b-completeness-and-results">2. E01b completeness and results</a></li>
+<li><a href="#3-stage-verdict">3. Stage verdict</a></li>
+<li><a href="#4-what-may-not-be-claimed">4. What may not be claimed</a></li>
+<li><a href="#5-local-raw-result-bundles">5. Local raw result bundles</a></li>
 </ul>
 </div>
 </nav>
-        <div class="sidebar-label experiment-label">All experiments</div><nav class="experiment-nav"><a class="experiment-nav-link active" href="e01.html"><span>E01</span><span>Static Hard Conditioning versus Optimizer-Induced Function Transport</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-Bit Counterfactual Invariance</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>Prior-Consistent Function Dynamics and Width Intervention</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>Post-Fit Drift in the Mingard 2025 Boolean Protocol</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>Feature Learning When a Fixed NTK Is Already Sufficient</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>Loss-Conditioned Prior Annealing</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>Function-ID Wandering and Matched-Loss Static Controls</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>Shared Intermediate Computation under Finite Capacity</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>Long Training with 80% Hidden Label Noise</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>Raw-BCE Competition between Preregistered Simple and Complex Function Pairs</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule-30 Train/Validation Gradient Alignment across Dataset Size</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND Shortcut Static Geometry and a One-Example Balance Intervention</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>SGD Dynamics of the AND Shortcut and Balanced Intervention</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>Weighted Rule-Bit Function Switching across Loss Scales</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Complete Functions versus Marginal Concentration in Modular-97 Grokking</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity Reachability, Half-Space Generalization, and Scaffold Recovery</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>Static Deep-Loss Mass versus Optimizer Transport</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>Teacher-Free Consensus and Symbolic Readability</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>Full-Truth-Table Rule Volume</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Measure Closure between Full Rules, Fixed Datasets, and Margin Cores</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement Control and a Consensus Complexity Frontier</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>Per-Example Free Energy and an Information Invariant</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>Prospective Prediction from Full-Rule Volume to Data Transition</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>Deep Neural K Crossing of Parity4 and a One-Point Exception</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST Sample Complexity and Static Branch Prediction</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>Balanced Unlabeled MNIST Label Volume</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Agreement Before and During Grokking</span></a><a class="experiment-nav-link" href="e28.html"><span>E28</span><span>Whole-Network HMC versus Adam on 50k MNIST</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Loss-Resolved Robustness to a Dead Input Bit</span></a><a class="experiment-nav-link" href="e30.html"><span>E30</span><span>Weight Decay Reshapes the Static Complete-Function Landscape</span></a></nav>
+        <div class="sidebar-label experiment-label">All experiments</div><nav class="experiment-nav"><a class="experiment-nav-link active" href="e01.html"><span>E01</span><span>Static Hard Conditioning versus Optimizer-Induced Function Transport</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-Bit Counterfactual Invariance</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>Prior-Consistent Function Dynamics and Width Intervention</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>Post-Fit Drift in the Mingard 2025 Boolean Protocol</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>Feature Learning When a Fixed NTK Is Already Sufficient</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>Loss-Conditioned Prior Annealing</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>Function-ID Wandering and Matched-Loss Static Controls</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>Shared Intermediate Computation under Finite Capacity</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>Long Training with 80% Hidden Label Noise</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>Raw-BCE Competition between Preregistered Simple and Complex Function Pairs</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule-30 Train/Validation Gradient Alignment across Dataset Size</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND Shortcut Static Geometry and a One-Example Balance Intervention</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>SGD Dynamics of the AND Shortcut and Balanced Intervention</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>Weighted Rule-Bit Function Switching across Loss Scales</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Complete Functions versus Marginal Concentration in Modular-97 Grokking</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity Reachability, Half-Space Generalization, and Scaffold Recovery</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>Static Deep-Loss Mass versus Optimizer Transport</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>Teacher-Free Consensus and Symbolic Readability</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>Full-Truth-Table Rule Volume</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Measure Closure between Full Rules, Fixed Datasets, and Margin Cores</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement Control and a Consensus Complexity Frontier</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>Per-Example Free Energy and an Information Invariant</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>Prospective Prediction from Full-Rule Volume to Data Transition</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>Deep Neural K Crossing of Parity4 and a One-Point Exception</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST Sample Complexity and Static Branch Prediction</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>Balanced Unlabeled MNIST Label Volume</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Agreement Before and During Grokking</span></a><a class="experiment-nav-link" href="e28.html"><span>E28</span><span>Whole-Network HMC versus Adam on 50k MNIST</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Loss-Resolved Robustness to a Dead Input Bit</span></a><a class="experiment-nav-link" href="e30.html"><span>E30</span><span>Weight Decay Reshapes the Static Complete-Function Landscape</span></a></nav><div class="sidebar-label experiment-label">Post-upload experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="../experiments/e31.html"><span>E31</span><span>Loss and output amplitude</span></a><a class="experiment-nav-link" href="../experiments/e32.html"><span>E32</span><span>Random-memory scaling</span></a><a class="experiment-nav-link" href="../experiments/e33.html"><span>E33</span><span>Cross-architecture output volume</span></a><a class="experiment-nav-link" href="../experiments/e34.html"><span>E34</span><span>Conditional rule duel</span></a><a class="experiment-nav-link" href="../experiments/e35.html"><span>E35</span><span>Frozen functions around grokking</span></a><a class="experiment-nav-link" href="../experiments/e36.html"><span>E36</span><span>Independent Peleg/G&amp;C recheck</span></a><a class="experiment-nav-link" href="../experiments/e37.html"><span>E37</span><span>Measure robustness and Gaussian alignment</span></a></nav>
       </div>
     </aside>
 
@@ -55,15 +84,377 @@
           <p class="article-description">Test whether repeated neural-network training merely samples the initialization function prior conditioned on training-label consistency.</p>
         </header>
         <div class="article-body"><div class="source-bar"><span>Scripts</span><div><a href="../../../experiments/experiment_01_static_conditioning_failure/experiment_single_sample_prior_dynamics_1024.py">experiment_single_sample_prior_dynamics_1024.py</a><a href="../../../experiments/experiment_01_static_conditioning_failure/experiment_static_prior_vs_sgd_posterior.py">experiment_static_prior_vs_sgd_posterior.py</a></div></div><h2 id="overview">Experiment overview</h2>
-<p>This unit contains two direct tests in a fully enumerable 3-bit Boolean space. E01a compares the initialization prior, the hard-conditioned prior, and the complete-function distribution produced by Adam. E01b uses a much wider network and a single training example to make the transport effect visually and statistically unmistakable.</p>
-<p>The complete output on all eight inputs is stored for every model, so no complexity proxy or test-accuracy summary is needed to identify the selected function.</p>
-<h2 id="motivation">Why this experiment was run</h2>
-<p>The function-prior program of <a href="https://www.nature.com/articles/s41467-018-03101-6" target="_blank" rel="noopener">Dingle et al. (2018)</a>, <a href="https://arxiv.org/abs/1805.08522" target="_blank" rel="noopener">Valle-Pérez et al. (2019)</a>, and <a href="https://www.jmlr.org/papers/v22/20-676.html" target="_blank" rel="noopener">Mingard et al. (2021)</a> supplies a strong static baseline: architecture induces a highly nonuniform function prior, and conditioning that prior on the observed labels can predict many first-order training statistics.</p>
-<p>The falsifiable strong version says that training only removes incompatible functions. If so, a network already compatible with the training labels should not be systematically transported to another complete function, and post-fit training should not continue changing function odds.</p>
+<h2 id="scientific-question">Scientific question</h2>
+<p>Test the strong claim:</p>
+<div class="math-display">$$
+P_{\mathrm{trained}}(f\mid D)
+\stackrel{?}{=}
+P_{\mathrm{init}}(f\mid f\models D).
+$$</div>
+<p>This experiment does not deny the simplicity bias of the initialization function prior; instead, it judges whether real optimization merely deletes initialization functions that do not satisfy the training labels and then samples from the remaining functions in proportion to their original mass.</p>
+<h2 id="files-and-order">Files and order</h2>
+<h3 id="e01a-per-function-distributions-rank-reversal-and-path-dependence">E01a: per-function distributions, rank reversal, and path dependence</h3>
+<pre><code class="language-bash">python experiment_static_prior_vs_sgd_posterior.py
+</code></pre>
+<p>Core setup:</p>
+<ul>
+<li><code>3-bit -&gt; 1-bit</code>; the full set of 256 hard functions can be enumerated one by one;</li>
+<li><code>3 -&gt; 64 x 10 -&gt; 1 tanh</code>;</li>
+<li>1,048,576 initialization prior samples;</li>
+<li>8,192 initializations per training condition;</li>
+<li>two single-sample conditions and the <code>k=2/3/4</code> nested conditions of Rule30;</li>
+<li>first fit, post-fit 100/1,000 steps;</li>
+<li>three paths: direct/forward/reverse, each with 4,096 initializations.</li>
+</ul>
+<p><strong>Implementation boundary: the script's historical name says <code>SGD posterior</code>, but the actual optimizer is full-batch Adam.</strong> The main text and results must not misstate it as an unconditional conclusion about all SGD variants.</p>
+<p>Default output directory:</p>
+<pre><code class="language-text">results_static_prior_vs_sgd_posterior/
+</code></pre>
+<h3 id="e01b-minimal-function-mass-transport-under-a-single-sample">E01b: minimal function-mass transport under a single sample</h3>
+<pre><code class="language-bash">python experiment_single_sample_prior_dynamics_1024.py
+</code></pre>
+<p>Core setup:</p>
+<ul>
+<li><code>3 -&gt; 1024 -&gt; 1024 -&gt; 1024 -&gt; 1</code>;</li>
+<li>GELU + LayerNorm, Adam, <code>weight_decay=0</code>;</li>
+<li>4,096 initialization prior samples;</li>
+<li>four conditions <code>000/111 -&gt; 0/1</code>, each with 128 paired initializations;</li>
+<li>saves the complete 8-point hard function and logits at first fit and 1 and 2 steps after it.</li>
+</ul>
+<p>Default output directory:</p>
+<pre><code class="language-text">results_single_sample_prior_dynamics_1024/
+</code></pre>
+<h2 id="expected-reproduction-results">Expected reproduction results</h2>
+<p>Experiment 1a:</p>
+<ul>
+<li>At first fit, the TV between the trained distribution and the hard-conditioned prior is about 0.10--0.31;</li>
+<li>after post-fit 100 steps it is about 0.54--0.64, with a sampling-noise baseline of about 0.01--0.04;</li>
+<li>in <code>rule30_k3</code> the dominant function undergoes a rank reversal;</li>
+<li>with the same initialization and the same final training set but different training histories, about 19.5%--28.2% of the complete functions still differ after post-final 2,000 steps.</li>
+</ul>
+<p>Experiment 1b:</p>
+<ul>
+<li>In the initialization prior, constant 0/1 account for about 14.01%/13.72% respectively, and non-constant functions about 72.27%;</li>
+<li>the single-sample hard-conditioned prior assigns the target constant about 27.5%--28.0%;</li>
+<li>under real training, all four groups reach 128/128 models becoming the target constant after one step;</li>
+<li>compatible non-constant seeds that already satisfied the training point at initialization also all migrate, 45/45 and 47/47;</li>
+<li>the trained distribution versus the static conditional prior has TV about 0.72, JS about 0.52 bit, and hard-function entropy about <code>5 bit -&gt; 0 bit</code>.</li>
+</ul>
+<h2 id="boundary-of-the-theoretical-verdict">Boundary of the theoretical verdict</h2>
+<p>What may be claimed:</p>
+<blockquote>
+<p>Under these explicit protocols, the optimizer systematically transports the mass of functions that already satisfy the training set; the post-training function distribution is not a one-shot passive conditioning of the initialization hard-function prior.</p>
+</blockquote>
+<p>What may not be claimed from this:</p>
+<ul>
+<li>that the initialization prior is unimportant;</li>
+<li>that every Bayesian account is wrong;</li>
+<li>that all optimizers, networks, and tasks exhibit the same collapse;</li>
+<li>that different paths necessarily never merge after infinite training time;</li>
+<li>that hard-function stability means logits or internal representations stop changing.</li>
+</ul>
+<h2 id="frozen-sources-and-sha256">Frozen sources and SHA256</h2>
+<table>
+<thead>
+<tr>
+<th>Frozen file</th>
+<th>Development-version source</th>
+<th>SHA256</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>experiment_static_prior_vs_sgd_posterior.py</code></td>
+<td><code>research/function_information_conservation/experiment_static_prior_vs_sgd_posterior.py</code></td>
+<td><code>c24388482df5dfb53a6fdcff27a566d9b9b03827b62d7b718b021d9196d44edf</code></td>
+</tr>
+<tr>
+<td><code>experiment_single_sample_prior_dynamics_1024.py</code></td>
+<td><code>research/function_information_conservation/experiment_single_sample_prior_dynamics_1024.py</code></td>
+<td><code>7e339772fd3263bfed4e0eacfdfef28ee05d23ef3aad9af3225b4134c53d99ca</code></td>
+</tr>
+</tbody>
+</table>
+<p>Copy time: 2026-08-25. The two frozen copies are byte-identical to the development-version source files listed above.</p>
+<h2 id="related-documents-and-local-result-cache">Related documents and local result cache</h2>
+<ul>
+<li><a href="#motivation">Experiment motivation and preregistered criteria</a></li>
+<li><a href="#results">Full results and stage verdict</a></li>
+<li>The <code>E01a</code> raw result bundle is kept locally at <code>results/results_static_prior_vs_sgd_posterior.zip</code>, SHA256: <code>ddfd912adb0581d174a88401dc7391267c89650752d0fcf30821fa3000b2e2eb</code></li>
+<li>The <code>E01b</code> raw result bundle is kept locally at <code>results/results_single_sample_prior_dynamics_1024.zip</code>, SHA256: <code>e75fa3084824ab7fc553d4d20861af3135512838bd4c22ead6708e021f28a6b5</code></li>
+</ul>
+<p>The two ZIPs are only for local re-checking of the numbers in this document and are not part of the final upload package; the experiments run quickly, and the published content is based on the scripts, configuration descriptions, and key result tables.</p>
+<h2 id="motivation">Why this experiment was run, and how it was judged</h2>
+<h2 id="1-why-it-was-done">1. Why it was done</h2>
+<p>In more than a hundred early synthetic tasks, the training data covered only a tiny fraction of a huge input space, yet the networks often converged stably across seeds to the generating rule. <a href="https://www.nature.com/articles/s41467-018-03101-6" target="_blank" rel="noopener">Dingle et al. (2018)</a>, <a href="https://arxiv.org/abs/1805.08522" target="_blank" rel="noopener">Valle-Pérez et al. (2019)</a>, and <a href="https://www.jmlr.org/papers/v22/20-676.html" target="_blank" rel="noopener">Mingard et al. (2021)</a> provide the closest explanation: the network architecture already induces a non-uniform function prior at initialization, and training mainly deletes the functions that do not satisfy the labels, so that</p>
+<div class="math-display">$$
+P_{\mathrm{trained}}(f\mid D)
+\approx
+\frac{P_0(f)\mathbf1[f\models D]}
+{\sum_gP_0(g)\mathbf1[g\models D]}.
+$$</div>
+<p>Being severely under-constrained yet generalizing stably forces this picture to carry a very strong quantitative prediction: the <strong>total conditional prior mass</strong> of all candidate functions that deviate from the generating rule but still satisfy the finite training set must be much smaller than that of the target rule. Although counterintuitive, this requirement cannot be ruled out by intuition alone, because the exponentially small probability of a single function could be cancelled by an exponentially large number of candidates. It must be measured directly in an enumerable space.</p>
+<h2 id="2-competing-hypotheses">2. Competing hypotheses</h2>
+<h3 id="h-static-hard-conditioning">H-static: hard conditioning</h3>
+<ol>
+<li>The trained distribution should be close to the hard-conditioned initialization prior within finite sampling error;</li>
+<li>once the training set no longer changes, post-fit age should not systematically change hard-function odds;</li>
+<li>the static posterior depends only on the final training set, so the order in which samples were added should leave no persistent differences;</li>
+<li>initialization functions that already satisfy the training labels need not undergo any further systematic migration.</li>
+</ol>
+<h3 id="h-transport-optimization-induced-transport">H-transport: optimization-induced transport</h3>
+<ol>
+<li>The trained function distribution can deviate significantly beyond the sampling noise of the conditional prior;</li>
+<li>continued post-fit optimization can still change the odds of specific functions;</li>
+<li>different training histories with the same final training set can produce different functions;</li>
+<li>even when the initialization function already satisfies all training labels, optimization can still transport it to another compatible function.</li>
+</ol>
+<p>H-transport does not predict that migration necessarily goes toward the human-defined lowest-complexity function, nor does it deny that the initialization prior provides a zeroth-order bias.</p>
+<h2 id="3-e01a-adjudication-design">3. E01a adjudication design</h2>
+<ul>
+<li>Complete function space: <code>3-bit -&gt; 1-bit</code>, 256 hard functions in total;</li>
+<li>network: <code>3 -&gt; 64 x 10 -&gt; 1 tanh</code>, <code>sigma_w=1</code>, <code>sigma_b=0.2</code>;</li>
+<li>prior: 1,048,576 initialization networks;</li>
+<li>training: 8,192 initializations per condition, full-batch Adam, learning rate <code>1e-3</code>;</li>
+<li>conditions: <code>000-&gt;0/1</code> and the <code>k=2/3/4</code> nested samples of Rule30;</li>
+<li>time: first fit, post-fit 100/1,000 steps, margin 2/4/8;</li>
+<li>paths: direct, forward, reverse, each with 4,096 paired initializations;</li>
+<li>null distribution: repeated sampling from the same static posterior, bootstrapped 1,000 times.</li>
+</ul>
+<p>Primary criterion: the per-function TV/JS must significantly exceed the sampling fluctuation produced by the prior and the training sample size. Complexity histograms, average accuracy, or LZ are not used as core criteria.</p>
+<h2 id="4-e01b-adjudication-design">4. E01b adjudication design</h2>
+<ul>
+<li>Network: <code>3 -&gt; 1024 x 3 -&gt; 1</code>, GELU+LayerNorm, Adam, no weight decay;</li>
+<li>prior: 4,096 initialization networks;</li>
+<li>conditions: four single-sample cases <code>000/111 -&gt; 0/1</code>;</li>
+<li>128 paired initializations per condition;</li>
+<li>snapshots: initialization, first fit, post-fit 1/2 steps;</li>
+<li>fair control: separately tally the seeds whose initialization already satisfies the training label but whose complete function is non-constant.</li>
+</ul>
+<p>Primary criterion: if the target constant does not occupy an overwhelming mass in the hard-conditioned prior, yet training still collapses all seeds onto the target constant, and the prior-compatible non-constant seeds also all migrate, then the hard-conditioning sampling model is directly rejected.</p>
+<h2 id="5-boundaries-explicitly-reserved-before-seeing-results">5. Boundaries explicitly reserved before seeing results</h2>
+<ul>
+<li>E01a actually uses Adam, so the results cannot be automatically generalized to all SGD;</li>
+<li>identical hard functions do not imply identical logits, margins, and representations;</li>
+<li>finite-time path dependence does not imply that paths never merge in infinite time;</li>
+<li>the results can only refute the strong version of passive filtering by the hard-function prior; they do not refute all continuous Bayesian or optimizer-dynamics-containing probabilistic descriptions.</li>
+</ul>
 <h2 id="results">Results, interpretation, and limits</h2>
-<p>E01a sampled 1,048,576 untrained networks and trained 8,192 models per condition. At first fit, total-variation distances from the hard-conditioned prior were about 0.10–0.31; 100 post-fit steps raised them to about 0.54–0.64, while repeated-sampling noise was only about 0.01–0.04. Function rankings reversed in several conditions, and different sample orders left measurable finite-time path dependence.</p>
-<p>E01b sampled 4,096 wide <code>3 -&gt; 1024 x 3 -&gt; 1</code> networks and trained 128 paired initializations per one-example condition. Roughly 72% of hard-compatible prior mass was nonconstant, so the hard-conditioned target-constant mass was only 27.5%–28.0%. Actual training made all 128/128 models the target constant after one optimizer step. Even the subset already correct on the training point moved unanimously.</p>
-<p><strong>Conclusion.</strong> Initialization simplicity bias is a real zeroth-order term, but optimization can transport mass between functions that already satisfy the training set. The result rejects exact hard-conditioning as a general training mechanism; it does not reject approximate Bayesian descriptions on richer continuous objects.</p></div>
+<h2 id="1-e01a-completeness">1. E01a completeness</h2>
+<ul>
+<li>Protocol version: <code>static_prior_vs_sgd_function_posterior_v1</code>;</li>
+<li>1,048,576 prior samples;</li>
+<li>5 conditions with 8,192 training trajectories each;</li>
+<li>three path-test protocols with 4,096 initializations each;</li>
+<li>all conditions reached hard exact on the training set;</li>
+<li>total runtime about 693.9 seconds;</li>
+<li>the raw function distributions, logits, bootstrap, path statistics, and plots are all in the ZIP.</li>
+</ul>
+<h3 id="1-1-per-function-tv-far-exceeds-sampling-noise">1.1 Per-function TV far exceeds sampling noise</h3>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+<th style="text-align: right;">First-fit TV</th>
+<th style="text-align: right;">post-fit 100 TV</th>
+<th style="text-align: right;">post-fit 1,000 TV</th>
+<th style="text-align: right;">age 1,000 null p95</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>single_x0_y0</code></td>
+<td style="text-align: right;">0.104</td>
+<td style="text-align: right;">0.539</td>
+<td style="text-align: right;">0.538</td>
+<td style="text-align: right;">0.037</td>
+</tr>
+<tr>
+<td><code>single_x0_y1</code></td>
+<td style="text-align: right;">0.102</td>
+<td style="text-align: right;">0.535</td>
+<td style="text-align: right;">0.534</td>
+<td style="text-align: right;">0.037</td>
+</tr>
+<tr>
+<td><code>rule30_k2</code></td>
+<td style="text-align: right;">0.309</td>
+<td style="text-align: right;">0.638</td>
+<td style="text-align: right;">0.640</td>
+<td style="text-align: right;">0.028</td>
+</tr>
+<tr>
+<td><code>rule30_k3</code></td>
+<td style="text-align: right;">0.308</td>
+<td style="text-align: right;">0.616</td>
+<td style="text-align: right;">0.620</td>
+<td style="text-align: right;">0.019</td>
+</tr>
+<tr>
+<td><code>rule30_k4</code></td>
+<td style="text-align: right;">0.309</td>
+<td style="text-align: right;">0.602</td>
+<td style="text-align: right;">0.607</td>
+<td style="text-align: right;">0.017</td>
+</tr>
+</tbody>
+</table>
+<p>All bootstrap tests reach the smallest <code>p≈0.001</code> resolvable with the current 1,000 repetitions. With the training set unchanged, the distribution continues to move away from the fixed static posterior within post-fit 100 steps.</p>
+<h3 id="1-2-rank-reversal-of-specific-functions">1.2 Rank reversal of specific functions</h3>
+<p><code>rule30_k3</code> at age 1,000:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">function ID</th>
+<th style="text-align: right;">Static conditional prior</th>
+<th style="text-align: right;">Adam trained distribution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">254</td>
+<td style="text-align: right;">43.61%</td>
+<td style="text-align: right;">16.53%</td>
+</tr>
+<tr>
+<td style="text-align: right;">238</td>
+<td style="text-align: right;">17.32%</td>
+<td style="text-align: right;">79.32%</td>
+</tr>
+</tbody>
+</table>
+<p>This is not a simple sharpening of the original ordering by a drop in a common temperature, but a reordering of the specific continuation functions.</p>
+<h3 id="1-3-training-history-is-not-fully-washed-out-by-2-000-steps">1.3 Training history is not fully washed out by 2,000 steps</h3>
+<p>After reaching the final training set and training for another 2,000 steps, the hard-function mismatch rates of same-initialization models are:</p>
+<table>
+<thead>
+<tr>
+<th>Paired paths</th>
+<th style="text-align: right;">Function mismatch rate</th>
+<th style="text-align: right;">TV between the two empirical distributions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>direct vs forward</td>
+<td style="text-align: right;">28.20%</td>
+<td style="text-align: right;">0.197</td>
+</tr>
+<tr>
+<td>direct vs reverse</td>
+<td style="text-align: right;">19.51%</td>
+<td style="text-align: right;">0.046</td>
+</tr>
+<tr>
+<td>forward vs reverse</td>
+<td style="text-align: right;">27.08%</td>
+<td style="text-align: right;">0.158</td>
+</tr>
+</tbody>
+</table>
+<p>The stage sizes and total step counts of forward and reverse are matched, so these two give the cleanest order effect; direct sees the final training set from the very beginning, so the full difference between it and the incremental paths cannot be attributed solely to order.</p>
+<h2 id="2-e01b-completeness-and-results">2. E01b completeness and results</h2>
+<ul>
+<li>Protocol version: <code>single_sample_prior_dynamics_1024_v1</code>;</li>
+<li>the prior covers 186/256 observed hard functions;</li>
+<li>four conditions with 128 models each, all fitting in one step;</li>
+<li>ages 0/1/2 all saved, with no transient reversal of the hard function.</li>
+</ul>
+<p>Initialization prior:</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th style="text-align: right;">Mass</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>constant 0</td>
+<td style="text-align: right;">14.01%</td>
+</tr>
+<tr>
+<td>constant 1</td>
+<td style="text-align: right;">13.72%</td>
+</tr>
+<tr>
+<td>non-constant functions, total</td>
+<td style="text-align: right;">72.27%</td>
+</tr>
+</tbody>
+</table>
+<p>After single-sample conditioning, the static mass of the target constant is:</p>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+<th style="text-align: right;">Static target-constant mass</th>
+<th style="text-align: right;">Post-training target-constant mass</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>000 -&gt; 0</code></td>
+<td style="text-align: right;">27.49%</td>
+<td style="text-align: right;">100%</td>
+</tr>
+<tr>
+<td><code>000 -&gt; 1</code></td>
+<td style="text-align: right;">27.99%</td>
+<td style="text-align: right;">100%</td>
+</tr>
+<tr>
+<td><code>111 -&gt; 0</code></td>
+<td style="text-align: right;">27.76%</td>
+<td style="text-align: right;">100%</td>
+</tr>
+<tr>
+<td><code>111 -&gt; 1</code></td>
+<td style="text-align: right;">27.71%</td>
+<td style="text-align: right;">100%</td>
+</tr>
+</tbody>
+</table>
+<p>All four groups, 128/128, became the target constant after the first Adam update. Seeds that already satisfied the training point at initialization but were still non-constant functions also all migrated to the target constant, 45/45 and 47/47. If sampling independently from the static conditional prior, the probability that all 128 draws in a single group hit the target constant is about <code>10^-71</code>.</p>
+<p>The final TV of the four conditions is about 0.720--0.725, JS about 0.515--0.521 bit; the static hard-function entropy is about 4.96--5.01 bit, and 0 after training. At age 2 the average training margin is about 11.3--11.5 and the average absolute logit on unseen inputs is about 10.8--11.1, so this is not an accidental flip near the threshold.</p>
+<h2 id="3-stage-verdict">3. Stage verdict</h2>
+<p>The two experiments jointly reject:</p>
+<blockquote>
+<p>All simplicity bias is already fixed at initialization; training only deletes hard functions inconsistent with the labels and samples in proportion to the remaining prior.</p>
+</blockquote>
+<p>The conclusion that is retained is:</p>
+<blockquote>
+<p>The initialization function prior is an important zeroth-order term, but the optimizer can systematically transport the mass of functions that already satisfy the training set, making the odds of specific functions depend on training age and history.</p>
+</blockquote>
+<h2 id="4-what-may-not-be-claimed">4. What may not be claimed</h2>
+<ol>
+<li>The simplicity bias of the initialization prior has not been denied;</li>
+<li>continuous-logit, soft-likelihood, or explicit-dynamics Bayesian models have not been denied;</li>
+<li>both E01a and E01b use Adam, so the results cannot yet be automatically generalized to arbitrary optimizers;</li>
+<li>it has not been proven that the migration direction equals a decrease in machine-independent Kolmogorov complexity;</li>
+<li>it has not been proven that paths still fail to merge after infinite time;</li>
+<li>logits keep changing after the hard function stabilizes, so the two must not be conflated into the same object.</li>
+</ol>
+<h2 id="5-local-raw-result-bundles">5. Local raw result bundles</h2>
+<table>
+<thead>
+<tr>
+<th>Bundle</th>
+<th>SHA256</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>results/results_static_prior_vs_sgd_posterior.zip</code></td>
+<td><code>ddfd912adb0581d174a88401dc7391267c89650752d0fcf30821fa3000b2e2eb</code></td>
+</tr>
+<tr>
+<td><code>results/results_single_sample_prior_dynamics_1024.zip</code></td>
+<td><code>e75fa3084824ab7fc553d4d20861af3135512838bd4c22ead6708e021f28a6b5</code></td>
+</tr>
+</tbody>
+</table>
+<p>These ZIPs are for local numerical verification and are not part of the final upload package. The published version retains the key tables, frozen scripts, and configurations in this report, so readers can directly rerun to generate the complete results.</p></div>
         <footer class="experiment-pager"><span></span><a href="e02.html">E02 Rule-Bit Counterfactual Invariance →</a></footer>
       </article>
     </main>

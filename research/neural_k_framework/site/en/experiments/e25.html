@@ -23,7 +23,7 @@
         <span class="mark-block">NK</span>
         <span class="mark-text">Neural K Research Archive</span>
       </a>
-      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="../index.html">Research</a><a class="top-link" href="../theory-core.html">Core Theory</a><a class="top-link active" href="../experiments/index.html">Experiments</a><a class="top-link" href="../references.html">References</a><a class="top-link" href="../evidence-ledger.html">Evidence</a></nav>
+      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="../index.html">Research</a><a class="top-link" href="../theory-core.html">Core Theory</a><a class="top-link active" href="../experiments/index.html">Experiments</a><a class="top-link" href="../post-upload.html">Updates</a><a class="top-link" href="../references.html">References</a><a class="top-link" href="../evidence-ledger.html">Evidence</a></nav>
       <nav class="language-switch" aria-label="Language"><a href="../../experiments/e25.html" lang="zh-CN">中文</a><span class="active" lang="en">EN</span></nav>
       <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
         <span aria-hidden="true">☰</span><span>Contents</span>
@@ -38,12 +38,24 @@
         <nav class="toc"><div class="toc">
 <ul>
 <li><a href="#overview">Experiment overview</a></li>
-<li><a href="#motivation">Why this experiment was run</a></li>
+<li><a href="#purpose">Purpose</a></li>
+<li><a href="#run-order">Run order</a></li>
+<li><a href="#sha256">SHA256</a></li>
+<li><a href="#motivation">Why this experiment was run, and how it was judged</a></li>
+<li><a href="#1-from-rule-tables-to-real-inputs">1. From rule tables to real inputs</a></li>
+<li><a href="#2-stage-0-calibration">2. Stage 0 calibration</a></li>
+<li><a href="#3-stage-1-freezing">3. Stage 1 freezing</a></li>
 <li><a href="#results">Results, interpretation, and limits</a></li>
+<li><a href="#1-task-difference-at-four-samples">1. Task difference at four samples</a></li>
+<li><a href="#2-static-volume-predicts-real-images">2. Static volume predicts real images</a></li>
+<li><a href="#3-static-geometry-reconstructs-the-nll-u-shape">3. Static geometry reconstructs the NLL U-shape</a></li>
+<li><a href="#4-agreement-accuracy-and-calibration-decouple">4. Agreement, accuracy, and calibration decouple</a></li>
+<li><a href="#5-the-volume-gap-aligns-with-sample-complexity">5. The volume gap aligns with sample complexity</a></li>
+<li><a href="#6-boundaries">6. Boundaries</a></li>
 </ul>
 </div>
 </nav>
-        <div class="sidebar-label experiment-label">All experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>Static Hard Conditioning versus Optimizer-Induced Function Transport</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-Bit Counterfactual Invariance</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>Prior-Consistent Function Dynamics and Width Intervention</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>Post-Fit Drift in the Mingard 2025 Boolean Protocol</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>Feature Learning When a Fixed NTK Is Already Sufficient</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>Loss-Conditioned Prior Annealing</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>Function-ID Wandering and Matched-Loss Static Controls</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>Shared Intermediate Computation under Finite Capacity</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>Long Training with 80% Hidden Label Noise</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>Raw-BCE Competition between Preregistered Simple and Complex Function Pairs</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule-30 Train/Validation Gradient Alignment across Dataset Size</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND Shortcut Static Geometry and a One-Example Balance Intervention</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>SGD Dynamics of the AND Shortcut and Balanced Intervention</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>Weighted Rule-Bit Function Switching across Loss Scales</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Complete Functions versus Marginal Concentration in Modular-97 Grokking</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity Reachability, Half-Space Generalization, and Scaffold Recovery</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>Static Deep-Loss Mass versus Optimizer Transport</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>Teacher-Free Consensus and Symbolic Readability</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>Full-Truth-Table Rule Volume</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Measure Closure between Full Rules, Fixed Datasets, and Margin Cores</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement Control and a Consensus Complexity Frontier</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>Per-Example Free Energy and an Information Invariant</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>Prospective Prediction from Full-Rule Volume to Data Transition</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>Deep Neural K Crossing of Parity4 and a One-Point Exception</span></a><a class="experiment-nav-link active" href="e25.html"><span>E25</span><span>MNIST Sample Complexity and Static Branch Prediction</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>Balanced Unlabeled MNIST Label Volume</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Agreement Before and During Grokking</span></a><a class="experiment-nav-link" href="e28.html"><span>E28</span><span>Whole-Network HMC versus Adam on 50k MNIST</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Loss-Resolved Robustness to a Dead Input Bit</span></a><a class="experiment-nav-link" href="e30.html"><span>E30</span><span>Weight Decay Reshapes the Static Complete-Function Landscape</span></a></nav>
+        <div class="sidebar-label experiment-label">All experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>Static Hard Conditioning versus Optimizer-Induced Function Transport</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-Bit Counterfactual Invariance</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>Prior-Consistent Function Dynamics and Width Intervention</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>Post-Fit Drift in the Mingard 2025 Boolean Protocol</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>Feature Learning When a Fixed NTK Is Already Sufficient</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>Loss-Conditioned Prior Annealing</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>Function-ID Wandering and Matched-Loss Static Controls</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>Shared Intermediate Computation under Finite Capacity</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>Long Training with 80% Hidden Label Noise</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>Raw-BCE Competition between Preregistered Simple and Complex Function Pairs</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule-30 Train/Validation Gradient Alignment across Dataset Size</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND Shortcut Static Geometry and a One-Example Balance Intervention</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>SGD Dynamics of the AND Shortcut and Balanced Intervention</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>Weighted Rule-Bit Function Switching across Loss Scales</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Complete Functions versus Marginal Concentration in Modular-97 Grokking</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity Reachability, Half-Space Generalization, and Scaffold Recovery</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>Static Deep-Loss Mass versus Optimizer Transport</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>Teacher-Free Consensus and Symbolic Readability</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>Full-Truth-Table Rule Volume</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Measure Closure between Full Rules, Fixed Datasets, and Margin Cores</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement Control and a Consensus Complexity Frontier</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>Per-Example Free Energy and an Information Invariant</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>Prospective Prediction from Full-Rule Volume to Data Transition</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>Deep Neural K Crossing of Parity4 and a One-Point Exception</span></a><a class="experiment-nav-link active" href="e25.html"><span>E25</span><span>MNIST Sample Complexity and Static Branch Prediction</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>Balanced Unlabeled MNIST Label Volume</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Agreement Before and During Grokking</span></a><a class="experiment-nav-link" href="e28.html"><span>E28</span><span>Whole-Network HMC versus Adam on 50k MNIST</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Loss-Resolved Robustness to a Dead Input Bit</span></a><a class="experiment-nav-link" href="e30.html"><span>E30</span><span>Weight Decay Reshapes the Static Complete-Function Landscape</span></a></nav><div class="sidebar-label experiment-label">Post-upload experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="../experiments/e31.html"><span>E31</span><span>Loss and output amplitude</span></a><a class="experiment-nav-link" href="../experiments/e32.html"><span>E32</span><span>Random-memory scaling</span></a><a class="experiment-nav-link" href="../experiments/e33.html"><span>E33</span><span>Cross-architecture output volume</span></a><a class="experiment-nav-link" href="../experiments/e34.html"><span>E34</span><span>Conditional rule duel</span></a><a class="experiment-nav-link" href="../experiments/e35.html"><span>E35</span><span>Frozen functions around grokking</span></a><a class="experiment-nav-link" href="../experiments/e36.html"><span>E36</span><span>Independent Peleg/G&amp;C recheck</span></a><a class="experiment-nav-link" href="../experiments/e37.html"><span>E37</span><span>Measure robustness and Gaussian alignment</span></a></nav>
       </div>
     </aside>
 
@@ -55,15 +67,76 @@
           <p class="article-description">Move the static-volume framework from enumerable Boolean maps to real images and test whether it predicts labels and validation-NLL turning points.</p>
         </header>
         <div class="article-body"><div class="source-bar"><span>Scripts</span><div><a href="../../../experiments/experiment_25_mnist_static_prediction/experiment_mnist_loss_calibration.py">experiment_mnist_loss_calibration.py</a><a href="../../../experiments/experiment_25_mnist_static_prediction/experiment_mnist_static_branch_prediction.py">experiment_mnist_static_branch_prediction.py</a></div></div><h2 id="overview">Experiment overview</h2>
-<p>Stage 0 average-pools MNIST to 7×7 and trains a 1,633-parameter tanh MLP on 0/1 and 3/8 classification for sample sizes 4–512, four datasets per size, and eight seeds. Stage 1 freezes one n=4 dataset per task and nine train-BCE thresholds, then uses six-replica Gaussian-pCN SMC to compare the two label branches of each unseen image before scoring.</p>
-<h2 id="motivation">Why this experiment was run</h2>
-<p>The Boolean framework would remain a toy unless a fixed training set’s static low-loss mass could predict unseen natural inputs. The 0/1 versus 3/8 pair supplies a same-architecture, same-sample-count contrast with radically different data sufficiency.</p>
+<h2 id="purpose">Purpose</h2>
+<p>E25 ports the Boolean truth table method to real images. Stage 0 first calibrates the minimal training set and the overfitting loss range on two binary classification tasks; after freezing the conditions, Stage 1 compares the static mass of the two label branches for each unseen image within the same training-loss parent, and examines its prediction accuracy, the NLL U-shape, and the position of the SGD turning point.</p>
+<h2 id="run-order">Run order</h2>
+<pre><code class="language-bash">python experiment_mnist_loss_calibration.py
+python experiment_mnist_static_branch_prediction.py
+</code></pre>
+<ul>
+<li><a href="#motivation">Experiment motivation and frozen protocol</a></li>
+<li><a href="#results">Results and boundaries</a></li>
+</ul>
+<h2 id="sha256">SHA256</h2>
+<pre><code class="language-text">0cbd6099986c973fd77e38397d8f14a878ca7054f4e308e9675dfc819e1c5df5  calibration script
+20b19dffdcf254bd0656e83b9b02393e9ee887c0f00f62dc7ed2019d6c766eeb  static prediction script
+11e786b30e3e76739e3666f805fbbaaf9060475c021e54c7761b862ace85dae5  calibration ZIP
+f104fc963fa9e7afe1531b32d63a2da80796899f84179cd5c68df24de3b05ae9  prediction ZIP
+</code></pre>
+<p>The MNIST IDX files must be placed in the data directory configured in the scripts. The raw result ZIPs are located in <code>E:\Downloads</code> and are not included in the release package.</p>
+<h2 id="motivation">Why this experiment was run, and how it was judged</h2>
+<h2 id="1-from-rule-tables-to-real-inputs">1. From rule tables to real inputs</h2>
+<p>For an unseen sample <code>x</code>, the framework's direct prediction does not first train an additional classifier, but instead compares, within the same <code>L_D&lt;=epsilon</code> static parent:</p>
+<div class="math-display">$$
+P_{hard}(y\mid x,D,\epsilon)
+=\frac{\mu\{L_D\le\epsilon,h_\theta(x)=y\}}
+{\mu\{L_D\le\epsilon\}}.
+$$</div>
+<p>The soft version adds a Bernoulli likelihood inside the parent; <code>-log P_soft(y)</code> is the single-sample free-energy increment. Both choose the label with the larger remaining parameter mass.</p>
+<h2 id="2-stage-0-calibration">2. Stage 0 calibration</h2>
+<ul>
+<li>Tasks: MNIST <code>0 vs 1</code> and <code>3 vs 8</code>;</li>
+<li>Input: 28x28 average-pooled to 7x7 and mapped to [-1,1];</li>
+<li>Network: <code>49 -&gt; 32 -&gt; 1 tanh</code>, 1,633 parameters;</li>
+<li>n=4 to 512, four datasets x eight seeds, 15,000 steps;</li>
+<li>Measured train/validation BCE, hard accuracy, agreement, and the U-shape turning point.</li>
+</ul>
+<p>Stage 0 is allowed to use validation to select the two contrast tasks, the minimal n, and the loss grid to cover; what follows is therefore a "calibrate-then-freeze" confirmation, not a fully blind prediction on a new task.</p>
+<h2 id="3-stage-1-freezing">3. Stage 1 freezing</h2>
+<p>Froze <code>0/1,n=4,dataset0</code> and <code>3/8,n=4,dataset0</code>, together with nine train raw-BCE sections <code>0.6...4e-5</code>. Each condition used Gaussian-pCN SMC with 6 replicas x 4,096 particles. For each section, the validation/test predictions were first written to an unscored file and their SHA256 computed, and only then were the labels read for scoring.</p>
+<p>Main verdicts:</p>
+<ol>
+<li>Whether the static branch predicts real MNIST significantly above chance;</li>
+<li>Whether the static soft NLL forms a U-shape on its own;</li>
+<li>Whether its lowest interval aligns with the matched-loss SGD validation turning point;</li>
+<li>Whether the low-loss volume difference between the two tasks points in the same direction as the minimal sufficient sample size.</li>
+</ol>
 <h2 id="results">Results, interpretation, and limits</h2>
-<p>At n=4, median best-validation checkpoints reached 98.31% test accuracy for 0/1 and 69.66% for 3/8. Under a 95% validation threshold, 0/1 crossed at n=4 and 3/8 at n=512.</p>
-<p>Static hard prediction rose from 92.97% to 96.35% for 0/1 and from 76.69% to about 78.13% for 3/8. Static soft NLL formed a U-shape whose minimum aligned within one preregistered grid cell of AdamW for 0/1 and directly covered the 3/8 training-loss turning interval. Prediction concentration continued after accuracy plateaued, while persistent mistakes became more confident.</p>
-<p>The deep-loss mass disadvantage of 3/8 relative to 0/1 expanded from 0.56 to 55.43 decimal orders, aligned with the four-versus-512 sample requirement.</p>
-<p><strong>Conclusion.</strong> Static loss-conditioned volume has strong sample-level predictive power on real images and contains a geometric source of the validation-NLL U-shape. The tasks and loss range were calibration-selected, so a new digit pair is still required for a fully blind test.</p>
-<figure class="result-figure"><a href="../../assets/figures/e25_mnist_static_prediction.png" target="_blank" rel="noopener"><img src="../../assets/figures/e25_mnist_static_prediction.png" alt="MNIST static branch prediction and concentration" loading="lazy"></a><figcaption>MNIST static branch prediction and concentration</figcaption></figure></div>
+<h2 id="1-task-difference-at-four-samples">1. Task difference at four samples</h2>
+<p>In Stage 0, checkpoints were selected by the lowest validation BCE along each trajectory: for <code>0/1,n=4</code>, the median validation accuracy was 96.74% and test 98.31%; for <code>3/8,n=4</code>, only 70.44%/69.66%. Under the operational threshold of median best-validation of at least 95%, 0/1 already crossed it at n=4, while 3/8 crossed it only at n=512.</p>
+<p>Identical input dimension, network, sample count, and training budget therefore correspond to a roughly 128-fold difference in sample-identification scale.</p>
+<h2 id="2-static-volume-predicts-real-images">2. Static volume predicts real images</h2>
+<p>All nine Stage 1 loss sections completed. Test static hard accuracy from shallow to deep is roughly:</p>
+<pre><code class="language-text">0 vs 1: 92.97% -&gt; peak 96.35% -&gt; 96.09%
+3 vs 8: 76.69% -&gt; peak 78.13% -&gt; 78.13%
+</code></pre>
+<p>With only four training samples, both tasks are already clearly above chance at <code>epsilon=0.6</code>; going deeper in loss overall improves the hard prediction, but not monotonically throughout. The static distribution also differs markedly from matched-loss AdamW, especially on 3/8 at shallow sections, where the static accuracy is about 76.7% versus about 60% for SGD.</p>
+<figure class="result-figure"><a href="../../assets/figures/e25_mnist_static_prediction.png" target="_blank" rel="noopener"><img src="../../assets/figures/e25_mnist_static_prediction.png" alt="MNIST static branch prediction and concentration" loading="lazy"></a><figcaption>MNIST static branch prediction and concentration</figcaption></figure>
+<h2 id="3-static-geometry-reconstructs-the-nll-u-shape">3. Static geometry reconstructs the NLL U-shape</h2>
+<p>For 0/1, the test and validation soft NLL are lowest near <code>epsilon=0.0006</code>; the SGD validation minimum on the same fixed training set corresponds to a train BCE of about <code>1.46e-4</code>, one preregistered grid interval away. For 3/8, the test minimum is at 0.01 and the validation minimum at 0.03; the SGD minimum corresponds to a train BCE of about 0.0455, landing directly in the adjacent interval.</p>
+<p>The classical validation-loss U-shape therefore has at least one static geometric source that precedes the optimizer. Because Stage 0 participated in selecting the tasks and the loss coverage, this is not yet a fully blind prediction of the turning-point position for a brand-new digit pair.</p>
+<h2 id="4-agreement-accuracy-and-calibration-decouple">4. Agreement, accuracy, and calibration decouple</h2>
+<p>Hard point collision increases as loss deepens: 0/1 rises from 0.595 to 0.979, and 3/8 from 0.542 to 0.922. But on 3/8 the contraction continues after accuracy stalls around 78%. On persistently mispredicted samples, the soft branch mass of the true label keeps decreasing past the NLL optimum, which explains why hard accuracy stays nearly unchanged while NLL rises: a small amount of boundary correction and inflated confidence on errors can happen at the same time.</p>
+<h2 id="5-the-volume-gap-aligns-with-sample-complexity">5. The volume gap aligns with sample complexity</h2>
+<p>The median parameter-mass deficit of 3/8 relative to 0/1 grows from 0.56 decimal orders of magnitude at <code>epsilon=0.6</code> to 55.43 orders of magnitude at <code>epsilon=4e-5</code>; this points in the same direction as the 95% identification threshold <code>n=512 vs n=4</code>. It constitutes a triangulation among the Neural K-profile, real-image prediction, and the sample data transition.</p>
+<h2 id="6-boundaries">6. Boundaries</h2>
+<ul>
+<li>Only two binary classification tasks, a tiny MLP, and one fixed n=4 dataset per task are covered;</li>
+<li>The static soft branch is not a full Bayesian posterior predictive;</li>
+<li>The deep-tail lineage shows degeneracy; high-precision single-sample odds still require more particles and repetitions;</li>
+<li>The results show that static volume has first-order predictive power, while once again refuting the claim that "SGD unbiasedly samples the static posterior";</li>
+<li>This experiment does not explain why this network language assigns 3/8 a smaller low-loss volume.</li>
+</ul></div>
         <footer class="experiment-pager"><a href="e24.html">← E24 Deep Neural K Crossing of Parity4 and a One-Point Exception</a><a href="e26.html">E26 Balanced Unlabeled MNIST Label Volume →</a></footer>
       </article>
     </main>

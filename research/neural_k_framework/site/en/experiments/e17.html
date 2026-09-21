@@ -23,7 +23,7 @@
         <span class="mark-block">NK</span>
         <span class="mark-text">Neural K Research Archive</span>
       </a>
-      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="../index.html">Research</a><a class="top-link" href="../theory-core.html">Core Theory</a><a class="top-link active" href="../experiments/index.html">Experiments</a><a class="top-link" href="../references.html">References</a><a class="top-link" href="../evidence-ledger.html">Evidence</a></nav>
+      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="../index.html">Research</a><a class="top-link" href="../theory-core.html">Core Theory</a><a class="top-link active" href="../experiments/index.html">Experiments</a><a class="top-link" href="../post-upload.html">Updates</a><a class="top-link" href="../references.html">References</a><a class="top-link" href="../evidence-ledger.html">Evidence</a></nav>
       <nav class="language-switch" aria-label="Language"><a href="../../experiments/e17.html" lang="zh-CN">中文</a><span class="active" lang="en">EN</span></nav>
       <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
         <span aria-hidden="true">☰</span><span>Contents</span>
@@ -38,12 +38,32 @@
         <nav class="toc"><div class="toc">
 <ul>
 <li><a href="#overview">Experiment overview</a></li>
-<li><a href="#motivation">Why this experiment was run</a></li>
+<li><a href="#purpose">Purpose</a></li>
+<li><a href="#files">Files</a></li>
+<li><a href="#frozen-script-sha256">Frozen script SHA256</a></li>
+<li><a href="#key-result-bundle-sha256">Key result bundle SHA256</a></li>
+<li><a href="#motivation">Why this experiment was run, and how it was judged</a></li>
+<li><a href="#1-the-two-layer-volume-hypothesis">1. The two-layer volume hypothesis</a></li>
+<li><a href="#2-experiment-chain">2. Experiment chain</a><ul>
+<li><a href="#a-brute-force-prior-and-optimizer-crossing">A. Brute-force prior and optimizer crossing</a></li>
+<li><a href="#b-constrained-smc">B. Constrained SMC</a></li>
+<li><a href="#c-real-training-from-the-deep-tail">C. Real training from the deep tail</a></li>
+<li><a href="#d-time-mixing">D. Time mixing</a></li>
+</ul>
+</li>
+<li><a href="#3-preregistered-boundaries">3. Preregistered boundaries</a></li>
 <li><a href="#results">Results, interpretation, and limits</a></li>
+<li><a href="#1-shallow-layer-static-mass-has-strong-first-order-predictive-power">1. Shallow-layer static mass has strong first-order predictive power</a></li>
+<li><a href="#2-smc-is-calibrated-in-the-brute-force-overlap-region-and-reveals-deep-tail-reordering">2. SMC is calibrated in the brute-force overlap region and reveals deep-tail reordering</a></li>
+<li><a href="#3-there-is-a-loss-dependent-lag-between-the-optimizer-and-the-static-geometry">3. There is a loss-dependent lag between the optimizer and the static geometry</a></li>
+<li><a href="#4-deep-tail-adamw-can-completely-overturn-the-static-winner">4. Deep-tail AdamW can completely overturn the static winner</a></li>
+<li><a href="#5-starting-from-the-smc-deep-tail-shows-that-path-history-is-irreducible">5. Starting from the SMC deep tail shows that path history is irreducible</a></li>
+<li><a href="#6-single-trajectory-time-sampling-is-not-equal-to-the-multi-seed-distribution">6. Single-trajectory time sampling is not equal to the multi-seed distribution</a></li>
+<li><a href="#7-final-verdict">7. Final verdict</a></li>
 </ul>
 </div>
 </nav>
-        <div class="sidebar-label experiment-label">All experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>Static Hard Conditioning versus Optimizer-Induced Function Transport</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-Bit Counterfactual Invariance</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>Prior-Consistent Function Dynamics and Width Intervention</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>Post-Fit Drift in the Mingard 2025 Boolean Protocol</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>Feature Learning When a Fixed NTK Is Already Sufficient</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>Loss-Conditioned Prior Annealing</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>Function-ID Wandering and Matched-Loss Static Controls</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>Shared Intermediate Computation under Finite Capacity</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>Long Training with 80% Hidden Label Noise</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>Raw-BCE Competition between Preregistered Simple and Complex Function Pairs</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule-30 Train/Validation Gradient Alignment across Dataset Size</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND Shortcut Static Geometry and a One-Example Balance Intervention</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>SGD Dynamics of the AND Shortcut and Balanced Intervention</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>Weighted Rule-Bit Function Switching across Loss Scales</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Complete Functions versus Marginal Concentration in Modular-97 Grokking</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity Reachability, Half-Space Generalization, and Scaffold Recovery</span></a><a class="experiment-nav-link active" href="e17.html"><span>E17</span><span>Static Deep-Loss Mass versus Optimizer Transport</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>Teacher-Free Consensus and Symbolic Readability</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>Full-Truth-Table Rule Volume</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Measure Closure between Full Rules, Fixed Datasets, and Margin Cores</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement Control and a Consensus Complexity Frontier</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>Per-Example Free Energy and an Information Invariant</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>Prospective Prediction from Full-Rule Volume to Data Transition</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>Deep Neural K Crossing of Parity4 and a One-Point Exception</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST Sample Complexity and Static Branch Prediction</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>Balanced Unlabeled MNIST Label Volume</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Agreement Before and During Grokking</span></a><a class="experiment-nav-link" href="e28.html"><span>E28</span><span>Whole-Network HMC versus Adam on 50k MNIST</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Loss-Resolved Robustness to a Dead Input Bit</span></a><a class="experiment-nav-link" href="e30.html"><span>E30</span><span>Weight Decay Reshapes the Static Complete-Function Landscape</span></a></nav>
+        <div class="sidebar-label experiment-label">All experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>Static Hard Conditioning versus Optimizer-Induced Function Transport</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-Bit Counterfactual Invariance</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>Prior-Consistent Function Dynamics and Width Intervention</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>Post-Fit Drift in the Mingard 2025 Boolean Protocol</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>Feature Learning When a Fixed NTK Is Already Sufficient</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>Loss-Conditioned Prior Annealing</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>Function-ID Wandering and Matched-Loss Static Controls</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>Shared Intermediate Computation under Finite Capacity</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>Long Training with 80% Hidden Label Noise</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>Raw-BCE Competition between Preregistered Simple and Complex Function Pairs</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule-30 Train/Validation Gradient Alignment across Dataset Size</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND Shortcut Static Geometry and a One-Example Balance Intervention</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>SGD Dynamics of the AND Shortcut and Balanced Intervention</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>Weighted Rule-Bit Function Switching across Loss Scales</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Complete Functions versus Marginal Concentration in Modular-97 Grokking</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity Reachability, Half-Space Generalization, and Scaffold Recovery</span></a><a class="experiment-nav-link active" href="e17.html"><span>E17</span><span>Static Deep-Loss Mass versus Optimizer Transport</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>Teacher-Free Consensus and Symbolic Readability</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>Full-Truth-Table Rule Volume</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Measure Closure between Full Rules, Fixed Datasets, and Margin Cores</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement Control and a Consensus Complexity Frontier</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>Per-Example Free Energy and an Information Invariant</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>Prospective Prediction from Full-Rule Volume to Data Transition</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>Deep Neural K Crossing of Parity4 and a One-Point Exception</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST Sample Complexity and Static Branch Prediction</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>Balanced Unlabeled MNIST Label Volume</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Agreement Before and During Grokking</span></a><a class="experiment-nav-link" href="e28.html"><span>E28</span><span>Whole-Network HMC versus Adam on 50k MNIST</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Loss-Resolved Robustness to a Dead Input Bit</span></a><a class="experiment-nav-link" href="e30.html"><span>E30</span><span>Weight Decay Reshapes the Static Complete-Function Landscape</span></a></nav><div class="sidebar-label experiment-label">Post-upload experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="../experiments/e31.html"><span>E31</span><span>Loss and output amplitude</span></a><a class="experiment-nav-link" href="../experiments/e32.html"><span>E32</span><span>Random-memory scaling</span></a><a class="experiment-nav-link" href="../experiments/e33.html"><span>E33</span><span>Cross-architecture output volume</span></a><a class="experiment-nav-link" href="../experiments/e34.html"><span>E34</span><span>Conditional rule duel</span></a><a class="experiment-nav-link" href="../experiments/e35.html"><span>E35</span><span>Frozen functions around grokking</span></a><a class="experiment-nav-link" href="../experiments/e36.html"><span>E36</span><span>Independent Peleg/G&amp;C recheck</span></a><a class="experiment-nav-link" href="../experiments/e37.html"><span>E37</span><span>Measure robustness and Gaussian alignment</span></a></nav>
       </div>
     </aside>
 
@@ -55,13 +75,131 @@
           <p class="article-description">Measure how closely static constrained-SMC function distributions predict AdamW/SGD ensembles and identify conditions where optimizer history dominates.</p>
         </header>
         <div class="article-body"><div class="source-bar"><span>Scripts</span><div><a href="../../../experiments/experiment_17_static_vs_optimizer/experiment_8bit_seed_time_mixing.py">experiment_8bit_seed_time_mixing.py</a><a href="../../../experiments/experiment_17_static_vs_optimizer/experiment_balanced_n10_tanh16_many_seed_retrain.py">experiment_balanced_n10_tanh16_many_seed_retrain.py</a><a href="../../../experiments/experiment_17_static_vs_optimizer/experiment_static_loss_vs_optimizer_distribution.py">experiment_static_loss_vs_optimizer_distribution.py</a><a href="../../../experiments/experiment_17_static_vs_optimizer/experiment_static_low_loss_constrained_smc.py">experiment_static_low_loss_constrained_smc.py</a><a href="../../../experiments/experiment_17_static_vs_optimizer/experiment_train_from_smc_deep_tail.py">experiment_train_from_smc_deep_tail.py</a></div></div><h2 id="overview">Experiment overview</h2>
-<p>The reference task is balanced AND with ten examples and a <code>4 -&gt; 16 x 2 -&gt; 1 tanh</code> network. The unit includes a 33.5-million-network brute-force prior, calibrated constrained SMC, AdamW/SGD/momentum crossings, a 32,768-seed AdamW retraining experiment, training from SMC deep-tail states, projection controls, and an 8-bit seed-versus-time mixing audit.</p>
-<h2 id="motivation">Why this experiment was run</h2>
-<p>Static volume can be an important first-order influence without being the optimizer distribution. A decisive test must compare both at matched loss, start optimization from real SMC states, and distinguish multi-seed ensembles from one trajectory sampled over time.</p>
+<h2 id="purpose">Purpose</h2>
+<p>E17 uses a brute-force prior, rare-event constrained SMC, three optimizer crossings, 32,768-seed AdamW, continued training from SMC deep-tail starting points, and a seed/time mixing experiment to systematically test how strongly the static loss volume predicts real training, and whether the optimizer is merely an unbiased or second-order sampling correction of that static distribution.</p>
+<h2 id="files">Files</h2>
+<ul>
+<li><a href="#motivation">Experiment motivation and preregistered criteria</a></li>
+<li><a href="#results">Full results and stage verdicts</a></li>
+<li><code>experiment_static_loss_vs_optimizer_distribution.py</code></li>
+<li><code>experiment_static_low_loss_constrained_smc.py</code></li>
+<li><code>experiment_balanced_n10_tanh16_many_seed_retrain.py</code></li>
+<li><code>experiment_train_from_smc_deep_tail.py</code></li>
+<li><code>experiment_8bit_seed_time_mixing.py</code></li>
+</ul>
+<p>Recommended run order:</p>
+<pre><code class="language-bash">python experiment_static_loss_vs_optimizer_distribution.py
+python experiment_static_low_loss_constrained_smc.py
+python experiment_balanced_n10_tanh16_many_seed_retrain.py
+python experiment_train_from_smc_deep_tail.py
+python experiment_8bit_seed_time_mixing.py
+</code></pre>
+<p><code>train_from_smc_deep_tail</code> reads the checkpoint of constrained SMC; the other scripts can run independently. After SMC reaches its layer cap, it can be re-run against the same results directory and automatically resumes from the checkpoint.</p>
+<h2 id="frozen-script-sha256">Frozen script SHA256</h2>
+<pre><code class="language-text">f11398741e099168de115cc26795174f4079589f729749f742e710b42a7aa6a2  static/optimizer
+22e1dfefe45848de3c5aff5c25163d53f164e18b523b4d48949ab538a72d018c  constrained SMC
+4a39fe18290803c4de3a0065be05ccd2b307fbd93b6d09bcd2ace7770079b50f  many-seed retrain
+8fca65f0ca1a893276ac5163906d3310e2c365b7a6ff0f6290aefb9634221f74  train from SMC
+bfcf7625c6cd8025034b81f4a1320084350348052ab1eb05d2d9996ff796cde7  seed/time mixing
+</code></pre>
+<h2 id="key-result-bundle-sha256">Key result bundle SHA256</h2>
+<pre><code class="language-text">368a94da2e539d96af907cd38bab368e4df4c25a6c9f51dda211a16c5ee01228  static vs optimizer
+e68026823ee36de37ec8ac7e0eaa113a439b8c86edb49acca3971e2693f57af8  SMC final continuation
+77da455af559a0e11296f0e923be140d2370a8e494df80637353b48c2e1e2f11  32768-seed AdamW
+2c6f21f4b6479b75d89eae6b516bb83c9166ccef1e2c4781e17c3f62916f0e0e  train from SMC
+a1b344a1094a1cfb8ec2d0bb2b6d6f0c121abf3fb149dfa788ac8ef56e92a6b1  seed/time mixing
+</code></pre>
+<p>The multiple SMC ZIPs are merely continued runs of the same checkpoint and are not counted as separate experiments. The raw bundles live under <code>E:\Downloads</code> and are not part of the release package.</p>
+<h2 id="motivation">Why this experiment was run, and how it was judged</h2>
+<h2 id="1-the-two-layer-volume-hypothesis">1. The two-layer volume hypothesis</h2>
+<p>At the time, the following distinction was drawn:</p>
+<ol>
+<li>Static layer: whether lower loss changes function mass and biases it toward economical implementations;</li>
+<li>Training layer: whether real generalization is dominated by this static mass, leaving the optimizer with only second-order influence.</li>
+</ol>
+<p>E17 specifically stress-tests the second layer, while calibrating the rare-event measurements of the first layer.</p>
+<h2 id="2-experiment-chain">2. Experiment chain</h2>
+<h3 id="a-brute-force-prior-and-optimizer-crossing">A. Brute-force prior and optimizer crossing</h3>
+<p>4-bit balanced AND, <code>4 -&gt; 16 x 2 -&gt; 1 tanh</code>; 33,554,432 untrained networks and 4,096 paired initial weights, comparing the function distributions of AdamW, full-batch SGD, and momentum SGD when they first cross the same raw BCE.</p>
+<h3 id="b-constrained-smc">B. Constrained SMC</h3>
+<p>32,768 particles, 8 replicas, driving BCE down layer by layer through prior-preserving MCMC; cross-calibrated against the brute-force prior at 0.68/0.65/0.60, then pushed into the hard-exact deep tail below 0.07.</p>
+<h3 id="c-real-training-from-the-deep-tail">C. Real training from the deep tail</h3>
+<ul>
+<li>Real training of 32,768-seed AdamW on the same network and the same training set;</li>
+<li>4,096 starting points drawn from the SMC deep-tail D440 weights, pairing normal AdamW with AdamW projected back into the initialization box at every step, to test whether the static deep tail flows back to AND.</li>
+</ul>
+<h3 id="d-time-mixing">D. Time mixing</h3>
+<p>8-bit AND and random labels, 2,048 seeds; comparing 64 late checkpoints from a single trajectory, an IID-64 seed sample, and a pool of 32 trajectories, to judge whether time sampling can substitute for the multi-seed distribution.</p>
+<h2 id="3-preregistered-boundaries">3. Preregistered boundaries</h2>
+<ul>
+<li>Static mass and optimizer crossings must be compared at the same loss and with sufficient prior/SMC support;</li>
+<li>Agreement of the top functions does not equal identity of the full distribution;</li>
+<li>SMC measures a specified parameter measure, not a coordinate-independent volume;</li>
+<li>The same hard ID may still lie in different continuous flow tubes;</li>
+<li>Similarity of a single agreement statistic cannot prove mixing of the full distribution.</li>
+</ul>
 <h2 id="results">Results, interpretation, and limits</h2>
-<p>At BCE 0.60, the static top-100 functions covered 98.7%–100% of optimizer mass, showing strong first-order relevance. SMC also matched brute-force prior distributions at accessible thresholds with very small JSD. In the deep tail, however, static mass concentrated on D440-like candidates while 32,768-seed AdamW concentrated roughly 76.5% on AND; the final JSD was about 0.760.</p>
-<p>Starting 4,096 models from real SMC D440 states and training with AdamW did not produce AND, whereas projected controls retained D440. The same hard ID had different futures depending on continuous state and history. One long trajectory covered only a small local set of functions and did not reproduce the IID multi-seed distribution.</p>
-<p><strong>Conclusion.</strong> Static volume can strongly constrain candidates yet fail to determine optimizer endpoints. Function cells contain nonexchangeable continuous states, and a time series is not an IID Bayesian posterior sample.</p></div>
+<h2 id="1-shallow-layer-static-mass-has-strong-first-order-predictive-power">1. Shallow-layer static mass has strong first-order predictive power</h2>
+<p>At the three BCE layers 0.68/0.65/0.60 where the brute-force prior is reliable, the static distribution and all three optimizers always share constant zero as their top function. The fraction of optimizer mass covered by the static top-100 functions deepens with loss, reaching:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">BCE</th>
+<th style="text-align: right;">Adam</th>
+<th style="text-align: right;">SGD</th>
+<th style="text-align: right;">Momentum</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">0.68</td>
+<td style="text-align: right;">66.4%</td>
+<td style="text-align: right;">74.5%</td>
+<td style="text-align: right;">77.4%</td>
+</tr>
+<tr>
+<td style="text-align: right;">0.65</td>
+<td style="text-align: right;">88.7%</td>
+<td style="text-align: right;">95.7%</td>
+<td style="text-align: right;">97.1%</td>
+</tr>
+<tr>
+<td style="text-align: right;">0.60</td>
+<td style="text-align: right;">98.7%</td>
+<td style="text-align: right;">100%</td>
+<td style="text-align: right;">100%</td>
+</tr>
+</tbody>
+</table>
+<p>But all JSD/TV deviations exceed finite-sample noise; the optimizer is not an unbiased static sampler.</p>
+<h2 id="2-smc-is-calibrated-in-the-brute-force-overlap-region-and-reveals-deep-tail-reordering">2. SMC is calibrated in the brute-force overlap region and reveals deep-tail reordering</h2>
+<p>SMC reproduces the brute-force volume fractions and the 65,536-dimensional function distribution at 0.68/0.65/0.60, with JSD of about 0.00677/0.00297/0.00144 respectively. The dominant static state of the deep tail passes successively through:</p>
+<pre><code class="language-text">high-loss constant zero
+-&gt; 0x5000 shortcut
+-&gt; D000/D040
+-&gt; F040/D440
+</code></pre>
+<p>All particles are already hard-exact below 0.20, yet continuing to lower the soft BCE still strongly reorders the unseen continuation. At 0.07, D440 is 50.99%, F040 27.20%, D040 16.35%, and AND is 0%. The static landscape itself contains rich stage structure, but it is not ordered by the length of the human AND formula.</p>
+<h2 id="3-there-is-a-loss-dependent-lag-between-the-optimizer-and-the-static-geometry">3. There is a loss-dependent lag between the optimizer and the static geometry</h2>
+<p>In the 0.50 static shell, 0x5000 is 42.33% and Adam only 13.62%, while SGD/Momentum still put 83.42%/97.80% on constant zero; by 0.40, the 0x5000 share of SGD/Momentum rises to 78.39%/69.12%, approaching the static 70.04% again. The relationship is not a fixed "which optimizer is closest to equilibrium"; rather, the static reordering happens first and the different optimizers follow with their own time lags.</p>
+<h2 id="4-deep-tail-adamw-can-completely-overturn-the-static-winner">4. Deep-tail AdamW can completely overturn the static winner</h2>
+<p>On the same training set, 32,768-seed AdamW at step 11,444 yields AND 76.52% and F040 23.48%; static SMC at BCE no higher than 0.065 gives AND 0% and D440 55.70%. A same-loss comparison at about BCE 0.10 already has JSD 0.301 and TV 0.438; the final distributions have JSD 0.760 and TV 0.765.</p>
+<p>Therefore optimizer reweighting is not always a mild second-order term; it is enough to dominate the final function selection.</p>
+<h2 id="5-starting-from-the-smc-deep-tail-shows-that-path-history-is-irreducible">5. Starting from the SMC deep tail shows that path history is irreducible</h2>
+<p>Continuing training from 4,096 real weight points drawn from D440: normal AdamW lowers the loss by about four million times, ending at D040 51.56%, F040 48.44%, AND 0%; the projected group stays at D440 100%. F040 on the random-initialization path migrates to AND, but the same hard ID on the SMC path migrates to D040. The same hard function, training set, and optimizer are still not enough to predict the future; the continuous state inside the cell and the entry history do not commute.</p>
+<h2 id="6-single-trajectory-time-sampling-is-not-equal-to-the-multi-seed-distribution">6. Single-trajectory time sampling is not equal to the multi-seed distribution</h2>
+<p>For 8-bit AND, 64 late checkpoints of a single chain typically visit only 5--6 functions, while IID-64 covers about 28--60; with random labels the single chain visits 14 and IID visits 64. Single-chain agreement is about 0.995, while the seed reference can be as low as 0.951 or 0.800. A pool of 32 trajectories can approximate some low-order agreement statistics, but the full fingerprint and covariance are still not equivalent.</p>
+<h2 id="7-final-verdict">7. Final verdict</h2>
+<p>E17 rules out two extremes:</p>
+<ul>
+<li>Static volume is not an irrelevant backdrop; it strongly constrains the candidate family and the reordering structure;</li>
+<li>The optimizer is also by no means a transparent or necessarily second-order sampler; it can produce huge, history-dependent reweighting.</li>
+</ul>
+<p>The empirical decomposition can be written as:</p>
+<div class="math-display">$$
+Q_O(f\mid D,L)\propto V_\mu(f;D,L)R_O(f;D,L),
+$$</div>
+<p>But this is only layered bookkeeping, not a known multiplicative law. <code>R_O</code> contains entry, flow tube, velocity, and dwell history; its microscopic theory is outside the scope of this paper. Multiple seeds form an optimizer-induced ensemble; single-trajectory checkpoints cannot masquerade as independent Bayesian posterior samples.</p></div>
         <footer class="experiment-pager"><a href="e16.html">← E16 Parity Reachability, Half-Space Generalization, and Scaffold Recovery</a><a href="e18.html">E18 Teacher-Free Consensus and Symbolic Readability →</a></footer>
       </article>
     </main>

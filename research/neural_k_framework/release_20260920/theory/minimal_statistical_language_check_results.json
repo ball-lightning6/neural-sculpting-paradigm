@@ -1,0 +1,103 @@
+{
+  "scope": "有限概率和代数核验；不构成神经网络经验前提的证明",
+  "checks": [
+    {
+      "check": "average_loss_incoming_outgoing",
+      "details": {
+        "old_mass": "3/5",
+        "new_mass": "4/5",
+        "new_over_old": "4/3",
+        "cap_target": "1",
+        "new_target": "1/2"
+      }
+    },
+    {
+      "check": "hard_function_internal_loss",
+      "details": {
+        "hard_label_probability": 1,
+        "soft_acceptance": 0.5,
+        "parameter_kl_bits": 1,
+        "function_kl_bits": 0
+      }
+    },
+    {
+      "check": "candidate_events_not_partition",
+      "details": {
+        "query_logit": 0,
+        "old_loss": 0.1,
+        "new_threshold": 0.5,
+        "candidate_masses": [
+          1,
+          1
+        ],
+        "hard_readout_at_tie": 1
+      }
+    },
+    {
+      "check": "total_budget_nesting",
+      "details": {
+        "n_values": [
+          1,
+          2,
+          9
+        ]
+      }
+    },
+    {
+      "check": "finite_random_models",
+      "details": {
+        "models": 200,
+        "checks": [
+          "conditioning_kl",
+          "coarse_graining_kl_chain",
+          "minimum_kl_decomposition",
+          "retention_update",
+          "cost_covariance",
+          "collision_bounds",
+          "probability_budget"
+        ]
+      }
+    },
+    {
+      "check": "hard_target_vs_agreement",
+      "details": {
+        "target_before": "1/10",
+        "target_after": "1/2",
+        "collision_before": "33/50",
+        "collision_after": "1/2"
+      }
+    },
+    {
+      "check": "cost_width_vs_collision",
+      "details": {
+        "fixed_cost_variance": 0,
+        "collision": "1/32"
+      }
+    },
+    {
+      "check": "density_vs_sublevel",
+      "details": {
+        "sublevel_odds": "125",
+        "density_odds": "125/4"
+      }
+    },
+    {
+      "check": "full_target_precision_factor",
+      "details": {
+        "fixed_D_hard_mass": "1/2",
+        "full_target_mass": "1/5",
+        "precision_factor": "2/5"
+      }
+    },
+    {
+      "check": "translation_and_curvature",
+      "details": {
+        "translation_invariance_does_not_imply_linearity": true,
+        "grid_error_bound_sharp": true,
+        "four_corner_error_factor": 4
+      }
+    }
+  ],
+  "passed_groups": 10,
+  "max_float_error": 8.881784197001252e-16
+}

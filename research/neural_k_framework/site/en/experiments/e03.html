@@ -23,7 +23,7 @@
         <span class="mark-block">NK</span>
         <span class="mark-text">Neural K Research Archive</span>
       </a>
-      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="../index.html">Research</a><a class="top-link" href="../theory-core.html">Core Theory</a><a class="top-link active" href="../experiments/index.html">Experiments</a><a class="top-link" href="../references.html">References</a><a class="top-link" href="../evidence-ledger.html">Evidence</a></nav>
+      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="../index.html">Research</a><a class="top-link" href="../theory-core.html">Core Theory</a><a class="top-link active" href="../experiments/index.html">Experiments</a><a class="top-link" href="../post-upload.html">Updates</a><a class="top-link" href="../references.html">References</a><a class="top-link" href="../evidence-ledger.html">Evidence</a></nav>
       <nav class="language-switch" aria-label="Language"><a href="../../experiments/e03.html" lang="zh-CN">中文</a><span class="active" lang="en">EN</span></nav>
       <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
         <span aria-hidden="true">☰</span><span>Contents</span>
@@ -38,12 +38,29 @@
         <nav class="toc"><div class="toc">
 <ul>
 <li><a href="#overview">Experiment overview</a></li>
-<li><a href="#motivation">Why this experiment was run</a></li>
+<li><a href="#experiment-composition">Experiment composition</a></li>
+<li><a href="#files">Files</a></li>
+<li><a href="#frozen-sources-and-sha256">Frozen sources and SHA256</a></li>
+<li><a href="#motivation">Why this experiment was run, and how it was judged</a></li>
+<li><a href="#1-the-circular-argument-problem">1. The circular-argument problem</a></li>
+<li><a href="#2-e03a-design">2. E03a design</a></li>
+<li><a href="#3-e03b-design">3. E03b design</a></li>
+<li><a href="#4-competing-predictions">4. Competing predictions</a></li>
+<li><a href="#5-pre-result-boundaries">5. Pre-result boundaries</a></li>
 <li><a href="#results">Results, interpretation, and limits</a></li>
+<li><a href="#1-e03a-a-single-update-rewrites-the-full-function">1. E03a: a single update rewrites the full function</a></li>
+<li><a href="#2-the-migration-direction-is-not-random-nor-equal-to-the-human-shortest-formula">2. The migration direction is not random, nor equal to the human-shortest formula</a></li>
+<li><a href="#3-substantial-paired-migration-persists-after-the-first-fit">3. Substantial paired migration persists after the first fit</a></li>
+<li><a href="#4-e03b-migration-is-robust-but-the-specific-posterior-depends-on-the-network-family">4. E03b: migration is robust, but the specific posterior depends on the network family</a><ul>
+<li><a href="#the-tanh-width-family">The tanh width family</a></li>
+<li><a href="#comparison-with-the-1024-3-gelu-layernorm-network">Comparison with the 1024×3 GELU+LayerNorm network</a></li>
+</ul>
+</li>
+<li><a href="#5-stage-verdict">5. Stage verdict</a></li>
 </ul>
 </div>
 </nav>
-        <div class="sidebar-label experiment-label">All experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>Static Hard Conditioning versus Optimizer-Induced Function Transport</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-Bit Counterfactual Invariance</span></a><a class="experiment-nav-link active" href="e03.html"><span>E03</span><span>Prior-Consistent Function Dynamics and Width Intervention</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>Post-Fit Drift in the Mingard 2025 Boolean Protocol</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>Feature Learning When a Fixed NTK Is Already Sufficient</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>Loss-Conditioned Prior Annealing</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>Function-ID Wandering and Matched-Loss Static Controls</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>Shared Intermediate Computation under Finite Capacity</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>Long Training with 80% Hidden Label Noise</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>Raw-BCE Competition between Preregistered Simple and Complex Function Pairs</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule-30 Train/Validation Gradient Alignment across Dataset Size</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND Shortcut Static Geometry and a One-Example Balance Intervention</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>SGD Dynamics of the AND Shortcut and Balanced Intervention</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>Weighted Rule-Bit Function Switching across Loss Scales</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Complete Functions versus Marginal Concentration in Modular-97 Grokking</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity Reachability, Half-Space Generalization, and Scaffold Recovery</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>Static Deep-Loss Mass versus Optimizer Transport</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>Teacher-Free Consensus and Symbolic Readability</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>Full-Truth-Table Rule Volume</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Measure Closure between Full Rules, Fixed Datasets, and Margin Cores</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement Control and a Consensus Complexity Frontier</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>Per-Example Free Energy and an Information Invariant</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>Prospective Prediction from Full-Rule Volume to Data Transition</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>Deep Neural K Crossing of Parity4 and a One-Point Exception</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST Sample Complexity and Static Branch Prediction</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>Balanced Unlabeled MNIST Label Volume</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Agreement Before and During Grokking</span></a><a class="experiment-nav-link" href="e28.html"><span>E28</span><span>Whole-Network HMC versus Adam on 50k MNIST</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Loss-Resolved Robustness to a Dead Input Bit</span></a><a class="experiment-nav-link" href="e30.html"><span>E30</span><span>Weight Decay Reshapes the Static Complete-Function Landscape</span></a></nav>
+        <div class="sidebar-label experiment-label">All experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>Static Hard Conditioning versus Optimizer-Induced Function Transport</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-Bit Counterfactual Invariance</span></a><a class="experiment-nav-link active" href="e03.html"><span>E03</span><span>Prior-Consistent Function Dynamics and Width Intervention</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>Post-Fit Drift in the Mingard 2025 Boolean Protocol</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>Feature Learning When a Fixed NTK Is Already Sufficient</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>Loss-Conditioned Prior Annealing</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>Function-ID Wandering and Matched-Loss Static Controls</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>Shared Intermediate Computation under Finite Capacity</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>Long Training with 80% Hidden Label Noise</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>Raw-BCE Competition between Preregistered Simple and Complex Function Pairs</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule-30 Train/Validation Gradient Alignment across Dataset Size</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND Shortcut Static Geometry and a One-Example Balance Intervention</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>SGD Dynamics of the AND Shortcut and Balanced Intervention</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>Weighted Rule-Bit Function Switching across Loss Scales</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Complete Functions versus Marginal Concentration in Modular-97 Grokking</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity Reachability, Half-Space Generalization, and Scaffold Recovery</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>Static Deep-Loss Mass versus Optimizer Transport</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>Teacher-Free Consensus and Symbolic Readability</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>Full-Truth-Table Rule Volume</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Measure Closure between Full Rules, Fixed Datasets, and Margin Cores</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement Control and a Consensus Complexity Frontier</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>Per-Example Free Energy and an Information Invariant</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>Prospective Prediction from Full-Rule Volume to Data Transition</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>Deep Neural K Crossing of Parity4 and a One-Point Exception</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST Sample Complexity and Static Branch Prediction</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>Balanced Unlabeled MNIST Label Volume</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Agreement Before and During Grokking</span></a><a class="experiment-nav-link" href="e28.html"><span>E28</span><span>Whole-Network HMC versus Adam on 50k MNIST</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Loss-Resolved Robustness to a Dead Input Bit</span></a><a class="experiment-nav-link" href="e30.html"><span>E30</span><span>Weight Decay Reshapes the Static Complete-Function Landscape</span></a></nav><div class="sidebar-label experiment-label">Post-upload experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="../experiments/e31.html"><span>E31</span><span>Loss and output amplitude</span></a><a class="experiment-nav-link" href="../experiments/e32.html"><span>E32</span><span>Random-memory scaling</span></a><a class="experiment-nav-link" href="../experiments/e33.html"><span>E33</span><span>Cross-architecture output volume</span></a><a class="experiment-nav-link" href="../experiments/e34.html"><span>E34</span><span>Conditional rule duel</span></a><a class="experiment-nav-link" href="../experiments/e35.html"><span>E35</span><span>Frozen functions around grokking</span></a><a class="experiment-nav-link" href="../experiments/e36.html"><span>E36</span><span>Independent Peleg/G&amp;C recheck</span></a><a class="experiment-nav-link" href="../experiments/e37.html"><span>E37</span><span>Measure robustness and Gaussian alignment</span></a></nav>
       </div>
     </aside>
 
@@ -55,13 +72,179 @@
           <p class="article-description">Measure complete-function motion without defining complexity from the same outcomes that the theory is meant to explain.</p>
         </header>
         <div class="article-body"><div class="source-bar"><span>Scripts</span><div><a href="../../../experiments/experiment_03_function_posterior_dynamics/experiment_boolean_function_posterior_dynamics.py">experiment_boolean_function_posterior_dynamics.py</a><a href="../../../experiments/experiment_03_function_posterior_dynamics/experiment_boolean_posterior_width_scan.py">experiment_boolean_posterior_width_scan.py</a></div></div><h2 id="overview">Experiment overview</h2>
-<p>E03a initializes ordinary models and models that already satisfy all labels of one-, two-, or four-example 3-bit datasets. Complete function IDs and logits are recorded after one update and through 5,000 post-fit steps. E03b repeats the analysis for tanh networks of widths 16, 32, 64, and 128.</p>
-<h2 id="motivation">Why this experiment was run</h2>
-<p>After E01 rejected passive hard conditioning, an immediate temptation was to label every destination “lower Kolmogorov complexity.” That would be circular. E03 deliberately measures no complexity proxy. It establishes the raw dynamical facts that any later complexity theory must explain.</p>
+<h2 id="experiment-composition">Experiment composition</h2>
+<ul>
+<li><strong>E03a</strong>: Starting from ordinary and prior-consistent initializations, track the full Boolean function distribution under 1/2/4-sample constraints up to 5,000 post-fit steps;</li>
+<li><strong>E03b</strong>: Using tanh networks of the same family as Oxford, scan width 16/32/64/128 to test whether the qualitative phenomena of E03a depend on the 1024×3 GELU+LayerNorm large network.</li>
+</ul>
+<h2 id="files">Files</h2>
+<ul>
+<li><a href="#motivation">Motivation and preregistered criteria</a></li>
+<li><a href="#results">Full results and stage verdict</a></li>
+<li><a href="../../../experiments/experiment_03_function_posterior_dynamics/experiment_boolean_function_posterior_dynamics.py"><code>E03a</code> script</a></li>
+<li><a href="../../../experiments/experiment_03_function_posterior_dynamics/experiment_boolean_posterior_width_scan.py"><code>E03b</code> script</a></li>
+</ul>
+<p>Run:</p>
+<pre><code class="language-bash">python experiment_boolean_function_posterior_dynamics.py
+python experiment_boolean_posterior_width_scan.py
+</code></pre>
+<p>For E03b to automatically load the 1024 reference results, unpack the E03a results into the <code>REFERENCE_RESULT_DIR</code> configured in the script; otherwise it will still complete the 16--128 same-family scan, and the cross-architecture comparison can be done offline.</p>
+<h2 id="frozen-sources-and-sha256">Frozen sources and SHA256</h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Development-version source</th>
+<th>SHA256</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>experiment_boolean_function_posterior_dynamics.py</code></td>
+<td><code>research/function_information_conservation/experiment_boolean_function_posterior_dynamics.py</code></td>
+<td><code>05090cf48e83c097178b76f5c591dc8c25d6f018e37c93ac8db36adf53889942</code></td>
+</tr>
+<tr>
+<td><code>experiment_boolean_posterior_width_scan.py</code></td>
+<td><code>research/function_information_conservation/experiment_boolean_posterior_width_scan.py</code></td>
+<td><code>f76facc59caa017af58346ae43d675ea0e598bd46c0b1fda017fed0a48c9c7fa</code></td>
+</tr>
+</tbody>
+</table>
+<p>Local result cache:</p>
+<ul>
+<li><code>results/results_boolean_function_posterior_dynamics.zip</code>, SHA256 <code>7e015ccd6c5951b06cea727c92a03fba2052e4ecc14f03ff596170e629930404</code>;</li>
+<li><code>results/results_boolean_posterior_tanh_width_scan.zip</code>, SHA256 <code>999ecfe84e6a0ec7d0195bf02ecbeed854ba17d026479c4e47f1c006e33d7a88</code>.</li>
+</ul>
+<p>The ZIPs are for local verification only and are not included in the final release package.</p>
+<h2 id="motivation">Why this experiment was run, and how it was judged</h2>
+<h2 id="1-the-circular-argument-problem">1. The circular-argument problem</h2>
+<p>The original plan attempted to construct hand-written DSL shortest lengths for the 256 Boolean functions and then test whether training migrates toward the lowest-complexity functions. That plan was deliberately abandoned because:</p>
+<ol>
+<li>DSL shortest length only represents an artificial reference language; it is not equal to the neural network's actual program complexity;</li>
+<li>Defining "neural complexity" by post-training function surprise and then using it to explain the same posterior would be circular;</li>
+<li>Metrics such as ANF, BDD, and DNF can serve as independent structural coordinates, but no single one suffices to impersonate the true K.</li>
+</ol>
+<p>Therefore E03 neither measures K nor pre-labels the migration direction as "compression". It only answers a more basic factual question: once the training constraints are fixed, does optimization continue to systematically change the full function?</p>
+<h2 id="2-e03a-design">2. E03a design</h2>
+<ul>
+<li><code>3-bit -&gt; 1-bit</code>, all 256 hard functions;</li>
+<li>Network: <code>3 -&gt; 1024 x 3 -&gt; 1</code>, GELU+LayerNorm, Adam, <code>weight_decay=0</code>;</li>
+<li>prior: 65,536 initialized networks;</li>
+<li>Three partial training sets: 1, 2, and 4 samples, leaving 128, 64, and 16 hard-compatible functions respectively;</li>
+<li>ordinary cohort: 128 ordinary initializations per condition;</li>
+<li>prior-consistent cohort: 512 networks per condition that already satisfy all training labels at initialization;</li>
+<li>post-fit ages: 0 to 5,000 steps, 13 cross-sections in total;</li>
+<li>Save both hard function IDs and full logits;</li>
+<li>The soft-likelihood temperature family serves only as a baseline, not as a post-hoc freely tunable interpreter.</li>
+</ul>
+<p>Primary criteria: whether prior-consistent models change the full function when no new hard constraints are added, and whether ordinary models continue to migrate after the first fit.</p>
+<h2 id="3-e03b-design">3. E03b design</h2>
+<ul>
+<li>Same family as Oxford: <code>3 -&gt; width x 2 -&gt; 1 tanh</code>, no normalization;</li>
+<li><code>sigma_w=1</code>, <code>sigma_b=0.2</code>, Adam, <code>weight_decay=0</code>;</li>
+<li>width 16/32/64/128;</li>
+<li>Reuse exactly the same three training constraints, prior/ordinary/consistent sample sizes, and ages as E03a;</li>
+<li>width 128 serves as the same-family anchor; 1024×3 serves only as a cross-architecture behavioral reference and is not disguised as a pure width ablation.</li>
+</ul>
+<h2 id="4-competing-predictions">4. Competing predictions</h2>
+<ul>
+<li>If the hard-conditioned prior is sufficient, the prior-consistent cohort should preserve its initial function distribution;</li>
+<li>If optimization actively transports function mass, a single update can already produce function migration exceeding sampling noise;</li>
+<li>If migration is only a special case of large networks/LayerNorm, it should significantly weaken or vanish in small tanh networks;</li>
+<li>If the network protocol defines an effective reference language, the specific attracting functions and probabilities should change with architecture, even if the qualitative phenomenon of "still migrating post-fit" is preserved.</li>
+</ul>
+<h2 id="5-pre-result-boundaries">5. Pre-result boundaries</h2>
+<ul>
+<li>Kolmogorov complexity is not measured;</li>
+<li>The posterior itself is not used to attach complexity labels to functions;</li>
+<li>It is not predicted that the formula shortest to human eyes must win;</li>
+<li>All main optimization remains Adam and cannot be automatically generalized to arbitrary optimizers;</li>
+<li>An approximately stable aggregate distribution does not mean paired seeds lack substantial migration in opposite directions.</li>
+</ul>
 <h2 id="results">Results, interpretation, and limits</h2>
-<p>Among prior-consistent models, one update changed the complete function in 72.7%, 99.0%, and 97.9% of the one-, two-, and four-example conditions. Long after first fit, 32.8%–50.8% of ordinary models still changed function. Marginal histograms could look stable while paired models moved in opposite directions.</p>
-<p>Width 16 through 128 preserved the qualitative post-fit transport, although priors and near-tied rankings changed. The tanh family and the much wider GELU–LayerNorm family also had systematically different priors and attractors.</p>
-<p><strong>Conclusion.</strong> Function transport is robust across the tested widths, but its destination is architecture-relative. The experiment does not identify transport with <a href="https://mlanthology.org/misc/1964/solomonoff1964misc-formal/" target="_blank" rel="noopener">Solomonoff induction</a> or machine-independent compression.</p></div>
+<h2 id="1-e03a-a-single-update-rewrites-the-full-function">1. E03a: a single update rewrites the full function</h2>
+<p>The experiment is still 3-bit, not 4-bit; 65,536 is the number of prior networks, not the number of target functions trained. The three training sets leave 128, 64, and 16 compatible functions respectively, for a total of <code>3 × (128 ordinary + 512 prior-consistent) = 1,920</code> trained models.</p>
+<p>The prior-consistent cohort already satisfies all hard labels before training, and its function distribution is consistent with the conditional prior. After only a single Adam update:</p>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+<th style="text-align: right;">Models that changed the full function</th>
+<th style="text-align: right;">Maximum function-mass change</th>
+<th style="text-align: right;">Post-training TV relative to hard prior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1-sample</td>
+<td style="text-align: right;">72.7%</td>
+<td style="text-align: right;">27.3% -&gt; 100%</td>
+<td style="text-align: right;">0.717</td>
+</tr>
+<tr>
+<td>2-sample</td>
+<td style="text-align: right;">99.0%</td>
+<td style="text-align: right;">7.2% -&gt; 77.3%</td>
+<td style="text-align: right;">0.826</td>
+</tr>
+<tr>
+<td>4-sample</td>
+<td style="text-align: right;">97.9%</td>
+<td style="text-align: right;">17.4% -&gt; 39.3%</td>
+<td style="text-align: right;">0.553</td>
+</tr>
+</tbody>
+</table>
+<p>The corresponding finite-sample null p95 values are about 0.156, 0.132, and 0.058; the migration far exceeds sampling fluctuations.</p>
+<h2 id="2-the-migration-direction-is-not-random-nor-equal-to-the-human-shortest-formula">2. The migration direction is not random, nor equal to the human-shortest formula</h2>
+<p>The two-sample training points are diagonal corners of the cube; after training, about 81% of the models concentrate on the symmetric maximum-margin threshold function:</p>
+<pre><code class="language-text">majority(not x0, not x1, x2)
+</code></pre>
+<p>The four-sample condition mainly concentrates on:</p>
+<pre><code class="language-text">x2 AND (not x1)
+x2 OR  (not x1)
+</code></pre>
+<p>Shorter one-variable solutions <code>x2</code> and <code>not x1</code> exist abundantly in the initialization conditional prior, yet they are actively squeezed out by training. Therefore "shorter human Boolean formula" is not a sufficient explanation for the current network's choice; symmetry, margin, norm, and optimization geometry may all participate.</p>
+<h2 id="3-substantial-paired-migration-persists-after-the-first-fit">3. Substantial paired migration persists after the first fit</h2>
+<p>The ordinary cohort continues from the first fit to age 5,000:</p>
+<ul>
+<li>Single-sample: 32.8% of seeds changed the full function;</li>
+<li>Two-sample: 50.8%;</li>
+<li>Four-sample: 47.7%.</li>
+</ul>
+<p>The four-sample aggregate-distribution TV is only 0.125, yet 47.7% of seeds have switched functions, showing that migrations in opposite directions cancel out in the marginal histogram. Looking only at the "apparently stable" aggregate distribution would severely underestimate the dynamics.</p>
+<p>The prior-consistent cohort still shows, at age 5,000:</p>
+<ul>
+<li>Two-sample: 10.5% of models changed functions;</li>
+<li>Four-sample: 27.0%.</li>
+</ul>
+<h2 id="4-e03b-migration-is-robust-but-the-specific-posterior-depends-on-the-network-family">4. E03b: migration is robust, but the specific posterior depends on the network family</h2>
+<h3 id="the-tanh-width-family">The tanh width family</h3>
+<ul>
+<li>The initialization hard priors of width 16/32/64/128 are very close; the TV relative to 128 is about 0.025/0.023/0.022;</li>
+<li>The final main modes of width 64 and 128 agree 6/6, with differences within bootstrap noise;</li>
+<li>width 16 preserves the same migration direction but changes the concentration speed and the ranking of near-tied functions;</li>
+<li>width 16 is not faster than 64: the six training blocks took about 122 s vs 119 s.</li>
+</ul>
+<p>All widths preserve large-scale post-fit migration. For the width-16 prior-consistent cohort at age 5,000, the TV relative to its own hard prior is about 0.828/0.850/0.565 for single/k2/k4.</p>
+<h3 id="comparison-with-the-1024-3-gelu-layernorm-network">Comparison with the 1024×3 GELU+LayerNorm network</h3>
+<ul>
+<li>The initialization priors of the two network families already have a TV of about 0.29;</li>
+<li>The specific dominant functions and probabilities differ significantly; all key comparisons exceed sampling noise;</li>
+<li>The corresponding TVs of the 1024 network are about 0.717/0.840/0.471.</li>
+</ul>
+<p>So the small network does not reproduce the large network's specific posterior, but "function mass is still transported at large scale after the training set is fit" is preserved across network families. Architecture affects both the prior and the dynamical attractors.</p>
+<h2 id="5-stage-verdict">5. Stage verdict</h2>
+<p>Without using any K-complexity labels, E03 establishes:</p>
+<ol>
+<li>The hard-conditioned initialization prior is not the post-training function distribution;</li>
+<li>Initialization functions that are already hard-fit are massively rewritten by a single update;</li>
+<li>Paired function migration persists long after the fit;</li>
+<li>The migration direction is structured but depends on the network reference protocol;</li>
+<li>aggregate agreement/TV cannot substitute for per-seed function trajectories.</li>
+</ol>
+<p>This experiment does not prove that migration is Kolmogorov compression, nor does it adjudicate "the broad hierarchy vs the lowest-complexity thin shell of <a href="https://mlanthology.org/misc/1964/solomonoff1964misc-formal/" target="_blank" rel="noopener">Solomonoff's (1964) algorithmic probability</a>". It provides circularity-free empirical facts that any subsequent complexity theory must explain.</p></div>
         <footer class="experiment-pager"><a href="e02.html">← E02 Rule-Bit Counterfactual Invariance</a><a href="e04.html">E04 Post-Fit Drift in the Mingard 2025 Boolean Protocol →</a></footer>
       </article>
     </main>

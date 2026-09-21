@@ -23,7 +23,7 @@
         <span class="mark-block">NK</span>
         <span class="mark-text">Neural K Research Archive</span>
       </a>
-      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="../index.html">Research</a><a class="top-link" href="../theory-core.html">Core Theory</a><a class="top-link active" href="../experiments/index.html">Experiments</a><a class="top-link" href="../references.html">References</a><a class="top-link" href="../evidence-ledger.html">Evidence</a></nav>
+      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="../index.html">Research</a><a class="top-link" href="../theory-core.html">Core Theory</a><a class="top-link active" href="../experiments/index.html">Experiments</a><a class="top-link" href="../post-upload.html">Updates</a><a class="top-link" href="../references.html">References</a><a class="top-link" href="../evidence-ledger.html">Evidence</a></nav>
       <nav class="language-switch" aria-label="Language"><a href="../../experiments/e20.html" lang="zh-CN">中文</a><span class="active" lang="en">EN</span></nav>
       <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
         <span aria-hidden="true">☰</span><span>Contents</span>
@@ -38,12 +38,23 @@
         <nav class="toc"><div class="toc">
 <ul>
 <li><a href="#overview">Experiment overview</a></li>
-<li><a href="#motivation">Why this experiment was run</a></li>
+<li><a href="#purpose">Purpose</a></li>
+<li><a href="#run-order">Run order</a></li>
+<li><a href="#script-sha256">Script SHA256</a></li>
+<li><a href="#motivation">Why this experiment was run, and how it was judged</a></li>
+<li><a href="#1-two-different-objects">1. Two different objects</a></li>
+<li><a href="#2-leave-one-out-identity">2. Leave-one-out identity</a></li>
+<li><a href="#3-and-four-candidates-and-the-margin-bridge">3. AND four candidates and the margin bridge</a></li>
+<li><a href="#4-boundaries">4. Boundaries</a></li>
 <li><a href="#results">Results, interpretation, and limits</a></li>
+<li><a href="#1-three-way-closure-of-constant-leave-one-out">1. Three-way closure of constant leave-one-out</a></li>
+<li><a href="#2-closure-of-the-and-four-candidates">2. Closure of the AND four candidates</a></li>
+<li><a href="#3-hard-to-margin-continuous-bridge">3. Hard-to-margin continuous bridge</a></li>
+<li><a href="#4-verdict">4. Verdict</a></li>
 </ul>
 </div>
 </nav>
-        <div class="sidebar-label experiment-label">All experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>Static Hard Conditioning versus Optimizer-Induced Function Transport</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-Bit Counterfactual Invariance</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>Prior-Consistent Function Dynamics and Width Intervention</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>Post-Fit Drift in the Mingard 2025 Boolean Protocol</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>Feature Learning When a Fixed NTK Is Already Sufficient</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>Loss-Conditioned Prior Annealing</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>Function-ID Wandering and Matched-Loss Static Controls</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>Shared Intermediate Computation under Finite Capacity</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>Long Training with 80% Hidden Label Noise</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>Raw-BCE Competition between Preregistered Simple and Complex Function Pairs</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule-30 Train/Validation Gradient Alignment across Dataset Size</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND Shortcut Static Geometry and a One-Example Balance Intervention</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>SGD Dynamics of the AND Shortcut and Balanced Intervention</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>Weighted Rule-Bit Function Switching across Loss Scales</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Complete Functions versus Marginal Concentration in Modular-97 Grokking</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity Reachability, Half-Space Generalization, and Scaffold Recovery</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>Static Deep-Loss Mass versus Optimizer Transport</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>Teacher-Free Consensus and Symbolic Readability</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>Full-Truth-Table Rule Volume</span></a><a class="experiment-nav-link active" href="e20.html"><span>E20</span><span>Measure Closure between Full Rules, Fixed Datasets, and Margin Cores</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement Control and a Consensus Complexity Frontier</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>Per-Example Free Energy and an Information Invariant</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>Prospective Prediction from Full-Rule Volume to Data Transition</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>Deep Neural K Crossing of Parity4 and a One-Point Exception</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST Sample Complexity and Static Branch Prediction</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>Balanced Unlabeled MNIST Label Volume</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Agreement Before and During Grokking</span></a><a class="experiment-nav-link" href="e28.html"><span>E28</span><span>Whole-Network HMC versus Adam on 50k MNIST</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Loss-Resolved Robustness to a Dead Input Bit</span></a><a class="experiment-nav-link" href="e30.html"><span>E30</span><span>Weight Decay Reshapes the Static Complete-Function Landscape</span></a></nav>
+        <div class="sidebar-label experiment-label">All experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>Static Hard Conditioning versus Optimizer-Induced Function Transport</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-Bit Counterfactual Invariance</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>Prior-Consistent Function Dynamics and Width Intervention</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>Post-Fit Drift in the Mingard 2025 Boolean Protocol</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>Feature Learning When a Fixed NTK Is Already Sufficient</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>Loss-Conditioned Prior Annealing</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>Function-ID Wandering and Matched-Loss Static Controls</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>Shared Intermediate Computation under Finite Capacity</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>Long Training with 80% Hidden Label Noise</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>Raw-BCE Competition between Preregistered Simple and Complex Function Pairs</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule-30 Train/Validation Gradient Alignment across Dataset Size</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND Shortcut Static Geometry and a One-Example Balance Intervention</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>SGD Dynamics of the AND Shortcut and Balanced Intervention</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>Weighted Rule-Bit Function Switching across Loss Scales</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Complete Functions versus Marginal Concentration in Modular-97 Grokking</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity Reachability, Half-Space Generalization, and Scaffold Recovery</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>Static Deep-Loss Mass versus Optimizer Transport</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>Teacher-Free Consensus and Symbolic Readability</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>Full-Truth-Table Rule Volume</span></a><a class="experiment-nav-link active" href="e20.html"><span>E20</span><span>Measure Closure between Full Rules, Fixed Datasets, and Margin Cores</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement Control and a Consensus Complexity Frontier</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>Per-Example Free Energy and an Information Invariant</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>Prospective Prediction from Full-Rule Volume to Data Transition</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>Deep Neural K Crossing of Parity4 and a One-Point Exception</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST Sample Complexity and Static Branch Prediction</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>Balanced Unlabeled MNIST Label Volume</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Agreement Before and During Grokking</span></a><a class="experiment-nav-link" href="e28.html"><span>E28</span><span>Whole-Network HMC versus Adam on 50k MNIST</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Loss-Resolved Robustness to a Dead Input Bit</span></a><a class="experiment-nav-link" href="e30.html"><span>E30</span><span>Weight Decay Reshapes the Static Complete-Function Landscape</span></a></nav><div class="sidebar-label experiment-label">Post-upload experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="../experiments/e31.html"><span>E31</span><span>Loss and output amplitude</span></a><a class="experiment-nav-link" href="../experiments/e32.html"><span>E32</span><span>Random-memory scaling</span></a><a class="experiment-nav-link" href="../experiments/e33.html"><span>E33</span><span>Cross-architecture output volume</span></a><a class="experiment-nav-link" href="../experiments/e34.html"><span>E34</span><span>Conditional rule duel</span></a><a class="experiment-nav-link" href="../experiments/e35.html"><span>E35</span><span>Frozen functions around grokking</span></a><a class="experiment-nav-link" href="../experiments/e36.html"><span>E36</span><span>Independent Peleg/G&amp;C recheck</span></a><a class="experiment-nav-link" href="../experiments/e37.html"><span>E37</span><span>Measure robustness and Gaussian alignment</span></a></nav>
       </div>
     </aside>
 
@@ -55,13 +66,74 @@
           <p class="article-description">Establish a strict bridge between full-target volume and candidate-function mass under a fixed partial training set.</p>
         </header>
         <div class="article-body"><div class="source-bar"><span>Scripts</span><div><a href="../../../experiments/experiment_20_measure_closure/experiment_and_n10_candidate_full_rule_smc.py">experiment_and_n10_candidate_full_rule_smc.py</a><a href="../../../experiments/experiment_20_measure_closure/experiment_and_n10_hard_margin_bridge_smc.py">experiment_and_n10_hard_margin_bridge_smc.py</a><a href="../../../experiments/experiment_20_measure_closure/experiment_constant_leave_one_out_smc_consistency.py">experiment_constant_leave_one_out_smc_consistency.py</a></div></div><h2 id="overview">Experiment overview</h2>
-<p>Three linked tests are used: a 15-of-16 constant leave-one-out closure, a balanced-AND ten-example closure for four candidate functions, and a hard-to-margin bridge that fixes training loss and hard function while tightening margins on six held-out inputs.</p>
-<h2 id="motivation">Why this experiment was run</h2>
-<p>Full-rule self-loss volume and fixed-dataset candidate mass are related but distinct. Without a conditional-measure bridge, exponential full-rule differences could not legitimately explain competition inside a partial-dataset posterior.</p>
+<h2 id="purpose">Purpose</h2>
+<p>E20 tests the strict relationship between the full-rule self-loss volume and the fixed-D candidate mass on a fixed partial training set, avoiding the intuitive interchange of different measurement objects. It consists of three steps: constant leave-one-out, AND four-candidate full-rule, and the hard-cell margin bridge.</p>
+<h2 id="run-order">Run order</h2>
+<pre><code class="language-bash">python experiment_constant_leave_one_out_smc_consistency.py
+python experiment_and_n10_candidate_full_rule_smc.py
+python experiment_and_n10_hard_margin_bridge_smc.py
+</code></pre>
+<ul>
+<li><a href="#motivation">Experiment motivation and identities</a></li>
+<li><a href="#results">Results and verdict</a></li>
+</ul>
+<h2 id="script-sha256">Script SHA256</h2>
+<pre><code class="language-text">0f89290cf946abdc1d0a11503951479bac5006f12d0f4a1f2a201228d4eb1201  constant LOO
+d9df0de87a02a62266d715c3265e3977a2137037917929ae13458eb2841dfb34  AND full-rule
+836a9ea573cafebd400700fbfe0203dbbd9314921c474a2ae7a3ef7e27dbe76a  hard-margin bridge
+</code></pre>
+<p>Key ZIP SHA256:</p>
+<pre><code class="language-text">1d8da6adf54480e717c72f1b1399d2d5ea6ef3d7e9edaafb9c211a1c73f3dd2  constant LOO
+a29339e94df29e5501e6f9624daa349454d7aad1b8010bba4b6cc61559549ec0  AND full-rule
+3c244b05801e1e2e1893fc6bc8b111a536647b80f850d0bf2072c4de7ae5558f  margin bridge
+</code></pre>
+<p>Hashes are case-insensitive. The raw ZIPs are not included in the release package.</p>
+<h2 id="motivation">Why this experiment was run, and how it was judged</h2>
+<h2 id="1-two-different-objects">1. Two different objects</h2>
+<p>Full-target volume:</p>
+<div class="math-display">$$
+V_g^{full}(\epsilon)=\mu\{L_{full,g}\le\epsilon\}.
+$$</div>
+<p>Fixed-D candidate mass under a fixed partial training set:</p>
+<div class="math-display">$$
+\Omega_D(g;\delta)=\mu\{L_D\le\delta,h_\theta=g\}.
+$$</div>
+<p>The two are related but not equal, and cannot be used to prove each other without bridging.</p>
+<h2 id="2-leave-one-out-identity">2. Leave-one-out identity</h2>
+<p>For 15 constant-0 training points with the held-out state 0110, compare the full constant-0 rule against the single-exception rule at that point. Let:</p>
+<div class="math-display">$$
+A_\delta=\{L_{15}\le\delta\},\quad
+B_{y,\epsilon}=\{L_{16,y}\le\epsilon\},\quad
+\delta=16\epsilon/15.
+$$</div>
+<p>Because BCE is non-negative, <code>B subset A</code>, and strictly:</p>
+<div class="math-display">$$
+\mu(B)=\mu(A)P(B\mid A).
+$$</div>
+<p>The volume ratio of two independent full SMC runs must equal the cross-event ratio of the subset particles.</p>
+<h2 id="3-and-four-candidates-and-the-margin-bridge">3. AND four candidates and the margin bridge</h2>
+<p>For the balanced AND n=10 candidates D440/F040/D040/F440, repeat: <code>delta=16epsilon/10</code>. Independently run one subset SMC and four full-rule SMC runs; then branch from the same subset parent by hard ID, and while keeping <code>L10&lt;=0.065</code> and the hard cell unchanged, only tighten the maximum BCE margin threshold tau on the 6 heldout points.</p>
+<p><code>tau=ln2</code> is the hard-cell boundary, and the normalized masses of the four branches must reproduce the parent hard posterior; all subsequent change comes only from the continuous contraction of the margin core inside the same hard function.</p>
+<h2 id="4-boundaries">4. Boundaries</h2>
+<p>A zero cross-event count can only give a finite-particle upper bound; a branch tau stopping its descent means the current sampling configuration has reached an attainable lower bound, not a mathematical zero volume. Hard odds only look at the sign and do not equal the full soft-margin event volume.</p>
 <h2 id="results">Results, interpretation, and limits</h2>
-<p>For constant leave-one-out, independent full-rule volume ratios and conditional crossing-event ratios closed over seven measurable thresholds with maximum log residual about 0.071. The four-candidate AND experiment closed with maximum residual about 0.049.</p>
-<p>At the hard-cell boundary, the four branch masses reproduced the parent hard posterior with TV about 0.0086. Tightening only held-out margin then separated the cells by large continuous factors while hard IDs remained fixed.</p>
-<p><strong>Conclusion.</strong> Full-rule volume and fixed-dataset mass are not the same number, but they obey exact set inclusion and conditional-probability identities. Hard functions are coarse macrostates with substantial internal margin geometry.</p></div>
+<h2 id="1-three-way-closure-of-constant-leave-one-out">1. Three-way closure of constant leave-one-out</h2>
+<p>At the 7 thresholds where both full events are measurable, the independent full-rule volume ratio closes with the subset conditional cross-event ratio, with a maximum natural-log ratio residual of about 0.071. Hard sign odds can differ significantly from the full-rule volume ratio, but once the soft-margin conditional probability is added back, the identity holds.</p>
+<h2 id="2-closure-of-the-and-four-candidates">2. Closure of the AND four candidates</h2>
+<p>For the four candidates, the independent full-rule SMC runs and the subset cross events show a maximum closure residual of about 0.049 in the jointly measurable region. This confirms that full-rule and fixed-D are not the same quantity, yet belong to the same parametric measure and satisfy a strict conditional decomposition; the earlier apparent contradiction of "volumes differing by a hundred orders of magnitude while the hard function still competes" is not an SMC artifact.</p>
+<h2 id="3-hard-to-margin-continuous-bridge">3. Hard-to-margin continuous bridge</h2>
+<p>After the parent subset is advanced to <code>L10&lt;=0.065</code>, all particles are hard-exact. At the <code>tau=ln2</code> starting point, the four hard-cell branches reproduce the parent hard posterior with a TV of about 0.0086; tightening only the heldout margin, the absolute core masses of the four cells then separate continuously, with D440 ultimately gaining an overwhelming advantage. The separation occurs inside cells whose hard ID is unchanged, proving that the hard function is not the finest granularity of the complexity flow.</p>
+<p>Individual branches stop advancing near deeper tau values; per the preregistration, only attainable lower or upper bounds are reported, without disguising them as zero volume.</p>
+<h2 id="4-verdict">4. Verdict</h2>
+<p>E20 establishes a static measurement closure:</p>
+<ol>
+<li><code>V_full</code> and <code>Omega_D</code> are not the same quantity;</li>
+<li>they are strictly related through set inclusion and conditional probability;</li>
+<li>the full-rule volume can serve as a measurement with a bridging basis, rather than a post-hoc analogy;</li>
+<li>hard-function competition at fixed D and extremely deep full-rule volume differences can hold simultaneously;</li>
+<li>enormous volume contraction can still occur in the margin/continuous realization inside the same hard cell.</li>
+</ol>
+<p>It does not prove that independently defined complex functions necessarily contract faster under all fixed D; the complexity direction still requires external criteria from the Neural K-profile and independent-sample data transition predictions.</p></div>
         <footer class="experiment-pager"><a href="e19.html">← E19 Full-Truth-Table Rule Volume</a><a href="e21.html">E21 Agreement Control and a Consensus Complexity Frontier →</a></footer>
       </article>
     </main>

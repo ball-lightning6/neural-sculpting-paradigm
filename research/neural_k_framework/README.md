@@ -15,6 +15,10 @@
 - **E01--E30 实验索引：**[实验与复现材料](experiments/README.md)
 - **引用文献：**[参考文献](references_zh.md)
 - **网页入口：**[中文网站](site/index.html) / [英文网站](site/en/index.html)
+- **提交后增量发布树：**[2026-09-20整理版](release_20260920/README.md) / [清单](release_20260920/MANIFEST.md)
+- **提交后聊天全量审计：**[理论、实验、边界和工程成果](../notes/20260920_post_upload_chat_audit_zh.md)
+
+网站当前包含 E01--E37、严格概率语言、MDL—grokking 长推导、测度鲁棒性复核、周末理论增量和完整架构估计器页面；最近一次构建为 110 个中英文 HTML 页面，并通过 `validate_site.py` 的链接、资源和双语结构校验。
 
 英文源文档分别为 [Formal Research Note](papers/compression_is_intelligence_en.md)、[Core Theory](theory_core_en.md)、[Research Narrative](short_paper_en.md)、[Evidence Ledger](evidence_ledger_en.md) 和 [References](references_en.md)。
 

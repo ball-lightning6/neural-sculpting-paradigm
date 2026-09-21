@@ -23,7 +23,7 @@
         <span class="mark-block">NK</span>
         <span class="mark-text">Neural K Research Archive</span>
       </a>
-      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="../index.html">Research</a><a class="top-link" href="../theory-core.html">Core Theory</a><a class="top-link active" href="../experiments/index.html">Experiments</a><a class="top-link" href="../references.html">References</a><a class="top-link" href="../evidence-ledger.html">Evidence</a></nav>
+      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="../index.html">Research</a><a class="top-link" href="../theory-core.html">Core Theory</a><a class="top-link active" href="../experiments/index.html">Experiments</a><a class="top-link" href="../post-upload.html">Updates</a><a class="top-link" href="../references.html">References</a><a class="top-link" href="../evidence-ledger.html">Evidence</a></nav>
       <nav class="language-switch" aria-label="Language"><a href="../../experiments/e29.html" lang="zh-CN">中文</a><span class="active" lang="en">EN</span></nav>
       <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
         <span aria-hidden="true">☰</span><span>Contents</span>
@@ -38,12 +38,27 @@
         <nav class="toc"><div class="toc">
 <ul>
 <li><a href="#overview">Experiment overview</a></li>
-<li><a href="#motivation">Why this experiment was run</a></li>
+<li><a href="#purpose">Purpose</a></li>
+<li><a href="#entry-points">Entry points</a></li>
+<li><a href="#frozen-sources">Frozen sources</a></li>
+<li><a href="#motivation">Why this experiment was run, and how it was judged</a></li>
+<li><a href="#1-background">1. Background</a></li>
+<li><a href="#2-protocol">2. Protocol</a></li>
+<li><a href="#3-preregistered-verdict">3. Preregistered verdict</a></li>
 <li><a href="#results">Results, interpretation, and limits</a></li>
+<li><a href="#1-question-and-protocol">1. Question and protocol</a></li>
+<li><a href="#2-main-result">2. Main result</a></li>
+<li><a href="#3-it-is-not-that-the-dead-weights-were-secretly-compressed-to-zero">3. It is not that the dead weights were secretly compressed to zero</a></li>
+<li><a href="#4-l2-map-mechanism-control">4. L2/MAP mechanism control</a></li>
+<li><a href="#5-stronger-shift-exposes-the-boundary">5. Stronger shift exposes the boundary</a></li>
+<li><a href="#6-nngp-result">6. NNGP result</a></li>
+<li><a href="#7-sampling-diagnostics-and-conclusion">7. Sampling diagnostics and conclusion</a></li>
+<li><a href="#8-standard-temperature-1-hmc-target-distribution">8. Standard temperature-1 HMC target distribution</a></li>
+<li><a href="#9-files">9. Files</a></li>
 </ul>
 </div>
 </nav>
-        <div class="sidebar-label experiment-label">All experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>Static Hard Conditioning versus Optimizer-Induced Function Transport</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-Bit Counterfactual Invariance</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>Prior-Consistent Function Dynamics and Width Intervention</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>Post-Fit Drift in the Mingard 2025 Boolean Protocol</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>Feature Learning When a Fixed NTK Is Already Sufficient</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>Loss-Conditioned Prior Annealing</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>Function-ID Wandering and Matched-Loss Static Controls</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>Shared Intermediate Computation under Finite Capacity</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>Long Training with 80% Hidden Label Noise</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>Raw-BCE Competition between Preregistered Simple and Complex Function Pairs</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule-30 Train/Validation Gradient Alignment across Dataset Size</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND Shortcut Static Geometry and a One-Example Balance Intervention</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>SGD Dynamics of the AND Shortcut and Balanced Intervention</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>Weighted Rule-Bit Function Switching across Loss Scales</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Complete Functions versus Marginal Concentration in Modular-97 Grokking</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity Reachability, Half-Space Generalization, and Scaffold Recovery</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>Static Deep-Loss Mass versus Optimizer Transport</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>Teacher-Free Consensus and Symbolic Readability</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>Full-Truth-Table Rule Volume</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Measure Closure between Full Rules, Fixed Datasets, and Margin Cores</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement Control and a Consensus Complexity Frontier</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>Per-Example Free Energy and an Information Invariant</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>Prospective Prediction from Full-Rule Volume to Data Transition</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>Deep Neural K Crossing of Parity4 and a One-Point Exception</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST Sample Complexity and Static Branch Prediction</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>Balanced Unlabeled MNIST Label Volume</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Agreement Before and During Grokking</span></a><a class="experiment-nav-link" href="e28.html"><span>E28</span><span>Whole-Network HMC versus Adam on 50k MNIST</span></a><a class="experiment-nav-link active" href="e29.html"><span>E29</span><span>Loss-Resolved Robustness to a Dead Input Bit</span></a><a class="experiment-nav-link" href="e30.html"><span>E30</span><span>Weight Decay Reshapes the Static Complete-Function Landscape</span></a></nav>
+        <div class="sidebar-label experiment-label">All experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>Static Hard Conditioning versus Optimizer-Induced Function Transport</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-Bit Counterfactual Invariance</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>Prior-Consistent Function Dynamics and Width Intervention</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>Post-Fit Drift in the Mingard 2025 Boolean Protocol</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>Feature Learning When a Fixed NTK Is Already Sufficient</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>Loss-Conditioned Prior Annealing</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>Function-ID Wandering and Matched-Loss Static Controls</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>Shared Intermediate Computation under Finite Capacity</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>Long Training with 80% Hidden Label Noise</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>Raw-BCE Competition between Preregistered Simple and Complex Function Pairs</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule-30 Train/Validation Gradient Alignment across Dataset Size</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND Shortcut Static Geometry and a One-Example Balance Intervention</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>SGD Dynamics of the AND Shortcut and Balanced Intervention</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>Weighted Rule-Bit Function Switching across Loss Scales</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Complete Functions versus Marginal Concentration in Modular-97 Grokking</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity Reachability, Half-Space Generalization, and Scaffold Recovery</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>Static Deep-Loss Mass versus Optimizer Transport</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>Teacher-Free Consensus and Symbolic Readability</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>Full-Truth-Table Rule Volume</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Measure Closure between Full Rules, Fixed Datasets, and Margin Cores</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement Control and a Consensus Complexity Frontier</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>Per-Example Free Energy and an Information Invariant</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>Prospective Prediction from Full-Rule Volume to Data Transition</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>Deep Neural K Crossing of Parity4 and a One-Point Exception</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST Sample Complexity and Static Branch Prediction</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>Balanced Unlabeled MNIST Label Volume</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Agreement Before and During Grokking</span></a><a class="experiment-nav-link" href="e28.html"><span>E28</span><span>Whole-Network HMC versus Adam on 50k MNIST</span></a><a class="experiment-nav-link active" href="e29.html"><span>E29</span><span>Loss-Resolved Robustness to a Dead Input Bit</span></a><a class="experiment-nav-link" href="e30.html"><span>E30</span><span>Weight Decay Reshapes the Static Complete-Function Landscape</span></a></nav><div class="sidebar-label experiment-label">Post-upload experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="../experiments/e31.html"><span>E31</span><span>Loss and output amplitude</span></a><a class="experiment-nav-link" href="../experiments/e32.html"><span>E32</span><span>Random-memory scaling</span></a><a class="experiment-nav-link" href="../experiments/e33.html"><span>E33</span><span>Cross-architecture output volume</span></a><a class="experiment-nav-link" href="../experiments/e34.html"><span>E34</span><span>Conditional rule duel</span></a><a class="experiment-nav-link" href="../experiments/e35.html"><span>E35</span><span>Frozen functions around grokking</span></a><a class="experiment-nav-link" href="../experiments/e36.html"><span>E36</span><span>Independent Peleg/G&amp;C recheck</span></a><a class="experiment-nav-link" href="../experiments/e37.html"><span>E37</span><span>Measure robustness and Gaussian alignment</span></a></nav>
       </div>
     </aside>
 
@@ -55,12 +70,323 @@
           <p class="article-description">Test whether deep-loss margins can restore counterfactual stability while an unobserved input direction remains distributed as the prior.</p>
         </header>
         <div class="article-body"><div class="source-bar"><span>Scripts</span><div><a href="../../../experiments/experiment_29_dead_bit_loss_resolved/analyze_dead_bit_temperature1_importance.py">analyze_dead_bit_temperature1_importance.py</a><a href="../../../experiments/experiment_29_dead_bit_loss_resolved/experiment_dead_bit_static_sgd_nngp.py">experiment_dead_bit_static_sgd_nngp.py</a></div></div><h2 id="overview">Experiment overview</h2>
-<p>Training covers all eight states of three active bits while a fourth dead bit is always zero. Counterfactual tests set the dead bit to 0.25, 0.5, 1, or 2 for five Boolean targets. Gaussian constrained SMC, 512-seed no-decay Adam, L2/MAP Adam, an MC prior-covariance kernel, and direct temperature-one posterior integration are compared.</p>
-<h2 id="motivation">Why this experiment was run</h2>
-<p>Exact Bayesian model averaging can be fragile when training features are linearly dependent because unidentifiable weights retain their prior. E29 asks whether loss depth supplies a second mechanism: active-path margins may grow until prior-scale dead-direction perturbations no longer flip hard predictions.</p>
+<h2 id="purpose">Purpose</h2>
+<p>Test whether, when input directions that are completely inactive during training
+remain at the prior, the effective margin that grows as the loss decreases can
+restore counterfactual invariance, and quantitatively predict no-decay Adam under
+the same initialization distribution.</p>
+<h2 id="entry-points">Entry points</h2>
+<ul>
+<li>experiment_dead_bit_static_sgd_nngp.py</li>
+<li>analyze_dead_bit_temperature1_importance.py</li>
+<li>MOTIVATION_AND_PREREGISTRATION.md</li>
+<li>RESULTS_AND_CONCLUSION.md</li>
+</ul>
+<h2 id="frozen-sources">Frozen sources</h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Development-version source</th>
+<th>SHA256</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>experiment_dead_bit_static_sgd_nngp.py</td>
+<td>research/function_information_conservation</td>
+<td>a21e84847d45fd457edd7a1326d8c45bd898072eac55f7b3affa934ddcb845e7</td>
+</tr>
+<tr>
+<td>analyze_dead_bit_temperature1_importance.py</td>
+<td>research/function_information_conservation</td>
+<td>3b850e1048e3f95dd47091d36b620fc677bb91cadb6df4866ed76e99aaae5fe2</td>
+</tr>
+</tbody>
+</table>
+<p>The SHA256 of the original main experiment result package is:
+3dea5218d4628dc7273a1a0cad102952a75d09623242bdd07efb98f8c34fc008.</p>
+<h2 id="motivation">Why this experiment was run, and how it was judged</h2>
+<h2 id="1-background">1. Background</h2>
+<p>Izmailov et al. showed that the weights corresponding to input features that are
+constantly 0 during training remain at the prior in the Bayesian posterior;
+MAP / regularized SGD pushes these weights toward 0 and may therefore be more
+stable under covariate shift.</p>
+<p>E29 does not presuppose that a static method must automatically delete dead
+weights. Instead it asks: even if the dead direction remains entirely at the
+prior, is the effective margin brought by deeper loss sufficient to withstand
+binary counterfactual flips?</p>
+<h2 id="2-protocol">2. Protocol</h2>
+<p>Training fully covers the 8 states of the three effective bits, but the dead bit
+z is constantly 0. Testing changes z to 0.25, 0.5, 1, or 2 while the targets stay
+unchanged. The function panel contains projection, XOR, majority, parity, and
+MUX.</p>
+<p>The comparison covers Gaussian constrained SMC, 512-seed no-decay Adam,
+L2/MAP Adam, an MC-NNGP-like kernel, and direct integration of the standard
+temperature-1 posterior.</p>
+<h2 id="3-preregistered-verdict">3. Preregistered verdict</h2>
+<p>The primary comparison is the strict correct mass of no-decay Adam versus
+matched-loss static SMC at z=1:</p>
+<ul>
+<li>the five-function mean absolute difference must be no higher than 0.10;</li>
+<li>the worst-function absolute difference must be no higher than 0.20.</li>
+</ul>
+<p>L2 is a mechanism control and is not required to equal the static mass. z=2 is a
+stronger amplitude extrapolation, used only to measure the boundary of
+applicability; it does not participate in the primary pass criterion.</p>
 <h2 id="results">Results, interpretation, and limits</h2>
-<p>The dead column retained variance near one and squared norm near sixteen under both SMC and no-decay Adam. Nevertheless, at the deepest measured loss the z=1 strict-correct mass reached 0.9959–1.0000. Against genuinely loss-matched no-decay Adam, mean absolute error was 0.0010 and the worst function error 0.0042, passing the preregistered 0.10/0.20 limits. L2 drove the dead column to zero and supplied a distinct MAP robustness mechanism. Low-ridge NNGP also passed z=1, while z=2 exposed larger static/optimizer gaps. Direct integration showed that the standard temperature-one posterior remained too shallow in this eight-example task.</p>
-<p><strong>Conclusion.</strong> Deep-loss static mass accurately predicts ordinary binary dead-bit behavior without contracting the dead direction. The result is protocol- and shift-scale-specific and does not overturn real-image covariate-shift failures of Bayesian model averaging.</p></div>
+<h2 id="1-question-and-protocol">1. Question and protocol</h2>
+<p>The inputs are (z,x0,x1,x2). The training set fully covers the 8 states of the
+three effective bits, but the dead bit z is constantly 0; the counterfactual
+tests change z to 0.25, 0.5, 1, and 2 in turn, while the target labels stay
+unchanged.</p>
+<p>The target functions are the five functions projection, XOR, majority, parity,
+and MUX. The network is a 4-&gt;16-&gt;1 tanh network with 97 parameters in total. The
+static branch uses Gaussian constrained SMC with 4 independent replicas of 2,048
+particles each; the optimizer branch uses 512 paired initializations; the
+NNGP-like baseline estimates the output covariance from 131,072 prior networks.</p>
+<p>The primary preregistered comparison is the strict correct mass of Adam without
+weight decay versus matched-loss static SMC at z=1. A mean absolute difference no
+higher than 0.10 and a worst function no higher than 0.20 counts as a pass.</p>
+<h2 id="2-main-result">2. Main result</h2>
+<p>The original package's automatic summary reports:</p>
+<ul>
+<li>mean absolute difference: 0.001001;</li>
+<li>maximum absolute difference: 0.004150;</li>
+<li>primary_static_prediction_pass=true.</li>
+</ul>
+<p>The automatic summary uses an approximate match between the Adam endpoint and the
+deepest SMC layer; the two losses still differ by a factor of about 20--60. After
+re-matching strictly using the Adam trajectories saved in the package, the
+log-loss distance of all five functions does not exceed 0.057, and the z=1
+conclusion is unchanged:</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th style="text-align: right;">SMC z=1 strict mass</th>
+<th style="text-align: right;">Adam z=1 strict mass</th>
+<th style="text-align: right;">Absolute difference</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>projection</td>
+<td style="text-align: right;">1.000000</td>
+<td style="text-align: right;">1.000000</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>XOR</td>
+<td style="text-align: right;">1.000000</td>
+<td style="text-align: right;">1.000000</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>majority</td>
+<td style="text-align: right;">0.999878</td>
+<td style="text-align: right;">1.000000</td>
+<td style="text-align: right;">0.000122</td>
+</tr>
+<tr>
+<td>parity</td>
+<td style="text-align: right;">0.999268</td>
+<td style="text-align: right;">1.000000</td>
+<td style="text-align: right;">0.000732</td>
+</tr>
+<tr>
+<td>MUX</td>
+<td style="text-align: right;">0.995850</td>
+<td style="text-align: right;">1.000000</td>
+<td style="text-align: right;">0.004150</td>
+</tr>
+</tbody>
+</table>
+<p>Therefore, on the frozen primary criterion, the static low-loss mass predicts the
+dead-bit counterfactual behavior of real no-decay Adam almost exactly.</p>
+<h2 id="3-it-is-not-that-the-dead-weights-were-secretly-compressed-to-zero">3. It is not that the dead weights were secretly compressed to zero</h2>
+<p>The dead-column variance in the deepest SMC layer is 0.975--1.077, and the mean
+squared norm of the 16-dimensional dead column is 15.68--17.41, consistent with
+the theoretical value 16 under the N(0,I) prior. In no-decay Adam, the maximum
+absolute change of the dead column is strictly 0, with variance about 1 and
+squared norm about 16.</p>
+<p>Although the dead weights remain at the prior throughout, the SMC z=1 strict
+correct mass increases systematically as the loss deepens:</p>
+<ul>
+<li>at epsilon of about 0.2, each function is about 0.53--0.90;</li>
+<li>at epsilon of about 0.02, each function is about 0.95--1.00;</li>
+<li>at epsilon of about 0.001, each function is about 0.996--1.00.</li>
+</ul>
+<p>The mechanism is not identifying and deleting the dead bit; rather, the effective
+branch obtains a larger margin at lower loss, so that dead perturbations of prior
+scale are insufficient to change the hard function.</p>
+<h2 id="4-l2-map-mechanism-control">4. L2/MAP mechanism control</h2>
+<p>Explicit L2 compresses both the dead-column variance and the squared norm of Adam
+to near 0; the z=1 strict masses are:</p>
+<ul>
+<li>projection, XOR, majority, MUX: 1.000;</li>
+<li>parity: 0.998.</li>
+</ul>
+<p>The static SMC matched to its higher endpoint loss achieves only 0.934, 0.955,
+0.843, and 0.794 on XOR, majority, parity, and MUX respectively. This difference
+reproduces the mechanism of Izmailov et al.: MAP-style regularization actively
+selects dead weights of 0, whereas BMA / static mass retains their prior
+randomness.</p>
+<h2 id="5-stronger-shift-exposes-the-boundary">5. Stronger shift exposes the boundary</h2>
+<p>At z=2 with strictly matched loss:</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th style="text-align: right;">SMC strict mass</th>
+<th style="text-align: right;">No-decay Adam strict mass</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>projection</td>
+<td style="text-align: right;">0.9827</td>
+<td style="text-align: right;">0.9824</td>
+</tr>
+<tr>
+<td>XOR</td>
+<td style="text-align: right;">0.7361</td>
+<td style="text-align: right;">0.8828</td>
+</tr>
+<tr>
+<td>majority</td>
+<td style="text-align: right;">0.8984</td>
+<td style="text-align: right;">0.9316</td>
+</tr>
+<tr>
+<td>parity</td>
+<td style="text-align: right;">0.6472</td>
+<td style="text-align: right;">0.8281</td>
+</tr>
+<tr>
+<td>MUX</td>
+<td style="text-align: right;">0.7456</td>
+<td style="text-align: right;">0.9062</td>
+</tr>
+</tbody>
+</table>
+<p>So the near-exact agreement between the static and optimizer branches has a clear
+scope: the standard binary flip z=1 passes, but after extrapolating the unseen
+input amplitude to 2, the complex functions show an optimizer reweighting
+advantage of about 0.15--0.18. This is not a failure of the primary criterion,
+but it limits the extrapolation of the conclusion.</p>
+<h2 id="6-nngp-result">6. NNGP result</h2>
+<p>For small ridges able to fit the z=0 training branch, the NNGP is strictly
+correct on the z=1 branch for all five functions. This experiment therefore does
+not establish that the NNGP cannot handle the dead bit. At z=2, high-frequency
+functions such as XOR and parity begin to fail, showing that it likewise has a
+shift-scale boundary.</p>
+<h2 id="7-sampling-diagnostics-and-conclusion">7. Sampling diagnostics and conclusion</h2>
+<p>The pCN acceptance rate in the deepest SMC layer is 0.298--0.302, and the z=1
+posterior-predictive disagreement across the four replicas is 0; the run took
+410.18 seconds, with peak GPU memory of about 65 MB.</p>
+<p>Claims that can be made:</p>
+<ol>
+<li>the loss-resolved static volume accurately predicts no-decay Adam on the
+   binary dead-bit counterfactual;</li>
+<li>deep loss restores invariance through margin rather than through posterior
+   contraction in the dead direction;</li>
+<li>explicit L2/MAP obtains stronger robustness through a different mechanism;</li>
+<li>the NNGP also handles this round's z=1 task, so the finite-width method does
+   not establish an exclusive advantage over the NNGP;</li>
+<li>stronger shift re-amplifies the static-versus-optimizer difference.</li>
+</ol>
+<p>It cannot be claimed that this Boolean result overturns the BMA failure under
+real MNIST/CIFAR covariate shift, nor that the static volume equals SGD for
+arbitrary dead features or arbitrary perturbation amplitudes.</p>
+<h2 id="8-standard-temperature-1-hmc-target-distribution">8. Standard temperature-1 HMC target distribution</h2>
+<p>To answer how the standard Bayesian HMC used by Izmailov et al. behaves on this
+task, we additionally drew 1,048,576 parameter samples from the Gaussian prior
+and reweighted them by the exact Bernoulli likelihood exp(-8*mean_BCE). This
+importance integral has exactly the same target distribution as temperature-1
+HMC; the ESS of each function remains 62%--93% of the total samples, with no
+deep-tail degeneracy.</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th style="text-align: right;">ESS ratio</th>
+<th style="text-align: right;">Posterior mean loss</th>
+<th style="text-align: right;">z=0 BMA accuracy</th>
+<th style="text-align: right;">z=1 BMA accuracy</th>
+<th style="text-align: right;">z=0 strict sample mass</th>
+<th style="text-align: right;">z=1 strict sample mass</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>projection</td>
+<td style="text-align: right;">0.621</td>
+<td style="text-align: right;">0.6706</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">0.0473</td>
+<td style="text-align: right;">0.0362</td>
+</tr>
+<tr>
+<td>XOR</td>
+<td style="text-align: right;">0.924</td>
+<td style="text-align: right;">0.7234</td>
+<td style="text-align: right;">0.750</td>
+<td style="text-align: right;">0.750</td>
+<td style="text-align: right;">0.000004</td>
+<td style="text-align: right;">0.000005</td>
+</tr>
+<tr>
+<td>majority</td>
+<td style="text-align: right;">0.737</td>
+<td style="text-align: right;">0.6920</td>
+<td style="text-align: right;">0.625</td>
+<td style="text-align: right;">0.625</td>
+<td style="text-align: right;">0.00508</td>
+<td style="text-align: right;">0.00455</td>
+</tr>
+<tr>
+<td>parity</td>
+<td style="text-align: right;">0.932</td>
+<td style="text-align: right;">0.7245</td>
+<td style="text-align: right;">0.500</td>
+<td style="text-align: right;">0.500</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>MUX</td>
+<td style="text-align: right;">0.779</td>
+<td style="text-align: right;">0.6998</td>
+<td style="text-align: right;">0.750</td>
+<td style="text-align: right;">0.750</td>
+<td style="text-align: right;">0.000171</td>
+<td style="text-align: right;">0.000141</td>
+</tr>
+</tbody>
+</table>
+<p>Therefore standard temperature-1 HMC fails on this 8-sample, 97-parameter scaled
+task, and for the four complex functions it does not even fit the BMA on the
+training branch adequately. The failure is not that the sampler failed to find
+the posterior, but that the posterior itself does not contract into the deep-loss
+region. Continuing to run HMC at the same temperature will not solve this; only
+duplicating the data, lowering the temperature, or explicitly entering a lower
+epsilon pushes the distribution toward the successful static layers described
+above.</p>
+<p>This result does not contradict the original paper. The original paper's
+large-data models already have high in-distribution accuracy and mainly expose
+the OOD dead-pixel degradation; this scaled task has too little data, so the
+under-contraction of the temperature-1 posterior appears on ID first. It instead
+clearly demonstrates the extra information that the loss-resolved profile carries
+relative to a single-temperature posterior.</p>
+<h2 id="9-files">9. Files</h2>
+<ul>
+<li>Experiment script:
+  research/function_information_conservation/experiment_dead_bit_static_sgd_nngp.py</li>
+<li>Raw results:
+  E:/Downloads/results_dead_bit_static_sgd_nngp_package.zip</li>
+</ul></div>
         <footer class="experiment-pager"><a href="e28.html">← E28 Whole-Network HMC versus Adam on 50k MNIST</a><a href="e30.html">E30 Weight Decay Reshapes the Static Complete-Function Landscape →</a></footer>
       </article>
     </main>

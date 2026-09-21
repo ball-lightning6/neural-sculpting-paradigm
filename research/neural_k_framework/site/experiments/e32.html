@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="E32 随机记忆的完整协议、结果和边界。">
+  <title>E32 随机记忆 · Neural K 研究档案</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="../assets/site.js"></script>
+</head>
+<body data-page-kind="post-upload">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+
+    <header class="topbar">
+      <a class="site-mark" href="../index.html" aria-label="返回研究主文">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K 研究档案</span>
+      </a>
+      <nav class="top-nav" aria-label="全站导航"><a class="top-link" href="../index.html">研究主文</a><a class="top-link" href="../theory-core.html">理论核心</a><a class="top-link" href="../experiments/index.html">实验索引</a><a class="top-link active" href="../post-upload.html">提交后增量</a><a class="top-link" href="../references.html">参考文献</a><a class="top-link" href="../evidence-ledger.html">证据总账</a></nav>
+      <nav class="language-switch" aria-label="语言"><span class="active" lang="zh-CN">中文</span><a href="../en/experiments/e32.html" lang="en">EN</a></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>目录</span>
+      </button>
+    </header>
+
+  <div class="page-shell">
+
+    <aside class="sidebar" id="sidebar" aria-label="本页目录">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">本页目录</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#范围与状态">范围与状态</a></li>
+<li><a href="#统计口径">统计口径</a></li>
+<li><a href="#末端0-002-0-001">末端0.002→0.001</a><ul>
+<li><a href="#线性关系仍在-但不是每份数据都同样干净">线性关系仍在，但不是每份数据都同样干净</a></li>
+</ul>
+</li>
+<li><a href="#最大两档的额外波动">最大两档的额外波动</a></li>
+<li><a href="#尾部变化减小">尾部变化减小</a></li>
+<li><a href="#独立核验">独立核验</a></li>
+<li><a href="#换gpu的一致性参考">换GPU的一致性参考</a></li>
+<li><a href="#为什么这是复杂度定义的外部校准">为什么这是复杂度定义的外部校准</a></li>
+<li><a href="#可以支持的结论">可以支持的结论</a></li>
+<li><a href="#产物">产物</a></li>
+</ul>
+</div>
+</nav>
+        <a class="sidebar-action" href="../post-upload.html">返回增量总览 →</a>
+      </div>
+    </aside>
+
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">实验增量 · E32</div>
+          <h1>E32 随机记忆</h1>
+          <p class="article-description">E32 随机记忆的完整协议、结果和边界。</p>
+        </header>
+        <div class="article-body"><h2 id="范围与状态">范围与状态</h2>
+<p>用户提供<code>results_8bit_random_memory_scaling_w16_v1_package (1).zip</code>。本包为5090重新运行后的完整结果，不是此前4090 D的10项阶段包。</p>
+<ul>
+<li>10档样本数：32、48、64、80、96、128、160、192、224、256。</li>
+<li>每档8份随机数据，共80项，全部达到平均BCE≤0.001。</li>
+<li>每个数据编号对应一张独立随机标签表及输入排列，同编号各n使用嵌套前缀。</li>
+<li>网络8→16→16→1 tanh，433参数；0/1输入，标准Gaussian神经坐标，权重与bias均按fan-in缩放。</li>
+<li>每项4副本×2048粒子，2次适应及12次固定更新，float32前向/粒子、float64 log体积，TF32关闭。</li>
+<li>环境为RTX5090、torch 2.8.0+cu128、Python 3.12.3。采样循环累计17692.89秒，约4.915小时；启动及部分打包等另计。</li>
+<li>本轮只读审计和离线统计，没有新增训练、SMC、自动recheck或失败seed微观分析。</li>
+</ul>
+<h2 id="统计口径">统计口径</h2>
+<p>每份数据先按副本计算：<code>c=[K(eps_low)-K(eps_high)]/log2(eps_high/eps_low)</code>，再取该数据的副本中位数。之后对8份独立数据的系数求均值和标准差，不先平均体积。</p>
+<p>主分析保留全部80项，包括有警告的项。数据集间SD、副本SD分别报告。副本共享自适应阈值与步长，不能将其SD当作严格置信区间。</p>
+<h2 id="末端0-002-0-001">末端0.002→0.001</h2>
+<p>单位：loss减半时负log2体积的增量。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">n</th>
+<th style="text-align: right;">8份数据均值</th>
+<th style="text-align: right;">数据集间SD</th>
+<th style="text-align: right;">数据集间中位数</th>
+<th style="text-align: right;">均值c/n</th>
+<th style="text-align: right;">窗口涉及采样报警的份数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">32</td>
+<td style="text-align: right;">54.33</td>
+<td style="text-align: right;">3.96</td>
+<td style="text-align: right;">52.78</td>
+<td style="text-align: right;">1.698</td>
+<td style="text-align: right;">0/8</td>
+</tr>
+<tr>
+<td style="text-align: right;">48</td>
+<td style="text-align: right;">68.14</td>
+<td style="text-align: right;">3.49</td>
+<td style="text-align: right;">68.16</td>
+<td style="text-align: right;">1.420</td>
+<td style="text-align: right;">0/8</td>
+</tr>
+<tr>
+<td style="text-align: right;">64</td>
+<td style="text-align: right;">79.93</td>
+<td style="text-align: right;">2.87</td>
+<td style="text-align: right;">79.80</td>
+<td style="text-align: right;">1.249</td>
+<td style="text-align: right;">0/8</td>
+</tr>
+<tr>
+<td style="text-align: right;">80</td>
+<td style="text-align: right;">90.70</td>
+<td style="text-align: right;">4.69</td>
+<td style="text-align: right;">90.67</td>
+<td style="text-align: right;">1.134</td>
+<td style="text-align: right;">0/8</td>
+</tr>
+<tr>
+<td style="text-align: right;">96</td>
+<td style="text-align: right;">100.76</td>
+<td style="text-align: right;">7.17</td>
+<td style="text-align: right;">101.64</td>
+<td style="text-align: right;">1.050</td>
+<td style="text-align: right;">0/8</td>
+</tr>
+<tr>
+<td style="text-align: right;">128</td>
+<td style="text-align: right;">118.47</td>
+<td style="text-align: right;">6.59</td>
+<td style="text-align: right;">118.29</td>
+<td style="text-align: right;">0.926</td>
+<td style="text-align: right;">0/8</td>
+</tr>
+<tr>
+<td style="text-align: right;">160</td>
+<td style="text-align: right;">141.53</td>
+<td style="text-align: right;">5.86</td>
+<td style="text-align: right;">143.98</td>
+<td style="text-align: right;">0.885</td>
+<td style="text-align: right;">2/8</td>
+</tr>
+<tr>
+<td style="text-align: right;">192</td>
+<td style="text-align: right;">164.24</td>
+<td style="text-align: right;">8.91</td>
+<td style="text-align: right;">164.28</td>
+<td style="text-align: right;">0.855</td>
+<td style="text-align: right;">1/8</td>
+</tr>
+<tr>
+<td style="text-align: right;">224</td>
+<td style="text-align: right;">209.61</td>
+<td style="text-align: right;">36.37</td>
+<td style="text-align: right;">196.11</td>
+<td style="text-align: right;">0.936</td>
+<td style="text-align: right;">4/8</td>
+</tr>
+<tr>
+<td style="text-align: right;">256</td>
+<td style="text-align: right;">253.67</td>
+<td style="text-align: right;">62.20</td>
+<td style="text-align: right;">220.39</td>
+<td style="text-align: right;">0.991</td>
+<td style="text-align: right;">6/8</td>
+</tr>
+</tbody>
+</table>
+<h3 id="线性关系仍在-但不是每份数据都同样干净">线性关系仍在，但不是每份数据都同样干净</h3>
+<p>全部10档均值拟合为：</p>
+<div class="math-display">$$
+c(n)\approx0.82354n+22.725,\qquad R^2=0.97238.
+$$</div>
+<p>七个相邻loss窗口的均值曲线，R²范围约0.9724至0.9871。8条独立数据轨迹在最深窗口均随n逐档增加，72/72个相邻增量为正。</p>
+<p>最深窗口逐数据轨迹的R²依次约为0.9938、0.9959、0.9854、0.8363、0.9252、0.9204、0.9938、0.9897。因此不是只有第1份数据呈现近似线性；同时也不能声称每份都接近完美直线。</p>
+<p>数据集间中位数曲线作为稳健性参考，拟合为<code>c≈0.72409n+30.927</code>，R²≈0.9960。这不替代均值主结果，更不意味着剔除高值。</p>
+<h2 id="最大两档的额外波动">最大两档的额外波动</h2>
+<p>n=256的8份系数依次为218.15、222.64、208.38、374.34、306.35、285.08、216.31、198.11。第4、5、6份明显拉高均值；其中并非每份都触发了同一类警告，不能用警告标签直接判断哪些是“假高值”。</p>
+<p>观察到这一现象后做范围敏感性分析：仅n≤192的均值拟合为<code>c≈0.66645n+35.617</code>，R²≈0.9978；其外推对224和256的预测分别比实际均值低约13.4%和23.0%。这是事后诊断，不包装成预先选择的主区间。</p>
+<p>最大两档同时出现较大副本分歧，例如第4份n=224的系数副本SD约24.8%，第6份n=256约31.0%。433参数对256个单输出样本只是轻度过参数化。当前无法区分真实数据难度、容量压力和采样混合不足的贡献。</p>
+<h2 id="尾部变化减小">尾部变化减小</h2>
+<p>在预定的7个相邻窗口中，80/80条曲线的局部系数都逐步下降。</p>
+<ul>
+<li>从0.2→0.1窗口到0.1→0.05窗口，系数下降的中位数约17.39%。</li>
+<li>从0.005→0.002窗口到0.002→0.001窗口，下降的中位数约3.79%。</li>
+<li>最后一次下降的10%至90%分位为3.02%至4.65%，全范围为0.34%至5.55%。</li>
+<li>78/80条最后变化不超过5%，80/80条不超过10%，没有末窗口反而上升的例子。</li>
+</ul>
+<p>这支持有限低loss区间的斜率逐渐稳定，但不证明真正epsilon→0时的极限，也不直接测出了微观实现复杂度分布。</p>
+<h2 id="独立核验">独立核验</h2>
+<ul>
+<li>全部1200个快照文件、38400组抽存参数，独立NumPy float64前向复算通过。</li>
+<li>最大logit差约1.77e-5，最大平均BCE差约4.44e-8；无分类符号变化，无观测到的loss约束违例。</li>
+<li>末端快照训练标签全部正确，全部任务报告的终点粒子完整拟合比例均为1。</li>
+<li>逐层及节点K未出现负增量；各数据的窗口系数与包内结果完全一致，汇总均值最大差约5.68e-14。</li>
+<li>8份完整随机数据的seed、标签及嵌套顺序独立重建一致，数据hash全部不同；不同标签表的Hamming距离为105至143。</li>
+<li>这些核验确认实现和约束一致，不认证全局SMC质量估计无偏。</li>
+</ul>
+<h2 id="换gpu的一致性参考">换GPU的一致性参考</h2>
+<p>同一第1份数据在4090 D和5090的末端系数差异约0.14%至6.23%，多数较小。n=256从216.95变为218.15，变化约0.55%；n=192的变化较大，约-6.23%。</p>
+<p>这一份的采样时间从3045.29秒变为2197.07秒，速度约1.386倍。数据与种子相同，不能把它计作第9份独立随机数据，也不作为独立随机流复测。</p>
+<h2 id="为什么这是复杂度定义的外部校准">为什么这是复杂度定义的外部校准</h2>
+<p>随机标签没有可复用的目标规则；增加独立样本，通常就增加需要分别记住的约束。这里的样本数<code>n</code>是在测量Neural K之前设定的外部记忆负担，不是由网络体积反过来定义的“复杂度”。因此可以用它检验负log参数质量及其loss-resolved收缩是否真的对不可复用实现成本有响应。</p>
+<p>本实验测的是有限窗口系数<code>c(n)=[K(0.001)-K(0.002)]/log2(2)</code>，不是每个完整函数的绝对Kolmogorov复杂度。10档样本量、8份独立数据的均值曲线近似线性（<code>R²=0.97238</code>）；全部8条最深窗口轨迹的相邻增量均为正。这个独立控制量与体积收缩负担的对应，为把Neural K-profile称作一种神经协议相对的实现复杂度提供构造效度证据，而不只是把体积重新命名。</p>
+<p>它仍是侧面校准，不是复杂度定义正确性的证明：较大<code>n</code>的容量压力和SMC混合问题尚未完全分离；不同架构、编码或loss可能有不同系数；随机记忆负担也不等于机器无关Kolmogorov复杂度。这里支持的是当前协议、当前有限loss窗口中的近线性响应。</p>
+<h2 id="可以支持的结论">可以支持的结论</h2>
+<p>相比单份试采，现在对“有限loss下，随机记忆负担增加时，体积收缩系数有可重复的近似线性响应”有了更充分的支持。低loss末端变化减小也在全部80条曲线上重现。</p>
+<p>尚不支持：全范围严格正比、每份数据精确线性、架构无关的系数、Kolmogorov复杂度等价，或所有最大n深尾已充分混合。大n的上翘不直接认定为超线性定律，也不作为采样误差删除。</p>
+<h2 id="产物">产物</h2>
+<ul>
+<li><a href="../assets/post_upload/9bb6d798ac_overview.png">总览图</a></li>
+<li><a href="../assets/post_upload/d8801989ec_replica_uncertainty.png">副本分歧图</a></li>
+<li>[完整审计与统计]</li>
+<li>[可重跑分析脚本]</li>
+</ul></div>
+
+      </article>
+    </main>
+  </div>
+</body>
+</html>

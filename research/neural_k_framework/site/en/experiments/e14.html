@@ -23,7 +23,7 @@
         <span class="mark-block">NK</span>
         <span class="mark-text">Neural K Research Archive</span>
       </a>
-      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="../index.html">Research</a><a class="top-link" href="../theory-core.html">Core Theory</a><a class="top-link active" href="../experiments/index.html">Experiments</a><a class="top-link" href="../references.html">References</a><a class="top-link" href="../evidence-ledger.html">Evidence</a></nav>
+      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="../index.html">Research</a><a class="top-link" href="../theory-core.html">Core Theory</a><a class="top-link active" href="../experiments/index.html">Experiments</a><a class="top-link" href="../post-upload.html">Updates</a><a class="top-link" href="../references.html">References</a><a class="top-link" href="../evidence-ledger.html">Evidence</a></nav>
       <nav class="language-switch" aria-label="Language"><a href="../../experiments/e14.html" lang="zh-CN">中文</a><span class="active" lang="en">EN</span></nav>
       <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
         <span aria-hidden="true">☰</span><span>Contents</span>
@@ -38,12 +38,24 @@
         <nav class="toc"><div class="toc">
 <ul>
 <li><a href="#overview">Experiment overview</a></li>
-<li><a href="#motivation">Why this experiment was run</a></li>
+<li><a href="#purpose">Purpose</a></li>
+<li><a href="#files">Files</a></li>
+<li><a href="#frozen-source">Frozen source</a></li>
+<li><a href="#motivation">Why this experiment was run, and how it was judged</a></li>
+<li><a href="#1-construction">1. Construction</a></li>
+<li><a href="#2-competing-predictions">2. Competing predictions</a></li>
+<li><a href="#3-configuration">3. Configuration</a></li>
+<li><a href="#4-boundary">4. Boundary</a></li>
 <li><a href="#results">Results, interpretation, and limits</a></li>
+<li><a href="#1-the-fixed-hard-function-clearly-rises-first-and-then-falls">1. The fixed hard function clearly rises first and then falls</a></li>
+<li><a href="#2-the-transition-is-taken-over-step-by-step-by-three-conflicting-constraints">2. The transition is taken over step by step by three conflicting constraints</a></li>
+<li><a href="#3-the-weight-ratio-mainly-shifts-the-loss-scale">3. The weight ratio mainly shifts the loss scale</a></li>
+<li><a href="#4-training-actively-worsens-the-minority-branch">4. Training actively worsens the minority branch</a></li>
+<li><a href="#5-stage-verdict">5. Stage verdict</a></li>
 </ul>
 </div>
 </nav>
-        <div class="sidebar-label experiment-label">All experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>Static Hard Conditioning versus Optimizer-Induced Function Transport</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-Bit Counterfactual Invariance</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>Prior-Consistent Function Dynamics and Width Intervention</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>Post-Fit Drift in the Mingard 2025 Boolean Protocol</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>Feature Learning When a Fixed NTK Is Already Sufficient</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>Loss-Conditioned Prior Annealing</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>Function-ID Wandering and Matched-Loss Static Controls</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>Shared Intermediate Computation under Finite Capacity</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>Long Training with 80% Hidden Label Noise</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>Raw-BCE Competition between Preregistered Simple and Complex Function Pairs</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule-30 Train/Validation Gradient Alignment across Dataset Size</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND Shortcut Static Geometry and a One-Example Balance Intervention</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>SGD Dynamics of the AND Shortcut and Balanced Intervention</span></a><a class="experiment-nav-link active" href="e14.html"><span>E14</span><span>Weighted Rule-Bit Function Switching across Loss Scales</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Complete Functions versus Marginal Concentration in Modular-97 Grokking</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity Reachability, Half-Space Generalization, and Scaffold Recovery</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>Static Deep-Loss Mass versus Optimizer Transport</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>Teacher-Free Consensus and Symbolic Readability</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>Full-Truth-Table Rule Volume</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Measure Closure between Full Rules, Fixed Datasets, and Margin Cores</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement Control and a Consensus Complexity Frontier</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>Per-Example Free Energy and an Information Invariant</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>Prospective Prediction from Full-Rule Volume to Data Transition</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>Deep Neural K Crossing of Parity4 and a One-Point Exception</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST Sample Complexity and Static Branch Prediction</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>Balanced Unlabeled MNIST Label Volume</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Agreement Before and During Grokking</span></a><a class="experiment-nav-link" href="e28.html"><span>E28</span><span>Whole-Network HMC versus Adam on 50k MNIST</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Loss-Resolved Robustness to a Dead Input Bit</span></a><a class="experiment-nav-link" href="e30.html"><span>E30</span><span>Weight Decay Reshapes the Static Complete-Function Landscape</span></a></nav>
+        <div class="sidebar-label experiment-label">All experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>Static Hard Conditioning versus Optimizer-Induced Function Transport</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-Bit Counterfactual Invariance</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>Prior-Consistent Function Dynamics and Width Intervention</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>Post-Fit Drift in the Mingard 2025 Boolean Protocol</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>Feature Learning When a Fixed NTK Is Already Sufficient</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>Loss-Conditioned Prior Annealing</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>Function-ID Wandering and Matched-Loss Static Controls</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>Shared Intermediate Computation under Finite Capacity</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>Long Training with 80% Hidden Label Noise</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>Raw-BCE Competition between Preregistered Simple and Complex Function Pairs</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule-30 Train/Validation Gradient Alignment across Dataset Size</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND Shortcut Static Geometry and a One-Example Balance Intervention</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>SGD Dynamics of the AND Shortcut and Balanced Intervention</span></a><a class="experiment-nav-link active" href="e14.html"><span>E14</span><span>Weighted Rule-Bit Function Switching across Loss Scales</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Complete Functions versus Marginal Concentration in Modular-97 Grokking</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity Reachability, Half-Space Generalization, and Scaffold Recovery</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>Static Deep-Loss Mass versus Optimizer Transport</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>Teacher-Free Consensus and Symbolic Readability</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>Full-Truth-Table Rule Volume</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Measure Closure between Full Rules, Fixed Datasets, and Margin Cores</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement Control and a Consensus Complexity Frontier</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>Per-Example Free Energy and an Information Invariant</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>Prospective Prediction from Full-Rule Volume to Data Transition</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>Deep Neural K Crossing of Parity4 and a One-Point Exception</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST Sample Complexity and Static Branch Prediction</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>Balanced Unlabeled MNIST Label Volume</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Agreement Before and During Grokking</span></a><a class="experiment-nav-link" href="e28.html"><span>E28</span><span>Whole-Network HMC versus Adam on 50k MNIST</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Loss-Resolved Robustness to a Dead Input Bit</span></a><a class="experiment-nav-link" href="e30.html"><span>E30</span><span>Weight Decay Reshapes the Static Complete-Function Landscape</span></a></nav><div class="sidebar-label experiment-label">Post-upload experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="../experiments/e31.html"><span>E31</span><span>Loss and output amplitude</span></a><a class="experiment-nav-link" href="../experiments/e32.html"><span>E32</span><span>Random-memory scaling</span></a><a class="experiment-nav-link" href="../experiments/e33.html"><span>E33</span><span>Cross-architecture output volume</span></a><a class="experiment-nav-link" href="../experiments/e34.html"><span>E34</span><span>Conditional rule duel</span></a><a class="experiment-nav-link" href="../experiments/e35.html"><span>E35</span><span>Frozen functions around grokking</span></a><a class="experiment-nav-link" href="../experiments/e36.html"><span>E36</span><span>Independent Peleg/G&amp;C recheck</span></a><a class="experiment-nav-link" href="../experiments/e37.html"><span>E37</span><span>Measure robustness and Gaussian alignment</span></a></nav>
       </div>
     </aside>
 
@@ -55,13 +67,102 @@
           <p class="article-description">Construct an explicit dataset in which one fixed complete function is suppressed at shallow loss and rises only when rare constraints become unavoidable.</p>
         </header>
         <div class="article-body"><div class="source-bar"><span>Scripts</span><div><a href="../../../experiments/experiment_14_weighted_rulebit_function_switch/experiment_weighted_rulebit_sgd.py">experiment_weighted_rulebit_sgd.py</a></div></div><h2 id="overview">Experiment overview</h2>
-<p>A rule bit selects Rule 110 or Rule 30, but training weights the majority and minority branches at ratios from 1:1 to 10,000:1. Each ratio uses 512 paired seeds with plain full-batch SGD, zero momentum, and zero weight decay. Complete local rule functions are recorded at matched weighted raw-BCE crossings.</p>
-<h2 id="motivation">Why this experiment was run</h2>
-<p>The experiment is designed to reject the strongest monotonic claim. At high loss, fitting the majority Rule-110 branch removes nearly all objective value; only at very low loss do the rare Rule-30 conflicts force the complete composite rule.</p>
+<h2 id="purpose">Purpose</h2>
+<p>E14 artificially constructs a hierarchical constraint in which Rule110 is the majority and Rule30 the minority, so that at high loss it is most economical to ignore the minority branch, whereas at extremely low loss the full composite mapping must be satisfied. It directly tests whether the probability of a fixed hard function must be monotonic in loss.</p>
+<h2 id="files">Files</h2>
+<ul>
+<li><a href="#motivation">Experiment motivation and preregistration criteria</a></li>
+<li><a href="#results">Full results and stage verdict</a></li>
+<li><a href="../../../experiments/experiment_14_weighted_rulebit_function_switch/experiment_weighted_rulebit_sgd.py"><code>experiment_weighted_rulebit_sgd.py</code></a></li>
+</ul>
+<p>Run:</p>
+<pre><code class="language-bash">python experiment_weighted_rulebit_sgd.py
+</code></pre>
+<h2 id="frozen-source">Frozen source</h2>
+<p>Script SHA256: <code>db944d90827da3ab3d4d68e2771ad86ee8639f27a67f166fbbf939923691bbcb</code>. Development version: <code>research/loss_level_function_switch/experiment_weighted_rulebit_sgd.py</code>.</p>
+<p>Local results: <code>E:\Downloads\results_weighted_rulebit_sgd_package.zip</code> SHA256: <code>c3ce46a4c99a8d5d1a9a6c19cbb1d359952bb2e50f9b8e1bf1541505d8604cbe</code>.</p>
+<p>The ZIP contains checkpoints and is about 177 MB; it is not included in the release package.</p>
+<h2 id="motivation">Why this experiment was run, and how it was judged</h2>
+<h2 id="1-construction">1. Construction</h2>
+<p>The input contains one rule bit. Rule bit 0 corresponds to Rule110, and rule bit 1 corresponds to Rule30. The training objective is weighted according to:</p>
+<pre><code class="language-text">Rule110 : Rule30 = 1, 10, 100, 1000, 10000
+</code></pre>
+<p>The minority Rule30 samples are still absolutely numerous enough to express the rule, but their contribution to a high weighted loss can be temporarily ignored by the majority branch.</p>
+<h2 id="2-competing-predictions">2. Competing predictions</h2>
+<ul>
+<li>If the probability of a fixed hard function were monotonic in loss throughout, then <code>Rule110-both</code> should not first increase and then decrease;</li>
+<li>If different loss depths activate different constraints, training should first optimize the majority branch, then correct the three conflicting neighborhoods bit by bit, and finally form the full composite mapping;</li>
+<li>If the weight ratio only shifts the effective loss scale, then after normalization by the minority weight <code>epsilon</code>, the transitions at different ratios should collapse onto each other.</li>
+</ul>
+<h2 id="3-configuration">3. Configuration</h2>
+<ul>
+<li><code>4 -&gt; 64 x 3 -&gt; 1</code> GELU+LayerNorm;</li>
+<li>Plain full-batch SGD, learning rate 0.05, no momentum and no weight decay;</li>
+<li>512 paired seeds per ratio, 2,560 models in total;</li>
+<li>Matched weighted raw-BCE first crossing;</li>
+<li>Maximum run length 125,204 steps.</li>
+</ul>
+<h2 id="4-boundary">4. Boundary</h2>
+<p>This experiment deliberately uses sample weights to create a constraint takeover, demonstrating that non-monotonicity "can occur"; it does not claim that all natural datasets exhibit the same route. The full composite function is still enforced by a hard constraint at sufficiently low loss, so this cannot on its own be interpreted as evidence for an MDL endpoint.</p>
 <h2 id="results">Results, interpretation, and limits</h2>
-<p>The fixed <code>Rule110-both</code> hard function rose to peaks near 52%–55% and then fell as the minority constraints took over. Under the 10,000:1 ratio, total loss initially decreased while the Rule-30 branch loss was actively made worse, before the trajectory returned to the full composite map in the deep tail.</p>
-<p>After rescaling by minority weight, extreme-ratio curves approximately collapsed, and takeover occurred near the theoretical loss floor of the majority-only solution.</p>
-<p><strong>Conclusion.</strong> One complete hard function can rise and fall as loss is tightened. Training follows the weighted objective rather than a researcher-designated “true composite rule.” The construction proves possible nonmonotonicity; it does not claim every natural dataset follows this path.</p></div>
+<h2 id="1-the-fixed-hard-function-clearly-rises-first-and-then-falls">1. The fixed hard function clearly rises first and then falls</h2>
+<p>The probability trajectory of <code>Rule110-both=0x6E6E</code>:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">Rule110:Rule30</th>
+<th style="text-align: right;">Peak</th>
+<th style="text-align: right;">Peak loss</th>
+<th style="text-align: right;">Full composite function takeover</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">10:1</td>
+<td style="text-align: right;">25.78%</td>
+<td style="text-align: right;">0.2</td>
+<td style="text-align: right;">100% at 0.01</td>
+</tr>
+<tr>
+<td style="text-align: right;">100:1</td>
+<td style="text-align: right;">52.93%</td>
+<td style="text-align: right;">0.05</td>
+<td style="text-align: right;">100% at 0.001</td>
+</tr>
+<tr>
+<td style="text-align: right;">1000:1</td>
+<td style="text-align: right;">54.69%</td>
+<td style="text-align: right;">0.005</td>
+<td style="text-align: right;">100% at 0.0001</td>
+</tr>
+<tr>
+<td style="text-align: right;">10000:1</td>
+<td style="text-align: right;">51.76%</td>
+<td style="text-align: right;">0.0005</td>
+<td style="text-align: right;">100% of 501 at 0.00001</td>
+</tr>
+</tbody>
+</table>
+<p>Same-seed transitions rule out replacement by a different seed population: for example, of the 280 Rule110-both models at the 1000:1 peak, 257 became full composite functions at deeper loss; the corresponding figure for 10000:1 is 260/260.</p>
+<h2 id="2-the-transition-is-taken-over-step-by-step-by-three-conflicting-constraints">2. The transition is taken over step by step by three conflicting constraints</h2>
+<p>The majority branch first freezes to the Rule110 low byte <code>0x6E</code>, and the minority branch then follows, in order:</p>
+<pre><code class="language-text">0x6E -&gt; {0x4E,0x2E} -&gt; 0x0E -&gt; 0x1E
+</code></pre>
+<p>correcting bit by bit the conflicts between Rule110 and Rule30 on <code>100, 101, 110</code>. The transition is not a one-shot discovery of the full rule; rather, training constraints at different weight scales take over step by step as the loss deepens.</p>
+<h2 id="3-the-weight-ratio-mainly-shifts-the-loss-scale">3. The weight ratio mainly shifts the loss scale</h2>
+<p>Let <code>epsilon=1/(ratio+1)</code>; the transitions at 100:1, 1000:1, and 10000:1 approximately collapse in the <code>loss/epsilon</code> coordinate. The hard-function loss floor of Rule110-both satisfies:</p>
+<div class="math-display">$$
+L_{floor}/\epsilon=(3/8)\ln2.
+$$</div>
+<p>The final switch occurs precisely near this lower bound.</p>
+<h2 id="4-training-actively-worsens-the-minority-branch">4. Training actively worsens the minority branch</h2>
+<p>Under the 10000:1 condition at step 500, the total weighted BCE had already fallen to 0.000979, yet the Rule30 branch BCE had risen from an initial 0.728 to 1.297; only later, as the total loss continued to decrease, did the Rule30 branch fall to 0.0145 and form the full mapping. The network has no external "full composite function" objective; it only optimizes the given weighted training loss.</p>
+<h2 id="5-stage-verdict">5. Stage verdict</h2>
+<p>E14 directly refutes:</p>
+<blockquote>
+<p>The relative probability of a fixed hard function across different loss regions is necessarily monotonic.</p>
+</blockquote>
+<p>It supports: data weights and loss depth jointly determine the currently effective constraint; intermediate function mass can switch order in multiple stages, and training can even first move systematically away from the external full rule and then return. This result is a dynamical construction; it does not imply that the static volume has the same trajectory.</p></div>
         <footer class="experiment-pager"><a href="e13.html">← E13 SGD Dynamics of the AND Shortcut and Balanced Intervention</a><a href="e15.html">E15 Complete Functions versus Marginal Concentration in Modular-97 Grokking →</a></footer>
       </article>
     </main>

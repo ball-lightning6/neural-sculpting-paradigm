@@ -1,0 +1,228 @@
+{
+  "measure": "uniform Lebesgue measure in ||theta||_2 <= 72",
+  "threshold": 0.01,
+  "records_at_threshold": 36,
+  "functions": [
+    "0x00",
+    "0x0F",
+    "0x17",
+    "0x69"
+  ],
+  "rectangles": [
+    {
+      "rectangles": [
+        {
+          "function_hex": "0x00",
+          "base_low": -10.0,
+          "base_high": 9.0,
+          "gamma_bits": -0.062362504927172324,
+          "replica_sd_sum_proxy": 1.4744333345438543,
+          "gamma_over_sd_proxy": 0.042295913600234374,
+          "delta_low_bits": 0.18849086248057745,
+          "delta_high_bits": 0.14830241710145486,
+          "k_base": 32.75470882489648,
+          "k_both": 33.02913959955134
+        },
+        {
+          "function_hex": "0x00",
+          "base_low": -10.0,
+          "base_high": 10.0,
+          "gamma_bits": 0.15845898111464862,
+          "replica_sd_sum_proxy": 1.0941472875865932,
+          "gamma_over_sd_proxy": 0.14482417761521693,
+          "delta_low_bits": 0.12612835755340512,
+          "delta_high_bits": -0.1391452239829576,
+          "k_base": 32.90301124199794,
+          "k_both": 33.048453356683034
+        }
+      ]
+    },
+    {
+      "rectangles": [
+        {
+          "function_hex": "0x0F",
+          "base_low": -10.0,
+          "base_high": 9.0,
+          "gamma_bits": 0.6367098888924332,
+          "replica_sd_sum_proxy": 1.446959682830777,
+          "gamma_over_sd_proxy": 0.4400329162225157,
+          "delta_low_bits": 0.48273906829218305,
+          "delta_high_bits": 0.41890615895441385,
+          "k_base": 47.25914812522685,
+          "k_both": 48.79750324136588
+        },
+        {
+          "function_hex": "0x0F",
+          "base_low": -10.0,
+          "base_high": 10.0,
+          "gamma_bits": -0.44804371361641415,
+          "replica_sd_sum_proxy": 1.5018607402464803,
+          "gamma_over_sd_proxy": 0.2983257379395128,
+          "delta_low_bits": 1.1194489571846162,
+          "delta_high_bits": 1.2471097025678404,
+          "k_base": 47.678054284181265,
+          "k_both": 49.59656923031731
+        }
+      ]
+    },
+    {
+      "rectangles": [
+        {
+          "function_hex": "0x17",
+          "base_low": -10.0,
+          "base_high": 9.0,
+          "gamma_bits": 0.8044413263723627,
+          "replica_sd_sum_proxy": 1.372527340687169,
+          "gamma_over_sd_proxy": 0.5861022236319252,
+          "delta_low_bits": 0.9938073944298083,
+          "delta_high_bits": 1.1202135066329788,
+          "k_base": 59.89156021541952,
+          "k_both": 62.81002244285467
+        },
+        {
+          "function_hex": "0x17",
+          "base_low": -10.0,
+          "base_high": 10.0,
+          "gamma_bits": -0.6046588042110841,
+          "replica_sd_sum_proxy": 1.1130891676826675,
+          "gamma_over_sd_proxy": 0.5432258454818305,
+          "delta_low_bits": 1.798248720802171,
+          "delta_high_bits": 1.5849476506965345,
+          "k_base": 61.011773722052496,
+          "k_both": 63.79031128934012
+        }
+      ]
+    },
+    {
+      "rectangles": [
+        {
+          "function_hex": "0x69",
+          "base_low": -10.0,
+          "base_high": 9.0,
+          "gamma_bits": -0.9190857481655286,
+          "replica_sd_sum_proxy": 2.1198804924557013,
+          "gamma_over_sd_proxy": 0.43355545344956964,
+          "delta_low_bits": 3.1554010259949763,
+          "delta_high_bits": 3.6136765877007235,
+          "k_base": 79.91392720998316,
+          "k_both": 85.76391907551333
+        },
+        {
+          "function_hex": "0x69",
+          "base_low": -10.0,
+          "base_high": 10.0,
+          "gamma_bits": 0.451542517037268,
+          "replica_sd_sum_proxy": 2.1453482250531546,
+          "gamma_over_sd_proxy": 0.21047516284964893,
+          "delta_low_bits": 2.2363152778294477,
+          "delta_high_bits": 2.520439045852882,
+          "k_base": 83.52760379768388,
+          "k_both": 88.73590063840348
+        }
+      ]
+    }
+  ],
+  "symmetric_paths": [
+    {
+      "function_hex": "0x00",
+      "points": [
+        {
+          "amplitude": 9.0,
+          "k": 32.58982827296407,
+          "sd": 0.08039315889723117,
+          "status": "completed"
+        },
+        {
+          "amplitude": 10.0,
+          "k": 32.90301124199794,
+          "sd": 0.34242345850335104,
+          "status": "completed"
+        },
+        {
+          "amplitude": 11.0,
+          "k": 33.048453356683034,
+          "sd": 0.3571754391777326,
+          "status": "completed"
+        }
+      ],
+      "second_difference_bits": -0.1677408543487715
+    },
+    {
+      "function_hex": "0x0F",
+      "points": [
+        {
+          "amplitude": 9.0,
+          "k": 46.40447659808546,
+          "sd": 0.26286610636824737,
+          "status": "completed"
+        },
+        {
+          "amplitude": 10.0,
+          "k": 47.678054284181265,
+          "sd": 0.38316988022525034,
+          "status": "completed"
+        },
+        {
+          "amplitude": 11.0,
+          "k": 49.59656923031731,
+          "sd": 0.2975804842702675,
+          "status": "completed"
+        }
+      ],
+      "second_difference_bits": 0.644937260040237
+    },
+    {
+      "function_hex": "0x17",
+      "points": [
+        {
+          "amplitude": 9.0,
+          "k": 58.057118644812526,
+          "sd": 0.30968859360091405,
+          "status": "completed"
+        },
+        {
+          "amplitude": 10.0,
+          "k": 61.011773722052496,
+          "sd": 0.41106766505800274,
+          "status": "completed"
+        },
+        {
+          "amplitude": 11.0,
+          "k": 63.79031128934012,
+          "sd": 0.36621847303081123,
+          "status": "completed"
+        }
+      ],
+      "second_difference_bits": -0.17611750995234843
+    },
+    {
+      "function_hex": "0x69",
+      "points": [
+        {
+          "amplitude": 9.0,
+          "k": 77.50729803515684,
+          "sd": 0.1716599533857147,
+          "status": "completed"
+        },
+        {
+          "amplitude": 10.0,
+          "k": 83.52760379768388,
+          "sd": 0.6197016713047119,
+          "status": "completed"
+        },
+        {
+          "amplitude": 11.0,
+          "k": 88.73590063840348,
+          "sd": 0.29025108413518297,
+          "status": "completed"
+        }
+      ],
+      "second_difference_bits": -0.8120089218074469
+    }
+  ],
+  "interpretation": {
+    "gamma": "K(low-1,high+1)-K(low-1,high)-K(low,high+1)+K(low,high)",
+    "small_gamma": "同一窗口内两个端点新增约束的log-volume代价近似可加",
+    "error_proxy": "四个replica标准差之和，只作保守诊断，不是置信区间"
+  }
+}

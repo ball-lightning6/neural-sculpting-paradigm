@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="本次增量包的主包、补充包与不上传材料的取舍清单。">
+  <title>上传裁决表 · Neural K 研究档案</title>
+  <link rel="stylesheet" href="assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="assets/site.js"></script>
+</head>
+<body data-page-kind="post-upload">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+
+    <header class="topbar">
+      <a class="site-mark" href="index.html" aria-label="返回研究主文">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K 研究档案</span>
+      </a>
+      <nav class="top-nav" aria-label="全站导航"><a class="top-link" href="index.html">研究主文</a><a class="top-link" href="theory-core.html">理论核心</a><a class="top-link" href="experiments/index.html">实验索引</a><a class="top-link active" href="post-upload.html">提交后增量</a><a class="top-link" href="references.html">参考文献</a><a class="top-link" href="evidence-ledger.html">证据总账</a></nav>
+      <nav class="language-switch" aria-label="语言"><span class="active" lang="zh-CN">中文</span><a href="en/post-upload-decision.html" lang="en">EN</a></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>目录</span>
+      </button>
+    </header>
+
+  <div class="page-shell">
+
+    <aside class="sidebar" id="sidebar" aria-label="本页目录">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">本页目录</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#一-主包-应上传">一、主包：应上传</a></li>
+<li><a href="#二-补充包-建议上传">二、补充包：建议上传</a></li>
+<li><a href="#三-暂不上传">三、暂不上传</a></li>
+<li><a href="#四-推荐上传顺序">四、推荐上传顺序</a></li>
+<li><a href="#五-公开时必须保留的限定">五、公开时必须保留的限定</a></li>
+</ul>
+</div>
+</nav>
+        <a class="sidebar-action" href="post-upload.html">返回增量总览 →</a>
+      </div>
+    </aside>
+
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">发布说明 · 上传裁决</div>
+          <h1>上传裁决表</h1>
+          <p class="article-description">本次增量包的主包、补充包与不上传材料的取舍清单。</p>
+        </header>
+        <div class="article-body"><p>基准：2026-09-02短论文提交，Git <code>4596b2b</code>。</p>
+<p>这里的“上传”分成三种：</p>
+<ul>
+<li><strong>主包</strong>：应进入公开仓库/论文配套材料，读者需要它理解核心主张；</li>
+<li><strong>补充包</strong>：值得公开，但不应挤进短论文主线；</li>
+<li><strong>归档</strong>：保留本地或单独备份，不进入公开上传包。</li>
+</ul>
+<h2 id="一-主包-应上传">一、主包：应上传</h2>
+<table>
+<thead>
+<tr>
+<th>材料</th>
+<th>路径</th>
+<th>原因</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>修订后的正式短论文</td>
+<td><code>papers/compression_is_intelligence_{zh,en}.md</code>及本地v1.1 PDF</td>
+<td>当前主叙事、联合输出和静态/动态边界已经修正</td>
+</tr>
+<tr>
+<td>理论核心</td>
+<td><code>theory_core_zh.md</code>、对应英文核心</td>
+<td>给出最终主张、Neural K、MDL、Agreement和优化可达性边界</td>
+</tr>
+<tr>
+<td>严格概率语言</td>
+<td><code>minimal_strict_statistical_language_tutorial_zh.md</code>及审计结果</td>
+<td>修复 full-target/fixed-D、KL方向、信息增益和loss事件混淆</td>
+</tr>
+<tr>
+<td>MDL—grokking桥</td>
+<td><code>theory/mdl_identifiability_grokking_derivation_zh.md</code></td>
+<td>形式化复杂度、竞争函数分歧和数据相变的关系</td>
+</tr>
+<tr>
+<td>测度鲁棒性补充</td>
+<td><code>theory/MEASURE_ROBUSTNESS_AND_GAUSSIAN_ALIGNMENT_ZH.md</code>、<code>../experiments/experiment_37_measure_robustness/</code></td>
+<td>纠正 Gaussian/欧式体积混淆，复核多种参考测度下的排序与真实训练对应边界</td>
+</tr>
+<tr>
+<td>4-bit规则曲线/规则对决</td>
+<td>父目录 E19/E23/E24及对应结果摘要</td>
+<td>核心静态体积和收缩证据</td>
+</tr>
+<tr>
+<td>E15/E27 Agreement</td>
+<td><code>experiments/E15_grokking_agreement</code></td>
+<td>证明 hard fit 后 Agreement不等于已泛化，并与grokking共同变化</td>
+</tr>
+<tr>
+<td>E23 Parity2/MUX3</td>
+<td><code>experiments/E23_volume_to_data_transition</code></td>
+<td>证明完整目标 Neural K 不能单独决定数据相变，竞争延拓和样本覆盖很重要</td>
+</tr>
+<tr>
+<td>E31 raw MSE与幅度对齐</td>
+<td><code>../experiments/experiment_31_loss_amplitude_grokking</code></td>
+<td>包含 Power 原版 CE+幅度对齐 grokking 主实验，以及 raw MSE 0/1、0/15 两轮；核心结论是 grokking 不要求唯一的极低 CE，联合输出形态很关键</td>
+</tr>
+<tr>
+<td>E32 随机记忆近线性</td>
+<td><code>../experiments/experiment_32_random_memory</code></td>
+<td>为“复杂度随记忆样本数增长”提供独立容量证据</td>
+</tr>
+<tr>
+<td>E33 跨架构联合输出</td>
+<td><code>../experiments/experiment_33_cross_architecture</code></td>
+<td>证明收缩现象不是单一MLP协议的孤例，同时保留排序/系数边界</td>
+</tr>
+<tr>
+<td>E34 条件规则决斗</td>
+<td><code>../experiments/experiment_34_conditional_rule_duel</code></td>
+<td>独立冻结4-bit复杂度全序预测75次8-bit决斗</td>
+</tr>
+<tr>
+<td>E35 Mod97 冻结函数决斗</td>
+<td><code>../experiments/experiment_35_mod97_frozen_function_duels</code></td>
+<td>用真实grokking前后函数检验完成规则的动态偏好</td>
+</tr>
+<tr>
+<td>E37 测度鲁棒性</td>
+<td><code>../experiments/experiment_37_measure_robustness</code></td>
+<td>把 Gaussian 密度效应与欧式体积分开，并复核多种参考测度下的排序和真实训练对应边界</td>
+</tr>
+<tr>
+<td>关键证据总账和参考文献</td>
+<td><code>evidence_ledger_zh.md</code>、<code>references_zh.md</code>及英文版</td>
+<td>让每个数字、主张和外部理论接口可追溯</td>
+</tr>
+</tbody>
+</table>
+<p>主包应包含脚本、协议、结果摘要和必要图；不必包含 checkpoint、粒子池或原始 zip。</p>
+<h2 id="二-补充包-建议上传">二、补充包：建议上传</h2>
+<table>
+<thead>
+<tr>
+<th>材料</th>
+<th>路径</th>
+<th>上传定位</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>训练前架构估计</td>
+<td><code>../supplementary/architecture_estimator</code></td>
+<td>成功浅区和失败深尾都值得公开，不能包装成通用预测器</td>
+</tr>
+<tr>
+<td>E36 Peleg/G&amp;C独立验证</td>
+<td><code>../experiments/experiment_36_peleg_g_and_c_validation</code></td>
+<td>独立验证实验：外部比较和体积假说边界，适合作为补充材料</td>
+</tr>
+<tr>
+<td>严格定义的有限概率核验</td>
+<td><code>theory/check_minimal_statistical_language.py</code>及JSON</td>
+<td>低成本、可复算，建议随理论附录上传</td>
+</tr>
+</tbody>
+</table>
+<p>补充包可以保留轻量 JSON、CSV和PNG；大型原始结果另建带 SHA256 的下载附件。</p>
+<h2 id="三-暂不上传">三、暂不上传</h2>
+<table>
+<thead>
+<tr>
+<th>材料</th>
+<th>处理</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>kimi_experiments</code> 输入级/concat输出级实验</td>
+<td>已有稳定结果（64/64 完成），但经裁决不进公开增量包；原始脚本与结果保留在工作区</td>
+</tr>
+<tr>
+<td>旧版规则决斗面板（物理目录 E31/E36_rule_duel_panel）</td>
+<td>与公开 E34 重复或未结案，保留在工作区；不代表公开 E31/E36 编号</td>
+</tr>
+<tr>
+<td>规则空间 OOD、解耦可达性、早期脚本审核</td>
+<td>保留在工作区，不进公开增量包</td>
+</tr>
+<tr>
+<td>addition8 静态预测</td>
+<td>保留在工作区，不进公开增量包</td>
+</tr>
+<tr>
+<td>AIT/Omega、体积假说独立文献审计</td>
+<td>保留在工作区，不进公开增量包</td>
+</tr>
+<tr>
+<td><code>.tmp_*</code>、<code>tmp/</code>、<code>_analysis_*</code></td>
+<td>作为工作区溯源缓存；其中 <code>_analysis_*</code>大多早于本次提交，正式结果已被报告吸收</td>
+</tr>
+<tr>
+<td><code>.venv-gpu</code>、pip缓存、GPU临时目录</td>
+<td>环境和缓存，不是研究材料</td>
+</tr>
+<tr>
+<td>checkpoint、SMC粒子池、<code>.pt/.npz/.zip/.jsonl</code></td>
+<td>只在有人需要完全复核时按专题单独打包，不进主包</td>
+</tr>
+<tr>
+<td><code>chatbox_*</code>、聊天恢复数据库、截图缓存</td>
+<td>隐私/工程缓存，不上传</td>
+</tr>
+<tr>
+<td>MSE失败seed的未解释工程日志</td>
+<td>只保留结果摘要和失败状态，不上传大量重复日志</td>
+</tr>
+<tr>
+<td>未经独立结果支持的经验公式草稿</td>
+<td>保留为研究笔记，不写成论文结论</td>
+</tr>
+<tr>
+<td>与本研究无关的RSA和text2image修改</td>
+<td>留在原工作区，不纳入Neural K发布</td>
+</tr>
+</tbody>
+</table>
+<h2 id="四-推荐上传顺序">四、推荐上传顺序</h2>
+<ol>
+<li>先上传主包：短论文、理论核心、E01-E30基础实验和本次主包增量；</li>
+<li>再上传补充包：E23、E31--E37以及架构估计报告；公开包只使用 canonical E31--E37 目录，旧物理 E37/E38 目录不上传；</li>
+<li>最后根据平台附件限制，单独上传早期脚本审核和大型原始结果；</li>
+<li>E35和其他未裁决实验等有正式结果后再追加版本，不提前占用主叙事。</li>
+</ol>
+<h2 id="五-公开时必须保留的限定">五、公开时必须保留的限定</h2>
+<ul>
+<li>Neural K是协议相对的实现质量码长，不等于机器无关Kolmogorov complexity；</li>
+<li>“复杂函数收缩更快、复杂度分布收窄”是有限协议中的经验趋势和条件机制，不是跨架构定理；</li>
+<li>静态函数分布、loss截面和SGD最终分布必须分开；</li>
+<li>grokking数据相变、训练时间相变和Neural K不是同一个标量；</li>
+<li>所有失败、局部换序、采样退化和可达性边界都应与成功结果一起保留。</li>
+</ul></div>
+
+      </article>
+    </main>
+  </div>
+</body>
+</html>

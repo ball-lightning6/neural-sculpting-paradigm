@@ -23,7 +23,7 @@
         <span class="mark-block">NK</span>
         <span class="mark-text">Neural K Research Archive</span>
       </a>
-      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="../index.html">Research</a><a class="top-link" href="../theory-core.html">Core Theory</a><a class="top-link active" href="../experiments/index.html">Experiments</a><a class="top-link" href="../references.html">References</a><a class="top-link" href="../evidence-ledger.html">Evidence</a></nav>
+      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="../index.html">Research</a><a class="top-link" href="../theory-core.html">Core Theory</a><a class="top-link active" href="../experiments/index.html">Experiments</a><a class="top-link" href="../post-upload.html">Updates</a><a class="top-link" href="../references.html">References</a><a class="top-link" href="../evidence-ledger.html">Evidence</a></nav>
       <nav class="language-switch" aria-label="Language"><a href="../../experiments/e27.html" lang="zh-CN">中文</a><span class="active" lang="en">EN</span></nav>
       <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
         <span aria-hidden="true">☰</span><span>Contents</span>
@@ -38,12 +38,23 @@
         <nav class="toc"><div class="toc">
 <ul>
 <li><a href="#overview">Experiment overview</a></li>
-<li><a href="#motivation">Why this experiment was run</a></li>
+<li><a href="#purpose">Purpose</a></li>
+<li><a href="#entry-points">Entry points</a></li>
+<li><a href="#frozen-sources">Frozen sources</a></li>
+<li><a href="#motivation">Why this experiment was run, and how it was judged</a></li>
+<li><a href="#1-competing-explanations">1. Competing explanations</a></li>
+<li><a href="#2-frozen-protocol">2. Frozen protocol</a></li>
+<li><a href="#3-judgment">3. Judgment</a></li>
 <li><a href="#results">Results, interpretation, and limits</a></li>
+<li><a href="#1-question">1. Question</a></li>
+<li><a href="#2-pre-fixed-protocol">2. Pre-fixed protocol</a></li>
+<li><a href="#3-results">3. Results</a></li>
+<li><a href="#4-verdict">4. Verdict</a></li>
+<li><a href="#5-scope">5. Scope</a></li>
 </ul>
 </div>
 </nav>
-        <div class="sidebar-label experiment-label">All experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>Static Hard Conditioning versus Optimizer-Induced Function Transport</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-Bit Counterfactual Invariance</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>Prior-Consistent Function Dynamics and Width Intervention</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>Post-Fit Drift in the Mingard 2025 Boolean Protocol</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>Feature Learning When a Fixed NTK Is Already Sufficient</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>Loss-Conditioned Prior Annealing</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>Function-ID Wandering and Matched-Loss Static Controls</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>Shared Intermediate Computation under Finite Capacity</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>Long Training with 80% Hidden Label Noise</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>Raw-BCE Competition between Preregistered Simple and Complex Function Pairs</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule-30 Train/Validation Gradient Alignment across Dataset Size</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND Shortcut Static Geometry and a One-Example Balance Intervention</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>SGD Dynamics of the AND Shortcut and Balanced Intervention</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>Weighted Rule-Bit Function Switching across Loss Scales</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Complete Functions versus Marginal Concentration in Modular-97 Grokking</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity Reachability, Half-Space Generalization, and Scaffold Recovery</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>Static Deep-Loss Mass versus Optimizer Transport</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>Teacher-Free Consensus and Symbolic Readability</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>Full-Truth-Table Rule Volume</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Measure Closure between Full Rules, Fixed Datasets, and Margin Cores</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement Control and a Consensus Complexity Frontier</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>Per-Example Free Energy and an Information Invariant</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>Prospective Prediction from Full-Rule Volume to Data Transition</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>Deep Neural K Crossing of Parity4 and a One-Point Exception</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST Sample Complexity and Static Branch Prediction</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>Balanced Unlabeled MNIST Label Volume</span></a><a class="experiment-nav-link active" href="e27.html"><span>E27</span><span>Agreement Before and During Grokking</span></a><a class="experiment-nav-link" href="e28.html"><span>E28</span><span>Whole-Network HMC versus Adam on 50k MNIST</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Loss-Resolved Robustness to a Dead Input Bit</span></a><a class="experiment-nav-link" href="e30.html"><span>E30</span><span>Weight Decay Reshapes the Static Complete-Function Landscape</span></a></nav>
+        <div class="sidebar-label experiment-label">All experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>Static Hard Conditioning versus Optimizer-Induced Function Transport</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-Bit Counterfactual Invariance</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>Prior-Consistent Function Dynamics and Width Intervention</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>Post-Fit Drift in the Mingard 2025 Boolean Protocol</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>Feature Learning When a Fixed NTK Is Already Sufficient</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>Loss-Conditioned Prior Annealing</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>Function-ID Wandering and Matched-Loss Static Controls</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>Shared Intermediate Computation under Finite Capacity</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>Long Training with 80% Hidden Label Noise</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>Raw-BCE Competition between Preregistered Simple and Complex Function Pairs</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule-30 Train/Validation Gradient Alignment across Dataset Size</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND Shortcut Static Geometry and a One-Example Balance Intervention</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>SGD Dynamics of the AND Shortcut and Balanced Intervention</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>Weighted Rule-Bit Function Switching across Loss Scales</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Complete Functions versus Marginal Concentration in Modular-97 Grokking</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity Reachability, Half-Space Generalization, and Scaffold Recovery</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>Static Deep-Loss Mass versus Optimizer Transport</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>Teacher-Free Consensus and Symbolic Readability</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>Full-Truth-Table Rule Volume</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Measure Closure between Full Rules, Fixed Datasets, and Margin Cores</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement Control and a Consensus Complexity Frontier</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>Per-Example Free Energy and an Information Invariant</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>Prospective Prediction from Full-Rule Volume to Data Transition</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>Deep Neural K Crossing of Parity4 and a One-Point Exception</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST Sample Complexity and Static Branch Prediction</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>Balanced Unlabeled MNIST Label Volume</span></a><a class="experiment-nav-link active" href="e27.html"><span>E27</span><span>Agreement Before and During Grokking</span></a><a class="experiment-nav-link" href="e28.html"><span>E28</span><span>Whole-Network HMC versus Adam on 50k MNIST</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Loss-Resolved Robustness to a Dead Input Bit</span></a><a class="experiment-nav-link" href="e30.html"><span>E30</span><span>Weight Decay Reshapes the Static Complete-Function Landscape</span></a></nav><div class="sidebar-label experiment-label">Post-upload experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="../experiments/e31.html"><span>E31</span><span>Loss and output amplitude</span></a><a class="experiment-nav-link" href="../experiments/e32.html"><span>E32</span><span>Random-memory scaling</span></a><a class="experiment-nav-link" href="../experiments/e33.html"><span>E33</span><span>Cross-architecture output volume</span></a><a class="experiment-nav-link" href="../experiments/e34.html"><span>E34</span><span>Conditional rule duel</span></a><a class="experiment-nav-link" href="../experiments/e35.html"><span>E35</span><span>Frozen functions around grokking</span></a><a class="experiment-nav-link" href="../experiments/e36.html"><span>E36</span><span>Independent Peleg/G&amp;C recheck</span></a><a class="experiment-nav-link" href="../experiments/e37.html"><span>E37</span><span>Measure robustness and Gaussian alignment</span></a></nav>
       </div>
     </aside>
 
@@ -55,12 +66,140 @@
           <p class="article-description">Determine whether seeds already share one stable wrong function after hard fit but before rule generalization.</p>
         </header>
         <div class="article-body"><div class="source-bar"><span>Scripts</span><div><a href="../../../experiments/experiment_27_grokking_agreement/analyze_agreement_around_grokking.py">analyze_agreement_around_grokking.py</a><a href="../../../experiments/experiment_27_grokking_agreement/experiment_mod97_matched_loss_function_distribution.py">experiment_mod97_matched_loss_function_distribution.py</a></div></div><h2 id="overview">Experiment overview</h2>
-<p>This supplemental analysis reuses the 32-seed Mod97 trajectories from E15. Pairwise agreement is recomputed only on unseen inputs. Hard fit requires every seed to reach at least 0.999 training accuracy; 0.90 mean unseen accuracy is used as a descriptive grokking milestone.</p>
-<h2 id="motivation">Why this experiment was run</h2>
-<p>Low validation accuracy before grokking could hide either one shared shortcut function or seed-specific residual functions that agree only on memorized training inputs. Full-domain agreement is biased upward after hard fit, so the held-out-only statistic is required.</p>
+<h2 id="purpose">Purpose</h2>
+<p>To test whether, when the model has already fully fit the training set but has not yet grokked, different seeds share the same wrong
+function, or are still scattered on unseen inputs; and to measure how agreement changes with rule generalization.</p>
+<h2 id="entry-points">Entry points</h2>
+<ul>
+<li>experiment_mod97_matched_loss_function_distribution.py</li>
+<li>analyze_agreement_around_grokking.py</li>
+<li>MOTIVATION_AND_PREREGISTRATION.md</li>
+<li>RESULTS_AND_CONCLUSION.md</li>
+</ul>
+<p>The analysis script reads the original E15 trajectory.csv; no retraining is needed. The primary protocol computes pairwise seed agreement only on unseen Mod97 inputs at the current training fraction.</p>
+<h2 id="frozen-sources">Frozen sources</h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Source</th>
+<th>SHA256</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>experiment_mod97_matched_loss_function_distribution.py</td>
+<td>E15 frozen script</td>
+<td>f87700c439929ce1e5dbc6cf0600ac88b71c453598646054b9758472ed110faf</td>
+</tr>
+<tr>
+<td>analyze_agreement_around_grokking.py</td>
+<td>E15 supplementary analysis</td>
+<td>52e45aa9086cdc24887713694c2c7d6d36fd8e522bf41ff3d81770000aaa8d79</td>
+</tr>
+</tbody>
+</table>
+<p>The SHA256 of the original results package results_mod97_matched_loss_function_distribution_package.zip is
+4bf8e597268411c2c7dc483862ab871cfa22b4fe0fb1a1a0c899b4ea709381c8.</p>
+<h2 id="motivation">Why this experiment was run, and how it was judged</h2>
+<h2 id="1-competing-explanations">1. Competing explanations</h2>
+<p>The low validation accuracy before grokking could correspond to two completely different function populations:</p>
+<ol>
+<li>Different seeds have already stably formed the same wrong shortcut;</li>
+<li>Different seeds share only the same training-set memorization, while the residual errors on unseen inputs are still different from one another.</li>
+</ol>
+<p>Ordinary average validation accuracy cannot distinguish between the two.</p>
+<h2 id="2-frozen-protocol">2. Frozen protocol</h2>
+<ul>
+<li>Hard fit: the first time all seeds' training accuracy is no lower than 0.999;</li>
+<li>Primary agreement: pairwise seed agreement computed only on unseen inputs;</li>
+<li>Grokking milestone: the first time average unseen accuracy reaches 0.90;</li>
+<li>Also report the agreement baseline produced only by each seed independently answering the target correctly.</li>
+</ul>
+<p>The full-domain agreement that includes training inputs serves only as a bias demonstration and cannot carry the primary judgment.</p>
+<h2 id="3-judgment">3. Judgment</h2>
+<p>If unseen agreement at hard fit is already close to 1, that supports a shared wrong function; if it is close to random and subsequently rises only together with unseen accuracy, that supports seed-specific residual errors being gradually replaced by the shared target.</p>
 <h2 id="results">Results, interpretation, and limits</h2>
-<p>Across the 60%, 70%, 80%, and 90% training conditions, unseen agreement at hard fit was only 0.027–0.033. In the 90% condition, final unseen accuracy was 0.916 and agreement 0.839. Through the middle and late trajectory, observed agreement was almost completely explained by seeds independently recovering the same correct targets; remaining errors were largely seed-specific.</p>
-<p><strong>Conclusion.</strong> The experiment rejects a simple picture in which one complete wrong function is already shared before grokking. Agreement rises with recovery of the target rule rather than in a separate function-condensation jump.</p></div>
+<h2 id="1-question">1. Question</h2>
+<p>To test the following intuition: when the model has already memorized the training set but has not yet grokked, are the predictions of different seeds on unseen inputs still scattered; and only after grokking, does agreement approach 1 as the target rule is recovered?</p>
+<p>This analysis does not retrain any model; it only reads the existing E15 <code>trajectory.csv</code>. E15 uses the Mod97 division task, multiple nested training fractions, and 32 paired seeds, and saves per-seed predictions and cross-seed agreement during training.</p>
+<h2 id="2-pre-fixed-protocol">2. Pre-fixed protocol</h2>
+<ul>
+<li><strong>Primary agreement</strong>: pairwise seed agreement computed only on unseen validation inputs at the current training fraction.</li>
+<li><strong>Hard fit</strong>: the first time all seeds' training accuracy is no lower than 0.999.</li>
+<li><strong>Grokking position</strong>: the first time average unseen accuracy reaches 0.90, used only as a descriptive milestone.</li>
+<li><strong>Accuracy baseline</strong>: if each seed gives the same correct label with probability <span class="math-inline">$a$</span>, and when wrong chooses independently and uniformly among the remaining 96 classes, then</li>
+</ul>
+<div class="math-display">$$
+A_{\mathrm{base}}(a)=a^2+\frac{(1-a)^2}{96}.
+$$</div>
+<p>This baseline is used to judge whether the growth of agreement exceeds what "each seed gradually answers the same target correctly" itself produces.</p>
+<p>Full-domain agreement that includes training inputs cannot be used for the primary judgment. After hard fit, all seeds already agree on training inputs; if the training set covers 90% of the inputs, full-domain agreement is mechanically lifted to near 0.9 even if it is nearly random on unseen inputs.</p>
+<h2 id="3-results">3. Results</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">Training fraction</th>
+<th style="text-align: right;">Unseen agreement at hard fit</th>
+<th style="text-align: right;">Full-domain agreement at hard fit</th>
+<th style="text-align: right;">Final unseen accuracy</th>
+<th style="text-align: right;">Final unseen agreement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">60%</td>
+<td style="text-align: right;">0.033</td>
+<td style="text-align: right;">0.613</td>
+<td style="text-align: right;">0.028</td>
+<td style="text-align: right;">0.027</td>
+</tr>
+<tr>
+<td style="text-align: right;">70%</td>
+<td style="text-align: right;">0.029</td>
+<td style="text-align: right;">0.709</td>
+<td style="text-align: right;">0.164</td>
+<td style="text-align: right;">0.046</td>
+</tr>
+<tr>
+<td style="text-align: right;">80%</td>
+<td style="text-align: right;">0.027</td>
+<td style="text-align: right;">0.805</td>
+<td style="text-align: right;">0.520</td>
+<td style="text-align: right;">0.273</td>
+</tr>
+<tr>
+<td style="text-align: right;">90%</td>
+<td style="text-align: right;">0.027</td>
+<td style="text-align: right;">0.903</td>
+<td style="text-align: right;">0.916</td>
+<td style="text-align: right;">0.839</td>
+</tr>
+</tbody>
+</table>
+<p>Random pairwise agreement for 97-class classification is about 0.010. At hard fit, the unseen agreement of all four training fractions is far from 1, only slightly above the random baseline; the high values of full-domain agreement mainly come from the already-memorized training inputs.</p>
+<p>The 90% training condition actually crossed the preset 0.90 unseen-accuracy threshold. At the adjacent checkpoints just before and after the crossing:</p>
+<ul>
+<li>unseen accuracy changed from about 0.900 to 0.901;</li>
+<li>unseen agreement changed from about 0.809 to 0.811;</li>
+<li>final unseen accuracy was about 0.916, with agreement about 0.839.</li>
+</ul>
+<p>Agreement did not suddenly jump to 1 at some independent moment; it grew together with unseen accuracy. After entering the mid-to-late phase, the observed agreement almost perfectly tracks <span class="math-inline">$A_{\mathrm{base}}(a)$</span>; in other words, different seeds mainly share the correct target predictions, while the remaining errors are mostly seed-specific.</p>
+<p>There is a brief agreement peak early in training, but at that point accuracy is still close to random, reflecting that multiple seeds share some simple but wrong output bias. This peak subsequently fades and cannot be interpreted as rule convergence.</p>
+<h2 id="4-verdict">4. Verdict</h2>
+<p>The existing E15 results support the core intuition raised by the user:</p>
+<blockquote>
+<p>When the training set has been fully fit but rule generalization has not yet occurred, unseen-input agreement is not close to 1; as grokking recovers the shared target rule, agreement rises toward 1.</p>
+</blockquote>
+<p>Two qualifications need to be added:</p>
+<ol>
+<li>The rise of agreement is not a second phase transition independent of generalization accuracy; in the current experiment, it is mainly explained by different seeds simultaneously recovering the correct labels.</li>
+<li>"Approaching 1 after grokking" requires each seed's unseen accuracy itself to approach 1. The 90% condition of E15 did not fully generalize in the end, so agreement also stops at a position below 1.</li>
+</ol>
+<p>Another important result is that the ensemble modal function can become the target function before single-seed high accuracy and high agreement: different seeds already share the target skeleton, but each still carries different residual errors. Therefore full function mass, modal function, unseen accuracy, and agreement still need to be reported separately.</p>
+<h2 id="5-scope">5. Scope</h2>
+<p>E15 reproduces the classic Mod97 division task, but uses an MLP, no weight decay, and higher training fractions; it is not an item-by-item replica of the original two-layer Transformer protocol of Power et al. It already directly answers the agreement intuition in a function ensemble; an original Transformer replication can serve as a confirmatory external control, rather than a necessary prerequisite for establishing the phenomenon.</p>
+<p>Analysis script: <code>analyze_agreement_around_grokking.py</code>.</p></div>
         <footer class="experiment-pager"><a href="e26.html">← E26 Balanced Unlabeled MNIST Label Volume</a><a href="e28.html">E28 Whole-Network HMC versus Adam on 50k MNIST →</a></footer>
       </article>
     </main>

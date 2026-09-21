@@ -1,0 +1,596 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="How raw MSE, BCE amplitude alignment, and target amplitude change rule recovery and grokking.">
+  <title>E31: Loss, target amplitude, and grokking · Neural K Research Archive</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="../assets/site.js"></script>
+</head>
+<body data-page-kind="post-upload">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+
+    <header class="topbar">
+      <a class="site-mark" href="index.html" aria-label="Back to the research narrative">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K Research Archive</span>
+      </a>
+      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="index.html">Research</a><a class="top-link" href="theory-core.html">Core Theory</a><a class="top-link" href="experiments/index.html">Experiments</a><a class="top-link active" href="post-upload.html">Updates</a><a class="top-link" href="references.html">References</a><a class="top-link" href="evidence-ledger.html">Evidence</a></nav>
+      <nav class="language-switch" aria-label="Language"><a href="../post-upload-e31.html" lang="zh-CN">中文</a><span class="active" lang="en">EN</span></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>Contents</span>
+      </button>
+    </header>
+
+  <div class="page-shell">
+
+    <aside class="sidebar" id="sidebar" aria-label="On this page">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">On this page</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#core-experimental-chain">Core experimental chain</a></li>
+<li><a href="#public-report-entry-points">Public report entry points</a></li>
+<li><a href="#core-result">Core Result</a></li>
+<li><a href="#configuration-and-run-status">Configuration and Run Status</a></li>
+<li><a href="#per-seed-results">Per-Seed Results</a></li>
+<li><a href="#main-mechanistic-information">Main Mechanistic Information</a></li>
+<li><a href="#common-ce-thresholds">Common CE Thresholds</a></li>
+<li><a href="#independent-checks-and-boundaries">Independent Checks and Boundaries</a></li>
+<li><a href="#files">Files</a></li>
+<li><a href="#question">Question</a></li>
+<li><a href="#results">Results</a><ul>
+<li><a href="#small-target-amplitude-series-12-training-samples-512-independent-initializations-per-group">Small target-amplitude series (12 training samples, 512 independent initializations per group)</a></li>
+<li><a href="#n-8-control-0-1-mse-overtakes-bce">n=8 control: 0/1 MSE overtakes BCE</a></li>
+<li><a href="#bce-amplitude-alignment-regularizer-birthplace">BCE + amplitude-alignment regularizer (birthplace)</a></li>
+</ul>
+</li>
+<li><a href="#verdict">Verdict</a></li>
+<li><a href="#boundaries">Boundaries</a></li>
+<li><a href="#files_1">Files</a></li>
+<li><a href="#question-and-configuration">Question and Configuration</a></li>
+<li><a href="#results_1">Results</a></li>
+<li><a href="#mechanism-and-boundaries-must-be-kept-together-with-the-results">Mechanism and Boundaries (must be kept together with the results)</a></li>
+<li><a href="#files_2">Files</a></li>
+<li><a href="#conclusion-first">Conclusion First</a></li>
+<li><a href="#1-what-was-measured">1. What Was Measured</a></li>
+<li><a href="#2-frozen-forecast-then-independent-sampling">2. Frozen Forecast, Then Independent Sampling</a></li>
+<li><a href="#3-excluding-the-explanation-bce-was-simply-lower">3. Excluding the Explanation "BCE Was Simply Lower"</a><ul>
+<li><a href="#main-result-lambda-0-1">Main Result: lambda=0.1</a></li>
+<li><a href="#prespecified-half-width-sensitivity-analysis">Prespecified Half-Width Sensitivity Analysis</a></li>
+<li><a href="#weak-dose-lambda-0-01">Weak Dose: lambda=0.01</a></li>
+</ul>
+</li>
+<li><a href="#4-theoretical-correspondence-and-what-was-not-proven">4. Theoretical Correspondence and What Was Not Proven</a></li>
+<li><a href="#5-computation-checks-and-residual-risk">5. Computation, Checks, and Residual Risk</a></li>
+<li><a href="#6-file-entry-points">6. File Entry Points</a></li>
+</ul>
+</div>
+</nav>
+        <a class="sidebar-action" href="post-upload.html">Back to the increments overview →</a>
+      </div>
+    </aside>
+
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">Experiment increment · E31 Loss and amplitude alignment</div>
+          <h1>E31: Loss, target amplitude, and grokking</h1>
+          <p class="article-description">How raw MSE, BCE amplitude alignment, and target amplitude change rule recovery and grokking.</p>
+        </header>
+        <div class="article-body"><p>The core of public experiment E31 is not an isolated loss comparison, but an evidence chain on the same Power-architecture mod97 task: <strong>original grokking with amplitude-alignment regularization -&gt; raw-MSE target-amplitude controls -&gt; amplitude series and static checks on smaller networks</strong>. The question is how the loss selects a joint output distribution and changes rule recovery, rather than treating "lower training CE" as the only explanation.</p>
+<h2 id="core-experimental-chain">Core experimental chain</h2>
+<ol>
+<li><strong>CE + amplitude-alignment regularization on the original Power mod97 task</strong>: the unregularized CE baseline still had not recovered the rule when training CE reached about <code>4e-11</code>; both amplitude-alignment conditions achieved complete generalization in 3/3 runs, while retaining a post-fitting grokking delay. This is the most important original-Transformer result in this experiment; see <code>POWER_MOD97_ALIGNMENT_REPORT.md</code>.</li>
+<li><strong>Two raw-MSE rounds on the same Power architecture</strong>: the 0/1 and 0/15 target amplitudes achieved complete recovery in 1/3 and 2/3 runs. This shows that diagnostic CE for fixed one-hot targets, the actual optimization objective, and whether grokking occurs must not be conflated; see <code>POWER_MOD97_MSE_ROUNDS_REPORT.md</code>.</li>
+<li><strong>4-bit copy, Rule30, and static amplitude checks</strong>: smaller networks separate target center, class spacing, amplitude alignment, and finite-sample effects; see the other reports in this directory.</li>
+</ol>
+<h2 id="public-report-entry-points">Public report entry points</h2>
+<ul>
+<li><code>POWER_MOD97_ALIGNMENT_REPORT.md</code>: the original Power Transformer CE/grokking and amplitude-alignment regularization experiment;</li>
+<li><code>POWER_MOD97_MSE_ROUNDS_REPORT.md</code>: the raw-MSE 0/1 and 0/15 rounds on the Power architecture;</li>
+<li><code>COPY_4BIT_MSE_AMPLITUDE_SERIES.md</code>: the 4-bit-copy MSE amplitude series and the origin of the amplitude-alignment regularizer;</li>
+<li><code>RULE30_MSE_PM01.md</code>, <code>RULE30_CENTERED_MSE_AMPLITUDES.md</code>: Rule30 target-center and amplitude controls;</li>
+<li><code>MARGIN_ALIGNMENT_STATIC_VERIFICATION.md</code>: an independent static-distribution check with a fixed training set.</li>
+</ul>
+<p>Failed seeds, paused states, the single data split, and target-amplitude boundaries must be read together with the successful results. These experiments do not support the claim that one loss is universally better; they support the narrower conclusion that <strong>loss, amplitude, and alignment direction change the joint output distribution and thereby change rule-recovery accessibility and selection pressure.</strong></p>
+<h1 id="power-architecture-mod97-amplitude-alignment-mechanism-control">Power Architecture mod97: Amplitude-Alignment Mechanism Control</h1>
+<p>Date: 2026-09-11.</p>
+<h2 id="core-result">Core Result</h2>
+<p><strong>Both amplitude-variance regularization groups recovered the complete rule in 3/3 runs; the unregularized CE baseline still had 0/3 recoveries after 150,550 steps, with mean test accuracy 15.5333%.</strong> The regularized groups did not eliminate delayed generalization: the training set became nearly or completely correct early, while test accuracy rose only after a substantial delay.</p>
+<p>This supports the following claim: under this Transformer, training set, and optimization configuration, amplitude alignment can substantially improve rule recovery within a finite budget without requiring the raw CE to reach the depth reached by the unregularized group. It does not measure a new static parameter volume or identify which specific geometric or optimization mechanism causes the improvement.</p>
+<h2 id="configuration-and-run-status">Configuration and Run Status</h2>
+<ul>
+<li>Mod97 division over 9,312 inputs: 6,518 training and 2,794 test inputs, using one fixed split.</li>
+<li>The original Power two-layer, width-128, four-head Transformer was retained, with a 239-token vocabulary, ReLU, and bias-free projections; each model has 455,424 parameters.</li>
+<li>The data fraction was increased to 70%, so this is a mechanism experiment on the original architecture, not an exact reproduction of the 50% data headline plot.</li>
+<li>All three groups used the same numerically stable CE objective, Adam with learning rate 0.001 and betas=(0.9,0.98), no weight decay, and TF32 disabled.</li>
+<li>CE still included answer and EOS positions; the variance regularizer acted only on answer positions. Throughout this report, "training CE" means answer-only CE and does not include EOS.</li>
+<li>The regularizer was the variance of correct-direction logit gaps over all training samples and all incorrect tokens, with coefficients 0, 0.1, and 1; each group used seeds 0, 1, and 2.</li>
+<li>Each model was saved and stopped at the first recorded evaluation with 100% test-answer accuracy. Stability under continued training was not tested.</li>
+<li>The run records specify an RTX 4090 and PyTorch 2.8.0+cu128; the cumulative run time was 77.889 minutes. The job was manually paused at 150,550 steps, and the three baselines could still be resumed. This was not a completed one-million-step run.</li>
+</ul>
+<h2 id="per-seed-results">Per-Seed Results</h2>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+<th style="text-align: right;">seed</th>
+<th style="text-align: right;">First full training accuracy</th>
+<th style="text-align: right;">First test 99%</th>
+<th style="text-align: right;">First test 100%</th>
+<th style="text-align: right;">Last test accuracy</th>
+<th style="text-align: right;">Last training answer CE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CE</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1,300</td>
+<td style="text-align: right;">not reached</td>
+<td style="text-align: right;">not reached</td>
+<td style="text-align: right;">5.9055%</td>
+<td style="text-align: right;">4.4372e-11</td>
+</tr>
+<tr>
+<td>CE</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">4,600</td>
+<td style="text-align: right;">not reached</td>
+<td style="text-align: right;">not reached</td>
+<td style="text-align: right;">36.3636%</td>
+<td style="text-align: right;">3.9559e-11</td>
+</tr>
+<tr>
+<td>CE</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">5,100</td>
+<td style="text-align: right;">not reached</td>
+<td style="text-align: right;">not reached</td>
+<td style="text-align: right;">4.3307%</td>
+<td style="text-align: right;">3.5049e-11</td>
+</tr>
+<tr>
+<td>CE+0.1R</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1,100</td>
+<td style="text-align: right;">77,500</td>
+<td style="text-align: right;">140,000</td>
+<td style="text-align: right;">100%</td>
+<td style="text-align: right;">7.6200e-5</td>
+</tr>
+<tr>
+<td>CE+0.1R</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1,100</td>
+<td style="text-align: right;">43,000</td>
+<td style="text-align: right;">51,000</td>
+<td style="text-align: right;">100%</td>
+<td style="text-align: right;">8.4922e-5</td>
+</tr>
+<tr>
+<td>CE+0.1R</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1,100</td>
+<td style="text-align: right;">34,500</td>
+<td style="text-align: right;">46,000</td>
+<td style="text-align: right;">100%</td>
+<td style="text-align: right;">9.9678e-5</td>
+</tr>
+<tr>
+<td>CE+R</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1,800</td>
+<td style="text-align: right;">57,500</td>
+<td style="text-align: right;">71,500</td>
+<td style="text-align: right;">100%</td>
+<td style="text-align: right;">7.7885e-4</td>
+</tr>
+<tr>
+<td>CE+R</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2,200</td>
+<td style="text-align: right;">35,500</td>
+<td style="text-align: right;">46,000</td>
+<td style="text-align: right;">100%</td>
+<td style="text-align: right;">3.4850e-3</td>
+</tr>
+<tr>
+<td>CE+R</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2,200</td>
+<td style="text-align: right;">79,000</td>
+<td style="text-align: right;">140,000</td>
+<td style="text-align: right;">100%</td>
+<td style="text-align: right;">3.7625e-4</td>
+</tr>
+</tbody>
+</table>
+<p>After first reaching full training accuracy, some models showed small regressions; not every subsequent evaluation was exactly 100%, although training accuracy remained high overall. The regularized test rise was not merely waiting for the final evaluation: reaching 50%, 90%, and 99% also occurred substantially after training-set fitting, giving a delayed-rise curve.</p>
+<p>Some models also regressed after their first 99% crossing. The last upward crossings after which the observed trajectory did not fall below 99% were 96,500, 44,500, and 43,500 for CE+0.1R, and 62,500, 35,500, and 86,000 for CE+R. These describe only the observed interval and do not guarantee stability under continued training.</p>
+<figure class="result-figure"><a href="../assets/post_upload/0eff015931_mechanism_overview.png" target="_blank" rel="noopener"><img src="../assets/post_upload/0eff015931_mechanism_overview.png" alt="Accuracy, training CE, and amplitude differences" loading="lazy"></a><figcaption>Accuracy, training CE, and amplitude differences</figcaption></figure>
+<h2 id="main-mechanistic-information">Main Mechanistic Information</h2>
+<ol>
+<li><strong>Lower raw CE alone did not guarantee rule recovery in this optimization process.</strong> The unregularized group reached about 4e-11 and remained far from complete generalization; the regularized groups recovered the rule at higher raw CE.</li>
+<li><strong>The output distribution was changed.</strong> The within-group median standard deviation of logit gaps at the final recorded snapshot was 6.439 for CE, 0.02837 for CE+0.1R, and 0.03175 for CE+R. The baseline had larger mean gaps but much greater nonuniformity.</li>
+<li><strong>The regularizer did not make this Transformer learn synchronously.</strong> All six regularized models showed a clear post-fitting wait and still passed the pre-specified delayed-generalization criterion.</li>
+<li><strong>Training CE was not monotonically decreasing in the regularized groups.</strong> The curves fluctuated and training accuracy also dipped slightly; the deepest final CE crossing cannot be treated as the complete explanation for the generalization change.</li>
+<li><strong>There is no reliable monotonic strength result.</strong> Coefficient 1 reached 100% earlier than 0.1 for seeds 0 and 1 but later for seed 2; with only three paired seeds, one should not claim that coefficient 1 is always better or 0.1 is always faster.</li>
+</ol>
+<p>The unregularized baseline had not completed recovery, so its true grokking time and an exact speedup cannot be calculated. <code>baseline_delay_not_yet_confirmed</code> means that the baseline had not finally generalized in the observed interval, not that the regularization intervention had no effect.</p>
+<h2 id="common-ce-thresholds">Common CE Thresholds</h2>
+<p>Only recorded snapshots after full training-answer accuracy and the first passage through the specified answer-only raw-CE threshold were used:</p>
+<table>
+<thead>
+<tr>
+<th>Threshold</th>
+<th>Condition</th>
+<th style="text-align: right;">Seeds covered</th>
+<th style="text-align: right;">Mean test accuracy</th>
+<th style="text-align: right;">Median actual CE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1e-3</td>
+<td>CE</td>
+<td style="text-align: right;">3/3</td>
+<td style="text-align: right;">9.1625%</td>
+<td style="text-align: right;">4.1787e-4</td>
+</tr>
+<tr>
+<td>1e-3</td>
+<td>CE+R</td>
+<td style="text-align: right;">3/3</td>
+<td style="text-align: right;">99.7972%</td>
+<td style="text-align: right;">9.3153e-4</td>
+</tr>
+<tr>
+<td>1e-4</td>
+<td>CE</td>
+<td style="text-align: right;">3/3</td>
+<td style="text-align: right;">13.4216%</td>
+<td style="text-align: right;">5.8361e-5</td>
+</tr>
+<tr>
+<td>1e-4</td>
+<td>CE+0.1R</td>
+<td style="text-align: right;">3/3</td>
+<td style="text-align: right;">98.1150%</td>
+<td style="text-align: right;">8.5070e-5</td>
+</tr>
+</tbody>
+</table>
+<p>These are common thresholds, not exact matched-loss conditioning; the actual CE values differ. At the earlier, higher threshold, the regularizer was not always superior; for example, CE+0.1R had only 12.9444% at the 1e-3 threshold. After successful stopping, no deeper CE trajectory was generated, so missing levels were not filled in as 100%.</p>
+<h2 id="independent-checks-and-boundaries">Independent Checks and Boundaries</h2>
+<ul>
+<li>The returned-source hash and metadata matched; the AST matched the local version.</li>
+<li>The data order, modular-division semantics, and train/test split were independently reconstructed; data hashes matched.</li>
+<li>For 2,261 complete mapping records, answer accuracy, EOS accuracy, full-row accuracy, function hashes, and CSV entries all matched.</li>
+<li>CE and regularizer statistics were independently recomputed with NumPy reductions for 15 raw output snapshots; the maximum absolute error was 8.88e-16.</li>
+<li>All inputs were reevaluated locally on an RTX 3080 with PyTorch 2.11.0+cu130. The maximum raw-output difference was 8.06e-5, but no answer or EOS class changed; all six successful endpoints still implemented the complete rule.</li>
+<li>The production seed-initialization hash was not reproduced bit-for-bit locally. Production used torch2.8 and the local check used torch2.11; the cause was not investigated further, so this check is not claimed to pass. Pairing is supported by reused initial states, production hash assertions, and independent step-0 full-prediction checks. The forward check of saved weights does not depend on reinitialization.</li>
+<li>The final weights of the three baselines were not in the download package; only their first full-training-accuracy weights were saved. Their final classes can therefore be independently checked from complete predictions, but their final CE could not be recomputed from final weights. Resume checkpoints remain on the AutoDL instance.</li>
+<li>No additional training, static sampling, or hyperparameter search was performed in this round.</li>
+</ul>
+<h2 id="files">Files</h2>
+<ul>
+<li>[Original result package]</li>
+<li>[Offline analysis script]</li>
+<li>[Summary and checks]</li>
+<li>[Per-seed results]</li>
+<li>[Weight verification]</li>
+<li>[Common CE thresholds]</li>
+</ul>
+<h1 id="mse-amplitude-series-for-4-bit-copy-and-the-bce-amplitude-alignment-regularizer">MSE Amplitude Series for 4-bit Copy and the BCE Amplitude-Alignment Regularizer</h1>
+<blockquote>
+<p>Part of: E31 loss, target amplitude, and grokking. This page fills in the 2026-09-10 4-bit copy series, which is the birthplace of the amplitude-alignment regularizer and the evidence for the direction "MSE is not uniformly inferior to BCE."</p>
+</blockquote>
+<h2 id="question">Question</h2>
+<p>With <code>4→16→1 tanh</code> fixed (97 parameters), 0/1 inputs, Gaussian initialization, and full fitting guaranteed: how does replacing the loss from BCE with raw MSE at different target amplitudes, or adding an amplitude-alignment regularizer on top of BCE, change the full recovery rate of the copy rule?</p>
+<h2 id="results">Results</h2>
+<h3 id="small-target-amplitude-series-12-training-samples-512-independent-initializations-per-group">Small target-amplitude series (12 training samples, 512 independent initializations per group)</h3>
+<table>
+<thead>
+<tr>
+<th>Target</th>
+<th style="text-align: right;">Full copy recovery</th>
+<th style="text-align: right;">Unseen accuracy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BCE / MSE ±1</td>
+<td style="text-align: right;">512/512</td>
+<td style="text-align: right;">100%</td>
+</tr>
+<tr>
+<td>MSE ±0.1</td>
+<td style="text-align: right;">446/512 (87.11%)</td>
+<td style="text-align: right;">96.00%</td>
+</tr>
+<tr>
+<td>MSE ±0.01</td>
+<td style="text-align: right;">67/512 (13.09%)</td>
+<td style="text-align: right;">58.79%</td>
+</tr>
+<tr>
+<td>MSE ±0.001</td>
+<td style="text-align: right;">30/512 (5.86%)</td>
+<td style="text-align: right;">49.32%</td>
+</tr>
+</tbody>
+</table>
+<p>All groups fully fit the training set. <strong>Full fitting ≠ generalization</strong>: with the ±0.001 target, performance on the 12 samples is close to random guessing.</p>
+<h3 id="n-8-control-0-1-mse-overtakes-bce">n=8 control: 0/1 MSE overtakes BCE</h3>
+<table>
+<thead>
+<tr>
+<th>Target</th>
+<th style="text-align: right;">Full copy recovery</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BCE</td>
+<td style="text-align: right;">374/512 (73.05%)</td>
+</tr>
+<tr>
+<td>0/1 MSE</td>
+<td style="text-align: right;">507/512 (99.02%)</td>
+</tr>
+<tr>
+<td>±0.5 MSE</td>
+<td style="text-align: right;">505/512</td>
+</tr>
+<tr>
+<td>±0.3 MSE</td>
+<td style="text-align: right;">480/512</td>
+</tr>
+</tbody>
+</table>
+<p>133 seeds succeeded only with MSE, with none in the reverse direction. <strong>The failure of small-amplitude MSE must not be generalized into "MSE is inferior to BCE"</strong>; whether it works depends on the target center, spacing, and task saturation, not on the loss name.</p>
+<h3 id="bce-amplitude-alignment-regularizer-birthplace">BCE + amplitude-alignment regularizer (birthplace)</h3>
+<p>BCE + λ×(variance of per-sample signed logits), λ∈{0.01, 0.1, 1}: <strong>all three levels recovered 512/512</strong> (baseline BCE only 374/512). The weak-regularizer group's raw BCE median is almost identical to the baseline (7.73e-6 vs 7.55e-6), ruling out the explanation "the loss simply went lower." This regularizer was subsequently transferred to Rule30 and mod97 (see the other E32 report pages).</p>
+<h2 id="verdict">Verdict</h2>
+<ol>
+<li>The choice of loss direction (target position, shape, alignment) is a control axis independent of "loss depth"; small-amplitude targets can destroy rule recovery from finite samples;</li>
+<li>"Only BCE can grok" does not hold: 0/1 MSE overtakes BCE in this group;</li>
+<li>Amplitude alignment (per-sample outputs kept as close as possible) can substantially strengthen the selection pressure favoring rule recovery — the birthplace of the amplitude-alignment regularizer.</li>
+</ol>
+<h2 id="boundaries">Boundaries</h2>
+<ul>
+<li>A single small <code>4→16→1 tanh</code> network, the single copy rule, 0/1 encoding, 512 seeds; the center / spacing / task saturation of the amplitude effect are not separated;</li>
+<li>The results must not be extrapolated to "MSE is generally superior/inferior to BCE" or "the alignment regularizer is generally effective";</li>
+<li>Together with Rule30 (the direction favoring BCE) and mod97 (the direction where alignment works) in E32, these form the full picture, and only one side of it should not be cited.</li>
+</ul>
+<h2 id="files_1">Files</h2>
+<ul>
+<li><code>experiment_4bit_copy_small_target_local.py</code>: small target-amplitude five-level series;</li>
+<li><code>experiment_4bit_copy_zero_one_mse_local.py</code>: n=8 0/1 MSE vs BCE control;</li>
+<li><code>experiment_4bit_copy_centered_mse_local.py</code>: centered-amplitude (±0.5/±0.3) control;</li>
+<li><code>experiment_4bit_copy_mse_intermediate_local.py</code>: intermediate-amplitude additional level;</li>
+<li><code>experiment_4bit_copy_bce_alignment_local.py</code>: BCE + amplitude-alignment regularizer;</li>
+<li>Result materials: <code>research/notes/20260910_4bit_copy_*.md</code> (five corresponding notes).</li>
+</ul>
+<h1 id="power-architecture-mod97-two-rounds-of-raw-mse-at-0-1-and-0-15">Power Architecture mod97: Two Rounds of Raw MSE at 0/1 and 0/15</h1>
+<blockquote>
+<p>Part of: E31 loss, target amplitude, and grokking. This page fills in the two rounds of raw MSE on the original Power Transformer; CE is used only as a diagnostic and does not participate in gradients.</p>
+</blockquote>
+<h2 id="question-and-configuration">Question and Configuration</h2>
+<p>Original Power two-layer, width-128, 4-head Transformer (455,424 parameters), mod97 division, 70% data (6,518 train / 2,794 test), no weight decay, Adam(lr=0.001, betas=(0.9,0.98)). The training target is raw one-hot MSE at the answer and EOS positions; the answer is averaged per sample, over the two RHS positions and all 239 classes, without amplifying labels or adjusting class weights. 3 paired seeds per condition (same data split, same initialization and batch order), stopping at the first 100% test answer.</p>
+<h2 id="results_1">Results</h2>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+<th style="text-align: right;">Full rule recovery</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>raw MSE 0/1</td>
+<td style="text-align: right;"><strong>1/3</strong></td>
+<td>seed 2 reached full marks at 140,000 steps; seed 0 peaked at 99.36% without full marks; seed 1 degraded late (training MSE stuck at 1.85e-5, with the bottleneck in the hidden representation rather than the output layer)</td>
+</tr>
+<tr>
+<td>raw MSE 0/15 (wrong class 0, correct class 15)</td>
+<td style="text-align: right;"><strong>2/3</strong></td>
+<td>succeeded at 14,500 and 70,500 steps (median 42,500); a uniform 100,000-step comparison gives 2/3 vs 0/3 for 0/1</td>
+</tr>
+</tbody>
+</table>
+<p>Reference calibration point: the "diagnostic CE" of a perfect one-hot solution is <strong>4.4836</strong> — i.e., for fixed one-hot targets, cross-entropy does not approach 0. This directly refutes "grokking must drive raw CE extremely low," and is consistent with the phenomenon in E32 where the CE + amplitude-alignment regularizer group recovered already at CE≈1e-4–1e-3.</p>
+<h2 id="mechanism-and-boundaries-must-be-kept-together-with-the-results">Mechanism and Boundaries (must be kept together with the results)</h2>
+<ul>
+<li>Both rounds are in <code>paused</code> state (manually paused, not run to the end of the budget), with mechanism status <code>mse_recovery_or_delay_not_yet_confirmed</code>; <strong>stopping at first full marks does not guarantee stability under continued training</strong>;</li>
+<li>3 seeds, single data split; stopping looks at the semantic answer and does not use EOS as an easy sample to inflate accuracy;</li>
+<li>Failed seeds were not attributed (the user decided not to investigate), so "the median step count of only the successful seeds" cannot represent the whole condition;</li>
+<li>CE is diagnostic only and does not participate in gradients; the 0/15 group's actual training does not divide by the amplitude squared, and relative MSE is used only for cross-amplitude comparison;</li>
+<li>This must not be used to claim "raw MSE can grok in general" or "0/15 is generally better than 0/1"; read this page together with <code>POWER_MOD97_ALIGNMENT_REPORT.md</code> (CE + amplitude-alignment regularizer 3/3) and the CE baseline (0/3, training CE already down to ~4e-11 yet still not recovered).</li>
+</ul>
+<h2 id="files_2">Files</h2>
+<ul>
+<li><code>experiment_power_mod97_raw_mse01.py</code>, <code>experiment_power_mod97_raw_mse15.py</code>: frozen experiment scripts;</li>
+<li><code>analyze_power_mod97_raw_mse01.py</code>, <code>analyze_power_mod97_raw_mse15.py</code>: analysis scripts;</li>
+<li>Result packages: <code>E:/Downloads/results_power_mod97_raw_mse01_n70_package.zip</code>, <code>results_power_mod97_raw_mse15_n70_package.zip</code>;</li>
+<li>Analysis packages: <code>tmp/power_mod97_mse01_analysis_20260911/</code>, <code>tmp/power_mod97_mse15_analysis_20260911/</code> (analysis.json, per-seed tables, weight verification).</li>
+</ul>
+<h1 id="independent-static-verification-of-amplitude-alignment">Independent Static Verification of Amplitude Alignment</h1>
+<p>Date: 2026-09-14. Status: one independent SMC verification round of the amplitude constraint completed; no SGD training, cross-training-set cost model, or deep-tail extrapolation was run.</p>
+<p><strong>Scope correction:</strong> the subsequent task clarification was to use newly surveyed mathematical foundations to make reliable quantitative predictions from the existing framework. This round was instead an independent static check of amplitude regularization. The results are retained, but do not count as completion of that original request; the mathematical transfer and old-data backtest are documented separately in the correction record.</p>
+<h2 id="conclusion-first">Conclusion First</h2>
+<p><strong>For this fixed training set, network, and Gaussian parameter measure, the amplitude-variance constraint produced an additional static selection effect beyond mean BCE.</strong> After matching the BCE distribution, the stronger <code>lambda=0.1</code> condition increased the mass of the complete <code>parity2</code> rule from 86.65% to 88.82%, while lowering the mean reference K and narrowing the K distribution. The target-share gain for the weaker <code>lambda=0.01</code> condition could not be distinguished clearly from this round's Monte Carlo variation.</p>
+<p>This does not directly prove the original grokking or SGD sampling dynamics, and it does not show that every amplitude regularizer strengthens simplicity bias. It answers a narrower question: <strong>near the same mean loss, can making the correct-direction margins more similar further change the static function distribution and favor rules with lower reference cost in this experiment? The result supports yes.</strong></p>
+<h2 id="1-what-was-measured">1. What Was Measured</h2>
+<ul>
+<li>Network: <code>4→16→1 tanh</code>, with 97 independent standard-Gaussian neural coordinates; hidden weights and biases divided by 2, readout weights and bias divided by 4. The parameterization was unchanged from the earlier experiment.</li>
+<li>Inputs: all 16 four-bit 0/1 inputs. Training inputs were fixed at 0, 3, 4, 7, 8, 11, 12, and 15; the other eight points were observation points only.</li>
+<li>Labels: <code>parity2</code>, namely <code>0x0FF0</code>. <code>parity4</code> (<code>0x6996</code>) also agrees with these eight training labels, but the analysis did not retain only these two functions; all complete mappings were included.</li>
+<li>Regularized quantity: the variance of the correct-direction margin <code>m_i=(2y_i-1)z_i</code>. This is not a constraint that makes raw logits for opposite labels equal, and it is not an unsigned-amplitude statistic.</li>
+<li>Sampling event: <code>J_lambda = mean_BCE_D + lambda * Var_D(m_i) &lt;= 0.3</code>, with lambda equal to 0, 0.01, and 0.1.</li>
+<li>Each condition used eight independent Gaussian-start replicas with 4,096 SMC particles per replica, followed by 96 fixed-step pCN updates at the endpoint.</li>
+</ul>
+<p><strong>Meaning of fixed K:</strong> the complete-rule cost table from the earlier full-16-point <code>BCE&lt;=0.01</code> curve was reused as an independent reference label for each hard function. It is not the parameter-volume cost under the current eight-sample constraint, an exact per-weight Kolmogorov complexity, or a newly estimated contraction slope.</p>
+<p><strong>Meaning of agreement:</strong> two complete mappings were independently drawn from the conditional function distribution, their pointwise agreement was computed on the fixed eight unseen inputs, and then averaged. This is not target accuracy and not the probability that two complete mappings are identical everywhere.</p>
+<h2 id="2-frozen-forecast-then-independent-sampling">2. Frozen Forecast, Then Independent Sampling</h2>
+<p>Before the new scientific sampling, the conditional-filtering forecasts, snapshot hashes, and protocol from four earlier SMC replicas were frozen at 2026-09-14 07:08:21. The new SMC run loaded no old weights and used no function-ID-guided proposal.</p>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+<th style="text-align: right;">Old forecast parity2 share</th>
+<th style="text-align: right;">New independent SMC share</th>
+<th style="text-align: right;">New mean fixed K</th>
+<th style="text-align: right;">New unseen agreement</th>
+<th style="text-align: right;">Extra volume cost: new / old forecast</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>No regularizer</td>
+<td style="text-align: right;">85.0830%</td>
+<td style="text-align: right;">85.8521%</td>
+<td style="text-align: right;">559.862</td>
+<td style="text-align: right;">95.3201%</td>
+<td style="text-align: right;">0 / 0 bit</td>
+</tr>
+<tr>
+<td>lambda=0.01</td>
+<td style="text-align: right;">85.8128%</td>
+<td style="text-align: right;">86.4014%</td>
+<td style="text-align: right;">558.896</td>
+<td style="text-align: right;">95.3927%</td>
+<td style="text-align: right;">0.296 / 0.427 bit</td>
+</tr>
+<tr>
+<td>lambda=0.1</td>
+<td style="text-align: right;">88.2866%</td>
+<td style="text-align: right;">88.8031%</td>
+<td style="text-align: right;">555.059</td>
+<td style="text-align: right;">95.9902%</td>
+<td style="text-align: right;">2.841 / 2.912 bit</td>
+</tr>
+</tbody>
+</table>
+<p>The extra volume cost is the negative-log2 mass ratio of the new event relative to the unregularized event; it must not be confused with the mean fixed K in the table.</p>
+<p>The old forecast and new measurement had the same direction and were numerically close, but are not called exact agreement: the target-share difference was about 0.52 to 0.77 percentage points, and the total-variation distance between complete-function distributions was about 1.1% to 2.0%. The old forecast was also a finite, correlated SMC estimate; the error bars for the new replicas do not include old-estimate error or possible shared mixing bias.</p>
+<h2 id="3-excluding-the-explanation-bce-was-simply-lower">3. Excluding the Explanation "BCE Was Simply Lower"</h2>
+<p>Because <code>J_lambda&lt;=0.3</code> leaves budget for the regularizer, the treatment group could naturally favor lower BCE. Comparing only the previous table is therefore insufficient.</p>
+<p>The preregistered comparison used BCE sub-bins of width 0.0005, compared function distributions within the same bins, and reweighted the unregularized control to the treatment group's BCE-bin distribution. Common support was determined by total counts per bin and independent-replica coverage, without looking at target share or K benefit.</p>
+<p>The main <code>lambda=0.1</code> sample had 85.19% support coverage and triggered the one prespecified supplemental draw: eight additional independent unregularized replicas sampled the <code>0.27&lt;=BCE&lt;=0.29</code> band. They only filled control sub-bins fully inside that band and were not mixed into the overall unregularized distribution. Main matched support after supplementation was 98.62%.</p>
+<h3 id="main-result-lambda-0-1">Main Result: lambda=0.1</h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th style="text-align: right;">BCE-matched unregularized control</th>
+<th style="text-align: right;">Amplitude-variance regularizer</th>
+<th style="text-align: right;">Difference</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Mean training BCE</td>
+<td style="text-align: right;">0.29246885</td>
+<td style="text-align: right;">0.29246186</td>
+<td style="text-align: right;">-0.00000698</td>
+</tr>
+<tr>
+<td>Complete parity2 share</td>
+<td style="text-align: right;">86.6538%</td>
+<td style="text-align: right;">88.8201%</td>
+<td style="text-align: right;"><strong>+2.1663 percentage points</strong></td>
+</tr>
+<tr>
+<td>Mean fixed K</td>
+<td style="text-align: right;">558.8386</td>
+<td style="text-align: right;">555.0164</td>
+<td style="text-align: right;"><strong>-3.8223</strong></td>
+</tr>
+<tr>
+<td>Fixed-K standard deviation</td>
+<td style="text-align: right;">43.8556</td>
+<td style="text-align: right;">37.6824</td>
+<td style="text-align: right;"><strong>-6.1732</strong></td>
+</tr>
+<tr>
+<td>Unseen-point paired agreement</td>
+<td style="text-align: right;">95.5737%</td>
+<td style="text-align: right;">95.9867%</td>
+<td style="text-align: right;"><strong>+0.4130 percentage points</strong></td>
+</tr>
+<tr>
+<td>Mean margin variance</td>
+<td style="text-align: right;">0.102079</td>
+<td style="text-align: right;">0.044891</td>
+<td style="text-align: right;">-0.057188</td>
+</tr>
+</tbody>
+</table>
+<p>Stratified resampling of independent SMC replicas 1,000 times gave the following 95% intervals:</p>
+<ul>
+<li>Target-share difference: [+1.6493, +2.7182] percentage points.</li>
+<li>Mean fixed-K difference: [-4.5129, -3.1665].</li>
+<li>Fixed-K standard-deviation difference: [-6.9816, -5.3368].</li>
+<li>Unseen-agreement difference: [+0.2409, +0.5998] percentage points.</li>
+</ul>
+<p>These intervals describe replica-level Monte Carlo variation only; they do not include fixed-K label error or unknown shared mixing bias.</p>
+<h3 id="prespecified-half-width-sensitivity-analysis">Prespecified Half-Width Sensitivity Analysis</h3>
+<p>Halving the BCE-bin width to 0.00025 gave 95.82% common-support coverage, with the same direction:</p>
+<ul>
+<li>Target-share difference <strong>+2.0991 percentage points</strong>, 95% interval [+1.6035, +2.5982].</li>
+<li>Mean fixed-K difference <strong>-3.7304</strong>.</li>
+<li>Unseen-agreement difference <strong>+0.3964 percentage points</strong>.</li>
+<li>The matched mean BCE values differed by only about 0.00000109.</li>
+</ul>
+<p>The main effect therefore did not disappear under finer BCE matching. Finite bins are still not exact continuous equal-loss conditioning, but the residual BCE difference here was very small.</p>
+<h3 id="weak-dose-lambda-0-01">Weak Dose: lambda=0.01</h3>
+<p>The main-bin target-share difference was +0.3662 percentage points, with a 95% interval of [-0.2194, +1.0534]; the unseen-agreement difference also included zero. The mean fixed-K reduction was a weak signal, and its half-width interval also included zero. <strong>This round does not treat this dose as a reliable target-share or agreement improvement.</strong></p>
+<h2 id="4-theoretical-correspondence-and-what-was-not-proven">4. Theoretical Correspondence and What Was Not Proven</h2>
+<p>If <code>E0</code> denotes <code>BCE&lt;=0.3</code> and <code>E_lambda</code> denotes the event with the added variance term, then <code>E_lambda</code> is a subset of <code>E0</code>. For a complete function <code>f</code>,</p>
+<p><code>q_lambda(f) = q_0(f) * P(E_lambda | E0, f) / P(E_lambda | E0)</code>.</p>
+<p>This conditional-probability relation is true by definition and is not a new discovery. The experimental question is how the margin distribution inside each complete mapping makes the extra constraint favor some mappings, and whether independent sampling reproduces that preference. The observed preference was higher parity2 mass and a lower, narrower reference-K distribution.</p>
+<p>This is consistent with the correction that the joint output distribution is upstream and mean BCE is only one selection coordinate. It does not require the absolute mass of simple functions to increase; the total event mass for <code>lambda=0.1</code> was actually smaller, while the target's relative share increased.</p>
+<p>Four qualifications must remain attached:</p>
+<ol>
+<li>This measures one training set, one architecture, and one reference measure; it does not establish cross-task universality.</li>
+<li>This is a hard-threshold conditional distribution, not a soft <code>exp(-eta R)</code> reweighting; it cannot directly validate a derivative value from a soft-response formula.</li>
+<li>No SGD was run, and the result is not presented as a measurement of the static volume of original grokking.</li>
+<li>A narrower fixed-K distribution does not prove a unique microscopic complexity spectrum, nor that every hard-function cell narrows internally in the same way.</li>
+</ol>
+<h2 id="5-computation-checks-and-residual-risk">5. Computation, Checks, and Residual Risk</h2>
+<ul>
+<li>Twenty-four formal main jobs and eight prespecified supplemental jobs were completed: 32 independent SMC jobs with 32 distinct seeds.</li>
+<li>There were 131,072 final weight vectors in total. All 16-point outputs were independently recomputed with NumPy float64; the maximum logit difference was within 8.02e-7, with no sign flips and no recomputed event-boundary violations.</li>
+<li>Sampling ran on a local RTX 3080 using CUDA device 1. Particles and forward passes used float32; log masses used float64; TF32 and AMP were disabled. The sampling jobs took about 618 seconds, or 10.3 minutes, excluding development, engineering checks, and post-processing.</li>
+<li>Seven sampler engineering checks and three bin-matching engineering tests passed. The 128-particle smoke data were kept separate from the scientific data and excluded from the formal statistics.</li>
+<li>An independent per-particle reweighting implementation checked the main bin-matrix analysis; the maximum statistic difference across four condition/bin-width combinations was below 2.9e-12.</li>
+<li>During the final 96 rounds, the mean target share changed by about 0.35 to 0.63 percentage points depending on condition. This short-range diagnostic cannot prove adequate mixing; multiple independent replicas also cannot rule out shared bias. The round was stopped without adding samples indefinitely in pursuit of precision that could not be guaranteed.</li>
+</ul>
+<h2 id="6-file-entry-points">6. File Entry Points</h2>
+<ul>
+<li>[Experiment protocol and run method]</li>
+<li>[Formal machine-readable results]</li>
+<li><a href="../assets/post_upload/7b0c9436d4_prediction_comparison.png">Old forecast versus new measurement</a></li>
+<li><a href="../assets/post_upload/d24b2521ab_matched_bce.png">BCE-matched comparison</a></li>
+<li>[Independent matching audit]</li>
+<li>[Result package]</li>
+</ul>
+<p>The original weights, logits, function IDs, layer diagnostics, and resume checkpoints remain in the local formal directory. The result package contains the final particles and analysis materials needed for analysis, but omits the larger <code>.pt</code> resume checkpoints.</p></div>
+
+      </article>
+    </main>
+  </div>
+</body>
+</html>

@@ -23,7 +23,7 @@
         <span class="mark-block">NK</span>
         <span class="mark-text">Neural K Research Archive</span>
       </a>
-      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="../index.html">Research</a><a class="top-link" href="../theory-core.html">Core Theory</a><a class="top-link active" href="../experiments/index.html">Experiments</a><a class="top-link" href="../references.html">References</a><a class="top-link" href="../evidence-ledger.html">Evidence</a></nav>
+      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="../index.html">Research</a><a class="top-link" href="../theory-core.html">Core Theory</a><a class="top-link active" href="../experiments/index.html">Experiments</a><a class="top-link" href="../post-upload.html">Updates</a><a class="top-link" href="../references.html">References</a><a class="top-link" href="../evidence-ledger.html">Evidence</a></nav>
       <nav class="language-switch" aria-label="Language"><a href="../../experiments/e07.html" lang="zh-CN">中文</a><span class="active" lang="en">EN</span></nav>
       <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
         <span aria-hidden="true">☰</span><span>Contents</span>
@@ -38,12 +38,25 @@
         <nav class="toc"><div class="toc">
 <ul>
 <li><a href="#overview">Experiment overview</a></li>
-<li><a href="#motivation">Why this experiment was run</a></li>
+<li><a href="#purpose">Purpose</a></li>
+<li><a href="#files">Files</a></li>
+<li><a href="#frozen-sources">Frozen sources</a></li>
+<li><a href="#motivation">Why this experiment was run, and how it was judged</a></li>
+<li><a href="#1-question">1. Question</a></li>
+<li><a href="#2-function-migration-experiment">2. Function-migration experiment</a></li>
+<li><a href="#3-matched-loss-static-control">3. Matched-loss static control</a></li>
+<li><a href="#4-criteria">4. Criteria</a></li>
+<li><a href="#5-boundaries">5. Boundaries</a></li>
 <li><a href="#results">Results, interpretation, and limits</a></li>
+<li><a href="#1-function-id-migration-is-not-a-random-walk">1. Function-ID migration is not a random walk</a></li>
+<li><a href="#2-the-shortest-human-rule-differs-from-the-network-s-attractor-function">2. The shortest human rule differs from the network's attractor function</a></li>
+<li><a href="#3-late-stage-re-expansion-at-extremely-low-loss">3. Late-stage re-expansion at extremely low loss</a></li>
+<li><a href="#4-at-the-same-normalized-loss-the-static-and-sgd-distributions-still-differ">4. At the same normalized loss, the static and SGD distributions still differ</a></li>
+<li><a href="#5-stage-verdict">5. Stage verdict</a></li>
 </ul>
 </div>
 </nav>
-        <div class="sidebar-label experiment-label">All experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>Static Hard Conditioning versus Optimizer-Induced Function Transport</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-Bit Counterfactual Invariance</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>Prior-Consistent Function Dynamics and Width Intervention</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>Post-Fit Drift in the Mingard 2025 Boolean Protocol</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>Feature Learning When a Fixed NTK Is Already Sufficient</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>Loss-Conditioned Prior Annealing</span></a><a class="experiment-nav-link active" href="e07.html"><span>E07</span><span>Function-ID Wandering and Matched-Loss Static Controls</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>Shared Intermediate Computation under Finite Capacity</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>Long Training with 80% Hidden Label Noise</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>Raw-BCE Competition between Preregistered Simple and Complex Function Pairs</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule-30 Train/Validation Gradient Alignment across Dataset Size</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND Shortcut Static Geometry and a One-Example Balance Intervention</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>SGD Dynamics of the AND Shortcut and Balanced Intervention</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>Weighted Rule-Bit Function Switching across Loss Scales</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Complete Functions versus Marginal Concentration in Modular-97 Grokking</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity Reachability, Half-Space Generalization, and Scaffold Recovery</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>Static Deep-Loss Mass versus Optimizer Transport</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>Teacher-Free Consensus and Symbolic Readability</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>Full-Truth-Table Rule Volume</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Measure Closure between Full Rules, Fixed Datasets, and Margin Cores</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement Control and a Consensus Complexity Frontier</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>Per-Example Free Energy and an Information Invariant</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>Prospective Prediction from Full-Rule Volume to Data Transition</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>Deep Neural K Crossing of Parity4 and a One-Point Exception</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST Sample Complexity and Static Branch Prediction</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>Balanced Unlabeled MNIST Label Volume</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Agreement Before and During Grokking</span></a><a class="experiment-nav-link" href="e28.html"><span>E28</span><span>Whole-Network HMC versus Adam on 50k MNIST</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Loss-Resolved Robustness to a Dead Input Bit</span></a><a class="experiment-nav-link" href="e30.html"><span>E30</span><span>Weight Decay Reshapes the Static Complete-Function Landscape</span></a></nav>
+        <div class="sidebar-label experiment-label">All experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>Static Hard Conditioning versus Optimizer-Induced Function Transport</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-Bit Counterfactual Invariance</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>Prior-Consistent Function Dynamics and Width Intervention</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>Post-Fit Drift in the Mingard 2025 Boolean Protocol</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>Feature Learning When a Fixed NTK Is Already Sufficient</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>Loss-Conditioned Prior Annealing</span></a><a class="experiment-nav-link active" href="e07.html"><span>E07</span><span>Function-ID Wandering and Matched-Loss Static Controls</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>Shared Intermediate Computation under Finite Capacity</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>Long Training with 80% Hidden Label Noise</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>Raw-BCE Competition between Preregistered Simple and Complex Function Pairs</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule-30 Train/Validation Gradient Alignment across Dataset Size</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND Shortcut Static Geometry and a One-Example Balance Intervention</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>SGD Dynamics of the AND Shortcut and Balanced Intervention</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>Weighted Rule-Bit Function Switching across Loss Scales</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Complete Functions versus Marginal Concentration in Modular-97 Grokking</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity Reachability, Half-Space Generalization, and Scaffold Recovery</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>Static Deep-Loss Mass versus Optimizer Transport</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>Teacher-Free Consensus and Symbolic Readability</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>Full-Truth-Table Rule Volume</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Measure Closure between Full Rules, Fixed Datasets, and Margin Cores</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement Control and a Consensus Complexity Frontier</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>Per-Example Free Energy and an Information Invariant</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>Prospective Prediction from Full-Rule Volume to Data Transition</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>Deep Neural K Crossing of Parity4 and a One-Point Exception</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST Sample Complexity and Static Branch Prediction</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>Balanced Unlabeled MNIST Label Volume</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Agreement Before and During Grokking</span></a><a class="experiment-nav-link" href="e28.html"><span>E28</span><span>Whole-Network HMC versus Adam on 50k MNIST</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Loss-Resolved Robustness to a Dead Input Bit</span></a><a class="experiment-nav-link" href="e30.html"><span>E30</span><span>Weight Decay Reshapes the Static Complete-Function Landscape</span></a></nav><div class="sidebar-label experiment-label">Post-upload experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="../experiments/e31.html"><span>E31</span><span>Loss and output amplitude</span></a><a class="experiment-nav-link" href="../experiments/e32.html"><span>E32</span><span>Random-memory scaling</span></a><a class="experiment-nav-link" href="../experiments/e33.html"><span>E33</span><span>Cross-architecture output volume</span></a><a class="experiment-nav-link" href="../experiments/e34.html"><span>E34</span><span>Conditional rule duel</span></a><a class="experiment-nav-link" href="../experiments/e35.html"><span>E35</span><span>Frozen functions around grokking</span></a><a class="experiment-nav-link" href="../experiments/e36.html"><span>E36</span><span>Independent Peleg/G&amp;C recheck</span></a><a class="experiment-nav-link" href="../experiments/e37.html"><span>E37</span><span>Measure robustness and Gaussian alignment</span></a></nav>
       </div>
     </aside>
 
@@ -55,13 +68,219 @@
           <p class="article-description">Observe post-fit movement between neighboring complete functions and test whether matching a scalar loss makes static and optimizer-induced distributions equal.</p>
         </header>
         <div class="article-body"><div class="source-bar"><span>Scripts</span><div><a href="../../../experiments/experiment_07_function_wandering_matched_loss/experiment_function_id_wandering.py">experiment_function_id_wandering.py</a><a href="../../../experiments/experiment_07_function_wandering_matched_loss/experiment_wandering_matched_loss_prior.py">experiment_wandering_matched_loss_prior.py</a></div></div><h2 id="overview">Experiment overview</h2>
-<p>A 4-bit, six-example dataset leaves 1,024 compatible hard extensions. 1,024 width-16 tanh networks are aligned at first complete fit and followed for 20,000 steps. A separate 4,194,304-network static sample is annealed to a normalized-BCE level matching late SGD.</p>
-<h2 id="motivation">Why this experiment was run</h2>
-<p>E06 showed static reweighting but not actual transport. E07 asks whether trajectories move through adjacent function cells and whether the late function distribution is determined by loss alone.</p>
+<h2 id="purpose">Purpose</h2>
+<p>E07 compares E06's static loss geometry against real optimizer transport inside exactly the same miniature protocol:</p>
+<ol>
+<li>directly record how the full function ID of each trajectory changes after the training set has been completely fitted;</li>
+<li>densely sample untrained weights for the same network and the same training set;</li>
+<li>compare the static function mass with the SGD function distribution under nearly identical normalized loss.</li>
+</ol>
+<p>What it answers is not "whether the function moves", but "whether the same loss is sufficient to determine the same function distribution".</p>
+<h2 id="files">Files</h2>
+<ul>
+<li><a href="#motivation">Experiment motivation and preregistered criteria</a></li>
+<li><a href="#results">Full results and stage verdict</a></li>
+<li><a href="../../../experiments/experiment_07_function_wandering_matched_loss/experiment_function_id_wandering.py"><code>experiment_function_id_wandering.py</code></a></li>
+<li><a href="../../../experiments/experiment_07_function_wandering_matched_loss/experiment_wandering_matched_loss_prior.py"><code>experiment_wandering_matched_loss_prior.py</code></a></li>
+</ul>
+<p>Run order:</p>
+<pre><code class="language-bash">python experiment_function_id_wandering.py
+python experiment_wandering_matched_loss_prior.py
+</code></pre>
+<p>The second script reads the trajectories and logits saved by the first script.</p>
+<h2 id="frozen-sources">Frozen sources</h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Development-version source</th>
+<th>SHA256</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>experiment_function_id_wandering.py</code></td>
+<td><code>research/function_information_conservation/experiment_function_id_wandering.py</code></td>
+<td><code>86b1d1599ec3aba0230340500b41685fd69d6d97fc1dc8d3f610fe75f1a57b57</code></td>
+</tr>
+<tr>
+<td><code>experiment_wandering_matched_loss_prior.py</code></td>
+<td><code>research/function_information_conservation/experiment_wandering_matched_loss_prior.py</code></td>
+<td><code>a6af0501654d7b100905dd705ca40ed19edccc0be02f0eec59f59ba1a11e2828</code></td>
+</tr>
+</tbody>
+</table>
+<p>Local raw results:</p>
+<table>
+<thead>
+<tr>
+<th>Result bundle</th>
+<th>SHA256</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>E:\Downloads\results_function_id_wandering.zip</code></td>
+<td><code>a3be58b7d2c4cb5636abb86a05bfb3f221de4f504491df8429bd73b14066517d</code></td>
+</tr>
+<tr>
+<td><code>E:\Downloads\results_wandering_matched_loss_prior.zip</code></td>
+<td><code>93d8fb721452fa6d12d58afb456c338109dfd341d2aa72300b184219d0d57e89</code></td>
+</tr>
+</tbody>
+</table>
+<p>The results can be quickly rebuilt; the ZIPs are not included in the final release bundle.</p>
+<h2 id="motivation">Why this experiment was run, and how it was judged</h2>
+<h2 id="1-question">1. Question</h2>
+<p>E06 has already shown that static low-loss mass rearranges the full functions, but the four-sample condition also showed that static annealing cannot replace SGD. E07 therefore coarse-grains the function distribution into exactly trackable function IDs and directly measures:</p>
+<ul>
+<li>whether a single model continues to cross function cells after the hard fit;</li>
+<li>whether the migration is random jumping or concentrates into a few channels;</li>
+<li>whether the multi-seed distribution tends to stabilize;</li>
+<li>whether the static prior gives the same distribution at the same loss.</li>
+</ul>
+<h2 id="2-function-migration-experiment">2. Function-migration experiment</h2>
+<ul>
+<li>Task: <code>4-bit -&gt; 1-bit</code>, fully enumerable over the complete 16 points;</li>
+<li>Training set: 6 fixed balanced samples, leaving 10 unseen inputs and 1,024 hard-compatible functions;</li>
+<li>Network: <code>4 -&gt; 16 x 3 -&gt; 1 tanh</code>;</li>
+<li>Models: 1,024 independent seeds;</li>
+<li>Optimization: full-batch Adam, learning rate 0.003, weight decay 0;</li>
+<li>Alignment: aligned by the first step at which each trajectory reaches 100% hard accuracy on the training set;</li>
+<li>Observation: 20,000 post-fit steps, with function IDs and partial logits saved densely.</li>
+</ul>
+<p>The training labels were discovered afterwards to satisfy exactly <code>y=x1</code>. This was not a preregistered target, so the related rule interpretation serves only as a result audit and must not be disguised as something known at experiment-design time.</p>
+<h2 id="3-matched-loss-static-control">3. Matched-loss static control</h2>
+<p>The second script samples 4,194,304 untrained networks under exactly the same network and training set, first filters for hard-exact weights, and then compares them against SGD ages in two ways:</p>
+<ol>
+<li>raw BCE sublevel sets or <code>exp(-beta L)</code> reweighting;</li>
+<li>RMS-normalized BCE annealing, comparing the function-ID distributions when the static and SGD average normalized losses are approximately the same.</li>
+</ol>
+<h2 id="4-criteria">4. Criteria</h2>
+<ul>
+<li>number of function-ID transitions, Hamming distances, transition edges, and dwell times;</li>
+<li>multi-seed function entropy, top-state mass, and agreement;</li>
+<li>JS divergence between the static and SGD distributions;</li>
+<li>static and dynamic odds of ID 666 and ID 722;</li>
+<li>whether the same normalized loss produces the same function distribution.</li>
+</ul>
+<h2 id="5-boundaries">5. Boundaries</h2>
+<ul>
+<li>width 16 is a high-density-trajectory pilot and does not carry cross-width generality;</li>
+<li>the extremely low loss approaches the numerical scale of Adam <code>eps=1e-8</code> and float32, so the late-stage re-expansion should be interpreted with caution;</li>
+<li>the lower-right cumulative-transition subplot of <code>wandering_overview.png</code> erroneously uses the final total; citing it is forbidden;</li>
+<li>the automatically generated <code>normalized_loss_match_*</code> in the original result bundle mistakenly used the raw SGD loss as the matching target; the normalized comparison in the main text must use the independent recomputation performed after the logits were saved;</li>
+<li>identical hard function IDs do not imply identical continuous logits, margins, or internal implementations.</li>
+</ul>
 <h2 id="results">Results, interpretation, and limits</h2>
-<p>1,019 of 1,024 trajectories changed complete function at least once after first fit, producing 4,379 transitions; 90.9% flipped only one unseen bit. Entropy fell from 5.217 bits to 1.291 bits and the top-function mass rose from 12.1% to 79.8%.</p>
-<p>At matched normalized loss, static sampling already amplified the eventual SGD attractor from 0.94% to 23.9%, showing strong first-order geometric relevance. Yet the static and SGD distributions still had Jensen–Shannon divergence 0.378 bits and reversed important pairwise odds.</p>
-<p><strong>Conclusion.</strong> Transport occurs mainly across neighboring hard cells. Static loss geometry identifies candidate structure, while optimizer history determines inflow and residence. Equal scalar loss does not imply equal function distribution.</p></div>
+<h2 id="1-function-id-migration-is-not-a-random-walk">1. Function-ID migration is not a random walk</h2>
+<p>All 1,024 trajectories fitted the training set, and 1,019 of them changed their full function at least once after the first fit:</p>
+<ul>
+<li>4,379 total transitions;</li>
+<li>mean 4.28 transitions, median 4;</li>
+<li>90.9% of the transitions flipped only one unseen-input bit.</li>
+</ul>
+<p>The function distribution contracts from an entropy of 5.217 bits, top mass of 12.1%, and agreement of 0.683 at first fit to an entropy of 1.291 bits, top ID 722 mass of 79.8%, and agreement of 0.945 at age 10,000. This is directed relaxation along neighboring function cells, not an unstructured random walk over the 1,024 compatible functions.</p>
+<h2 id="2-the-shortest-human-rule-differs-from-the-network-s-attractor-function">2. The shortest human rule differs from the network's attractor function</h2>
+<p>The six training labels happen, after the fact, to match <code>y=x1</code>, corresponding to ID 666. ID 666 is the most common at first fit, but the long-run dominant function becomes ID 722:</p>
+<pre><code class="language-text">1[2*x0 + 4*x1 - 2*x2 + 2*x3 - 3 &gt;= 0]
+</code></pre>
+<p>ID 722 deviates from <code>x1</code> on only two unseen inputs and is also a linear threshold function. Only 81 of the 1,024 compatible functions are linearly separable, yet after age 10, 100% of the models lie in this family. The result shows that the network is strongly biased toward a narrow function family, but "simple" cannot be specified by human surface-formula length alone.</p>
+<h2 id="3-late-stage-re-expansion-at-extremely-low-loss">3. Late-stage re-expansion at extremely low loss</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">age</th>
+<th style="text-align: right;">mean loss</th>
+<th style="text-align: right;">top mass</th>
+<th style="text-align: right;">function entropy</th>
+<th style="text-align: right;">agreement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">14,000</td>
+<td style="text-align: right;"><code>5.83e-8</code></td>
+<td style="text-align: right;">81.2%</td>
+<td style="text-align: right;">1.234</td>
+<td style="text-align: right;">0.948</td>
+</tr>
+<tr>
+<td style="text-align: right;">17,000</td>
+<td style="text-align: right;"><code>2.01e-8</code></td>
+<td style="text-align: right;">85.8%</td>
+<td style="text-align: right;">1.073</td>
+<td style="text-align: right;">0.953</td>
+</tr>
+<tr>
+<td style="text-align: right;">20,000</td>
+<td style="text-align: right;"><code>9.39e-9</code></td>
+<td style="text-align: right;">77.1%</td>
+<td style="text-align: right;">1.450</td>
+<td style="text-align: right;">0.936</td>
+</tr>
+</tbody>
+</table>
+<p>Therefore a decreasing loss does not guarantee a monotonically decreasing function entropy. However, this stage already approaches the Adam epsilon and float32 sensitivity region, and the network width is only 16; this document treats it only as a warning that "the strong claim of monotonicity throughout is unsafe", and does not propose a universal second phase transition on its basis.</p>
+<h2 id="4-at-the-same-normalized-loss-the-static-and-sgd-distributions-still-differ">4. At the same normalized loss, the static and SGD distributions still differ</h2>
+<p>Of the 4.19 million untrained networks, only 25,935 are hard-exact, with a minimum raw BCE of 0.6061. SGD has already dropped to 0.6006 by age 2 and then rapidly enters a region that direct sampling of the initialization cannot cover at all. Therefore the raw loss cannot support a deep matched comparison.</p>
+<p>After independently recomputing the normalized BCE, the static <code>beta=128</code> case is comparable to SGD at age 20,000:</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th style="text-align: right;">Static annealing</th>
+<th style="text-align: right;">SGD age 20,000</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>mean normalized BCE</td>
+<td style="text-align: right;">0.2885</td>
+<td style="text-align: right;">0.2903</td>
+</tr>
+<tr>
+<td>function entropy</td>
+<td style="text-align: right;">3.139 bits</td>
+<td style="text-align: right;">1.450 bits</td>
+</tr>
+<tr>
+<td>ID 666 mass</td>
+<td style="text-align: right;">30.6%</td>
+<td style="text-align: right;">2.9%</td>
+</tr>
+<tr>
+<td>ID 722 mass</td>
+<td style="text-align: right;">23.9%</td>
+<td style="text-align: right;">77.1%</td>
+</tr>
+<tr>
+<td>agreement</td>
+<td style="text-align: right;">0.853</td>
+<td style="text-align: right;">0.936</td>
+</tr>
+<tr>
+<td>JS between the two distributions</td>
+<td style="text-align: right;">0.378 bits</td>
+<td style="text-align: right;">-</td>
+</tr>
+</tbody>
+</table>
+<p>The static geometry is not uninformative: ID 722 rises from 0.94% under the hard prior to 23.9%, and is already identified as an advantaged candidate; but SGD further pushes it to 77.1% and suppresses the statically more favored ID 666. Even SGD at age 20 versus age 20,000, whose normalized losses are close, still have completely different function distributions, showing clear history dependence.</p>
+<h2 id="5-stage-verdict">5. Stage verdict</h2>
+<p>E07 supports:</p>
+<blockquote>
+<p>The static loss geometry provides strong candidate structure for the optimizer, but the same training set and the same scalar loss are not sufficient to determine the function distribution; real training also involves directed, history-dependent probability transport.</p>
+</blockquote>
+<p>It downgrades "different seeds are Bayesian posterior samples" to a strong identity that does not hold, while also explaining why the static posterior often has first-order predictive power: the static and dynamic distributions share the same loss landscape, but the optimizer reweights their function mass according to inflow channels, paths, and dwell properties.</p>
+<p>It cannot claim:</p>
+<ul>
+<li>that the fine-grained attractor ordering at width 16 is invariant across architectures;</li>
+<li>that the late-stage re-expansion is a universal physical phase transition;</li>
+<li>that ID 722 has a lower machine-independent Kolmogorov complexity than <code>x1</code>;</li>
+<li>that identical hard function IDs mean the internal program has stopped changing;</li>
+<li>that a known conversion formula already exists between the static volume and the dynamic basin of attraction.</li>
+</ul></div>
         <footer class="experiment-pager"><a href="e06.html">← E06 Loss-Conditioned Prior Annealing</a><a href="e08.html">E08 Shared Intermediate Computation under Finite Capacity →</a></footer>
       </article>
     </main>

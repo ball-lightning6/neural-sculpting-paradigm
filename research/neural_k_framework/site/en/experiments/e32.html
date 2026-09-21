@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Full protocol, results, and boundaries for E32 Random memory.">
+  <title>E32 Random memory · Neural K Research Archive</title>
+  <link rel="stylesheet" href="../../assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="../../assets/site.js"></script>
+</head>
+<body data-page-kind="post-upload">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+
+    <header class="topbar">
+      <a class="site-mark" href="../index.html" aria-label="Back to the research narrative">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K Research Archive</span>
+      </a>
+      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="../index.html">Research</a><a class="top-link" href="../theory-core.html">Core Theory</a><a class="top-link" href="../experiments/index.html">Experiments</a><a class="top-link active" href="../post-upload.html">Updates</a><a class="top-link" href="../references.html">References</a><a class="top-link" href="../evidence-ledger.html">Evidence</a></nav>
+      <nav class="language-switch" aria-label="Language"><a href="../../experiments/e32.html" lang="zh-CN">中文</a><span class="active" lang="en">EN</span></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>Contents</span>
+      </button>
+    </header>
+
+  <div class="page-shell">
+
+    <aside class="sidebar" id="sidebar" aria-label="On this page">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">On this page</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#scope-and-status">Scope and status</a></li>
+<li><a href="#statistical-conventions">Statistical conventions</a></li>
+<li><a href="#the-final-0-002-0-001-window">The final 0.002→0.001 window</a><ul>
+<li><a href="#the-linear-relationship-still-holds-but-not-every-dataset-is-equally-clean">The linear relationship still holds, but not every dataset is equally clean</a></li>
+</ul>
+</li>
+<li><a href="#extra-fluctuation-at-the-two-largest-tiers">Extra fluctuation at the two largest tiers</a></li>
+<li><a href="#reduced-change-in-the-tail">Reduced change in the tail</a></li>
+<li><a href="#independent-verification">Independent verification</a></li>
+<li><a href="#cross-gpu-consistency-reference">Cross-GPU consistency reference</a></li>
+<li><a href="#why-this-calibrates-the-complexity-definition">Why this calibrates the complexity definition</a></li>
+<li><a href="#conclusions-that-can-be-supported">Conclusions that can be supported</a></li>
+<li><a href="#artifacts">Artifacts</a></li>
+</ul>
+</div>
+</nav>
+        <a class="sidebar-action" href="../post-upload.html">Back to the increments overview →</a>
+      </div>
+    </aside>
+
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">Experiment increment · E32</div>
+          <h1>E32 Random memory</h1>
+          <p class="article-description">Full protocol, results, and boundaries for E32 Random memory.</p>
+        </header>
+        <div class="article-body"><h2 id="scope-and-status">Scope and status</h2>
+<p>The user provided <code>results_8bit_random_memory_scaling_w16_v1_package (1).zip</code>. This package is the complete set of results re-run on the 5090, not the earlier 10-item stage package from the 4090 D.</p>
+<ul>
+<li>10 sample-size tiers: 32, 48, 64, 80, 96, 128, 160, 192, 224, 256.</li>
+<li>8 random datasets per tier, 80 items in total, all reaching mean BCE ≤ 0.001.</li>
+<li>Each dataset index corresponds to an independent random label table and input permutation; the different n values sharing the same index use nested prefixes.</li>
+<li>Network 8→16→16→1 tanh, 433 parameters; 0/1 inputs, standard Gaussian neural coordinates, both weights and biases scaled by fan-in.</li>
+<li>Each item: 4 replicas × 2048 particles, 2 adaptation rounds and 12 fixed updates, float32 forward/particles, float64 log volumes, TF32 disabled.</li>
+<li>Environment: RTX 5090, torch 2.8.0+cu128, Python 3.12.3. The sampling loop accumulated 17692.89 seconds, about 4.915 hours; startup and partial packaging time are counted separately.</li>
+<li>This round was read-only auditing and offline statistics; no new training, SMC, automatic recheck, or failed-seed microanalysis was added.</li>
+</ul>
+<h2 id="statistical-conventions">Statistical conventions</h2>
+<p>Each dataset is first computed per replica: <code>c=[K(eps_low)-K(eps_high)]/log2(eps_high/eps_low)</code>, then the replica median of that dataset is taken. The mean and standard deviation of the coefficients are then computed over the 8 independent datasets, without averaging the volumes first.</p>
+<p>The main analysis keeps all 80 items, including those with warnings. Between-dataset SD and replica SD are reported separately. Replicas share the adaptive thresholds and step sizes, so their SD must not be treated as a strict confidence interval.</p>
+<h2 id="the-final-0-002-0-001-window">The final 0.002→0.001 window</h2>
+<p>Unit: increment of negative log2 volume when the loss is halved.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">n</th>
+<th style="text-align: right;">Mean over 8 datasets</th>
+<th style="text-align: right;">Between-dataset SD</th>
+<th style="text-align: right;">Between-dataset median</th>
+<th style="text-align: right;">Mean c/n</th>
+<th style="text-align: right;">Number of datasets with sampling warnings in the window</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">32</td>
+<td style="text-align: right;">54.33</td>
+<td style="text-align: right;">3.96</td>
+<td style="text-align: right;">52.78</td>
+<td style="text-align: right;">1.698</td>
+<td style="text-align: right;">0/8</td>
+</tr>
+<tr>
+<td style="text-align: right;">48</td>
+<td style="text-align: right;">68.14</td>
+<td style="text-align: right;">3.49</td>
+<td style="text-align: right;">68.16</td>
+<td style="text-align: right;">1.420</td>
+<td style="text-align: right;">0/8</td>
+</tr>
+<tr>
+<td style="text-align: right;">64</td>
+<td style="text-align: right;">79.93</td>
+<td style="text-align: right;">2.87</td>
+<td style="text-align: right;">79.80</td>
+<td style="text-align: right;">1.249</td>
+<td style="text-align: right;">0/8</td>
+</tr>
+<tr>
+<td style="text-align: right;">80</td>
+<td style="text-align: right;">90.70</td>
+<td style="text-align: right;">4.69</td>
+<td style="text-align: right;">90.67</td>
+<td style="text-align: right;">1.134</td>
+<td style="text-align: right;">0/8</td>
+</tr>
+<tr>
+<td style="text-align: right;">96</td>
+<td style="text-align: right;">100.76</td>
+<td style="text-align: right;">7.17</td>
+<td style="text-align: right;">101.64</td>
+<td style="text-align: right;">1.050</td>
+<td style="text-align: right;">0/8</td>
+</tr>
+<tr>
+<td style="text-align: right;">128</td>
+<td style="text-align: right;">118.47</td>
+<td style="text-align: right;">6.59</td>
+<td style="text-align: right;">118.29</td>
+<td style="text-align: right;">0.926</td>
+<td style="text-align: right;">0/8</td>
+</tr>
+<tr>
+<td style="text-align: right;">160</td>
+<td style="text-align: right;">141.53</td>
+<td style="text-align: right;">5.86</td>
+<td style="text-align: right;">143.98</td>
+<td style="text-align: right;">0.885</td>
+<td style="text-align: right;">2/8</td>
+</tr>
+<tr>
+<td style="text-align: right;">192</td>
+<td style="text-align: right;">164.24</td>
+<td style="text-align: right;">8.91</td>
+<td style="text-align: right;">164.28</td>
+<td style="text-align: right;">0.855</td>
+<td style="text-align: right;">1/8</td>
+</tr>
+<tr>
+<td style="text-align: right;">224</td>
+<td style="text-align: right;">209.61</td>
+<td style="text-align: right;">36.37</td>
+<td style="text-align: right;">196.11</td>
+<td style="text-align: right;">0.936</td>
+<td style="text-align: right;">4/8</td>
+</tr>
+<tr>
+<td style="text-align: right;">256</td>
+<td style="text-align: right;">253.67</td>
+<td style="text-align: right;">62.20</td>
+<td style="text-align: right;">220.39</td>
+<td style="text-align: right;">0.991</td>
+<td style="text-align: right;">6/8</td>
+</tr>
+</tbody>
+</table>
+<h3 id="the-linear-relationship-still-holds-but-not-every-dataset-is-equally-clean">The linear relationship still holds, but not every dataset is equally clean</h3>
+<p>The fit over all 10 tier means is:</p>
+<div class="math-display">$$
+c(n)\approx0.82354n+22.725,\qquad R^2=0.97238.
+$$</div>
+<p>For the mean curves of the seven adjacent loss windows, R² ranges from about 0.9724 to 0.9871. The 8 independent dataset trajectories all increase tier by tier with n in the deepest window, with 72/72 adjacent increments positive.</p>
+<p>The per-dataset trajectory R² values in the deepest window are approximately 0.9938, 0.9959, 0.9854, 0.8363, 0.9252, 0.9204, 0.9938, 0.9897 in order. So it is not the case that only dataset 1 shows approximate linearity; at the same time, one cannot claim that every dataset is close to a perfect straight line.</p>
+<p>The between-dataset median curve serves as a robustness reference, fitted as <code>c≈0.72409n+30.927</code>, R²≈0.9960. This does not replace the mean-based main result, and even less does it mean removing high values.</p>
+<h2 id="extra-fluctuation-at-the-two-largest-tiers">Extra fluctuation at the two largest tiers</h2>
+<p>The 8 coefficients at n=256 are, in order, 218.15, 222.64, 208.38, 374.34, 306.35, 285.08, 216.31, 198.11. Datasets 4, 5, and 6 clearly pull the mean up; not every one of them triggered the same class of warning, so warning labels cannot be used to directly judge which are "spurious high values".</p>
+<p>After observing this phenomenon, a range sensitivity analysis was done: fitting only the means with n≤192 gives <code>c≈0.66645n+35.617</code>, R²≈0.9978; its extrapolated predictions for 224 and 256 are about 13.4% and 23.0% below the actual means, respectively. This is a post-hoc diagnostic and is not dressed up as a pre-selected main interval.</p>
+<p>The two largest tiers also show larger replica disagreement; for example, the replica SD of the coefficient for dataset 4 at n=224 is about 24.8%, and for dataset 6 at n=256 about 31.0%. 433 parameters is only mild overparameterization relative to 256 single-output samples. At present the contributions of genuine data difficulty, capacity pressure, and insufficient sampling mixing cannot be separated.</p>
+<h2 id="reduced-change-in-the-tail">Reduced change in the tail</h2>
+<p>Across the 7 pre-specified adjacent windows, the local coefficients of all 80/80 curves decrease step by step.</p>
+<ul>
+<li>From the 0.2→0.1 window to the 0.1→0.05 window, the median decrease of the coefficient is about 17.39%.</li>
+<li>From the 0.005→0.002 window to the 0.002→0.001 window, the median decrease is about 3.79%.</li>
+<li>The 10th to 90th percentile of the final decrease is 3.02% to 4.65%, with the full range 0.34% to 5.55%.</li>
+<li>In 78/80 curves the final change does not exceed 5%, and in 80/80 it does not exceed 10%; there is no example where the final window rises instead.</li>
+</ul>
+<p>This supports the slope gradually stabilizing over the finite low-loss region, but it does not prove the true epsilon→0 limit, nor does it directly measure the microscopic distribution of implementation complexity.</p>
+<h2 id="independent-verification">Independent verification</h2>
+<ul>
+<li>All 1200 snapshot files and 38400 groups of extracted parameters passed independent NumPy float64 forward recomputation.</li>
+<li>The maximum logit difference is about 1.77e-5, and the maximum mean BCE difference is about 4.44e-8; no classification sign changes, no observed violations of the loss constraint.</li>
+<li>Training labels at the final snapshots are all correct, and the reported fraction of fully fitted endpoint particles is 1 for all tasks.</li>
+<li>Layer-wise and per-node K show no negative increments; the per-dataset window coefficients agree exactly with the in-package results, with the maximum difference in summary means about 5.68e-14.</li>
+<li>The seeds, labels, and nesting order of the 8 complete random datasets were independently reconstructed and agree; the data hashes are all distinct; the Hamming distances between different label tables range from 105 to 143.</li>
+<li>These checks confirm that the implementation and the constraints are consistent; they do not certify that the global SMC mass estimate is unbiased.</li>
+</ul>
+<h2 id="cross-gpu-consistency-reference">Cross-GPU consistency reference</h2>
+<p>For the same dataset 1, the final-window coefficients differ between the 4090 D and the 5090 by about 0.14% to 6.23%, mostly small. At n=256 the value changes from 216.95 to 218.15, a change of about 0.55%; the change at n=192 is larger, about -6.23%.</p>
+<p>The sampling time for this dataset changed from 3045.29 seconds to 2197.07 seconds, a speed factor of about 1.386. The data and seeds are identical, so it cannot be counted as a 9th independent random dataset, nor treated as a retest on an independent random stream.</p>
+<h2 id="why-this-calibrates-the-complexity-definition">Why this calibrates the complexity definition</h2>
+<p>Random labels offer no reusable target rule; adding independent examples generally adds constraints that must be memorized separately. Here the sample count <code>n</code> is an external memory burden fixed before measuring Neural K. It is not a "complexity" defined after the fact from neural volume. We can therefore use it to test whether negative log parameter mass and its loss-resolved contraction respond to a nonreusable implementation cost.</p>
+<p>This experiment measures the finite-window coefficient <code>c(n)=[K(0.001)-K(0.002)]/log2(2)</code>, not the absolute Kolmogorov complexity of each complete function. The mean curve over ten sample sizes and eight independent datasets is approximately linear (<code>R²=0.97238</code>); every adjacent increment in all eight deepest-window trajectories is positive. The correspondence between an independently controlled burden and the volume-contraction cost provides evidence of construct validity for interpreting the Neural K-profile as a neural-protocol-relative implementation complexity. It is more than a relabeling of volume.</p>
+<p>This remains an indirect calibration, not a proof that the complexity definition is universally correct. Capacity pressure and SMC mixing at larger <code>n</code> have not been fully separated; other architectures, encodings, or losses may give different coefficients; and random-memory burden is not machine-independent Kolmogorov complexity. The supported claim is an approximately linear response in this protocol and this finite loss window.</p>
+<h2 id="conclusions-that-can-be-supported">Conclusions that can be supported</h2>
+<p>Compared with the single-dataset pilot sampling, there is now fuller support for the statement that "at finite loss, as the random memory burden increases, the volume contraction coefficient shows a reproducible approximately linear response". The reduced change at the low-loss end is also reproduced across all 80 curves.</p>
+<p>Not yet supported: strict proportionality over the full range, exact linearity for every dataset, architecture-independent coefficients, equivalence to Kolmogorov complexity, or that all deepest tails at the largest n are already well mixed. The upturn at large n is not directly asserted to be a superlinear law, nor is it removed as sampling error.</p>
+<h2 id="artifacts">Artifacts</h2>
+<ul>
+<li><a href="../../assets/post_upload/9bb6d798ac_overview.png">Overview figure</a></li>
+<li><a href="../../assets/post_upload/d8801989ec_replica_uncertainty.png">Replica disagreement figure</a></li>
+<li>[Full audit and statistics]</li>
+<li>[Re-runnable analysis script]</li>
+</ul></div>
+
+      </article>
+    </main>
+  </div>
+</body>
+</html>

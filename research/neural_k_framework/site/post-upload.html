@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="2026-09-02 短论文提交之后的新增理论与实验：MDL—grokking、规则对决、幅度对齐、随机记忆、跨架构、架构估计器与 Peleg 复核。">
+  <title>本次应上传的增量材料 · Neural K 研究档案</title>
+  <link rel="stylesheet" href="assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="assets/site.js"></script>
+</head>
+<body data-page-kind="post-upload">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+
+    <header class="topbar">
+      <a class="site-mark" href="index.html" aria-label="返回研究主文">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K 研究档案</span>
+      </a>
+      <nav class="top-nav" aria-label="全站导航"><a class="top-link" href="index.html">研究主文</a><a class="top-link" href="theory-core.html">理论核心</a><a class="top-link" href="experiments/index.html">实验索引</a><a class="top-link active" href="post-upload.html">提交后增量</a><a class="top-link" href="references.html">参考文献</a><a class="top-link" href="evidence-ledger.html">证据总账</a></nav>
+      <nav class="language-switch" aria-label="语言"><span class="active" lang="zh-CN">中文</span><a href="en/post-upload.html" lang="en">EN</a></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>目录</span>
+      </button>
+    </header>
+
+  <div class="page-shell">
+
+    <aside class="sidebar" id="sidebar" aria-label="本页目录">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">本页目录</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#1-既有证据-4-bit规则曲线与规则对决-e10-e19-e23-e24">1. 既有证据：4-bit规则曲线与规则对决（E10/E19/E23/E24）</a></li>
+<li><a href="#2-既有实验-e15-e27-agreement-around-grokking">2. 既有实验：E15/E27 Agreement around grokking</a></li>
+<li><a href="#3-既有实验-e23-parity2-mux3-数据相变">3. 既有实验：E23 Parity2/MUX3 数据相变</a></li>
+<li><a href="#4-e31-raw-mse与幅度对齐">4. E31 raw MSE与幅度对齐</a></li>
+<li><a href="#5-e32-随机记忆">5. E32 随机记忆</a></li>
+<li><a href="#6-e33-跨架构联合输出">6. E33 跨架构联合输出</a></li>
+<li><a href="#7-e34-8-bit条件规则决斗">7. E34 8-bit条件规则决斗</a></li>
+<li><a href="#8-e35-mod97-真实-grokking-候选的冻结函数对决">8. E35 mod97 真实 grokking 候选的冻结函数对决</a></li>
+<li><a href="#9-e36-peleg-g-c-独立验证">9. E36 Peleg/G&amp;C 独立验证</a></li>
+</ul>
+</div>
+</nav>
+        <a class="sidebar-action" href="index.html">返回研究主文 →</a>
+      </div>
+    </aside>
+
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">提交后增量 · 2026-09</div>
+          <h1>本次应上传的增量材料</h1>
+          <p class="article-description">2026-09-02 短论文提交之后的新增理论与实验：MDL—grokking、规则对决、幅度对齐、随机记忆、跨架构、架构估计器与 Peleg 复核。</p>
+        </header>
+        <div class="article-body">
+    <div class="notice warning"><strong>提交后增量</strong><span>本组页面对应 2026-09-02 短论文提交之后新增的理论与实验材料。新增实验使用 E31–E37 公共编号，前三项关联既有 E15/E23 等证据。</span></div>
+
+    <div class="metric-strip" aria-label="增量入口">
+      <div><strong><a href="post-upload-mdl.html">MDL 与 grokking</a></strong><span>最低可行复杂度与条件推导</span></div>
+      <div><strong><a href="post-upload-language.html">严格概率语言</a></strong><span>联合输出、信息更新与统计物理边界</span></div>
+      <div><strong><a href="post-upload-theory-update.html">理论增量全文</a></strong><span>统计语言、MDL、复杂度收窄与周末修正</span></div>
+      <div><strong><a href="post-upload-estimator.html">架构估计器</a></strong><span>训练前估算 Neural K</span></div>
+      <div><strong><a href="experiments/e31.html">E31 Loss 与幅度</a></strong><span>目标幅度与联合输出</span></div>
+      <div><strong><a href="experiments/e32.html">E32 随机记忆</a></strong><span>复杂度近线性缩放</span></div>
+      <div><strong><a href="experiments/e33.html">E33 跨架构</a></strong><span>联合输出体积</span></div>
+      <div><strong><a href="experiments/e34.html">E34 规则决斗</a></strong><span>75 次事前预测全部命中</span></div>
+      <div><strong><a href="experiments/e35.html">E35 grokking 决斗</a></strong><span>真实候选函数偏好</span></div>
+      <div><strong><a href="experiments/e36.html">E36 Peleg/G&C 验证</a></strong><span>静态 vs SGD 对照</span></div>
+      <div><strong><a href="experiments/e37.html">E37 测度鲁棒性</a></strong><span>Gaussian、欧式球与训练对应</span></div>
+      <div><strong><a href="post-upload-decision.html">上传裁决</a></strong><span>本批材料取舍清单</span></div>
+    </div>
+    <h2 id="1-既有证据-4-bit规则曲线与规则对决-e10-e19-e23-e24">1. 既有证据：4-bit规则曲线与规则对决（E10/E19/E23/E24）</h2>
+<p>这是本次主包的基础证据：完整规则空间中的函数质量曲线、低loss下的复杂函数收缩、规则对决和复杂度分布变化。</p>
+<h2 id="2-既有实验-e15-e27-agreement-around-grokking">2. 既有实验：E15/E27 Agreement around grokking</h2>
+<p>Mod97任务中，hard fit之后未见输入 Agreement 仍接近随机，随后与目标准确率共同上升。它支持“grokking前存在很多不同训练集兼容函数”，不支持“所有seed早已共享一个错误函数”的简单图景。</p>
+<h2 id="3-既有实验-e23-parity2-mux3-数据相变">3. 既有实验：E23 Parity2/MUX3 数据相变</h2>
+<p>完整目标Neural K不能单独决定数据相变。MUX3的copy shortcut、selector冲突覆盖和fixed-D竞争分母会改变 <code>n50/n90</code>。自然覆盖、外生冲突干预和静态SMC形成了闭环。</p>
+<h2 id="4-e31-raw-mse与幅度对齐">4. E31 raw MSE与幅度对齐</h2>
+<p>raw 0/1、0/15 MSE可以出现grokking；输出幅度对齐的BCE干预能在更高平均CE处泛化。结论不是BCE唯一正确，而是loss和目标幅度共同选择联合输出分布的方向。</p>
+<h2 id="5-e32-随机记忆">5. E32 随机记忆</h2>
+<p>随机标签记忆复杂度随样本数近似线性，为复杂度/容量关系提供外部校准。</p>
+<h2 id="6-e33-跨架构联合输出">6. E33 跨架构联合输出</h2>
+<p>不同架构也出现规则相关的联合输出体积曲线，但系数和局部排序依赖协议。</p>
+<h2 id="7-e34-8-bit条件规则决斗">7. E34 8-bit条件规则决斗</h2>
+<p>同属规则对决家族且是其中信号最强的一组：8-bit输入分前后两个4-bit块分别喂给两条规则，训练集只含两规则输出一致的输入，冲突集检验偏好。事先从独立4-bit曲线冻结复杂度全序（parity1&lt;majority3&lt;MUX3&lt;parity2&lt;parity3&lt;parity4），完整循环赛15对×双向×5个loss截面=75次判决全部命中；唯一非压倒判决是MUX3 vs parity2=0.606（偏好随loss加深从0.684降到0.606，未反转）。</p>
+<h2 id="8-e35-mod97-真实-grokking-候选的冻结函数对决">8. E35 mod97 真实 grokking 候选的冻结函数对决</h2>
+<p>把原grokking轨迹完成前的实际完整函数B与完成后的规则A，放进统一小MLP里用对决训练集重新竞争：全部192个模型都完全拟合训练集、冲突点约99.9%偏向A、没有任何模型最终实现B，但完整A恢复率仅约16%——说明"后到的规则更受偏好"是函数人口层面的动态事实，而非逐网复制规则。近远档对照显示更大的来源loss差不提高精确恢复率。</p>
+<h2 id="9-e36-peleg-g-c-独立验证">9. E36 Peleg/G&amp;C 独立验证</h2>
+<p>这是一个单独的外部验证实验，不是文献摘要：按 Peleg/Hein 的小样本 MNIST 设置复现 Guess-and-Check，并在相同初始化协议下继续收紧 raw BCE 的静态 SMC 约束。G&amp;C 只要求训练分类全对时约为 82.13%；收紧 BCE 后静态样本达到约 96% 的测试水平，与 SGD 接近。因此它检验的是“无梯度静态采样是否必须停在浅层插值面”这一边界，不把 G&amp;C 与本项目的函数级 Neural K 测量混为同一实验。</p></div>
+
+      </article>
+    </main>
+  </div>
+</body>
+</html>

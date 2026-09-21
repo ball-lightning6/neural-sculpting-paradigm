@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="What is included in this increment package and what is deliberately left out.">
+  <title>Upload decision table · Neural K Research Archive</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="../assets/site.js"></script>
+</head>
+<body data-page-kind="post-upload">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+
+    <header class="topbar">
+      <a class="site-mark" href="index.html" aria-label="Back to the research narrative">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K Research Archive</span>
+      </a>
+      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="index.html">Research</a><a class="top-link" href="theory-core.html">Core Theory</a><a class="top-link" href="experiments/index.html">Experiments</a><a class="top-link active" href="post-upload.html">Updates</a><a class="top-link" href="references.html">References</a><a class="top-link" href="evidence-ledger.html">Evidence</a></nav>
+      <nav class="language-switch" aria-label="Language"><a href="../post-upload-decision.html" lang="zh-CN">中文</a><span class="active" lang="en">EN</span></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>Contents</span>
+      </button>
+    </header>
+
+  <div class="page-shell">
+
+    <aside class="sidebar" id="sidebar" aria-label="On this page">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">On this page</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#1-main-package-should-be-uploaded">1. Main package: should be uploaded</a></li>
+<li><a href="#2-supplementary-package-recommended-for-upload">2. Supplementary package: recommended for upload</a></li>
+<li><a href="#3-not-uploaded-for-now">3. Not uploaded for now</a></li>
+<li><a href="#4-recommended-upload-order">4. Recommended upload order</a></li>
+<li><a href="#5-qualifications-that-must-be-preserved-when-publishing">5. Qualifications that must be preserved when publishing</a></li>
+</ul>
+</div>
+</nav>
+        <a class="sidebar-action" href="post-upload.html">Back to the increments overview →</a>
+      </div>
+    </aside>
+
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">Release note · Upload decision</div>
+          <h1>Upload decision table</h1>
+          <p class="article-description">What is included in this increment package and what is deliberately left out.</p>
+        </header>
+        <div class="article-body"><p>Baseline: the 2026-09-02 short-paper submission, Git <code>4596b2b</code>.</p>
+<p>Here "upload" is divided into three categories:</p>
+<ul>
+<li><strong>Main package</strong>: should go into the public repository / the paper's accompanying materials; readers need it to understand the core claims;</li>
+<li><strong>Supplementary package</strong>: worth publishing, but it should not crowd into the short paper's main line;</li>
+<li><strong>Archive</strong>: kept locally or backed up separately; does not enter the public upload package.</li>
+</ul>
+<h2 id="1-main-package-should-be-uploaded">1. Main package: should be uploaded</h2>
+<table>
+<thead>
+<tr>
+<th>Material</th>
+<th>Path</th>
+<th>Reason</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Revised official short paper</td>
+<td><code>papers/compression_is_intelligence_{zh,en}.md</code> and the local v1.1 PDF</td>
+<td>The current main narrative, joint output, and static/dynamic boundaries have been corrected</td>
+</tr>
+<tr>
+<td>Theoretical core</td>
+<td><code>theory_core_zh.md</code> and the corresponding English core</td>
+<td>States the final claims and the boundaries of Neural K, MDL, agreement, and optimization accessibility</td>
+</tr>
+<tr>
+<td>Strict probabilistic language</td>
+<td><code>minimal_strict_statistical_language_tutorial_zh.md</code> and its audit results</td>
+<td>Fixes the full-target/fixed-D, KL-direction, information-gain, and loss-event confusions</td>
+</tr>
+<tr>
+<td>MDL–grokking bridge</td>
+<td><code>theory/mdl_identifiability_grokking_derivation_zh.md</code></td>
+<td>Formalizes the relationship among complexity, competing-function divergence, and the data transition</td>
+</tr>
+<tr>
+<td>4-bit rule curves / rule duels</td>
+<td>Parent directories E19/E23/E24 and the corresponding result summaries</td>
+<td>Core static volume and contraction evidence</td>
+</tr>
+<tr>
+<td>E15/E27 agreement</td>
+<td><code>experiments/E15_grokking_agreement</code></td>
+<td>Shows that after a hard fit, agreement does not equal generalization, and that it co-varies with grokking</td>
+</tr>
+<tr>
+<td>E23 Parity2/MUX3</td>
+<td><code>experiments/E23_volume_to_data_transition</code></td>
+<td>Shows that full-target Neural K alone cannot determine the data transition; competing continuations and sample coverage are important</td>
+</tr>
+<tr>
+<td>E31 raw MSE and amplitude alignment</td>
+<td><code>experiments/E32_loss_amplitude_grokking</code></td>
+<td>The most important new training intervention: grokking does not require a unique extremely low CE; the joint output shape is critical</td>
+</tr>
+<tr>
+<td>E32 random-memory near-linearity</td>
+<td><code>experiments/E33_random_memory</code></td>
+<td>Provides independent capacity evidence for "complexity grows with the number of memorized samples"</td>
+</tr>
+<tr>
+<td>E33 cross-architecture joint output</td>
+<td><code>experiments/E34_cross_architecture</code></td>
+<td>Shows that the contraction phenomenon is not an isolated case of a single MLP protocol, while preserving the ranking/coefficient boundaries</td>
+</tr>
+<tr>
+<td>E34 conditional rule duel</td>
+<td><code>experiments/E37_conditional_rule_duel</code></td>
+<td>An independent frozen 4-bit complexity total order predicts 75 8-bit duels</td>
+</tr>
+<tr>
+<td>E35 Mod97 frozen-function duels</td>
+<td><code>experiments/E38_mod97_frozen_function_duels</code></td>
+<td>Uses real pre-/post-grokking functions to test the dynamic preference for completed rules</td>
+</tr>
+<tr>
+<td>Key evidence ledger and references</td>
+<td><code>evidence_ledger_zh.md</code>, <code>references_zh.md</code>, and the English versions</td>
+<td>Makes every number, claim, and external theoretical interface traceable</td>
+</tr>
+</tbody>
+</table>
+<p>The main package should include scripts, protocols, result summaries, and the necessary figures; it need not include checkpoints, particle pools, or raw zips.</p>
+<h2 id="2-supplementary-package-recommended-for-upload">2. Supplementary package: recommended for upload</h2>
+<table>
+<thead>
+<tr>
+<th>Material</th>
+<th>Path</th>
+<th>Upload positioning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pre-training architecture estimation</td>
+<td><code>evidence/architecture_bias</code></td>
+<td>Both the successful shallow region and the failed deep tail are worth publishing; it must not be packaged as a general-purpose predictor</td>
+</tr>
+<tr>
+<td>E36 Peleg/G&amp;C independent verification</td>
+<td><code>evidence/peleg_recheck</code></td>
+<td>An independent verification experiment: external comparison and the boundaries of the volume hypothesis; suitable as supplementary material</td>
+</tr>
+<tr>
+<td>Verification of strictly defined finite probabilities</td>
+<td><code>theory/check_minimal_statistical_language.py</code> and JSON</td>
+<td>Low-cost and reproducible; recommended to be uploaded together with the theory appendix</td>
+</tr>
+</tbody>
+</table>
+<p>The supplementary package may keep lightweight JSON, CSV, and PNG files; large raw results should be made into separate downloadable attachments with SHA256.</p>
+<h2 id="3-not-uploaded-for-now">3. Not uploaded for now</h2>
+<table>
+<thead>
+<tr>
+<th>Material</th>
+<th>Handling</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>kimi_experiments</code> input-level / concat output-level experiments</td>
+<td>Stable results already exist (64/64 completed), but it was decided they will not enter the public incremental package; the original scripts and results are kept in the workspace</td>
+</tr>
+<tr>
+<td>Legacy rule-duel panels (physical directories E31/E36)</td>
+<td>Duplicated with the public E34 or not closed; kept in the workspace; they do not represent the public E31/E36 numbering</td>
+</tr>
+<tr>
+<td>Rule-space OOD, decoupled accessibility, early script audits</td>
+<td>Kept in the workspace; not entering the public incremental package</td>
+</tr>
+<tr>
+<td>addition8 static prediction</td>
+<td>Kept in the workspace; not entering the public incremental package</td>
+</tr>
+<tr>
+<td>AIT/Omega and the independent literature audit of the volume hypothesis</td>
+<td>Kept in the workspace; not entering the public incremental package</td>
+</tr>
+<tr>
+<td><code>.tmp_*</code>, <code>tmp/</code>, <code>_analysis_*</code></td>
+<td>Serve as workspace provenance caches; most of <code>_analysis_*</code> predates this submission, and its formal results have been absorbed into the report</td>
+</tr>
+<tr>
+<td><code>.venv-gpu</code>, pip caches, GPU temp directories</td>
+<td>Environment and caches, not research material</td>
+</tr>
+<tr>
+<td>Checkpoints, SMC particle pools, <code>.pt/.npz/.zip/.jsonl</code></td>
+<td>Packed separately by topic only when someone needs a full recheck; they do not enter the main package</td>
+</tr>
+<tr>
+<td><code>chatbox_*</code>, chat recovery databases, screenshot caches</td>
+<td>Privacy/engineering caches; not uploaded</td>
+</tr>
+<tr>
+<td>Unexplained engineering logs of failed MSE seeds</td>
+<td>Only result summaries and failure status are kept; large volumes of duplicate logs are not uploaded</td>
+</tr>
+<tr>
+<td>Draft empirical formulas without independent result support</td>
+<td>Kept as research notes; not written as paper conclusions</td>
+</tr>
+<tr>
+<td>RSA and text2image changes unrelated to this research</td>
+<td>Left in the original workspace; not included in the Neural K release</td>
+</tr>
+</tbody>
+</table>
+<h2 id="4-recommended-upload-order">4. Recommended upload order</h2>
+<ol>
+<li>First upload the main package: the short paper, the theoretical core, the E01–E30 basic experiments, and this main-package increment;</li>
+<li>Then upload the supplementary package: E23, E31–E37, and the architecture-estimation report; the old physical E37/E38 directories remain local archive directories and are not the public E37 directory;</li>
+<li>Finally, subject to platform attachment limits, separately upload the early script audits and the large raw results;</li>
+<li>E35 and other undecided experiments receive versioned additions only after formal results exist; they should not occupy the main narrative in advance.</li>
+</ol>
+<h2 id="5-qualifications-that-must-be-preserved-when-publishing">5. Qualifications that must be preserved when publishing</h2>
+<ul>
+<li>Neural K is a protocol-relative implementation-quality code length; it is not equal to machine-independent Kolmogorov complexity;</li>
+<li>"Complex functions contract faster and the complexity distribution narrows" is an empirical trend and a conditional mechanism within finite protocols, not a cross-architecture theorem;</li>
+<li>The static function distribution, loss cross-sections, and the SGD final distribution must be kept separate;</li>
+<li>The grokking data transition, the training-time transition, and Neural K are not the same scalar;</li>
+<li>All failures, local reorderings, sampling degeneracies, and accessibility boundaries must be preserved together with the successful results.</li>
+</ul></div>
+
+      </article>
+    </main>
+  </div>
+</body>
+</html>

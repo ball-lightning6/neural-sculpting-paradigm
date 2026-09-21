@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Full protocol, results, and boundaries for E34 Conditional rule duel.">
+  <title>E34 Conditional rule duel · Neural K Research Archive</title>
+  <link rel="stylesheet" href="../../assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="../../assets/site.js"></script>
+</head>
+<body data-page-kind="post-upload">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+
+    <header class="topbar">
+      <a class="site-mark" href="../index.html" aria-label="Back to the research narrative">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K Research Archive</span>
+      </a>
+      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="../index.html">Research</a><a class="top-link" href="../theory-core.html">Core Theory</a><a class="top-link" href="../experiments/index.html">Experiments</a><a class="top-link active" href="../post-upload.html">Updates</a><a class="top-link" href="../references.html">References</a><a class="top-link" href="../evidence-ledger.html">Evidence</a></nav>
+      <nav class="language-switch" aria-label="Language"><a href="../../experiments/e34.html" lang="zh-CN">中文</a><span class="active" lang="en">EN</span></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>Contents</span>
+      </button>
+    </header>
+
+  <div class="page-shell">
+
+    <aside class="sidebar" id="sidebar" aria-label="On this page">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">On this page</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#1-question-and-design">1. Question and Design</a></li>
+<li><a href="#2-results">2. Results</a></li>
+<li><a href="#3-boundaries-that-must-be-retained-together-with-the-results">3. Boundaries That Must Be Retained Together with the Results</a></li>
+<li><a href="#4-files">4. Files</a></li>
+</ul>
+</div>
+</nav>
+        <a class="sidebar-action" href="../post-upload.html">Back to the increments overview →</a>
+      </div>
+    </aside>
+
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">Experiment increment · E34</div>
+          <h1>E34 Conditional rule duel</h1>
+          <p class="article-description">Full protocol, results, and boundaries for E34 Conditional rule duel.</p>
+        </header>
+        <div class="article-body"><blockquote>
+<p>Status: both the high-gap pilot and the full round robin are complete. Evidence level: a priori prediction of a preregistered complexity order, under a single <code>8→16→1 tanh</code> protocol.</p>
+</blockquote>
+<h2 id="1-question-and-design">1. Question and Design</h2>
+<p><strong>Can the independently measured 4-bit single-rule Neural K ordering predict, in advance, which rule real Adam training will select under direct competition?</strong> (Together with E36's 48-pair panel, this experiment belongs to the "rule duel" family; it is the first one run in that family and the one with the strongest signal.)</p>
+<p>The 8-bit input is split into a front and a back 4-bit block; rule f reads the front block and rule g reads the back block:</p>
+<ul>
+<li>Training set: all 128 inputs with <code>f(front) == g(back)</code>, labeled with the common output;</li>
+<li>Conflict set: the 128 inputs with <code>f(front) != g(back)</code>, with no external ground truth assigned; only the competition preference is tested;</li>
+<li>Each pair is run with front/back positions swapped and is seed-matched; <code>8→16→1 tanh</code> (161 parameters), full-batch Adam (lr=0.01, wd=0); matched-loss thresholds 0.1/0.03/0.01/0.003/0.001.</li>
+</ul>
+<p>The rule panel and the expected ordering were frozen from the independently measured 4-bit Neural K curves <strong>before</strong> any training results were read: parity1 &lt; majority3 &lt; MUX3 &lt; parity2 &lt; parity3 &lt; parity4.</p>
+<h2 id="2-results">2. Results</h2>
+<p><strong>High-gap pilot</strong>: 5 duels × both directions × 256 seeds; the low-K rule was selected in 100% of all runs.</p>
+<p><strong>Full round robin</strong> (all 15 unordered pairs of the 6 rules × both directions × 5 loss cross-sections = 75 verdicts): <strong>75/75 all conform to the pre-frozen complexity total order</strong>. Per-pair results at the main cross-section (BCE=0.001) are in <code>FULL_TOURNAMENT_RESULTS.md</code>; representative non-saturated readings:</p>
+<ul>
+<li>parity1 vs majority3: low-K match rate 0.761 (the remainder are hybrid functions);</li>
+<li><strong>MUX3 vs parity2: 0.606</strong> (seed-matched win rate 0.617, Wilson [0.556, 0.675]) — this is the only non-overwhelming verdict among the 15 pairs; the direction still conforms to the frozen total order, but the preference decreases monotonically from 0.684 to 0.606 as the loss deepens (no reversal; retained as an open reading).</li>
+</ul>
+<h2 id="3-boundaries-that-must-be-retained-together-with-the-results">3. Boundaries That Must Be Retained Together with the Results</h2>
+<ol>
+<li>The conflict set has no external ground truth; what is measured is which complete extension the optimizer more often follows when the training set cannot distinguish the two rules — not "which rule is correct";</li>
+<li>In most verdicts the networks form hybrid functions (e.g., in parity1 vs majority3 the low-K rule wins on all 256 matched seeds, yet the average match rate is only 0.761) — "preference for the low-K rule" refers to a function population preference and does not require every network to replicate the full rule;</li>
+<li>A single network and data protocol; we do not claim that the win rate equals a softmax of the K gap, nor do we claim pairwise monotonicity;</li>
+<li>Relationship to E36 (the 48-pair panel): E36 shows an average preference close to 0.5 in the small-K-gap band (20–40 bits), indicating that the strong signal of this experiment depends on a sufficiently large complexity gap; the complete picture comes only from reading the two together.</li>
+</ol>
+<h2 id="4-files">4. Files</h2>
+<ul>
+<li><code>experiment_8bit_conditional_rule_duel_high_gap.py</code>: the frozen experiment script (no argparse; configuration at the top; pilot and full round robin are different modes of the same script);</li>
+<li><code>README_8BIT_CONDITIONAL_RULE_DUEL_HIGH_GAP.md</code>: the original protocol description;</li>
+<li><code>FULL_TOURNAMENT_RESULTS.md</code>: per-pair results for all 15 pairs of the full round robin, with interpretation boundaries;</li>
+<li>Result packages: <code>E:/Downloads/results_8bit_conditional_rule_duel_high_gap_package.zip</code> (pilot), <code>E:/Downloads/results_8bit_conditional_rule_duel_full_tournament_package.zip</code> (round robin, including per-condition weights and plots).</li>
+</ul></div>
+
+      </article>
+    </main>
+  </div>
+</body>
+</html>

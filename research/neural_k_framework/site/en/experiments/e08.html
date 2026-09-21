@@ -23,7 +23,7 @@
         <span class="mark-block">NK</span>
         <span class="mark-text">Neural K Research Archive</span>
       </a>
-      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="../index.html">Research</a><a class="top-link" href="../theory-core.html">Core Theory</a><a class="top-link active" href="../experiments/index.html">Experiments</a><a class="top-link" href="../references.html">References</a><a class="top-link" href="../evidence-ledger.html">Evidence</a></nav>
+      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="../index.html">Research</a><a class="top-link" href="../theory-core.html">Core Theory</a><a class="top-link active" href="../experiments/index.html">Experiments</a><a class="top-link" href="../post-upload.html">Updates</a><a class="top-link" href="../references.html">References</a><a class="top-link" href="../evidence-ledger.html">Evidence</a></nav>
       <nav class="language-switch" aria-label="Language"><a href="../../experiments/e08.html" lang="zh-CN">中文</a><span class="active" lang="en">EN</span></nav>
       <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
         <span aria-hidden="true">☰</span><span>Contents</span>
@@ -38,12 +38,25 @@
         <nav class="toc"><div class="toc">
 <ul>
 <li><a href="#overview">Experiment overview</a></li>
-<li><a href="#motivation">Why this experiment was run</a></li>
+<li><a href="#purpose">Purpose</a></li>
+<li><a href="#files">Files</a></li>
+<li><a href="#frozen-source">Frozen source</a></li>
+<li><a href="#motivation">Why this experiment was run, and how it was judged</a></li>
+<li><a href="#1-phenomenological-hypothesis">1. Phenomenological hypothesis</a></li>
+<li><a href="#2-the-four-atomic-tasks">2. The four atomic tasks</a></li>
+<li><a href="#3-joint-and-split-interventions">3. Joint and Split interventions</a></li>
+<li><a href="#4-formal-configuration-and-preregistered-dose-effects">4. Formal configuration and preregistered dose effects</a></li>
+<li><a href="#5-metric-boundaries">5. Metric boundaries</a></li>
 <li><a href="#results">Results, interpretation, and limits</a></li>
+<li><a href="#1-design-audit">1. Design audit</a></li>
+<li><a href="#2-late-collapse-and-primary-metric-correction">2. Late collapse and primary-metric correction</a></li>
+<li><a href="#3-depth-and-width-dose-effects-on-best-loss">3. Depth and width dose effects on best loss</a></li>
+<li><a href="#4-sample-count-needed-to-reach-a-fixed-loss">4. Sample count needed to reach a fixed loss</a></li>
+<li><a href="#5-stage-verdict">5. Stage verdict</a></li>
 </ul>
 </div>
 </nav>
-        <div class="sidebar-label experiment-label">All experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>Static Hard Conditioning versus Optimizer-Induced Function Transport</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-Bit Counterfactual Invariance</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>Prior-Consistent Function Dynamics and Width Intervention</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>Post-Fit Drift in the Mingard 2025 Boolean Protocol</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>Feature Learning When a Fixed NTK Is Already Sufficient</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>Loss-Conditioned Prior Annealing</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>Function-ID Wandering and Matched-Loss Static Controls</span></a><a class="experiment-nav-link active" href="e08.html"><span>E08</span><span>Shared Intermediate Computation under Finite Capacity</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>Long Training with 80% Hidden Label Noise</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>Raw-BCE Competition between Preregistered Simple and Complex Function Pairs</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule-30 Train/Validation Gradient Alignment across Dataset Size</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND Shortcut Static Geometry and a One-Example Balance Intervention</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>SGD Dynamics of the AND Shortcut and Balanced Intervention</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>Weighted Rule-Bit Function Switching across Loss Scales</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Complete Functions versus Marginal Concentration in Modular-97 Grokking</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity Reachability, Half-Space Generalization, and Scaffold Recovery</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>Static Deep-Loss Mass versus Optimizer Transport</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>Teacher-Free Consensus and Symbolic Readability</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>Full-Truth-Table Rule Volume</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Measure Closure between Full Rules, Fixed Datasets, and Margin Cores</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement Control and a Consensus Complexity Frontier</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>Per-Example Free Energy and an Information Invariant</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>Prospective Prediction from Full-Rule Volume to Data Transition</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>Deep Neural K Crossing of Parity4 and a One-Point Exception</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST Sample Complexity and Static Branch Prediction</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>Balanced Unlabeled MNIST Label Volume</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Agreement Before and During Grokking</span></a><a class="experiment-nav-link" href="e28.html"><span>E28</span><span>Whole-Network HMC versus Adam on 50k MNIST</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Loss-Resolved Robustness to a Dead Input Bit</span></a><a class="experiment-nav-link" href="e30.html"><span>E30</span><span>Weight Decay Reshapes the Static Complete-Function Landscape</span></a></nav>
+        <div class="sidebar-label experiment-label">All experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>Static Hard Conditioning versus Optimizer-Induced Function Transport</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-Bit Counterfactual Invariance</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>Prior-Consistent Function Dynamics and Width Intervention</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>Post-Fit Drift in the Mingard 2025 Boolean Protocol</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>Feature Learning When a Fixed NTK Is Already Sufficient</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>Loss-Conditioned Prior Annealing</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>Function-ID Wandering and Matched-Loss Static Controls</span></a><a class="experiment-nav-link active" href="e08.html"><span>E08</span><span>Shared Intermediate Computation under Finite Capacity</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>Long Training with 80% Hidden Label Noise</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>Raw-BCE Competition between Preregistered Simple and Complex Function Pairs</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule-30 Train/Validation Gradient Alignment across Dataset Size</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND Shortcut Static Geometry and a One-Example Balance Intervention</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>SGD Dynamics of the AND Shortcut and Balanced Intervention</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>Weighted Rule-Bit Function Switching across Loss Scales</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Complete Functions versus Marginal Concentration in Modular-97 Grokking</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity Reachability, Half-Space Generalization, and Scaffold Recovery</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>Static Deep-Loss Mass versus Optimizer Transport</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>Teacher-Free Consensus and Symbolic Readability</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>Full-Truth-Table Rule Volume</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Measure Closure between Full Rules, Fixed Datasets, and Margin Cores</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement Control and a Consensus Complexity Frontier</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>Per-Example Free Energy and an Information Invariant</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>Prospective Prediction from Full-Rule Volume to Data Transition</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>Deep Neural K Crossing of Parity4 and a One-Point Exception</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST Sample Complexity and Static Branch Prediction</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>Balanced Unlabeled MNIST Label Volume</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Agreement Before and During Grokking</span></a><a class="experiment-nav-link" href="e28.html"><span>E28</span><span>Whole-Network HMC versus Adam on 50k MNIST</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Loss-Resolved Robustness to a Dead Input Bit</span></a><a class="experiment-nav-link" href="e30.html"><span>E30</span><span>Weight Decay Reshapes the Static Complete-Function Landscape</span></a></nav><div class="sidebar-label experiment-label">Post-upload experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="../experiments/e31.html"><span>E31</span><span>Loss and output amplitude</span></a><a class="experiment-nav-link" href="../experiments/e32.html"><span>E32</span><span>Random-memory scaling</span></a><a class="experiment-nav-link" href="../experiments/e33.html"><span>E33</span><span>Cross-architecture output volume</span></a><a class="experiment-nav-link" href="../experiments/e34.html"><span>E34</span><span>Conditional rule duel</span></a><a class="experiment-nav-link" href="../experiments/e35.html"><span>E35</span><span>Frozen functions around grokking</span></a><a class="experiment-nav-link" href="../experiments/e36.html"><span>E36</span><span>Independent Peleg/G&amp;C recheck</span></a><a class="experiment-nav-link" href="../experiments/e37.html"><span>E37</span><span>Measure robustness and Gaussian alignment</span></a></nav>
       </div>
     </aside>
 
@@ -55,13 +68,192 @@
           <p class="article-description">Test whether reusable intermediate computation causally helps a network reach deeper loss with less capacity and data.</p>
         </header>
         <div class="article-body"><div class="source-bar"><span>Scripts</span><div><a href="../../../experiments/experiment_08_shared_intermediate_pressure/experiment_ca_shared_intermediate_pressure.py">experiment_ca_shared_intermediate_pressure.py</a></div></div><h2 id="overview">Experiment overview</h2>
-<p>Four matched task families are built from multi-step Rule 30/Rule 110 prefixes and two output summaries. In Shared conditions, both outputs can reuse the same expensive prefix; in Separate conditions, they require different prefixes. Joint networks can share hidden layers, while parameter-matched Split controls cannot.</p>
-<h2 id="motivation">Why this experiment was run</h2>
-<p>The phenomenological compression account requires a reason that reusable computation should be favored by the explicit loss objective. If sharing only changes label statistics, Shared tasks should also be easier in the Split control. A Joint-only advantage isolates finite-capacity computation reuse.</p>
+<h2 id="purpose">Purpose</h2>
+<p>E08 tests a phenomenological mechanism: when two output tasks share an expensive common CA prefix computation, does allowing the network to share hidden representations make it easier to reach the same extremely low loss than forcing two independent branches?</p>
+<p>The experiment uses a four-cell crossover design so that the exact same four atomic subtasks each appear once in the Shared group and once in the Separate group; a parameter-count-matched forced-split architecture is added as a negative control, ruling out label marginals or the intrinsic difficulty of the atomic tasks.</p>
+<h2 id="files">Files</h2>
+<ul>
+<li><a href="#motivation">Experiment motivation and preregistered criteria</a></li>
+<li><a href="#results">Full results and stage verdict</a></li>
+<li><a href="../../../experiments/experiment_08_shared_intermediate_pressure/experiment_ca_shared_intermediate_pressure.py"><code>experiment_ca_shared_intermediate_pressure.py</code></a></li>
+</ul>
+<p>Run:</p>
+<pre><code class="language-bash">python experiment_ca_shared_intermediate_pressure.py
+</code></pre>
+<h2 id="frozen-source">Frozen source</h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Development-version source</th>
+<th>SHA256</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>experiment_ca_shared_intermediate_pressure.py</code></td>
+<td><code>research/computational_pressure/experiment_ca_shared_intermediate_pressure.py</code></td>
+<td><code>ec3b985274222d39dcb62c9dcbf8c115b079e76396a4a5e5618aa2729d52f7ab</code></td>
+</tr>
+</tbody>
+</table>
+<p>Local results bundle:</p>
+<pre><code class="language-text">E:\Downloads\results_ca_shared_intermediate_pressure.zip
+</code></pre>
+<p>SHA256:</p>
+<pre><code class="language-text">97ec4fd2d6342ed62c682109a52cd4c462fb6ff358c8edfdbee1704303b1124f
+</code></pre>
+<p>Hashes are case-insensitive. The ZIP can be rebuilt quickly and is not included in the final release bundle.</p>
+<h2 id="motivation">Why this experiment was run, and how it was judged</h2>
+<h2 id="1-phenomenological-hypothesis">1. Phenomenological hypothesis</h2>
+<p>If two tasks repeatedly compute the same expensive intermediate state, sharing that state should save limited network capacity; if they are forced to recompute it separately, the effective capacity available to each of the two tasks drops, and reaching the same low loss requires more samples, more optimization steps, or a wider network.</p>
+<p>This hypothesis attempts to provide a causal positive control for "why low loss may favor reusable representations", but it does not presuppose that the network must internally form the symbol nodes named by the researchers.</p>
+<h2 id="2-the-four-atomic-tasks">2. The four atomic tasks</h2>
+<p>The input consists of two independent 30-bit states <code>u,v</code>. Definitions:</p>
+<pre><code class="language-text">F_k(u) = Rule30^k(u)
+G_k(v) = Rule110^k(v)
+A(z)   = z[:15] AND z[15:]
+B(z)   = z[:15] OR  z[15:]
+</code></pre>
+<p>The four joint conditions are:</p>
+<pre><code class="language-text">shared_f    = [A(F), B(F)]
+shared_g    = [A(G), B(G)]
+separate_fg = [A(F), B(G)]
+separate_gf = [A(G), B(F)]
+</code></pre>
+<p>Therefore <code>A(F), B(F), A(G), B(G)</code> each appear once in the Shared group and once in the Separate group. Any between-group difference cannot be simply attributed to using different atomic label functions.</p>
+<h2 id="3-joint-and-split-interventions">3. Joint and Split interventions</h2>
+<ul>
+<li>Joint: the two outputs share a three-layer hidden network, providing a channel for reusing intermediate computations;</li>
+<li>Split: the two outputs use completely independent branches, and sharing of hidden computation is forbidden;</li>
+<li>The per-branch width of Split is automatically set to 178/359/721, so that the total parameter count deviates from the Joint widths 256/512/1024 by less than 0.16%.</li>
+</ul>
+<p>If Shared were merely statistically easier, it should also be easier in Split. Only an extra Shared advantage appearing in Joint can be attributed to allowing shared hidden computation.</p>
+<h2 id="4-formal-configuration-and-preregistered-dose-effects">4. Formal configuration and preregistered dose effects</h2>
+<ul>
+<li>CA prefix depths <code>k=0,1,2,3</code>;</li>
+<li>Joint widths 256, 512, 1024;</li>
+<li>3 seeds per condition, 288 trajectories in total;</li>
+<li>Three hidden layers with GELU+LayerNorm, Adam <code>1e-3</code>, weight decay and dropout both 0;</li>
+<li>Online random CA data, batch 512; fixed 32,768 probe; at most 5,000 steps.</li>
+</ul>
+<p>Main predictions:</p>
+<ol>
+<li>The Shared/Separate difference in Split should be close to 0;</li>
+<li>The sharing advantage in Joint should increase with prefix depth;</li>
+<li>The wider the network, the easier it is to accommodate duplicated computation, so the sharing advantage should weaken;</li>
+<li>The advantage may manifest as a lower best loss or as faster reaching of a fixed loss threshold.</li>
+</ol>
+<h2 id="5-metric-boundaries">5. Metric boundaries</h2>
+<p>Online training with a fixed learning rate may undergo late collapse after reaching extremely low loss. Therefore the theoretical verdict prioritizes:</p>
+<ul>
+<li>the best probe loss within budget;</li>
+<li>the cumulative sample count at which <code>1e-2, 1e-3, 1e-4</code> is first reached;</li>
+<li>the late-collapse audit.</li>
+</ul>
+<p>The final-checkpoint mean is used only for the stability audit and cannot serve as the primary verdict.</p>
 <h2 id="results">Results, interpretation, and limits</h2>
-<p>The experiment scans prefix depth 0–3, widths 256/512/1024, and three seeds. Split controls show essentially zero Shared/Separate gap. At prefix depth 0, the Joint model has no sharing benefit. At depths 2 and 3, Shared wins all 18 paired comparisons.</p>
-<p>At depth 2, the Separate-to-Shared best-loss ratio decreases from 8.06 to 3.58 as width increases. At depth 3 it decreases from about 399 to 6.07. Fixed-loss crossing counts show the same sample-efficiency direction.</p>
-<p><strong>Conclusion.</strong> When common intermediate computation is sufficiently expensive, reuse lets a finite network reach lower loss with less capacity and data. The experiment does not prove that the learned hidden variables exactly equal the researcher-named CA prefixes.</p></div>
+<h2 id="1-design-audit">1. Design audit</h2>
+<ul>
+<li>All 24/24 batch groups and 288 trajectories completed;</li>
+<li>Joint/Split parameter-count matching error below 0.16%;</li>
+<li>In the Split negative control, the Shared/Separate loss gap is about <code>1e-8</code> or lower in all 12 <code>depth x width</code> cells;</li>
+<li>The four conditions of the same seed use element-wise identical initialization and the same online input stream.</li>
+</ul>
+<p>The near-zero difference in Split shows that the difficulty balancing of the four-cell atomic tasks succeeded. The differences in Joint are the new interaction effects introduced once the sharing channel exists.</p>
+<h2 id="2-late-collapse-and-primary-metric-correction">2. Late collapse and primary-metric correction</h2>
+<p>In 25/288 trajectories the final loss is more than 5x worse than the best within-budget loss. Extreme trajectories once reached 100% exact and about <code>1e-5</code> loss, then suddenly rose to <code>0.2--0.33</code> in the final interval. Therefore the final-checkpoint arithmetic mean would be contaminated by the few collapses, and the results are based on the best attainable loss and the first time to threshold.</p>
+<h2 id="3-depth-and-width-dose-effects-on-best-loss">3. Depth and width dose effects on best loss</h2>
+<p>The table below gives:</p>
+<pre><code class="language-text">log(best separate / best shared)_joint
+- log(best separate / best shared)_split
+</code></pre>
+<p>Parentheses give the Separate/Shared geometric ratio of best loss.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">prefix depth</th>
+<th style="text-align: right;">W=256</th>
+<th style="text-align: right;">W=512</th>
+<th style="text-align: right;">W=1024</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">-1.731 (0.18x)</td>
+<td style="text-align: right;">+0.022 (1.02x)</td>
+<td style="text-align: right;">-0.061 (0.94x)</td>
+</tr>
+<tr>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">+1.366 (3.92x)</td>
+<td style="text-align: right;">-0.147 (0.86x)</td>
+<td style="text-align: right;">-0.216 (0.81x)</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">+2.087 (8.06x)</td>
+<td style="text-align: right;">+1.524 (4.59x)</td>
+<td style="text-align: right;">+1.275 (3.58x)</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">+5.990 (399.4x)</td>
+<td style="text-align: right;">+4.315 (74.8x)</td>
+<td style="text-align: right;">+1.804 (6.07x)</td>
+</tr>
+</tbody>
+</table>
+<p><code>k=0</code> shows no sharing benefit, and <code>k=1</code> lies in the crossover region; in all 18 seed pairs at <code>k=2/3</code>, the Shared best loss is lower than the Separate one. The deeper the prefix, the larger the reuse benefit; the wider the network, the more the benefit systematically weakens.</p>
+<h2 id="4-sample-count-needed-to-reach-a-fixed-loss">4. Sample count needed to reach a fixed loss</h2>
+<p>At <code>depth=2</code>, reaching BCE <code>1e-3</code>:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">Joint width</th>
+<th style="text-align: right;">Shared median samples</th>
+<th style="text-align: right;">Separate median samples</th>
+<th style="text-align: right;">Ratio</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">256</td>
+<td style="text-align: right;">768,000</td>
+<td style="text-align: right;">1,984,000</td>
+<td style="text-align: right;">2.58x</td>
+</tr>
+<tr>
+<td style="text-align: right;">512</td>
+<td style="text-align: right;">512,000</td>
+<td style="text-align: right;">768,000</td>
+<td style="text-align: right;">1.50x</td>
+</tr>
+<tr>
+<td style="text-align: right;">1024</td>
+<td style="text-align: right;">384,000</td>
+<td style="text-align: right;">512,000</td>
+<td style="text-align: right;">1.33x</td>
+</tr>
+</tbody>
+</table>
+<p>At <code>depth=3</code>, W=512 reaches <code>1e-2</code> 4.71x faster and W=1024 3.80x faster; at W=1024, reaching <code>1e-3</code> takes 576,000 versus 2,048,000 samples, with Shared 3.56x faster. In narrower settings, Separate often completely fails to reach the deep thresholds within budget.</p>
+<h2 id="5-stage-verdict">5. Stage verdict</h2>
+<p>E08 permits the claim:</p>
+<blockquote>
+<p>When two outputs share a sufficiently expensive common CA prefix computation, allowing a shared hidden network reaches the same extremely low loss with less capacity and fewer online samples; the advantage grows with shared prefix depth and weakens with network width. Without an expensive prefix, task-coupling costs can offset or even reverse the sharing benefit.</p>
+</blockquote>
+<p>This provides causal phenomenological evidence that "limited capacity creates pressure for computational reuse, and reuse structures favor deeper loss". It does not rely on using the hard function ID to guess the internal program, so it complements the problem that full-mapping volume measurements cannot directly distinguish different internal implementations of the same hard function.</p>
+<p>It cannot be claimed that:</p>
+<ul>
+<li>the network has explicitly formed the researcher-presupposed <code>F_k/G_k</code> intermediate variables;</li>
+<li>all layers or neurons share the computational pressure equally;</li>
+<li>any shared task is better than the separate task;</li>
+<li>this experiment has proved a Kolmogorov complexity law;</li>
+<li>OOD rule semantics or human concept formation has been directly proved by this experiment.</li>
+</ul>
+<p>A reasonable connection to OOD semantics remains a macro-level hypothesis: when many tasks can reuse the same interpreter, symbol binding, or intermediate state, that shared program may be more economical than multiple sets of hard-wired circuits, thereby gaining a low-loss advantage.</p></div>
         <footer class="experiment-pager"><a href="e07.html">← E07 Function-ID Wandering and Matched-Loss Static Controls</a><a href="e09.html">E09 Long Training with 80% Hidden Label Noise →</a></footer>
       </article>
     </main>

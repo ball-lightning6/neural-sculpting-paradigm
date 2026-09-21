@@ -23,7 +23,7 @@
         <span class="mark-block">NK</span>
         <span class="mark-text">Neural K Research Archive</span>
       </a>
-      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="../index.html">Research</a><a class="top-link" href="../theory-core.html">Core Theory</a><a class="top-link active" href="../experiments/index.html">Experiments</a><a class="top-link" href="../references.html">References</a><a class="top-link" href="../evidence-ledger.html">Evidence</a></nav>
+      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="../index.html">Research</a><a class="top-link" href="../theory-core.html">Core Theory</a><a class="top-link active" href="../experiments/index.html">Experiments</a><a class="top-link" href="../post-upload.html">Updates</a><a class="top-link" href="../references.html">References</a><a class="top-link" href="../evidence-ledger.html">Evidence</a></nav>
       <nav class="language-switch" aria-label="Language"><a href="../../experiments/e13.html" lang="zh-CN">中文</a><span class="active" lang="en">EN</span></nav>
       <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
         <span aria-hidden="true">☰</span><span>Contents</span>
@@ -38,12 +38,24 @@
         <nav class="toc"><div class="toc">
 <ul>
 <li><a href="#overview">Experiment overview</a></li>
-<li><a href="#motivation">Why this experiment was run</a></li>
+<li><a href="#objective">Objective</a></li>
+<li><a href="#files">Files</a></li>
+<li><a href="#frozen-sources">Frozen sources</a></li>
+<li><a href="#motivation">Why this experiment was run, and how it was judged</a></li>
+<li><a href="#1-competing-explanations">1. Competing explanations</a></li>
+<li><a href="#2-configuration">2. Configuration</a></li>
+<li><a href="#3-criteria">3. Criteria</a></li>
+<li><a href="#4-boundaries">4. Boundaries</a></li>
 <li><a href="#results">Results, interpretation, and limits</a></li>
+<li><a href="#1-the-original-gap-rapidly-enters-the-shortcut-family">1. The original gap rapidly enters the shortcut family</a></li>
+<li><a href="#2-long-training-does-not-automatically-recover-the-unique-and">2. Long training does not automatically recover the unique AND</a></li>
+<li><a href="#3-replacing-a-single-sample-systematically-changes-the-long-run-distribution">3. Replacing a single sample systematically changes the long-run distribution</a></li>
+<li><a href="#4-shared-structure-and-differences-between-the-static-and-dynamic-pictures">4. Shared structure and differences between the static and dynamic pictures</a></li>
+<li><a href="#5-stage-verdict">5. Stage verdict</a></li>
 </ul>
 </div>
 </nav>
-        <div class="sidebar-label experiment-label">All experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>Static Hard Conditioning versus Optimizer-Induced Function Transport</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-Bit Counterfactual Invariance</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>Prior-Consistent Function Dynamics and Width Intervention</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>Post-Fit Drift in the Mingard 2025 Boolean Protocol</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>Feature Learning When a Fixed NTK Is Already Sufficient</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>Loss-Conditioned Prior Annealing</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>Function-ID Wandering and Matched-Loss Static Controls</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>Shared Intermediate Computation under Finite Capacity</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>Long Training with 80% Hidden Label Noise</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>Raw-BCE Competition between Preregistered Simple and Complex Function Pairs</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule-30 Train/Validation Gradient Alignment across Dataset Size</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND Shortcut Static Geometry and a One-Example Balance Intervention</span></a><a class="experiment-nav-link active" href="e13.html"><span>E13</span><span>SGD Dynamics of the AND Shortcut and Balanced Intervention</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>Weighted Rule-Bit Function Switching across Loss Scales</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Complete Functions versus Marginal Concentration in Modular-97 Grokking</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity Reachability, Half-Space Generalization, and Scaffold Recovery</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>Static Deep-Loss Mass versus Optimizer Transport</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>Teacher-Free Consensus and Symbolic Readability</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>Full-Truth-Table Rule Volume</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Measure Closure between Full Rules, Fixed Datasets, and Margin Cores</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement Control and a Consensus Complexity Frontier</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>Per-Example Free Energy and an Information Invariant</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>Prospective Prediction from Full-Rule Volume to Data Transition</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>Deep Neural K Crossing of Parity4 and a One-Point Exception</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST Sample Complexity and Static Branch Prediction</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>Balanced Unlabeled MNIST Label Volume</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Agreement Before and During Grokking</span></a><a class="experiment-nav-link" href="e28.html"><span>E28</span><span>Whole-Network HMC versus Adam on 50k MNIST</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Loss-Resolved Robustness to a Dead Input Bit</span></a><a class="experiment-nav-link" href="e30.html"><span>E30</span><span>Weight Decay Reshapes the Static Complete-Function Landscape</span></a></nav>
+        <div class="sidebar-label experiment-label">All experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>Static Hard Conditioning versus Optimizer-Induced Function Transport</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-Bit Counterfactual Invariance</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>Prior-Consistent Function Dynamics and Width Intervention</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>Post-Fit Drift in the Mingard 2025 Boolean Protocol</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>Feature Learning When a Fixed NTK Is Already Sufficient</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>Loss-Conditioned Prior Annealing</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>Function-ID Wandering and Matched-Loss Static Controls</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>Shared Intermediate Computation under Finite Capacity</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>Long Training with 80% Hidden Label Noise</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>Raw-BCE Competition between Preregistered Simple and Complex Function Pairs</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule-30 Train/Validation Gradient Alignment across Dataset Size</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND Shortcut Static Geometry and a One-Example Balance Intervention</span></a><a class="experiment-nav-link active" href="e13.html"><span>E13</span><span>SGD Dynamics of the AND Shortcut and Balanced Intervention</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>Weighted Rule-Bit Function Switching across Loss Scales</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Complete Functions versus Marginal Concentration in Modular-97 Grokking</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity Reachability, Half-Space Generalization, and Scaffold Recovery</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>Static Deep-Loss Mass versus Optimizer Transport</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>Teacher-Free Consensus and Symbolic Readability</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>Full-Truth-Table Rule Volume</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Measure Closure between Full Rules, Fixed Datasets, and Margin Cores</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement Control and a Consensus Complexity Frontier</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>Per-Example Free Energy and an Information Invariant</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>Prospective Prediction from Full-Rule Volume to Data Transition</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>Deep Neural K Crossing of Parity4 and a One-Point Exception</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST Sample Complexity and Static Branch Prediction</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>Balanced Unlabeled MNIST Label Volume</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Agreement Before and During Grokking</span></a><a class="experiment-nav-link" href="e28.html"><span>E28</span><span>Whole-Network HMC versus Adam on 50k MNIST</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Loss-Resolved Robustness to a Dead Input Bit</span></a><a class="experiment-nav-link" href="e30.html"><span>E30</span><span>Weight Decay Reshapes the Static Complete-Function Landscape</span></a></nav><div class="sidebar-label experiment-label">Post-upload experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="../experiments/e31.html"><span>E31</span><span>Loss and output amplitude</span></a><a class="experiment-nav-link" href="../experiments/e32.html"><span>E32</span><span>Random-memory scaling</span></a><a class="experiment-nav-link" href="../experiments/e33.html"><span>E33</span><span>Cross-architecture output volume</span></a><a class="experiment-nav-link" href="../experiments/e34.html"><span>E34</span><span>Conditional rule duel</span></a><a class="experiment-nav-link" href="../experiments/e35.html"><span>E35</span><span>Frozen functions around grokking</span></a><a class="experiment-nav-link" href="../experiments/e36.html"><span>E36</span><span>Independent Peleg/G&amp;C recheck</span></a><a class="experiment-nav-link" href="../experiments/e37.html"><span>E37</span><span>Measure robustness and Gaussian alignment</span></a></nav>
       </div>
     </aside>
 
@@ -55,13 +67,188 @@
           <p class="article-description">Test whether static loss-stage reordering appears in actual optimizer trajectories and whether one sample causally changes the long-run function distribution.</p>
         </header>
         <div class="article-body"><div class="source-bar"><span>Scripts</span><div><a href="../../../experiments/experiment_13_and_shortcut_sgd_intervention/experiment_and_shortcut_sgd_dynamics.py">experiment_and_shortcut_sgd_dynamics.py</a></div></div><h2 id="overview">Experiment overview</h2>
-<p>Thousands of small tanh networks are trained on the original and minimally balanced ten-example AND datasets. Complete 16-bit hard functions are logged throughout long training, together with AND and shortcut masses, function entropy, agreement, and exception counts. Checkpointing and interrupt-safe saving support very long runs.</p>
-<h2 id="motivation">Why this experiment was run</h2>
-<p>Static odds alone do not prove that an optimizer follows the same ordering. The paired data intervention allows a causal test: if the training-set geometry matters, one example should alter both the static tail and the optimizer ensemble.</p>
+<h2 id="objective">Objective</h2>
+<p>E13 tests whether the static function reordering found in E12 also appears in real training, and uses a paired intervention — identical initialization with only a single training sample replaced — to judge whether the data geometry can causally rewrite the long-run function distribution.</p>
+<h2 id="files">Files</h2>
+<ul>
+<li><a href="#motivation">Experiment motivation and preregistered criteria</a></li>
+<li><a href="#results">Full results and stage verdict</a></li>
+<li><a href="../../../experiments/experiment_13_and_shortcut_sgd_intervention/experiment_and_shortcut_sgd_dynamics.py"><code>experiment_and_shortcut_sgd_dynamics.py</code></a></li>
+</ul>
+<p>Run:</p>
+<pre><code class="language-bash">python experiment_and_shortcut_sgd_dynamics.py
+</code></pre>
+<p>The release copy trains both the original-gap and the minimal-balanced conditions by default, each with 2,048 paired seeds up to 50,000 steps.</p>
+<h2 id="frozen-sources">Frozen sources</h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Origin</th>
+<th>SHA256</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>experiment_and_shortcut_sgd_dynamics.py</code></td>
+<td>Copy of the development version after merging the conditions and freezing the 50k budget</td>
+<td><code>c65c4c075a2af7eb203c73d10b578bfd5ffcb578eedb9ff63c50d6b3ac6ab73f</code></td>
+</tr>
+</tbody>
+</table>
+<p>Local results:</p>
+<table>
+<thead>
+<tr>
+<th>Result package</th>
+<th>SHA256</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>results_and_shortcut_sgd_dynamics_package.zip</code></td>
+<td><code>7e46ed6a90786399df388c7c83129ad2d0465f3cf0972097ee6e53b34e84f4eb</code></td>
+</tr>
+<tr>
+<td><code>results_and_shortcut_sgd_long_package.zip</code></td>
+<td><code>29e98821174ec378ddf2c69e74bf35750ae43227f55331afe32bf6746d5687a1</code></td>
+</tr>
+<tr>
+<td><code>results_and_shortcut_sgd_balanced_n10_long_package.zip</code></td>
+<td><code>2f3d0929938f3d844ccea2c3c7bf11e58cfd081650e2012d12f709a48a8432ea</code></td>
+</tr>
+</tbody>
+</table>
+<p>The original ZIPs are located in <code>E:\Downloads</code>; because they contain large model checkpoints, they are not included in the release package.</p>
+<h2 id="motivation">Why this experiment was run, and how it was judged</h2>
+<h2 id="1-competing-explanations">1. Competing explanations</h2>
+<p>E12 found that the static low-loss region of the original AND, n=10 dataset is biased toward the F500/F550 shortcut. Possible explanations include:</p>
+<ol>
+<li>The static mass predicts that SGD enters the same shortcut family;</li>
+<li>The optimizer completely ignores this static structure;</li>
+<li>The initial seed predetermines the endpoint, independent of the data gap;</li>
+<li>Continued training eventually always recovers AND, and data insufficiency only affects speed.</li>
+</ol>
+<h2 id="2-configuration">2. Configuration</h2>
+<ul>
+<li>Network: <code>4 -&gt; 64 x 3 -&gt; 1</code> GELU+LayerNorm;</li>
+<li>Full-batch AdamW, learning rate <code>1e-3</code>, weight decay 0;</li>
+<li>2,048 seeds per condition;</li>
+<li>Fully enumerated 16-point hard function;</li>
+<li>The original-gap and minimal-balanced n=10 conditions use identical initialization seeds;</li>
+<li>The release reproduction fixes 50,000 steps; the original archive is additionally extended to 127,458 steps to verify the plateau.</li>
+</ul>
+<p>The minimal intervention only does:</p>
+<pre><code class="language-text">Remove 1101 -&gt; 1
+Add    1000 -&gt; 0
+</code></pre>
+<p>The other 9 samples are unchanged.</p>
+<h2 id="3-criteria">3. Criteria</h2>
+<ul>
+<li>The time at which the training set first reaches 100% hard-exact;</li>
+<li>Mass trajectories of AND, F100, F500, F510, F550, and the single-point neighbors;</li>
+<li>Mean number of unseen exceptions, function entropy, and agreement;</li>
+<li>Sources of post-interpolation migration;</li>
+<li>Stability of the distribution plateau after 50k;</li>
+<li>Changes in the function and in the number of exceptions for the same seed before and after the data intervention.</li>
+</ul>
+<h2 id="4-boundaries">4. Boundaries</h2>
+<ul>
+<li>The optimizer distribution should not be equated with the E12 static volume values;</li>
+<li>The original data does not uniquely identify AND, so the long-run mixed plateau is not an internal definition of "having failed to learn the correct answer";</li>
+<li>The 50k reproduction budget is used for the core pairing; 127k only verifies that the original plateau does not continue to converge on its own;</li>
+<li>The small 4-bit space amplifies single-sample effects; cross-scale generality requires support from other experiments.</li>
+</ul>
 <h2 id="results">Results, interpretation, and limits</h2>
-<p>The original dataset entered the shortcut family and reduced exceptions without concentrating on AND. The balanced dataset shifted dramatically: at step 32,000, about 64.3% of models were AND and the preregistered shortcuts had disappeared; the final audited distribution assigned roughly 64.9% to AND.</p>
-<p>Static and optimizer distributions were related but not identical, and the optimizer did not simply sample one static slice.</p>
-<p><strong>Conclusion.</strong> A one-example intervention can change the long-run function ensemble, confirming that sample composition is causal. The result supports static geometry as an important influence while preserving an independent optimizer layer.</p></div>
+<h2 id="1-the-original-gap-rapidly-enters-the-shortcut-family">1. The original gap rapidly enters the shortcut family</h2>
+<p>In the first round, all 8,192 models across the four conditions fitted the training set around step 20. In the original n=10 condition:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">step</th>
+<th style="text-align: right;">AND</th>
+<th style="text-align: right;">F100</th>
+<th style="text-align: right;">F500</th>
+<th style="text-align: right;">F510</th>
+<th style="text-align: right;">F550</th>
+<th style="text-align: right;">Mean exceptions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">0.83%</td>
+<td style="text-align: right;">10.94%</td>
+<td style="text-align: right;">6.84%</td>
+<td style="text-align: right;">26.71%</td>
+<td style="text-align: right;">19.43%</td>
+<td style="text-align: right;">2.870</td>
+</tr>
+<tr>
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">0.63%</td>
+<td style="text-align: right;">12.16%</td>
+<td style="text-align: right;">8.45%</td>
+<td style="text-align: right;">34.81%</td>
+<td style="text-align: right;">22.71%</td>
+<td style="text-align: right;">2.783</td>
+</tr>
+<tr>
+<td style="text-align: right;">5,000</td>
+<td style="text-align: right;">8.35%</td>
+<td style="text-align: right;">22.41%</td>
+<td style="text-align: right;">11.87%</td>
+<td style="text-align: right;">21.24%</td>
+<td style="text-align: right;">20.41%</td>
+<td style="text-align: right;">2.300</td>
+</tr>
+<tr>
+<td style="text-align: right;">20,000</td>
+<td style="text-align: right;">21.19%</td>
+<td style="text-align: right;">26.12%</td>
+<td style="text-align: right;">11.33%</td>
+<td style="text-align: right;">13.92%</td>
+<td style="text-align: right;">12.55%</td>
+<td style="text-align: right;">1.767</td>
+</tr>
+</tbody>
+</table>
+<p>SGD reproduced the statically predicted shortcut family, but with different specific weights: F510 is the main winner early on, while F100 becomes first place after deep training. The static geometry identifies the candidate directions; the optimizer determines the intra-family transport.</p>
+<h2 id="2-long-training-does-not-automatically-recover-the-unique-and">2. Long training does not automatically recover the unique AND</h2>
+<p>The original condition extended to 127,458 steps:</p>
+<ul>
+<li>AND 22.51%;</li>
+<li>F100 25.29%;</li>
+<li>F550 14.21%;</li>
+<li>Mean exceptions 1.771;</li>
+<li>Function entropy about 2.83 bit;</li>
+<li>Unseen accuracy about 70.5%.</li>
+</ul>
+<p>After 50k all metrics enter a narrow plateau; from 100k to the end, 98.3% of the models keep an unchanged hard function. The loss still drops to <code>2.06e-9</code>, but the function distribution no longer contracts toward the unique AND. Extending training indefinitely therefore cannot substitute for the missing data.</p>
+<h2 id="3-replacing-a-single-sample-systematically-changes-the-long-run-distribution">3. Replacing a single sample systematically changes the long-run distribution</h2>
+<p>Balanced condition at step 50,288:</p>
+<pre><code class="language-text">AND             64.94%
+D000            16.02%
+F040             8.35%
+F050             5.62%
+Mean exceptions  0.450
+Function entropy 1.711 bit
+Unseen accuracy  92.50%
+</code></pre>
+<p>The network has already fully fitted the training set at step 20, at which point F050 is 42.58% and AND is 21.58%; subsequently F050 drops to 5.62% while AND rises to 64.94%. Of the final 1,330 AND models, 72.1% migrated from shortcuts after interpolation.</p>
+<p>Compared seed-by-seed with the original condition up to 50k: for 69.97% of the seeds the number of exceptions decreased, for 21.73% it was unchanged, for 8.30% it increased, with a mean reduction of 1.337 error points. Among the original F100/F500/F510/F550 endpoints, the fractions that became AND after balancing are approximately 75.1%/66.4%/56.3%/52.8% respectively. The initialization did not fix the endpoint in advance.</p>
+<h2 id="4-shared-structure-and-differences-between-the-static-and-dynamic-pictures">4. Shared structure and differences between the static and dynamic pictures</h2>
+<p>The balanced static geometry already shows that medium loss first raises the relative advantage of F050 and deep loss then raises AND; SGD produces a stronger reordering along the same stage-wise direction. In the static lowest 0.2%, AND is 28.10%, whereas SGD ends at 64.94%, and the BCE reached in real training lies far below the coverage range of direct prior sampling.</p>
+<h2 id="5-stage-verdict">5. Stage verdict</h2>
+<p>E13 establishes:</p>
+<ol>
+<li>The dominant function at lower loss reorders across training stages;</li>
+<li>Continued training after interpolation can transport probability mass from many-exception shortcuts toward fewer-exception rules;</li>
+<li>When the data underdetermines the target, this compression stops at a stable mixed plateau rather than at the unique generator;</li>
+<li>Replacing only a single discriminative sample can causally change both the early shortcut and the long-run distribution;</li>
+<li>The static loss geometry correlates with the SGD direction, but the optimizer is not a static sampler.</li>
+</ol>
+<p>This directly refutes the claim that "the same predetermined simple function dominates along the entire loss axis," and it led the final theory to adopt the loss-resolved Neural K-profile rather than a single complexity ordering.</p></div>
         <footer class="experiment-pager"><a href="e12.html">← E12 AND Shortcut Static Geometry and a One-Example Balance Intervention</a><a href="e14.html">E14 Weighted Rule-Bit Function Switching across Loss Scales →</a></footer>
       </article>
     </main>

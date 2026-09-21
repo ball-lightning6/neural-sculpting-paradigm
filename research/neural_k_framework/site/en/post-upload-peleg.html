@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="With a tightened raw-BCE constraint, gradient-free static sampling reaches SGD-level MNIST generalization; the G&amp;C comparison does not falsify the static picture.">
+  <title>E36 Peleg/G&amp;C Independent Verification: raw-BCE Static Recheck · Neural K Research Archive</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="../assets/site.js"></script>
+</head>
+<body data-page-kind="post-upload">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+
+    <header class="topbar">
+      <a class="site-mark" href="index.html" aria-label="Back to the research narrative">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K Research Archive</span>
+      </a>
+      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="index.html">Research</a><a class="top-link" href="theory-core.html">Core Theory</a><a class="top-link" href="experiments/index.html">Experiments</a><a class="top-link active" href="post-upload.html">Updates</a><a class="top-link" href="references.html">References</a><a class="top-link" href="evidence-ledger.html">Evidence</a></nav>
+      <nav class="language-switch" aria-label="Language"><a href="../post-upload-peleg.html" lang="zh-CN">中文</a><span class="active" lang="en">EN</span></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>Contents</span>
+      </button>
+    </header>
+
+  <div class="page-shell">
+
+    <aside class="sidebar" id="sidebar" aria-label="On this page">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">On this page</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#running">Running</a></li>
+<li><a href="#core-results">Core Results</a></li>
+<li><a href="#actual-adjudication-of-the-two-code-suspicions">Actual Adjudication of the Two Code Suspicions</a><ul>
+<li><a href="#bias-is-not-the-main-explanation">Bias Is Not the Main Explanation</a></li>
+<li><a href="#learning-rate-and-initialization-do-interact">Learning Rate and Initialization Do Interact</a></li>
+</ul>
+</li>
+<li><a href="#which-step-is-still-missing-for-bce-matching">Which Step Is Still Missing for BCE Matching</a></li>
+<li><a href="#quality-time-and-files">Quality, Time, and Files</a></li>
+</ul>
+</div>
+</nav>
+        <a class="sidebar-action" href="post-upload.html">Back to the increments overview →</a>
+      </div>
+    </aside>
+
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">Experiment increment · E36 Peleg/G&amp;C independent verification</div>
+          <h1>E36 Peleg/G&amp;C Independent Verification: raw-BCE Static Recheck</h1>
+          <p class="article-description">With a tightened raw-BCE constraint, gradient-free static sampling reaches SGD-level MNIST generalization; the G&amp;C comparison does not falsify the static picture.</p>
+        </header>
+        <div class="article-body"><p>The first round is complete. Read the <a href="../../experiments/experiment_36_peleg_g_and_c_validation/CONCLUSION.md">conclusion</a> or the <a href="../../experiments/experiment_36_peleg_g_and_c_validation/analysis/REPORT.md">full table</a> first. This is not a reproduction of the full paper; there is only one 16-sample training set.</p>
+<h2 id="running">Running</h2>
+<p><code>experiment.py</code> implements training and SMC in one place; the configuration is at the top and there is no argparse. It requires the GPU build of PyTorch, torchvision, and NumPy; the analysis additionally requires Matplotlib. The precheck also depends on the authors' data classes in the <code>upstream</code> directory alongside it, so this round is runnable as a complete directory, not as a ready-made single-file migration package. The default is physical GPU1 RTX3080; see the <a href="../../experiments/experiment_36_peleg_g_and_c_validation/PROTOCOL.md">protocol</a> for all mathematical and sampling settings.</p>
+<p>Run from the root of this repository:</p>
+<pre><code class="language-powershell">&amp; '.venv-gpu/Scripts/python.exe' -E -s -X utf8 research/peleg_static_recheck_20260919/experiment.py
+</code></pre>
+<p>Already-completed conditions are skipped; when the configuration or the main source code changes, the script refuses to overwrite the original results — please specify a new directory. The data reuse the local MNIST cache. Re-running across machines requires modifying the device and data paths and using a new results directory; direct reuse of the local metadata is not promised. No AutoDL migration package has been prepared at present.</p>
+<p><code>endpoint_check.py</code> uses the remainder of the original 120-second budget for at most 512 rounds of fixed-kernel updates; it does not re-estimate K and does not treat snapshots as independent replicas. <code>analyze.py</code> only reads results offline on CPU, using an independent NumPy float64 forward recheck.</p>
+<p><code>results/</code> preserves data IDs, initial weights, batch permutations, per-epoch training outputs, test outputs at the prescheduled nodes, SGD checkpoints and complete endpoint weights, and SMC checkpoints plus sampled audit weights. <code>upstream/</code> is the frozen authors' code, used only for cross-checking; its batch training entry point was not run.</p>
+<p>The average accuracies shown in the G&amp;C/SMC figures are single-model readings, not ensemble readings. High-coverage BCE matching and confirmation on an independent training set have not yet been completed.</p>
+<h1 id="round-1-conclusion-after-tightening-raw-bce-static-samples-reach-sgd-s-test-level">Round-1 Conclusion: After Tightening raw BCE, Static Samples Reach SGD's Test Level</h1>
+<p>2026-09-19. Completed on the local physical GPU1 RTX3080; the remote 5090 was not used. Document No. 49 and the public paper were not rewritten.</p>
+<h2 id="core-results">Core Results</h2>
+<p>A fixed 16-sample MNIST 0/7 training set reconstructed from the authors' public logic, 2008 test images, and a 3/6-width LeNet are used. Weights are initialized from U[-0.2,0.2]; the bias is fixed at 0 for static sampling. Training uses the native two-class CE; the static constraint and the reporting use the equivalent stable raw BCE.</p>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+<th style="text-align: right;">Mean single-model/single-particle test accuracy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>G&amp;C: only requiring all training classifications to be correct</td>
+<td style="text-align: right;">82.1344%</td>
+</tr>
+<tr>
+<td>SMC: all training correct and BCE≤0.3</td>
+<td style="text-align: right;">93.1083%</td>
+</tr>
+<tr>
+<td>SMC: all training correct and BCE≤0.1</td>
+<td style="text-align: right;">95.0906%</td>
+</tr>
+<tr>
+<td>SMC: all training correct and BCE≤0.01</td>
+<td style="text-align: right;">95.8853%</td>
+</tr>
+<tr>
+<td>SMC: all training correct and BCE≤0.001, first arrival</td>
+<td style="text-align: right;">96.3977%</td>
+</tr>
+<tr>
+<td>Additional 512 rounds of fixed-kernel updates at the same endpoint</td>
+<td style="text-align: right;">96.3677%</td>
+</tr>
+<tr>
+<td>SGD: bias fixed at 0, lr=0.01, 60 epochs</td>
+<td style="text-align: right;">96.3588%</td>
+</tr>
+<tr>
+<td>SGD: trainable bias, otherwise identical</td>
+<td style="text-align: right;">96.3589%</td>
+</tr>
+</tbody>
+</table>
+<p>SGD has 512 paired initializations in each case; SMC consists of 4 independent jobs of 1024 particles each, and all jobs start from independent G&amp;C starting points with no SGD warm-up. SMC test labels do not participate in acceptance, target-node, or budget selection. These are averages of single-network accuracies, not ensemble majority-vote scores.</p>
+<p>After the additional updates, the individual SMC replicas range from 96.3288% to 96.4150%. There are still 1024 distinct complete test prediction vectors per replica; agreement in average performance must not be misread as the complete function distribution having become a single point, and the presence of diversity likewise does not prove sufficient mixing.</p>
+<p><strong>Conclusions that can be supported:</strong> in this experiment, G&amp;C filtered only by training classification correctness is clearly below SGD; continuing to tighten raw BCE under the same zero-bias reference measure, the static conditional samples also reach the same test level. Therefore, the original hard-fit control is insufficient to rule out loss-resolved static selection as an explanation of the generalization gap.</p>
+<p><strong>This cannot be upgraded to:</strong> having overturned all of Peleg's experiments; SGD being equal to static sampling; the complete function probability distributions already being identical; or this holding for all architectures and training sets.</p>
+<h2 id="actual-adjudication-of-the-two-code-suspicions">Actual Adjudication of the Two Code Suspicions</h2>
+<h3 id="bias-is-not-the-main-explanation">Bias Is Not the Main Explanation</h3>
+<p>The original public code fixes the bias prior at 0, while SGD allows training the bias — this is indeed worth controlling. But in the critical a=0.2, lr=0.01 group, the accuracy of trainable bias minus fixed bias is only about 0.00010 percentage points, with a paired-initialization bootstrap 95% interval of [-0.01352,0.01362] percentage points. Both groups achieve 512/512 all-correct training fits.</p>
+<p>This rules out the simple explanation that "the main gap is most likely caused solely by whether the bias is trained"; this attribution can no longer be retained on the basis of the code difference alone.</p>
+<h3 id="learning-rate-and-initialization-do-interact">Learning Rate and Initialization Do Interact</h3>
+<p>At a=1, lr=0.001 the accuracy is about 86.4% to 86.5%, with the training BCE already extremely low and plateauing early; at a=0.2, lr=0.001 the average is about 93.9% to 94.2%, but some models still have not fully fit; at a=0.2, lr=0.01 all models fully fit and reach about 96.36%.</p>
+<p>In the two a=1, lr=0.01 groups, no model fully fits; 83/512 and 95/512 runs in the fixed-bias and trainable-bias groups, respectively, produce non-finite outputs. These are numerical/optimization failure conditions and are not treated as static or generalization counterexamples.</p>
+<p>The advantage of small initialization does not disappear because the learning rate is fixed. raw BCE values under different initialization priors cannot be directly compared across settings without reference to the output scale; in particular, an extremely low BCE under large initialization cannot be used to refute the conditional curves of the small-initialization reference measure.</p>
+<h2 id="which-step-is-still-missing-for-bce-matching">Which Step Is Still Missing for BCE Matching</h2>
+<p>At the SGD endpoints with fixed a=0.2, lr=0.01, bias=0, an exploratory matching was performed without selecting bins by accuracy. The binning includes all SMC source thresholds, preventing errors caused by directly mixing different conditional distributions.</p>
+<ul>
+<li>log10 bin width 0.1: common support 80/512, i.e., 15.625%. SGD is 96.3521%, SMC after matching is 96.3797%, difference SGD-SMC=-0.02765 percentage points, interval [-0.44399,0.37259].</li>
+<li>Half bin width 0.05: common support 68/512, i.e., 13.281%. SGD is 96.3711%, SMC is 96.3728%.</li>
+</ul>
+<p>This is a result from finite binning on the common-support subset, not a strict matched-BCE confirmation over the full SGD population. Between the endpoint nodes 0.003 and 0.001 there is not sufficiently dense intermediate sampling, leaving coverage insufficient. If stronger conclusions are needed in the future, dense nodes should be frozen based on the training BCE distribution and confirmed independently, rather than continuing to select high-test-accuracy points.</p>
+<p>The static means before and after the additional endpoint updates are both about 0.000889; the median SGD endpoint BCE is about 0.00116. The two belong to neighboring low-loss regions, but they cannot be called exactly the same loss merely because they are close.</p>
+<h2 id="quality-time-and-files">Quality, Time, and Files</h2>
+<ul>
+<li>The authors' data selection and normalization agree exactly with the independent reconstruction; the forward pass, gradients, 10-step SGD, and the plain single-model float64 implementation agree to about the 1e-16 level.</li>
+<li>The hashes of the original sampling source code and the authors' files are unchanged. The continued SMC fixed-kernel updates are saved separately and do not overwrite the first round.</li>
+<li>The NumPy float64 recheck covered 72 groups of sampled audit weights, each group nominally containing 16 models and 80 inputs; 4 failed models with non-finite outputs were skipped and recorded. All actual checks showed no classification flips; no observed violations of the SMC training constraint. The maximum absolute logit difference between the valid main conditions and SMC is about 6.08e-6. The failed large-initialization groups separately contain huge values, which were not mixed in as normal error metrics.</li>
+<li>At the deep endpoints, only 5 to 9 initial ancestors remain; high acceptance rates, multiple replicas, and stable continued updates are still not proof of global mixing.</li>
+<li>The 8 conditions comprise 4096 networks in total; the training loops total 20.25 seconds and training-side evaluation 35.28 seconds; the four G&amp;C collections take 29.30 seconds, the initial SMC advancement 206.92 seconds, and the endpoint fixed-kernel updates 81.69 seconds. The main run, including the corresponding disk writes, takes about 6.5 minutes, excluding code writing, prechecks, and offline audits. No training or sampling processes of this experiment are still running.</li>
+</ul>
+<p>The first round ends here; no new training sets, width scans, magnitude regularization, or deeper sampling were automatically appended.</p>
+<ul>
+<li><a href="../../experiments/experiment_36_peleg_g_and_c_validation/analysis/REPORT.md">Full analysis report</a></li>
+<li><a href="../../experiments/experiment_36_peleg_g_and_c_validation/analysis/summary.json">Machine-readable summary</a></li>
+<li><a href="../../experiments/experiment_36_peleg_g_and_c_validation/PROTOCOL.md">Preregistered protocol</a></li>
+<li><a href="../../experiments/experiment_36_peleg_g_and_c_validation/experiment.py">Main script, no argparse</a></li>
+<li><a href="../../experiments/experiment_36_peleg_g_and_c_validation/endpoint_check.py">Endpoint check</a></li>
+<li><a href="../../experiments/experiment_36_peleg_g_and_c_validation/analyze.py">Independent analysis</a></li>
+</ul>
+<figure class="result-figure"><a href="../../experiments/experiment_36_peleg_g_and_c_validation/analysis/overview.png" target="_blank" rel="noopener"><img src="../../experiments/experiment_36_peleg_g_and_c_validation/analysis/overview.png" alt="Overview" loading="lazy"></a><figcaption>Overview</figcaption></figure></div>
+
+      </article>
+    </main>
+  </div>
+</body>
+</html>

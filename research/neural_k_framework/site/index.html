@@ -23,7 +23,7 @@
         <span class="mark-block">NK</span>
         <span class="mark-text">Neural K 研究档案</span>
       </a>
-      <nav class="top-nav" aria-label="全站导航"><a class="top-link active" href="index.html">研究主文</a><a class="top-link" href="theory-core.html">理论核心</a><a class="top-link" href="experiments/index.html">实验索引</a><a class="top-link" href="references.html">参考文献</a><a class="top-link" href="evidence-ledger.html">证据总账</a></nav>
+      <nav class="top-nav" aria-label="全站导航"><a class="top-link active" href="index.html">研究主文</a><a class="top-link" href="theory-core.html">理论核心</a><a class="top-link" href="experiments/index.html">实验索引</a><a class="top-link" href="post-upload.html">提交后增量</a><a class="top-link" href="references.html">参考文献</a><a class="top-link" href="evidence-ledger.html">证据总账</a></nav>
       <nav class="language-switch" aria-label="语言"><span class="active" lang="zh-CN">中文</span><a href="en/index.html" lang="en">EN</a></nav>
       <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
         <span aria-hidden="true">☰</span><span>目录</span>
@@ -109,7 +109,8 @@
 <li><a href="#12-这套框架和已有理论是什么关系">12. 这套框架和已有理论是什么关系</a></li>
 <li><a href="#13-哪些话现在还不能说">13. 哪些话现在还不能说</a></li>
 <li><a href="#14-总结">14. 总结</a></li>
-<li><a href="#附录-e01-e30-证据地图">附录：E01--E30 证据地图</a></li>
+<li><a href="#提交后增量-e31-e37">提交后增量：E31--E37</a></li>
+<li><a href="#附录-e01-e37-证据地图">附录：E01--E37 证据地图</a></li>
 </ul>
 </div>
 </nav>
@@ -133,7 +134,7 @@
       <p>需要核查或寻找更详细解释时，请优先查看研究证据总账、各实验详情页、原始实验脚本及其完整说明。作者之后会继续修改当前网页，并推进正式论文写作。</p>
       <div class="disclosure-links">
         <a href="evidence-ledger.html">查看研究证据总账</a>
-        <a href="experiments/index.html">查看 E01–E30 实验与脚本</a>
+        <a href="experiments/index.html">查看 E01–E37 实验与脚本</a>
       </div>
     </aside>
 
@@ -143,7 +144,9 @@
     </div>
 
     <div class="metric-strip" aria-label="文档概览">
-      <div><strong>30</strong><span>组证据单元</span></div>
+      <div><strong>37</strong><span>组已编号证据单元</span></div>
+      <div><strong>30</strong><span>组历史档案实验</span></div>
+      <div><strong>7</strong><span>组提交后增量实验</span></div>
       <div><strong>22</strong><span>组关键实验展开</span></div>
       <div><strong>4</strong><span>张关键结果图</span></div>
     </div>
@@ -544,7 +547,56 @@ $$</div>
 <p>这项研究最初是在问：初始化函数先验加训练集硬过滤，是否已经足以解释神经网络为什么泛化。实验给出的答案是“不够”，但初始化先验也没有被抛弃。它仍然是重要零阶项；连续训练 loss 会继续重排函数质量，优化器又会在静态几何之上施加路径依赖的运输。</p>
 <p>真正需要的新对象不是一个万能复杂度分数，而是一条 Neural K-profile。它允许同一函数在不同精度下呈现不同难度，允许 shortcut 在中间 loss 合理占优，也允许 hard function 固定以后内部实现继续变化。它还能在受控实验中前瞻预测需要多少数据，并在 MNIST 上对未见图像和过拟合转折给出静态预测。</p>
 <p>用这套语言，网络不必知道研究者心中的真实规则。它只是在当前网络语言和训练集约束下不断降低 loss。数据充分时，这个过程很早便指向可复用规则；数据临界时，它表现为 grokking；数据不足或有噪声时，它会继续收束到训练集特异延拓。泛化不是另一个隐藏目标，而是训练集、网络语言、loss 深度和优化路径共同选择了可迁移函数。</p>
-<h2 id="附录-e01-e30-证据地图">附录：E01--E30 证据地图</h2>
+<h2 id="提交后增量-e31-e37">提交后增量：E31--E37</h2>
+<p>短论文提交后又完成了五组已经形成独立协议和结果边界的实验。它们不改变 E01--E30 的历史编号，而是作为连续的新增证据单元进入同一研究档案：</p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>实验</th>
+<th>新增结论</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="experiments/e31.html">E31</a></td>
+<td>Loss 与幅度对齐</td>
+<td>raw MSE 也可以出现规则恢复；幅度对齐能在更高平均 CE 区域促进泛化，关键变量是输出联合分布，而不是 BCE 这个名字。</td>
+</tr>
+<tr>
+<td><a href="experiments/e32.html">E32</a></td>
+<td>随机记忆缩放</td>
+<td>随机标签记忆的复杂度随样本数近似线性增加，为 Neural K 与容量之间的经验联系提供外部校准。</td>
+</tr>
+<tr>
+<td><a href="experiments/e33.html">E33</a></td>
+<td>跨架构联合输出体积</td>
+<td>MLP 之外的有限架构协议也出现规则相关的联合输出体积曲线，但系数和局部排序依赖架构与测度。</td>
+</tr>
+<tr>
+<td><a href="experiments/e34.html">E34</a></td>
+<td>条件规则决斗</td>
+<td>独立冻结的 4-bit Neural K 全序在 8-bit 条件规则决斗中预测了 75/75 次人口偏好；这是协议相对的外部预测，不是普适 softmax 定律。</td>
+</tr>
+<tr>
+<td><a href="experiments/e35.html">E35</a></td>
+<td>Mod97 冻结函数决斗</td>
+<td>grokking 前后真实完整函数在新网络中竞争时，冲突点几乎都偏向完成规则，但完整恢复仍不高，说明这是函数人口偏好而非逐网复制。</td>
+</tr>
+<tr>
+<td><a href="experiments/e36.html">E36</a></td>
+<td>Peleg/G&amp;C 独立验证</td>
+<td>按原小样本 MNIST 协议复现无梯度静态采样，并证明收紧 raw BCE 后静态样本可以达到与 SGD 接近的测试水平。</td>
+</tr>
+<tr>
+<td><a href="experiments/e37.html">E37</a></td>
+<td>测度鲁棒性与 Gaussian 对应</td>
+<td>用固定范数球内均匀欧式测度复核 Gaussian 端点效应，检验复杂度排序、端点响应和真实训练对应边界。</td>
+</tr>
+</tbody>
+</table>
+<p>架构训练前估计器、MDL--grokking 条件推导和测度鲁棒性复核属于同一时期的补充材料；Peleg/G&amp;C 独立复核已经作为单独的 <a href="experiments/e36.html">E36</a> 外部验证实验列出，测度复核作为 <a href="experiments/e37.html">E37</a> 列出。它们统一收录在<a href="post-upload.html">提交后增量总览</a>。</p>
+<h2 id="附录-e01-e37-证据地图">附录：E01--E37 证据地图</h2>
 <p>主文只展开承担关键转折的实验。其余实验并没有被删除，下面说明每个编号究竟在测什么。</p>
 <table>
 <thead>
@@ -705,9 +757,45 @@ $$</div>
 <td>在近似matched-BCE下比较三个显式L2系数的静态完整函数质量</td>
 <td>写进loss的正则项能否用同一静态地形语言理解</td>
 </tr>
+<tr>
+<td><a href="experiments/e31.html">E31</a></td>
+<td>比较 raw MSE、BCE 幅度对齐和不同目标幅度下的规则恢复与 grokking</td>
+<td>loss 形式与输出幅度怎样共同选择联合输出分布</td>
+</tr>
+<tr>
+<td><a href="experiments/e32.html">E32</a></td>
+<td>在多组随机标签任务中测量记忆复杂度随样本数的变化</td>
+<td>记忆负担能否作为函数复杂度和容量的外部校准</td>
+</tr>
+<tr>
+<td><a href="experiments/e33.html">E33</a></td>
+<td>在不同有限架构协议中测量规则联合输出体积</td>
+<td>体积收缩现象是否超出单一 MLP 协议</td>
+</tr>
+<tr>
+<td><a href="experiments/e34.html">E34</a></td>
+<td>用冻结的 4-bit Neural K 顺序预测 8-bit 条件规则决斗</td>
+<td>独立复杂度排序能否跨任务预测函数人口偏好</td>
+</tr>
+<tr>
+<td><a href="experiments/e35.html">E35</a></td>
+<td>让 Mod97 grokking 前后的真实完整函数在新网络中竞争</td>
+<td>完成规则是否在函数人口层面具有额外偏好</td>
+</tr>
+<tr>
+<td><a href="experiments/e36.html">E36</a></td>
+<td>复现 Peleg/G&amp;C，并对静态样本继续施加 raw-BCE 约束</td>
+<td>收紧连续 loss 是否能消除浅层随机插值与 SGD 之间的泛化差距</td>
+</tr>
+<tr>
+<td><a href="experiments/e37.html">E37</a></td>
+<td>比较 Gaussian 与固定范数球内均匀欧式测度的体积响应</td>
+<td>Gaussian 与真实训练的对应是否依赖密度惩罚，还是保留了测度较稳健的复杂度排序</td>
+</tr>
 </tbody>
-</table></div>
-        <footer class="article-footer"><a href="experiments/index.html">继续查看 E01–E30 实验索引 →</a></footer>
+</table>
+<p>\n</p></div>
+        <footer class="article-footer"><a href="experiments/index.html">继续查看 E01–E37 实验索引 →</a></footer>
       </article>
     </main>
   </div>

@@ -23,7 +23,7 @@
         <span class="mark-block">NK</span>
         <span class="mark-text">Neural K Research Archive</span>
       </a>
-      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="../index.html">Research</a><a class="top-link" href="../theory-core.html">Core Theory</a><a class="top-link active" href="../experiments/index.html">Experiments</a><a class="top-link" href="../references.html">References</a><a class="top-link" href="../evidence-ledger.html">Evidence</a></nav>
+      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="../index.html">Research</a><a class="top-link" href="../theory-core.html">Core Theory</a><a class="top-link active" href="../experiments/index.html">Experiments</a><a class="top-link" href="../post-upload.html">Updates</a><a class="top-link" href="../references.html">References</a><a class="top-link" href="../evidence-ledger.html">Evidence</a></nav>
       <nav class="language-switch" aria-label="Language"><a href="../../experiments/e23.html" lang="zh-CN">中文</a><span class="active" lang="en">EN</span></nav>
       <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
         <span aria-hidden="true">☰</span><span>Contents</span>
@@ -38,12 +38,28 @@
         <nav class="toc"><div class="toc">
 <ul>
 <li><a href="#overview">Experiment overview</a></li>
-<li><a href="#motivation">Why this experiment was run</a></li>
+<li><a href="#purpose">Purpose</a></li>
+<li><a href="#the-closed-loop-of-the-three-supplementary-experiments">The closed loop of the three supplementary experiments</a></li>
+<li><a href="#run-order">Run order</a></li>
+<li><a href="#sha256">SHA256</a></li>
+<li><a href="#motivation">Why this experiment was run, and how it was judged</a></li>
+<li><a href="#1-falsifiable-question">1. Falsifiable question</a></li>
+<li><a href="#2-stage-a-frozen-volume-prediction">2. Stage A: frozen volume prediction</a></li>
+<li><a href="#3-stage-b-independently-measuring-the-sample-transition">3. Stage B: independently measuring the sample transition</a></li>
+<li><a href="#4-verdicts">4. Verdicts</a></li>
 <li><a href="#results">Results, interpretation, and limits</a></li>
+<li><a href="#1-the-confirmatory-parity-prediction-hits-exactly">1. The confirmatory parity prediction hits exactly</a></li>
+<li><a href="#2-the-cross-family-relationship-is-strong-but-a-shallow-single-scalar-is-not-enough">2. The cross-family relationship is strong, but a shallow single scalar is not enough</a></li>
+<li><a href="#3-the-complexity-ordering-itself-changes-with-loss">3. The complexity ordering itself changes with loss</a></li>
+<li><a href="#4-agreement-reproduces-bifurcation-and-re-coalescence">4. Agreement reproduces bifurcation and re-coalescence</a></li>
+<li><a href="#5-the-gaussian-deep-tail-leaves-the-only-stable-misordering-to-mux3-parity2">5. The Gaussian deep tail leaves the only stable misordering to MUX3/parity2</a></li>
+<li><a href="#6-targeted-sampling-completely-flips-the-real-training-transition">6. Targeted sampling completely flips the real-training transition</a></li>
+<li><a href="#7-fixed-d-static-smc-reproduces-the-reversal-and-localizes-the-competing-functions">7. Fixed-D static SMC reproduces the reversal and localizes the competing functions</a></li>
+<li><a href="#8-final-stratification-and-boundaries">8. Final stratification and boundaries</a></li>
 </ul>
 </div>
 </nav>
-        <div class="sidebar-label experiment-label">All experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>Static Hard Conditioning versus Optimizer-Induced Function Transport</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-Bit Counterfactual Invariance</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>Prior-Consistent Function Dynamics and Width Intervention</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>Post-Fit Drift in the Mingard 2025 Boolean Protocol</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>Feature Learning When a Fixed NTK Is Already Sufficient</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>Loss-Conditioned Prior Annealing</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>Function-ID Wandering and Matched-Loss Static Controls</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>Shared Intermediate Computation under Finite Capacity</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>Long Training with 80% Hidden Label Noise</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>Raw-BCE Competition between Preregistered Simple and Complex Function Pairs</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule-30 Train/Validation Gradient Alignment across Dataset Size</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND Shortcut Static Geometry and a One-Example Balance Intervention</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>SGD Dynamics of the AND Shortcut and Balanced Intervention</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>Weighted Rule-Bit Function Switching across Loss Scales</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Complete Functions versus Marginal Concentration in Modular-97 Grokking</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity Reachability, Half-Space Generalization, and Scaffold Recovery</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>Static Deep-Loss Mass versus Optimizer Transport</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>Teacher-Free Consensus and Symbolic Readability</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>Full-Truth-Table Rule Volume</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Measure Closure between Full Rules, Fixed Datasets, and Margin Cores</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement Control and a Consensus Complexity Frontier</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>Per-Example Free Energy and an Information Invariant</span></a><a class="experiment-nav-link active" href="e23.html"><span>E23</span><span>Prospective Prediction from Full-Rule Volume to Data Transition</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>Deep Neural K Crossing of Parity4 and a One-Point Exception</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST Sample Complexity and Static Branch Prediction</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>Balanced Unlabeled MNIST Label Volume</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Agreement Before and During Grokking</span></a><a class="experiment-nav-link" href="e28.html"><span>E28</span><span>Whole-Network HMC versus Adam on 50k MNIST</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Loss-Resolved Robustness to a Dead Input Bit</span></a><a class="experiment-nav-link" href="e30.html"><span>E30</span><span>Weight Decay Reshapes the Static Complete-Function Landscape</span></a></nav>
+        <div class="sidebar-label experiment-label">All experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>Static Hard Conditioning versus Optimizer-Induced Function Transport</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-Bit Counterfactual Invariance</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>Prior-Consistent Function Dynamics and Width Intervention</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>Post-Fit Drift in the Mingard 2025 Boolean Protocol</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>Feature Learning When a Fixed NTK Is Already Sufficient</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>Loss-Conditioned Prior Annealing</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>Function-ID Wandering and Matched-Loss Static Controls</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>Shared Intermediate Computation under Finite Capacity</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>Long Training with 80% Hidden Label Noise</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>Raw-BCE Competition between Preregistered Simple and Complex Function Pairs</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule-30 Train/Validation Gradient Alignment across Dataset Size</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND Shortcut Static Geometry and a One-Example Balance Intervention</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>SGD Dynamics of the AND Shortcut and Balanced Intervention</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>Weighted Rule-Bit Function Switching across Loss Scales</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Complete Functions versus Marginal Concentration in Modular-97 Grokking</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity Reachability, Half-Space Generalization, and Scaffold Recovery</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>Static Deep-Loss Mass versus Optimizer Transport</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>Teacher-Free Consensus and Symbolic Readability</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>Full-Truth-Table Rule Volume</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Measure Closure between Full Rules, Fixed Datasets, and Margin Cores</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement Control and a Consensus Complexity Frontier</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>Per-Example Free Energy and an Information Invariant</span></a><a class="experiment-nav-link active" href="e23.html"><span>E23</span><span>Prospective Prediction from Full-Rule Volume to Data Transition</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>Deep Neural K Crossing of Parity4 and a One-Point Exception</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST Sample Complexity and Static Branch Prediction</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>Balanced Unlabeled MNIST Label Volume</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Agreement Before and During Grokking</span></a><a class="experiment-nav-link" href="e28.html"><span>E28</span><span>Whole-Network HMC versus Adam on 50k MNIST</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Loss-Resolved Robustness to a Dead Input Bit</span></a><a class="experiment-nav-link" href="e30.html"><span>E30</span><span>Weight Decay Reshapes the Static Complete-Function Landscape</span></a></nav><div class="sidebar-label experiment-label">Post-upload experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="../experiments/e31.html"><span>E31</span><span>Loss and output amplitude</span></a><a class="experiment-nav-link" href="../experiments/e32.html"><span>E32</span><span>Random-memory scaling</span></a><a class="experiment-nav-link" href="../experiments/e33.html"><span>E33</span><span>Cross-architecture output volume</span></a><a class="experiment-nav-link" href="../experiments/e34.html"><span>E34</span><span>Conditional rule duel</span></a><a class="experiment-nav-link" href="../experiments/e35.html"><span>E35</span><span>Frozen functions around grokking</span></a><a class="experiment-nav-link" href="../experiments/e36.html"><span>E36</span><span>Independent Peleg/G&amp;C recheck</span></a><a class="experiment-nav-link" href="../experiments/e37.html"><span>E37</span><span>Measure robustness and Gaussian alignment</span></a></nav>
       </div>
     </aside>
 
@@ -54,23 +70,267 @@
           <h1>E23: Prospective Prediction from Full-Rule Volume to Data Transition</h1>
           <p class="article-description">Prospectively test full-rule volume against n50/n90, then isolate why one cross-family ordering depends on fixed-dataset competitors and sampling.</p>
         </header>
-        <div class="article-body"><div class="source-bar"><span>Scripts</span><div><a href="../../../experiments/experiment_23_volume_to_data_transition/experiment_8bit_mismatch_joint_deep_bridge.py">experiment_8bit_mismatch_joint_deep_bridge.py</a><a href="../../../experiments/experiment_23_volume_to_data_transition/experiment_8bit_rule_volume_preregister.py">experiment_8bit_rule_volume_preregister.py</a><a href="../../../experiments/experiment_23_volume_to_data_transition/experiment_8bit_volume_to_data_transition.py">experiment_8bit_volume_to_data_transition.py</a><a href="../../../experiments/experiment_23_volume_to_data_transition/experiment_parity2_mux3_coverage_shortcut_intervention.py">experiment_parity2_mux3_coverage_shortcut_intervention.py</a><a href="../../../experiments/experiment_23_volume_to_data_transition/experiment_parity2_mux3_fixed_d_static_smc.py">experiment_parity2_mux3_fixed_d_static_smc.py</a></div></div><h2 id="overview">Experiment overview</h2>
-<p>Stage A uses full 256-state truth tables and constrained SMC for eight balanced 8-bit rules under a <code>8 -&gt; 16 x 2 -&gt; 1 tanh</code> network. A preregistered contraction score and rank are hashed before Stage B. Stage B trains 19 nonfull sample sizes × 8 rules × 64 random datasets, plus full-data qualification controls, with 24 paired seeds per dataset.</p>
-<p>Three follow-ups close the sole stable parity2/MUX3 mismatch: a shared-parent five-target Gaussian deep-tail SMC; a 270,336-model uniform/cell/conflict sampling intervention; and a 48-condition fixed-<span class="math-inline">$D$</span> Gaussian SMC under the same three sampling protocols.</p>
-<h2 id="motivation">Why this experiment was run</h2>
-<p>Defining low volume as difficulty is not predictive by itself. An independent sample-complexity measurement is required. The nested parity family is the confirmatory target; all eight rules form a cross-family stress test.</p>
+        <div class="article-body"><div class="source-bar"><span>Scripts</span><div><a href="../../../experiments/experiment_23_volume_to_data_transition/analyze_uniform_natural_conflict_coverage.py">analyze_uniform_natural_conflict_coverage.py</a><a href="../../../experiments/experiment_23_volume_to_data_transition/analyze_uniform_nuisance_selector_competition.py">analyze_uniform_nuisance_selector_competition.py</a><a href="../../../experiments/experiment_23_volume_to_data_transition/experiment_8bit_mismatch_joint_deep_bridge.py">experiment_8bit_mismatch_joint_deep_bridge.py</a><a href="../../../experiments/experiment_23_volume_to_data_transition/experiment_8bit_rule_volume_preregister.py">experiment_8bit_rule_volume_preregister.py</a><a href="../../../experiments/experiment_23_volume_to_data_transition/experiment_8bit_volume_to_data_transition.py">experiment_8bit_volume_to_data_transition.py</a><a href="../../../experiments/experiment_23_volume_to_data_transition/experiment_parity2_mux3_coverage_shortcut_intervention.py">experiment_parity2_mux3_coverage_shortcut_intervention.py</a><a href="../../../experiments/experiment_23_volume_to_data_transition/experiment_parity2_mux3_fixed_d_static_smc.py">experiment_parity2_mux3_fixed_d_static_smc.py</a></div></div><h2 id="overview">Experiment overview</h2>
+<h2 id="purpose">Purpose</h2>
+<p>E23 first used full-truth-table SMC to freeze the local volume contraction scores of eight 8-bit rules before reading any random-subset training results; it then trained 9,736 random dataset conditions to test whether static volume can prospectively predict the <code>n50/n90</code> sample transition. The three supplementary experiments of 2026-08-26 continued to track the only stable parity2/MUX3 cross-family misordering, and localized the missing variable to the fixed-<span class="math-inline">$D$</span> competing-function denominator and sampling identification efficiency.</p>
+<h2 id="the-closed-loop-of-the-three-supplementary-experiments">The closed loop of the three supplementary experiments</h2>
+<ol>
+<li><strong>Multi-target Gaussian deep-tail SMC</strong>: the shallow misordering of random relative to parity3/4 reorders in the deep tail; the full-target volume of MUX3, by contrast, remains far larger than that of parity2 throughout, showing that this discrepancy can no longer be attributed to not reading the profile deeply enough.</li>
+<li><strong>Cell/conflict real-training intervention</strong>: under both uniform and eight-cell-balanced sampling, parity2 recovers earlier; merely up-weighting the MUX selector-conflict samples flips <code>n50</code> from parity2/MUX3=<code>64/80</code> to <code>72/56</code>.</li>
+<li><strong>Cell/conflict fixed-<span class="math-inline">$D$</span> static SMC</strong>: without an optimizer, the same ordering is reproduced. At <code>epsilon=0.02</code>, the parity2/MUX3 exact-target mass under uniform, cell, and conflict is <code>0.266/0.000214</code>, <code>0.469/0.284</code>, and <code>0.498/0.782</code>, respectively.</li>
+</ol>
+<p>Therefore, the full-target Neural K-profile is a strong first-order predictor, but the grokking transition also depends on how a specific training set excludes target-relevant competing extensions; <code>n50/n90</code> is an independent protocol-relative identification/recovery complexity, not a universal synonymous definition of static Neural K.</p>
+<figure class="result-figure"><a href="../../assets/figures/e23_sampling_intervention.png" target="_blank" rel="noopener"><img src="../../assets/figures/e23_sampling_intervention.png" alt="Cell/conflict real-training transition" loading="lazy"></a><figcaption>Cell/conflict real-training transition</figcaption></figure>
+<figure class="result-figure"><a href="../../assets/figures/e23_fixed_d_static_smc.png" target="_blank" rel="noopener"><img src="../../assets/figures/e23_fixed_d_static_smc.png" alt="Cell/conflict fixed-D static SMC" loading="lazy"></a><figcaption>Cell/conflict fixed-D static SMC</figcaption></figure>
+<h2 id="run-order">Run order</h2>
+<pre><code class="language-bash">python experiment_8bit_rule_volume_preregister.py
+python experiment_8bit_volume_to_data_transition.py
+</code></pre>
+<p>For the three misorderings between the stage-A shallow scores and the cross-family transition ordering, there is a separate preregistered five-branch shared-parent-ensemble deep-tail confirmation experiment. Because the original <code>Uniform[-1,1]</code> parameter cube has a nonzero BCE lower bound, this follow-up experiment uses an unbounded Gaussian reference measure with the same variance; it tests cross-protocol ordering robustness and is not a seamless continuation of the original volume curve:</p>
+<pre><code class="language-bash">python experiment_8bit_mismatch_joint_deep_bridge.py
+</code></pre>
+<p>The original stage B already included 64 random training sets per <code>n</code> and 24 seeds per set. The coarse-grid transition locations can be refined by re-coalescing the curves with continuous agreement:</p>
+<pre><code class="language-bash">python analysis_tools/analyze_agreement_subgrid_transitions.py \
+  --result-dir /root/results_8bit_volume_to_data_transition
+</code></pre>
+<p>To determine whether the parity2/MUX3 cross-family misordering comes from full rule difficulty or from the number of relevant cells and the MUX copy shortcut, there is a separate causal data intervention with fixed AdamW:</p>
+<pre><code class="language-bash">python experiment_parity2_mux3_coverage_shortcut_intervention.py
+</code></pre>
+<p>It compares three nested sampling protocols — uniform random, eight-cell-balanced, and selector-conflict-enriched — and uses parity2 as the negative control for conflict enrichment.</p>
+<p>To directly measure the static competition denominator under these three partial training sets, rather than relying on optimizer trajectories again, run:</p>
+<pre><code class="language-bash">python experiment_parity2_mux3_fixed_d_static_smc.py
+</code></pre>
+<p>This experiment fixes <code>n=32</code>, takes 8 datasets per protocol, and runs 48 fixed-D conditions in parallel under the same reference measure as the Gaussian full-target deep-tail experiment.</p>
+<p>The existing uniform training runs do not need to be rerun; one can also test offline whether natural random coverage already predicts MUX3 recovery. This analysis reconstructs each training set, separately counts the samples that refute <code>copy x1</code> and <code>copy x2</code>, and performs block inference by dataset path:</p>
+<pre><code class="language-bash">python analyze_uniform_natural_conflict_coverage.py \
+  --result-dir /root/results_parity2_mux3_coverage_shortcut_intervention
+</code></pre>
+<p>The results show that, at the same <code>n</code>, uniform datasets with more sufficient two-sided refutation are significantly more likely to recover MUX3, while the parity2 negative control shows no such relationship.</p>
+<p>A further test of whether redundant input bits can act as fake selectors:</p>
+<pre><code class="language-bash">python analyze_uniform_nuisance_selector_competition.py \
+  --result-dir /root/results_parity2_mux3_coverage_shortcut_intervention
+</code></pre>
+<p>This analysis preregisters the 10 nuisance literals formed by <code>x3...x7</code> and their negations. After controlling for the original copy shortcut, the results still find a small independent MUX3 signal, but the MUX3/parity2 difference does not reach the strong-verdict criterion; therefore, at present it only supports — without yet proving — the further conjecture that "increasing the input dimension widens the MUX3 disadvantage."</p>
+<ul>
+<li><a href="#motivation">Experiment motivation and preregistration</a></li>
+<li><a href="#results">Results and boundaries</a></li>
+<li><a href="../../../experiments/experiment_23_volume_to_data_transition/DEEP_TAIL_FOLLOWUP_PREREGISTRATION.md">Deep-tail misordering confirmation preregistration</a></li>
+<li><a href="../../../experiments/experiment_23_volume_to_data_transition/DEEP_TAIL_FOLLOWUP_RESULTS.md">Gaussian deep-tail follow-up results</a></li>
+<li><a href="../../../experiments/experiment_23_volume_to_data_transition/COVERAGE_SHORTCUT_INTERVENTION_PREREGISTRATION.md">Parity2/MUX3 coverage and shortcut intervention preregistration</a></li>
+<li><a href="../../../experiments/experiment_23_volume_to_data_transition/COVERAGE_SHORTCUT_INTERVENTION_RESULTS.md">Parity2/MUX3 coverage and shortcut intervention results</a></li>
+<li><a href="../../../experiments/experiment_23_volume_to_data_transition/FIXED_D_STATIC_SMC_PREREGISTRATION.md">Parity2/MUX3 fixed-D static SMC preregistration</a></li>
+<li><a href="../../../experiments/experiment_23_volume_to_data_transition/FIXED_D_STATIC_SMC_RESULTS.md">Parity2/MUX3 fixed-D static SMC results</a></li>
+<li><a href="../../../experiments/experiment_23_volume_to_data_transition/UNIFORM_NATURAL_CONFLICT_ANALYSIS_PREREGISTRATION.md">Uniform natural-conflict coverage analysis preregistration</a></li>
+<li><a href="../../../experiments/experiment_23_volume_to_data_transition/UNIFORM_NATURAL_CONFLICT_ANALYSIS_RESULTS.md">Uniform natural-conflict coverage analysis results</a></li>
+<li><a href="../../../experiments/experiment_23_volume_to_data_transition/UNIFORM_NUISANCE_SELECTOR_ANALYSIS_PREREGISTRATION.md">Uniform nuisance-bit fake-selector analysis preregistration</a></li>
+<li><a href="../../../experiments/experiment_23_volume_to_data_transition/UNIFORM_NUISANCE_SELECTOR_ANALYSIS_RESULTS.md">Uniform nuisance-bit fake-selector analysis results</a></li>
+</ul>
+<h2 id="sha256">SHA256</h2>
+<pre><code class="language-text">466a59d8e0a2243a9040d328dfef5e6f11c4ecb9893452b72024c6ecbe02fbb7  volume script
+7b14e28ffd97a50da0af424e1bf755e72e82ad894e613cd129bcf00e5f742331  transition script
+5df789c3976f59224b38ef63649a7ba9ce931cfa2c92c3d22098bd64d7e42f0c  Gaussian deep-tail script
+234b87d39454d7fca35d7502ad76aa48329e8abece57f18aee8cbb81cd7812ce  coverage/conflict intervention script
+fab1a8f12acb6c21d2396b0d9ecea8e6c4cfa23806d7f1ce513a5e7fb6a2c40d  fixed-D static SMC script
+ed94c60979a2b019bca5ddbe951fca1d053e1cfddcda0d62ed5face819f43ffb  uniform natural-conflict analysis script
+8e5f47b665d692d6960928a6b30542363bd14dca0f2302a58f29ede88f605896  uniform nuisance-selector analysis script
+ebf266355364f25a0e694ea41863190cbf8a546025c1c49fda309fcb5c1172c5  volume ZIP
+6e4075cae4fbd7072ab53f1e2764e65bbbf1934ced35f0301da965e8e0cd834d  transition ZIP
+</code></pre>
+<p>The raw ZIPs are located in <code>E:\Downloads</code> and are not included in the release package.</p>
+<h2 id="motivation">Why this experiment was run, and how it was judged</h2>
+<h2 id="1-falsifiable-question">1. Falsifiable question</h2>
+<p>If the low-loss mass of a complete rule under a fixed neural reference protocol really captures machine-relative difficulty, then it should predict another independent quantity: how many samples are needed to reliably recover that rule from a random partial truth table. To avoid choosing the complexity metric post hoc based on training results, the experiment is divided into fully separated stages A and B.</p>
+<h2 id="2-stage-a-frozen-volume-prediction">2. Stage A: frozen volume prediction</h2>
+<p>Fix the <code>8 -&gt; 16 x 2 -&gt; 1 tanh</code> network and eight balanced rules: parity1--4, majority3/5, MUX3, and random-balanced. Run SMC over the full 256 states, and take</p>
+<div class="math-display">$$
+K_f^N(\epsilon)=-\log V_f^{full}(\epsilon)
+$$</div>
+<p>the secant slope over raw BCE <code>0.690 -&gt; 0.670</code> as the frozen volume score. The larger the score, the harder the rule is predicted to be. Before any random-subset training begins, the predicted order and SHA256 are written to file.</p>
+<p>The confirmatory primary verdict uses only nested parity, because its independent difficulty ordering is the clearest; all eight rules serve as a stress test, allowed to expose cross-family single-scalar failure.</p>
+<h2 id="3-stage-b-independently-measuring-the-sample-transition">3. Stage B: independently measuring the sample transition</h2>
+<p>For each non-full sample size and each rule, generate 64 random training sets, each trained with 24 paired initializations for 40,000 steps. A dataset is judged "recovered" only if it simultaneously satisfies the training fit rate, the target full-function mass, the target being the modal function, and the function collision threshold. <code>n50/n90</code> is defined as the smallest random sample size at which the isotonic recovery rate first reaches 50%/90%; <code>n=256</code> serves only as a full-data accessibility check.</p>
+<p>Totals:</p>
+<pre><code class="language-text">19 non-full n x 8 rules x 64 datasets = 9,728
+8 full-data eligibility conditions
+24 seeds per condition
+</code></pre>
+<h2 id="4-verdicts">4. Verdicts</h2>
+<ul>
+<li>Primary verdict: whether the parity volume ordering strictly predicts the <code>n50/n90</code> ordering;</li>
+<li>Secondary verdict: the rank correlation across the eight rules and explicit reversals;</li>
+<li>Diagnostics: save multi-threshold curves, and check whether local speed and absolute volume rankings change with loss.</li>
+</ul>
 <h2 id="results">Results, interpretation, and limits</h2>
-<p>The frozen parity ranking exactly predicted transition order: n50 values 24, 64, 96, 160 and n90 values 48, 80, 112, 160 for parity1–4. Transition intervals did not overlap; within-family Spearman correlation was 1.</p>
-<p>Because every shared sample count already has 64 random datasets, continuous agreement can refine the coarse grid. A post-hoc target-aligned agreement=0.99 interpolation with 2,000 dataset-bootstrap replicates estimated parity2 at 59.98, MUX3 at 69.47, parity3 at 88.94, parity4 at 151.93, and random-balanced above 240. The parity2/MUX3 95% intervals were disjoint. This is a resolution diagnostic rather than a replacement for the preregistered decision.</p>
-<p>Across all eight rules, Spearman correlations were 0.898 and 0.868. The balanced random target’s contraction accelerated with depth and crossed parity3/4, raising profile-to-transition correlation to about 0.97/0.95. MUX3 remained the one stable exception: at the deepest shared Gaussian threshold, its complete-target volume exceeded parity2 by roughly 42 decimal orders even though uniform-random training recovered parity2 earlier.</p>
-<p>Sampling intervention resolved the mechanism. Uniform parity2/MUX3 gave <code>n50=64/80</code> and <code>n90=80/104</code>; strict eight-cell balancing gave <code>56/72</code> and <code>64/88</code>; increasing MUX selector-conflict examples to 75% reversed the order to <code>n50=72/56</code> and <code>n90=88/72</code>. Relative to uniform sampling, MUX3 moved 24/32 examples earlier while parity2 moved eight later at both thresholds. Two thousand paired-bootstrap replicates and every evaluated step from 500 through 40,000 preserved the direction.</p>
-<p>Fixed-<span class="math-inline">$D$</span> Gaussian SMC reproduced the reversal without an optimizer. At <code>n=32, epsilon=0.02</code>, uniform parity2/MUX3 exact-target masses were 0.266/0.000214, cell masses were 0.469/0.284, and conflict masses were 0.498/0.782. Uniform-MUX3 reached agreement 0.959 while almost never selecting the target; conflict-MUX3 made the target modal in 8/8 datasets. Uniform posterior accuracy was 0.993 on ordinary MUX cells but only 0.777 on selector-conflict cells; conflict enrichment raised the latter to 0.995.</p>
-<p>Deep-tail lineages fell to roughly one or two per replica, so absolute decimals are coarse. The qualitative decision rests on direction across loss thresholds, all eight datasets for conflict-versus-uniform MUX3, replica support, the causal intervention, and the independent optimizer result.</p>
-<p><strong>Conclusion.</strong> Full-rule Neural K-profile is a strong first-order predictor, exact within the preregistered parity family, but <code>n50/n90</code> is a separate protocol-relative identification/recovery complexity. Cross-family prediction additionally requires the fixed-<span class="math-inline">$D$</span> competitor denominator, sampling coverage, and optimizer transport. The MUX3 reversal is already present statically; AdamW is not required to create its qualitative direction.</p>
-<figure class="result-figure"><a href="../../assets/figures/e23_volume_to_transition.png" target="_blank" rel="noopener"><img src="../../assets/figures/e23_volume_to_transition.png" alt="Complete-rule volume and data transitions" loading="lazy"></a><figcaption>Complete-rule volume and data transitions</figcaption></figure>
+<h2 id="1-the-confirmatory-parity-prediction-hits-exactly">1. The confirmatory parity prediction hits exactly</h2>
+<p>On full data, all eight rules fit 100% and recover the target hard function. The frozen parity ordering and the independently measured sample transition are:</p>
+<table>
+<thead>
+<tr>
+<th>Rule</th>
+<th style="text-align: right;">volume score</th>
+<th style="text-align: right;"><code>n50</code></th>
+<th style="text-align: right;"><code>n90</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>parity1</td>
+<td style="text-align: right;">125.21</td>
+<td style="text-align: right;">24</td>
+<td style="text-align: right;">48</td>
+</tr>
+<tr>
+<td>parity2</td>
+<td style="text-align: right;">3266.21</td>
+<td style="text-align: right;">64</td>
+<td style="text-align: right;">80</td>
+</tr>
+<tr>
+<td>parity3</td>
+<td style="text-align: right;">4618.60</td>
+<td style="text-align: right;">96</td>
+<td style="text-align: right;">112</td>
+</tr>
+<tr>
+<td>parity4</td>
+<td style="text-align: right;">6719.58</td>
+<td style="text-align: right;">160</td>
+<td style="text-align: right;">160</td>
+</tr>
+</tbody>
+</table>
+<p>All four <code>n50</code> and <code>n90</code> grid intervals are mutually non-overlapping; Spearman is 1.0/1.0. This ordering was already stable from 5,000 steps onward and is not an artifact of the 40,000-step cutoff. This yields direct prospective evidence from full-target static volume to the identification sample size of random training sets.</p>
+<figure class="result-figure"><a href="../../assets/figures/e23_volume_to_transition.png" target="_blank" rel="noopener"><img src="../../assets/figures/e23_volume_to_transition.png" alt="Full-target volume and data transition" loading="lazy"></a><figcaption>Full-target volume and data transition</figcaption></figure>
+<h2 id="2-the-cross-family-relationship-is-strong-but-a-shallow-single-scalar-is-not-enough">2. The cross-family relationship is strong, but a shallow single scalar is not enough</h2>
+<p>Across all eight rules, the Spearman of volume score against <code>n50/n90</code> is 0.898/0.868; after removing the random rule, the seven structured rules give 0.955/0.927. The preregistered shallow secant score shows three misorderings relative to the transition ordering: MUX3/parity2, random/parity3, random/parity4. Random still has not recovered the full mapping by <code>n=240</code>.</p>
+<p>The score frozen in stage A is only a shallow-loss secant. It is a strong first-order predictor, but not a sufficient statistic across arbitrary function families. The follow-up deep-tail experiment resolves the misordering of random relative to parity3/4, but MUX3/parity2 remains stably oriented — "full MUX3 volume is larger, yet the uniform data transition is later" — even in the Gaussian deep tail. This proves that the full-target profile and <code>n50/n90</code> are inherently correlated but distinct objects, with the fixed-training-set competition denominator, sample coverage structure, and optimizer accessibility in between.</p>
+<h2 id="3-the-complexity-ordering-itself-changes-with-loss">3. The complexity ordering itself changes with loss</h2>
+<p>The local contraction rate of random-balanced accelerates sharply as loss deepens, and successively overtakes parity2, parity3, and parity4. The absolute volume ranking also crosses. When predicting <code>n50/n90</code> with deeper local windows, Spearman rises from about 0.73/0.71 to 0.97/0.95; when predicting with a single-section <code>-log V</code>, it also rises from about 0.83/0.77 to 0.95/0.93.</p>
+<p>Thus what actually reverses is the ordering of volume and local speed inside the profile; the <code>n50/n90</code> transition itself does not reverse — instead, as an external operational quantity, it indicates that the shallow score was read too early.</p>
+<p>This forces the complexity object to be revised from a single number to a full profile:</p>
+<div class="math-display">$$
+K_f^N(\epsilon)=-\log V_f(\epsilon),\quad
+s=-\log\epsilon,\quad
+\kappa_f(s)=\frac{dK_f^N}{ds}.
+$$</div>
+<p>Local slope, curvature, and crossings all carry information; any shallow slice may miss deep-tail cost.</p>
+<h2 id="4-agreement-reproduces-bifurcation-and-re-coalescence">4. Agreement reproduces bifurcation and re-coalescence</h2>
+<p>For all rules at <code>n=1</code>, agreement is close to 1 while the target-function mass is 0. As n increases, parity first bifurcates and then re-coalesces to the target function in the order <code>parity1 -&gt; parity4</code>; the agreement of random keeps dropping to about 0.656 and its target mass stays at 0 throughout. High agreement only means the current function distribution is narrow, not that it is externally correct.</p>
+<p>Each same <span class="math-inline">$n$</span> has already been randomly repeated over 64 training sets with 24 seeds each, so agreement can also refine the coarse grid of <code>n50/n90</code>. The posterior diagnostic starts from the agreement minimum of each curve, requires unseen target accuracy of at least 0.90, and performs an isotonic fit and linear sub-grid interpolation on mean unseen agreement=0.99. The 2,000-replicate dataset bootstrap results are:</p>
+<table>
+<thead>
+<tr>
+<th>Rule</th>
+<th style="text-align: right;">agreement=0.99 estimate</th>
+<th style="text-align: right;">95% bootstrap interval</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>parity2</td>
+<td style="text-align: right;">59.98</td>
+<td style="text-align: right;">[58.77,61.07]</td>
+</tr>
+<tr>
+<td>MUX3</td>
+<td style="text-align: right;">69.47</td>
+<td style="text-align: right;">[65.02,72.40]</td>
+</tr>
+<tr>
+<td>parity3</td>
+<td style="text-align: right;">88.94</td>
+<td style="text-align: right;">[85.72,91.05]</td>
+</tr>
+<tr>
+<td>parity4</td>
+<td style="text-align: right;">151.93</td>
+<td style="text-align: right;">[149.65,153.81]</td>
+</tr>
+<tr>
+<td>random-balanced</td>
+<td style="text-align: right;">&gt;240</td>
+<td style="text-align: right;">100% right-censored</td>
+</tr>
+</tbody>
+</table>
+<p>On paired random subsets at the same <code>n=64</code>, parity2 agreement is on average 0.0106 higher than MUX3, with a paired-bootstrap 95% interval of [0.0078,0.0134]. This supports using the agreement of "several more random draws at the same n" to compare relative complexity, but this threshold and interpolation were diagnostics added after seeing the original data and must not masquerade as preregistered results.</p>
+<h2 id="5-the-gaussian-deep-tail-leaves-the-only-stable-misordering-to-mux3-parity2">5. The Gaussian deep tail leaves the only stable misordering to MUX3/parity2</h2>
+<p>The Gaussian SMC of the five-target shared-parent ensemble advances to a deepest common threshold of about <code>0.0004635</code>. The volume ratio and relative contraction speed of random-balanced relative to parity3/4 both support the operational transition direction in 8/8 replicas. Parity2/MUX3, in contrast, shows no crossing: at the deepest point</p>
+<div class="math-display">$$
+\log\frac{V(\mathrm{parity2})}{V(\mathrm{MUX3})}\approx-96.9,
+$$</div>
+<p>i.e., the MUX3 full-target volume is about <span class="math-inline">$10^{42}$</span> times larger. This result refutes the claim that "all cross-family misorderings will disappear simply by reading the full profile deeper."</p>
 <figure class="result-figure"><a href="../../assets/figures/e23_gaussian_deep_tail.png" target="_blank" rel="noopener"><img src="../../assets/figures/e23_gaussian_deep_tail.png" alt="Five-target Gaussian deep-tail SMC" loading="lazy"></a><figcaption>Five-target Gaussian deep-tail SMC</figcaption></figure>
-<figure class="result-figure"><a href="../../assets/figures/e23_sampling_intervention.png" target="_blank" rel="noopener"><img src="../../assets/figures/e23_sampling_intervention.png" alt="Uniform/cell/conflict optimizer intervention" loading="lazy"></a><figcaption>Uniform/cell/conflict optimizer intervention</figcaption></figure>
-<figure class="result-figure"><a href="../../assets/figures/e23_fixed_d_static_smc.png" target="_blank" rel="noopener"><img src="../../assets/figures/e23_fixed_d_static_smc.png" alt="Uniform/cell/conflict fixed-D static SMC" loading="lazy"></a><figcaption>Uniform/cell/conflict fixed-D static SMC</figcaption></figure></div>
+<h2 id="6-targeted-sampling-completely-flips-the-real-training-transition">6. Targeted sampling completely flips the real-training transition</h2>
+<p>With the network, AdamW, training budget, and target functions fixed, only the training sample distribution is changed:</p>
+<table>
+<thead>
+<tr>
+<th>Protocol</th>
+<th style="text-align: right;">parity2 <code>n50/n90</code></th>
+<th style="text-align: right;">MUX3 <code>n50/n90</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>uniform</td>
+<td style="text-align: right;">64 / 80</td>
+<td style="text-align: right;">80 / 104</td>
+</tr>
+<tr>
+<td>cell-balanced</td>
+<td style="text-align: right;">56 / 64</td>
+<td style="text-align: right;">72 / 88</td>
+</tr>
+<tr>
+<td>conflict-enriched</td>
+<td style="text-align: right;">72 / 88</td>
+<td style="text-align: right;"><strong>56 / 72</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Cell balancing helps both rules, yet preserves the <code>copy x1/x2</code> shortcut at 75% accuracy, so MUX3 remains later. After raising selector-conflict samples to 75%, MUX3's <code>n50/n90</code> moves 24/32 samples earlier relative to uniform, while parity2 is delayed by 8 samples each. Both the 2,000-replicate paired bootstrap and the per-moment analysis from 500 to 40,000 steps preserve this direction.</p>
+<h2 id="7-fixed-d-static-smc-reproduces-the-reversal-and-localizes-the-competing-functions">7. Fixed-D static SMC reproduces the reversal and localizes the competing functions</h2>
+<p>With <code>n=32</code> fixed, Gaussian constrained SMC is run for three protocols, two targets, and 8 datasets per protocol. After hard-fit in all conditions, the exact-target mass at <code>epsilon=0.02</code> is:</p>
+<table>
+<thead>
+<tr>
+<th>Protocol</th>
+<th style="text-align: right;">parity2</th>
+<th style="text-align: right;">MUX3</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>uniform</td>
+<td style="text-align: right;">0.266</td>
+<td style="text-align: right;">0.000214</td>
+</tr>
+<tr>
+<td>cell-balanced</td>
+<td style="text-align: right;">0.469</td>
+<td style="text-align: right;">0.284</td>
+</tr>
+<tr>
+<td>conflict-enriched</td>
+<td style="text-align: right;">0.498</td>
+<td style="text-align: right;"><strong>0.782</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Uniform-MUX3 agreement has already reached 0.959, yet it almost never selects the true target; the conflict-MUX3 target is the modal function in 8/8 datasets. Decomposed by unseen semantic cells, uniform achieves a target accuracy of 0.993 on ordinary cells but only 0.777 on selector-conflict cells; conflict raises the conflict cells to 0.995.</p>
+<p>Therefore the transition reversal in real training already exists in the fixed-<span class="math-inline">$D$</span> static competition denominator; AdamW is not a necessary condition for producing the qualitative ordering. The optimizer still affects magnitudes and local effects such as parity2.</p>
+<h2 id="8-final-stratification-and-boundaries">8. Final stratification and boundaries</h2>
+<ul>
+<li>parity is the preregistered confirmatory family; the cross-family curve diagnostics include post hoc analyses;</li>
+<li><code>n50/n90</code> are interval crossings on a sample-size grid, not infinite-precision points; close rules must be examined together with adjacent grid points and bootstrap intervals;</li>
+<li>targets without an <span class="math-inline">$n&lt;N$</span> crossing can only be recorded as right-censored; the <code>n=256</code> full data serves only as an accessibility control;</li>
+<li><code>n50/n90</code> is a protocol-relative operational threshold, not a machine-independent sample complexity;</li>
+<li>the full-rule profile strongly predicts the data transition, but does not by itself determine all cross-family orderings;</li>
+<li><code>n50/n90</code> should be called a protocol-relative identification/recovery sample complexity, not a synonymous scalar of full-target Neural K;</li>
+<li>most fixed-<span class="math-inline">$D$</span> deep-tail lineages drop to about 1--2 per replica, so absolute target-mass decimals are only rough estimates; the primary verdict relies on external controls across loss, 8 datasets, replicas, targeted interventions, and real training;</li>
+<li>why the profile has its specific shape remains a microscopic mathematical question that this paper explicitly does not solve.</li>
+</ul></div>
         <footer class="experiment-pager"><a href="e22.html">← E22 Per-Example Free Energy and an Information Invariant</a><a href="e24.html">E24 Deep Neural K Crossing of Parity4 and a One-Point Exception →</a></footer>
       </article>
     </main>

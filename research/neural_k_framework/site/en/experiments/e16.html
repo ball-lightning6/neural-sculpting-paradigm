@@ -23,7 +23,7 @@
         <span class="mark-block">NK</span>
         <span class="mark-text">Neural K Research Archive</span>
       </a>
-      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="../index.html">Research</a><a class="top-link" href="../theory-core.html">Core Theory</a><a class="top-link active" href="../experiments/index.html">Experiments</a><a class="top-link" href="../references.html">References</a><a class="top-link" href="../evidence-ledger.html">Evidence</a></nav>
+      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="../index.html">Research</a><a class="top-link" href="../theory-core.html">Core Theory</a><a class="top-link active" href="../experiments/index.html">Experiments</a><a class="top-link" href="../post-upload.html">Updates</a><a class="top-link" href="../references.html">References</a><a class="top-link" href="../evidence-ledger.html">Evidence</a></nav>
       <nav class="language-switch" aria-label="Language"><a href="../../experiments/e16.html" lang="zh-CN">中文</a><span class="active" lang="en">EN</span></nav>
       <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
         <span aria-hidden="true">☰</span><span>Contents</span>
@@ -38,12 +38,25 @@
         <nav class="toc"><div class="toc">
 <ul>
 <li><a href="#overview">Experiment overview</a></li>
-<li><a href="#motivation">Why this experiment was run</a></li>
+<li><a href="#objective">Objective</a></li>
+<li><a href="#files">Files</a></li>
+<li><a href="#frozen-script-sha256">Frozen script SHA256</a></li>
+<li><a href="#key-result-bundle-sha256">Key result bundle SHA256</a></li>
+<li><a href="#motivation">Why this experiment was run, and how it was judged</a></li>
+<li><a href="#1-initial-ambiguity">1. Initial ambiguity</a></li>
+<li><a href="#2-four-layer-adjudication">2. Four-layer adjudication</a></li>
+<li><a href="#3-common-reference-machine">3. Common reference machine</a></li>
+<li><a href="#4-boundaries">4. Boundaries</a></li>
 <li><a href="#results">Results, interpretation, and limits</a></li>
+<li><a href="#1-leave-one-out-preference-turnover-happens-first-accessibility-collapse-only-later">1. Leave-one-out: preference turnover happens first, accessibility collapse only later</a></li>
+<li><a href="#2-the-14-bit-random-half-space-removes-the-main-entrance-barrier">2. The 14-bit random half-space removes the main entrance barrier</a></li>
+<li><a href="#3-current-error-points-carry-extremely-high-information-gain">3. Current error points carry extremely high information gain</a></li>
+<li><a href="#4-the-16-bit-scaffold-proves-the-endpoint-exists-and-is-locally-recoverable">4. The 16-bit scaffold proves the endpoint exists and is locally recoverable</a></li>
+<li><a href="#5-causal-verdict">5. Causal verdict</a></li>
 </ul>
 </div>
 </nav>
-        <div class="sidebar-label experiment-label">All experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>Static Hard Conditioning versus Optimizer-Induced Function Transport</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-Bit Counterfactual Invariance</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>Prior-Consistent Function Dynamics and Width Intervention</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>Post-Fit Drift in the Mingard 2025 Boolean Protocol</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>Feature Learning When a Fixed NTK Is Already Sufficient</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>Loss-Conditioned Prior Annealing</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>Function-ID Wandering and Matched-Loss Static Controls</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>Shared Intermediate Computation under Finite Capacity</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>Long Training with 80% Hidden Label Noise</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>Raw-BCE Competition between Preregistered Simple and Complex Function Pairs</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule-30 Train/Validation Gradient Alignment across Dataset Size</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND Shortcut Static Geometry and a One-Example Balance Intervention</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>SGD Dynamics of the AND Shortcut and Balanced Intervention</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>Weighted Rule-Bit Function Switching across Loss Scales</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Complete Functions versus Marginal Concentration in Modular-97 Grokking</span></a><a class="experiment-nav-link active" href="e16.html"><span>E16</span><span>Parity Reachability, Half-Space Generalization, and Scaffold Recovery</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>Static Deep-Loss Mass versus Optimizer Transport</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>Teacher-Free Consensus and Symbolic Readability</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>Full-Truth-Table Rule Volume</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Measure Closure between Full Rules, Fixed Datasets, and Margin Cores</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement Control and a Consensus Complexity Frontier</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>Per-Example Free Energy and an Information Invariant</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>Prospective Prediction from Full-Rule Volume to Data Transition</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>Deep Neural K Crossing of Parity4 and a One-Point Exception</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST Sample Complexity and Static Branch Prediction</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>Balanced Unlabeled MNIST Label Volume</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Agreement Before and During Grokking</span></a><a class="experiment-nav-link" href="e28.html"><span>E28</span><span>Whole-Network HMC versus Adam on 50k MNIST</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Loss-Resolved Robustness to a Dead Input Bit</span></a><a class="experiment-nav-link" href="e30.html"><span>E30</span><span>Weight Decay Reshapes the Static Complete-Function Landscape</span></a></nav>
+        <div class="sidebar-label experiment-label">All experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>Static Hard Conditioning versus Optimizer-Induced Function Transport</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-Bit Counterfactual Invariance</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>Prior-Consistent Function Dynamics and Width Intervention</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>Post-Fit Drift in the Mingard 2025 Boolean Protocol</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>Feature Learning When a Fixed NTK Is Already Sufficient</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>Loss-Conditioned Prior Annealing</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>Function-ID Wandering and Matched-Loss Static Controls</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>Shared Intermediate Computation under Finite Capacity</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>Long Training with 80% Hidden Label Noise</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>Raw-BCE Competition between Preregistered Simple and Complex Function Pairs</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule-30 Train/Validation Gradient Alignment across Dataset Size</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND Shortcut Static Geometry and a One-Example Balance Intervention</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>SGD Dynamics of the AND Shortcut and Balanced Intervention</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>Weighted Rule-Bit Function Switching across Loss Scales</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Complete Functions versus Marginal Concentration in Modular-97 Grokking</span></a><a class="experiment-nav-link active" href="e16.html"><span>E16</span><span>Parity Reachability, Half-Space Generalization, and Scaffold Recovery</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>Static Deep-Loss Mass versus Optimizer Transport</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>Teacher-Free Consensus and Symbolic Readability</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>Full-Truth-Table Rule Volume</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Measure Closure between Full Rules, Fixed Datasets, and Margin Cores</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement Control and a Consensus Complexity Frontier</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>Per-Example Free Energy and an Information Invariant</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>Prospective Prediction from Full-Rule Volume to Data Transition</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>Deep Neural K Crossing of Parity4 and a One-Point Exception</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST Sample Complexity and Static Branch Prediction</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>Balanced Unlabeled MNIST Label Volume</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Agreement Before and During Grokking</span></a><a class="experiment-nav-link" href="e28.html"><span>E28</span><span>Whole-Network HMC versus Adam on 50k MNIST</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Loss-Resolved Robustness to a Dead Input Bit</span></a><a class="experiment-nav-link" href="e30.html"><span>E30</span><span>Weight Decay Reshapes the Static Complete-Function Landscape</span></a></nav><div class="sidebar-label experiment-label">Post-upload experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="../experiments/e31.html"><span>E31</span><span>Loss and output amplitude</span></a><a class="experiment-nav-link" href="../experiments/e32.html"><span>E32</span><span>Random-memory scaling</span></a><a class="experiment-nav-link" href="../experiments/e33.html"><span>E33</span><span>Cross-architecture output volume</span></a><a class="experiment-nav-link" href="../experiments/e34.html"><span>E34</span><span>Conditional rule duel</span></a><a class="experiment-nav-link" href="../experiments/e35.html"><span>E35</span><span>Frozen functions around grokking</span></a><a class="experiment-nav-link" href="../experiments/e36.html"><span>E36</span><span>Independent Peleg/G&amp;C recheck</span></a><a class="experiment-nav-link" href="../experiments/e37.html"><span>E37</span><span>Measure robustness and Gaussian alignment</span></a></nav>
       </div>
     </aside>
 
@@ -55,13 +68,177 @@
           <p class="article-description">Separate intrinsic low-loss parity preference from global optimization barriers and holdout-symmetry artifacts.</p>
         </header>
         <div class="article-body"><div class="source-bar"><span>Scripts</span><div><a href="../../../experiments/experiment_16_parity_reachability/experiment_parity12_half_space_generalization.py">experiment_parity12_half_space_generalization.py</a><a href="../../../experiments/experiment_16_parity_reachability/experiment_parity16_scaffold_perturb_recovery.py">experiment_parity16_scaffold_perturb_recovery.py</a><a href="../../../experiments/experiment_16_parity_reachability/experiment_parity_leave_one_out_dimension_scan.py">experiment_parity_leave_one_out_dimension_scan.py</a></div></div><h2 id="overview">Experiment overview</h2>
-<p>The unit combines a leave-one-out dimension scan, a 12-bit half-space and holdout-structure study, a 14-bit 50/50 train-test experiment, targeted error-reveal interventions, and a 16-bit scaffold–perturb–recovery test with wider networks.</p>
-<h2 id="motivation">Why this experiment was run</h2>
-<p>Parity is short in human algebra yet difficult for ordinary gradient descent. Poor leave-one-out prediction could mean the parity endpoint has tiny static support, or it could reflect special symmetry breaking and an entrance barrier that appears before endpoint preference can be measured.</p>
+<h2 id="objective">Objective</h2>
+<p>E16 distinguishes the following through four layers of intervention — leave-one-out, random half-space, error-point reveal, and prefix scaffold:</p>
+<ol>
+<li>whether parity exists and is supported by the endpoint loss;</li>
+<li>whether random initialization can enter its low-loss region;</li>
+<li>whether an exact solution that has been reached remains stable after the auxiliary information is removed;</li>
+<li>whether, after a strong perturbation destroys the hard function, it can be recovered using only the endpoint loss.</li>
+</ol>
+<h2 id="files">Files</h2>
+<ul>
+<li><a href="#motivation">Experiment motivation and preregistered criteria</a></li>
+<li><a href="#results">Full results and stage verdicts</a></li>
+<li><a href="../../../experiments/experiment_16_parity_reachability/experiment_parity_leave_one_out_dimension_scan.py"><code>experiment_parity_leave_one_out_dimension_scan.py</code></a></li>
+<li><a href="../../../experiments/experiment_16_parity_reachability/experiment_parity12_half_space_generalization.py"><code>experiment_parity12_half_space_generalization.py</code></a></li>
+<li><a href="../../../experiments/experiment_16_parity_reachability/experiment_parity16_scaffold_perturb_recovery.py"><code>experiment_parity16_scaffold_perturb_recovery.py</code></a></li>
+</ul>
+<p>Run order:</p>
+<pre><code class="language-bash">python experiment_parity_leave_one_out_dimension_scan.py
+python experiment_parity12_half_space_generalization.py
+python experiment_parity16_scaffold_perturb_recovery.py
+</code></pre>
+<p>The second script's current frozen configuration is 14-bit half-space plus error reveal; the filename keeps its original 12-bit origin to preserve development-version tracking.</p>
+<h2 id="frozen-script-sha256">Frozen script SHA256</h2>
+<pre><code class="language-text">4c9498cd825fbf887bc1ffb7ebd035a778d07b8cd139fb9aeb1dfac87a2aa6f2  leave-one-out
+5612bc8135377c96b431ca7835c428605080e5f55e01ca31836fc4690fd6f282  half-space/reveal
+abb131d68780c441eac692a34720309d5f14554414f67862f7884d31909b0424  scaffold/recovery
+</code></pre>
+<h2 id="key-result-bundle-sha256">Key result bundle SHA256</h2>
+<pre><code class="language-text">41099ca001b64cd4195f16639c1056de0098d6312b23a04d7a3000b7f36adccd  leave-one-out
+b503bf464212c59db2bbb14b10d8e5a5d13ff1f48a8ebe5c2b870f6af56dd882  parity14 half-space
+675716cafaa260f7a7ed89de2e6693220b54edd6c6facb3cd1edb07c246cd900  error reveal
+448072a1678dcdfE28e0d2622dd1070fe2ffee375bf45e0da840d2cb602a3b21  parity16 w256
+</code></pre>
+<p>Hashes are case-insensitive. The ZIP files are located in <code>E:\Downloads</code> and are not part of the release bundle.</p>
+<h2 id="motivation">Why this experiment was run, and how it was judged</h2>
+<h2 id="1-initial-ambiguity">1. Initial ambiguity</h2>
+<p>High-dimensional parity, when trained from random initialization, often stalls on the <code>ln2</code> plateau. This could mean:</p>
+<ul>
+<li>the network cannot represent exact parity;</li>
+<li>the low-loss region does not prefer parity;</li>
+<li>the data gap makes another continuation more preferred;</li>
+<li>the target exists and is locally stable, but ordinary gradients cannot see the global entrance.</li>
+</ul>
+<p>Leave-one-out also deliberately breaks the symmetry of the input space, so a wrong prediction on the final held-out point cannot be directly interpreted as insufficient target volume.</p>
+<h2 id="2-four-layer-adjudication">2. Four-layer adjudication</h2>
+<ol>
+<li><strong>Dimension scan</strong>: <code>n=4...16</code>, training on the full truth table minus one stratified holdout;</li>
+<li><strong>Random half-space</strong>: a 14-bit random, label-balanced 50% train / 50% test mask;</li>
+<li><strong>Error reveal</strong>: five branches copied from the same parent weights — continue, random correct points, current error points, error replay, and full reveal;</li>
+<li><strong>Scaffold recovery</strong>: a 16-bit network first predicts all prefix parities; after transferring the final head, all intermediate supervision is removed; then relative L2 perturbations of 0--0.2 are applied from the exact anchor, and recovery uses only endpoint BCE.</li>
+</ol>
+<h2 id="3-common-reference-machine">3. Common reference machine</h2>
+<p>GELU + LayerNorm with three hidden layers, AdamW at <code>1e-3</code>, weight decay 0. The main networks for leave-one-out and half-space are width 64; the final scaffold adjudication uses width 256. The full input space is exhaustively enumerable in all cases.</p>
+<h2 id="4-boundaries">4. Boundaries</h2>
+<ul>
+<li>Parity being short in human logical language does not mean it is easy to reach in the gradient language of this network;</li>
+<li>the holdout position and the mask spectrum change optimization visibility;</li>
+<li>high test accuracy does not equal the exact full function;</li>
+<li>auxiliary supervision changes the path; after success it must be removed, and endpoint-only stability/recovery serves as the final criterion.</li>
+</ul>
 <h2 id="results">Results, interpretation, and limits</h2>
-<p>Leave-one-out behavior changed qualitatively with dimension and holdout structure. In a balanced 14-bit half-space, all 64 models escaped the <code>ln 2</code> plateau, fit 8,192 training states, and reached mean test accuracy about 99.935%, although none was exactly correct over all 16,384 states. Revealing an average of 6.22 targeted errors recovered the exact function in 23/64 models; equally many random correct points recovered 0/64.</p>
-<p>For 16-bit parity, endpoint-only random starts recovered 0/8. A prefix scaffold produced 5/8 exact models, and after removing all auxiliary supervision, pure endpoint training reached 7/8. Strong perturbations destroyed every exact function, yet endpoint-only retraining recovered most models.</p>
-<p><strong>Conclusion.</strong> The dominant obstacle is global entrance, not absence of a locally supported endpoint. Holdout symmetry, information content, sample weight, and optimization accessibility must be separated.</p></div>
+<h2 id="1-leave-one-out-preference-turnover-happens-first-accessibility-collapse-only-later">1. Leave-one-out: preference turnover happens first, accessibility collapse only later</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">bits</th>
+<th style="text-align: right;">leave-one-out models hard-exact</th>
+<th style="text-align: right;">of which complete parity</th>
+<th>interpretation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">64/64</td>
+<td style="text-align: right;">0/64</td>
+<td>single-point flip dominant</td>
+</tr>
+<tr>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">64/64</td>
+<td style="text-align: right;">26/64</td>
+<td>mixed completions</td>
+</tr>
+<tr>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">64/64</td>
+<td style="text-align: right;">57/64</td>
+<td>parity dominant</td>
+</tr>
+<tr>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">64/64</td>
+<td style="text-align: right;">45/64</td>
+<td>parity dominant, with position effects</td>
+</tr>
+<tr>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">64/64</td>
+<td style="text-align: right;">43/64</td>
+<td>parity dominant, long-tail arrivals</td>
+</tr>
+<tr>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">22/64</td>
+<td style="text-align: right;">10/22</td>
+<td>accessibility dominates</td>
+</tr>
+<tr>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">1/64</td>
+<td style="text-align: right;">1/1</td>
+<td>single unstable escape; probability cannot be estimated</td>
+</tr>
+</tbody>
+</table>
+<p>Looking only at internal holdouts, 8--12 bit gives 89/96, about 92.7%, completed to parity; the overall-table decline comes mainly from low Hamming-weight boundary points being oversampled. This withdraws the conjecture that "leave-one-out can never complete parity."</p>
+<h2 id="2-the-14-bit-random-half-space-removes-the-main-entrance-barrier">2. The 14-bit random half-space removes the main entrance barrier</h2>
+<p>All 64/64 half-space models fit the 8,192 training points; the final test accuracy has mean 99.935% and median 99.963%, but 0/64 recover the complete 16,384-point parity. With the full truth table as control, only 3/8 escape the plateau.</p>
+<p>From step 500 to 2,000, train BCE falls from 0.678 to 0.00644, and test accuracy rises from 43.9% to 99.46%; after extremely low loss, the remaining 1--21 errors no longer disappear monotonically. The main difficulty is the global entrance; exact program recovery is a still finer layer.</p>
+<h2 id="3-current-error-points-carry-extremely-high-information-gain">3. Current error points carry extremely high information gain</h2>
+<p>Five branches copied from the 20,000-step parent model, with an average of 6.22 original errors:</p>
+<table>
+<thead>
+<tr>
+<th>intervention</th>
+<th style="text-align: right;">final mean total errors</th>
+<th style="text-align: right;">complete parity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>continue training</td>
+<td style="text-align: right;">6.50</td>
+<td style="text-align: right;">0/64</td>
+</tr>
+<tr>
+<td>same number of random correct points</td>
+<td style="text-align: right;">6.55</td>
+<td style="text-align: right;">0/64</td>
+</tr>
+<tr>
+<td>precisely revealing the error points</td>
+<td style="text-align: right;">3.38</td>
+<td style="text-align: right;">23/64</td>
+</tr>
+<tr>
+<td>error points with 25% replay</td>
+<td style="text-align: right;">6.47</td>
+<td style="text-align: right;">7/64</td>
+</tr>
+<tr>
+<td>revealing the full test set</td>
+<td style="text-align: right;">0.61</td>
+<td style="text-align: right;">29/64</td>
+</tr>
+</tbody>
+</table>
+<p>Precise samples almost clear the old errors, yet produce an average of 3.19 new errors; overly strong replay clears old errors while creating 6.47 new ones. The missing constraints determine which defects can survive; the optimizer determines whether the repair is a global reorganization or an error migration.</p>
+<h2 id="4-the-16-bit-scaffold-proves-the-endpoint-exists-and-is-locally-recoverable">4. The 16-bit scaffold proves the endpoint exists and is locally recoverable</h2>
+<p>Width-256 reference machine:</p>
+<ul>
+<li>direct endpoint-only: 0/8 exact, BCE about 0.693;</li>
+<li>prefix scaffold with final head: 5/8 exact;</li>
+<li>all auxiliary supervision removed, endpoint-only settle: 7/8 exact;</li>
+<li>continued training without perturbation: 7/7 remain exact.</li>
+</ul>
+<p>Four perturbations were made from each of the 7 anchors: at relative L2 radii 0.1 and 0.2, all 28/28 hard functions were destroyed; recovering for 5,000 steps using only endpoint BCE, the final counts that returned to exact were 23/28 and 21/28 respectively. A radius of 0.2 pushes the median BCE to 0.631, yet most models can still be recovered.</p>
+<h2 id="5-causal-verdict">5. Causal verdict</h2>
+<p>Under this protocol, the main obstacle for 16-bit parity is global accessibility — entering the target region from random initialization — rather than insufficient representational capacity, the exact endpoint not being supported by the pure endpoint loss, or the absence of a basin of attraction near the target.</p>
+<p>This requires the main theory to be explicitly conditioned on "the optimizer being able to enter the corresponding low-loss region." Low description length and a favorable local endpoint do not guarantee a global gradient entrance; decoupling/scaffolds can change the path without changing the final architecture and the endpoint function.</p></div>
         <footer class="experiment-pager"><a href="e15.html">← E15 Complete Functions versus Marginal Concentration in Modular-97 Grokking</a><a href="e17.html">E17 Static Deep-Loss Mass versus Optimizer Transport →</a></footer>
       </article>
     </main>

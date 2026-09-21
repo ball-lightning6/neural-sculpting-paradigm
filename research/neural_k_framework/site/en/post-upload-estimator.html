@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Estimating Neural K before training: finite-width CGF, saddlepoint approximation, and a 520-node backtest.">
+  <title>Neural K estimator: finite-width CGF, saddlepoint correction, and the 520-node backtest · Neural K Research Archive</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="../assets/site.js"></script>
+</head>
+<body data-page-kind="post-upload">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+
+    <header class="topbar">
+      <a class="site-mark" href="index.html" aria-label="Back to the research narrative">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K Research Archive</span>
+      </a>
+      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="index.html">Research</a><a class="top-link" href="theory-core.html">Core Theory</a><a class="top-link" href="experiments/index.html">Experiments</a><a class="top-link active" href="post-upload.html">Updates</a><a class="top-link" href="references.html">References</a><a class="top-link" href="evidence-ledger.html">Evidence</a></nav>
+      <nav class="language-switch" aria-label="Language"><a href="../post-upload-estimator.html" lang="zh-CN">中文</a><span class="active" lang="en">EN</span></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>Contents</span>
+      </button>
+    </header>
+
+  <div class="page-shell">
+
+    <aside class="sidebar" id="sidebar" aria-label="On this page">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">On this page</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#1-scope-and-protocol">1. Scope and protocol</a></li>
+<li><a href="#2-exact-finite-width-joint-output-cgf">2. Exact finite-width joint-output CGF</a></li>
+<li><a href="#3-chernoff-action-for-the-bce-event">3. Chernoff action for the BCE event</a></li>
+<li><a href="#4-representation-cost-is-included">4. Representation cost is included</a></li>
+<li><a href="#5-from-action-to-a-practical-probability-estimate">5. From action to a practical probability estimate</a></li>
+<li><a href="#6-backtest-design">6. Backtest design</a></li>
+<li><a href="#7-quantitative-results">7. Quantitative results</a></li>
+<li><a href="#8-why-this-is-not-merely-an-empirical-fit">8. Why this is not merely an empirical fit</a></li>
+<li><a href="#9-provenance-and-reproducibility">9. Provenance and reproducibility</a></li>
+<li><a href="#10-supported-and-unsupported-claims">10. Supported and unsupported claims</a></li>
+</ul>
+</div>
+</nav>
+        <a class="sidebar-action" href="post-upload.html">Back to the increments overview →</a>
+      </div>
+    </aside>
+
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">Experiment increment · Architecture estimator</div>
+          <h1>Neural K estimator: finite-width CGF, saddlepoint correction, and the 520-node backtest</h1>
+          <p class="article-description">Estimating Neural K before training: finite-width CGF, saddlepoint approximation, and a 520-node backtest.</p>
+        </header>
+        <div class="article-body"><p>This page combines the method note, the current-method implementation note, the backtest reports, the protocol, and the provenance correction. It is the complete website-facing explanation of the current pre-training estimator.</p>
+<h2 id="1-scope-and-protocol">1. Scope and protocol</h2>
+<p>The estimator applies to the fixed protocol used here: a single-hidden-layer width-16 tanh network, 0/1 inputs, Gaussian whitened neural coordinates, the original fan-in scaling, and a full-truth-table mean raw-BCE sublevel event. It is not an exact algorithm for arbitrary depth, CNN, RNN, Transformer, encoding, or prior.</p>
+<p>The goal is to estimate the low-loss volume and the corresponding Neural K before running SMC. The reference SMC values are used for a frozen backtest, not to fit per-rule correction coefficients.</p>
+<h2 id="2-exact-finite-width-joint-output-cgf">2. Exact finite-width joint-output CGF</h2>
+<p>For the 3-bit and 4-bit experiments, let the input table have (r=2^b) rows and let the hidden width be (m=16). With independent Gaussian neural coordinates,
+<div class="math-display">$$
+Z=\frac1{\sqrt m}\sum_{j=1}^{m}a_jh_j
++\frac{b_o}{\sqrt m}\mathbf 1,
+\qquad
+h_j(x)=\tanh((w_j\cdot x+b_j)/\sqrt b).
+$$</div></p>
+<p>After integrating the independent Gaussian readout variables, the finite-width cumulant generating function is
+<div class="math-display">$$
+\Lambda(t)=\log\mathbb E e^{t^T Z}
+=\frac{(\mathbf1^Tt)^2}{2m}
++m\log\mathbb E_{w,b}
+\exp\left[\frac{(t^Th)^2}{2m}\right].
+$$</div></p>
+<p>This is an exact identity for the specified finite-width prior. It does not use an infinite-width approximation and does not calibrate parameters from SMC. The single-neuron integral has only (b+1) independent Gaussian coordinates and is evaluated by multidimensional Gauss–Hermite quadrature.</p>
+<p>Unlike a covariance-only Gaussian approximation, the CGF retains finite-width representation fluctuations of all orders. The derivation is inspired by finite-width Gaussian-mixture and feature-distribution work, but the BCE estimator and its reductions are specific to this project protocol.</p>
+<h2 id="3-chernoff-action-for-the-bce-event">3. Chernoff action for the BCE event</h2>
+<p>Let (s_i=2y_i-1) and let (E) be the event that the mean BCE over the full truth table is at most (\epsilon). Define
+<div class="math-display">$$
+I(E)=\sup_t\{\inf_{z\in E}t^Tz-\Lambda(t)\}.
+$$</div></p>
+<p>Chernoff's inequality gives
+<div class="math-display">$$
+\Pr(E)\le e^{-I(E)},
+\qquad
+K(E)\ge I(E)/\ln 2.
+$$</div></p>
+<p>The Chernoff action is therefore a directional lower bound on the negative log probability; it is not by itself the complete Neural K.</p>
+<p>For BCE, parameterize (t=s\odot\omega), (omega_i\ge0), introduce (alpha&gt;\max_iomega_i), and solve the finite-dimensional concave maximization
+<div class="math-display">$$
+I(E)=\sup_{\omega,\alpha}
+\left\{
+\alpha\sum_i H(\omega_i/\alpha)
+-r\alpha\epsilon
+-\Lambda(s\odot\omega)
+\right\}.
+$$</div></p>
+<p>The implementation checks the average BCE, KKT residuals, and the Legendre identity. The mathematical Chernoff inequality is exact, but the floating-point quadrature is not interval-certified, so numerical outputs are not certified rigorous bounds.</p>
+<h2 id="4-representation-cost-is-included">4. Representation cost is included</h2>
+<p>Under the optimal exponential tilt, the action decomposes into the KL cost of tilting the hidden representation distribution plus the readout tilt cost. Thus the method does not replace rare hidden representations by an arbitrary minimum-norm output solution. The finite-width representation fluctuations are explicitly charged in the calculation.</p>
+<h2 id="5-from-action-to-a-practical-probability-estimate">5. From action to a practical probability estimate</h2>
+<p>The action is converted into a complete event-probability approximation by a local Gaussian approximation under the tilted distribution and a second-order expansion of the nonlinear BCE boundary. The fixed approximation includes the Gaussian half-space factor and a tangential boundary-curvature determinant correction.</p>
+<p>This correction is an approximation, not an identity. It has no universal error bound over all widths, rules, or loss depths. The implementation also retains the uncorrected Chernoff action so that the dominant action is not confused with the full probability approximation. The benchmark is a theoretical prediction checked against historical SMC; it is not a second independent sampler fitted to the same SMC values.</p>
+<h2 id="6-backtest-design">6. Backtest design</h2>
+<p>The large benchmark contains:</p>
+<ul>
+<li>all 40 strictly symmetric 3-bit orbits at five BCE thresholds;</li>
+<li>64 preregistered 4-bit orbits at five thresholds;</li>
+<li>520 rule-by-loss nodes in total;</li>
+<li>no per-rule SMC fit of estimator parameters;</li>
+<li>fixed numerical screening before comparison.</li>
+</ul>
+<p>The comparison retains original SMC replicas, warnings, rechecks, and both median-volume and volume-mean conventions. A node passing the numerical screen is not thereby certified to have error below 0.05 bits; a node failing the screen is not thereby proven wrong.</p>
+<h2 id="7-quantitative-results">7. Quantitative results</h2>
+<p>The method clearly improves on the old logarithmic and Hill empirical baselines in the shallow and intermediate regions.</p>
+<p>At BCE 0.001, the K-ranking Spearman correlations against the original SMC medians are:</p>
+<ul>
+<li>3-bit: 0.999625;</li>
+<li>4-bit: 0.997482.</li>
+</ul>
+<p>For the finite-window contraction coefficient
+<div class="math-display">$$
+c=\frac{K(0.001)-K(0.01)}{\log_2(10)},
+$$</div>
+the method preserves the observed deep-tail ordering very well:</p>
+<ul>
+<li>3-bit coefficient (R^2=0.999594);</li>
+<li>4-bit coefficient (R^2=0.992877);</li>
+<li>coefficient Spearman correlations 0.997561 and 0.988324.</li>
+</ul>
+<p>The coefficient is a finite-window slope. It is not claimed to be the final asymptotic coefficient as (epsilon\to0).</p>
+<p>The full benchmark has 248/520 nodes passing the fixed numerical screen. The remaining nodes are retained with approximation or unconfirmed labels. The main limitations are importance-weight concentration, replica disagreement, and occasional quadrature warnings. Deep 4-bit tails remain systematically harder.</p>
+<h2 id="8-why-this-is-not-merely-an-empirical-fit">8. Why this is not merely an empirical fit</h2>
+<p>The predictor does not fit a separate proportionality, offset, or rule-specific parameter to SMC K. It computes the joint-output CGF from the architecture and prior, solves the BCE convex dual, and applies a fixed saddlepoint/boundary approximation. The benchmark therefore tests whether the architecture-induced joint-output distribution contains computable complexity information.</p>
+<p>This is still a protocol-relative result. It does not establish a universal Neural K formula, a machine-independent Kolmogorov complexity theorem, or an exact prediction of SGD endpoint frequencies.</p>
+<h2 id="9-provenance-and-reproducibility">9. Provenance and reproducibility</h2>
+<p>A prior finite-width CGF derivation and implementation already existed in the project on 2026-08-31. The current work reconnects that route to a faster saddlepoint approximation, a complete 3/4-bit backtest, and the documented 4-bit transfer. It is not the first discovery of finite-width CGF in this project.</p>
+<p>The reproducible method, protocol, validation scripts, slope CSV, summary JSON, and benchmark reports are kept under <code>evidence/architecture_bias/current_method/</code>. SMC checkpoints and intermediate caches are not required for the public method description.</p>
+<h2 id="10-supported-and-unsupported-claims">10. Supported and unsupported claims</h2>
+<p>Supported:</p>
+<ul>
+<li>the finite-width joint-output distribution contains computable information about loss-resolved implementation mass;</li>
+<li>the fixed estimator predicts the scale, ordering, and finite-window contraction coefficients of many rules in this protocol;</li>
+<li>the method transfers from the 3-bit development family to preregistered 4-bit nodes without fitting new rule parameters.</li>
+</ul>
+<p>Not supported:</p>
+<ul>
+<li>one formula works for all architectures and priors;</li>
+<li>deep-tail probabilities are already exact;</li>
+<li>the estimator replaces SMC in every regime;</li>
+<li>estimated Neural K directly gives the true SGD function frequency;</li>
+<li>Neural K is identical to machine-independent Kolmogorov complexity.</li>
+</ul></div>
+
+      </article>
+    </main>
+  </div>
+</body>
+</html>

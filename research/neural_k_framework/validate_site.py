@@ -23,6 +23,15 @@ class PageParser(HTMLParser):
         self.document_language = ""
         self.title_depth = 0
         self.title_text: list[str] = []
+        self.h2_count = 0
+        self.h3_count = 0
+        self.headings: list[tuple[int, str]] = []
+        self.tables = 0
+        self.pres = 0
+        self.math_display = 0
+        self.math_inline = 0
+        self._heading_level = 0
+        self._heading_parts: list[str] = []
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         attributes = dict(attrs)
@@ -43,14 +52,36 @@ class PageParser(HTMLParser):
             self.cards += 1
         if tag == "title":
             self.title_depth += 1
+        if tag in {"h2", "h3"}:
+            if tag == "h2":
+                self.h2_count += 1
+            else:
+                self.h3_count += 1
+            self._heading_level = int(tag[1])
+            self._heading_parts = []
+        if tag == "table":
+            self.tables += 1
+        if tag == "pre":
+            self.pres += 1
+        classes = str(attributes.get("class", ""))
+        if tag == "div" and "math-display" in classes:
+            self.math_display += 1
+        if tag == "span" and "math-inline" in classes:
+            self.math_inline += 1
 
     def handle_endtag(self, tag: str) -> None:
         if tag == "title" and self.title_depth:
             self.title_depth -= 1
+        if tag in {"h2", "h3"} and self._heading_level:
+            self.headings.append((self._heading_level, "".join(self._heading_parts).strip()))
+            self._heading_level = 0
+            self._heading_parts = []
 
     def handle_data(self, data: str) -> None:
         if self.title_depth:
             self.title_text.append(data)
+        if self._heading_level:
+            self._heading_parts.append(data)
 
 
 def parse_page(path: Path) -> PageParser:
@@ -75,8 +106,8 @@ def main() -> int:
     pages = sorted(SITE.rglob("*.html"))
     parsed = {page.resolve(): parse_page(page) for page in pages}
 
-    if len(pages) != 70:
-        errors.append(f"预期 70 个 HTML 页面，实际 {len(pages)} 个。")
+    if len(pages) != 110:
+        errors.append(f"预期 110 个 HTML 页面，实际 {len(pages)} 个。")
 
     required = [
         SITE / "index.html",
@@ -97,6 +128,8 @@ def main() -> int:
     for page in pages:
         parser = parsed[page.resolve()]
         raw_html = page.read_text(encoding="utf-8")
+        if re.search(r'(?:href|src)="[A-Za-z]:[\\/]', raw_html):
+            errors.append(f"{page}: 含本机绝对路径链接或资源")
         duplicates = [item for item, count in Counter(parser.ids).items() if count > 1]
         if duplicates:
             errors.append(f"{page}: 重复 id {duplicates}")
@@ -131,11 +164,11 @@ def main() -> int:
                     errors.append(f"{page}: 锚点不存在 {url}")
 
     experiment_index = parsed.get((SITE / "experiments" / "index.html").resolve())
-    if experiment_index and experiment_index.cards != 30:
-        errors.append(f"实验索引卡片应为 30，实际 {experiment_index.cards}。")
+    if experiment_index and experiment_index.cards != 37:
+        errors.append(f"实验索引卡片应为 37，实际 {experiment_index.cards}。")
     experiment_index_en = parsed.get((SITE / "en" / "experiments" / "index.html").resolve())
-    if experiment_index_en and experiment_index_en.cards != 30:
-        errors.append(f"英文实验索引卡片应为 30，实际 {experiment_index_en.cards}。")
+    if experiment_index_en and experiment_index_en.cards != 37:
+        errors.append(f"英文实验索引卡片应为 37，实际 {experiment_index_en.cards}。")
 
     main_page = parsed.get((SITE / "index.html").resolve())
     if main_page:
@@ -150,15 +183,26 @@ def main() -> int:
             errors.append("主页缺少醒目的理论核心直达入口。")
         if len(main_page.images) != 4:
             errors.append(f"主文应有 4 张结果图，实际 {len(main_page.images)}。")
-        experiment_links = {Path(urlsplit(url).path).name for url in main_page.hrefs if "experiments/e" in url}
-        if len(experiment_links) != 30:
-            errors.append(f"主文应链接全部 30 个实验页，实际 {len(experiment_links)}。")
+        experiment_links = {
+            Path(urlsplit(url).path).name
+            for url in main_page.hrefs
+            if "experiments/e" in url or "post-upload-e" in url or "post-upload-peleg.html" in url
+        }
+        if len(experiment_links) != 37:
+            errors.append(f"主文应链接全部 37 个编号实验页，实际 {len(experiment_links)}。")
 
     main_page_en = parsed.get((SITE / "en" / "index.html").resolve())
     if main_page_en:
         main_html_en = (SITE / "en" / "index.html").read_text(encoding="utf-8")
         if 'class="core-entry-banner"' not in main_html_en or 'href="theory-core.html"' not in main_html_en:
             errors.append("英文主页缺少醒目的理论核心直达入口。")
+        experiment_links_en = {
+            Path(urlsplit(url).path).name
+            for url in main_page_en.hrefs
+            if "experiments/e" in url or "post-upload-e" in url or "post-upload-peleg.html" in url
+        }
+        if len(experiment_links_en) != 37:
+            errors.append(f"英文主文应链接全部 37 个编号实验页，实际 {len(experiment_links_en)}。")
 
     reference_page = parsed.get((SITE / "references.html").resolve())
     if reference_page:
@@ -218,16 +262,54 @@ def main() -> int:
         if missing_en:
             errors.append(f"英文 E{number:02d}: 缺少分节锚点 {sorted(missing_en)}")
 
+    post_upload_experiment_pages = [
+        "post-upload-e31.html",
+        "post-upload-e32.html",
+        "post-upload-e33.html",
+        "post-upload-e34.html",
+        "post-upload-e35.html",
+        "post-upload-peleg.html",
+    ]
+    for relative in post_upload_experiment_pages:
+        if not (SITE / relative).exists():
+            errors.append(f"缺少提交后实验页 E31–E37：{relative}")
+        if not (SITE / "en" / relative).exists():
+            errors.append(f"缺少英文提交后实验页 E31–E37：en/{relative}")
+
+    canonical_increment_pages = [f"experiments/e{number:02d}.html" for number in range(31, 38)]
+    for relative in canonical_increment_pages:
+        if not (SITE / relative).exists():
+            errors.append(f"缺少 canonical 实验页：{relative}")
+        if not (SITE / "en" / relative).exists():
+            errors.append(f"缺少英文 canonical 实验页：en/{relative}")
+
     language_pairs = [
         (SITE / "index.html", SITE / "en" / "index.html"),
         (SITE / "evidence-ledger.html", SITE / "en" / "evidence-ledger.html"),
         (SITE / "references.html", SITE / "en" / "references.html"),
         (SITE / "theory-core.html", SITE / "en" / "theory-core.html"),
         (SITE / "experiments" / "index.html", SITE / "en" / "experiments" / "index.html"),
+        (SITE / "post-upload.html", SITE / "en" / "post-upload.html"),
+        (SITE / "post-upload-mdl.html", SITE / "en" / "post-upload-mdl.html"),
+        (SITE / "post-upload-language.html", SITE / "en" / "post-upload-language.html"),
+        (SITE / "post-upload-measure.html", SITE / "en" / "post-upload-measure.html"),
+        (SITE / "post-upload-theory-update.html", SITE / "en" / "post-upload-theory-update.html"),
+        (SITE / "post-upload-estimator.html", SITE / "en" / "post-upload-estimator.html"),
+        (SITE / "post-upload-peleg.html", SITE / "en" / "post-upload-peleg.html"),
+        (SITE / "post-upload-e31.html", SITE / "en" / "post-upload-e31.html"),
+        (SITE / "post-upload-e32.html", SITE / "en" / "post-upload-e32.html"),
+        (SITE / "post-upload-e33.html", SITE / "en" / "post-upload-e33.html"),
+        (SITE / "post-upload-e34.html", SITE / "en" / "post-upload-e34.html"),
+        (SITE / "post-upload-e35.html", SITE / "en" / "post-upload-e35.html"),
+        (SITE / "post-upload-decision.html", SITE / "en" / "post-upload-decision.html"),
     ]
     language_pairs.extend(
         (SITE / "experiments" / f"e{number:02d}.html", SITE / "en" / "experiments" / f"e{number:02d}.html")
         for number in range(1, 31)
+    )
+    language_pairs.extend(
+        (SITE / "experiments" / f"e{number:02d}.html", SITE / "en" / "experiments" / f"e{number:02d}.html")
+        for number in range(31, 38)
     )
 
     def html_targets(page: Path, parser: PageParser) -> set[Path]:
@@ -263,13 +345,62 @@ def main() -> int:
         if wrong_from_en:
             errors.append(f"英文页面跳回错误中文页面：{english} -> {wrong_from_en}")
 
+    def structure_signature(parser: PageParser) -> dict[str, int]:
+        return {
+            "H2": parser.h2_count,
+            "H3": parser.h3_count,
+            "表格": parser.tables,
+            "图片": len(parser.images),
+            "块公式": parser.math_display,
+            "行内公式": parser.math_inline,
+            "代码块": parser.pres,
+        }
+
+    def heading_number_sequence(parser: PageParser) -> list[str]:
+        sequence: list[str] = []
+        chinese_numerals = {
+            "一": "1", "二": "2", "三": "3", "四": "4", "五": "5",
+            "六": "6", "七": "7", "八": "8", "九": "9", "十": "10",
+        }
+        for _level, heading in parser.headings:
+            code = re.match(r"\s*(E\d+|R\d+)(?=[\s:：)\]]|$)", heading)
+            if code:
+                sequence.append(code.group(1))
+                continue
+            number = re.match(r"\s*(\d+(?:\.\d+)*)(?=[\s.:：]|$)", heading)
+            if number:
+                sequence.append(number.group(1))
+                continue
+            numeral = re.match(r"\s*([一二三四五六七八九十]+)、", heading)
+            if numeral and numeral.group(1) in chinese_numerals:
+                sequence.append(chinese_numerals[numeral.group(1)])
+        return sequence
+
+    for chinese, english in language_pairs:
+        zh_parser = parsed.get(chinese.resolve())
+        en_parser = parsed.get(english.resolve())
+        if zh_parser is None or en_parser is None:
+            continue
+        zh_signature = structure_signature(zh_parser)
+        en_signature = structure_signature(en_parser)
+        for label, zh_value in zh_signature.items():
+            en_value = en_signature[label]
+            if zh_value != en_value:
+                errors.append(f"中英结构不一致（{label}）：{chinese.relative_to(SITE)}={zh_value}，{english.relative_to(SITE)}={en_value}")
+        zh_numbers = heading_number_sequence(zh_parser)
+        en_numbers = heading_number_sequence(en_parser)
+        if zh_numbers != en_numbers:
+            errors.append(
+                f"中英标题编号序列不一致：{chinese.relative_to(SITE)}={zh_numbers}，{english.relative_to(SITE)}={en_numbers}"
+            )
+
     if errors:
         print("Site validation failed:")
         for error in errors:
             print(f"- {error}")
         return 1
 
-    print(f"Validated {len(pages)} HTML pages, all local links, anchors, assets and experiment cards.")
+    print(f"Validated {len(pages)} HTML pages: links, anchors, assets, cards and zh/en structural parity all pass.")
     return 0
 
 

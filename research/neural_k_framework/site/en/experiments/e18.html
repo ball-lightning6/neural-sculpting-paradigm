@@ -23,7 +23,7 @@
         <span class="mark-block">NK</span>
         <span class="mark-text">Neural K Research Archive</span>
       </a>
-      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="../index.html">Research</a><a class="top-link" href="../theory-core.html">Core Theory</a><a class="top-link active" href="../experiments/index.html">Experiments</a><a class="top-link" href="../references.html">References</a><a class="top-link" href="../evidence-ledger.html">Evidence</a></nav>
+      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="../index.html">Research</a><a class="top-link" href="../theory-core.html">Core Theory</a><a class="top-link active" href="../experiments/index.html">Experiments</a><a class="top-link" href="../post-upload.html">Updates</a><a class="top-link" href="../references.html">References</a><a class="top-link" href="../evidence-ledger.html">Evidence</a></nav>
       <nav class="language-switch" aria-label="Language"><a href="../../experiments/e18.html" lang="zh-CN">中文</a><span class="active" lang="en">EN</span></nav>
       <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
         <span aria-hidden="true">☰</span><span>Contents</span>
@@ -38,12 +38,23 @@
         <nav class="toc"><div class="toc">
 <ul>
 <li><a href="#overview">Experiment overview</a></li>
-<li><a href="#motivation">Why this experiment was run</a></li>
+<li><a href="#purpose">Purpose</a></li>
+<li><a href="#files-and-run-order">Files and run order</a></li>
+<li><a href="#script-sha256">Script SHA256</a></li>
+<li><a href="#motivation">Why this experiment was run, and how it was judged</a></li>
+<li><a href="#1-conjecture">1. Conjecture</a></li>
+<li><a href="#2-pilot">2. Pilot</a></li>
+<li><a href="#3-intervention-and-large-scale-confirmation">3. Intervention and large-scale confirmation</a></li>
+<li><a href="#4-limits">4. Limits</a></li>
 <li><a href="#results">Results, interpretation, and limits</a></li>
+<li><a href="#1-pilot-finds-teacher-free-high-consensus-readable-rules">1. Pilot finds teacher-free high-consensus readable rules</a></li>
+<li><a href="#2-cross-capacity-and-sample-interventions">2. Cross-capacity and sample interventions</a></li>
+<li><a href="#3-large-scale-results">3. Large-scale results</a></li>
+<li><a href="#4-verdict">4. Verdict</a></li>
 </ul>
 </div>
 </nav>
-        <div class="sidebar-label experiment-label">All experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>Static Hard Conditioning versus Optimizer-Induced Function Transport</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-Bit Counterfactual Invariance</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>Prior-Consistent Function Dynamics and Width Intervention</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>Post-Fit Drift in the Mingard 2025 Boolean Protocol</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>Feature Learning When a Fixed NTK Is Already Sufficient</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>Loss-Conditioned Prior Annealing</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>Function-ID Wandering and Matched-Loss Static Controls</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>Shared Intermediate Computation under Finite Capacity</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>Long Training with 80% Hidden Label Noise</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>Raw-BCE Competition between Preregistered Simple and Complex Function Pairs</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule-30 Train/Validation Gradient Alignment across Dataset Size</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND Shortcut Static Geometry and a One-Example Balance Intervention</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>SGD Dynamics of the AND Shortcut and Balanced Intervention</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>Weighted Rule-Bit Function Switching across Loss Scales</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Complete Functions versus Marginal Concentration in Modular-97 Grokking</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity Reachability, Half-Space Generalization, and Scaffold Recovery</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>Static Deep-Loss Mass versus Optimizer Transport</span></a><a class="experiment-nav-link active" href="e18.html"><span>E18</span><span>Teacher-Free Consensus and Symbolic Readability</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>Full-Truth-Table Rule Volume</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Measure Closure between Full Rules, Fixed Datasets, and Margin Cores</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement Control and a Consensus Complexity Frontier</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>Per-Example Free Energy and an Information Invariant</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>Prospective Prediction from Full-Rule Volume to Data Transition</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>Deep Neural K Crossing of Parity4 and a One-Point Exception</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST Sample Complexity and Static Branch Prediction</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>Balanced Unlabeled MNIST Label Volume</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Agreement Before and During Grokking</span></a><a class="experiment-nav-link" href="e28.html"><span>E28</span><span>Whole-Network HMC versus Adam on 50k MNIST</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Loss-Resolved Robustness to a Dead Input Bit</span></a><a class="experiment-nav-link" href="e30.html"><span>E30</span><span>Weight Decay Reshapes the Static Complete-Function Landscape</span></a></nav>
+        <div class="sidebar-label experiment-label">All experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>Static Hard Conditioning versus Optimizer-Induced Function Transport</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-Bit Counterfactual Invariance</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>Prior-Consistent Function Dynamics and Width Intervention</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>Post-Fit Drift in the Mingard 2025 Boolean Protocol</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>Feature Learning When a Fixed NTK Is Already Sufficient</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>Loss-Conditioned Prior Annealing</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>Function-ID Wandering and Matched-Loss Static Controls</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>Shared Intermediate Computation under Finite Capacity</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>Long Training with 80% Hidden Label Noise</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>Raw-BCE Competition between Preregistered Simple and Complex Function Pairs</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule-30 Train/Validation Gradient Alignment across Dataset Size</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND Shortcut Static Geometry and a One-Example Balance Intervention</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>SGD Dynamics of the AND Shortcut and Balanced Intervention</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>Weighted Rule-Bit Function Switching across Loss Scales</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Complete Functions versus Marginal Concentration in Modular-97 Grokking</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity Reachability, Half-Space Generalization, and Scaffold Recovery</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>Static Deep-Loss Mass versus Optimizer Transport</span></a><a class="experiment-nav-link active" href="e18.html"><span>E18</span><span>Teacher-Free Consensus and Symbolic Readability</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>Full-Truth-Table Rule Volume</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Measure Closure between Full Rules, Fixed Datasets, and Margin Cores</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement Control and a Consensus Complexity Frontier</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>Per-Example Free Energy and an Information Invariant</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>Prospective Prediction from Full-Rule Volume to Data Transition</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>Deep Neural K Crossing of Parity4 and a One-Point Exception</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST Sample Complexity and Static Branch Prediction</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>Balanced Unlabeled MNIST Label Volume</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Agreement Before and During Grokking</span></a><a class="experiment-nav-link" href="e28.html"><span>E28</span><span>Whole-Network HMC versus Adam on 50k MNIST</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Loss-Resolved Robustness to a Dead Input Bit</span></a><a class="experiment-nav-link" href="e30.html"><span>E30</span><span>Weight Decay Reshapes the Static Complete-Function Landscape</span></a></nav><div class="sidebar-label experiment-label">Post-upload experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="../experiments/e31.html"><span>E31</span><span>Loss and output amplitude</span></a><a class="experiment-nav-link" href="../experiments/e32.html"><span>E32</span><span>Random-memory scaling</span></a><a class="experiment-nav-link" href="../experiments/e33.html"><span>E33</span><span>Cross-architecture output volume</span></a><a class="experiment-nav-link" href="../experiments/e34.html"><span>E34</span><span>Conditional rule duel</span></a><a class="experiment-nav-link" href="../experiments/e35.html"><span>E35</span><span>Frozen functions around grokking</span></a><a class="experiment-nav-link" href="../experiments/e36.html"><span>E36</span><span>Independent Peleg/G&amp;C recheck</span></a><a class="experiment-nav-link" href="../experiments/e37.html"><span>E37</span><span>Measure robustness and Gaussian alignment</span></a></nav>
       </div>
     </aside>
 
@@ -55,13 +66,68 @@
           <p class="article-description">Test whether training sets that induce near-deterministic complete-function agreement also induce short human-readable symbolic rules.</p>
         </header>
         <div class="article-body"><div class="source-bar"><span>Scripts</span><div><a href="../../../experiments/experiment_18_consensus_symbolicity/experiment_8bit_consensus_large_scale.py">experiment_8bit_consensus_large_scale.py</a><a href="../../../experiments/experiment_18_consensus_symbolicity/experiment_8bit_consensus_symbolicity.py">experiment_8bit_consensus_symbolicity.py</a><a href="../../../experiments/experiment_18_consensus_symbolicity/experiment_8bit_consensus_width_intervention.py">experiment_8bit_consensus_width_intervention.py</a></div></div><h2 id="overview">Experiment overview</h2>
-<p>The unit first scans 540 8-bit datasets with 64 seeds, intervenes on network width and additional samples, then scales to 8,192 random n=12 datasets. Candidate high-consensus endpoints are re-evaluated with up to 4,096 fresh seeds and audited using essential variables, ANF, decision trees, ROBDDs, and linear-threshold tests.</p>
-<h2 id="motivation">Why this experiment was run</h2>
-<p>Agreement does not require knowledge of a teacher, so it can detect function concentration on unknown datasets. The nontrivial question is whether the concentrated function is symbolically simple or a neural-only, high-complexity lookup map.</p>
+<h2 id="purpose">Purpose</h2>
+<p>E18 searches, on teacher-free random partial truth tables whose data-generating rule is unknown, for full functions that contract to high consensus across initializations, and audits whether these functions belong to a human-readable low-complexity symbolic family; it then runs a cross-capacity check, sample interventions, and a large-scale recheck over 8,192 datasets.</p>
+<h2 id="files-and-run-order">Files and run order</h2>
+<pre><code class="language-bash">python experiment_8bit_consensus_symbolicity.py
+python experiment_8bit_consensus_width_intervention.py
+python experiment_8bit_consensus_large_scale.py
+</code></pre>
+<ul>
+<li><a href="#motivation">Experiment motivation and criteria</a></li>
+<li><a href="#results">Results and limits</a></li>
+</ul>
+<h2 id="script-sha256">Script SHA256</h2>
+<pre><code class="language-text">ed04dfd5c7c78407124776b6e829abfa73e0832f025964d0afb30c9606e8d561  pilot
+5073de1c3d9d1ad870cce02a462ad3fa2814406a2e6a7c793b684907a13e6905  intervention
+e7f08889e7e56329bfe207a8ce7168392cbe594316863d878c07aeda72710e9b  large-scale
+</code></pre>
+<p>Key ZIP SHA256:</p>
+<pre><code class="language-text">cc7da4ce381295672ac18b54ef9a39b31b7eab946f754cf218684c8890959375  pilot
+4720d2d073119cca52d8654ec6f316514ef99b43f40da229d95b6640884a2fa2  intervention
+958e51fc7339810f2783fea46e8f07486f018560aea15ae40660affebfc03845  large-scale
+</code></pre>
+<p>The raw ZIPs are not published.</p>
+<h2 id="motivation">Why this experiment was run, and how it was judged</h2>
+<h2 id="1-conjecture">1. Conjecture</h2>
+<p>Agreement does not depend on a researcher-specified teacher. If a partial training set makes many independent initializations contract to almost the same full function, does that usually mean that the version space contains a short rule that the network prefers and that is human-readable? A counterexample would be <code>high consensus + cannot be compressed by the pre-registered symbolic language</code>.</p>
+<h2 id="2-pilot">2. Pilot</h2>
+<ul>
+<li>Full 8-bit input space of 256 points;</li>
+<li>540 datasets: 512 random balanced partial truth tables and 28 hidden symbolic teachers;</li>
+<li>64 seeds per dataset, <code>8 -&gt; 16 x 2 -&gt; 1 tanh</code>, 20,000 steps;</li>
+<li>High consensus requires a fit rate no lower than 0.95, a modal full-function mass no lower than 0.95, and a full-function collision no lower than 0.90.</li>
+</ul>
+<p>The symbolic audit pre-registers essential variables, ANF, decision tree, ROBDD, and influence; it does not judge by natural language alone after seeing the candidates.</p>
+<h2 id="3-intervention-and-large-scale-confirmation">3. Intervention and large-scale confirmation</h2>
+<ul>
+<li>To teacher-free high-consensus sets, add a high-disagreement unanimous point, a conflicting label at the same point, and a low-disagreement unanimous point;</li>
+<li>Sweep widths 16--1024, depths, and tanh/GELU;</li>
+<li>A large-scale scan of 8,192 new random n=12 training sets, screened with 64 seeds and confirmed with 4,096 fresh seeds;</li>
+<li>The pre-registered Tier audit and the post-hoc linear-threshold LP audit are strictly kept in separate columns.</li>
+</ul>
+<h2 id="4-limits">4. Limits</h2>
+<p>High consensus only defines function condensation and does not guarantee external correctness; symbolic complexity must be compared among the candidates compatible with the training set. The experiment tests the one-way proposition <code>high consensus -&gt; low readable complexity</code> and does not test its converse.</p>
 <h2 id="results">Results, interpretation, and limits</h2>
-<p>The pilot found one teacher-free n=12 dataset with 61/64 seeds on the same complete function and collision 0.908. Its modal rule used four variables and admitted a short signed-threshold/2-CNF description.</p>
-<p>The large scan produced 46 strict high-consensus endpoints after fresh-seed confirmation. A unified post-hoc audit found all 46 to be equal-magnitude signed threshold functions; 120 broader candidates were also linearly separable. No high-consensus random lookup-table counterexample was observed.</p>
-<p><strong>Conclusion.</strong> Under this 8-bit MLP protocol, strict high consensus systematically coincided with human-readable low symbolic complexity. The signed-threshold family was discovered post hoc and is not a preregistered theorem over architectures or all functions.</p></div>
+<h2 id="1-pilot-finds-teacher-free-high-consensus-readable-rules">1. Pilot finds teacher-free high-consensus readable rules</h2>
+<p>Of the 540 datasets, 4 reach strict high consensus: copy, NOT, majority3, and one random balanced n=12 training set. In that random set, 61/64 seeds contract to the same full 256-bit function, with collision 0.908; the training set is already fully fit by step 200, and the modal mass then rises from 0.281 to 0.953, which is post-interpolation function contraction.</p>
+<p>The main mode depends on only 4 variables and can be written as a short 2-CNF or a signed-threshold-style rule; the exhaustive audit shows that no 0--3-variable junta compatible with the current training set exists, so it attains the minimum essential-variable count.</p>
+<p>Across all 512 random training sets, collision is significantly negatively correlated with essential variables, ANF, decision tree, ROBDD, and influence; the correlations persist after controlling for sample count and output balance, with ROBDD partial Spearman of about -0.526.</p>
+<h2 id="2-cross-capacity-and-sample-interventions">2. Cross-capacity and sample interventions</h2>
+<p>The canonical rule is the first mode in all six capacity/activation baselines, but the exact mass drops from 0.963 to 0.596, showing that the symbolic skeleton is relatively stable while the precise function cloud is highly protocol-dependent.</p>
+<p>After adding one sample on which the original ensemble had high disagreement yet unanimity, the canonical mass reaches 0.998--1.000 in five tanh settings; a large number of originally non-canonical paired seeds are causally transported to the canonical function. GELU is a clear exception, showing that information value still depends on the optimization protocol.</p>
+<p>Although a low-disagreement unanimous sample is already hard-predicted correctly by every function in the base final state, retraining still significantly changes the exact distribution, proving that "applying zero-one conditioning on top of the final hard posterior" is not the training process. After a conflicting label excludes the canonical function, none of the six architectures chooses "the canonical function flipped only at that point"; instead they form broad protocol-dependent function clouds.</p>
+<h2 id="3-large-scale-results">3. Large-scale results</h2>
+<p>From 8,192 random training sets, 120 loose candidates are screened out; confirmation with fresh 4,096 seeds yields 46 strict high consensus. The pre-registered Tier distribution is 4/31/11/0, with no Tier-4 candidate. The post-hoc LP audit finds:</p>
+<ul>
+<li>46/46 strict high-consensus functions are linear threshold functions;</li>
+<li>46/46 have equal-absolute-value weights;</li>
+<li>120/120 loose candidates are all linearly separable, and 119/120 belong to the equal-weight signed-threshold family.</li>
+</ul>
+<p>Tier-3 is not a complex counterexample; rather, the pre-registered language missed the standard signed-cardinality threshold.</p>
+<h2 id="4-verdict">4. Verdict</h2>
+<p>E18 does not prove that all neural high-consensus functions are human-readable, but it provides strong teacher-free positive evidence: in this 8-bit MLP protocol, high full-function consensus systematically corresponds to short symbolic rules among the candidates compatible with the training set; neural complexity and human symbolic complexity are significantly aligned at least on this natural rule family.</p>
+<p>The results do not support the converse, nor do they support the claim that high consensus necessarily holds across arbitrary architectures. The unified identification of the threshold family is a post-hoc finding and must be reported separately from the pre-registered zero-Tier-4 result.</p></div>
         <footer class="experiment-pager"><a href="e17.html">← E17 Static Deep-Loss Mass versus Optimizer Transport</a><a href="e19.html">E19 Full-Truth-Table Rule Volume →</a></footer>
       </article>
     </main>

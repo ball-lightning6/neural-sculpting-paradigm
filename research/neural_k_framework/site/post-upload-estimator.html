@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="从架构与参数先验直接估算 Neural K：有限宽 CGF、鞍点近似与 520 节点回测。">
+  <title>Neural K 估计器：有限宽 CGF、鞍点修正与 520 节点回测 · Neural K 研究档案</title>
+  <link rel="stylesheet" href="assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="assets/site.js"></script>
+</head>
+<body data-page-kind="post-upload">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+
+    <header class="topbar">
+      <a class="site-mark" href="index.html" aria-label="返回研究主文">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K 研究档案</span>
+      </a>
+      <nav class="top-nav" aria-label="全站导航"><a class="top-link" href="index.html">研究主文</a><a class="top-link" href="theory-core.html">理论核心</a><a class="top-link" href="experiments/index.html">实验索引</a><a class="top-link active" href="post-upload.html">提交后增量</a><a class="top-link" href="references.html">参考文献</a><a class="top-link" href="evidence-ledger.html">证据总账</a></nav>
+      <nav class="language-switch" aria-label="语言"><span class="active" lang="zh-CN">中文</span><a href="en/post-upload-estimator.html" lang="en">EN</a></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>目录</span>
+      </button>
+    </header>
+
+  <div class="page-shell">
+
+    <aside class="sidebar" id="sidebar" aria-label="本页目录">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">本页目录</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#1-适用范围与协议">1. 适用范围与协议</a></li>
+<li><a href="#2-精确的有限宽联合输出-cgf">2. 精确的有限宽联合输出 CGF</a></li>
+<li><a href="#3-bce事件的-chernoff-作用量">3. BCE事件的 Chernoff 作用量</a></li>
+<li><a href="#4-表示代价确实被计入">4. 表示代价确实被计入</a></li>
+<li><a href="#5-从作用量到实用概率估计">5. 从作用量到实用概率估计</a></li>
+<li><a href="#6-回测协议">6. 回测协议</a></li>
+<li><a href="#7-量化结果">7. 量化结果</a></li>
+<li><a href="#8-为什么这不是单纯经验拟合">8. 为什么这不是单纯经验拟合</a></li>
+<li><a href="#9-来源与可复现性">9. 来源与可复现性</a></li>
+<li><a href="#10-当前可以支持和不能支持的结论">10. 当前可以支持和不能支持的结论</a></li>
+</ul>
+</div>
+</nav>
+        <a class="sidebar-action" href="post-upload.html">返回增量总览 →</a>
+      </div>
+    </aside>
+
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">实验增量 · 架构估计器</div>
+          <h1>Neural K 估计器：有限宽 CGF、鞍点修正与 520 节点回测</h1>
+          <p class="article-description">从架构与参数先验直接估算 Neural K：有限宽 CGF、鞍点近似与 520 节点回测。</p>
+        </header>
+        <div class="article-body"><p>本页把当前推荐方法、有限宽 CGF 推导、数值协议、旧经验式对照、最终回测和来源更正合并成一个网站入口。它是协议相对的训练前估计器，不是任意架构的精确算法。</p>
+<h2 id="1-适用范围与协议">1. 适用范围与协议</h2>
+<p>估计器适用于本项目固定协议：单隐藏层宽16的 tanh 网络、0/1输入、Gaussian白化神经坐标、原fan-in缩放，以及完整真值表平均 raw-BCE 子水平事件。它不能直接推广到任意深度、CNN、RNN、Transformer、编码或先验。</p>
+<p>目标是在运行SMC之前，根据架构和参数先验估计低loss体积及对应Neural K。SMC只用于冻结回测参考，不用于按规则拟合校正系数。</p>
+<h2 id="2-精确的有限宽联合输出-cgf">2. 精确的有限宽联合输出 CGF</h2>
+<p>3-bit和4-bit实验有 (r=2^b) 个输入表行，隐藏宽度为 (m=16)。独立Gaussian神经坐标下：
+<div class="math-display">$$
+Z=\frac1{\sqrt m}\sum_{j=1}^{m}a_jh_j
++\frac{b_o}{\sqrt m}\mathbf1,
+\qquad
+h_j(x)=\tanh((w_j\cdot x+b_j)/\sqrt b).
+$$</div></p>
+<p>积分掉独立Gaussian读出后，有限宽累积量生成函数为：
+<div class="math-display">$$
+\Lambda(t)=\log\mathbb E e^{t^TZ}
+=\frac{(\mathbf1^Tt)^2}{2m}
++m\log\mathbb E_{w,b}
+\exp\left[\frac{(t^Th)^2}{2m}\right].
+$$</div></p>
+<p>这是指定有限宽先验下的精确恒等式，不使用无限宽近似，也没有从SMC数据标定参数。单神经元积分只有 (b+1) 个独立Gaussian坐标，用多维Gauss-Hermite求积计算。</p>
+<p>与只保留协方差的Gaussian近似不同，CGF保留有限宽表示涨落的高阶结构。该推导受到有限宽Gaussian混合与特征分布工作的启发，但BCE估计器及其化简是本项目协议特定的实现。</p>
+<h2 id="3-bce事件的-chernoff-作用量">3. BCE事件的 Chernoff 作用量</h2>
+<p>令 (s_i=2y_i-1)，事件 (E) 为完整真值表平均BCE不超过 (\epsilon)。定义：
+<div class="math-display">$$
+I(E)=\sup_t\{\inf_{z\in E}t^Tz-\Lambda(t)\}.
+$$</div></p>
+<p>Chernoff不等式给出：
+<div class="math-display">$$
+\Pr(E)\le e^{-I(E)},
+\qquad
+K(E)\ge I(E)/\ln2.
+$$</div></p>
+<p>因此Chernoff作用量只是负log概率的方向性下界，不是完整Neural K。</p>
+<p>对BCE令 (t=s\odot\omega)、(omega_i\ge0)，并引入 (alpha&gt;\max_i\omega_i)，得到有限维凹最大化：
+<div class="math-display">$$
+I(E)=\sup_{\omega,\alpha}
+\left\{
+\alpha\sum_iH(\omega_i/\alpha)
+-r\alpha\epsilon
+-\Lambda(s\odot\omega)
+\right}.
+$$</div></p>
+<p>程序检查平均BCE、KKT残差和Legendre恒等式。数学Chernoff不等式是严格的，但浮点求积未经区间认证，所以数值输出不称为已认证严格界。</p>
+<h2 id="4-表示代价确实被计入">4. 表示代价确实被计入</h2>
+<p>在最优指数倾斜分布下，作用量分解为隐藏表示分布的KL倾斜代价与读出倾斜代价。因此方法没有把罕见隐藏表示替换成任意最小范数输出解；有限宽表示涨落被明确计入。</p>
+<h2 id="5-从作用量到实用概率估计">5. 从作用量到实用概率估计</h2>
+<p>方法在倾斜分布下对联合输出使用局部Gaussian近似，并对非线性BCE边界作二阶展开，加入Gaussian半空间因子和切向边界曲率行列式修正。</p>
+<p>这个修正是近似，不是恒等式；没有对所有宽度、规则和loss深度给出统一误差界。程序同时保留未经修正的Chernoff作用量，避免把主导作用量和完整事件概率混为一谈。回测是理论预测与历史SMC的比较，不是换一个采样器再对同一SMC结果自我拟合。</p>
+<h2 id="6-回测协议">6. 回测协议</h2>
+<p>最终回测包含：</p>
+<ul>
+<li>全部40个严格对称3-bit轨道、5档BCE；</li>
+<li>预先固定的64个4-bit轨道、5档BCE；</li>
+<li>总计520个规则×loss节点；</li>
+<li>没有按规则用SMC拟合估计器参数；</li>
+<li>比较前固定数值筛查。</li>
+</ul>
+<p>参考值保留原SMC副本、报警、复测和体积均值/中位数两种口径。通过筛查不等于严格证明误差小于0.05 bit；未通过也不等于原近似必然错误。</p>
+<h2 id="7-量化结果">7. 量化结果</h2>
+<p>在浅层和中间loss区域，新方法明显优于旧的对数式和Hill经验式。</p>
+<p>BCE=0.001时，与原SMC中位数的K排序Spearman为：</p>
+<ul>
+<li>3-bit：0.999625；</li>
+<li>4-bit：0.997482。</li>
+</ul>
+<p>有限窗口收缩系数定义为：
+<div class="math-display">$$
+c=\frac{K(0.001)-K(0.01)}{\log_2(10)}.
+$$</div></p>
+<p>估计器保留深尾收缩排序：</p>
+<ul>
+<li>3-bit (R^2=0.999594)；</li>
+<li>4-bit (R^2=0.992877)；</li>
+<li>系数Spearman分别为0.997561和0.988324。</li>
+</ul>
+<p>这里的系数是有限窗口斜率，不声称是 (epsilon\to0) 的最终渐近系数。</p>
+<p>520个节点中248个通过固定数值筛查，其余保留近似或未确认标记。主要限制是重要性权重集中、副本分歧和少量求积报警；4-bit深尾仍然明显更难。</p>
+<h2 id="8-为什么这不是单纯经验拟合">8. 为什么这不是单纯经验拟合</h2>
+<p>预测器没有从SMC K拟合比例、偏置或逐规则参数。它从架构和先验计算联合输出CGF，求解BCE凸对偶，再使用固定的鞍点/边界曲率近似。因此回测检验的是：架构诱导的联合输出分布是否包含可计算的复杂度信息。</p>
+<p>这仍是协议相对结果，不是普适Neural K公式、机器无关Kolmogorov复杂度定理或SGD终点频率的精确预测。</p>
+<h2 id="9-来源与可复现性">9. 来源与可复现性</h2>
+<p>项目在2026-08-31已经有有限宽CGF的推导和实现。本轮新增的是快速鞍点近似、完整3/4-bit回测和4-bit迁移，不是第一次发现有限宽CGF。</p>
+<p>方法、协议、验证脚本、斜率CSV、汇总JSON和回测报告保存在 architecture_bias/current_method/ 及其上级目录。公开方法不需要SMC checkpoint或中间缓存。</p>
+<h2 id="10-当前可以支持和不能支持的结论">10. 当前可以支持和不能支持的结论</h2>
+<p>可以支持：</p>
+<ul>
+<li>有限宽联合输出分布包含可计算的loss-resolved实现质量信息；</li>
+<li>在当前协议内，方法能预测大量规则的K尺度、排序和有限窗口收缩系数；</li>
+<li>方法可以从3-bit开发族迁移到预先固定的4-bit节点，而不拟合新的规则参数。</li>
+</ul>
+<p>不能支持：</p>
+<ul>
+<li>任意架构和先验都有同一公式；</li>
+<li>深尾概率已经精确算出；</li>
+<li>估计器在所有区域替代SMC；</li>
+<li>估计的Neural K直接等于真实SGD函数频率；</li>
+<li>Neural K等同于机器无关Kolmogorov complexity。</li>
+</ul></div>
+
+      </article>
+    </main>
+  </div>
+</body>
+</html>

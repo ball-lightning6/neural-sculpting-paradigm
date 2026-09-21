@@ -23,7 +23,7 @@
         <span class="mark-block">NK</span>
         <span class="mark-text">Neural K Research Archive</span>
       </a>
-      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="../index.html">Research</a><a class="top-link" href="../theory-core.html">Core Theory</a><a class="top-link active" href="../experiments/index.html">Experiments</a><a class="top-link" href="../references.html">References</a><a class="top-link" href="../evidence-ledger.html">Evidence</a></nav>
+      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="../index.html">Research</a><a class="top-link" href="../theory-core.html">Core Theory</a><a class="top-link active" href="../experiments/index.html">Experiments</a><a class="top-link" href="../post-upload.html">Updates</a><a class="top-link" href="../references.html">References</a><a class="top-link" href="../evidence-ledger.html">Evidence</a></nav>
       <nav class="language-switch" aria-label="Language"><a href="../../experiments/e10.html" lang="zh-CN">中文</a><span class="active" lang="en">EN</span></nav>
       <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
         <span aria-hidden="true">☰</span><span>Contents</span>
@@ -38,12 +38,25 @@
         <nav class="toc"><div class="toc">
 <ul>
 <li><a href="#overview">Experiment overview</a></li>
-<li><a href="#motivation">Why this experiment was run</a></li>
+<li><a href="#purpose">Purpose</a></li>
+<li><a href="#files">Files</a></li>
+<li><a href="#frozen-sources">Frozen sources</a></li>
+<li><a href="#motivation">Why this experiment was run, and how it was judged</a></li>
+<li><a href="#1-why-the-broad-scan-failed-first">1. Why the broad scan failed first</a></li>
+<li><a href="#2-two-cleaner-discrimination-principles">2. Two cleaner discrimination principles</a></li>
+<li><a href="#3-primary-decision-quantity">3. Primary decision quantity</a></li>
+<li><a href="#4-final-reliability-criterion">4. Final reliability criterion</a></li>
+<li><a href="#5-boundaries">5. Boundaries</a></li>
 <li><a href="#results">Results, interpretation, and limits</a></li>
+<li><a href="#1-the-broad-complexity-proxy-scan-refutes-the-strong-version">1. The broad complexity-proxy scan refutes the strong version</a></li>
+<li><a href="#2-the-prior-baseline-is-already-strongly-biased-toward-simple-rules">2. The prior baseline is already strongly biased toward simple rules</a></li>
+<li><a href="#3-final-re-audit-12-12-for-raw-bce">3. Final re-audit: 12/12 for raw BCE</a></li>
+<li><a href="#4-theoretical-role">4. Theoretical role</a></li>
+<li><a href="#5-boundaries-and-subsequent-corrections">5. Boundaries and subsequent corrections</a></li>
 </ul>
 </div>
 </nav>
-        <div class="sidebar-label experiment-label">All experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>Static Hard Conditioning versus Optimizer-Induced Function Transport</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-Bit Counterfactual Invariance</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>Prior-Consistent Function Dynamics and Width Intervention</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>Post-Fit Drift in the Mingard 2025 Boolean Protocol</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>Feature Learning When a Fixed NTK Is Already Sufficient</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>Loss-Conditioned Prior Annealing</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>Function-ID Wandering and Matched-Loss Static Controls</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>Shared Intermediate Computation under Finite Capacity</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>Long Training with 80% Hidden Label Noise</span></a><a class="experiment-nav-link active" href="e10.html"><span>E10</span><span>Raw-BCE Competition between Preregistered Simple and Complex Function Pairs</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule-30 Train/Validation Gradient Alignment across Dataset Size</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND Shortcut Static Geometry and a One-Example Balance Intervention</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>SGD Dynamics of the AND Shortcut and Balanced Intervention</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>Weighted Rule-Bit Function Switching across Loss Scales</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Complete Functions versus Marginal Concentration in Modular-97 Grokking</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity Reachability, Half-Space Generalization, and Scaffold Recovery</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>Static Deep-Loss Mass versus Optimizer Transport</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>Teacher-Free Consensus and Symbolic Readability</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>Full-Truth-Table Rule Volume</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Measure Closure between Full Rules, Fixed Datasets, and Margin Cores</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement Control and a Consensus Complexity Frontier</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>Per-Example Free Energy and an Information Invariant</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>Prospective Prediction from Full-Rule Volume to Data Transition</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>Deep Neural K Crossing of Parity4 and a One-Point Exception</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST Sample Complexity and Static Branch Prediction</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>Balanced Unlabeled MNIST Label Volume</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Agreement Before and During Grokking</span></a><a class="experiment-nav-link" href="e28.html"><span>E28</span><span>Whole-Network HMC versus Adam on 50k MNIST</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Loss-Resolved Robustness to a Dead Input Bit</span></a><a class="experiment-nav-link" href="e30.html"><span>E30</span><span>Weight Decay Reshapes the Static Complete-Function Landscape</span></a></nav>
+        <div class="sidebar-label experiment-label">All experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>Static Hard Conditioning versus Optimizer-Induced Function Transport</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-Bit Counterfactual Invariance</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>Prior-Consistent Function Dynamics and Width Intervention</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>Post-Fit Drift in the Mingard 2025 Boolean Protocol</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>Feature Learning When a Fixed NTK Is Already Sufficient</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>Loss-Conditioned Prior Annealing</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>Function-ID Wandering and Matched-Loss Static Controls</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>Shared Intermediate Computation under Finite Capacity</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>Long Training with 80% Hidden Label Noise</span></a><a class="experiment-nav-link active" href="e10.html"><span>E10</span><span>Raw-BCE Competition between Preregistered Simple and Complex Function Pairs</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule-30 Train/Validation Gradient Alignment across Dataset Size</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND Shortcut Static Geometry and a One-Example Balance Intervention</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>SGD Dynamics of the AND Shortcut and Balanced Intervention</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>Weighted Rule-Bit Function Switching across Loss Scales</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Complete Functions versus Marginal Concentration in Modular-97 Grokking</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity Reachability, Half-Space Generalization, and Scaffold Recovery</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>Static Deep-Loss Mass versus Optimizer Transport</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>Teacher-Free Consensus and Symbolic Readability</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>Full-Truth-Table Rule Volume</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Measure Closure between Full Rules, Fixed Datasets, and Margin Cores</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement Control and a Consensus Complexity Frontier</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>Per-Example Free Energy and an Information Invariant</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>Prospective Prediction from Full-Rule Volume to Data Transition</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>Deep Neural K Crossing of Parity4 and a One-Point Exception</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST Sample Complexity and Static Branch Prediction</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>Balanced Unlabeled MNIST Label Volume</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Agreement Before and During Grokking</span></a><a class="experiment-nav-link" href="e28.html"><span>E28</span><span>Whole-Network HMC versus Adam on 50k MNIST</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Loss-Resolved Robustness to a Dead Input Bit</span></a><a class="experiment-nav-link" href="e30.html"><span>E30</span><span>Weight Decay Reshapes the Static Complete-Function Landscape</span></a></nav><div class="sidebar-label experiment-label">Post-upload experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="../experiments/e31.html"><span>E31</span><span>Loss and output amplitude</span></a><a class="experiment-nav-link" href="../experiments/e32.html"><span>E32</span><span>Random-memory scaling</span></a><a class="experiment-nav-link" href="../experiments/e33.html"><span>E33</span><span>Cross-architecture output volume</span></a><a class="experiment-nav-link" href="../experiments/e34.html"><span>E34</span><span>Conditional rule duel</span></a><a class="experiment-nav-link" href="../experiments/e35.html"><span>E35</span><span>Frozen functions around grokking</span></a><a class="experiment-nav-link" href="../experiments/e36.html"><span>E36</span><span>Independent Peleg/G&amp;C recheck</span></a><a class="experiment-nav-link" href="../experiments/e37.html"><span>E37</span><span>Measure robustness and Gaussian alignment</span></a></nav>
       </div>
     </aside>
 
@@ -55,12 +68,250 @@
           <p class="article-description">Test lower-loss simplicity enrichment without defining complexity from the observed winner.</p>
         </header>
         <div class="article-body"><div class="source-bar"><span>Scripts</span><div><a href="../../../experiments/experiment_10_raw_bce_rule_pair_competition/analyze_loss_conditioned_rule_pair_competition.py">analyze_loss_conditioned_rule_pair_competition.py</a><a href="../../../experiments/experiment_10_raw_bce_rule_pair_competition/experiment_loss_conditioned_prior_scaling_4bit.py">experiment_loss_conditioned_prior_scaling_4bit.py</a></div></div><h2 id="overview">Experiment overview</h2>
-<p>Simple targets are projections, AND, or OR. Complex targets match them on every training example and have the same full output balance, but introduce two unseen exceptions. Linear programming certifies that the simple member is a threshold function and the complex member is not. Both tanh and GELU–LayerNorm reference networks are tested at training-set sizes 10, 12, and 14.</p>
-<h2 id="motivation">Why this experiment was run</h2>
-<p>A broad external-complexity scan produced many apparent failures because datasets were underconstrained and several supposedly complex functions were easy threshold functions for the MLP. The pair design removes those ambiguities and uses the actual raw BCE optimized by training.</p>
+<h2 id="purpose">Purpose</h2>
+<p>E10 first uses a multi-task, large-scale static scan to test whether "lower loss universally increases the mass of simple functions", and then, targeting the problems of training-set ambiguity and external complexity proxies, constructs simple/complex function pairs whose training outputs are completely identical but whose representational difficulty is strictly ordered, for a direct odds test.</p>
+<h2 id="files">Files</h2>
+<ul>
+<li><a href="#motivation">Experiment motivation and preregistered criteria</a></li>
+<li><a href="#results">Full results, re-audit, and stage verdict</a></li>
+<li><a href="../../../experiments/experiment_10_raw_bce_rule_pair_competition/experiment_loss_conditioned_prior_scaling_4bit.py"><code>experiment_loss_conditioned_prior_scaling_4bit.py</code></a></li>
+<li><a href="../../../experiments/experiment_10_raw_bce_rule_pair_competition/analyze_loss_conditioned_rule_pair_competition.py"><code>analyze_loss_conditioned_rule_pair_competition.py</code></a></li>
+</ul>
+<p>Run order:</p>
+<pre><code class="language-bash">python experiment_loss_conditioned_prior_scaling_4bit.py
+python analyze_loss_conditioned_rule_pair_competition.py
+</code></pre>
+<p>The second frozen script has restored the default source to <code>/root/results_loss_conditioned_prior_scaling_4bit</code>, generated by the first step, and adopts the final reliability criterion.</p>
+<h2 id="frozen-sources">Frozen sources</h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Source</th>
+<th>SHA256</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>experiment_loss_conditioned_prior_scaling_4bit.py</code></td>
+<td>development version with the same name</td>
+<td><code>dff27be60da28f4e537c5547f68d7d2a78b69727305b0ecf646ea0c5301cf5ab</code></td>
+</tr>
+<tr>
+<td><code>analyze_loss_conditioned_rule_pair_competition.py</code></td>
+<td>release copy of the development version after restoring the Aug-19 data path</td>
+<td><code>5cff544b8b96199af4dbdd6ca2270c701639745f511d1b27f9cef755294256a2</code></td>
+</tr>
+</tbody>
+</table>
+<p>Raw results:</p>
+<table>
+<thead>
+<tr>
+<th>Result bundle</th>
+<th>SHA256</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>E:\Downloads\results_loss_conditioned_prior_scaling_4bit.zip</code></td>
+<td><code>9436665cb0ce8587b664cb9ce8da664527805022029c88cef125415656d2aa20</code></td>
+</tr>
+<tr>
+<td><code>E:\Downloads\results_loss_conditioned_rule_pair_competition.zip</code></td>
+<td><code>6df85b66acedcd670866fbf3e0bdbbc9ade06c36d8f5ff52d8f261411049a388</code></td>
+</tr>
+</tbody>
+</table>
+<p>The automatic <code>summary.json</code> in the old pair ZIP used the deprecated tail reliability criterion. The numbers in the main text come from a re-audit of <code>pair_odds_trajectories.csv</code> under the final null-hypothesis expected-count rule; the frozen analysis script can fully reproduce them after the prior shards are regenerated. The ZIP is not included in the final release package.</p>
+<h2 id="motivation">Why this experiment was run, and how it was judged</h2>
+<h2 id="1-why-the-broad-scan-failed-first">1. Why the broad scan failed first</h2>
+<p>In the first stage, projection, majority, parity, and random balanced training constraints were combined in the full 4-bit space, scanning <code>k=2,4,6,8</code> and two network measures:</p>
+<ul>
+<li><code>tanh 16x2</code>: 67,108,864 prior samples;</li>
+<li><code>GELU+LayerNorm 1024x3</code>: 100,663,296 prior samples.</li>
+</ul>
+<p>However, a "human-specified generating rule" is not necessarily the simple continuation preferred by the network under the current finite training set; ANF, DNF, decision trees, and the composite rank do not necessarily correspond to the network's language either. Under severely underconstrained conditions, a shift of low loss toward another threshold function cannot be directly counted as a simplicity failure.</p>
+<h2 id="2-two-cleaner-discrimination-principles">2. Two cleaner discrimination principles</h2>
+<ol>
+<li>Use obviously simple rules that the samples are sufficient to expose, such as projection, AND, and OR;</li>
+<li>Directly compare a pair of functions, where complex is obtained from simple by adding discrete exceptions, and:
+   - the two are pointwise completely identical on the training set;
+   - they have the same full truth table Hamming weight;
+   - simple is a single-layer linear threshold function;
+   - complex is proven non-linearly-separable by linear programming;
+   - the ANF, normal form, and decision tree proxies of complex are all strictly larger.</li>
+</ol>
+<p>Training samples are drawn only from the agreement set of the two functions, using <code>k=10,12,14</code>.</p>
+<h2 id="3-primary-decision-quantity">3. Primary decision quantity</h2>
+<p>For the simple function <code>f_s</code> and the complex function <code>f_c</code>, define:</p>
+<div class="math-display">$$
+R(q)=
+\frac{P_q(f_s)/P_q(f_c)}{P_{hard}(f_s)/P_{hard}(f_c)},
+$$</div>
+<p>where <code>q</code> is the lowest raw BCE quantile and <code>P_hard</code> is the baseline that only satisfies the same hard constraints. <code>R(q)&gt;1</code> means that lower raw BCE further increases the odds of the simple rule.</p>
+<p>raw BCE is the sole primary endpoint, because it is the loss that the corresponding training actually optimizes. normalized BCE and fixed-scale serve only as mechanism diagnostics and do not participate in judging the truth of the main proposition.</p>
+<h2 id="4-final-reliability-criterion">4. Final reliability criterion</h2>
+<p>The old automatic summary mistakenly only required the actual total of simple+complex in the tail to be sufficient. Because the baseline may already be extremely biased toward simple, 0/1 hits of complex would dominate the odds. The final rule was changed to:</p>
+<div class="math-display">$$
+E_0[N_s]=N_s^{base}q\ge20,
+\qquad
+E_0[N_c]=N_c^{base}q\ge20.
+$$</div>
+<p>For each condition, the deepest quantile satisfying this rule is selected, and a Fisher exact test is used to compare the simple/complex probabilities of "entering the low-loss tail". This criterion was triggered by a statistical reliability concern after the results were returned but before the directions were read, and must be recorded separately from the old ZIP summary.</p>
+<h2 id="5-boundaries">5. Boundaries</h2>
+<ul>
+<li>This is still a static reference measure, not the SGD endpoint distribution;</li>
+<li>the 12 reliable comparisons are concentrated in the moderate variants of projection, AND, and OR;</li>
+<li>high variants and parity are often not adjudicable because of too few prior hits;</li>
+<li>the 12/12 result demonstrates a strong tendency within the tested function pairs, not a theorem for all loss ranges, function pairs, and architectures.</li>
+</ul>
 <h2 id="results">Results, interpretation, and limits</h2>
-<p>After requiring reliable expected counts for both members in the chosen tail, all 12 of 12 comparisons increased the simple-to-complex odds and all were significant. Mean odds amplification was about 10.6-fold for GELU and 5.1-fold for tanh. Examples include about 9.96-fold for GELU AND at k=12 and 8.49-fold for GELU OR at k=10.</p>
-<p><strong>Conclusion.</strong> Lower raw BCE favors independently ordered simple compatible functions in this controlled family. The result is not a universal all-loss monotonicity theorem and does not identify the optimizer distribution with static odds.</p></div>
+<h2 id="1-the-broad-complexity-proxy-scan-refutes-the-strong-version">1. The broad complexity-proxy scan refutes the strong version</h2>
+<p>The first stage analyzed 24 constraint groups for each of the two networks. After removing conditions without a reliable low-loss slice, according to the composite complexity panel at that time, the proportions of "becoming simpler" were approximately:</p>
+<table>
+<thead>
+<tr>
+<th>Measure</th>
+<th style="text-align: right;">Valid conditions</th>
+<th style="text-align: right;">Composite complexity decrease</th>
+<th style="text-align: right;">Mass increase in simplest 10%</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>raw BCE</td>
+<td style="text-align: right;">44</td>
+<td style="text-align: right;">56.8%</td>
+<td style="text-align: right;">34.1%</td>
+</tr>
+<tr>
+<td>normalized BCE</td>
+<td style="text-align: right;">44</td>
+<td style="text-align: right;">29.5%</td>
+<td style="text-align: right;">15.9%</td>
+</tr>
+<tr>
+<td>fixed scale</td>
+<td style="text-align: right;">42</td>
+<td style="text-align: right;">33.3%</td>
+<td style="text-align: right;">21.4%</td>
+</tr>
+</tbody>
+</table>
+<p>This refutes the strong version that "under any finite constraint, lower loss monotonically simplifies according to external Boolean complexity proxies". A large number of so-called failures actually shifted toward linear threshold functions, showing that training-set ambiguity and the mismatch of complexity language are severe.</p>
+<h2 id="2-the-prior-baseline-is-already-strongly-biased-toward-simple-rules">2. The prior baseline is already strongly biased toward simple rules</h2>
+<p>In the GELU-LN <code>1024x3</code> hard-exact baseline:</p>
+<table>
+<thead>
+<tr>
+<th>Rule pair</th>
+<th style="text-align: right;">simple count</th>
+<th style="text-align: right;">complex count</th>
+<th style="text-align: right;">Ratio</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>x0</code></td>
+<td style="text-align: right;">226,375</td>
+<td style="text-align: right;">1,794</td>
+<td style="text-align: right;">126:1</td>
+</tr>
+<tr>
+<td><code>x0 AND x1</code></td>
+<td style="text-align: right;">38,404</td>
+<td style="text-align: right;">2,984</td>
+<td style="text-align: right;">12.9:1</td>
+</tr>
+<tr>
+<td><code>x0 OR x1</code></td>
+<td style="text-align: right;">137,064</td>
+<td style="text-align: right;">482</td>
+<td style="text-align: right;">284:1</td>
+</tr>
+</tbody>
+</table>
+<p>The high-complexity four-exception variants are mostly too rare to reliably enter the pairwise test.</p>
+<h2 id="3-final-re-audit-12-12-for-raw-bce">3. Final re-audit: 12/12 for raw BCE</h2>
+<p>Using the final criterion that the expected hits of both simple and complex under the null hypothesis are no fewer than 20, raw BCE yields 12 reliable comparisons:</p>
+<ul>
+<li>12/12 show increased simple odds;</li>
+<li>12/12 are significantly biased toward simple by the Fisher two-sided test;</li>
+<li>the GELU nine groups average <code>log2 odds enrichment=3.40</code>, about 10.6x;</li>
+<li>the tanh three groups average <code>log2 odds enrichment=2.34</code>, about 5.1x.</li>
+</ul>
+<p>Representative results:</p>
+<table>
+<thead>
+<tr>
+<th>Architecture/rule</th>
+<th style="text-align: right;">k</th>
+<th style="text-align: right;">retained fraction</th>
+<th style="text-align: right;">odds enrichment</th>
+<th style="text-align: right;">Fisher p</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GELU <code>x0</code></td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">2%</td>
+<td style="text-align: right;">13.59x</td>
+<td style="text-align: right;"><code>5.88e-8</code></td>
+</tr>
+<tr>
+<td>GELU <code>x0</code></td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">2%</td>
+<td style="text-align: right;">26.71x</td>
+<td style="text-align: right;"><code>2.00e-16</code></td>
+</tr>
+<tr>
+<td>GELU <code>x0</code></td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">2%</td>
+<td style="text-align: right;">81.99x</td>
+<td style="text-align: right;"><code>1.96e-18</code></td>
+</tr>
+<tr>
+<td>GELU AND</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">1%</td>
+<td style="text-align: right;">9.96x</td>
+<td style="text-align: right;"><code>3.95e-14</code></td>
+</tr>
+<tr>
+<td>GELU OR</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">5%</td>
+<td style="text-align: right;">8.49x</td>
+<td style="text-align: right;"><code>4.85e-10</code></td>
+</tr>
+<tr>
+<td>tanh AND</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">20%</td>
+<td style="text-align: right;">6.00x</td>
+<td style="text-align: right;"><code>1.58e-10</code></td>
+</tr>
+</tbody>
+</table>
+<p>Under the normalized measure, 9/12 have a positive direction; under fixed-scale, only the nine GELU groups satisfy the final expected counts, of which 6/9 have a positive direction. They are mechanism diagnostics and do not participate in the raw primary adjudication.</p>
+<h2 id="4-theoretical-role">4. Theoretical role</h2>
+<p>E10 directly supports, on the restricted function pairs:</p>
+<blockquote>
+<p>For function pairs that satisfy completely identical training hard constraints but are strictly ordered in the network's representation language, entering a lower true raw BCE sublevel set significantly increases the relative odds of the simple function.</p>
+</blockquote>
+<p>This result separates "complex functions also have equally low-loss solutions" from "complex functions hold equally low-loss probability mass". It does not add a complexity objective to training; the network still only optimizes raw BCE, and the simplicity enrichment is an empirical consequence of the static geometry.</p>
+<h2 id="5-boundaries-and-subsequent-corrections">5. Boundaries and subsequent corrections</h2>
+<ul>
+<li>The result does not grant prior privilege to the researcher-generated scripts; the simple/complex ordering is constructed from independent function pairs;</li>
+<li>the failure of the broad scan remains valid, showing that external complexity proxies cannot replace architecture-relative difficulty;</li>
+<li>a static odds tendency does not equal the optimizer distribution; E07 has directly shown that the numerical values can deviate significantly;</li>
+<li>12/12 only tests the terminal reliable slice selected for each group; it does not prove that the odds are monotonic along the entire loss path;</li>
+<li>later AND shortcut and deep-tail crossover experiments will further show that the dominant function and the volume ordering can swap order with the loss scale; therefore E10 is strong positive evidence, not an unconditional law.</li>
+</ul></div>
         <footer class="experiment-pager"><a href="e09.html">← E09 Long Training with 80% Hidden Label Noise</a><a href="e11.html">E11 Rule-30 Train/Validation Gradient Alignment across Dataset Size →</a></footer>
       </article>
     </main>

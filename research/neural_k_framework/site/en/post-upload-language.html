@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Precise definitions for joint outputs, function mass, information updates, and statistical-physics terminology.">
+  <title>A strict probability language: joint outputs, function mass, and information updates · Neural K Research Archive</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="../assets/site.js"></script>
+</head>
+<body data-page-kind="post-upload">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+
+    <header class="topbar">
+      <a class="site-mark" href="index.html" aria-label="Back to the research narrative">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K Research Archive</span>
+      </a>
+      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="index.html">Research</a><a class="top-link" href="theory-core.html">Core Theory</a><a class="top-link" href="experiments/index.html">Experiments</a><a class="top-link active" href="post-upload.html">Updates</a><a class="top-link" href="references.html">References</a><a class="top-link" href="evidence-ledger.html">Evidence</a></nav>
+      <nav class="language-switch" aria-label="Language"><a href="../post-upload-language.html" lang="zh-CN">中文</a><span class="active" lang="en">EN</span></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>Contents</span>
+      </button>
+    </header>
+
+  <div class="page-shell">
+
+    <aside class="sidebar" id="sidebar" aria-label="On this page">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">On this page</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#1-fix-the-output-object-and-the-measure-first">1. Fix the output object and the measure first</a></li>
+<li><a href="#2-cumulative-loss-mass-is-not-an-exact-loss-shell">2. Cumulative loss mass is not an exact-loss shell</a></li>
+<li><a href="#3-full-target-fixed-d-and-training-endpoints-are-different-distributions">3. Full-target, fixed-D, and training endpoints are different distributions</a></li>
+<li><a href="#4-adding-an-example-denotes-three-different-operations">4. Adding an example denotes three different operations</a></li>
+<li><a href="#5-surprise-kl-and-within-function-information">5. Surprise, KL, and within-function information</a></li>
+<li><a href="#6-complexity-distributions-and-conditional-narrowing">6. Complexity distributions and conditional narrowing</a></li>
+<li><a href="#7-audit-and-limits-of-use">7. Audit and limits of use</a></li>
+</ul>
+</div>
+</nav>
+        <a class="sidebar-action" href="post-upload.html">Back to the increments overview →</a>
+      </div>
+    </aside>
+
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">Theory increment · Strict probability language</div>
+          <h1>A strict probability language: joint outputs, function mass, and information updates</h1>
+          <p class="article-description">Precise definitions for joint outputs, function mass, information updates, and statistical-physics terminology.</p>
+        </header>
+        <div class="article-body"><p>This is the website's entry point to the theory. The <a href="theory-core.html">Core Theory page</a> provides the main framework, while this page states the strict objects and audit boundaries. The original formal specification, tutorial, and verification scripts remain in the release tree. The formulas below are definitions or identities under stated conditions. “Complex functions contract faster” does not follow automatically from them.</p>
+<h2 id="1-fix-the-output-object-and-the-measure-first">1. Fix the output object and the measure first</h2>
+<p>Fix a protocol <code>Π</code>: parameter space, architecture, encoding, parameter reference probability measure <code>μ</code>, per-example loss, and hard readout rule. Fix a finite input table <code>U</code>. The continuous joint output <code>Z_U(θ)=(F_θ(x))_{x∈U}</code> induces the pushforward measure <code>ν_U=(Z_U)_#μ</code>. The hard function <code>H_U(θ)</code> is the complete discrete output table on the same inputs.</p>
+<p>The cells <code>C_U(f)={θ:H_U(θ)=f}</code> are disjoint and cover parameter space; their reference masses <code>p_U(f)=μ(C_U(f))</code> sum to one. “Complete” here is relative to the specified <code>U</code>. A single hard cell can contain different logits, margins, and losses. Changing the loss while leaving the network, readout, and reference measure fixed changes the event imposed on <code>ν_U</code>, not the underlying joint-output distribution.</p>
+<h2 id="2-cumulative-loss-mass-is-not-an-exact-loss-shell">2. Cumulative loss mass is not an exact-loss shell</h2>
+<p>Mean training loss on <code>D</code> defines <code>A_D(ε)={θ:L_D(θ)≤ε}</code>. The cumulative mass of a function branch and its normalized conditional distribution are:</p>
+<div class="math-display">$$
+Ω_{U,D}(f;ε)=μ(C_U(f)∩A_D(ε)),\qquad
+Q_{U,D,ε}(f)=\frac{Ω_{U,D}(f;ε)}{\sum_gΩ_{U,D}(g;ε)}.
+$$</div>
+<p><code>Q</code> is the cumulative ensemble below a loss threshold. For a thin loss window use <code>Ω_f(b)-Ω_f(a)</code>. To discuss an exact-loss density one must first establish that the relevant loss measure has a density <code>ρ_f</code> on that interval. Where differentiability and positive denominators hold, the local contraction index is <code>λ_f(ε)=ερ_f(ε)/Ω_f(ε)</code>; the function distribution in a thin shell is the cumulative <code>Q</code> reweighted by <code>λ_f</code>. These are not interchangeable distributions.</p>
+<h2 id="3-full-target-fixed-d-and-training-endpoints-are-different-distributions">3. Full-target, fixed-D, and training endpoints are different distributions</h2>
+<p><code>K^{N,full}(f;ε)=-log₂ μ{L_{D_full(f)}≤ε}</code> measures the loss volume of a complete target. <code>K^{N,FD}_{U,D}(f;ε)=-log₂ Ω_{U,D}(f;ε)</code> measures the intersection of a fixed partial dataset event with a function cell. The cell factor can be omitted only when the full-target threshold already forces every hard output to be correct. In general these profiles must not share one suffix-free <code>K</code> symbol.</p>
+<p>The function distribution produced by SGD or Adam is the pushforward of the initialization measure under the training map; it is not the static conditional distribution above. Static mass can make first-order predictions, while entrances, gradients, connectivity, numerical noise, and history can still alter the endpoints. A change of parameter measure must be stated explicitly; Gaussian probability is not the Euclidean volume of an unbounded parameter space.</p>
+<h2 id="4-adding-an-example-denotes-three-different-operations">4. Adding an example denotes three different operations</h2>
+<p>Fix the old event <code>E=A_D(ε)</code> and use one input table that already includes the query point. At least three distinct operations can be meant by adding a sample:</p>
+<ol>
+<li><strong>Hard conditioning:</strong> retain parameters in the old event whose predicted label is <code>y</code>, obtaining <code>E∩B_y</code>;</li>
+<li><strong>Continuous filtering inside the old parent:</strong> retain <code>E</code> and require the new mean loss to meet another threshold, obtaining <code>E∩A^+_y</code>;</li>
+<li><strong>Redefining the event over all parameter space:</strong> require only <code>A^+_y={L_{D∥(x*,y)}≤ε'}</code>, without separately requiring old <code>E</code>.</li>
+</ol>
+<p>The third event can absorb parameters from outside the old event, so it is generally not the conditional update in the first or second operation. The second operation requires the joint distribution of the old loss and continuous output at the query point. A hard label alone is insufficient because one hard output can have many margins.</p>
+<h2 id="5-surprise-kl-and-within-function-information">5. Surprise, KL, and within-function information</h2>
+<p>In the first operation the old ensemble predicts the new hard label with <code>p_E(y|x*)=μ(B_y|E)</code>. If that probability is positive, the information cost of the observed label is exactly <code>-log₂ p_E(y|x*)</code> bits. The direction of the KL identity is essential:</p>
+<div class="math-display">$$
+D_{KL}(μ(\cdot|E∩B_y)\,\|\,μ(\cdot|E))=-\log p_E(y|x_*).
+$$</div>
+<p>The reverse KL generally diverges. This is the surprise of an observed label, not expected information gain before observation and not the information acquired by retraining SGD. For a function partition, parameter KL further decomposes into KL between function probabilities plus conditional parameter KL within each hard cell. Large within-cell reallocation remains possible even if the distribution of complete hard functions is unchanged.</p>
+<h2 id="6-complexity-distributions-and-conditional-narrowing">6. Complexity distributions and conditional narrowing</h2>
+<p>If candidates are grouped by an external cost <code>c(f)</code> frozen before scanning, its distribution is the pushforward of <code>Q</code> through <code>c</code>. It is neither a histogram counting functions nor a histogram of the current values of <code>-log Ω_f</code>. When loss is tightened at a fixed dataset, put <code>r_f=Ω_f(ε₂)/Ω_f(ε₁)</code> (<code>ε₂&lt;ε₁</code> and only where the old mass is positive). Then</p>
+<div class="math-display">$$
+Q_2(f)=\frac{Q_1(f)r_f}{\sum_gQ_1(g)r_g},\qquad
+\mathbb E_{Q_2}c-\mathbb E_{Q_1}c=
+\frac{\operatorname{Cov}_{Q_1}(c,r)}{\mathbb E_{Q_1}r}.
+$$</div>
+<p>A lower retention rate for complex functions is sufficient to lower mean fixed cost. The covariance sign is empirical; lower variance or eventual monopoly by one function needs additional conditions. Shortcut elimination and contraction of complex functions among surviving candidates must be measured separately. Neither follows from nested loss events alone.</p>
+<h2 id="7-audit-and-limits-of-use">7. Audit and limits of use</h2>
+<p>The itemized audit checks the old/new mean-loss event substitution, the mistaken assumption that every parameter in a hard cell survives, the replacement of fixed-D by full-target mass, the direction of KL, the difference between densities and cumulative mass, and extra assumptions in amplitude-translation arguments. The finite verification script checks formulas and counterexamples; it does not prove that neural networks generally contract complex functions faster. The original audit and script remain in the release tree.</p>
+<p>This language specifies the objects measured and the probability updates precisely. It does not replace empirical tests such as E20, E22, E23, and E31, or prove that SGD samples from the static measure. The finite verification scripts and JSON results remain available as reproducible release materials.</p></div>
+
+      </article>
+    </main>
+  </div>
+</body>
+</html>

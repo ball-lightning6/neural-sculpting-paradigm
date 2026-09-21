@@ -660,7 +660,23 @@ MNIST 目前只有两个二分类任务，而且任务和 loss 范围经过校�
 
 用这套语言，网络不必知道研究者心中的真实规则。它只是在当前网络语言和训练集约束下不断降低 loss。数据充分时，这个过程很早便指向可复用规则；数据临界时，它表现为 grokking；数据不足或有噪声时，它会继续收束到训练集特异延拓。泛化不是另一个隐藏目标，而是训练集、网络语言、loss 深度和优化路径共同选择了可迁移函数。
 
-## 附录：E01--E30 证据地图
+## 提交后增量：E31--E37
+
+短论文提交后又完成了五组已经形成独立协议和结果边界的实验。它们不改变 E01--E30 的历史编号，而是作为连续的新增证据单元进入同一研究档案：
+
+| ID | 实验 | 新增结论 |
+|---|---|---|
+| [E31](experiments/e31.html) | Loss 与幅度对齐 | raw MSE 也可以出现规则恢复；幅度对齐能在更高平均 CE 区域促进泛化，关键变量是输出联合分布，而不是 BCE 这个名字。 |
+| [E32](experiments/e32.html) | 随机记忆缩放 | 随机标签记忆的复杂度随样本数近似线性增加，为 Neural K 与容量之间的经验联系提供外部校准。 |
+| [E33](experiments/e33.html) | 跨架构联合输出体积 | MLP 之外的有限架构协议也出现规则相关的联合输出体积曲线，但系数和局部排序依赖架构与测度。 |
+| [E34](experiments/e34.html) | 条件规则决斗 | 独立冻结的 4-bit Neural K 全序在 8-bit 条件规则决斗中预测了 75/75 次人口偏好；这是协议相对的外部预测，不是普适 softmax 定律。 |
+| [E35](experiments/e35.html) | Mod97 冻结函数决斗 | grokking 前后真实完整函数在新网络中竞争时，冲突点几乎都偏向完成规则，但完整恢复仍不高，说明这是函数人口偏好而非逐网复制。 |
+| [E36](experiments/e36.html) | Peleg/G&C 独立验证 | 按原小样本 MNIST 协议复现无梯度静态采样，并证明收紧 raw BCE 后静态样本可以达到与 SGD 接近的测试水平。 |
+| [E37](experiments/e37.html) | 测度鲁棒性与 Gaussian 对应 | 用固定范数球内均匀欧式测度复核 Gaussian 端点效应，检验复杂度排序、端点响应和真实训练对应边界。 |
+
+架构训练前估计器、MDL--grokking 条件推导和测度鲁棒性复核属于同一时期的补充材料；Peleg/G&C 独立复核已经作为单独的 [E36](experiments/e36.html) 外部验证实验列出，测度复核作为 [E37](experiments/e37.html) 列出。它们统一收录在[提交后增量总览](post-upload.html)。
+
+## 附录：E01--E37 证据地图
 
 主文只展开承担关键转折的实验。其余实验并没有被删除，下面说明每个编号究竟在测什么。
 
@@ -696,3 +712,12 @@ MNIST 目前只有两个二分类任务，而且任务和 loss 范围经过校�
 | [E28](experiments/experiment_28_mnist50k_hmc_adam/README.md) | 在50k MNIST上比较整网HMC、plain Adam与MAP Adam | 静态有限宽系综能否达到真实optimizer的自然任务性能 |
 | [E29](experiments/experiment_29_dead_bit_loss_resolved/README.md) | 比较dead-bit静态profile、无衰减Adam、L2、NNGP与温度1posterior | 未约束方向保持prior时，深loss margin能否恢复反事实稳定性 |
 | [E30](experiments/experiment_30_weight_decay_static_landscape/README.md) | 在近似matched-BCE下比较三个显式L2系数的静态完整函数质量 | 写进loss的正则项能否用同一静态地形语言理解 |
+| [E31](experiments/e31.html) | 比较 raw MSE、BCE 幅度对齐和不同目标幅度下的规则恢复与 grokking | loss 形式与输出幅度怎样共同选择联合输出分布 |
+| [E32](experiments/e32.html) | 在多组随机标签任务中测量记忆复杂度随样本数的变化 | 记忆负担能否作为函数复杂度和容量的外部校准 |
+| [E33](experiments/e33.html) | 在不同有限架构协议中测量规则联合输出体积 | 体积收缩现象是否超出单一 MLP 协议 |
+| [E34](experiments/e34.html) | 用冻结的 4-bit Neural K 顺序预测 8-bit 条件规则决斗 | 独立复杂度排序能否跨任务预测函数人口偏好 |
+| [E35](experiments/e35.html) | 让 Mod97 grokking 前后的真实完整函数在新网络中竞争 | 完成规则是否在函数人口层面具有额外偏好 |
+| [E36](experiments/e36.html) | 复现 Peleg/G&C，并对静态样本继续施加 raw-BCE 约束 | 收紧连续 loss 是否能消除浅层随机插值与 SGD 之间的泛化差距 |
+| [E37](experiments/e37.html) | 比较 Gaussian 与固定范数球内均匀欧式测度的体积响应 | Gaussian 与真实训练的对应是否依赖密度惩罚，还是保留了测度较稳健的复杂度排序 |
+
+\n

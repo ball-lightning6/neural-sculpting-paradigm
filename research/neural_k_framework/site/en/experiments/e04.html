@@ -23,7 +23,7 @@
         <span class="mark-block">NK</span>
         <span class="mark-text">Neural K Research Archive</span>
       </a>
-      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="../index.html">Research</a><a class="top-link" href="../theory-core.html">Core Theory</a><a class="top-link active" href="../experiments/index.html">Experiments</a><a class="top-link" href="../references.html">References</a><a class="top-link" href="../evidence-ledger.html">Evidence</a></nav>
+      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="../index.html">Research</a><a class="top-link" href="../theory-core.html">Core Theory</a><a class="top-link active" href="../experiments/index.html">Experiments</a><a class="top-link" href="../post-upload.html">Updates</a><a class="top-link" href="../references.html">References</a><a class="top-link" href="../evidence-ledger.html">Evidence</a></nav>
       <nav class="language-switch" aria-label="Language"><a href="../../experiments/e04.html" lang="zh-CN">中文</a><span class="active" lang="en">EN</span></nav>
       <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
         <span aria-hidden="true">☰</span><span>Contents</span>
@@ -38,12 +38,31 @@
         <nav class="toc"><div class="toc">
 <ul>
 <li><a href="#overview">Experiment overview</a></li>
-<li><a href="#motivation">Why this experiment was run</a></li>
+<li><a href="#purpose">Purpose</a></li>
+<li><a href="#files">Files</a></li>
+<li><a href="#frozen-sources">Frozen sources</a></li>
+<li><a href="#motivation">Why this experiment was run, and how it was judged</a></li>
+<li><a href="#1-theoretical-conflict">1. Theoretical conflict</a></li>
+<li><a href="#2-frozen-settings">2. Frozen settings</a></li>
+<li><a href="#3-criteria">3. Criteria</a><ul>
+<li><a href="#single-trajectory-hard-function-migration">Single-trajectory hard function migration</a></li>
+<li><a href="#distributional-directional-drift">Distributional directional drift</a></li>
+<li><a href="#zero-error-stable-subset">Zero-error stable subset</a></li>
+</ul>
+</li>
+<li><a href="#4-competing-predictions">4. Competing predictions</a></li>
+<li><a href="#5-pre-declared-boundaries">5. Pre-declared boundaries</a></li>
 <li><a href="#results">Results, interpretation, and limits</a></li>
+<li><a href="#1-completeness">1. Completeness</a></li>
+<li><a href="#2-the-complete-function-keeps-changing-post-fit">2. The complete function keeps changing post-fit</a></li>
+<li><a href="#3-the-generalization-direction-depends-on-the-protocol">3. The generalization direction depends on the protocol</a></li>
+<li><a href="#4-lz-is-not-a-conclusion-of-this-project">4. LZ is not a conclusion of this project</a></li>
+<li><a href="#5-reliability-boundary-of-the-static-posterior-comparison">5. Reliability boundary of the static-posterior comparison</a></li>
+<li><a href="#6-stage-verdict">6. Stage verdict</a></li>
 </ul>
 </div>
 </nav>
-        <div class="sidebar-label experiment-label">All experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>Static Hard Conditioning versus Optimizer-Induced Function Transport</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-Bit Counterfactual Invariance</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>Prior-Consistent Function Dynamics and Width Intervention</span></a><a class="experiment-nav-link active" href="e04.html"><span>E04</span><span>Post-Fit Drift in the Mingard 2025 Boolean Protocol</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>Feature Learning When a Fixed NTK Is Already Sufficient</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>Loss-Conditioned Prior Annealing</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>Function-ID Wandering and Matched-Loss Static Controls</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>Shared Intermediate Computation under Finite Capacity</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>Long Training with 80% Hidden Label Noise</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>Raw-BCE Competition between Preregistered Simple and Complex Function Pairs</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule-30 Train/Validation Gradient Alignment across Dataset Size</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND Shortcut Static Geometry and a One-Example Balance Intervention</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>SGD Dynamics of the AND Shortcut and Balanced Intervention</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>Weighted Rule-Bit Function Switching across Loss Scales</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Complete Functions versus Marginal Concentration in Modular-97 Grokking</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity Reachability, Half-Space Generalization, and Scaffold Recovery</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>Static Deep-Loss Mass versus Optimizer Transport</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>Teacher-Free Consensus and Symbolic Readability</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>Full-Truth-Table Rule Volume</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Measure Closure between Full Rules, Fixed Datasets, and Margin Cores</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement Control and a Consensus Complexity Frontier</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>Per-Example Free Energy and an Information Invariant</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>Prospective Prediction from Full-Rule Volume to Data Transition</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>Deep Neural K Crossing of Parity4 and a One-Point Exception</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST Sample Complexity and Static Branch Prediction</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>Balanced Unlabeled MNIST Label Volume</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Agreement Before and During Grokking</span></a><a class="experiment-nav-link" href="e28.html"><span>E28</span><span>Whole-Network HMC versus Adam on 50k MNIST</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Loss-Resolved Robustness to a Dead Input Bit</span></a><a class="experiment-nav-link" href="e30.html"><span>E30</span><span>Weight Decay Reshapes the Static Complete-Function Landscape</span></a></nav>
+        <div class="sidebar-label experiment-label">All experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>Static Hard Conditioning versus Optimizer-Induced Function Transport</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-Bit Counterfactual Invariance</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>Prior-Consistent Function Dynamics and Width Intervention</span></a><a class="experiment-nav-link active" href="e04.html"><span>E04</span><span>Post-Fit Drift in the Mingard 2025 Boolean Protocol</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>Feature Learning When a Fixed NTK Is Already Sufficient</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>Loss-Conditioned Prior Annealing</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>Function-ID Wandering and Matched-Loss Static Controls</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>Shared Intermediate Computation under Finite Capacity</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>Long Training with 80% Hidden Label Noise</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>Raw-BCE Competition between Preregistered Simple and Complex Function Pairs</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule-30 Train/Validation Gradient Alignment across Dataset Size</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND Shortcut Static Geometry and a One-Example Balance Intervention</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>SGD Dynamics of the AND Shortcut and Balanced Intervention</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>Weighted Rule-Bit Function Switching across Loss Scales</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Complete Functions versus Marginal Concentration in Modular-97 Grokking</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity Reachability, Half-Space Generalization, and Scaffold Recovery</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>Static Deep-Loss Mass versus Optimizer Transport</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>Teacher-Free Consensus and Symbolic Readability</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>Full-Truth-Table Rule Volume</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Measure Closure between Full Rules, Fixed Datasets, and Margin Cores</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement Control and a Consensus Complexity Frontier</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>Per-Example Free Energy and an Information Invariant</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>Prospective Prediction from Full-Rule Volume to Data Transition</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>Deep Neural K Crossing of Parity4 and a One-Point Exception</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST Sample Complexity and Static Branch Prediction</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>Balanced Unlabeled MNIST Label Volume</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Agreement Before and During Grokking</span></a><a class="experiment-nav-link" href="e28.html"><span>E28</span><span>Whole-Network HMC versus Adam on 50k MNIST</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Loss-Resolved Robustness to a Dead Input Bit</span></a><a class="experiment-nav-link" href="e30.html"><span>E30</span><span>Weight Decay Reshapes the Static Complete-Function Landscape</span></a></nav><div class="sidebar-label experiment-label">Post-upload experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="../experiments/e31.html"><span>E31</span><span>Loss and output amplitude</span></a><a class="experiment-nav-link" href="../experiments/e32.html"><span>E32</span><span>Random-memory scaling</span></a><a class="experiment-nav-link" href="../experiments/e33.html"><span>E33</span><span>Cross-architecture output volume</span></a><a class="experiment-nav-link" href="../experiments/e34.html"><span>E34</span><span>Conditional rule duel</span></a><a class="experiment-nav-link" href="../experiments/e35.html"><span>E35</span><span>Frozen functions around grokking</span></a><a class="experiment-nav-link" href="../experiments/e36.html"><span>E36</span><span>Independent Peleg/G&amp;C recheck</span></a><a class="experiment-nav-link" href="../experiments/e37.html"><span>E37</span><span>Measure robustness and Gaussian alignment</span></a></nav>
       </div>
     </aside>
 
@@ -55,13 +74,170 @@
           <p class="article-description">Test whether first zero training error is the endpoint of function selection in a protocol used to support a static function-prior explanation.</p>
         </header>
         <div class="article-body"><div class="source-bar"><span>Scripts</span><div><a href="../../../experiments/experiment_04_mingard_postfit_drift/experiment_mingard_2025_postfit_drift.py">experiment_mingard_2025_postfit_drift.py</a></div></div><h2 id="overview">Experiment overview</h2>
-<p>The experiment reproduces the central 7-bit Boolean setup of <a href="https://www.nature.com/articles/s41467-024-54813-x" target="_blank" rel="noopener">Mingard et al. (2025)</a>: 128-state truth tables, a <code>7 -&gt; 40 x 10 -&gt; 1 tanh</code> network, three target-complexity groups, two initialization scales, and advSGD example selection. The only conceptual intervention is to continue training for 100 and 1,000 steps after first zero classification error while saving the complete 128-bit function.</p>
-<h2 id="motivation">Why this experiment was run</h2>
-<p>Static hard conditioning has no time coordinate after interpolation. If the first zero-error snapshot is already representative of the conditioned endpoint, complete-function changes afterward should be sampling-level noise. Systematic post-fit drift would instead show that continuous loss and optimizer transport remain active.</p>
+<h2 id="purpose">Purpose</h2>
+<p>The Boolean experiments in <a href="https://www.nature.com/articles/s41467-024-54813-x" target="_blank" rel="noopener">Mingard et al. (2025), <em>Deep Neural Networks Have an Inbuilt Occam's Razor</em></a> stop when the model first reaches zero training classification error, and use that point to compare the initialization function prior, the complexity distribution, and the training endpoint. E04 keeps its core network, targets, initialization scales, and advSGD settings, and only extends the observation window to post-fit 100/1,000 steps, saving the complete 128-bit function of every trajectory.</p>
+<h2 id="files">Files</h2>
+<ul>
+<li><a href="#motivation">Experiment motivation and preregistered criteria</a></li>
+<li><a href="#results">Full results and stage verdict</a></li>
+<li><a href="../../../experiments/experiment_04_mingard_postfit_drift/experiment_mingard_2025_postfit_drift.py"><code>experiment_mingard_2025_postfit_drift.py</code></a></li>
+</ul>
+<p>Run:</p>
+<pre><code class="language-bash">python experiment_mingard_2025_postfit_drift.py
+</code></pre>
+<p>By default <code>PROFILE="pilot"</code>, with output to:</p>
+<pre><code class="language-text">results_mingard_2025_postfit_drift/pilot/
+</code></pre>
+<h2 id="frozen-sources">Frozen sources</h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Development-version source</th>
+<th>SHA256</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>experiment_mingard_2025_postfit_drift.py</code></td>
+<td><code>research/function_information_conservation/experiment_mingard_2025_postfit_drift.py</code></td>
+<td><code>dd3eb8706c2008f6ab6f1c8df51419687016eb3dcb6b60787c18b5781c60d5f8</code></td>
+</tr>
+</tbody>
+</table>
+<p>The local result cache <code>results/pilot.zip</code> has SHA256 <code>72e00af9e6cd91765867afec2e09a55724b4cc9f40f780c5e6f04be40f04a91d</code>. The ZIP is not included in the final release package.</p>
+<h2 id="motivation">Why this experiment was run, and how it was judged</h2>
+<h2 id="1-theoretical-conflict">1. Theoretical conflict</h2>
+<p>The static hard conditioning picture has no time variable after first interpolation. If the training set is unchanged, function odds should be determined by the fixed conditional prior. Grokking and E01/E03, however, show that functions can still migrate after interpolation.</p>
+<p>Observing this directly on a self-designed tiny Boolean task could still be dismissed as protocol-specific, so E04 adopts the very Boolean setting that <a href="https://www.nature.com/articles/s41467-024-54813-x" target="_blank" rel="noopener">Mingard et al. (2025)</a> themselves use to support the static interpretation, modifying only the stopping time.</p>
+<h2 id="2-frozen-settings">2. Frozen settings</h2>
+<ul>
+<li>Inputs: 7 bit, the full 128 states;</li>
+<li>Network: <code>7 -&gt; 40 x 10 -&gt; 1 tanh</code>;</li>
+<li>trainable biases initialized to 0;</li>
+<li><code>sigma_w=1,8</code>, scaled by fan-in;</li>
+<li>the three paper targets, with LZ values 31.5/66.5/101.5;</li>
+<li>training set size 64 per target;</li>
+<li>Adam plus paper-style advSGD, batch 16;</li>
+<li>2,048 networks per condition, 6 conditions and 12,288 trajectories in total;</li>
+<li>the training set of each network is independently resampled, but stays fixed within a single trajectory;</li>
+<li>snapshots: initialization, first zero error, post-fit 100/1,000 steps;</li>
+<li>prior: 262,144 untrained networks per initialization scale.</li>
+</ul>
+<h2 id="3-criteria">3. Criteria</h2>
+<h3 id="single-trajectory-hard-function-migration">Single-trajectory hard function migration</h3>
+<p>Record the complete function ID over the 128 inputs, and measure the fraction that changes post-fit together with the Hamming distance.</p>
+<h3 id="distributional-directional-drift">Distributional directional drift</h3>
+<p>Because the <code>2^128</code> function space is far larger than 2,048 seeds, per-function empirical TV would by itself be saturated by sparse sampling. We therefore additionally measure per-input prediction marginals, the full-space error-count distribution, and paired migration, and use a permutation null distribution to judge directionality. LZ is used only to reproduce the other side's metric and carries no complexity conclusion of this project.</p>
+<h3 id="zero-error-stable-subset">Zero-error stable subset</h3>
+<p>Separately examine the models that maintain zero training-set error at both endpoints, to avoid miswriting a temporary departure from the interpolation set as "drift inside the interpolation set".</p>
+<h2 id="4-competing-predictions">4. Competing predictions</h2>
+<ul>
+<li>Strong static picture: after first zero error there should be no systematic drift of function marginals;</li>
+<li>Dynamic picture: with the training set unchanged, continuing to reduce the loss post-fit can still directionally move the function on unseen inputs;</li>
+<li>if only LZ/mean error are examined without saving the complete function, the migration may be missed by coarse-grained metrics.</li>
+</ul>
+<h2 id="5-pre-declared-boundaries">5. Pre-declared boundaries</h2>
+<ul>
+<li>the pilot averages over different training sets and does not directly equal the function posterior for a fixed single D;</li>
+<li>the static importance sampling ESS at <code>sigma_w=8</code> may be too low, so static posteriors must not be compared by force;</li>
+<li>complete-function TV in an extremely sparse space must be accompanied by a null and cannot be interpreted alone;</li>
+<li>the experiment tests only the training protocol and stopping rule used in the paper, and does not infer the authors' subsequent position.</li>
+</ul>
 <h2 id="results">Results, interpretation, and limits</h2>
-<p>Across 12,288 trajectories, 59.96%–97.66% of models changed complete function at initialization scale 1, and 99.66%–99.80% changed at scale 8. Mean Hamming distances reached roughly 1–4 bits at scale 1 and about 15 bits at scale 8. Permutation tests for per-input marginal drift were significant in all six conditions.</p>
-<p>Direction was protocol-dependent: some groups improved over the full input space while others worsened. Lempel–Ziv trends were not uniform and are retained only as auxiliary statistics.</p>
-<p><strong>Conclusion.</strong> First interpolation is not the endpoint of function selection in this protocol. The claim is post-fit function drift, not monotone improvement under an artificial complexity proxy.</p></div>
+<h2 id="1-completeness">1. Completeness</h2>
+<ul>
+<li>2,048 trajectories for each of the 6 conditions; 12,288/12,288 all reached first fit and were recorded through post-fit 1,000;</li>
+<li>main training about 145.9 s, prior sampling about 80.7 s, the complete cell about 4 min 20 s;</li>
+<li>the slowest termination across the six conditions was about 1,770 steps, never hitting the 12,000-step cap;</li>
+<li>the complete 128-bit functions, logits, training loss, and training-set agreement have all been saved.</li>
+</ul>
+<h2 id="2-the-complete-function-keeps-changing-post-fit">2. The complete function keeps changing post-fit</h2>
+<p>From first zero error to age 1,000:</p>
+<table>
+<thead>
+<tr>
+<th>target</th>
+<th style="text-align: right;">sigma_w</th>
+<th style="text-align: right;">function-change rate</th>
+<th style="text-align: right;">mean Hamming distance/128</th>
+<th style="text-align: right;">mean prediction-marginal drift</th>
+<th style="text-align: right;">marginal permutation p</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>low</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">59.96%</td>
+<td style="text-align: right;">1.16</td>
+<td style="text-align: right;">0.00529</td>
+<td style="text-align: right;">0.00498</td>
+</tr>
+<tr>
+<td>mid</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">87.74%</td>
+<td style="text-align: right;">2.51</td>
+<td style="text-align: right;">0.00407</td>
+<td style="text-align: right;">0.00498</td>
+</tr>
+<tr>
+<td>high</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">97.66%</td>
+<td style="text-align: right;">4.03</td>
+<td style="text-align: right;">0.00476</td>
+<td style="text-align: right;">0.00498</td>
+</tr>
+<tr>
+<td>low</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">99.66%</td>
+<td style="text-align: right;">14.77</td>
+<td style="text-align: right;">0.01467</td>
+<td style="text-align: right;">0.00498</td>
+</tr>
+<tr>
+<td>mid</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">99.80%</td>
+<td style="text-align: right;">15.33</td>
+<td style="text-align: right;">0.01387</td>
+<td style="text-align: right;">0.00498</td>
+</tr>
+<tr>
+<td>high</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">99.76%</td>
+<td style="text-align: right;">15.37</td>
+<td style="text-align: right;">0.01001</td>
+<td style="text-align: right;">0.00498</td>
+</tr>
+</tbody>
+</table>
+<p>Function migration is not an occasional one-or-two threshold flip. At <code>sigma_w=8</code>, about 15/128 unseen outputs change on average, and the per-input marginal drift of every condition exceeds the permutation null distribution. Keeping only the models that maintain zero training-set error at both endpoints leaves the qualitative conclusion unchanged.</p>
+<h2 id="3-the-generalization-direction-depends-on-the-protocol">3. The generalization direction depends on the protocol</h2>
+<p>At <code>sigma_w=8</code>, the mean full-space error of the three targets falls by about 1.81, 1.53, and 0.80 respectively; at <code>sigma_w=1</code> the changes are +0.46, +0.11, and -0.03. Thus the post-fit migration is real, but it cannot be simply summarized as a monotonic improvement toward the external rule under every initialization scale and every target.</p>
+<h2 id="4-lz-is-not-a-conclusion-of-this-project">4. LZ is not a conclusion of this project</h2>
+<p>To align with the original paper, the result package keeps the LZ changes: <code>sigma_w=8</code> broadly decreases, while the low-complexity target at <code>sigma_w=1</code> instead rises by about 1.93. The direction is not uniform, and LZ is only a proxy of the 128-bit truth table. The core verdict of E04 rests entirely on complete-function migration and marginal drift, and does not use LZ to measure Kolmogorov complexity.</p>
+<h2 id="5-reliability-boundary-of-the-static-posterior-comparison">5. Reliability boundary of the static-posterior comparison</h2>
+<p>The prior importance ESS at <code>sigma_w=1</code> is about 3,020--5,168, usable for static comparison; at <code>sigma_w=8</code> it is only about 1.7--4.4 and is explicitly marked unreliable. E04 therefore does not use the latter to claim that "static posterior values are wrong", and instead uses only the post-fit time experiment, which requires no prior importance sampling.</p>
+<h2 id="6-stage-verdict">6. Stage verdict</h2>
+<p>What can be claimed:</p>
+<blockquote>
+<p>In the core Boolean protocol of <a href="https://www.nature.com/articles/s41467-024-54813-x" target="_blank" rel="noopener">Mingard et al. (2025)</a>, first zero training error is not the endpoint of function selection; continuing to optimize with the training set unchanged systematically migrates the complete hard function and its per-input marginals.</p>
+</blockquote>
+<p>This directly refutes the strong version of "the first-interpolation snapshot already fully describes the subsequent function distribution", and also shows that the original paper's stopping time misses a time dimension with generalization significance.</p>
+<p>What cannot be claimed:</p>
+<ul>
+<li>that the initialization function prior has no predictive value;</li>
+<li>that all six conditions contract monotonically toward the same complexity proxy;</li>
+<li>that sparse empirical exact-function TV by itself reliably recovers the overall <code>2^128</code> distribution;</li>
+<li>that the <code>sigma_w=8</code> static importance posterior is interpretable;</li>
+<li>that the results negate all Bayesian work or the authors' subsequent dynamics work;</li>
+<li>that LZ is this project's measure of program complexity.</li>
+</ul></div>
         <footer class="experiment-pager"><a href="e03.html">← E03 Prior-Consistent Function Dynamics and Width Intervention</a><a href="e05.html">E05 Feature Learning When a Fixed NTK Is Already Sufficient →</a></footer>
       </article>
     </main>

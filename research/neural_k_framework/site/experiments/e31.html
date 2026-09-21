@@ -1,0 +1,596 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="E31 Loss 与幅度对齐的完整协议、结果和边界。">
+  <title>E31 Loss 与幅度对齐 · Neural K 研究档案</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="../assets/site.js"></script>
+</head>
+<body data-page-kind="post-upload">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+
+    <header class="topbar">
+      <a class="site-mark" href="../index.html" aria-label="返回研究主文">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K 研究档案</span>
+      </a>
+      <nav class="top-nav" aria-label="全站导航"><a class="top-link" href="../index.html">研究主文</a><a class="top-link" href="../theory-core.html">理论核心</a><a class="top-link" href="../experiments/index.html">实验索引</a><a class="top-link active" href="../post-upload.html">提交后增量</a><a class="top-link" href="../references.html">参考文献</a><a class="top-link" href="../evidence-ledger.html">证据总账</a></nav>
+      <nav class="language-switch" aria-label="语言"><span class="active" lang="zh-CN">中文</span><a href="../en/experiments/e31.html" lang="en">EN</a></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>目录</span>
+      </button>
+    </header>
+
+  <div class="page-shell">
+
+    <aside class="sidebar" id="sidebar" aria-label="本页目录">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">本页目录</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#核心实验链">核心实验链</a></li>
+<li><a href="#公开报告入口">公开报告入口</a></li>
+<li><a href="#核心结果">核心结果</a></li>
+<li><a href="#配置与运行状态">配置与运行状态</a></li>
+<li><a href="#逐seed结果">逐seed结果</a></li>
+<li><a href="#最重要的机制信息">最重要的机制信息</a></li>
+<li><a href="#共同ce门槛">共同CE门槛</a></li>
+<li><a href="#独立核验与边界">独立核验与边界</a></li>
+<li><a href="#文件">文件</a></li>
+<li><a href="#问题与配置">问题与配置</a></li>
+<li><a href="#结果">结果</a></li>
+<li><a href="#机制与边界-必须随结果保留">机制与边界（必须随结果保留）</a></li>
+<li><a href="#文件_1">文件</a></li>
+<li><a href="#结论先行">结论先行</a></li>
+<li><a href="#1-测了什么">1. 测了什么</a></li>
+<li><a href="#2-冻结旧预报-再独立采样">2. 冻结旧预报，再独立采样</a></li>
+<li><a href="#3-排除-只是bce更低-的解释">3. 排除“只是BCE更低”的解释</a><ul>
+<li><a href="#主结果-lambda-0-1">主结果：lambda=0.1</a></li>
+<li><a href="#预定的半箱宽敏感性分析">预定的半箱宽敏感性分析</a></li>
+<li><a href="#弱剂量-lambda-0-01">弱剂量：lambda=0.01</a></li>
+</ul>
+</li>
+<li><a href="#4-与理论的对应-及没有证明什么">4. 与理论的对应，及没有证明什么</a></li>
+<li><a href="#5-计算-复核与残余风险">5. 计算、复核与残余风险</a></li>
+<li><a href="#6-文件入口">6. 文件入口</a></li>
+<li><a href="#问题">问题</a></li>
+<li><a href="#结果_1">结果</a><ul>
+<li><a href="#小目标幅度系列-12-训练样本-512-独立初始化-组">小目标幅度系列（12 训练样本，512 独立初始化/组）</a></li>
+<li><a href="#n-8-对照-0-1-mse-反超-bce">n=8 对照：0/1 MSE 反超 BCE</a></li>
+<li><a href="#bce-幅度对齐正则-诞生地">BCE + 幅度对齐正则（诞生地）</a></li>
+</ul>
+</li>
+<li><a href="#裁决">裁决</a></li>
+<li><a href="#边界">边界</a></li>
+<li><a href="#文件_2">文件</a></li>
+</ul>
+</div>
+</nav>
+        <a class="sidebar-action" href="../post-upload.html">返回增量总览 →</a>
+      </div>
+    </aside>
+
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">实验增量 · E31</div>
+          <h1>E31 Loss 与幅度对齐</h1>
+          <p class="article-description">E31 Loss 与幅度对齐的完整协议、结果和边界。</p>
+        </header>
+        <div class="article-body"><p>公开实验 E31 的核心不是某一个孤立的 loss 对照，而是一条在同一 Power 架构 mod97 任务上逐步展开的证据链：<strong>原版 grokking + 幅度对齐正则 → 原始 MSE 的目标幅度对照 → 小型网络上的幅度系列与静态复核</strong>。它检验的是 loss 所选择的输出联合分布如何改变规则恢复，而不是把“训练 CE 越低”当成唯一解释。</p>
+<h2 id="核心实验链">核心实验链</h2>
+<ol>
+<li><strong>Power 原版 mod97 的 CE + 幅度对齐正则</strong>：无正则 CE 基线在训练 CE 约 <code>4e-11</code> 时仍未恢复规则；两个幅度对齐条件均为 3/3 完整泛化，并且仍保留拟合后的 grokking 延迟。这是本实验最重要的原版 Transformer 结果，见 <code>POWER_MOD97_ALIGNMENT_REPORT.md</code>。</li>
+<li><strong>同一 Power 架构的原始 MSE 两轮</strong>：分别使用 0/1 与 0/15 目标幅度，结果为 1/3 与 2/3 完整恢复；它说明固定 one-hot 目标的诊断 CE、实际优化目标和是否发生 grokking 不能混为一谈，见 <code>POWER_MOD97_MSE_ROUNDS_REPORT.md</code>。</li>
+<li><strong>4-bit copy、Rule30 与静态幅度复核</strong>：用更小的网络拆开目标中心、类间隔、幅度对齐和有限样本效应，见同目录的其他报告。</li>
+</ol>
+<h2 id="公开报告入口">公开报告入口</h2>
+<ul>
+<li><code>POWER_MOD97_ALIGNMENT_REPORT.md</code>：原版 Power Transformer 的 CE/grokking 与幅度对齐正则主实验；</li>
+<li><code>POWER_MOD97_MSE_ROUNDS_REPORT.md</code>：Power 架构 raw MSE 的 0/1、0/15 两轮；</li>
+<li><code>COPY_4BIT_MSE_AMPLITUDE_SERIES.md</code>：4-bit copy 的 MSE 幅度系列与幅度对齐正则起点；</li>
+<li><code>RULE30_MSE_PM01.md</code>、<code>RULE30_CENTERED_MSE_AMPLITUDES.md</code>：Rule30 的目标中心和幅度对照；</li>
+<li><code>MARGIN_ALIGNMENT_STATIC_VERIFICATION.md</code>：固定训练集下的独立静态分布复核。</li>
+</ul>
+<p>失败 seed、暂停状态、单一数据划分和目标幅度边界必须与成功结果一起阅读；这些结果不支持“某种 loss 普遍更好”，而支持更窄的结论：<strong>loss 及其幅度/对齐方向会改变联合输出分布，从而改变规则恢复的可达性与选择压力。</strong></p>
+<h1 id="power架构模97除法-幅度对齐的机制对照">Power架构模97除法：幅度对齐的机制对照</h1>
+<p>日期：2026-09-11。</p>
+<h2 id="核心结果">核心结果</h2>
+<p><strong>加入幅度方差正则的两组均3/3恢复完整规则；无正则CE基线运行到150,550步仍0/3恢复，平均测试准确率15.5333%。</strong> 正则组并未消除延迟泛化：训练集很早已接近或达到全对，测试准确率经过明显等待后才上升。</p>
+<p>本轮支持的是：在这个Transformer、训练集和优化配置中，幅度对齐能大幅改善有限预算内的规则恢复，并且不需要把原始CE降到无正则组所达到的深度。没有测量新的静态参数体积，也未确定改善来自哪些具体的几何或优化机制。</p>
+<h2 id="配置与运行状态">配置与运行状态</h2>
+<ul>
+<li>模97除法，共9312个输入；训练6518个，测试2794个，单一固定划分。</li>
+<li>保留Power原版两层、宽128、4头Transformer、239-token词表、ReLU与无偏置投影；每模型455,424个参数。</li>
+<li>数据增加到70%，因此是原版架构上的机制实验，不是50%数据头图的严格复现。</li>
+<li>三组都用数值稳定的同一CE数学目标，Adam学习率0.001，betas=(0.9,0.98)，无WD，关闭TF32。</li>
+<li>CE仍包含答案与EOS，方差正则只作用于答案位置。本文的“训练CE”均指单独的答题CE，未混入EOS。</li>
+<li>正则为所有训练样本、所有错误token上的正确方向logit差距方差；系数0、0.1、1，每组seed 0、1、2。</li>
+<li>每个模型在已记录评估中首次测试答案100%时保存并停止。这里不检验停止后继续训练是否仍保持100%。</li>
+<li>文件记录实际设备为RTX 4090，PyTorch 2.8.0+cu128；累计77.889分钟，在150,550步手动暂停，三个基线仍可续训。不是已跑完100万步。</li>
+</ul>
+<h2 id="逐seed结果">逐seed结果</h2>
+<table>
+<thead>
+<tr>
+<th>条件</th>
+<th style="text-align: right;">seed</th>
+<th style="text-align: right;">首次训练全对</th>
+<th style="text-align: right;">首次测试99%</th>
+<th style="text-align: right;">首次测试100%</th>
+<th style="text-align: right;">末次测试准确率</th>
+<th style="text-align: right;">末次训练答题CE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CE</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1,300</td>
+<td style="text-align: right;">未达到</td>
+<td style="text-align: right;">未达到</td>
+<td style="text-align: right;">5.9055%</td>
+<td style="text-align: right;">4.4372e-11</td>
+</tr>
+<tr>
+<td>CE</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">4,600</td>
+<td style="text-align: right;">未达到</td>
+<td style="text-align: right;">未达到</td>
+<td style="text-align: right;">36.3636%</td>
+<td style="text-align: right;">3.9559e-11</td>
+</tr>
+<tr>
+<td>CE</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">5,100</td>
+<td style="text-align: right;">未达到</td>
+<td style="text-align: right;">未达到</td>
+<td style="text-align: right;">4.3307%</td>
+<td style="text-align: right;">3.5049e-11</td>
+</tr>
+<tr>
+<td>CE+0.1R</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1,100</td>
+<td style="text-align: right;">77,500</td>
+<td style="text-align: right;">140,000</td>
+<td style="text-align: right;">100%</td>
+<td style="text-align: right;">7.6200e-5</td>
+</tr>
+<tr>
+<td>CE+0.1R</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1,100</td>
+<td style="text-align: right;">43,000</td>
+<td style="text-align: right;">51,000</td>
+<td style="text-align: right;">100%</td>
+<td style="text-align: right;">8.4922e-5</td>
+</tr>
+<tr>
+<td>CE+0.1R</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1,100</td>
+<td style="text-align: right;">34,500</td>
+<td style="text-align: right;">46,000</td>
+<td style="text-align: right;">100%</td>
+<td style="text-align: right;">9.9678e-5</td>
+</tr>
+<tr>
+<td>CE+R</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1,800</td>
+<td style="text-align: right;">57,500</td>
+<td style="text-align: right;">71,500</td>
+<td style="text-align: right;">100%</td>
+<td style="text-align: right;">7.7885e-4</td>
+</tr>
+<tr>
+<td>CE+R</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2,200</td>
+<td style="text-align: right;">35,500</td>
+<td style="text-align: right;">46,000</td>
+<td style="text-align: right;">100%</td>
+<td style="text-align: right;">3.4850e-3</td>
+</tr>
+<tr>
+<td>CE+R</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2,200</td>
+<td style="text-align: right;">79,000</td>
+<td style="text-align: right;">140,000</td>
+<td style="text-align: right;">100%</td>
+<td style="text-align: right;">3.7625e-4</td>
+</tr>
+</tbody>
+</table>
+<p>“首次训练全对”后存在少量回落，并非每一个后续评估都严格100%；整体训练准确率一直很高。正则组测试上升不是单纯等待最后一个测试点：达到50%、90%、99%也明显晚于训练集拟合，完整曲线呈延迟后的上升过程。</p>
+<p>首次99%后部分模型还有回落。直到已观察终点再未跌破99%的最后上穿步数分别为：CE+0.1R的96,500、44,500、43,500；CE+R的62,500、35,500、86,000。此统计只描述已观察区间，不保证继续训练的稳定性。</p>
+<figure class="result-figure"><a href="../assets/post_upload/0eff015931_mechanism_overview.png" target="_blank" rel="noopener"><img src="../assets/post_upload/0eff015931_mechanism_overview.png" alt="准确率、训练CE与幅度差异" loading="lazy"></a><figcaption>准确率、训练CE与幅度差异</figcaption></figure>
+<h2 id="最重要的机制信息">最重要的机制信息</h2>
+<ol>
+<li><strong>更低的原始CE并不足以保证这个优化过程恢复规则。</strong> 无正则组已到约4e-11，仍远未完整泛化；正则组在更高的原始CE下恢复了全部9312个输入的规则。</li>
+<li><strong>输出分布确实被改变。</strong> 末次训练logit差距标准差的组内中位数：CE为6.439，CE+0.1R为0.02837，CE+R为0.03175。基线差距的平均值更大，但不均匀性也大得多。</li>
+<li><strong>正则不是让这个Transformer立即同步学会。</strong> 六个正则模型都有明显拟合后等待，仍通过本轮预定的延迟泛化筛选。</li>
+<li><strong>训练CE并非在正则组中单调降低。</strong> 曲线存在反复波动，训练答案也有小幅回落；不能把“最终一次更深的CE crossing”当作全部泛化变化的解释。</li>
+<li><strong>没有可靠的强度单调结论。</strong> 系数1在seed 0、1比0.1更早达到100%，但seed 2更慢；仅三个配对seed，不应宣称系数1总是更好或0.1总是更快。</li>
+</ol>
+<p>无正则基线尚未完成恢复，所以不能计算其真正grokking时间或精确加速倍数。<code>baseline_delay_not_yet_confirmed</code>的含义是这个基线仍未最终泛化，不是说正则干预无效。</p>
+<h2 id="共同ce门槛">共同CE门槛</h2>
+<p>只取训练答案全对后、首次通过指定原始答题CE门槛的已记录快照：</p>
+<table>
+<thead>
+<tr>
+<th>门槛</th>
+<th>条件</th>
+<th style="text-align: right;">覆盖seed</th>
+<th style="text-align: right;">平均测试准确率</th>
+<th style="text-align: right;">实际CE中位数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1e-3</td>
+<td>CE</td>
+<td style="text-align: right;">3/3</td>
+<td style="text-align: right;">9.1625%</td>
+<td style="text-align: right;">4.1787e-4</td>
+</tr>
+<tr>
+<td>1e-3</td>
+<td>CE+R</td>
+<td style="text-align: right;">3/3</td>
+<td style="text-align: right;">99.7972%</td>
+<td style="text-align: right;">9.3153e-4</td>
+</tr>
+<tr>
+<td>1e-4</td>
+<td>CE</td>
+<td style="text-align: right;">3/3</td>
+<td style="text-align: right;">13.4216%</td>
+<td style="text-align: right;">5.8361e-5</td>
+</tr>
+<tr>
+<td>1e-4</td>
+<td>CE+0.1R</td>
+<td style="text-align: right;">3/3</td>
+<td style="text-align: right;">98.1150%</td>
+<td style="text-align: right;">8.5070e-5</td>
+</tr>
+</tbody>
+</table>
+<p>这些是共同门槛，不是精确matched-loss，实际CE并不相同。早期较高门槛处正则不总占优；例如1e-3处CE+0.1R仅12.9444%。成功停止后不再产生更深的CE轨迹，缺失水平没有被填成100%。</p>
+<h2 id="独立核验与边界">独立核验与边界</h2>
+<ul>
+<li>返回源码的hash与元数据一致，AST与本地版本一致。</li>
+<li>独立重建数据顺序、模除法语义、训练测试划分；数据hash一致。</li>
+<li>2261条完整映射记录的答案准确率、EOS准确率、整行准确率、函数hash与CSV全部一致。</li>
+<li>对15份原始输出快照，以独立NumPy归约重算CE和正则统计，最大绝对误差8.88e-16。</li>
+<li>在本地RTX 3080、PyTorch 2.11.0+cu130上载入15份已存权重，重新计算全部输入。最大原始输出差8.06e-5，但答案和EOS的类别变化均为0；六份成功终点仍全部实现完整规则。</li>
+<li>未从本机环境逐位复现生产端seed初始化hash。生产端为torch2.8，本机为torch2.11；差异原因未进一步定位，因此不声称该项通过。组间配对由已核对源码的初态复用、生产端哈希断言和独立核对的step0完整预测支持。已存权重的前向核验不依赖重新初始化。</li>
+<li>三个基线末尾权重不在下载包中，只有首次训练全对的基线权重；因此末尾基线类别可从完整预测独立核对，末尾CE未能从末尾权重再次独立重算。续跑checkpoint保留在AutoDL实例。</li>
+<li>本轮没有追加训练、静态采样或超参数搜索。</li>
+</ul>
+<h2 id="文件">文件</h2>
+<ul>
+<li>[原结果包]</li>
+<li>[离线分析脚本]</li>
+<li>[汇总与核验]</li>
+<li>[逐seed结果]</li>
+<li>[权重核验]</li>
+<li>[共同CE门槛]</li>
+</ul>
+<h1 id="power-架构-mod97-原始-mse-的-0-1-与-0-15-两轮">Power 架构 mod97：原始 MSE 的 0/1 与 0/15 两轮</h1>
+<blockquote>
+<p>所属：E31 Loss、目标幅度与 grokking。本页补齐 raw MSE 在 Power 原版 Transformer 上的两轮结果；CE 仅作诊断，不参与梯度。</p>
+</blockquote>
+<h2 id="问题与配置">问题与配置</h2>
+<p>Power 原版两层、宽 128、4 头 Transformer（455,424 参数）、mod97 除法、70% 数据（6,518 训练/2,794 测试）、无 weight decay、Adam(lr=0.001, betas=(0.9,0.98))。训练目标为答案与 EOS 位置的原始 one-hot MSE；答案按样本、两个 RHS 位置和全部 239 类平均，不放大标签、不调整类别权重。每条件 3 个配对 seed（同一数据划分、同一初始化与 batch 顺序），首次测试答案 100% 即停。</p>
+<h2 id="结果">结果</h2>
+<table>
+<thead>
+<tr>
+<th>条件</th>
+<th style="text-align: right;">恢复完整规则</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>raw MSE 0/1</td>
+<td style="text-align: right;"><strong>1/3</strong></td>
+<td>seed 2 于 140,000 步满分；seed 0 最高 99.36% 未满分；seed 1 后期退化（训练 MSE 卡在 1.85e-5，瓶颈在隐藏表示而非输出层）</td>
+</tr>
+<tr>
+<td>raw MSE 0/15（错误类 0，正确类 15）</td>
+<td style="text-align: right;"><strong>2/3</strong></td>
+<td>成功于 14,500 与 70,500 步（中位 42,500）；统一 100,000 步比较为 2/3 vs 0/1 的 0/3</td>
+</tr>
+</tbody>
+</table>
+<p>参考标定点：完美 one-hot 解的"诊断 CE"为 <strong>4.4836</strong>——即对固定 one-hot 目标，交叉熵不趋于 0。这直接否定"grokking 必须把原始 CE 降到极低"，与 E32 中 CE+幅度对齐正则组在 CE≈1e-4–1e-3 即恢复的现象一致。</p>
+<h2 id="机制与边界-必须随结果保留">机制与边界（必须随结果保留）</h2>
+<ul>
+<li>两轮状态均为 <code>paused</code>（手动暂停，非跑完预算），机制状态 <code>mse_recovery_or_delay_not_yet_confirmed</code>；<strong>首次满分即停，不保证继续训练仍稳定</strong>；</li>
+<li>3 seed、单数据划分；停止看语义答案，不把 EOS 作为容易样本抬高准确率；</li>
+<li>失败 seed 未做归因（用户决定不追查），不能用"只统计成功 seed 的中位步数"代表整个条件；</li>
+<li>CE 仅作诊断不参与梯度；0/15 组实际训练不除以幅度平方，relative MSE 仅用于跨幅度比较；</li>
+<li>不能据此声称"raw MSE 普遍能 grokking"或"0/15 普遍优于 0/1"；本页与 <code>POWER_MOD97_ALIGNMENT_REPORT.md</code>（CE+幅度对齐正则 3/3）和 CE 基线（0/3，训练 CE 已至 ~4e-11 仍未恢复）一起阅读。</li>
+</ul>
+<h2 id="文件_1">文件</h2>
+<ul>
+<li><code>experiment_power_mod97_raw_mse01.py</code>、<code>experiment_power_mod97_raw_mse15.py</code>：冻结实验脚本；</li>
+<li><code>analyze_power_mod97_raw_mse01.py</code>、<code>analyze_power_mod97_raw_mse15.py</code>：分析脚本；</li>
+<li>结果包：<code>E:/Downloads/results_power_mod97_raw_mse01_n70_package.zip</code>、<code>results_power_mod97_raw_mse15_n70_package.zip</code>；</li>
+<li>分析包：<code>tmp/power_mod97_mse01_analysis_20260911/</code>、<code>tmp/power_mod97_mse15_analysis_20260911/</code>（analysis.json、逐 seed 表、权重核验）。</li>
+</ul>
+<h1 id="幅度对齐的独立静态验证">幅度对齐的独立静态验证</h1>
+<p>日期：2026-09-14。状态：完成一轮幅度约束的独立SMC验证，不运行SGD训练、跨训练集成本模型或深尾外推。</p>
+<p><strong>任务范围纠偏：</strong>用户随后明确，原要求是利用新调研的数学基础对现有框架作可靠量化预测。本轮实际是幅度正则的独立静态复核，虽保留结果，但不算完成该原始要求；数学转移与旧数据回测另见[纠偏后的记录]。</p>
+<h2 id="结论先行">结论先行</h2>
+<p><strong>在这一个固定训练集、网络和Gaussian参数测度下，幅度方差约束确实产生了平均BCE之外的额外静态选择效应。</strong> 较强一档lambda=0.1在匹配BCE分布后，使完整parity2规则占比由86.65%升至88.82%，同时降低候选规则的平均固定K和K分布宽度。较弱一档lambda=0.01的目标占比收益还不能与本轮Monte Carlo波动清楚区分。</p>
+<p>这不是直接证明原版grokking或SGD采样规律，也不是证明任何幅度正则都会增强简单性偏置。它回答的是更窄而明确的问题：<strong>在相同平均loss附近，约束各样本的正确方向margin更接近，能否额外改变静态函数分布，并偏向本实验中参考成本较低的规则？本次结果支持。</strong></p>
+<h2 id="1-测了什么">1. 测了什么</h2>
+<ul>
+<li>网络：4→16→1 tanh，97维独立标准Gaussian神经坐标；隐藏权重和bias除以2，读出权重和bias除以4。与旧实验相同，不修改参数化。</li>
+<li>输入：4bit的16种0/1输入。训练输入固定为0、3、4、7、8、11、12、15；其它8点只作观测。</li>
+<li>标签：来自parity2，即0x0FF0。parity4（0x6996）也符合这8条训练标签，但没有只保留这两个函数；全部完整映射都参与统计。</li>
+<li>正则对象：正确方向margin <code>m_i=(2y_i-1)z_i</code> 的总体方差。不是让相反标签的原始logits相等，也不是只取无符号幅度。</li>
+<li>采样事件：<code>J_lambda = mean_BCE_D + lambda * Var_D(m_i) &lt;= 0.3</code>，lambda取0、0.01、0.1。</li>
+<li>每个条件8个独立Gaussian起点副本，每副本4096个SMC粒子。到达终点后追加96轮固定步长pCN更新。</li>
+</ul>
+<p><strong>固定K的含义：</strong>沿用旧全16点BCE&lt;=0.01曲线得到的完整规则成本表，作为给不同hard function贴的独立参考标签。它不是本次8样本约束的参数体积成本，也不是逐权重的精确Kolmogorov复杂度或新估计的收缩斜率。</p>
+<p><strong>Agreement的含义：</strong>从条件函数分布独立抽两个完整映射，计算它们在固定8个未见输入上的逐点相同概率，再取平均；不是目标正确率，也不是整个映射完全一致的概率。</p>
+<h2 id="2-冻结旧预报-再独立采样">2. 冻结旧预报，再独立采样</h2>
+<p>新科学采样前，已于2026-09-14 07:08:21冻结旧4个SMC副本的条件筛选预报、快照hash和本轮协议。新SMC没有载入旧权重，也没有用函数ID引导proposal。</p>
+<table>
+<thead>
+<tr>
+<th>条件</th>
+<th style="text-align: right;">旧预报parity2占比</th>
+<th style="text-align: right;">新独立SMC占比</th>
+<th style="text-align: right;">新平均固定K</th>
+<th style="text-align: right;">新未见agreement</th>
+<th style="text-align: right;">额外体积成本：新测/旧预报</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>无正则</td>
+<td style="text-align: right;">85.0830%</td>
+<td style="text-align: right;">85.8521%</td>
+<td style="text-align: right;">559.862</td>
+<td style="text-align: right;">95.3201%</td>
+<td style="text-align: right;">0 / 0 bit</td>
+</tr>
+<tr>
+<td>lambda=0.01</td>
+<td style="text-align: right;">85.8128%</td>
+<td style="text-align: right;">86.4014%</td>
+<td style="text-align: right;">558.896</td>
+<td style="text-align: right;">95.3927%</td>
+<td style="text-align: right;">0.296 / 0.427 bit</td>
+</tr>
+<tr>
+<td>lambda=0.1</td>
+<td style="text-align: right;">88.2866%</td>
+<td style="text-align: right;">88.8031%</td>
+<td style="text-align: right;">555.059</td>
+<td style="text-align: right;">95.9902%</td>
+<td style="text-align: right;">2.841 / 2.912 bit</td>
+</tr>
+</tbody>
+</table>
+<p>额外体积成本指新事件相对无正则事件的负log2质量比，不要与表内平均固定K混为一谈。</p>
+<p>旧预报与新测同方向、数值接近，但不称为精确吻合：目标占比偏差约0.52至0.77个百分点，完整函数分布的总变差距离约1.1%至2.0%。旧预报也是有限且有关联的SMC估计；图上新副本误差条不包含旧估计误差或双方可能共有的混合偏差。</p>
+<h2 id="3-排除-只是bce更低-的解释">3. 排除“只是BCE更低”的解释</h2>
+<p><code>J_lambda&lt;=0.3</code>给正则留出了预算，因此处理组本来就可以偏向更低的BCE。仅比较上表不够。</p>
+<p>本轮预先规定用宽0.0005的BCE细分箱，比较同箱内的函数分布，再把无正则对照重加权为处理组的BCE分箱分布。共同支持由每箱总计数与独立副本覆盖决定，不看目标占比或K收益。</p>
+<p>主采样中lambda=0.1的支持覆盖率为85.19%，触发预定的一次补采：额外8个独立副本采样无正则的 <code>0.27&lt;=BCE&lt;=0.29</code> 带。它们只补足完整落在带内的细分箱对照，不混入无正则组的总体分布。补采后主匹配覆盖98.62%。</p>
+<h3 id="主结果-lambda-0-1">主结果：lambda=0.1</h3>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th style="text-align: right;">BCE匹配后的无正则对照</th>
+<th style="text-align: right;">幅度方差正则</th>
+<th style="text-align: right;">差值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>平均训练BCE</td>
+<td style="text-align: right;">0.29246885</td>
+<td style="text-align: right;">0.29246186</td>
+<td style="text-align: right;">-0.00000698</td>
+</tr>
+<tr>
+<td>完整parity2占比</td>
+<td style="text-align: right;">86.6538%</td>
+<td style="text-align: right;">88.8201%</td>
+<td style="text-align: right;"><strong>+2.1663个百分点</strong></td>
+</tr>
+<tr>
+<td>平均固定K</td>
+<td style="text-align: right;">558.8386</td>
+<td style="text-align: right;">555.0164</td>
+<td style="text-align: right;"><strong>-3.8223</strong></td>
+</tr>
+<tr>
+<td>固定K标准差</td>
+<td style="text-align: right;">43.8556</td>
+<td style="text-align: right;">37.6824</td>
+<td style="text-align: right;"><strong>-6.1732</strong></td>
+</tr>
+<tr>
+<td>未见点配对agreement</td>
+<td style="text-align: right;">95.5737%</td>
+<td style="text-align: right;">95.9867%</td>
+<td style="text-align: right;"><strong>+0.4130个百分点</strong></td>
+</tr>
+<tr>
+<td>平均margin方差</td>
+<td style="text-align: right;">0.102079</td>
+<td style="text-align: right;">0.044891</td>
+<td style="text-align: right;">-0.057188</td>
+</tr>
+</tbody>
+</table>
+<p>按独立SMC副本分层重抽样1000次，95%区间为：</p>
+<ul>
+<li>目标占比差：[+1.6493,+2.7182]个百分点。</li>
+<li>平均固定K差：[-4.5129,-3.1665]。</li>
+<li>固定K标准差差：[-6.9816,-5.3368]。</li>
+<li>未见agreement差：[+0.2409,+0.5998]个百分点。</li>
+</ul>
+<p>这些是本轮副本Monte Carlo波动的区间，不包含固定K标签误差或未知共同混合偏差。</p>
+<h3 id="预定的半箱宽敏感性分析">预定的半箱宽敏感性分析</h3>
+<p>将BCE分箱宽减半到0.00025，共同支持覆盖95.82%，结果仍为：</p>
+<ul>
+<li>目标占比差 <strong>+2.0991个百分点</strong>，95%区间[+1.6035,+2.5982]。</li>
+<li>平均固定K差 <strong>-3.7304</strong>。</li>
+<li>未见agreement差 <strong>+0.3964个百分点</strong>。</li>
+<li>双方匹配后的平均BCE仅差约0.00000109。</li>
+</ul>
+<p>所以主要效果没有因更细的BCE匹配而消失。有限分箱仍不等于严格连续等loss条件化，但这里的残余BCE差已很小。</p>
+<h3 id="弱剂量-lambda-0-01">弱剂量：lambda=0.01</h3>
+<p>主分箱中目标占比差为+0.3662个百分点，95%区间[-0.2194,+1.0534]；未见agreement差也包含零。平均固定K下降有弱信号，但半箱宽后其区间也包含零。<strong>本轮不把这一档写成可靠的目标占比或agreement提升。</strong></p>
+<h2 id="4-与理论的对应-及没有证明什么">4. 与理论的对应，及没有证明什么</h2>
+<p>如果E0表示 <code>BCE&lt;=0.3</code>，E_lambda表示加入方差项后的事件，则E_lambda包含于E0。对完整函数f，有</p>
+<p><code>q_lambda(f) = q_0(f) * P(E_lambda | E0, f) / P(E_lambda | E0)</code>。</p>
+<p>这个条件概率关系本身按定义成立，不是新发现。真正需要实验的部分是：<strong>不同完整映射内部的margin分布怎样，使额外约束实际偏向哪些映射，以及独立采样能否复现这种偏好。</strong> 本次观察到的具体偏好是更高的parity2质量、更低且更窄的参考K分布。</p>
+<p>这与“联合输出分布是上游对象，平均BCE只是一个选择坐标”的修正相符。无需假设简单函数的绝对质量增加；lambda=0.1的总事件质量实际上更小，但目标的相对份额增加。</p>
+<p>还应保留四点：</p>
+<ol>
+<li>这里只测一个训练集、一个架构和一个参考测度，不推出跨任务普遍有效。</li>
+<li>这是硬目标阈值的条件分布，不是 <code>exp(-eta R)</code> 软重权；不能拿它直接验证软响应公式的导数值。</li>
+<li>没有运行SGD，也没有据此声称已经测到原版grokking的静态体积。</li>
+<li>固定K变窄不证明微观复杂度谱唯一，更不证明每个hard function内部也同样变窄。</li>
+</ol>
+<h2 id="5-计算-复核与残余风险">5. 计算、复核与残余风险</h2>
+<ul>
+<li>正式主作业24个，预定补采8个，共32个独立SMC作业、32个不同seed；全部完成。</li>
+<li>总计131072个最终权重向量，逐个用NumPy float64独立重算16点输出；最大logit差8.02e-7以内，无符号翻转，无重算后目标越界。</li>
+<li>采样在本地RTX3080的CUDA1运行；粒子和前向float32，log质量float64，无TF32或AMP。采样作业累计约618秒，即10.3分钟，不含开发、工程检查和后处理时间。</li>
+<li>7项采样器工程自检、3项分箱匹配工程测试通过；128粒子的冒烟数据与科学数据分目录保存，不进入正式统计。</li>
+<li>另一份逐粒子重权实现独立核对主分析的分箱矩阵算法，四组条件/箱宽的最大统计量差小于2.9e-12，全部通过。</li>
+<li>终点96轮内，各条件目标占比均值有约0.35至0.63个百分点的净变化。此短程诊断不能证明充分混合；多个独立副本也不能排除共有偏差。本轮到此结束，不无限加采来追求无法保证的精度。</li>
+</ul>
+<h2 id="6-文件入口">6. 文件入口</h2>
+<ul>
+<li>[实验协议与运行方法]</li>
+<li>[正式机器可读结果]</li>
+<li><a href="../assets/post_upload/7b0c9436d4_prediction_comparison.png">旧预测与新测对比图</a></li>
+<li><a href="../assets/post_upload/d24b2521ab_matched_bce.png">BCE匹配对比图</a></li>
+<li>[独立匹配算法核验]</li>
+<li>[结果包]</li>
+</ul>
+<p>原始权重、logits、函数ID、层级诊断与断点仍保留在本地正式目录；结果包包含最终粒子与分析所需材料，但省略较大的<code>.pt</code>续跑断点。</p>
+<h1 id="4-bit-copy-的-mse-幅度系列与-bce-幅度对齐正则">4-bit copy 的 MSE 幅度系列与 BCE 幅度对齐正则</h1>
+<blockquote>
+<p>所属：E31 Loss、目标幅度与 grokking。本页补齐 2026-09-10 的 4-bit copy 系列，它是幅度对齐正则的诞生地，也是"MSE 并非一律劣于 BCE"方向的证据。</p>
+</blockquote>
+<h2 id="问题">问题</h2>
+<p>固定 <code>4→16→1 tanh</code>（97 参数）、0/1 输入、Gaussian 初始化、充分拟合的前提下：把 loss 从 BCE 换成不同目标幅度的原始 MSE，或在 BCE 上加入幅度对齐正则，会怎样改变 copy 规则的完整恢复率？</p>
+<h2 id="结果_1">结果</h2>
+<h3 id="小目标幅度系列-12-训练样本-512-独立初始化-组">小目标幅度系列（12 训练样本，512 独立初始化/组）</h3>
+<table>
+<thead>
+<tr>
+<th>目标</th>
+<th style="text-align: right;">完整恢复 copy</th>
+<th style="text-align: right;">未见准确率</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BCE / MSE ±1</td>
+<td style="text-align: right;">512/512</td>
+<td style="text-align: right;">100%</td>
+</tr>
+<tr>
+<td>MSE ±0.1</td>
+<td style="text-align: right;">446/512（87.11%）</td>
+<td style="text-align: right;">96.00%</td>
+</tr>
+<tr>
+<td>MSE ±0.01</td>
+<td style="text-align: right;">67/512（13.09%）</td>
+<td style="text-align: right;">58.79%</td>
+</tr>
+<tr>
+<td>MSE ±0.001</td>
+<td style="text-align: right;">30/512（5.86%）</td>
+<td style="text-align: right;">49.32%</td>
+</tr>
+</tbody>
+</table>
+<p>全部组都充分拟合了训练集。<strong>充分拟合 ≠ 泛化</strong>：±0.001 目标下 12 个样本的表现接近随机猜测。</p>
+<h3 id="n-8-对照-0-1-mse-反超-bce">n=8 对照：0/1 MSE 反超 BCE</h3>
+<table>
+<thead>
+<tr>
+<th>目标</th>
+<th style="text-align: right;">完整恢复 copy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BCE</td>
+<td style="text-align: right;">374/512（73.05%）</td>
+</tr>
+<tr>
+<td>0/1 MSE</td>
+<td style="text-align: right;">507/512（99.02%）</td>
+</tr>
+<tr>
+<td>±0.5 MSE</td>
+<td style="text-align: right;">505/512</td>
+</tr>
+<tr>
+<td>±0.3 MSE</td>
+<td style="text-align: right;">480/512</td>
+</tr>
+</tbody>
+</table>
+<p>133 个 seed 只有 MSE 成功、无反向。<strong>不能把"小幅度 MSE 失败"推广成"MSE 不如 BCE"</strong>；是否有效取决于目标中心、间隔与任务饱和程度，不是 loss 名称。</p>
+<h3 id="bce-幅度对齐正则-诞生地">BCE + 幅度对齐正则（诞生地）</h3>
+<p>BCE + λ×（各样本有符号 logit 的方差），λ∈{0.01, 0.1, 1}：<strong>三档全部 512/512 恢复</strong>（基线 BCE 仅 374/512）。弱正则组原始 BCE 中位数与基线几乎相同（7.73e-6 vs 7.55e-6），排除"只是 loss 降得更低"的解释。该正则随后被迁移到 Rule30 与 mod97（见 E32 其他报告页）。</p>
+<h2 id="裁决">裁决</h2>
+<ol>
+<li>loss 的选择方向（目标位置、形状、对齐方式）是独立于"loss 深度"的控制轴；小幅度目标可以摧毁有限样本的规则恢复；</li>
+<li>"BCE 才能 grokking"不成立：0/1 MSE 在本组反超 BCE；</li>
+<li>幅度对齐（各样本输出尽量接近）能实质增强有利于规则恢复的选择压力——幅度对齐正则的诞生地。</li>
+</ol>
+<h2 id="边界">边界</h2>
+<ul>
+<li>单一 <code>4→16→1 tanh</code> 小网络、copy 单规则、0/1 编码、512 seed；幅度效应的中心/间隔/任务饱和度未分离；</li>
+<li>结果不能外推为"MSE 普遍优于/劣于 BCE"或"对齐正则普遍有效"；</li>
+<li>与 E32 中 Rule30（BCE 更优方向）和 mod97（对齐有效方向）一起构成完整图景，不应只引用其中一侧。</li>
+</ul>
+<h2 id="文件_2">文件</h2>
+<ul>
+<li><code>experiment_4bit_copy_small_target_local.py</code>：小目标幅度五档系列；</li>
+<li><code>experiment_4bit_copy_zero_one_mse_local.py</code>：n=8 的 0/1 MSE vs BCE 对照；</li>
+<li><code>experiment_4bit_copy_centered_mse_local.py</code>：居中幅度（±0.5/±0.3）对照；</li>
+<li><code>experiment_4bit_copy_mse_intermediate_local.py</code>：中间幅度追加档；</li>
+<li><code>experiment_4bit_copy_bce_alignment_local.py</code>：BCE + 幅度对齐正则；</li>
+<li>结果素材：<code>research/notes/20260910_4bit_copy_*.md</code>（五份对应笔记）。</li>
+</ul></div>
+
+      </article>
+    </main>
+  </div>
+</body>
+</html>

@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="统计语言严格化、MDL—grokking、复杂度分布收窄、幅度对齐和相关边界的完整周末整理。">
+  <title>2026-09-19 至 2026-09-20 理论增量整理 · Neural K 研究档案</title>
+  <link rel="stylesheet" href="assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="assets/site.js"></script>
+</head>
+<body data-page-kind="post-upload">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+
+    <header class="topbar">
+      <a class="site-mark" href="index.html" aria-label="返回研究主文">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K 研究档案</span>
+      </a>
+      <nav class="top-nav" aria-label="全站导航"><a class="top-link" href="index.html">研究主文</a><a class="top-link" href="theory-core.html">理论核心</a><a class="top-link" href="experiments/index.html">实验索引</a><a class="top-link active" href="post-upload.html">提交后增量</a><a class="top-link" href="references.html">参考文献</a><a class="top-link" href="evidence-ledger.html">证据总账</a></nav>
+      <nav class="language-switch" aria-label="语言"><span class="active" lang="zh-CN">中文</span><a href="en/post-upload-theory-update.html" lang="en">EN</a></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>目录</span>
+      </button>
+    </header>
+
+  <div class="page-shell">
+
+    <aside class="sidebar" id="sidebar" aria-label="本页目录">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">本页目录</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#1-统计语言从类比变成严格对象">1. 统计语言从类比变成严格对象</a></li>
+<li><a href="#2-允许最大误差时-最简单的可行函数">2. 允许最大误差时，最简单的可行函数</a></li>
+<li><a href="#3-剩余候选中的简单性偏置">3. 剩余候选中的简单性偏置</a></li>
+<li><a href="#4-与-mdl-的关系">4. 与 MDL 的关系</a></li>
+<li><a href="#5-与-grokking-数据相变的关系">5. 与 grokking 数据相变的关系</a></li>
+<li><a href="#6-本周其余理论增量">6. 本周其余理论增量</a></li>
+<li><a href="#7-联合输出-幅度对齐和收缩定律的修正">7. 联合输出、幅度对齐和收缩定律的修正</a></li>
+<li><a href="#8-peleg-g-c周末复核的完整边界">8. Peleg/G&amp;C周末复核的完整边界</a></li>
+<li><a href="#9-ait-omega的最小保留内容">9. AIT/Omega的最小保留内容</a></li>
+<li><a href="#10-算法互信息是后续接口-不是本周实验结果">10. 算法互信息是后续接口，不是本周实验结果</a></li>
+<li><a href="#11-完整文档对应关系">11. 完整文档对应关系</a></li>
+</ul>
+</div>
+</nav>
+        <a class="sidebar-action" href="post-upload.html">返回增量总览 →</a>
+      </div>
+    </aside>
+
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">理论增量 · 2026-09-19 至 2026-09-20</div>
+          <h1>2026-09-19 至 2026-09-20 理论增量整理</h1>
+          <p class="article-description">统计语言严格化、MDL—grokking、复杂度分布收窄、幅度对齐和相关边界的完整周末整理。</p>
+        </header>
+        <div class="article-body"><p>这份文件专门整理周六到周日形成的理论内容，不与更早的85项增量混在一起。</p>
+<h2 id="1-统计语言从类比变成严格对象">1. 统计语言从类比变成严格对象</h2>
+<p>本轮把参数测度、联合输出、hard function cell、fixed-D loss事件、full-target事件、shell、信息增益、参数KL/函数KL和optimizer分布重新分开。核心修正是：</p>
+<div class="math-display">$$
+\theta\longrightarrow Z_U(\theta)\longrightarrow \text{联合输出分布}
+\longrightarrow \text{loss/幅度截面}
+\longrightarrow \text{函数质量分布}.
+$$</div>
+<p>loss不是“能量”的先验类比，而是联合输出分布上的一个可测事件。full-target Neural K与fixed-D函数cell profile也不再共用一个未限定的符号。</p>
+<p>对应材料：</p>
+<ul>
+<li><code>release_20260920/theory/minimal_strict_statistical_language_zh.md</code></li>
+<li><code>release_20260920/theory/minimal_statistical_language_audit_zh.md</code></li>
+<li><code>release_20260920/theory/joint_output_rate_derivation_zh.md</code></li>
+<li><code>release_20260920/theory/volume_contraction_conditional_theorem_zh.md</code></li>
+</ul>
+<h2 id="2-允许最大误差时-最简单的可行函数">2. 允许最大误差时，最简单的可行函数</h2>
+<p>这是本周最重要的 MDL 增量。固定输入域、训练集 <code>D</code>、网络协议和参考复杂度 <code>K_ref(f)</code>。允许平均 loss 不超过 <code>epsilon</code> 时，定义可行函数集合：</p>
+<div class="math-display">$$
+\mathcal F_D(\epsilon)
+=
+\{f:\Omega_{D}(f;\epsilon)&gt;0\}.
+$$</div>
+<p>允许误差下的最低可行复杂度是：</p>
+<div class="math-display">$$
+K^*_D(\epsilon)
+=
+\inf_{f\in\mathcal F_D(\epsilon)}K_{\rm ref}(f).
+$$</div>
+<p>这严格表达了：</p>
+<blockquote>
+<p>允许最大训练误差是多少时，最简单的函数仍然能够完成任务？</p>
+</blockquote>
+<p>对于同一个 <code>D</code> 和嵌套的 loss 子水平集，<code>epsilon</code> 降低时可行集合只会缩小，所以 <code>K^*_D(epsilon)</code> 不会下降。这是集合定义带来的严格性质。但它只说明“最简单可行函数”的前沿，不说明该函数占据最大体积，也不说明 SGD 一定会找到它。</p>
+<h2 id="3-剩余候选中的简单性偏置">3. 剩余候选中的简单性偏置</h2>
+<p>真正描述神经网络选择的是完整质量分布：</p>
+<div class="math-display">$$
+Q_{D,\epsilon}(f)
+=
+\frac{\Omega_D(f;\epsilon)}
+{\sum_g\Omega_D(g;\epsilon)}.
+$$</div>
+<p>因此需要区分两个过程：</p>
+<ol>
+<li><strong>可行性淘汰</strong>：某些捷径或错误延拓不再满足更低的 loss，离开 <code>F_D(epsilon)</code>；</li>
+<li><strong>可行候选内重排</strong>：仍然可行的函数，其实现质量以不同速度下降，<code>Q</code>发生变化。</li>
+</ol>
+<p>若用单调的 loss 深度坐标 <code>t</code> 表示收紧过程，并记</p>
+<div class="math-display">$$
+s_t(f)=-\partial_t\log\Omega_t(f),
+$$</div>
+<p>则对固定的复杂度标尺 <code>kappa(f)</code> 有：</p>
+<div class="math-display">$$
+\partial_tE_{Q_t}[\kappa]
+=-\operatorname{Cov}_{Q_t}(\kappa,s_t).
+$$</div>
+<p>当复杂函数的收缩率更大时，协方差为正，平均复杂度下降；若同时没有新的远离主模态的质量出现，复杂度分布会收窄。这正是“随 BCE/loss 下降，简单性偏置还会增强”的精确定义版本。</p>
+<p>它仍是条件机制，不是任意 loss 的定理。<code>s_t</code>由联合输出分布、参数测度、架构和 loss 共同决定；BCE只是已测协议中的一种方向。</p>
+<h2 id="4-与-mdl-的关系">4. 与 MDL 的关系</h2>
+<p>两段式 MDL 写成：</p>
+<div class="math-display">$$
+L_{\rm MDL}(f;D)
+=K_{\rm ref}(f)+L_{\rm residual}(D\mid f).
+$$</div>
+<p><code>K^*_D(epsilon)</code>描述允许残差预算下的最低模型码长；<code>Q_{D,epsilon}</code>描述在该残差预算下不同模型实现的质量分布。前者是“最简单可行解”的前沿，后者才对应网络在剩余候选中实际偏向谁。</p>
+<p>因此不能把“MDL选择最简单函数”写成网络训练代码中额外存在的第二个目标。网络显式降低的仍然是训练 loss；MDL式偏好来自架构参考质量和 loss 截面共同产生的质量重排。</p>
+<h2 id="5-与-grokking-数据相变的关系">5. 与 grokking 数据相变的关系</h2>
+<p>增加数据和降低 loss不是同一个轴：</p>
+<ul>
+<li>增加数据主要按照竞争函数与目标的分歧位置淘汰候选；</li>
+<li>降低 loss主要在给定训练集的联合输出截面上继续重排实现质量；</li>
+<li>grokking时间轴还要加入optimizer transport和可达性。</li>
+</ul>
+<p>在竞争函数分歧谱模型中，数据相变由目标质量、竞争总质量以及每个竞争函数被样本击中的概率共同决定；因此 <code>K^*_D(epsilon)</code>和 Neural K 是重要的一阶对象，但都不单独等于 <code>n50/n90</code>或grokking时间点。</p>
+<h2 id="6-本周其余理论增量">6. 本周其余理论增量</h2>
+<ul>
+<li>联合输出的局部收缩率、端点交互项和有限窗口近似可加条件；</li>
+<li>Gaussian、固定范数球和自然测度下复杂度排序的鲁棒性边界；</li>
+<li>AIT/Omega与Neural K的实现质量结构对应，但不作机器无关等同；</li>
+<li>Peleg/G&amp;C复核对“静态低loss质量”和“SGD分布”关系的外部核对。</li>
+</ul>
+<h2 id="7-联合输出-幅度对齐和收缩定律的修正">7. 联合输出、幅度对齐和收缩定律的修正</h2>
+<p>周末讨论明确修正了一个容易出错的推导：不能给单个样本定义独立的“函数复杂度”，也不能把多个样本的体积简单相乘，因为共享网络参数会产生联合相关性。</p>
+<p>幅度正则是否偏向简单函数，正确对象是同一个联合训练事件内不同函数cell的类内保留率；BCE方向的收缩率差异不能自动推出幅度对齐后的函数赔率差异。平移对称性也只能约化某些坐标，不能单独推出指数体积收缩。</p>
+<p>有限窗口近似收缩需要额外条件：</p>
+<ul>
+<li>输出平移造成的整体测度变化在研究窗口内足够小；</li>
+<li>正负输出组新增的交互成本变化足够小；</li>
+<li>深尾局部误差可控，且不能只用两个端点反推整段直线。</li>
+</ul>
+<p>因此当前能上传的是“条件推导 + 可证伪实验协议”，不是跨架构、无限深尾的收缩定律。</p>
+<h2 id="8-peleg-g-c周末复核的完整边界">8. Peleg/G&amp;C周末复核的完整边界</h2>
+<p>文献审计发现，Peleg的G&amp;C并非完全不考虑loss，但其归一化loss分桶不等于本项目的raw-BCE深尾事件；公开代码中G&amp;C与SGD的bias活动空间、初始化尺度和学习率还存在需要区分的条件。</p>
+<p>本地复核得到：G&amp;C hard-start约82.13%，低loss静态样本约96.37%，SGD关键组约96.36%。这支持静态低loss质量具有预测力，但不证明静态分布等于SGD，也不允许把原论文的差异简单归因于“loss没有降够”。</p>
+<h2 id="9-ait-omega的最小保留内容">9. AIT/Omega的最小保留内容</h2>
+<p>Omega、不完备性和算法概率只能提供实现质量求和、编码长度和不可计算性边界。它们不能推出：</p>
+<ul>
+<li>Neural K等于机器无关Kolmogorov complexity；</li>
+<li>复杂度方差降低就等于函数混合修正降低；</li>
+<li>有限神经网络的Agreement继承停机问题不可判定性。</li>
+</ul>
+<p>这部分不作为独立文献审计上传，只把已经进入严格统计语言的边界保留在理论附录中。</p>
+<h2 id="10-算法互信息是后续接口-不是本周实验结果">10. 算法互信息是后续接口，不是本周实验结果</h2>
+<p>rule bit或concat输出可以用联合事件的条件信息成本近似测量输出块之间的冗余和协同，但它不是已经完成的独立实验，也不自动等于关于真实规则的可辨识信息。小任务和网络的输入/输出头开销可能使理论上近似等价的协议出现明显数值差异，因此本次不上传该实验草稿。</p>
+<p>这些内容已分别放入 <code>release_20260920/theory/</code> 和 Peleg补充材料；本页作为周末理论增量的总入口。</p>
+<h2 id="11-完整文档对应关系">11. 完整文档对应关系</h2>
+<p>本页是周末理论的公开正文入口；发布包同时保留以下完整源稿：</p>
+<table>
+<thead>
+<tr>
+<th>文档</th>
+<th>作用</th>
+<th>网站入口</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>minimal_strict_statistical_language_zh.md</code></td>
+<td>最小严格定义、对象和条件恒等式</td>
+<td><a href="../release_20260920/theory/../../site/post-upload-language.html">严格概率语言</a></td>
+</tr>
+<tr>
+<td><code>minimal_strict_statistical_language_tutorial_zh.md</code></td>
+<td>面向阅读的逐步教学版</td>
+<td><a href="../release_20260920/theory/../../site/post-upload-theory-update.html">理论增量全文</a></td>
+</tr>
+<tr>
+<td><code>minimal_statistical_language_audit_zh.md</code></td>
+<td>前稿漏洞、有限反例和逐项勘误</td>
+<td><a href="../release_20260920/theory/../../site/post-upload-theory-update.html">理论增量全文</a></td>
+</tr>
+<tr>
+<td><code>MDL_FRONTIER_AND_GROKKING.md</code></td>
+<td>最低可行复杂度与剩余候选重排</td>
+<td><a href="../release_20260920/theory/../../site/post-upload-mdl.html">MDL—grokking</a></td>
+</tr>
+<tr>
+<td><code>mdl_identifiability_grokking_derivation_zh.md</code></td>
+<td>复杂度—分歧谱与样本相变条件推导</td>
+<td><a href="../release_20260920/theory/../../site/post-upload-mdl.html">MDL—grokking</a></td>
+</tr>
+<tr>
+<td><code>MEASURE_ROBUSTNESS_AND_GAUSSIAN_ALIGNMENT_ZH.md</code></td>
+<td>Gaussian、欧式球和真实训练对应边界</td>
+<td><a href="../release_20260920/theory/../../site/experiments/e37.html">E37 测度鲁棒性</a></td>
+</tr>
+</tbody>
+</table>
+<p>网页正文采用经过链接和双语结构校验的公开版，源稿保留完整推导、审计记录和复算入口；两者不是互相替代的重复副本。</p>
+<p>完整源稿可直接打开：
+<a href="source_docs/zh/minimal_strict_statistical_language_tutorial_zh.md">教学版</a> ·
+<a href="source_docs/zh/minimal_strict_statistical_language_zh.md">严格定义版</a> ·
+<a href="source_docs/zh/minimal_statistical_language_audit_zh.md">审计与勘误</a> ·
+<a href="source_docs/zh/WEEKEND_THEORY_UPDATE.md">本周增量源稿</a>。</p></div>
+
+      </article>
+    </main>
+  </div>
+</body>
+</html>

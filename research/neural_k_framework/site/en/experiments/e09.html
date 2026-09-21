@@ -23,7 +23,7 @@
         <span class="mark-block">NK</span>
         <span class="mark-text">Neural K Research Archive</span>
       </a>
-      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="../index.html">Research</a><a class="top-link" href="../theory-core.html">Core Theory</a><a class="top-link active" href="../experiments/index.html">Experiments</a><a class="top-link" href="../references.html">References</a><a class="top-link" href="../evidence-ledger.html">Evidence</a></nav>
+      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="../index.html">Research</a><a class="top-link" href="../theory-core.html">Core Theory</a><a class="top-link active" href="../experiments/index.html">Experiments</a><a class="top-link" href="../post-upload.html">Updates</a><a class="top-link" href="../references.html">References</a><a class="top-link" href="../evidence-ledger.html">Evidence</a></nav>
       <nav class="language-switch" aria-label="Language"><a href="../../experiments/e09.html" lang="zh-CN">中文</a><span class="active" lang="en">EN</span></nav>
       <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
         <span aria-hidden="true">☰</span><span>Contents</span>
@@ -38,12 +38,23 @@
         <nav class="toc"><div class="toc">
 <ul>
 <li><a href="#overview">Experiment overview</a></li>
-<li><a href="#motivation">Why this experiment was run</a></li>
+<li><a href="#purpose">Purpose</a></li>
+<li><a href="#files">Files</a></li>
+<li><a href="#frozen-sources">Frozen sources</a></li>
+<li><a href="#motivation">Why this experiment was run, and how it was judged</a></li>
+<li><a href="#1-the-disputed-proposition">1. The disputed proposition</a></li>
+<li><a href="#2-experimental-design">2. Experimental design</a></li>
+<li><a href="#3-three-frozen-decision-points">3. Three frozen decision points</a></li>
+<li><a href="#4-pre-declared-boundaries">4. Pre-declared boundaries</a></li>
 <li><a href="#results">Results, interpretation, and limits</a></li>
+<li><a href="#1-the-best-validation-point-reproduces-the-91-phenomenon-almost-exactly">1. The best-validation point reproduces the 91% phenomenon almost exactly</a></li>
+<li><a href="#2-continuing-to-reduce-the-noisy-training-loss-destroys-the-rule">2. Continuing to reduce the noisy training loss destroys the rule</a></li>
+<li><a href="#3-rigorous-boundaries">3. Rigorous boundaries</a></li>
+<li><a href="#4-theoretical-role">4. Theoretical role</a></li>
 </ul>
 </div>
 </nav>
-        <div class="sidebar-label experiment-label">All experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>Static Hard Conditioning versus Optimizer-Induced Function Transport</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-Bit Counterfactual Invariance</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>Prior-Consistent Function Dynamics and Width Intervention</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>Post-Fit Drift in the Mingard 2025 Boolean Protocol</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>Feature Learning When a Fixed NTK Is Already Sufficient</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>Loss-Conditioned Prior Annealing</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>Function-ID Wandering and Matched-Loss Static Controls</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>Shared Intermediate Computation under Finite Capacity</span></a><a class="experiment-nav-link active" href="e09.html"><span>E09</span><span>Long Training with 80% Hidden Label Noise</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>Raw-BCE Competition between Preregistered Simple and Complex Function Pairs</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule-30 Train/Validation Gradient Alignment across Dataset Size</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND Shortcut Static Geometry and a One-Example Balance Intervention</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>SGD Dynamics of the AND Shortcut and Balanced Intervention</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>Weighted Rule-Bit Function Switching across Loss Scales</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Complete Functions versus Marginal Concentration in Modular-97 Grokking</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity Reachability, Half-Space Generalization, and Scaffold Recovery</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>Static Deep-Loss Mass versus Optimizer Transport</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>Teacher-Free Consensus and Symbolic Readability</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>Full-Truth-Table Rule Volume</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Measure Closure between Full Rules, Fixed Datasets, and Margin Cores</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement Control and a Consensus Complexity Frontier</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>Per-Example Free Energy and an Information Invariant</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>Prospective Prediction from Full-Rule Volume to Data Transition</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>Deep Neural K Crossing of Parity4 and a One-Point Exception</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST Sample Complexity and Static Branch Prediction</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>Balanced Unlabeled MNIST Label Volume</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Agreement Before and During Grokking</span></a><a class="experiment-nav-link" href="e28.html"><span>E28</span><span>Whole-Network HMC versus Adam on 50k MNIST</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Loss-Resolved Robustness to a Dead Input Bit</span></a><a class="experiment-nav-link" href="e30.html"><span>E30</span><span>Weight Decay Reshapes the Static Complete-Function Landscape</span></a></nav>
+        <div class="sidebar-label experiment-label">All experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>Static Hard Conditioning versus Optimizer-Induced Function Transport</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-Bit Counterfactual Invariance</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>Prior-Consistent Function Dynamics and Width Intervention</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>Post-Fit Drift in the Mingard 2025 Boolean Protocol</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>Feature Learning When a Fixed NTK Is Already Sufficient</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>Loss-Conditioned Prior Annealing</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>Function-ID Wandering and Matched-Loss Static Controls</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>Shared Intermediate Computation under Finite Capacity</span></a><a class="experiment-nav-link active" href="e09.html"><span>E09</span><span>Long Training with 80% Hidden Label Noise</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>Raw-BCE Competition between Preregistered Simple and Complex Function Pairs</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule-30 Train/Validation Gradient Alignment across Dataset Size</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND Shortcut Static Geometry and a One-Example Balance Intervention</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>SGD Dynamics of the AND Shortcut and Balanced Intervention</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>Weighted Rule-Bit Function Switching across Loss Scales</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Complete Functions versus Marginal Concentration in Modular-97 Grokking</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity Reachability, Half-Space Generalization, and Scaffold Recovery</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>Static Deep-Loss Mass versus Optimizer Transport</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>Teacher-Free Consensus and Symbolic Readability</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>Full-Truth-Table Rule Volume</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Measure Closure between Full Rules, Fixed Datasets, and Margin Cores</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement Control and a Consensus Complexity Frontier</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>Per-Example Free Energy and an Information Invariant</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>Prospective Prediction from Full-Rule Volume to Data Transition</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>Deep Neural K Crossing of Parity4 and a One-Point Exception</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST Sample Complexity and Static Branch Prediction</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>Balanced Unlabeled MNIST Label Volume</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Agreement Before and During Grokking</span></a><a class="experiment-nav-link" href="e28.html"><span>E28</span><span>Whole-Network HMC versus Adam on 50k MNIST</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Loss-Resolved Robustness to a Dead Input Bit</span></a><a class="experiment-nav-link" href="e30.html"><span>E30</span><span>Weight Decay Reshapes the Static Complete-Function Landscape</span></a></nav><div class="sidebar-label experiment-label">Post-upload experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="../experiments/e31.html"><span>E31</span><span>Loss and output amplitude</span></a><a class="experiment-nav-link" href="../experiments/e32.html"><span>E32</span><span>Random-memory scaling</span></a><a class="experiment-nav-link" href="../experiments/e33.html"><span>E33</span><span>Cross-architecture output volume</span></a><a class="experiment-nav-link" href="../experiments/e34.html"><span>E34</span><span>Conditional rule duel</span></a><a class="experiment-nav-link" href="../experiments/e35.html"><span>E35</span><span>Frozen functions around grokking</span></a><a class="experiment-nav-link" href="../experiments/e36.html"><span>E36</span><span>Independent Peleg/G&amp;C recheck</span></a><a class="experiment-nav-link" href="../experiments/e37.html"><span>E37</span><span>Measure robustness and Gaussian alignment</span></a></nav>
       </div>
     </aside>
 
@@ -55,13 +66,150 @@
           <p class="article-description">Separate early learning of shared digit structure from later memorization of fixed incorrect labels.</p>
         </header>
         <div class="article-body"><div class="source-bar"><span>Scripts</span><div><a href="../../../experiments/experiment_09_mnist_hidden_noise_long_training/experiment_mnist_hidden_noise_long_training.py">experiment_mnist_hidden_noise_long_training.py</a></div></div><h2 id="overview">Experiment overview</h2>
-<p>Forty thousand of fifty thousand MNIST training labels are permanently corrupted without marking which inputs are noisy. An overparameterized CNN and a smaller CNN, each with three paired seeds and clean-label controls, are trained for 300 epochs.</p>
-<h2 id="motivation">Why this experiment was run</h2>
-<p>A widely repeated result says networks can reach roughly 91% test accuracy even with 80% corrupted labels. The crucial question is whether this occurs after noise interpolation or in an early phase before the wrong labels are memorized.</p>
+<h2 id="purpose">Purpose</h2>
+<p>This experiment separates two propositions that are often conflated:</p>
+<ol>
+<li>An MNIST training set with 80% wrong labels can still learn the true digit rule early in training;</li>
+<li>Whether the network still retains about 91% clean test accuracy after it has fully memorized the 80% wrong labels.</li>
+</ol>
+<p>The experiment fixes a single label corruption, does not provide the noise identity to the network, and strictly separates the best-validation point, the first near-complete interpolation, and the long-training endpoint.</p>
+<h2 id="files">Files</h2>
+<ul>
+<li><a href="#motivation">Experiment motivation and preregistered criteria</a></li>
+<li><a href="#results">Full results and staged verdict</a></li>
+<li><a href="../../../experiments/experiment_09_mnist_hidden_noise_long_training/experiment_mnist_hidden_noise_long_training.py"><code>experiment_mnist_hidden_noise_long_training.py</code></a></li>
+</ul>
+<p>Run:</p>
+<pre><code class="language-bash">python experiment_mnist_hidden_noise_long_training.py
+</code></pre>
+<h2 id="frozen-sources">Frozen sources</h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Development source</th>
+<th>SHA256</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>experiment_mnist_hidden_noise_long_training.py</code></td>
+<td><code>research/overfitting_related_research/scripts/experiment_mnist_hidden_noise_long_training.py</code></td>
+<td><code>1985627d1c8f81d288aba30ad1337c6f852eff096f882aa4731598cc2ef712ac</code></td>
+</tr>
+</tbody>
+</table>
+<p>Local results bundle: <code>E:\Downloads\results_mnist_hidden_noise_long_training.zip</code>SHA256: <code>1f54d164256b4df403b5306dd559078f08e372c7f8f87c9f3fca4a7274a9988f</code>.</p>
+<p>The ZIP can be rebuilt quickly and is not included in the final release bundle.</p>
+<h2 id="motivation">Why this experiment was run, and how it was judged</h2>
+<h2 id="1-the-disputed-proposition">1. The disputed proposition</h2>
+<p>The related public claim is often paraphrased as: even with 80% of MNIST training labels wrong, a student network can still reach about 91% test accuracy. What really needs to be distinguished is: does that number appear early, when the model has only learned the 20% coherent signal, or at the interpolated end state after the wrong labels have already been fully memorized.</p>
+<p>If it is the former, the phenomenon is merely "the strong shared signal is learned before noise memorization"; if it is the latter, it would require the optimizer to form a special decomposition in which training points are memorized locally while unseen inputs use the rule by default.</p>
+<h2 id="2-experimental-design">2. Experimental design</h2>
+<ul>
+<li>MNIST: 50,000 training, 10,000 clean validation, 10,000 clean test;</li>
+<li>a fixed set of 40,000 corrupted training labels, with no noise marker added to the inputs;</li>
+<li>clean/noise80 use elementwise-identical initialization and identical data order;</li>
+<li>3 seeds per architecture;</li>
+<li><code>overparam_cnn</code>: about 1,260,810 parameters;</li>
+<li><code>hinton_small</code>: about 23,603 parameters;</li>
+<li>Adam, weight decay 0, at most 300 epochs.</li>
+</ul>
+<h2 id="3-three-frozen-decision-points">3. Three frozen decision points</h2>
+<ol>
+<li><code>best_validation</code>: the early-stopping point selected by clean validation;</li>
+<li><code>first_interpolation</code>: the first time noisy train accuracy reaches 99.99%;</li>
+<li><code>final</code>: 40 epochs after interpolation, or the end of the 300-epoch budget.</li>
+</ol>
+<p>Also recorded:</p>
+<ul>
+<li>accuracy on the noisy training labels;</li>
+<li>accuracy of the same training images relative to the hidden ground truth;</li>
+<li>separate accuracies on the corrupted subset for the wrong labels and for the true labels;</li>
+<li>clean validation/test accuracy;</li>
+<li>agreement on test between the noise model and the paired clean model.</li>
+</ul>
+<h2 id="4-pre-declared-boundaries">4. Pre-declared boundaries</h2>
+<ul>
+<li>If 99.99% noisy interpolation is not reached within 300 epochs, the experiment cannot adjudicate the fully interpolated end state;</li>
+<li>clean validation is used for human model selection and is not part of the network's training objective;</li>
+<li>fixed random label noise is a controlled amplification of non-reusable residuals and is not equivalent to all real-world data noise;</li>
+<li>a drop in test accuracy only shows that the external ground truth has been corrupted; it does not mean the training objective has worsened.</li>
+</ul>
 <h2 id="results">Results, interpretation, and limits</h2>
-<p>The overparameterized CNN reached 91.89% test accuracy at epoch 4 and the small CNN reached 93.89% at epoch 5. At those times, noisy-train accuracy was only about 19.5%; the models were still roughly 91%–93% aligned with hidden clean labels and about 1% aligned with corrupted labels on the noisy subset.</p>
-<p>Continued noisy-loss reduction drove test accuracy down to roughly 23%–32%. No noisy model reached 99.99% interpolation within 300 epochs, so the experiment does not claim the final fully memorized endpoint.</p>
-<p><strong>Conclusion.</strong> The famous high accuracy is an early shared-structure phase, not evidence that a fully noise-memorizing network retains the rule. Overfitting is visible as loss pressure shifts from reusable structure to example-specific residuals.</p></div>
+<h2 id="1-the-best-validation-point-reproduces-the-91-phenomenon-almost-exactly">1. The best-validation point reproduces the 91% phenomenon almost exactly</h2>
+<table>
+<thead>
+<tr>
+<th>Architecture</th>
+<th style="text-align: right;">Best epoch</th>
+<th style="text-align: right;">Best test</th>
+<th style="text-align: right;">Noisy train at that time</th>
+<th style="text-align: right;">Corrupted subset fitting wrong labels</th>
+<th style="text-align: right;">Corrupted subset following ground truth</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>overparam CNN</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">91.890%</td>
+<td style="text-align: right;">19.441%</td>
+<td style="text-align: right;">about 1.26%</td>
+<td style="text-align: right;">about 90.63%</td>
+</tr>
+<tr>
+<td>Hinton small</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">93.893%</td>
+<td style="text-align: right;">19.621%</td>
+<td style="text-align: right;">about 1.03%</td>
+<td style="text-align: right;">about 92.5%</td>
+</tr>
+</tbody>
+</table>
+<p>The noisy train accuracy at the best point is about 19.5%, which is essentially the contribution of the 20% uncorrupted labels plus chance-correct guessing; the corrupted subset is still almost entirely following the true digit labels. The ~91% phenomenon therefore lies in an early stage where the rule has been learned but the noise has not yet been substantially memorized.</p>
+<h2 id="2-continuing-to-reduce-the-noisy-training-loss-destroys-the-rule">2. Continuing to reduce the noisy training loss destroys the rule</h2>
+<table>
+<thead>
+<tr>
+<th>Architecture</th>
+<th style="text-align: right;">Final noisy train</th>
+<th style="text-align: right;">Final test</th>
+<th style="text-align: right;">Clean-control final test</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>overparam CNN</td>
+<td style="text-align: right;">62.512%</td>
+<td style="text-align: right;">22.793%</td>
+<td style="text-align: right;">about 99.29%</td>
+</tr>
+<tr>
+<td>Hinton small</td>
+<td style="text-align: right;">33.456%</td>
+<td style="text-align: right;">32.423%</td>
+<td style="text-align: right;">about 99.25%</td>
+</tr>
+</tbody>
+</table>
+<p>By epoch 300, the overparam model's accuracy on the corrupted subset is about 59.42% on the wrong labels and only about 11.47% on the true labels. Its test accuracy is 22.79%, almost exactly matching the 22.80% test agreement with the paired clean model. From epoch 5 onward, the correlation between noisy train accuracy and clean test accuracy is <code>-0.941</code> for the large model and <code>-0.980</code> for the small model.</p>
+<p>The clean control trained for the same duration still maintains about 99.3%, ruling out "training time itself necessarily harms test performance". The harm comes from continuing to satisfy the fixed wrong training labels.</p>
+<h2 id="3-rigorous-boundaries">3. Rigorous boundaries</h2>
+<p>Neither architecture reaches 99.99% noisy interpolation within 300 epochs. Therefore one cannot claim that this experiment has measured "the final test accuracy after fully memorizing 80% noise". What can be robustly claimed is:</p>
+<blockquote>
+<p>Long before noise fitting is complete, external rule performance has already dropped from about 92%--94% to about 23%--32%, and the entire 300-epoch trajectory shows no sign of late recovery.</p>
+</blockquote>
+<h2 id="4-theoretical-role">4. Theoretical role</h2>
+<p>E09 amplifies ordinary overfitting into two clear stages:</p>
+<pre><code class="language-text">reduce the loss of many samples simultaneously through shared structure
+-&gt; the shared signal is largely exhausted
+-&gt; continue reducing training loss through sample-level residuals
+-&gt; the overall function is continuously rewritten
+</code></pre>
+<p>It directly supports the statement "loss is the explicit objective, compression is a conditional path, and generalization is an external outcome". The network is given no oracle about which labels are ground truth and which are noise; clean validation is useful because the researcher re-injects the external semantics they actually care about into model selection.</p>
+<p>This experiment also refutes any universal proposition of the form <code>loss decreasing =&gt; external rule or program complexity continuously improving</code>.</p></div>
         <footer class="experiment-pager"><a href="e08.html">← E08 Shared Intermediate Computation under Finite Capacity</a><a href="e10.html">E10 Raw-BCE Competition between Preregistered Simple and Complex Function Pairs →</a></footer>
       </article>
     </main>

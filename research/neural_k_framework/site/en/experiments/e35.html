@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Full protocol, results, and boundaries for E35 Mod97 frozen-function duels.">
+  <title>E35 Mod97 frozen-function duels · Neural K Research Archive</title>
+  <link rel="stylesheet" href="../../assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="../../assets/site.js"></script>
+</head>
+<body data-page-kind="post-upload">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+
+    <header class="topbar">
+      <a class="site-mark" href="../index.html" aria-label="Back to the research narrative">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K Research Archive</span>
+      </a>
+      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="../index.html">Research</a><a class="top-link" href="../theory-core.html">Core Theory</a><a class="top-link" href="../experiments/index.html">Experiments</a><a class="top-link active" href="../post-upload.html">Updates</a><a class="top-link" href="../references.html">References</a><a class="top-link" href="../evidence-ledger.html">Evidence</a></nav>
+      <nav class="language-switch" aria-label="Language"><a href="../../experiments/e35.html" lang="zh-CN">中文</a><span class="active" lang="en">EN</span></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>Contents</span>
+      </button>
+    </header>
+
+  <div class="page-shell">
+
+    <aside class="sidebar" id="sidebar" aria-label="On this page">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">On this page</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#1-question">1. Question</a></li>
+<li><a href="#2-protocol">2. Protocol</a></li>
+<li><a href="#3-results">3. Results</a></li>
+<li><a href="#4-relationship-to-the-many-competitor-picture-of-grokking">4. Relationship to the "many-competitor" picture of grokking</a></li>
+<li><a href="#5-limits-must-be-kept-together-with-the-results">5. Limits (must be kept together with the results)</a></li>
+<li><a href="#6-files">6. Files</a></li>
+</ul>
+</div>
+</nav>
+        <a class="sidebar-action" href="../post-upload.html">Back to the increments overview →</a>
+      </div>
+    </aside>
+
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">Experiment increment · E35</div>
+          <h1>E35 Mod97 frozen-function duels</h1>
+          <p class="article-description">Full protocol, results, and boundaries for E35 Mod97 frozen-function duels.</p>
+        </header>
+        <div class="article-body"><blockquote>
+<p>Status: both the near tier and the far tier completed (3 cases each × 2 subsets × 16 initializations = 192 training runs). Evidence level: dynamic-preference evidence across trained networks, single reference MLP protocol.</p>
+</blockquote>
+<h2 id="1-question">1. Question</h2>
+<p>Before grokking completes — when the network already fits the training set 100% but has not yet generalized — the complete function at that point (denoted <strong>B</strong>), and the final rule obtained after grokking completes (denoted <strong>A</strong>), are made to compete again inside a <strong>brand-new unified small network</strong>: which one is preferred? This directly tests "the later-arriving rule is preferred in function space", without relying on the original training trajectory.</p>
+<p>The candidates come from the mod97 experiment of the original Power et al. Transformer (two layers, width 128, 70% data, CE + 0.1 amplitude-variance regularization): A is the final mod97 division mapping; B is the last actual complete mapping with "training all-correct, test ≤90%" before that same trajectory completed (verified one by one against the hashes of the originally archived functions, not a newly fabricated rule that "looks more complex"). The far-tier B is taken as the one with the highest raw answer CE among the pre-completion "training all-correct, test ≤50%" candidates.</p>
+<h2 id="2-protocol">2. Protocol</h2>
+<ul>
+<li>Duel training set: the 6,518 inputs on which A/B outputs agree; the conflict set (where A/B disagree) is only used to measure preference, with no external ground truth assigned;</li>
+<li>Reference network: <code>194→128→128→239</code> GELU+LayerNorm MLP (72,815 parameters); Adam (lr=0.001, wd=0), fixed 50,000 steps; two independent training subsets per tier × 16 initializations;</li>
+<li>Each B must first be fitted to all-correct (CE≤0.01) by a network of the same architecture before it is allowed into a duel — passing this representational-capacity pre-check rules out "B simply cannot be learned at all".</li>
+</ul>
+<h2 id="3-results">3. Results</h2>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th style="text-align: right;">Source CE (multiple relative to completion)</th>
+<th style="text-align: right;">Conflict points matching A</th>
+<th style="text-align: right;">Conflict points matching B</th>
+<th style="text-align: right;">Complete implementation of A</th>
+<th style="text-align: right;">Complete implementation of B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Near 0/1/2 (B deviates from A at 365/337/289 points)</td>
+<td style="text-align: right;">0.0004–0.002 (5–22×)</td>
+<td style="text-align: right;">99.89–99.95%</td>
+<td style="text-align: right;">0%</td>
+<td style="text-align: right;">15/96</td>
+<td style="text-align: right;">0/96</td>
+</tr>
+<tr>
+<td>Far 3/4/5 (B deviates from A at 2,713–2,731 points)</td>
+<td style="text-align: right;">0.11–0.12 (1153–1630×)</td>
+<td style="text-align: right;">≈99.91%</td>
+<td style="text-align: right;">≈0%</td>
+<td style="text-align: right;">17/96</td>
+<td style="text-align: right;">0/96</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>All 192 models fully fit the duel training set, and on the conflict points they side with A almost unanimously</strong>; the fraction recovering A in the complete 9,312-point mapping is 15/96 in the near tier and 17/96 in the far tier — <strong>no model ever ends up implementing B</strong>;</li>
+<li>The remaining functions are not arbitrarily scattered wrong mappings, but functions very close to A (differing from A on average at only about 2.3/9,312 inputs);</li>
+<li>Paired near-vs-far comparison: complete-A recoveries 15/96 → 17/96, a net gain of 2 (the interval contains 0) — <strong>a larger source-loss gap does not raise the exact-recovery rate</strong>;</li>
+<li>After fitting, the models keep concentrating toward the vicinity of A: the first complete A appears markedly later than the moment of hard fitting of the training set.</li>
+</ul>
+<h2 id="4-relationship-to-the-many-competitor-picture-of-grokking">4. Relationship to the "many-competitor" picture of grokking</h2>
+<p>This round of results is consistent with that picture and can serve as its dynamic counterpart: the original trajectory's early candidate B (closer to a training-set-specific complex extension) completely loses function population in the new learning system, and the networks instead concentrate on A and its immediate neighbors. It supports the dynamic fact that "the post-completion rule is preferred"; one testable but not directly measured explanation is that the pre-grokking competing cluster contains many functions whose contraction coefficients are only slightly above the target rule's, producing slow screening and a late takeover. Testing this explanation requires a direct measurement of the loss-resolved contraction spectrum of the competing cluster; this round does not treat it as established.</p>
+<h2 id="5-limits-must-be-kept-together-with-the-results">5. Limits (must be kept together with the results)</h2>
+<ol>
+<li>This is <strong>dynamic-preference evidence across trained networks</strong>: the candidates come from the original Transformer trajectory, and the duels take place in a separate unified small MLP; it is not a static-volume or exact-K measurement of the original architecture, nor does it establish an architecture-independent K ordering;</li>
+<li>"Conflict points match A ≈99.9%" does not equal "≈99.9% of the models completely implement A" — the complete-A recovery rate is only about 16%;</li>
+<li>The K difference between the near-tier source and A was not directly measured; the loss gap is only the basis for choosing the stages;</li>
+<li>Single task (mod97), single reference network, 192 models; the fitting pre-check for the first-round far tiers 4/5 was not done (far 3 already passed).</li>
+</ol>
+<h2 id="6-files">6. Files</h2>
+<ul>
+<li><code>experiment_mod97_frozen_function_duels.py</code>: the frozen-experiment script (candidates, near/far tiers, and duel training embedded);</li>
+<li><code>analyze_mod97_frozen_function_duels.py</code>, <code>compare_mod97_near_far_function_duels.py</code>: the analysis and near-vs-far comparison scripts;</li>
+<li><code>RESULTS_NEAR_DUELS.md</code>: the complete first-round near-tier results document (candidate table, protocol, per-subset results, limits);</li>
+<li><code>duel_curves.png</code>: per-point preference and complete-mapping curves;</li>
+<li>Far-tier analysis bundle: <code>tmp/mod97_far_function_duel_analysis_20260912/</code> (audit.json, final_by_dataset.json, weight_replay.json).</li>
+</ul></div>
+
+      </article>
+    </main>
+  </div>
+</body>
+</html>

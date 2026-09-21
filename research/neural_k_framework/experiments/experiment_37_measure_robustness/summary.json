@@ -1,0 +1,46 @@
+{
+  "protocol": {
+    "protocol": "3bit_endpoint_grid_uniform_ball_euclidean_volume_v2",
+    "measure": "Lebesgue restricted to ||theta||_2 <= R, normalized by ball volume",
+    "radius": 72.0,
+    "parameter_dimension": 81,
+    "rules": [
+      "0x00",
+      "0x0F",
+      "0x17",
+      "0x69"
+    ],
+    "thresholds": [
+      200.0,
+      100.0,
+      50.0,
+      20.0,
+      10.0,
+      3.0,
+      1.0,
+      0.3,
+      0.1,
+      0.03,
+      0.01
+    ],
+    "low_values": [
+      -11.0,
+      -10.0,
+      -9.0
+    ],
+    "high_values": [
+      9.0,
+      10.0,
+      11.0
+    ],
+    "device": "cuda:1",
+    "gpu_name": "NVIDIA GeForce RTX 3080",
+    "torch": "2.11.0+cu130",
+    "python": "3.13.5",
+    "script_sha256": "60409b8a057a6d86b54e9846b3a14079bb02e1833b951ffc128e7b69d47ed40a",
+    "engine_sha256": "80e2c0ac188c74def8b8e23d7b6f878d316fffa81285e78ba33a91590c7f108a"
+  },
+  "records": 36,
+  "completed": 36,
+  "records_path": "E:\\code\\clean_github\\neural-sculpting-paradigm\\research\\architecture_bias_theory_20260915\\output_box_translation_v1\\results_endpoint_uniform_ball\\records.json"
+}

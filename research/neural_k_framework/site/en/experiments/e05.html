@@ -23,7 +23,7 @@
         <span class="mark-block">NK</span>
         <span class="mark-text">Neural K Research Archive</span>
       </a>
-      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="../index.html">Research</a><a class="top-link" href="../theory-core.html">Core Theory</a><a class="top-link active" href="../experiments/index.html">Experiments</a><a class="top-link" href="../references.html">References</a><a class="top-link" href="../evidence-ledger.html">Evidence</a></nav>
+      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="../index.html">Research</a><a class="top-link" href="../theory-core.html">Core Theory</a><a class="top-link active" href="../experiments/index.html">Experiments</a><a class="top-link" href="../post-upload.html">Updates</a><a class="top-link" href="../references.html">References</a><a class="top-link" href="../evidence-ledger.html">Evidence</a></nav>
       <nav class="language-switch" aria-label="Language"><a href="../../experiments/e05.html" lang="zh-CN">中文</a><span class="active" lang="en">EN</span></nav>
       <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
         <span aria-hidden="true">☰</span><span>Contents</span>
@@ -38,12 +38,29 @@
         <nav class="toc"><div class="toc">
 <ul>
 <li><a href="#overview">Experiment overview</a></li>
-<li><a href="#motivation">Why this experiment was run</a></li>
+<li><a href="#purpose">Purpose</a></li>
+<li><a href="#files">Files</a></li>
+<li><a href="#frozen-source">Frozen source</a></li>
+<li><a href="#motivation">Why this experiment was run, and how it was judged</a></li>
+<li><a href="#1-the-question-at-the-time">1. The question at the time</a></li>
+<li><a href="#2-competing-predictions">2. Competing predictions</a><ul>
+<li><a href="#h1-kernel-sufficiency-causes-lazy-staying">H1: Kernel sufficiency causes lazy staying</a></li>
+<li><a href="#h2-feature-learning-is-separable-from-kernel-sufficiency-and-generalization">H2: Feature learning is separable from kernel sufficiency and generalization</a></li>
+</ul>
+</li>
+<li><a href="#3-three-ntk-objects-that-must-be-kept-separate">3. Three NTK objects that must be kept separate</a></li>
+<li><a href="#4-formal-configuration">4. Formal configuration</a></li>
+<li><a href="#5-preregistered-primary-metrics">5. Preregistered primary metrics</a></li>
+<li><a href="#6-pre-declared-boundaries">6. Pre-declared boundaries</a></li>
 <li><a href="#results">Results, interpretation, and limits</a></li>
+<li><a href="#1-measurement-audit-and-the-fixed-kernel-premise">1. Measurement audit and the fixed-kernel premise</a></li>
+<li><a href="#2-structural-change-from-initialization-to-the-end">2. Structural change from initialization to the end</a></li>
+<li><a href="#3-after-the-full-function-is-already-correct">3. After the full function is already correct</a></li>
+<li><a href="#4-phase-verdict">4. Phase verdict</a></li>
 </ul>
 </div>
 </nav>
-        <div class="sidebar-label experiment-label">All experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>Static Hard Conditioning versus Optimizer-Induced Function Transport</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-Bit Counterfactual Invariance</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>Prior-Consistent Function Dynamics and Width Intervention</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>Post-Fit Drift in the Mingard 2025 Boolean Protocol</span></a><a class="experiment-nav-link active" href="e05.html"><span>E05</span><span>Feature Learning When a Fixed NTK Is Already Sufficient</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>Loss-Conditioned Prior Annealing</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>Function-ID Wandering and Matched-Loss Static Controls</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>Shared Intermediate Computation under Finite Capacity</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>Long Training with 80% Hidden Label Noise</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>Raw-BCE Competition between Preregistered Simple and Complex Function Pairs</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule-30 Train/Validation Gradient Alignment across Dataset Size</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND Shortcut Static Geometry and a One-Example Balance Intervention</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>SGD Dynamics of the AND Shortcut and Balanced Intervention</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>Weighted Rule-Bit Function Switching across Loss Scales</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Complete Functions versus Marginal Concentration in Modular-97 Grokking</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity Reachability, Half-Space Generalization, and Scaffold Recovery</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>Static Deep-Loss Mass versus Optimizer Transport</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>Teacher-Free Consensus and Symbolic Readability</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>Full-Truth-Table Rule Volume</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Measure Closure between Full Rules, Fixed Datasets, and Margin Cores</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement Control and a Consensus Complexity Frontier</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>Per-Example Free Energy and an Information Invariant</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>Prospective Prediction from Full-Rule Volume to Data Transition</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>Deep Neural K Crossing of Parity4 and a One-Point Exception</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST Sample Complexity and Static Branch Prediction</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>Balanced Unlabeled MNIST Label Volume</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Agreement Before and During Grokking</span></a><a class="experiment-nav-link" href="e28.html"><span>E28</span><span>Whole-Network HMC versus Adam on 50k MNIST</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Loss-Resolved Robustness to a Dead Input Bit</span></a><a class="experiment-nav-link" href="e30.html"><span>E30</span><span>Weight Decay Reshapes the Static Complete-Function Landscape</span></a></nav>
+        <div class="sidebar-label experiment-label">All experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>Static Hard Conditioning versus Optimizer-Induced Function Transport</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-Bit Counterfactual Invariance</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>Prior-Consistent Function Dynamics and Width Intervention</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>Post-Fit Drift in the Mingard 2025 Boolean Protocol</span></a><a class="experiment-nav-link active" href="e05.html"><span>E05</span><span>Feature Learning When a Fixed NTK Is Already Sufficient</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>Loss-Conditioned Prior Annealing</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>Function-ID Wandering and Matched-Loss Static Controls</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>Shared Intermediate Computation under Finite Capacity</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>Long Training with 80% Hidden Label Noise</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>Raw-BCE Competition between Preregistered Simple and Complex Function Pairs</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule-30 Train/Validation Gradient Alignment across Dataset Size</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND Shortcut Static Geometry and a One-Example Balance Intervention</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>SGD Dynamics of the AND Shortcut and Balanced Intervention</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>Weighted Rule-Bit Function Switching across Loss Scales</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Complete Functions versus Marginal Concentration in Modular-97 Grokking</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity Reachability, Half-Space Generalization, and Scaffold Recovery</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>Static Deep-Loss Mass versus Optimizer Transport</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>Teacher-Free Consensus and Symbolic Readability</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>Full-Truth-Table Rule Volume</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Measure Closure between Full Rules, Fixed Datasets, and Margin Cores</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement Control and a Consensus Complexity Frontier</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>Per-Example Free Energy and an Information Invariant</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>Prospective Prediction from Full-Rule Volume to Data Transition</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>Deep Neural K Crossing of Parity4 and a One-Point Exception</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST Sample Complexity and Static Branch Prediction</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>Balanced Unlabeled MNIST Label Volume</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Agreement Before and During Grokking</span></a><a class="experiment-nav-link" href="e28.html"><span>E28</span><span>Whole-Network HMC versus Adam on 50k MNIST</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Loss-Resolved Robustness to a Dead Input Bit</span></a><a class="experiment-nav-link" href="e30.html"><span>E30</span><span>Weight Decay Reshapes the Static Complete-Function Landscape</span></a></nav><div class="sidebar-label experiment-label">Post-upload experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="../experiments/e31.html"><span>E31</span><span>Loss and output amplitude</span></a><a class="experiment-nav-link" href="../experiments/e32.html"><span>E32</span><span>Random-memory scaling</span></a><a class="experiment-nav-link" href="../experiments/e33.html"><span>E33</span><span>Cross-architecture output volume</span></a><a class="experiment-nav-link" href="../experiments/e34.html"><span>E34</span><span>Conditional rule duel</span></a><a class="experiment-nav-link" href="../experiments/e35.html"><span>E35</span><span>Frozen functions around grokking</span></a><a class="experiment-nav-link" href="../experiments/e36.html"><span>E36</span><span>Independent Peleg/G&amp;C recheck</span></a><a class="experiment-nav-link" href="../experiments/e37.html"><span>E37</span><span>Measure robustness and Gaussian alignment</span></a></nav>
       </div>
     </aside>
 
@@ -55,13 +72,160 @@
           <p class="article-description">Separate the existence of a fixed-kernel solution from whether a finite network still reorganizes its features during end-to-end training.</p>
         </header>
         <div class="article-body"><div class="source-bar"><span>Scripts</span><div><a href="../../../experiments/experiment_05_ntk_sufficient_feature_learning/rule110_ntk_sufficient_feature_learning.py">rule110_ntk_sufficient_feature_learning.py</a></div></div><h2 id="overview">Experiment overview</h2>
-<p>The task is one-step 30-bit Rule 110 with 8,000 training states and 20,000 unseen states. A bias-free <code>30 -&gt; 1024 x 3 ReLU -&gt; 30</code> network is trained with BCE and MSE. The experiment distinguishes the analytic infinite-width NTK, the finite-width empirical NTK at initialization, and the evolving multi-output block NTK during training.</p>
-<h2 id="motivation">Why this experiment was run</h2>
-<p><a href="https://arxiv.org/abs/2507.19680" target="_blank" rel="noopener">Göring et al. (2025)</a> emphasize that feature-learning strength and feature usefulness are different. E05 asks the reverse sufficiency question: if the fixed <a href="https://arxiv.org/abs/1806.07572" target="_blank" rel="noopener">NTK of Jacot et al. (2018)</a> already solves the rule, does the finite network remain lazy?</p>
+<h2 id="purpose">Purpose</h2>
+<p>This experiment tests an easily conflated proposition: if the fixed NTK at initialization of a matched architecture is already sufficient to learn one layer of Rule 110, will a finite-width network still change its empirical NTK, hidden representations, and ReLU gating when trained end-to-end?</p>
+<p>The experiment does not attempt to prove that feature learning is a necessary condition for generalization. On the contrary, it separates two things: a fixed kernel being able to generalize does not mean a real network necessarily stays in the lazy regime; and feature learning occurring does not automatically mean extra generalization gains are obtained.</p>
+<h2 id="files">Files</h2>
+<ul>
+<li><a href="#motivation">Experiment motivation and preregistered criteria</a></li>
+<li><a href="#results">Full results and phase verdict</a></li>
+<li><a href="../../../experiments/experiment_05_ntk_sufficient_feature_learning/rule110_ntk_sufficient_feature_learning.py"><code>rule110_ntk_sufficient_feature_learning.py</code></a></li>
+</ul>
+<p>Run:</p>
+<pre><code class="language-bash">python rule110_ntk_sufficient_feature_learning.py
+</code></pre>
+<p>Results are written by default to:</p>
+<pre><code class="language-text">/root/results_rule110_ntk_sufficient_feature_learning_v1/
+</code></pre>
+<h2 id="frozen-source">Frozen source</h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Development source</th>
+<th>SHA256</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>rule110_ntk_sufficient_feature_learning.py</code></td>
+<td><code>research/ntk_feature_learning/rule110_ntk_sufficient_feature_learning.py</code></td>
+<td><code>163a13ca0ed1ba5337141cd78603ff3d1b3ce825372ead780e27183693708480</code></td>
+</tr>
+</tbody>
+</table>
+<p>Local raw result archive:</p>
+<pre><code class="language-text">E:\Downloads\results_rule110_ntk_sufficient_feature_learning_v1.zip
+</code></pre>
+<p>SHA256:</p>
+<pre><code class="language-text">df6b29a4c0d22d77a64877c6d7bf608e6d47c16ef8f984a93e4836857805425d
+</code></pre>
+<p>The raw ZIP is about 49 MB and can be quickly rebuilt on a consumer GPU, so it is not included in the final release package.</p>
+<h2 id="motivation">Why this experiment was run, and how it was judged</h2>
+<h2 id="1-the-question-at-the-time">1. The question at the time</h2>
+<p>When reading <a href="https://arxiv.org/abs/2507.19680" target="_blank" rel="noopener">Göring et al. (2025), <em>Feature Learning Is Decoupled from Generalization in High Capacity Neural Networks</em></a>, the research first accepted a conceptual distinction: large changes in representations or in the kernel do not imply that these changes necessarily improve generalization. It then posed the more direct reverse question:</p>
+<blockquote>
+<p>If the fixed NTK at initialization is already sufficient to learn the rule, will a real finite-width network still undergo feature learning?</p>
+</blockquote>
+<p>This distinguishes between two pictures: "feature learning is merely a patch applied when the fixed kernel is insufficient" and "feature learning is a form of representation transport that can appear independently while reducing the training objective".</p>
+<h2 id="2-competing-predictions">2. Competing predictions</h2>
+<h3 id="h1-kernel-sufficiency-causes-lazy-staying">H1: Kernel sufficiency causes lazy staying</h3>
+<p>If the kernel at initialization already provides a zero-error rule solution, end-to-end training has no need to significantly change the normalized empirical NTK, the hidden-feature Gram, or the ReLU activation gating. After the network reaches full zero error on train/test, structural changes should be closer to numerical noise.</p>
+<h3 id="h2-feature-learning-is-separable-from-kernel-sufficiency-and-generalization">H2: Feature learning is separable from kernel sufficiency and generalization</h3>
+<p>The network only directly optimizes the training objective. Even if the fixed kernel can already generalize, the finite network may still reorganize its representations along the training loss; this change can happen after the full function is already correct, and need not be equivalent to extra generalization gains.</p>
+<h2 id="3-three-ntk-objects-that-must-be-kept-separate">3. Three NTK objects that must be kept separate</h2>
+<ol>
+<li><strong>Analytic infinite-width NTK</strong>: the NTK proposed by <a href="https://arxiv.org/abs/1806.07572" target="_blank" rel="noopener">Jacot, Gabriel, and Hongler (2018)</a>, recursed under the same three-hidden-layer He-ReLU parameterization, with KRR performed on 8,000 Rule 110 states and the full 30-bit outputs checked on 20,000 unseen states.</li>
+<li><strong>Finite-width empirical NTK at initialization</strong>: the exact Jacobian Gram computed for a concrete initialization of <code>30 -&gt; 1024 x 3 -&gt; 30</code>, with KRR performed separately on output bits 0, 15, and 29. It is only a finite-width sample of the infinite-width kernel and is not required to achieve exactly zero error.</li>
+<li><strong>Multi-output block NTK during training</strong>: the three output bits and cross-output blocks tracked on a fixed 128-state probe, used to measure structural changes during end-to-end training.</li>
+</ol>
+<p>The closed-form fast algorithm for the empirical NTK must first be compared against the per-parameter autograd Jacobian Gram on a tiny network; formal runs are allowed only after the error passes audit.</p>
+<h2 id="4-formal-configuration">4. Formal configuration</h2>
+<ul>
+<li>Task: one-step update of the 30-bit one-dimensional cellular automaton Rule 110, outputting 30 bits;</li>
+<li>Data: 8,000 training states and 20,000 fixed unseen states;</li>
+<li>Network: <code>30 -&gt; 1024 x 3 ReLU -&gt; 30</code> without bias;</li>
+<li>Seeds: 0, 1, 2;</li>
+<li>Optimizer: Adam, learning rate <code>1e-3</code>, weight decay 0;</li>
+<li>Batch: 1,024; trained for 30,000 steps;</li>
+<li>Loss: three trajectories each for BCE and MSE;</li>
+<li>Snapshots: steps 0, 10, 30, 100, 300, 1,000, 3,000, 10,000, and 30,000.</li>
+</ul>
+<p>MSE is a necessary control: it prevents pure scale changes caused by BCE continuing to grow logits/margins after zero classification error from being misjudged as feature learning.</p>
+<h2 id="5-preregistered-primary-metrics">5. Preregistered primary metrics</h2>
+<ul>
+<li><code>block_ntk_cka_to_init</code>: centered CKA as systematized by <a href="https://proceedings.mlr.press/v97/kornblith19a.html" target="_blank" rel="noopener">Kornblith et al. (2019)</a>, comparing the empirical block NTK against initialization;</li>
+<li><code>ck_cka_to_init</code>: CKA of the hidden-activation Gram relative to initialization;</li>
+<li><code>gate_flip_fraction_from_init</code>: ReLU gate flip fraction on the fixed probe;</li>
+<li><code>block_ntk_target_alignment</code> and hidden CK target alignment: whether the changes have a task direction;</li>
+<li><code>*_to_first_perfect</code>: whether changes continue after the first time the training set and the 20,000 test set simultaneously reach zero error.</li>
+</ul>
+<p>Looking only at the kernel norm does not constitute evidence. The core criterion is joint change in normalized CKA, gating, and task alignment; "continued change after full correctness" is reported separately as a stronger supplementary criterion.</p>
+<h2 id="6-pre-declared-boundaries">6. Pre-declared boundaries</h2>
+<ul>
+<li>Zero error of the analytic infinite-width NTK and zero error of a particular width-1,024 empirical NTK are not the same proposition;</li>
+<li>Feature learning does not automatically equal improved generalization, program compression, or redistribution of computational pressure;</li>
+<li>This experiment only tests finite width, this parameterization, and this optimization protocol;</li>
+<li>Overly sparse snapshots may register the true first fully-correct moment too late, causing the post-fit change to be underestimated.</li>
+</ul>
 <h2 id="results">Results, interpretation, and limits</h2>
-<p>The analytic infinite-width NTK made zero errors over 600,000 unseen output bits. The width-1,024 empirical NTK was already near-perfect on three representative output bits. Nevertheless, all six finite-network trajectories reached complete zero error while changing hidden representations, ReLU gates, and empirical block NTKs.</p>
-<p>Centered kernel alignment, following <a href="https://proceedings.mlr.press/v97/kornblith19a.html" target="_blank" rel="noopener">Kornblith et al. (2019)</a>, was used together with gate flips and target alignment. Five of six trajectories crossed the preregistered post-fit structural-change thresholds; the sixth retained smaller but nonzero changes.</p>
-<p><strong>Conclusion.</strong> Kernel sufficiency does not force finite-network training to remain in the initialization-kernel mechanism. Feature learning can occur even when it is not necessary for generalization, so representation change cannot be equated with generalization or compression.</p></div>
+<h2 id="1-measurement-audit-and-the-fixed-kernel-premise">1. Measurement audit and the fixed-kernel premise</h2>
+<p>The maximum absolute error between the fast empirical-NTK formula and the per-parameter autograd Jacobian Gram was <code>3.55e-15</code>, and the maximum relative error was <code>2.72e-16</code>.</p>
+<p>The analytic infinite-width NTK matched to the three-hidden-layer ReLU network obtained, on 20,000 unseen states:</p>
+<ul>
+<li>Zero errors across 600,000 output bits;</li>
+<li>Zero exact errors across 20,000 full 30-bit outputs;</li>
+<li>Both bit accuracy and exact accuracy at 100%.</li>
+</ul>
+<p>The width-1,024 empirical NTK at initialization was evaluated only on output bits 0, 15, and 29. Across the three seeds, 220 of 180,000 predicted bits were wrong, for a mean bit accuracy of 99.8778%; the three-bit joint exact accuracies were 99.5800%, 99.7500%, and 99.5750%, respectively. Thus the finite-width empirical kernel is already close to the analytic limit, but it has not been smuggled into being strictly zero-error.</p>
+<h2 id="2-structural-change-from-initialization-to-the-end">2. Structural change from initialization to the end</h2>
+<p>All six end-to-end trajectories eventually reached full 30-bit zero error on both the training set and the 20,000 test set. Three-seed averages:</p>
+<table>
+<thead>
+<tr>
+<th>Loss</th>
+<th style="text-align: right;">Hidden representation <code>1-CKA</code></th>
+<th style="text-align: right;">Block NTK <code>1-CKA</code></th>
+<th style="text-align: right;">ReLU gate flips</th>
+<th style="text-align: right;">Hidden representation target alignment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BCE</td>
+<td style="text-align: right;">0.2400</td>
+<td style="text-align: right;">0.01556</td>
+<td style="text-align: right;">37.85%</td>
+<td style="text-align: right;">0.1305 -&gt; 0.2472</td>
+</tr>
+<tr>
+<td>MSE</td>
+<td style="text-align: right;">0.0920</td>
+<td style="text-align: right;">0.00728</td>
+<td style="text-align: right;">25.76%</td>
+<td style="text-align: right;">0.1305 -&gt; 0.1666</td>
+</tr>
+</tbody>
+</table>
+<p>Under MSE there were still about a quarter of gates changed, clear hidden-representation CKA change, and stable task-alignment gains, so the results cannot be attributed solely to BCE growing margins without bound. The kernel norm under BCE did grow several-hundred-fold; under MSE the norm also grew about 3.7--5.1-fold, but the primary criterion uses normalized structural metrics.</p>
+<h2 id="3-after-the-full-function-is-already-correct">3. After the full function is already correct</h2>
+<p>Five of the six trajectories passed the script's preset criterion of "CKA change and gate flips both exceeding <code>0.001</code>". <code>mse_seed2</code> did not pass the automatic Boolean decision, but from the registered first fully-correct snapshot to step 30,000 it still showed:</p>
+<ul>
+<li>1.145% of gates continuing to flip;</li>
+<li>Block NTK <code>1-CKA=0.000169</code>;</li>
+<li>Hidden CK <code>1-CKA=0.000464</code>.</li>
+</ul>
+<p>This seed had only one exact error left at step 3,000, and the next snapshot jumped directly to full correctness at step 10,000, so the main changes after the true first fully-correct moment may fall in the unrecorded interval. The result should be written faithfully as "five trajectories crossed the preregistered double threshold; the sixth still had gate changes but its normalized kernel change was below threshold", and cannot be written as all six passing.</p>
+<h2 id="4-phase-verdict">4. Phase verdict</h2>
+<p>What can be claimed:</p>
+<blockquote>
+<p>The fixed infinite-width NTK of the matched architecture can already learn Rule 110 with zero error, but real finite-width networks still undergo task-related feature learning across seeds and across BCE/MSE during end-to-end training. Kernel sufficiency does not force the network to stay at the initialization kernel or in a lazy-training mechanism.</p>
+</blockquote>
+<p>The result also supports a conceptual separation: the fixed NTK itself already generalizes, while the real network still changes its features, so "feature learning occurring" and "feature learning being necessary for generalization" are not the same proposition.</p>
+<p>In the framework of this paper, feature learning is a mechanism by which the optimizer transports parameters and representations along the training objective; generalization depends on whether the low-loss mass defined by the training set and the protocol concentrates onto a common extension on unseen inputs. Therefore:</p>
+<ul>
+<li>On structured and identifiable data, feature learning can appear together with generalization;</li>
+<li>On under-constrained or randomly labeled data, representational change can also occur without producing rule generalization;</li>
+<li>A suitable fixed kernel can generalize without any kernel change.</li>
+</ul>
+<p>What cannot be claimed:</p>
+<ul>
+<li>That the fixed NTK itself underwent feature learning;</li>
+<li>That every width-1,024 empirical NTK at initialization was already fully zero-error;</li>
+<li>That feature learning necessarily improves generalization;</li>
+<li>That CKA or gate changes have already proven a decrease in program complexity;</li>
+<li>That all six trajectories passed the post-fit preregistered double threshold.</li>
+</ul></div>
         <footer class="experiment-pager"><a href="e04.html">← E04 Post-Fit Drift in the Mingard 2025 Boolean Protocol</a><a href="e06.html">E06 Loss-Conditioned Prior Annealing →</a></footer>
       </article>
     </main>

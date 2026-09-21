@@ -23,7 +23,7 @@
         <span class="mark-block">NK</span>
         <span class="mark-text">Neural K Research Archive</span>
       </a>
-      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="../index.html">Research</a><a class="top-link" href="../theory-core.html">Core Theory</a><a class="top-link active" href="../experiments/index.html">Experiments</a><a class="top-link" href="../references.html">References</a><a class="top-link" href="../evidence-ledger.html">Evidence</a></nav>
+      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="../index.html">Research</a><a class="top-link" href="../theory-core.html">Core Theory</a><a class="top-link active" href="../experiments/index.html">Experiments</a><a class="top-link" href="../post-upload.html">Updates</a><a class="top-link" href="../references.html">References</a><a class="top-link" href="../evidence-ledger.html">Evidence</a></nav>
       <nav class="language-switch" aria-label="Language"><a href="../../experiments/e30.html" lang="zh-CN">中文</a><span class="active" lang="en">EN</span></nav>
       <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
         <span aria-hidden="true">☰</span><span>Contents</span>
@@ -38,12 +38,30 @@
         <nav class="toc"><div class="toc">
 <ul>
 <li><a href="#overview">Experiment overview</a></li>
-<li><a href="#motivation">Why this experiment was run</a></li>
+<li><a href="#purpose">Purpose</a></li>
+<li><a href="#entry-points">Entry points</a></li>
+<li><a href="#frozen-provenance">Frozen provenance</a></li>
+<li><a href="#raw-result-bundles">Raw result bundles</a></li>
+<li><a href="#main-run-modes">Main run modes</a></li>
+<li><a href="#motivation">Why this experiment was run, and how it was judged</a></li>
+<li><a href="#1-question">1. Question</a></li>
+<li><a href="#2-competing-explanations">2. Competing explanations</a></li>
+<li><a href="#3-fixed-task-and-measure">3. Fixed task and measure</a></li>
+<li><a href="#4-staged-threshold-freezing">4. Staged threshold freezing</a></li>
+<li><a href="#5-quality-gates">5. Quality gates</a></li>
+<li><a href="#6-external-connection">6. External connection</a></li>
 <li><a href="#results">Results, interpretation, and limits</a></li>
+<li><a href="#1-three-point-main-result">1. Three-point main result</a></li>
+<li><a href="#2-replica-level-statistics">2. Replica-level statistics</a></li>
+<li><a href="#3-sampling-diagnostics">3. Sampling diagnostics</a></li>
+<li><a href="#4-conceptual-verdict">4. Conceptual verdict</a></li>
+<li><a href="#5-why-this-is-not-and-already-had-a-lower-total-norm">5. Why this is not "AND already had a lower total norm"</a></li>
+<li><a href="#6-deeper-layer-and-stronger-coefficient-boundaries">6. Deeper-layer and stronger-coefficient boundaries</a></li>
+<li><a href="#7-what-can-and-cannot-be-claimed">7. What can and cannot be claimed</a></li>
 </ul>
 </div>
 </nav>
-        <div class="sidebar-label experiment-label">All experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>Static Hard Conditioning versus Optimizer-Induced Function Transport</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-Bit Counterfactual Invariance</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>Prior-Consistent Function Dynamics and Width Intervention</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>Post-Fit Drift in the Mingard 2025 Boolean Protocol</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>Feature Learning When a Fixed NTK Is Already Sufficient</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>Loss-Conditioned Prior Annealing</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>Function-ID Wandering and Matched-Loss Static Controls</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>Shared Intermediate Computation under Finite Capacity</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>Long Training with 80% Hidden Label Noise</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>Raw-BCE Competition between Preregistered Simple and Complex Function Pairs</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule-30 Train/Validation Gradient Alignment across Dataset Size</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND Shortcut Static Geometry and a One-Example Balance Intervention</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>SGD Dynamics of the AND Shortcut and Balanced Intervention</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>Weighted Rule-Bit Function Switching across Loss Scales</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Complete Functions versus Marginal Concentration in Modular-97 Grokking</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity Reachability, Half-Space Generalization, and Scaffold Recovery</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>Static Deep-Loss Mass versus Optimizer Transport</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>Teacher-Free Consensus and Symbolic Readability</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>Full-Truth-Table Rule Volume</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Measure Closure between Full Rules, Fixed Datasets, and Margin Cores</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement Control and a Consensus Complexity Frontier</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>Per-Example Free Energy and an Information Invariant</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>Prospective Prediction from Full-Rule Volume to Data Transition</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>Deep Neural K Crossing of Parity4 and a One-Point Exception</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST Sample Complexity and Static Branch Prediction</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>Balanced Unlabeled MNIST Label Volume</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Agreement Before and During Grokking</span></a><a class="experiment-nav-link" href="e28.html"><span>E28</span><span>Whole-Network HMC versus Adam on 50k MNIST</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Loss-Resolved Robustness to a Dead Input Bit</span></a><a class="experiment-nav-link active" href="e30.html"><span>E30</span><span>Weight Decay Reshapes the Static Complete-Function Landscape</span></a></nav>
+        <div class="sidebar-label experiment-label">All experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>Static Hard Conditioning versus Optimizer-Induced Function Transport</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-Bit Counterfactual Invariance</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>Prior-Consistent Function Dynamics and Width Intervention</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>Post-Fit Drift in the Mingard 2025 Boolean Protocol</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>Feature Learning When a Fixed NTK Is Already Sufficient</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>Loss-Conditioned Prior Annealing</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>Function-ID Wandering and Matched-Loss Static Controls</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>Shared Intermediate Computation under Finite Capacity</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>Long Training with 80% Hidden Label Noise</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>Raw-BCE Competition between Preregistered Simple and Complex Function Pairs</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule-30 Train/Validation Gradient Alignment across Dataset Size</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND Shortcut Static Geometry and a One-Example Balance Intervention</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>SGD Dynamics of the AND Shortcut and Balanced Intervention</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>Weighted Rule-Bit Function Switching across Loss Scales</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Complete Functions versus Marginal Concentration in Modular-97 Grokking</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity Reachability, Half-Space Generalization, and Scaffold Recovery</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>Static Deep-Loss Mass versus Optimizer Transport</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>Teacher-Free Consensus and Symbolic Readability</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>Full-Truth-Table Rule Volume</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Measure Closure between Full Rules, Fixed Datasets, and Margin Cores</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement Control and a Consensus Complexity Frontier</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>Per-Example Free Energy and an Information Invariant</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>Prospective Prediction from Full-Rule Volume to Data Transition</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>Deep Neural K Crossing of Parity4 and a One-Point Exception</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST Sample Complexity and Static Branch Prediction</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>Balanced Unlabeled MNIST Label Volume</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Agreement Before and During Grokking</span></a><a class="experiment-nav-link" href="e28.html"><span>E28</span><span>Whole-Network HMC versus Adam on 50k MNIST</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Loss-Resolved Robustness to a Dead Input Bit</span></a><a class="experiment-nav-link active" href="e30.html"><span>E30</span><span>Weight Decay Reshapes the Static Complete-Function Landscape</span></a></nav><div class="sidebar-label experiment-label">Post-upload experiments</div><nav class="experiment-nav"><a class="experiment-nav-link" href="../experiments/e31.html"><span>E31</span><span>Loss and output amplitude</span></a><a class="experiment-nav-link" href="../experiments/e32.html"><span>E32</span><span>Random-memory scaling</span></a><a class="experiment-nav-link" href="../experiments/e33.html"><span>E33</span><span>Cross-architecture output volume</span></a><a class="experiment-nav-link" href="../experiments/e34.html"><span>E34</span><span>Conditional rule duel</span></a><a class="experiment-nav-link" href="../experiments/e35.html"><span>E35</span><span>Frozen functions around grokking</span></a><a class="experiment-nav-link" href="../experiments/e36.html"><span>E36</span><span>Independent Peleg/G&amp;C recheck</span></a><a class="experiment-nav-link" href="../experiments/e37.html"><span>E37</span><span>Measure robustness and Gaussian alignment</span></a></nav>
       </div>
     </aside>
 
@@ -55,13 +73,310 @@
           <p class="article-description">Clarify that grokking does not require weight decay and that explicit L2 helps by reshaping the same static function landscape rather than introducing a special mechanism.</p>
         </header>
         <div class="article-body"><div class="source-bar"><span>Scripts</span><div><a href="../../../experiments/experiment_30_weight_decay_static_landscape/experiment_weight_decay_static_landscape.py">experiment_weight_decay_static_landscape.py</a></div></div><h2 id="overview">Experiment overview</h2>
-<p>The frozen task is balanced AND with 40 examples under an exact finite-width 8-to-16-to-16-to-1 tanh network and an iid Gaussian reference measure. Direct constrained SMC uses 16 replicas of 8,192 particles. Complete functions are recomputed on all 256 inputs. Three approximately raw-BCE-matched conditions use lambda 0, 5e-5, and 1e-4.</p>
-<h2 id="motivation">Why this experiment was run</h2>
-<p>The unregularized raw-loss landscape can already make a reusable rule the leading extension, so weight decay is not necessary for grokking. For explicit L2, the optimizer receives the gradient of one scalar objective, J = BCE + lambda ||theta||^2/2. The regularizer should therefore be understandable as a deformation of the same static landscape, not as a mysterious optimizer-specific mechanism.</p>
+<h2 id="purpose">Purpose</h2>
+<p>Show that grokking does not require weight decay; explicit L2 helps grokking because it
+changes the static loss landscape over which the same set of functions competes, not
+because it introduces a mysterious or special learning mechanism.</p>
+<h2 id="entry-points">Entry points</h2>
+<ul>
+<li><a href="../../../experiments/experiment_30_weight_decay_static_landscape/experiment_weight_decay_static_landscape.py">experiment_weight_decay_static_landscape.py</a></li>
+<li><a href="#motivation">MOTIVATION_AND_PREREGISTRATION.md</a></li>
+<li><a href="#results">RESULTS_AND_CONCLUSION.md</a></li>
+<li><a href="../../../experiments/experiment_30_weight_decay_static_landscape/NUMERICAL_TOLERANCE_AUDIT.md">NUMERICAL_TOLERANCE_AUDIT.md</a></li>
+</ul>
+<h2 id="frozen-provenance">Frozen provenance</h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Development-version source</th>
+<th>SHA256</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>experiment_weight_decay_static_landscape.py</td>
+<td>research/function_information_conservation/experiment_8bit_and_gaussian_blind.py</td>
+<td><code>0EE9E1118EB497997B1557EE49D69A65868CC207B38F8E3379ECA650A1797FC0</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="raw-result-bundles">Raw result bundles</h2>
+<p>The raw results are not committed to the repository. The SHA256 values of the three
+main bundles are:</p>
+<pre><code class="language-text">D4CB2A6CC1C65399833CB1DEBAD9F9D21CB05078ECF35B89ABE4B925DBB93CEE  lambda=0
+39F4814E814A637339D8CF8EADC72E7A2E4B141BD28E5F7F0076A2ECB09C7FFF  lambda=5e-5
+178B4A2EB108018E4B37B16DD871AA46DA9FFB83F083AED34406CCE9203255E9  lambda=1e-4
+</code></pre>
+<p>SHA256 of the deeper-L2 supplementary bundle:</p>
+<pre><code class="language-text">DF0756CA78AB64C83A544298728FCA892AD6ED90A9DB34F815B84F3FCFB6C8F6
+</code></pre>
+<h2 id="main-run-modes">Main run modes</h2>
+<pre><code class="language-bash">python experiment_weight_decay_static_landscape.py --mode no_wd_static_matched_bce_n40
+python experiment_weight_decay_static_landscape.py --mode l2_static_half_lambda_n40
+python experiment_weight_decay_static_landscape.py --mode l2_static_reliable_n40
+</code></pre>
+<p>The main results use only these three approximately matched-BCE conditions. The
+<code>lambda=2e-4</code> calibration and the <code>J&lt;=0.0186</code> deeper-layer results serve only as
+boundary notes.</p>
+<h2 id="motivation">Why this experiment was run, and how it was judged</h2>
+<h2 id="1-question">1. Question</h2>
+<p><a href="https://arxiv.org/abs/2201.02177" target="_blank" rel="noopener">The original grokking experiments by Power et al.</a>
+showed that weight decay markedly promotes delayed generalization, but grokking and
+rule recovery do not take weight decay as a necessary condition.
+<a href="https://proceedings.neurips.cc/paper_files/paper/2025/file/92f67b9047fa7a43d7506054b5f0ec6a-Paper-Conference.pdf" target="_blank" rel="noopener">Zhang et al. (NeurIPS 2025)</a>
+also found high-norm generalizing solutions with WanD without explicit regularization.
+A common explanation still treats weight decay as a special intervention in the
+optimizer dynamics;
+but for explicit L2, the optimizer in fact only receives the gradient of the full
+scalar objective</p>
+<div class="math-display">$$
+J_\lambda(\theta)
+=
+L_D(\theta)+\lambda\lVert\theta\rVert^2/2
+$$</div>
+<p>The two most basic objects of the original framework are precisely the loss landscape
+and the optimizer; explicit L2 merely adds a term to the same scalar loss and is not a
+new theoretical mechanism. The preferred prediction should be: the raw-loss landscape
+without L2 can already support rule takeover, and adding L2 strengthens this
+preference by changing the static landscape.</p>
+<h2 id="2-competing-explanations">2. Competing explanations</h2>
+<ol>
+<li><strong>Full static-landscape explanation.</strong> At similar raw BCE, increasing <span class="math-inline">$\lambda$</span>
+   increases the static mass of correct AND continuations and compresses the function
+   diversity of incorrect continuations.</li>
+<li><strong>Fit-depth-only explanation.</strong> The L2 conditions have more AND only because their
+   raw BCE is lower; after matched-BCE the difference should vanish.</li>
+<li><strong>optimizer-specific explanation.</strong> The static landscape is nearly unchanged, and
+   real training differences come mainly from the path.</li>
+</ol>
+<p>E30 directly adjudicates only the first two. The third is worth testing only after
+reliable static measurements leave a clear residual.</p>
+<h2 id="3-fixed-task-and-measure">3. Fixed task and measure</h2>
+<ul>
+<li>Input: all 8-bit strings; the target is <code>x0 AND x1</code>; the remaining 6 bits are nuisance.</li>
+<li>Training set: 10 samples from each of the four main semantic cells, 40 frozen samples in total.</li>
+<li>Network: <code>8-&gt;16-&gt;16-&gt;1</code> tanh, 433 standardized Gaussian coordinates.</li>
+<li>Reference measure: coordinate-wise independent <span class="math-inline">$N(0,1)$</span>; the network forward pass uses fan-in scaling.</li>
+<li>Static sampling: direct constrained SMC; 16 replicas, 8192 particles each.</li>
+<li>Function audit: 2048 parameters saved per replica, with the hard function decided on all 256 points.</li>
+</ul>
+<h2 id="4-staged-threshold-freezing">4. Staged threshold freezing</h2>
+<p>This experiment is not a fully blind single-step preregistration, but a staged
+calibration based only on BCE, norms, and sampling diagnostics. Thresholds must not be
+adjusted based on the AND mass to be reported.</p>
+<p>The final three main conditions are:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;"><span class="math-inline">$\lambda$</span></th>
+<th>Static constraint</th>
+<th style="text-align: right;">Actual raw BCE mean</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">0</td>
+<td><span class="math-inline">$L_D\le0.00268$</span></td>
+<td style="text-align: right;">0.00258150</td>
+</tr>
+<tr>
+<td style="text-align: right;"><span class="math-inline">$5\times10^{-5}$</span></td>
+<td><span class="math-inline">$J_\lambda\le0.0160$</span></td>
+<td style="text-align: right;">0.00251046</td>
+</tr>
+<tr>
+<td style="text-align: right;"><span class="math-inline">$10^{-4}$</span></td>
+<td><span class="math-inline">$J_\lambda\le0.0211$</span></td>
+<td style="text-align: right;">0.00258978</td>
+</tr>
+</tbody>
+</table>
+<p>The middle point's BCE is about 3% lower than the two endpoints, so the conditions can
+only be called approximately matched-BCE. All figures and tables must also show the
+actual BCE; the three points must not be written as exactly equal.</p>
+<h2 id="5-quality-gates">5. Quality gates</h2>
+<ul>
+<li>replica log-volume standard deviation no higher than 1 nat;</li>
+<li>maximum probe cross-replica standard deviation no higher than 0.03;</li>
+<li>replica standard deviation of the full AND mass no higher than 0.05;</li>
+<li>all saved samples satisfy the constraint and 100% hard-fit the training set;</li>
+<li>use the replica, not the particle, as the paired statistical unit.</li>
+</ul>
+<p>Floating-point boundary checks use a relative tolerance plus 16 float32 ULPs; the
+minimum tolerance for deep losses remains <span class="math-inline">$10^{-12}$</span>.</p>
+<h2 id="6-external-connection">6. External connection</h2>
+<p><a href="https://proceedings.neurips.cc/paper_files/paper/2025/file/92f67b9047fa7a43d7506054b5f0ec6a-Paper-Conference.pdf" target="_blank" rel="noopener">Zhang et al. (NeurIPS 2025)</a>
+used the Wang--Landau method to observe a high-entropy advantage of low-loss
+generalizing states in a modular-arithmetic Transformer.
+E30 does not reproduce their full Transformer entropy map; instead, in a rigorously
+auditable 433-parameter system, it directly compares the function-level static mass of
+the explicit-L2 full objective.</p>
 <h2 id="results">Results, interpretation, and limits</h2>
-<p>The raw-BCE means were 0.0025815, 0.0025105, and 0.0025898. Exact AND mass increased from 53.683% to 58.423% to 73.318%, while the number of observed complete functions fell from 4,190 to 1,246 to 86. The endpoint lambda=0 versus lambda=1e-4 difference was 19.635 percentage points, positive in all 16 replicas; the replica bootstrap 95% interval was 17.508--21.570 points.</p>
-<p>All three conditions hard-fit the training set. The no-decay and middle-dose samplers passed all automated gates. The lambda=1e-4 raw archive exceeded an old float32 boundary check by 8.9e-10; all substantive diagnostics and saved samples passed, and the frozen code now audits relative tolerance plus float32 ULP error. A deeper lambda=1e-4 layer observed only AND but did not converge in absolute log volume, so it remains supplementary.</p>
-<p><strong>Conclusion.</strong> The no-decay landscape already gives AND majority static mass, while explicit L2 strengthens that preference at nearly matched training fit. Weight decay is neither required nor theoretically special; its present effect is explained by reshaping the same static function competition. This controlled result does not establish the same quantitative mechanism for decoupled AdamW or the original Mod97 Transformer.</p></div>
+<h2 id="1-three-point-main-result">1. Three-point main result</h2>
+<p>The raw BCE of the three conditions differs by at most about 3.1%, and all saved
+networks 100% hard-fit the training set:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;"><span class="math-inline">$\lambda$</span></th>
+<th style="text-align: right;">raw BCE mean</th>
+<th style="text-align: right;">full AND mass</th>
+<th style="text-align: right;">replica range</th>
+<th style="text-align: right;">number of full functions</th>
+<th style="text-align: right;">half norm mean</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.00258150</td>
+<td style="text-align: right;">53.683%</td>
+<td style="text-align: right;">50.391%--57.178%</td>
+<td style="text-align: right;">4190</td>
+<td style="text-align: right;">369.70</td>
+</tr>
+<tr>
+<td style="text-align: right;"><span class="math-inline">$5\times10^{-5}$</span></td>
+<td style="text-align: right;">0.00251046</td>
+<td style="text-align: right;">58.423%</td>
+<td style="text-align: right;">50.830%--66.406%</td>
+<td style="text-align: right;">1246</td>
+<td style="text-align: right;">268.76</td>
+</tr>
+<tr>
+<td style="text-align: right;"><span class="math-inline">$10^{-4}$</span></td>
+<td style="text-align: right;">0.00258978</td>
+<td style="text-align: right;">73.318%</td>
+<td style="text-align: right;">66.016%--78.125%</td>
+<td style="text-align: right;">86</td>
+<td style="text-align: right;">184.97</td>
+</tr>
+</tbody>
+</table>
+<p>The full AND mass increases monotonically with the L2 coefficient, while the
+full-function diversity drops from 4190 to 1246 and then to 86.</p>
+<h2 id="2-replica-level-statistics">2. Replica-level statistics</h2>
+<pre><code class="language-text">lambda 0 -&gt; 5e-5:
+  AND +4.739 percentage points
+  13/16 replicas in the same direction
+  bootstrap 95% CI: 2.823--6.555 percentage points
+  paired t-test p=2.35e-4
+  Wilcoxon p=1.92e-3
+
+lambda 5e-5 -&gt; 1e-4:
+  AND +14.896 percentage points
+  16/16 replicas in the same direction
+  bootstrap 95% CI: 12.097--17.502 percentage points
+  paired t-test p=2.80e-8
+  Wilcoxon p=4.37e-4
+
+lambda 0 -&gt; 1e-4:
+  AND +19.635 percentage points
+  16/16 replicas in the same direction
+  bootstrap 95% CI: 17.508--21.570 percentage points
+</code></pre>
+<p>The middle point's raw BCE is slightly lower, which may slightly inflate its AND mass;
+but the BCE of <span class="math-inline">$\lambda=0$</span> and <span class="math-inline">$10^{-4}$</span> differ by only 0.32%, so the main endpoint
+difference is not affected by this boundary.</p>
+<h2 id="3-sampling-diagnostics">3. Sampling diagnostics</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;"><span class="math-inline">$\lambda$</span></th>
+<th style="text-align: right;">logV replica std</th>
+<th style="text-align: right;">max probe std</th>
+<th style="text-align: right;">AND mass std</th>
+<th>automatic quality</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.215</td>
+<td style="text-align: right;">0.01949</td>
+<td style="text-align: right;">0.02291</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td style="text-align: right;"><span class="math-inline">$5\times10^{-5}$</span></td>
+<td style="text-align: right;">0.321</td>
+<td style="text-align: right;">0.02351</td>
+<td style="text-align: right;">0.04087</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td style="text-align: right;"><span class="math-inline">$10^{-4}$</span></td>
+<td style="text-align: right;">0.693</td>
+<td style="text-align: right;">0.00794</td>
+<td style="text-align: right;">0.03393</td>
+<td>PASS after numerical audit</td>
+</tr>
+</tbody>
+</table>
+<p>The <span class="math-inline">$10^{-4}$</span> raw bundle was automatically flagged as failed only because its maximum
+<span class="math-inline">$J$</span> exceeded the old float32 check bound by <span class="math-inline">$8.9\times10^{-10}$</span>; all saved parameters
+and every other gate passed. See
+<a href="../../../experiments/experiment_30_weight_decay_static_landscape/NUMERICAL_TOLERANCE_AUDIT.md">NUMERICAL_TOLERANCE_AUDIT.md</a> for details.</p>
+<h2 id="4-conceptual-verdict">4. Conceptual verdict</h2>
+<p>With training fit depth approximately matched, explicit L2 still systematically
+increases the static mass of correct AND continuations and compresses the full-function
+diversity. The current simplest explanation is therefore:</p>
+<blockquote>
+<p>weight decay reshuffles the parameter mass of training-set-consistent continuations
+by changing the low-<span class="math-inline">$J$</span> geometry of the full scalar objective; its effect on this
+round of grokking-style function selection does not need an optimizer-specific
+mechanism as a backstop.</p>
+</blockquote>
+<p>The no-WD condition by itself already gives AND about 53.7% static mass, showing that
+the rule can become the dominant candidate in a pure raw-loss landscape; weight decay
+is not a necessary condition for grokking. Its role in this experiment is to further
+strengthen an already existing static preference, not to create a new mechanism
+unrelated to the original framework.</p>
+<p>This result does not add a new theoretical element; it clarifies the direct use of the
+original framework: the most basic objects remain the loss landscape and the
+optimizer. Any term genuinely written into the scalar loss, whether called a
+regularizer, an auxiliary loss, or anything else, merely co-shapes the same landscape
+and has no special theoretical status. When analyzing such interventions, first
+measure the corresponding static function landscape; only if a residual remains should
+the optimizer be discussed.</p>
+<h2 id="5-why-this-is-not-and-already-had-a-lower-total-norm">5. Why this is not "AND already had a lower total norm"</h2>
+<p>In the fixed cross-section with no WD and <code>BCE&lt;=0.01</code>, the ranking of total L2 norm
+between AND and other continuations is nearly random: the loss-stratified low-norm AUC
+median is 0.5088. The role of L2 is not to read a pre-existing obvious norm label,
+but to let <code>BCE+lambda*R</code> jointly define different BCE--norm Pareto subsets.</p>
+<h2 id="6-deeper-layer-and-stronger-coefficient-boundaries">6. Deeper-layer and stronger-coefficient boundaries</h2>
+<ul>
+<li>At the deeper layer with <span class="math-inline">$\lambda=10^{-4}$</span> and <span class="math-inline">$J\le0.0186$</span>, all low-<span class="math-inline">$J$</span> full
+  functions found by the 16 far-apart replicas are AND; but the absolute logV standard
+  deviation is 5.66 nat and the genealogies are severely degenerate, so we only write
+  "all observed modes are AND" and do not certify an exact 100%.</li>
+<li>For <span class="math-inline">$\lambda=2\times10^{-4}$</span> at <span class="math-inline">$J\le0.0396$</span>, BCE is 0.00535 and AND is 73.42%;
+  going further down to <span class="math-inline">$J\le0.03545$</span>, BCE is 0.00470 and AND is 90.79%, but the logV
+  standard deviation rises to 1.48 nat. Neither point is a matched-BCE main dose, so
+  neither enters the main curve.</li>
+</ul>
+<h2 id="7-what-can-and-cannot-be-claimed">7. What can and cannot be claimed</h2>
+<p>What can be claimed:</p>
+<ol>
+<li>Under this task, architecture, Gaussian measure, and approximately matched-BCE
+   protocol, increasing the explicit L2 coefficient increases the static
+   full-function mass of AND;</li>
+<li>the raw-loss landscape without weight decay already supports rule dominance by
+   itself, and weight decay is not a necessary condition for grokking;</li>
+<li>the enhancement brought by weight decay can be explained by the change in the
+   static landscape, with no extra assumption that the optimizer recognizes the
+   regularizer; other terms written into the loss are the same and are not special.</li>
+</ol>
+<p>What cannot be claimed:</p>
+<ol>
+<li>that the same mechanism has already been directly demonstrated on the original
+   Mod97 Transformer;</li>
+<li>that decoupled AdamW is strictly equal to the explicit-L2 scalar objective;</li>
+<li>that the AND mass is monotonic in arbitrary <span class="math-inline">$\lambda$</span>, or that
+   <span class="math-inline">$\lambda=2\times10^{-4}$</span> has completed matched-BCE;</li>
+<li>that the deep-layer static AND probability has been strictly certified as 100%.</li>
+</ol></div>
         <footer class="experiment-pager"><a href="e29.html">← E29 Loss-Resolved Robustness to a Dead Input Bit</a><span></span></footer>
       </article>
     </main>
