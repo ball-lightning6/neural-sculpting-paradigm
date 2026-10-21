@@ -79,7 +79,7 @@ Cell balancing 同时帮助两条规则，却保留准确率75%的 `copy x1/x2` 
 
 ## 7. Fixed-D 静态 SMC 复现反转并定位竞争函数
 
-固定`n=32`，对三协议、两目标、每协议8份数据集运行 Gaussian constrained SMC。全部条件 hard-fit 后，`epsilon=0.02`的 exact-target mass 为：
+固定`n=32`，对三协议、两目标、每协议8份数据集运行 Gaussian constrained SMC。在`epsilon=0.1`时各组近乎全部 hard-fit，但不是严格全部：uniform-MUX3 的 train hard-exact mass 均值为0.989685。在主比较的`epsilon=0.02`时全部48个条件的 train hard-exact mass 均为1，exact-target mass 为：
 
 | 协议 | parity2 | MUX3 |
 |---|---:|---:|

@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="检验Gaussian参考测度下的完整有限宽静态HMC系综，能否在完整50,000样本 MNIST十分类任务上达到真实Adam训练的预测水平，并测量函数agreement与残余 链间差异。">
-  <title>E28：MNIST 50k整网HMC与同协议Adam · Neural K 研究档案</title>
+  <meta name="description" content="检验Gaussian先验乘以训练集likelihood的整网后验HMC采样，能否在完整50,000样本 MNIST十分类任务上达到同协议Adam的预测水平，并测量函数agreement与残余链间差异。">
+  <title>E28：MNIST 50k likelihood加权后验HMC与同协议Adam · Neural K 研究档案</title>
   <link rel="stylesheet" href="../assets/site.css">
   <script>
     window.MathJax = {
@@ -54,7 +54,7 @@
 </ul>
 </div>
 </nav>
-        <div class="sidebar-label experiment-label">全部实验</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>静态硬条件化不足以描述训练函数分布</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-bit 反事实不变性与训练 loss 中心原则</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>函数系综动力学与网络参考语言</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>在 Mingard 2025协议中延长 post-fit 观察</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>固定 NTK 足够时的特征学习</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>连续 loss 条件下的静态函数质量</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>函数 ID 迁移与 matched-loss 静态对照</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>共享中间表示与有限容量压力</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>MNIST 80%隐藏标签噪声长训</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>4-bit raw-BCE 简单/复杂规则竞争</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule30 数据量与训练/验证梯度对齐</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND shortcut 的静态 loss 几何</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>AND shortcut 的 SGD 运输与单样本干预</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>加权 Rule-bit 的 loss 阶段函数换序</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Mod97 grokking 的完整函数与边缘凝聚</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity 终点偏好、全局入口与局部恢复</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>静态低-loss 质量与 optimizer 运输</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>高函数共识与符号可读性</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>完整真值表规则的 loss-resolved 体积</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Full-rule、固定 D 与 hard-margin 测度闭环</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement 控制与共识复杂度前沿</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>逐样本自由能与信息不变量</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>完整目标体积前瞻预测数据相变</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>深尾 Neural K-profile 与排序交叉</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST 样本复杂度与静态体积分支预测</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>MNIST平衡无标签划分的静态体积</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Grokking前后的未见函数Agreement</span></a><a class="experiment-nav-link active" href="e28.html"><span>E28</span><span>MNIST 50k整网HMC与同协议Adam</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Dead bit的loss-resolved静态预测</span></a><a class="experiment-nav-link" href="e30.html"><span>E30</span><span>Weight decay重塑完整静态函数地形</span></a></nav><div class="sidebar-label experiment-label">提交后增量实验</div><nav class="experiment-nav"><a class="experiment-nav-link" href="../experiments/e31.html"><span>E31</span><span>Loss 与幅度对齐</span></a><a class="experiment-nav-link" href="../experiments/e32.html"><span>E32</span><span>随机记忆缩放</span></a><a class="experiment-nav-link" href="../experiments/e33.html"><span>E33</span><span>跨架构联合输出体积</span></a><a class="experiment-nav-link" href="../experiments/e34.html"><span>E34</span><span>条件规则决斗</span></a><a class="experiment-nav-link" href="../experiments/e35.html"><span>E35</span><span>Mod97 冻结函数决斗</span></a><a class="experiment-nav-link" href="../experiments/e36.html"><span>E36</span><span>Peleg/G&amp;C 独立验证</span></a><a class="experiment-nav-link" href="../experiments/e37.html"><span>E37</span><span>测度鲁棒性与 Gaussian 对应</span></a></nav>
+        <div class="sidebar-label experiment-label">全部实验</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>静态硬条件化不足以描述训练函数分布</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-bit 反事实不变性与训练 loss 中心原则</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>函数系综动力学与网络参考语言</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>在 Mingard 2025协议中延长 post-fit 观察</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>固定 NTK 足够时的特征学习</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>连续 loss 条件下的静态函数质量</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>函数 ID 迁移与 matched-loss 静态对照</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>共享中间表示与有限容量压力</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>MNIST 80%隐藏标签噪声长训</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>4-bit raw-BCE 简单/复杂规则竞争</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule30 数据量与训练/验证梯度对齐</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND shortcut 的静态 loss 几何</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>AND shortcut 的 SGD 运输与单样本干预</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>加权 Rule-bit 的 loss 阶段函数换序</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Mod97 grokking 的完整函数与边缘凝聚</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity 终点偏好、全局入口与局部恢复</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>静态低-loss 质量与 optimizer 运输</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>高函数共识与符号可读性</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>完整真值表规则的 loss-resolved 体积</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Full-rule、固定 D 与 hard-margin 测度闭环</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement 控制与共识复杂度前沿</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>逐样本自由能与信息不变量</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>完整目标体积前瞻预测数据相变</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>深尾 Neural K-profile 与排序交叉</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST 样本复杂度与静态体积分支预测</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>MNIST平衡无标签划分的静态体积</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Grokking前后的未见函数Agreement</span></a><a class="experiment-nav-link active" href="e28.html"><span>E28</span><span>MNIST 50k likelihood加权后验HMC与同协议Adam</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Dead bit的loss-resolved静态预测</span></a><a class="experiment-nav-link" href="e30.html"><span>E30</span><span>Weight decay重塑完整静态函数地形</span></a></nav><div class="sidebar-label experiment-label">提交后增量实验</div><nav class="experiment-nav"><a class="experiment-nav-link" href="../experiments/e31.html"><span>E31</span><span>Loss 与幅度对齐</span></a><a class="experiment-nav-link" href="../experiments/e32.html"><span>E32</span><span>随机记忆缩放</span></a><a class="experiment-nav-link" href="../experiments/e33.html"><span>E33</span><span>跨架构联合输出体积</span></a><a class="experiment-nav-link" href="../experiments/e34.html"><span>E34</span><span>条件规则决斗</span></a><a class="experiment-nav-link" href="../experiments/e35.html"><span>E35</span><span>Mod97 冻结函数决斗</span></a><a class="experiment-nav-link" href="../experiments/e36.html"><span>E36</span><span>Peleg/G&amp;C 独立验证</span></a><a class="experiment-nav-link" href="../experiments/e37.html"><span>E37</span><span>测度鲁棒性与 Gaussian 对应</span></a><a class="experiment-nav-link" href="../experiments/e38.html"><span>E38</span><span>宽深扫描与相对目标质量</span></a></nav>
       </div>
     </aside>
 
@@ -62,14 +62,28 @@
       <article class="article">
         <header class="article-header">
           <div class="eyebrow">E28 · 实验详情</div>
-          <h1>E28：MNIST 50k整网HMC与同协议Adam</h1>
-          <p class="article-description">检验Gaussian参考测度下的完整有限宽静态HMC系综，能否在完整50,000样本 MNIST十分类任务上达到真实Adam训练的预测水平，并测量函数agreement与残余 链间差异。</p>
+          <h1>E28：MNIST 50k likelihood加权后验HMC与同协议Adam</h1>
+          <p class="article-description">检验Gaussian先验乘以训练集likelihood的整网后验HMC采样，能否在完整50,000样本 MNIST十分类任务上达到同协议Adam的预测水平，并测量函数agreement与残余链间差异。</p>
         </header>
         <div class="article-body"><div class="source-bar"><span>复现脚本</span><div><a href="../../experiments/experiment_28_mnist50k_hmc_adam/experiment_mnist10_small_cnn_adam_same_protocol.py">experiment_mnist10_small_cnn_adam_same_protocol.py</a><a href="../../experiments/experiment_28_mnist50k_hmc_adam/experiment_mnist10_small_cnn_full_hmc_demo.py">experiment_mnist10_small_cnn_full_hmc_demo.py</a></div></div><h2 id="overview">实验概览</h2>
 <h2 id="目的">目的</h2>
-<p>检验Gaussian参考测度下的完整有限宽静态HMC系综，能否在完整50,000样本
-MNIST十分类任务上达到真实Adam训练的预测水平，并测量函数agreement与残余
-链间差异。</p>
+<p>检验Gaussian先验乘以训练集likelihood的整网后验HMC采样，能否在完整50,000样本
+MNIST十分类任务上达到同协议Adam的预测水平，并测量函数agreement与残余链间差异。</p>
+<p><strong>证据定位（2026-10-21澄清）：这是likelihood加权后验的预测对照，不是固定loss阈值下直接条件体积的验证。</strong> 本实验的目标是</p>
+<div class="math-display">$$
+Q_{\beta,D}(d\theta)=Z_{\beta,D}^{-1}e^{-\beta L_D(\theta)}\mu(d\theta),
+\qquad \beta=N=50{,}000.
+$$</div>
+<p>其中<span class="math-inline">$\mu$</span>是脚本中归一化参数的标准Gaussian先验，<span class="math-inline">$L_D$</span>是平均十分类交叉熵。它不同于</p>
+<div class="math-display">$$
+Q_{D,\epsilon}(d\theta)=
+\frac{\mathbf 1_{\{L_D(\theta)\leq\epsilon\}}\mu(d\theta)}
+{\mu\{L_D\leq\epsilon\}}.
+$$</div>
+<p>硬阈值条件化在允许区域内保留原测度的相对权重；指数加权仍按loss重新分配该区域
+内部的权重，也不设置同一个有限loss截止。这不是可忽略的实现差异，不能假定函数
+分布或预测接近。HMC使用梯度，本实现也没有估计阈值体积或Neural K；99.03%的
+结果不能转述成硬阈值系综在完整MNIST上达到99.03%。本次澄清不改变冻结脚本与结果。</p>
 <h2 id="入口">入口</h2>
 <ul>
 <li>experiment_mnist10_small_cnn_full_hmc_demo.py</li>
@@ -111,19 +125,26 @@ HMC、plain Adam和MAP Adam。</p>
 <p>小型Boolean任务中的静态体积可能只是玩具现象。E28把完整网络参数全部纳入
 HMC，在50,000张真实图像上构造静态函数系综，并与相同架构、切分和初始函数
 分布的Adam比较。</p>
+<p><strong>解释边界（2026-10-21补充，不改变冻结协议）：</strong> 这里改用了Gaussian先验乘以
+likelihood的后验目标，不是把Boolean任务的硬loss阈值体积实验直接放大。
+本实验只能作为加权后验采样与Adam的对照，不能填补完整MNIST上的硬阈值体积验证。</p>
 <h2 id="2-协议">2. 协议</h2>
 <ul>
 <li>网络：Conv(1,4)-&gt;Conv(4,8)-&gt;Linear(392,10)，4,266参数；</li>
 <li>HMC：16条chain，beta=n=50,000，30个冻结步长后快照，共480个样本；</li>
+<li>采样目标：Gaussian先验按整训练集likelihood加权；HMC使用全数据梯度，不做硬loss阈值条件化或体积归一化常数估计；</li>
 <li>Adam：32 seed、batch 256、50 epochs；</li>
 <li>plain与对应Gaussian prior的MAP两种Adam；</li>
 <li>无数据增强，validation/test标签不参与训练和停止。</li>
 </ul>
 <h2 id="3-判决">3. 判决</h2>
-<p>主问题是静态HMC能否达到与真实optimizer相同的预测量级，而不是预设HMC必须
+<p>主问题是likelihood加权后验HMC能否达到与同协议Adam相近的预测量级，而不是预设HMC必须
 显著胜出。还必须报告成员数配平、逐样本配对误差、完整函数多样性和链内/链间
-分歧。高accuracy不能自动证明全局MCMC混合。</p>
+分歧。高accuracy不能自动证明全局MCMC混合，也不能验证固定loss阈值体积的预测。</p>
 <h2 id="results">结果、解读与边界</h2>
+<p><strong>证据类型：likelihood加权后验采样对照。</strong> 以下HMC结果对应Gaussian先验乘以
+整训练集likelihood，不对应固定loss阈值下的直接条件体积。两种分布可能显著不同，
+本实验没有测量它们之间的差距，也没有测量阈值体积或Neural K。</p>
 <h2 id="1-预测质量">1. 预测质量</h2>
 <table>
 <thead>
@@ -197,14 +218,17 @@ HMC，在50,000张真实图像上构造静态函数系综，并与相同架构�
 <ul>
 <li>50k HMC约5,590秒；</li>
 <li>全部四个Adam条件约141秒，其中50k plain Adam约57秒；</li>
-<li>HMC是测量静态函数系综的工具，不是更实用的训练算法。</li>
+<li>HMC在此用于探索likelihood加权后验函数系综，使用全数据梯度，不是更实用的训练算法。</li>
 </ul>
-<p>本实验建立：整网静态HMC在真实50k十分类任务上可达到99.03%，并与同架构
-真实Adam达到相同水平。</p>
+<p>本实验观察到：以likelihood加权后验为目标的有限时间整网HMC采样，其集成预测
+在真实50k十分类任务上达到99.03%，并与同架构Adam处于相近水平。这是后验采样
+与优化器的预测对照，不是硬阈值体积机制的直接证据。</p>
 <p>本实验不建立：</p>
 <ul>
 <li>HMC普遍优于Adam；</li>
 <li>HMC已全局精确混合；</li>
+<li>固定loss阈值下的Gaussian条件系综也能达到99.03%，或与该加权后验分布接近；</li>
+<li>体积收缩定律在完整MNIST上得到验证，或无需梯度即可复现该结果；</li>
 <li>静态分布等于optimizer终点分布；</li>
 <li>该结果相对NNGP或其他kernel具有独占accuracy优势。</li>
 </ul>

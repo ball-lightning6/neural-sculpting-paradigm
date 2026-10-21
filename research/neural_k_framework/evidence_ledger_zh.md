@@ -34,7 +34,7 @@ $$
 
 进一步地，仅用每类两张 MNIST 训练图像，静态体积分支在未见 `0/1` 图像上达到约 93%--96% 准确率，在`3/8` 上达到约 77%--78%；其校准后冻结的 soft free-energy 曲线还重现了真实训练中 validation negative log-likelihood 的 U 形转折。
 
-相同网络与相同四个样本下，`3/8` 相对 `0/1` 的低-loss 体积劣势由浅层不足一个数量级放大到深尾约 55 个十进制数量级，并与操作性最小充分样本量 `4 vs 512`同向。另一个全穷举实验把逐样本广义惊讶度写成自由能差，并在256条规则的全部样本顺序上验证其累计值严格等于完整规则端点成本。
+相同网络与相同四个样本下，`3/8` 相对 `0/1` 的低-loss 体积劣势由浅层不足一个数量级放大到深尾约 55 个十进制数量级，并与操作性最小充分样本量 `4 vs 512`同向。另一个全穷举实验把逐样本广义成本增量写成 bit 状态函数 $J=-\log_2Z$ 的差，并在256条规则的全部样本顺序上验证其累计值严格等于完整规则端点成本；与自由能的换算及预测 surprise 的归一化条件见第3.13节。
 
 这些结果支持一个分层图景：架构与参数测度提供非均匀函数先验，数据和连续 loss 定义函数分辨的静态几何，优化器则在该几何上施加路径依赖的运输。静态体积具有强一阶预测力，却不等于真实优化器分布。
 
@@ -92,12 +92,12 @@ $$
 \Pi=(\mathcal A,\varphi,\mu,\ell),
 $$
 
-其中 `A` 是网络架构和参数化，`varphi` 是输入输出编码，`mu` 是参数空间上的参考测度，`ell` 是逐样本损失。给定训练集
+其中 `A` 是网络架构和参数化，`varphi` 是输入输出编码，`mu` 是参数空间上的参考概率测度，`ell` 是逐样本损失。记连续前向输出为 $F_\theta(x)$，固定读取规则下的 hard 输出为 $h_\theta(x)=R(F_\theta(x))$。给定训练集
 
 $$
 D=\{(x_i,y_i)\}_{i=1}^{n},
 \qquad
-L_D(\theta)=\frac1n\sum_i\ell(h_\theta(x_i),y_i),
+L_D(\theta)=\frac1n\sum_i\ell(F_\theta(x_i),y_i),
 $$
 
 定义 loss 亚水平集合
@@ -120,7 +120,7 @@ $$
 
 ### 2.2 固定训练集下的函数分辨质量
 
-在有限 probe/完整输入空间上，用 `h_theta` 的 hard 输出标识函数 `f`。固定训练集下，候选函数的联合参数质量为
+在有限 probe/完整输入域 $U$ 上，令 $H_U(\theta)=(h_\theta(x))_{x\in U}$，用这个 hard 输出表标识函数 $f$，并记 $C_f=\{\theta:H_U(\theta)=f\}$。下文 $h_\theta=f$ 都指 hard 表相等。固定训练集下，候选函数的联合参数质量为
 
 $$
 \Omega_{\Pi,D}(f;\epsilon)
@@ -165,19 +165,37 @@ $$
 
 我们称整条曲线为 Neural K-profile，其关于 `s=-log epsilon` 的一阶导数描述局部体积收缩率，二阶导数描述收缩率怎样随尺度变化。该定义与算法概率和描述长度存在直接形式联系，但它不是机器无关 `K_U(f)`，也尚无神经版 coding theorem。
 
-`V_full` 与固定部分训练集下的 `Omega_D` 不是同一个量。本文通过 leave-one-out、AND 四候选条件事件和 hard-margin bridge 建立二者的集合关系与数值闭环，而不把一种测量未经校准地替代另一种测量。
+`V_full` 与固定部分训练集下的 `Omega_D` 不是同一个量。记完整目标事件为 $A_{\mathrm{full}}(f;\epsilon_{\mathrm{full}})$，只有在
+
+$$
+A_{\mathrm{full}}(f;\epsilon_{\mathrm{full}})
+\subseteq A_D(\epsilon_D)\cap C_f
+$$
+
+且条件事件有正质量时，才有
+
+$$
+V^{\mathrm{full}}_\Pi(f;\epsilon_{\mathrm{full}})
+=\Omega_{\Pi,D}(f;\epsilon_D)
+\Pr\!\left(A_{\mathrm{full}}(f;\epsilon_{\mathrm{full}})
+\mid A_D(\epsilon_D)\cap C_f\right).
+$$
+
+对非负逐样本 loss、$D\subseteq D_{\mathrm{full}}(f)$，相同总 loss 预算 $n\epsilon_D=N\epsilon_{\mathrm{full}}$ 保证对父训练事件的包含，其中 $N$ 为完整目标样本数；目标 hard cell 的包含须另外保证。仅有 hard-exact 不够，没有嵌套时必须保留交集或父事件外质量，不能直接把 full-target 当作 fixed-$D$ 分子。本文通过 leave-one-out、AND 四候选条件事件和 hard-margin bridge 检查这些集合关系与数值闭环。
+
+hard 先验 $p_0(f)=\mu_\Pi(C_f)$ 是独立基准。对正质量 cell，$\Omega_{\Pi,D}(f;\epsilon)=p_0(f)\Pr(A_D(\epsilon)\mid C_f)$；几乎处处有限的非负 loss 下，full-target 质量在高阈值极限趋于 1，并不一般趋于 $p_0(f)$。此外，full-target 事件可能重叠，负 log 质量首先是事件信息成本；函数前缀码长解释需要互斥分区、适当归一化或满足相应条件的事件族。
 
 ### 2.4 优化器诱导分布不是静态体积
 
-给定初始化分布和训练算法，真实训练在时刻 `t` 诱导
+给定初始化分布 $\mu_{\mathrm{init}}$ 和训练算法，真实训练在时刻 `t` 先诱导参数分布，再诱导函数分布：
 
 $$
-Q^{\mathrm{opt}}_{\Pi,D,t}
-=
-(T_{\Pi,D,t})_{\#}\mu_\Pi,
+\nu_{\Pi,D,t}=(T_{\Pi,D,t})_{\#}\mu_{\mathrm{init}},
+\qquad
+Q^{\mathrm{opt}}_{\Pi,D,t}=(H_U)_{\#}\nu_{\Pi,D,t},
 $$
 
-其中 `T` 是参数动力学映射，`#` 表示 pushforward。`Qopt` 可能受静态质量强烈影响，但还依赖入口、连通性、曲率、优化器状态、batch noise 和历史。本文始终把 `Qstatic` 与 `Qopt` 分开测量。
+其中 `T` 输出训练后参数，`H_U` 读取 hard 函数，`#` 表示 pushforward。若训练含随机性，将随机种子等一并纳入初始联合分布和训练协议；$\mu_{\mathrm{init}}$ 不必等于静态参考测度 $\mu_\Pi$。`Qopt` 可能受静态质量强烈影响，但还依赖入口、连通性、曲率、优化器状态、batch noise 和历史。本文始终把 `Qstatic` 与 `Qopt` 分开测量。
 
 ### 2.5 逐样本标签的体积分支
 
@@ -199,7 +217,7 @@ P_{\mathrm{soft}}(y\mid x,D,\epsilon)
 [p_\theta(y\mid x)].
 $$
 
-其单样本自由能增量为 `-log P_soft(y)`。本文用共同 parent 粒子同时计算两个候选标签，预测剩余质量更大、自由能代价更小的一支。
+其预测 surprise 为 $-\log_2P_{\mathrm{soft}}(y)$ bit，或 $-\ln P_{\mathrm{soft}}(y)$ nat。若把新样本作为标准似然因子、取 $\beta=1$，后一量也等于对应的自由能增量；一般 Gibbs 权重不能省略尺度换算和跨标签归一化。本文用共同 parent 粒子同时计算两个候选标签，预测概率更大、预测成本更小的一支。
 
 ## 3. 实验判决链
 
@@ -601,7 +619,7 @@ E10 仍不是全程单调定律。它只比较每组满足最终可靠性标准�
 
 #### 3.8.5 [E11] 数据量决定规则对齐下降通道能延伸多深
 
-17:35又提出一个更局部的可测问题：数据充分时 train 与 validation loss 为何几乎同步下降？这不要求高 loss 区域已经由正确 hard function 占满。对一次小学习率更新，
+17:35又提出一个更局部的可测问题：数据充分时 train 与 validation loss 为何几乎同步下降？这不要求高 loss 区域已经由正确 hard function 占满。对沿负原始训练梯度的一次小步更新，
 
 $$
 \Delta L_{val}
@@ -609,17 +627,17 @@ $$
 -\eta\nabla L_{val}\cdot\nabla L_{train},
 $$
 
-因此训练与 validation 梯度的夹角直接判断当前降低训练 loss 是否也降低总体规则 loss。[E11](experiments/experiment_11_rule30_gradient_alignment/README.md)固定一层30-bit Rule30、`1024x3` GELU+LayerNorm 网络和5个 paired seeds，使用严格嵌套的`n=256...4096`训练集及4,096个独立 validation 状态。
+因此训练与 validation 梯度的夹角给出该方向上 validation loss 变化的一阶预测，不直接测量实际 Adam 更新效果。[E11](experiments/experiment_11_rule30_gradient_alignment/README.md)固定一层30-bit Rule30、`1024x3` GELU+LayerNorm 网络和5个 paired seeds，使用严格嵌套的`n=256...4096`训练集及4,096个独立 validation 状态。
 
-实验不只比较相同步数，还在每条轨迹的`log(raw BCE)`轴上插值，比较11个共同 loss 截面。
+实验不只比较相同步数，还按每条轨迹的 `log(raw BCE)` 距离选择最近 checkpoint，并仅保留 `max(actual_loss / target_loss, target_loss / actual_loss) <= 1.35` 的点。冻结实现没有插值，比较的是目标 loss 附近的诊断点，不是精确共同截面。
 
-结果极其整齐：在 BCE 0.3至0.003的每个截面，五个 seed 各自都呈现样本量增加、train/validation 梯度余弦严格上升。
+归档结果显示：目标 BCE 0.2、0.1、0.05、0.02、0.01和0.003的近邻匹配中，五个 seed 各自都呈现样本量增加、train/validation 梯度余弦严格上升；目标 BCE 0.3 则只有4/5 seed严格保持这一完整次序，不能写成全区间5/5。
 
-BCE 0.1时，余弦从`n=256`的-0.167依次升至`n=4096`的0.927，validation-train gap 从0.482降至0.019；BCE 0.01时两端更为-0.237与0.950，gap 约0.693与0.00137。
+目标 BCE 0.1的近邻匹配中，五个 seed 的平均余弦从`n=256`的-0.167依次升至`n=4096`的0.927，平均 validation-train gap 从0.482降至0.019；目标 BCE 0.01时两端平均余弦为-0.237与0.950，gap 约0.693与0.00137。实际 BCE 在上述容差内，并不都等于目标值；组均值为负也不意味着每个 seed 都为负。
 
 行为终点形成连续谱：256/512样本很快拟合训练集但最终 validation bit accuracy 只有74.84%/92.96%；768样本先拟合、随后平滑延迟泛化至99.9958%；1024样本五个 seed 最终全对；4096样本的训练与 validation exact accuracy 都约在84步达到100%。
 
-因此数据量决定的并不是高 loss 处有没有任何规则方向，而是该方向能延伸到多深：低数据先利用廉价共享结构，随后训练梯度旋转到样本特有方向；高数据在相同深 loss 处仍保留总体规则相干性。这为§3.8.4的勘误提供直接动力学证据，也把普通过拟合、延迟泛化和同步下降放入同一连续图景。
+因此数据量决定的并不是高 loss 处有没有任何规则方向，而是该方向能延伸到多深：低数据先利用廉价共享结构，随后训练梯度旋转到样本特有方向；高数据在近似匹配的深 loss 处仍保留总体规则相干性。这为§3.8.4的勘误提供轨迹上的局部梯度几何证据，也把普通过拟合、延迟泛化和同步下降放入同一连续图景；它不是实际 Adam 更新方向或 validation loss 增量的测量。
 
 随后还尝试在 Rule30 中寻找原版 grokking 的“validation loss 先降、再升、再降”形状，但脚本在约`2.5e-8` BCE 处遭遇 float32 梯度消减，未形成有效裁决；Mod97 只是复现已知曲线，Mod3“小数据先记忆再 grok”猜想失败。三条均留在总账，不建立短论文实验编号。
 
@@ -654,9 +672,9 @@ copy/NOT/AND/OR 共12个可裁决条件，从完整 prior 到最低0.01% raw-los
 
 原训练集遗漏若干 off-diagonal 负例，使依赖`x4`的 shortcut 仍与全部10点一致，并能在已见点形成更大 margin：AND/F500/F550 平均 signed margin 分别为0.378/0.404/0.444。
 
-定向补洞建立了因果链。只封闭一条分支会排除旧 shortcut，却可能暴露新的`copy x2`；同时覆盖四个关键负例后，AND 由 hard-exact 40.2%升到最低1%的54.9%。六个随机负例子集中五组富集、一组下降，证明具体样本覆盖而非样本数和标签比例决定曲线。
+定向补洞建立了因果链。只封闭一条分支会排除旧 shortcut，却可能暴露新的`copy x2`；同时覆盖四个关键负例后，AND 由 hard-exact 40.2%升到最低1%的54.9%。六个随机负例子集中五组富集、一组下降。这些保持样本数及正负标签比例4:6的对照支持具体覆盖会改变静态选择，不能仅用样本数或标签比例解释。
 
-最小平衡干预只替换一个样本，使四种`(x1,x2)`模式覆盖从`3/2/1/4`变为`3/2/2/3`。静态 AND 由16.65%升至最低0.2%的28.10%，平均例外由1.733降至1.242，熵由4.331降至3.303 bit；但 AND/F050 赔率先下降、后在深 loss 反超。
+另一个最小平衡干预把正例 `1101 -> 1` 替换为负例 `1000 -> 0`，使四种`(x1,x2)`模式覆盖从`3/2/1/4`变为`3/2/2/3`，同时使正负标签比例从4:6变为3:7。它不是只改变负例位置，不能单独隔离覆盖效应。静态 AND 由16.65%升至最低0.2%的28.10%，平均例外由1.733降至1.242，熵由4.331降至3.303 bit；但 AND/F050 赔率先下降、后在深 loss 反超。
 
 静态截面自身已出现“中等 loss 强化 shortcut、更深 loss 强化 AND”的阶段换序。
 
@@ -668,7 +686,7 @@ copy/NOT/AND/OR 共12个可裁决条件，从完整 prior 到最低0.01% raw-los
 
 原始条件延长至127,458步后稳定在欠定平台：AND 22.51%、F100 25.29%、平均例外1.771、未见准确率约70.5%。100k 至终点98.3%的 hard function 不再变化，训练 loss 仍下降到`2.06e-9`，却没有自动恢复唯一 AND。优化时间不能替代缺失约束。
 
-只替换一个样本的平衡条件则产生完全不同轨迹。step 20时 F050 为42.58%、AND 为21.58%；step 50,288时 F050 降至5.62%、AND 升至64.94%，平均例外只剩0.450，未见准确率92.5%。最终 AND 模型中72.1%是在插值后由 shortcut 迁移形成。
+只替换一个样本的平衡条件则产生完全不同轨迹；这里沿用上述同时改变覆盖与正负标签比例的条件，不是覆盖的单因素干预。step 20时 F050 为42.58%、AND 为21.58%；step 50,288时 F050 降至5.62%、AND 升至64.94%，平均例外只剩0.450，未见准确率92.5%。最终 AND 模型中72.1%是在插值后由 shortcut 迁移形成。
 
 与原始条件同 seed 比较，69.97%的模型例外减少，平均减少1.337个错误点；初始化 seed 没有预先固定终点。
 
@@ -879,24 +897,24 @@ $$
 此前逐样本加入实验已经反复显示：当前 committee 越意外的新标签，越能重排函数分布；但每一步信息量依赖样本顺序，始终没有找到总难度的不变量。E22 把问题改写为同一静态参考测度上的配分函数。对部分标注状态`S`定义
 
 $$
-F(S)=-\log_2 Z(S),
+J(S)=-\log_2 Z(S),
 $$
 
-并把加入样本`i`的广义惊讶度写成
+并把加入样本`i`的广义成本增量（单位 bit）写成
 
 $$
-\Delta I(i\mid S)
-=F(S\cup\{i\})-F(S)
+\Delta J(i\mid S)
+=J(S\cup\{i\})-J(S)
 =-\log_2\frac{Z(S\cup\{i\})}{Z(S)}.
 $$
 
-只要全部状态共享同一个`Z`，任意样本顺序的增量和必然望远镜消去，等于完整规则端点自由能。这并不要求每一步相同；顺序只是在阶段之间重新分配总成本。
+只要全部状态使用同一个参考测度和同一套 `Z` 定义（Gibbs 情形还须固定 $\beta$），任意样本顺序的增量和必然望远镜消去，等于完整规则终点与空状态起点的 $J$ 差。这并不要求每一步相同；顺序只是在阶段之间重新分配总成本。
 
 [E22](experiments/experiment_22_static_free_energy_information/README.md)用2,097,152个 prior 网络一次保存3-bit 全部8点 logit，穷举`3^8=6,561`个部分标注状态、256条完整规则及每条规则`8!=40,320`个加入顺序。
 
 在 hard-conditioned 和多个 Gibbs 口径下，最大路径不变量误差为`2.84e-14 bit`，Shapley 效率误差为`5.68e-14 bit`。Rule150 即 parity3 在 hard 口径下以约29 bit 排名最难，在`beta=1`口径下排名第二。
 
-因此，逐样本 surprise、完整规则成本与 prequential code 可以由一个静态状态函数统一描述。这里真正的实验内容是网络参考测度下不同端点成本的差异及数值闭合；“同一势函数的增量和路径无关”本身是严格恒等式，不冒充经验发现，也不意味着真实 SGD 路径守恒。
+因此，逐样本广义成本增量与完整规则成本由同一个静态状态函数描述。纯 hard 条件化或标准似然的 $\beta=1$ 情形下，这也直接连接 predictive surprise 与 prequential code；一般 Gibbs 分数需要额外标签归一化。这里真正的实验内容是网络参考测度下不同端点成本的差异及数值闭合；“同一势函数的增量和路径无关”本身是严格恒等式，不冒充经验发现，也不意味着真实 SGD 路径守恒。
 
 #### 3.13.2 与统计力学的连接及其历史位置
 
@@ -906,10 +924,25 @@ $$
 Z_{\Pi,D}(\beta)
 =\int \exp[-\beta nL_D(\theta)]\,d\mu_\Pi(\theta),
 \qquad
-F_{\Pi,D}(\beta)=-\frac1\beta\log Z_{\Pi,D}(\beta).
+F_{\Pi,D}(\beta)=-\frac1\beta\ln Z_{\Pi,D}(\beta).
 $$
 
-本文主要使用的亚水平体积是 microcanonical 对象；Gibbs 配分函数则是整条 loss 态密度的 Laplace 型汇总。两种语言描述同一参考测度下的不同切片。这里的“温度”是 loss 容忍度的数学控制量，不表示 SGD 真的处于热平衡。
+这里 $J_{\Pi,D}=-\log_2Z_{\Pi,D}$ 与 $F_{\Pi,D}$ 不是同一尺度。固定 $\beta>0$ 时：
+
+$$
+\Delta J=\frac{\beta}{\ln 2}\Delta F.
+$$
+
+令 $r_\beta(y\mid x,D)=Z_{\Pi,D\cup\{(x,y)\}}(\beta)/Z_{\Pi,D}(\beta)$。它是 Gibbs 分支分数，不一般是归一化标签概率。若 $p_\beta(y\mid x,D)=r_\beta(y\mid x,D)/\sum_{y'}r_\beta(y'\mid x,D)$，则
+
+$$
+-\log_2p_\beta(y\mid x,D)
+=\Delta J+\log_2\sum_{y'}r_\beta(y'\mid x,D).
+$$
+
+纯 hard 分支或标准负对数似然在 $\beta=1$ 时，标签分数和为 1，才可直接把增量解释为预测 surprise；望远镜相消本身不提供这个归一化条件。
+
+本文主要使用的亚水平体积是 microcanonical 对象；Gibbs 配分函数则是整条 loss 态密度的 Laplace 型汇总。两种语言描述同一参考测度下的不同汇总，不保证某个阈值窗口的体积交叉在 canonical 系综中逐点复现。E24 比较各自完整标签目标的质量曲线，不是同一有限训练事件中的受限分支配分函数。这里的“温度”是 loss 容忍度的数学控制量，不表示 SGD 真的处于热平衡。
 
 这条联系并非本文首先提出。Esther Levin、Naftali Tishby 与 Sara A. Solla 在1989年的[*A Statistical Approach to Learning and Generalization in Layered Neural Networks*](https://mlanthology.org/colt/1989/levin1989colt-statistical/)已经把固定网络架构写成 Gibbs ensemble，用自由能差表达新样本预测代价，并连接 predictive MDL 与泛化。
 
@@ -1036,12 +1069,19 @@ Agreement 0.839。中后期Agreement几乎由不同seed共同答对目标解释�
 
 #### 3.14.8 [E28] 50k MNIST整网HMC与Adam
 
+**证据类型是likelihood加权后验对照，不是硬阈值体积验证。** 目标为Gaussian先验
+乘以整训练集likelihood；平均交叉熵的权重beta=N=50,000。该加权会重新分配低-loss
+区域内部的相对质量，不等同于固定loss阈值条件化，也不能假定两者接近。
+
 [E28](experiments/experiment_28_mnist50k_hmc_adam/README.md)在4,266参数小CNN
 上对全部50,000张MNIST训练图像运行16-chain整网HMC，并与32-seed plain/MAP
 Adam比较。HMC、plain Adam、MAP Adam的ensemble test accuracy分别为99.03%、
 98.95%、98.82%；HMC与plain Adam只差8张测试图，McNemar p=0.2005，应判为
 同一性能水平。480个HMC样本对应480个不同完整测试函数，但逐点agreement达到
 0.9877。异链函数分歧仍高于同链，故预测成功不等于全局混合证明。
+
+该实现使用梯度，没有估计阈值体积或Neural K。因此99.03%只属于上述后验采样的
+集成预测，不能作为完整MNIST上硬阈值系综同样准确或体积收缩律成立的直接证据。
 
 #### 3.14.9 [E29] Dead bit的loss-resolved稳定性
 
@@ -1117,7 +1157,7 @@ K^N_\Pi(f;\epsilon)
 =-\log_2V^{full}_\Pi(f;\epsilon)
 $$
 
-称为协议`Pi`下的 Neural Kolmogorov complexity profile。它把“这个网络语言实现目标`f`到精度`epsilon`需要付出多稀有的参数质量”变成可测量对象。先验概率、某个固定 loss 处的值、局部斜率、曲率和深尾渐近行为都是 profile 的投影，不能互相替代。
+称为协议`Pi`下的 Neural Kolmogorov complexity profile。它把“这个网络语言实现目标`f`到精度`epsilon`需要付出多稀有的参数质量”变成可测量对象。某个固定 loss 处的值、局部斜率、曲率和深尾渐近行为都是 profile 的投影，不能互相替代；hard 先验则是第2.3节区分的独立基准。
 
 它与机器无关 Kolmogorov 复杂度`K_U(f)`有三点区别：
 
@@ -1125,7 +1165,7 @@ $$
 2. hard function 内部仍有连续 margin 和表示复杂度；
 3. 当前没有神经版 coding theorem 把`-log volume`严格等同最短程序长度。
 
-但“Neural Kolmogorov”不是随意命名。`-log`质量天然具有码长形式；E22 的逐样本自由能严格累加为完整规则端点成本；E23 又用事前冻结的 profile 预测了独立随机训练集的`n50/n90`。这构成体积码长、predictive code 和辨识样本量之间的经验闭环。
+但“Neural Kolmogorov”不是随意命名。`-log`质量具有信息成本形式，在满足编码条件时可解释为码长；E22 的逐样本 $\Delta J$ 严格累加为完整规则端点成本；E23 又用事前冻结的 profile 预测了独立随机训练集的`n50/n90`。这在前述归一化和编码条件下连接了体积成本、predictive code 和辨识样本量。
 
 把`-log volume`**定义**为协议相对难度本身当然不可被实验推翻；可证伪的科学内容是它能否预测定义之外的量。本文使用三种外部锚点：预先具有严格包含关系的规则族、训练前冻结 profile 后测得的随机数据相变，以及真实训练对未见函数/图像的偏好。
 
@@ -1141,11 +1181,11 @@ $$
 Z(\beta)=\int e^{-\beta nL_D(\theta)}d\mu(\theta)
 $$
 
-是同一 loss 几何的不同汇总。自由能差给出新增样本的预测代价；把所有样本增量相加得到端点码长。E20 又证明完整目标体积、固定 D 候选 cell 和 hard-margin 核心可由条件概率严格桥接。
+是同一 loss 几何的不同汇总，不保证两种系综的局部排序或交叉逐点相同。固定 $\beta$ 时，$\Delta J=\beta\Delta F/\ln2$ 给出新增样本的广义 bit 成本；满足标签归一化条件时才直接等于预测代价。把所有 $\Delta J$ 相加得到端点成本差。E20 又在明确事件嵌套和阈值换算下，检查了完整目标体积、固定 D 候选 cell 和 hard-margin 核心之间的条件概率桥接。
 
 标准 MDL 写作`L(H)+L(D|H)`。神经网络通常没有显式计算一个额外的程序长度目标；它只降低经验 loss。本文的解释是：架构和参考测度已经为实现分配不均匀质量，收紧残差容忍度又差异淘汰这些实现，于是单一 loss 压力可以产生 MDL 式函数选择。“压缩”是 loss 几何的结果，不是偷偷加入的第二优化目标。
 
-在这条对应中，`-log2 V_full(f; epsilon)`是当前神经语言把完整目标实现到精度`epsilon`的协议相对码长，整条 Neural K-profile 则是随残差精度变化的码长曲线。它与算法概率共享“质量越大、码长越短”的结构，却不是机器无关 Kolmogorov complexity。E22 的端点码长闭合与 E23 的`profile -> n50/n90`前瞻预测，是这条 MDL/算法信息解释超出命名层面的两个独立经验锚点。
+在这条对应中，`-log2 V_full(f; epsilon)`是当前神经语言把完整目标实现到精度`epsilon`的协议相对事件信息成本，整条 Neural K-profile 则是随残差精度变化的成本曲线。函数码长解释需要互斥或适当归一化，不能直接用于一般重叠的 full-target 事件。它与算法概率共享“质量越大、负 log 成本越小”的结构，却不是机器无关 Kolmogorov complexity。E22 的端点成本闭合与 E23 的`profile -> n50/n90`前瞻预测，是这条有条件 MDL/算法信息解释超出命名层面的两个独立经验锚点。
 
 这也限定了“loss 下降等于复杂度下降”的说法。训练早期从常量输出学会任何非平凡任务，绝对程序复杂度显然可能上升；拟合噪声也会增加描述成本。可靠命题是：在固定训练约束和协议下，loss 下降重排相容实现，并常在深尾提高可复用低描述实现的相对质量。其方向必须由 profile 测量，不能凭口号预设。
 
@@ -1256,7 +1296,7 @@ E12--E16 显示捷径换序、边缘凝聚与全局可达性可以分离，因�
 
 Neural K 与这些方向共享`-log mass`结构，但研究对象更具体：固定网络协议在指定 loss 精度上的可测参数质量，以及它对完整函数、数据相变和真实图像分支的预测。
 
-E22 使逐样本自由能增量严格累加为端点成本，E23 则把完整目标 profile 连接到随机训练集辨识阈值。当前仍缺少神经 coding theorem，不能把 Neural K 写成标准 Kolmogorov 复杂度的估计器，也不能从 PAC-Bayes 界自动推出本文观察到的排序交叉。
+E22 使逐样本 bit 成本增量 $\Delta J$ 严格累加为端点成本差，E23 则把完整目标 profile 连接到随机训练集辨识阈值。当前仍缺少神经 coding theorem，不能把 Neural K 写成标准 Kolmogorov 复杂度的估计器，也不能从 PAC-Bayes 界自动推出本文观察到的排序交叉。
 
 ### 5.4 Flat minima、SLT/RLCT 与函数体积
 
@@ -1302,11 +1342,17 @@ E22 使逐样本自由能增量严格累加为端点成本，E23 则把完整目
 
 神经网络训练的显式压力只是降低训练目标。架构与参考测度首先赋予函数非均匀质量；训练集定义竞争约束；loss 深度差异收缩函数及其内部实现；optimizer 决定系统实际怎样进入和穿过这些区域。简单性偏好不是一次 hard 过滤，也不是每个函数处处单调的神谕，而是一条可发生弯曲和交叉的 loss-resolved 质量流。
 
-本文把这条流定义为 Neural K-profile，并用三类独立证据约束其含义：完整目标体积前瞻预测随机训练集的 parity 数据相变；共享父 SMC 确认深尾复杂度排序真实反转；MNIST 静态分支在真实图像上产生高准确率并重建 validation NLL U 形。逐样本自由能又把预测惊讶、端点码长和统计力学配分函数严格连接起来。
+本文把这条流定义为 Neural K-profile，并用三类独立证据约束其含义：完整目标体积前瞻预测随机训练集的 parity 数据相变；共享父 SMC 确认深尾复杂度排序真实反转；MNIST 静态分支在真实图像上产生高准确率并重建 validation NLL U 形。逐样本 $\Delta J$ 又把端点信息成本和统计力学配分函数严格连接起来，并在标签归一化及编码条件成立时连接预测 surprise 与码长。
 
 因此，grokking、direct learning、过拟合、噪声记忆、特征复用、符号凝聚和部分能力涌现不必被视为互不相关的机制集合。它们可以被理解为同一训练集中心函数系综在数据量、loss 精度、网络语言和可达性轴上的不同区域。
 
 这个框架尚未解析“为什么具体架构产生具体 profile”，也没有完成普适理论；但它已经把一个长期被混在“泛化为何发生”中的问题，改写成一组可测、可桥接、可前瞻判决的对象。
+
+## 2026-10网站补充
+
+[E38](experiments/e38.html)完成了五配置、19目标、9阈值的宽深SMC扫描。在BCE≤0.30下，17个选定非单bit目标相对同一单bit参照的估计质量劣势均随四个双隐层宽度扩大。它是指定均匀测度与缩放下的连续loss事件证据，不是hard cell质量、测度无关复杂度或双下降因果证明。预算随宽度变化、共享池适应与混合边界在实验页逐项保留。
+
+网站另提供[双下降解释与宽度证据](width-double-descent.html)及[复杂度测量方法](complexity-methods.html)。后者是针对规则和权重所实现函数的测量方案，本轮没有新增方法验证实验。
 
 ## 附录计划
 

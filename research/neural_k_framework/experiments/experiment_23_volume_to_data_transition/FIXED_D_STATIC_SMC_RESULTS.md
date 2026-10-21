@@ -9,13 +9,13 @@
 - 共1,154个 SMC level，用时约1,798秒；
 - 最后12层 proposal acceptance 均值约0.299，范围约0.289--0.308；
 - 最后一层 survival 均值0.771，范围0.740--0.808；
-- 所有条件在 `epsilon<=0.1` 时 train hard-exact mass 已约为1。
+- 在 `epsilon=0.1` 时各组 train hard-exact mass 已接近1，但 uniform-MUX3 的均值为0.989685；在主比较的 `epsilon=0.02` 时全部48个条件均为1。
 
 SMC 没有发生阈值停滞或 acceptance 崩溃。深尾 lineage 已明显收缩：`epsilon=0.02` 时多数 replica 只剩1--2条祖先，最大约6条。因此绝对 target-mass 小数不应当成高精度积分；主要使用跨阈值方向、数据集重复、replica 符号和数量级做裁决。
 
-## 2. Hard-fit 后的主要结果
+## 2. 近乎全部 hard-fit 时的主要结果
 
-在 `epsilon=0.1`，全部条件已经 hard-fit：
+在 `epsilon=0.1`，各组近乎全部 hard-fit，但不是严格全部（uniform-MUX3 的 train hard-exact mass 均值为0.989685）：
 
 | 协议 | 目标 | unseen accuracy | exact target mass | agreement |
 |---|---|---:|---:|---:|
@@ -30,7 +30,7 @@ SMC 没有发生阈值停滞或 acceptance 崩溃。深尾 lineage 已明显收�
 
 ## 3. 深尾结果
 
-到 `epsilon=0.02`：
+到主比较的 `epsilon=0.02`，全部48个条件的 train hard-exact mass 均为1：
 
 | 协议 | parity2 target mass | MUX3 target mass | 占优目标 |
 |---|---:|---:|---|

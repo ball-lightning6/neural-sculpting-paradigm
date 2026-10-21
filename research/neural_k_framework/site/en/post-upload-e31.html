@@ -330,7 +330,7 @@
 </tr>
 </tbody>
 </table>
-<p>All groups fully fit the training set. <strong>Full fitting ≠ generalization</strong>: with the ±0.001 target, performance on the 12 samples is close to random guessing.</p>
+<p>All groups fully fit the training set. <strong>Full fitting ≠ generalization</strong>: with the ±0.001 target, all 12 training points are fitted, while the mean accuracy on the 4 unseen points is 49.32%, close to random guessing.</p>
 <h3 id="n-8-control-0-1-mse-overtakes-bce">n=8 control: 0/1 MSE overtakes BCE</h3>
 <table>
 <thead>
@@ -360,7 +360,7 @@
 </table>
 <p>133 seeds succeeded only with MSE, with none in the reverse direction. <strong>The failure of small-amplitude MSE must not be generalized into "MSE is inferior to BCE"</strong>; whether it works depends on the target center, spacing, and task saturation, not on the loss name.</p>
 <h3 id="bce-amplitude-alignment-regularizer-birthplace">BCE + amplitude-alignment regularizer (birthplace)</h3>
-<p>BCE + λ×(variance of per-sample signed logits), λ∈{0.01, 0.1, 1}: <strong>all three levels recovered 512/512</strong> (baseline BCE only 374/512). The weak-regularizer group's raw BCE median is almost identical to the baseline (7.73e-6 vs 7.55e-6), ruling out the explanation "the loss simply went lower." This regularizer was subsequently transferred to Rule30 and mod97 (see the other E32 report pages).</p>
+<p>BCE + λ×(variance of per-sample signed logits), λ∈{0.01, 0.1, 1}: <strong>all three levels recovered 512/512</strong> (baseline BCE only 374/512). The weak-regularizer group's raw BCE median is almost identical to the baseline (7.73e-6 vs 7.55e-6), ruling out the explanation "the loss simply went lower." This regularizer was subsequently transferred to Rule30 and mod97 (see the other E31 report pages).</p>
 <h2 id="verdict">Verdict</h2>
 <ol>
 <li>The choice of loss direction (target position, shape, alignment) is a control axis independent of "loss depth"; small-amplitude targets can destroy rule recovery from finite samples;</li>
@@ -371,7 +371,7 @@
 <ul>
 <li>A single small <code>4→16→1 tanh</code> network, the single copy rule, 0/1 encoding, 512 seeds; the center / spacing / task saturation of the amplitude effect are not separated;</li>
 <li>The results must not be extrapolated to "MSE is generally superior/inferior to BCE" or "the alignment regularizer is generally effective";</li>
-<li>Together with Rule30 (the direction favoring BCE) and mod97 (the direction where alignment works) in E32, these form the full picture, and only one side of it should not be cited.</li>
+<li>Together with Rule30 (the direction favoring BCE) and mod97 (the direction where alignment works) in E31, these form the full picture, and only one side of it should not be cited.</li>
 </ul>
 <h2 id="files_1">Files</h2>
 <ul>
@@ -410,7 +410,7 @@
 </tr>
 </tbody>
 </table>
-<p>Reference calibration point: the "diagnostic CE" of a perfect one-hot solution is <strong>4.4836</strong> — i.e., for fixed one-hot targets, cross-entropy does not approach 0. This directly refutes "grokking must drive raw CE extremely low," and is consistent with the phenomenon in E32 where the CE + amplitude-alignment regularizer group recovered already at CE≈1e-4–1e-3.</p>
+<p>Reference calibration point: the "diagnostic CE" of a perfect one-hot solution is <strong>4.4836</strong> — i.e., for fixed one-hot targets, cross-entropy does not approach 0. This directly refutes "grokking must drive raw CE extremely low," and is consistent with the phenomenon in E31 where the CE + amplitude-alignment regularizer group recovered already at CE≈1e-4–1e-3.</p>
 <h2 id="mechanism-and-boundaries-must-be-kept-together-with-the-results">Mechanism and Boundaries (must be kept together with the results)</h2>
 <ul>
 <li>Both rounds are in <code>paused</code> state (manually paused, not run to the end of the budget), with mechanism status <code>mse_recovery_or_delay_not_yet_confirmed</code>; <strong>stopping at first full marks does not guarantee stability under continued training</strong>;</li>

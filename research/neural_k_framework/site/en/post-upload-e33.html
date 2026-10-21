@@ -58,6 +58,13 @@
 <li><a href="#memory-and-disk">Memory and disk</a></li>
 <li><a href="#recommended-next-steps">Recommended next steps</a></li>
 <li><a href="#assets_1">Assets</a></li>
+<li><a href="#1-questions">1. Questions</a></li>
+<li><a href="#2-protocol-and-completeness">2. Protocol and Completeness</a></li>
+<li><a href="#3-different-architectures-do-share-a-complexity-backbone">3. Different Architectures Do Share a Complexity Backbone</a></li>
+<li><a href="#4-a-shared-backbone-does-not-mean-complete-architecture-independence">4. A Shared Backbone Does Not Mean Complete Architecture Independence</a></li>
+<li><a href="#5-relationship-between-the-prior-ordering-and-neural-k-curves">5. Relationship Between the Prior Ordering and Neural K Curves</a></li>
+<li><a href="#6-comparison-with-approximations-to-kolmogorov-complexity">6. Comparison with Approximations to Kolmogorov Complexity</a></li>
+<li><a href="#7-conclusions-and-4-bit-follow-up">7. Conclusions and 4-bit Follow-up</a></li>
 </ul>
 </div>
 </nav>
@@ -687,7 +694,306 @@ The script zip excludes the full <code>.pt</code> files, but the raw checkpoints
 <li>Structural/forward benchmarking: <code>tmp/results_cross_architecture_output_volume_local_preflight_v2/</code>.</li>
 <li>Engineering tests: <code>research/function_information_conservation/tests/test_cross_architecture_output_volume.py</code>, 10 passing, including native RNN/LSTM consistency, scalar/batched forward for all architectures, the BCE-margin identity, Gaussian integrable probabilities, resume/skip, and Jupyter without <code>__file__</code>.</li>
 </ul>
-<p>No formal deep-tail curve measurement was performed this round, and diffusion was not started.</p></div>
+<p>No formal deep-tail curve measurement was performed this round, and diffusion was not started.</p>
+<h1 id="finite-width-cross-architecture-results-for-the-complexity-ordering-of-all-3-bit-functions">Finite-Width Cross-Architecture Results for the Complexity Ordering of All 3-bit Functions</h1>
+<h2 id="1-questions">1. Questions</h2>
+<p>This experiment examines three distinct questions:</p>
+<ol>
+<li>Whether different conventional MLPs give broadly the same function-complexity ordering;</li>
+<li>How much of the prior complexity ordering is preserved and how much is reordered as BCE on the full truth table decreases;</li>
+<li>Whether commonly used complexity measures can provide a preliminary explanation for this extremely short truth table. The 3-bit setting alone is insufficient to
+   adjudicate the relationship between Neural K and Kolmogorov complexity.</li>
+</ol>
+<p>The main measurements use actual finite-width networks throughout. The prior comes from direct random-weight counting, and low-loss Neural K
+comes from prior-preserving pCN constrained SMC. NNGP was not used to generate the main conclusions.</p>
+<h2 id="2-protocol-and-completeness">2. Protocol and Completeness</h2>
+<table>
+<thead>
+<tr>
+<th>Architecture</th>
+<th style="text-align: right;">Parameter count</th>
+<th style="text-align: right;">Completed orbits</th>
+<th style="text-align: right;">Time for this run</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>3 -&gt; 16 -&gt; 1 tanh</code></td>
+<td style="text-align: right;">81</td>
+<td style="text-align: right;">40/40</td>
+<td style="text-align: right;">610.1 seconds</td>
+</tr>
+<tr>
+<td><code>3 -&gt; 32 -&gt; 1 tanh</code></td>
+<td style="text-align: right;">161</td>
+<td style="text-align: right;">40/40</td>
+<td style="text-align: right;">1066.0 seconds</td>
+</tr>
+<tr>
+<td><code>3 -&gt; 16 -&gt; 16 -&gt; 1 tanh</code></td>
+<td style="text-align: right;">353</td>
+<td style="text-align: right;">40/40</td>
+<td style="text-align: right;">757.7 seconds</td>
+</tr>
+<tr>
+<td><code>3 -&gt; 16 -&gt; 1 ReLU</code></td>
+<td style="text-align: right;">81</td>
+<td style="text-align: right;">40/40</td>
+<td style="text-align: right;">455.7 seconds</td>
+</tr>
+</tbody>
+</table>
+<p>The total time was approximately 48 minutes and 10 seconds. Each architecture directly sampled <code>67,108,864</code> random initializations, for a total of
+<code>268,435,456</code> finite networks across the four architectures. All 256 functions appeared at least once for each architecture; except for
+parity3 and its complement, the remaining 254 functions each appeared at least 20 times.</p>
+<p>Low-loss SMC used 8 independent replicas per architecture, with 4096 particles per replica, and covered 16
+BCE thresholds, from <code>0.7</code> all the way down to <code>0.001</code>. All curves satisfy the following:</p>
+<ul>
+<li>Neural K is strictly nondecreasing as the threshold decreases;</li>
+<li>There are no target-function label violations in the hard-exact region <code>epsilon &lt;= 0.08</code>;</li>
+<li>The error in the exact symmetry expansion under input-variable permutations and global output complementation is zero;</li>
+<li>The final acceptance rates for all parameter blocks are <code>0.295--0.304</code>.</li>
+</ul>
+<p>At <code>epsilon=0.001</code>, the minimum pairwise Spearman correlations between the 40-orbit rankings produced by the SMC replicas still lie in the range
+<code>0.9977--0.9994</code>, with medians in <code>0.9992--0.9996</code>. Thus, the ranking conclusions below are not artifacts created by taking
+medians over multiple inconsistent replicas.</p>
+<h2 id="3-different-architectures-do-share-a-complexity-backbone">3. Different Architectures Do Share a Complexity Backbone</h2>
+<p>First, consider only the 70 balanced functions whose outputs contain exactly 4 occurrences of 0 and 4 occurrences of 1, thereby excluding
+trivial correlations due to label proportions. The cross-architecture Spearman correlations of the direct prior complexity are:</p>
+<table>
+<thead>
+<tr>
+<th>Architecture pair</th>
+<th style="text-align: right;">Spearman</th>
+<th style="text-align: right;">Kendall tau</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tanh width16 / tanh width32</td>
+<td style="text-align: right;">0.962</td>
+<td style="text-align: right;">0.838</td>
+</tr>
+<tr>
+<td>tanh width16 / tanh depth2</td>
+<td style="text-align: right;">0.953</td>
+<td style="text-align: right;">0.807</td>
+</tr>
+<tr>
+<td>tanh width16 / ReLU width16</td>
+<td style="text-align: right;">0.893</td>
+<td style="text-align: right;">0.709</td>
+</tr>
+<tr>
+<td>tanh width32 / tanh depth2</td>
+<td style="text-align: right;">0.932</td>
+<td style="text-align: right;">0.777</td>
+</tr>
+<tr>
+<td>tanh width32 / ReLU width16</td>
+<td style="text-align: right;">0.865</td>
+<td style="text-align: right;">0.674</td>
+</tr>
+<tr>
+<td>tanh depth2 / ReLU width16</td>
+<td style="text-align: right;">0.922</td>
+<td style="text-align: right;">0.770</td>
+</tr>
+</tbody>
+</table>
+<p>After resampling the 8 direct-counting replicas, the weakest pair, <code>tanh width32 / ReLU width16</code>,
+still has a 95% bootstrap interval of <code>0.852--0.875</code>. Thus, even with output entropy held fixed, the cross-architecture prior
+ordering remains stable.</p>
+<p>The shared ordering is even stronger at low loss. At <code>epsilon=0.08</code>, the rankings of all 70 balanced functions are
+identical across the four architectures. At <code>epsilon=0.001</code>, the balanced-function Spearman correlations for the six architecture pairs
+are still <code>0.937--1.000</code>; when counting only the 10 nonredundant balanced orbits, they are <code>0.976--1.000</code>.</p>
+<p>Another count that does not rely on correlation coefficients gives the same conclusion:</p>
+<table>
+<thead>
+<tr>
+<th>Measurement point</th>
+<th style="text-align: right;">Function pairs with consistent ordering among 40 orbits</th>
+<th style="text-align: right;">Function pairs with consistent ordering among 10 balanced orbits</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Direct prior</td>
+<td style="text-align: right;">733/780 = 94.0%</td>
+<td style="text-align: right;">41/45 = 91.1%</td>
+</tr>
+<tr>
+<td><code>epsilon=0.08</code></td>
+<td style="text-align: right;">746/780 = 95.6%</td>
+<td style="text-align: right;">45/45 = 100.0%</td>
+</tr>
+<tr>
+<td><code>epsilon=0.001</code></td>
+<td style="text-align: right;">749/780 = 96.0%</td>
+<td style="text-align: right;">43/45 = 95.6%</td>
+</tr>
+</tbody>
+</table>
+<p>This strongly supports the following statement: the specific complexity values of conventional fully connected networks can differ greatly, but the ordering of function
+difficulty has a shared backbone that is quite stable across widths, depths, and activation functions.</p>
+<h2 id="4-a-shared-backbone-does-not-mean-complete-architecture-independence">4. A Shared Backbone Does Not Mean Complete Architecture Independence</h2>
+<p>At the deepest threshold, the Neural K values of the balanced orbits across the three tanh architectures are related almost by linear scaling, with linear-fit
+<code>R^2=0.996--0.999</code>. ReLU still has a similar overall ranking, but imposes an additional enormous penalty on parity3.</p>
+<p>The Neural K values of the parity3 orbit <code>0x69/0x96</code> at <code>epsilon=0.001</code> are:</p>
+<table>
+<thead>
+<tr>
+<th>Architecture</th>
+<th style="text-align: right;">Neural K, bits</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tanh width16</td>
+<td style="text-align: right;">868.8</td>
+</tr>
+<tr>
+<td>tanh width32</td>
+<td style="text-align: right;">1203.2</td>
+</tr>
+<tr>
+<td>tanh depth2</td>
+<td style="text-align: right;">434.4</td>
+</tr>
+<tr>
+<td>ReLU width16</td>
+<td style="text-align: right;">1078.7</td>
+</tr>
+</tbody>
+</table>
+<p>After excluding parity3, the linear fits between ReLU and the three tanh architectures over the 9 remaining balanced orbits give
+<code>R^2=0.958--0.972</code>. In other words, a shared complexity axis explains the vast majority of functions, while the activation function
+introduces substantial additional distortions for a few special computations.</p>
+<p>At the deepest point, only two pairs of balanced orbits exhibit architecture-dependent ordering reversals. For <code>0x1B/0x2E</code>, the former
+is easier in the two single-hidden-layer tanh networks, whereas the latter is easier in ReLU. The replica intervals largely do not overlap, making this a reliable local
+architecture effect. <code>0x69/0x6A</code> is close to a tie within the error range in tanh width32, but parity3 is
+harder than <code>0x6A</code> in ReLU by about 453 bits, a clear and enormous separation.</p>
+<p>Thus, the experiment supports a "stable backbone," not "exactly the same complexity under every architecture."</p>
+<h2 id="5-relationship-between-the-prior-ordering-and-neural-k-curves">5. Relationship Between the Prior Ordering and Neural K Curves</h2>
+<p>In the hard-exact region, there is an exact set decomposition:</p>
+<pre><code class="language-text">Neural K(f, epsilon)
+  = -log2 P(F=f)
+  + -log2 P(L_f&lt;=epsilon | F=f)
+</code></pre>
+<p>The first term is the direct prior function cost; the second is the conditional contraction cost required to continue pushing the outputs away from
+the decision boundary after the discrete function has already been implemented.</p>
+<p>The Spearman correlations between the prior ordering and the deepest Neural K ordering on balanced functions are:</p>
+<table>
+<thead>
+<tr>
+<th>Architecture</th>
+<th style="text-align: right;"><code>epsilon=0.08</code></th>
+<th style="text-align: right;"><code>epsilon=0.001</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tanh width16</td>
+<td style="text-align: right;">0.928</td>
+<td style="text-align: right;">0.861</td>
+</tr>
+<tr>
+<td>tanh width32</td>
+<td style="text-align: right;">0.905</td>
+<td style="text-align: right;">0.838</td>
+</tr>
+<tr>
+<td>tanh depth2</td>
+<td style="text-align: right;">0.967</td>
+<td style="text-align: right;">0.901</td>
+</tr>
+<tr>
+<td>ReLU width16</td>
+<td style="text-align: right;">0.965</td>
+<td style="text-align: right;">0.965</td>
+</tr>
+</tbody>
+</table>
+<p>Thus, the prior already provides most of the ordering, but it is not synonymous with the final Neural K. As loss decreases further,
+the parameter volumes within different functions that can continue to attain large margins contract at different rates, leading to a small number of
+genuine ordering reversals.</p>
+<p>This conditional contraction rate is itself stable across architectures. At <code>epsilon=0.001</code>, the Spearman correlations of conditional contraction
+costs for balanced functions across architectures are <code>0.913--0.980</code>. Thus, low loss does not arbitrarily scramble
+the prior; instead, it further filters functions in similar directions across different conventional MLPs.</p>
+<h2 id="6-comparison-with-approximations-to-kolmogorov-complexity">6. Comparison with Approximations to Kolmogorov Complexity</h2>
+<p>On balanced functions, the Spearman ranges between the main external measures and Neural K are:</p>
+<table>
+<thead>
+<tr>
+<th>External complexity measure</th>
+<th style="text-align: right;">Direct prior</th>
+<th style="text-align: right;">Neural K at <code>epsilon=0.001</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>total influence</td>
+<td style="text-align: right;">approximately 0.900</td>
+<td style="text-align: right;">0.909--0.917</td>
+</tr>
+<tr>
+<td>AND/OR/NOT formula length</td>
+<td style="text-align: right;">0.683--0.757</td>
+<td style="text-align: right;">0.744--0.753</td>
+</tr>
+<tr>
+<td>Boolean operation count</td>
+<td style="text-align: right;">0.650--0.710</td>
+<td style="text-align: right;">0.741--0.826</td>
+</tr>
+<tr>
+<td>Symmetrized Lempel-Ziv minimum</td>
+<td style="text-align: right;">0.366--0.477</td>
+<td style="text-align: right;">0.375--0.398</td>
+</tr>
+<tr>
+<td>Symmetrized CTM mean</td>
+<td style="text-align: right;">0.099--0.205</td>
+<td style="text-align: right;">0.056--0.141</td>
+</tr>
+<tr>
+<td>Formula length with an XOR primitive</td>
+<td style="text-align: right;">-0.257-- -0.195</td>
+<td style="text-align: right;">approximately -0.290</td>
+</tr>
+</tbody>
+</table>
+<p>For these 8-bit truth tables, the strongest explanatory quantity is the number of label flips between adjacent inputs on the
+Boolean hypercube, namely total influence. The AND/OR/NOT description language also has a fairly strong correlation; once XOR
+is included as an inexpensive primitive, the correlation becomes negative, because parity is short in that language but
+extremely difficult for ordinary MLPs. These are meaningful comparisons of finite Boolean structure.</p>
+<p>The low correlations of LZ and CTM cannot, however, be used to reject a connection between Neural K and Kolmogorov complexity.
+Eight-bit strings are not long enough for LZ to produce discriminative compression, and the LZ results occupy only a few discrete levels;
+although CTM is specifically designed to estimate the complexity of short strings, the constants associated with different reference machines, truth-table orderings, and finite-length
+effects can all exceed the complexity differences one actually wants to compare here. For all 3-bit functions, writing out
+the truth table literally takes at most eight bits, so differences in the "shortest program" can easily be overwhelmed by fixed overhead.</p>
+<p>Furthermore, treating the output as a one-dimensional string does not explicitly tell the complexity estimator that these positions come from inputs on a three-dimensional
+Boolean cube. Neural networks see the input coordinates and Hamming adjacency relations, whereas ordinary
+string compressors see only a reordered <code>0/1</code> sequence. Therefore, this section only shows that different complexity languages
+produce different orderings in the 3-bit setting; it cannot determine which is closer to true Kolmogorov complexity.</p>
+<h2 id="7-conclusions-and-4-bit-follow-up">7. Conclusions and 4-bit Follow-up</h2>
+<p>This experiment yields two clear conclusions:</p>
+<ol>
+<li><strong>The function-complexity backbone across conventional neural networks receives strong support.</strong> This is not caused solely by output entropy, symmetry
+   replication, or SMC noise.</li>
+<li><strong>Neural K is an architecture-dependent and measurable complexity.</strong> The 3-bit results show a strong relationship with Boolean
+   geometry and network primitives, but the truth tables are too short to test whether it approximates a more universal
+   Kolmogorov complexity ordering.</li>
+</ol>
+<p>The results are sufficient to support moving on to 4-bit. The 4-bit setting has 65,536 functions, with
+1,992 exact orbits remaining under input-variable permutations and output complementation, of which 365 are balanced orbits. The next round should not immediately run full deep SMC over all 1,992
+orbits and four architectures; a more reasonable approach is to first directly count the finite-network prior for all functions,
+then preregister a panel of balanced orbits spanning the full complexity range for low-loss SMC, to test whether the cross-architecture backbone
+persists. A 4-bit truth table is also only 16 bits long and is still unsuitable as the key test for ordinary compression methods.</p>
+<p>A substantive comparison between Neural K and compression-based approximations to Kolmogorov complexity should use 8-bit inputs to generate 256-bit
+full truth tables. In this setting, enumerating all <code>2^256</code> functions is impossible, but one can preregister a set of structured functions,
+random functions, and functions drawn from different network priors, then compare the rankings given by Neural K, LZ, BDM, logical description
+length, and program-based description length.</p></div>
 
       </article>
     </main>

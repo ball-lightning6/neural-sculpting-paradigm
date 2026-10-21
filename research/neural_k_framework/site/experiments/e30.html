@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="说明grokking并不需要weight decay；显式L2之所以能够帮助grokking，是因为它 改变了同一套函数竞争的静态loss地形，而不是引入一种神秘或特殊的学习机制。">
+  <meta name="description" content="测量显式L2如何改变同一套函数竞争的静态loss地形，为其影响grokking式规则选择 提供一种静态贡献；本实验不独立裁决真实grokking的动力学因果，也不证明该贡献 是唯一原因。无weight decay的grokking需另看真实训练证据，例如 E31的无WD Transformer训练。">
   <title>E30：Weight decay重塑完整静态函数地形 · Neural K 研究档案</title>
   <link rel="stylesheet" href="../assets/site.css">
   <script>
@@ -61,7 +61,7 @@
 </ul>
 </div>
 </nav>
-        <div class="sidebar-label experiment-label">全部实验</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>静态硬条件化不足以描述训练函数分布</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-bit 反事实不变性与训练 loss 中心原则</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>函数系综动力学与网络参考语言</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>在 Mingard 2025协议中延长 post-fit 观察</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>固定 NTK 足够时的特征学习</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>连续 loss 条件下的静态函数质量</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>函数 ID 迁移与 matched-loss 静态对照</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>共享中间表示与有限容量压力</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>MNIST 80%隐藏标签噪声长训</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>4-bit raw-BCE 简单/复杂规则竞争</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule30 数据量与训练/验证梯度对齐</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND shortcut 的静态 loss 几何</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>AND shortcut 的 SGD 运输与单样本干预</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>加权 Rule-bit 的 loss 阶段函数换序</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Mod97 grokking 的完整函数与边缘凝聚</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity 终点偏好、全局入口与局部恢复</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>静态低-loss 质量与 optimizer 运输</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>高函数共识与符号可读性</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>完整真值表规则的 loss-resolved 体积</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Full-rule、固定 D 与 hard-margin 测度闭环</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement 控制与共识复杂度前沿</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>逐样本自由能与信息不变量</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>完整目标体积前瞻预测数据相变</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>深尾 Neural K-profile 与排序交叉</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST 样本复杂度与静态体积分支预测</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>MNIST平衡无标签划分的静态体积</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Grokking前后的未见函数Agreement</span></a><a class="experiment-nav-link" href="e28.html"><span>E28</span><span>MNIST 50k整网HMC与同协议Adam</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Dead bit的loss-resolved静态预测</span></a><a class="experiment-nav-link active" href="e30.html"><span>E30</span><span>Weight decay重塑完整静态函数地形</span></a></nav><div class="sidebar-label experiment-label">提交后增量实验</div><nav class="experiment-nav"><a class="experiment-nav-link" href="../experiments/e31.html"><span>E31</span><span>Loss 与幅度对齐</span></a><a class="experiment-nav-link" href="../experiments/e32.html"><span>E32</span><span>随机记忆缩放</span></a><a class="experiment-nav-link" href="../experiments/e33.html"><span>E33</span><span>跨架构联合输出体积</span></a><a class="experiment-nav-link" href="../experiments/e34.html"><span>E34</span><span>条件规则决斗</span></a><a class="experiment-nav-link" href="../experiments/e35.html"><span>E35</span><span>Mod97 冻结函数决斗</span></a><a class="experiment-nav-link" href="../experiments/e36.html"><span>E36</span><span>Peleg/G&amp;C 独立验证</span></a><a class="experiment-nav-link" href="../experiments/e37.html"><span>E37</span><span>测度鲁棒性与 Gaussian 对应</span></a></nav>
+        <div class="sidebar-label experiment-label">全部实验</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>静态硬条件化不足以描述训练函数分布</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-bit 反事实不变性与训练 loss 中心原则</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>函数系综动力学与网络参考语言</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>在 Mingard 2025协议中延长 post-fit 观察</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>固定 NTK 足够时的特征学习</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>连续 loss 条件下的静态函数质量</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>函数 ID 迁移与 matched-loss 静态对照</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>共享中间表示与有限容量压力</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>MNIST 80%隐藏标签噪声长训</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>4-bit raw-BCE 简单/复杂规则竞争</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule30 数据量与训练/验证梯度对齐</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND shortcut 的静态 loss 几何</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>AND shortcut 的 SGD 运输与单样本干预</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>加权 Rule-bit 的 loss 阶段函数换序</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Mod97 grokking 的完整函数与边缘凝聚</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity 终点偏好、全局入口与局部恢复</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>静态低-loss 质量与 optimizer 运输</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>高函数共识与符号可读性</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>完整真值表规则的 loss-resolved 体积</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Full-rule、固定 D 与 hard-margin 测度闭环</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement 控制与共识复杂度前沿</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>逐样本自由能与信息不变量</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>完整目标体积前瞻预测数据相变</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>深尾 Neural K-profile 与排序交叉</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST 样本复杂度与静态体积分支预测</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>MNIST平衡无标签划分的静态体积</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Grokking前后的未见函数Agreement</span></a><a class="experiment-nav-link" href="e28.html"><span>E28</span><span>MNIST 50k likelihood加权后验HMC与同协议Adam</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Dead bit的loss-resolved静态预测</span></a><a class="experiment-nav-link active" href="e30.html"><span>E30</span><span>Weight decay重塑完整静态函数地形</span></a></nav><div class="sidebar-label experiment-label">提交后增量实验</div><nav class="experiment-nav"><a class="experiment-nav-link" href="../experiments/e31.html"><span>E31</span><span>Loss 与幅度对齐</span></a><a class="experiment-nav-link" href="../experiments/e32.html"><span>E32</span><span>随机记忆缩放</span></a><a class="experiment-nav-link" href="../experiments/e33.html"><span>E33</span><span>跨架构联合输出体积</span></a><a class="experiment-nav-link" href="../experiments/e34.html"><span>E34</span><span>条件规则决斗</span></a><a class="experiment-nav-link" href="../experiments/e35.html"><span>E35</span><span>Mod97 冻结函数决斗</span></a><a class="experiment-nav-link" href="../experiments/e36.html"><span>E36</span><span>Peleg/G&amp;C 独立验证</span></a><a class="experiment-nav-link" href="../experiments/e37.html"><span>E37</span><span>测度鲁棒性与 Gaussian 对应</span></a><a class="experiment-nav-link" href="../experiments/e38.html"><span>E38</span><span>宽深扫描与相对目标质量</span></a></nav>
       </div>
     </aside>
 
@@ -70,12 +70,14 @@
         <header class="article-header">
           <div class="eyebrow">E30 · 实验详情</div>
           <h1>E30：Weight decay重塑完整静态函数地形</h1>
-          <p class="article-description">说明grokking并不需要weight decay；显式L2之所以能够帮助grokking，是因为它 改变了同一套函数竞争的静态loss地形，而不是引入一种神秘或特殊的学习机制。</p>
+          <p class="article-description">测量显式L2如何改变同一套函数竞争的静态loss地形，为其影响grokking式规则选择 提供一种静态贡献；本实验不独立裁决真实grokking的动力学因果，也不证明该贡献 是唯一原因。无weight decay的grokking需另看真实训练证据，例如 E31的无WD Transformer训练。</p>
         </header>
         <div class="article-body"><div class="source-bar"><span>复现脚本</span><div><a href="../../experiments/experiment_30_weight_decay_static_landscape/experiment_weight_decay_static_landscape.py">experiment_weight_decay_static_landscape.py</a></div></div><h2 id="overview">实验概览</h2>
 <h2 id="目的">目的</h2>
-<p>说明grokking并不需要weight decay；显式L2之所以能够帮助grokking，是因为它
-改变了同一套函数竞争的静态loss地形，而不是引入一种神秘或特殊的学习机制。</p>
+<p>测量显式L2如何改变同一套函数竞争的静态loss地形，为其影响grokking式规则选择
+提供一种静态贡献；本实验不独立裁决真实grokking的动力学因果，也不证明该贡献
+是唯一原因。无weight decay的grokking需另看真实训练证据，例如
+<a href="../../experiments/experiment_31_loss_amplitude_grokking/POWER_MOD97_ALIGNMENT_REPORT.md">E31的无WD Transformer训练</a>。</p>
 <h2 id="入口">入口</h2>
 <ul>
 <li><a href="../../experiments/experiment_30_weight_decay_static_landscape/experiment_weight_decay_static_landscape.py">experiment_weight_decay_static_landscape.py</a></li>
@@ -140,7 +142,8 @@ $$</div>
    差异应消失。</li>
 <li><strong>optimizer-specific解释。</strong> 静态地形近乎不变，真实训练差异主要来自路径。</li>
 </ol>
-<p>E30只直接裁决前两项。只有可靠静态测量留下明显残差后，第三项才值得检验。</p>
+<p>E30只直接裁决前两项。第三项需要独立的动力学对照；静态地形发生变化并不能排除
+optimizer路径也影响真实训练的选择与延迟。</p>
 <h2 id="3-固定任务与测度">3. 固定任务与测度</h2>
 <ul>
 <li>输入：全部8-bit字符串；目标为<code>x0 AND x1</code>，其余6 bit是nuisance。</li>
@@ -301,18 +304,22 @@ BCE只差0.32%，主端点差异不受这一边界影响。</p>
 <a href="../../experiments/experiment_30_weight_decay_static_landscape/NUMERICAL_TOLERANCE_AUDIT.md">NUMERICAL_TOLERANCE_AUDIT.md</a>。</p>
 <h2 id="4-概念判决">4. 概念判决</h2>
 <p>在训练拟合深度近似匹配时，显式L2仍系统提高正确AND延拓的静态质量，并压缩
-完整函数多样性。因此当前最简解释是：</p>
+完整函数多样性。因此当前直接支持的是一种静态选择贡献：</p>
 <blockquote>
-<p>weight decay通过改变完整标量目标的低<span class="math-inline">$J$</span>几何，重排训练集一致延拓的参数
-质量；其对本轮grokking式函数选择的作用不需要optimizer-specific机制兜底。</p>
+<p>显式L2通过改变完整标量目标的低<span class="math-inline">$J$</span>几何，重排训练集一致延拓的参数质量。
+这一静态效应不需要运行optimizer便可观察，但不能据此认定它是真实grokking
+的唯一动力学原因。</p>
 </blockquote>
 <p>无WD条件本身已经给AND约53.7%的静态质量，说明规则可以在纯raw-loss地形中
-成为主导候选；weight decay不是grokking的必要条件。它在本实验中的作用是把
-已有静态偏好进一步增强，而不是创造一种与原框架无关的新机制。</p>
+成为主导候选；这本身不测量延迟泛化。无weight decay的grokking另有
+<a href="../../experiments/experiment_31_loss_amplitude_grokking/POWER_MOD97_ALIGNMENT_REPORT.md">E31的无WD Transformer训练</a>
+作为真实训练证据。显式L2在本实验中增强了已有静态偏好，但没有独立分离其对
+训练路径、可达性和grokking时间的贡献。</p>
 <p>这个结果不是增加新的理论元素，而是澄清原框架的直接用法：最基本的对象仍然是
 loss地形与optimizer。任何真正写进标量loss的项，无论叫正则项、辅助损失还是
 其他名字，都只是共同塑造同一张地形，并不具有特殊理论身份。分析这类干预时，
-先测相应静态函数地形；只有仍有残差时才讨论optimizer。</p>
+先测相应静态函数地形，再用独立动力学对照判断optimizer贡献；静态测量不能
+替代这种因果分离。</p>
 <h2 id="5-为什么不是-and本来总范数更低">5. 为什么不是“AND本来总范数更低”</h2>
 <p>在无WD、<code>BCE&lt;=0.01</code>的固定截面中，AND与其他延拓的总L2范数排序几乎为随机：
 loss分层低范数AUC中位数为0.5088。L2的作用不是读取一个预先存在的明显范数
@@ -331,17 +338,18 @@ loss分层低范数AUC中位数为0.5088。L2的作用不是读取一个预先�
 <ol>
 <li>在本任务、架构、Gaussian测度和近似matched-BCE协议下，提高显式L2系数会
    提高AND的静态完整函数质量；</li>
-<li>无weight decay的raw-loss地形本身已经支持规则占优，weight decay并非
-   grokking必要条件；</li>
-<li>weight decay带来的增强可以由静态地形变化解释，无需额外假设optimizer识别
-   正则项；写进loss的其他项同理，并不特殊。</li>
+<li>无weight decay的raw-loss地形本身已经支持静态规则占优；无WD的grokking
+   则由另行引用的真实训练实验支持，不是本静态实验的直接结论；</li>
+<li>显式L2带来的静态质量增强表明地形变化可贡献于规则选择，但不是对真实训练
+   或grokking延迟的唯一因果解释。</li>
 </ol>
 <p>不能声称：</p>
 <ol>
 <li>已经在原版Mod97 Transformer上直接证明相同机制；</li>
 <li>decoupled AdamW严格等于显式L2标量目标；</li>
 <li>AND质量对任意<span class="math-inline">$\lambda$</span>单调，或<span class="math-inline">$\lambda=2\times10^{-4}$</span>已完成matched-BCE；</li>
-<li>深层静态AND概率被严格认证为100%。</li>
+<li>深层静态AND概率被严格认证为100%；</li>
+<li>静态AND质量差已唯一解释真实grokking动力学，或已排除optimizer路径的作用。</li>
 </ol></div>
         <footer class="experiment-pager"><a href="e29.html">← E29 Dead bit的loss-resolved静态预测</a><span></span></footer>
       </article>

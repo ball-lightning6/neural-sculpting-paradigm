@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A conditional account of capacity and time axes, complete E38 SMC results, and explicitly labeled exploratory comparisons.">
+  <title>Double descent and width evidence · Neural K Research Archive</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="../assets/site.js"></script>
+</head>
+<body data-page-kind="core">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+
+    <header class="topbar">
+      <a class="site-mark" href="index.html" aria-label="Back to the research narrative">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K Research Archive</span>
+      </a>
+      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="index.html">Research</a><a class="top-link active" href="theory-core.html">Core Theory</a><a class="top-link" href="experiments/index.html">Experiments</a><a class="top-link" href="post-upload.html">Updates</a><a class="top-link" href="references.html">References</a><a class="top-link" href="evidence-ledger.html">Evidence</a></nav>
+      <nav class="language-switch" aria-label="Language"><a href="../width-double-descent.html" lang="zh-CN">中文</a><span class="active" lang="en">EN</span></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>Contents</span>
+      </button>
+    </header>
+
+  <div class="page-shell">
+
+    <aside class="sidebar" id="sidebar" aria-label="On this page">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">On this page</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#1-two-aspects-of-changing-width">1. Two aspects of changing width</a><ul>
+<li><a href="#1-1-cross-dimensional-comparison-takes-place-in-a-common-output-space">1.1 Cross-dimensional comparison takes place in a common output space</a></li>
+</ul>
+</li>
+<li><a href="#2-a-mechanism-intuition-about-redundant-implementations">2. A mechanism intuition about redundant implementations</a></li>
+<li><a href="#3-connecting-capacity-and-training-time-double-descent">3. Connecting capacity and training-time double descent</a><ul>
+<li><a href="#3-1-the-shared-premise-is-maintaining-training-set-fit-in-the-later-regime">3.1 The shared premise is maintaining training-set fit in the later regime</a></li>
+<li><a href="#3-2-why-the-training-time-axis-connects-directly-to-the-existing-theory">3.2 Why the training-time axis connects directly to the existing theory</a></li>
+<li><a href="#3-3-the-capacity-axis-is-another-path-through-the-same-selection-picture">3.3 The capacity axis is another path through the same selection picture</a></li>
+<li><a href="#3-4-explanatory-contribution-and-evidence-levels">3.4 Explanatory contribution and evidence levels</a></li>
+</ul>
+</li>
+<li><a href="#4-testing-the-account-with-function-complexity-along-training">4. Testing the account with function complexity along training</a></li>
+<li><a href="#5-complete-smc-results-and-existing-training-comparisons">5. Complete SMC results and existing training comparisons</a><ul>
+<li><a href="#5-1-protocol-coverage-and-traceability">5.1 Protocol, coverage, and traceability</a></li>
+<li><a href="#5-2-width-effects-at-a-common-loss">5.2 Width effects at a common loss</a></li>
+<li><a href="#5-3-depth-comparison-and-sampling-boundaries">5.3 Depth comparison and sampling boundaries</a></li>
+<li><a href="#5-4-mnist-an-unfinished-literature-inspired-attempt-to-reproduce-the-phenomenon">5.4 MNIST: an unfinished, literature-inspired attempt to reproduce the phenomenon</a></li>
+<li><a href="#5-5-what-this-round-establishes">5.5 What this round establishes</a></li>
+</ul>
+</li>
+<li><a href="#6-connections-to-the-published-research">6. Connections to the published research</a></li>
+</ul>
+</div>
+</nav>
+        <a class="sidebar-action" href="theory-core.html">Back to core theory →</a>
+      </div>
+    </aside>
+
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">Theory supplement · Evidence and proposals distinguished</div>
+          <h1>Double descent and width evidence</h1>
+          <p class="article-description">A conditional account of capacity and time axes, complete E38 SMC results, and explicitly labeled exploratory comparisons.</p>
+        </header>
+        <div class="article-body"><p>Date: 2026-10-21. Status: website explanation and evidence draft incorporating the completed width/depth SMC results; for the Chinese and English websites only, not the formal papers or PDFs. The unified account remains a conditional mechanism, not a proven causal law for every double-descent curve. All planned SMC runs are complete; the existing MNIST training scan has saved only 13 of 14 planned conditions and remains an unfinished, literature-inspired attempt to reproduce the phenomenon. This update launches no new experiments.</p>
+<p>The central account of this draft places capacity-wise and training-time double descent within the same picture of selection. Earlier behavior is dominated by overcoming underfitting and eliminating simple shortcuts that cannot satisfy the data; later, once the training set is sufficiently fitted, stronger simplicity selection among compatible implementations can improve extensions to unseen inputs. The two effects can coexist: the stages describe changes in which effect dominates, not the first appearance of simplicity bias late in training.</p>
+<p>Neither axis requires abandoning training-set fit during the second descent: longer training and larger networks can continue satisfying the same training set while selecting functions with different generalization. The width experiments examine whether the relative mass gap between simple and complex targets grows, providing static evidence for the capacity-wise account; the training-time account connects to earlier experiments on training constraints and shortcut interventions, functional migration after hard fit, and candidate-mass redistribution. In the completed SMC scan, at the common BCE threshold of 0.30, the mass disadvantage of all 17 selected non-single-bit rules relative to the same single-bit rule increases across the four widths. This supports a change in relative preference under the specified protocol, but does not yet establish a causal correspondence between full-target volume and an actual double-descent curve on the same finite training set.</p>
+<h2 id="1-two-aspects-of-changing-width">1. Two aspects of changing width</h2>
+<p>Increasing network capacity can make a task accessible that was previously difficult to represent or fit within a given training budget. It can also change the relative parameter mass of different rules that are already realizable. These aspects require separate measurements.</p>
+<p>Fix depth, input and output encoding, the construction of the reference parameter distribution, and the loss event. At width W, write the full-target mass as</p>
+<div class="math-display">$$
+V_W^{\mathrm{full}}(f;\epsilon)
+=\mu_W\{\theta:L_{U,f}(\theta)\le\epsilon\},
+\qquad
+K_W^{N,\mathrm{full}}(f;\epsilon)
+=-\log_2 V_W^{\mathrm{full}}(f;\epsilon).
+$$</div>
+<p>For a prespecified simple rule s and complex rule c, define</p>
+<div class="math-display">$$
+\Delta K_W(\epsilon)
+=K_W^{N,\mathrm{full}}(c;\epsilon)
+-K_W^{N,\mathrm{full}}(s;\epsilon),
+\qquad
+\frac{V_W^{\mathrm{full}}(s;\epsilon)}
+{V_W^{\mathrm{full}}(c;\epsilon)}
+=2^{\Delta K_W(\epsilon)}.
+$$</div>
+<p>A growing gap therefore means a stronger mass advantage for the simple target relative to the complex target under this comparison protocol. It does not require the simple target's absolute mass to increase. Parameter spaces at different widths have different dimensions; each reference measure must be normalized separately, and parameterization rules such as fan-in scaling must be recorded.</p>
+<h3 id="1-1-cross-dimensional-comparison-takes-place-in-a-common-output-space">1.1 Cross-dimensional comparison takes place in a common output space</h3>
+<p>Each network in this scan outputs 16 logits for the same 16 inputs. Although their parameter spaces have different dimensions, they induce distributions on the same 16-dimensional joint-output space:</p>
+<div class="math-display">$$
+\rho_W=(Z_W)_\#\mu_W,
+\qquad
+V_W^{\mathrm{full}}(f;\epsilon)
+=\rho_W\{z:\mathcal L_f(z)\leq\epsilon\}.
+$$</div>
+<p>The same rule and threshold specify the same output event, so the probabilities that different networks assign to that event can be compared. The object of comparison is the preference of different neural generative mechanisms for the same requirement, not a direct ratio of unnormalized Euclidean volumes in different dimensions.</p>
+<p>However, a relative volume ratio removes only an overall normalization factor, not the effect of redistributing measure across regions. What is held common here is the construction rule of uniform sampling in normalized parameters and fan-in scaling; biases in later layers also scale with width. The intervention therefore changes width together with its associated parameterization and reference measure. The conclusion concerns relative preferences in this protocol family, not a measure-independent law of objective complexity or a necessary effect of adding neurons alone.</p>
+<p>A full-target average-loss event can contain parameters with some incorrect hard labels at general thresholds. Calling it the mass of the target hard cell requires an additional guarantee or direct verification; the initialization prior over hard functions cannot replace this full-target profile either.</p>
+<h2 id="2-a-mechanism-intuition-about-redundant-implementations">2. A mechanism intuition about redundant implementations</h2>
+<p>The researcher's intuition is that, when resources are ample, computations with looser constraints and greater sharing may allow new degrees of freedom to participate in more ways of distributing, substituting, and reorganizing computation. They may consequently gain more relative implementation mass. Computations that require more precise coordination can also benefit, but their multiplicative gain may be smaller.</p>
+<p>This intuition accommodates two observations: complex tasks may lose accessibility first when a network is narrowed toward its capacity boundary; once simple and complex tasks are both accessible, further widening may favor the relative mass of simple tasks.</p>
+<p>New parameters do not automatically confer probability mass. Completely free additional coordinates expand the event and the total space together under a normalized measure; preserving an existing function with new neurons can also require disabling, cancellation, or coordination. The asymmetry in the gains of different rules is what needs explanation.</p>
+<p>This experiment neither directly counts such functional decompositions nor proves the source of coordination costs; it measures changes in the relative mass of continuous-loss events. The redundant-implementation account remains a mechanism intuition requiring further constraints.</p>
+<h2 id="3-connecting-capacity-and-training-time-double-descent">3. Connecting capacity and training-time double descent</h2>
+<p>Earlier loss studies distinguished two effects that can occur together: low-cost shortcuts insufficient for the current constraints are eliminated; among implementations that remain compatible, function-dependent mass redistribution occurs and favors candidates with lower reference costs under some protocols. This draft uses those effects to explain double descent, rather than describing the entire process as continuously increasing or decreasing function complexity.</p>
+<h3 id="3-1-the-shared-premise-is-maintaining-training-set-fit-in-the-later-regime">3.1 The shared premise is maintaining training-set fit in the later regime</h3>
+<p><strong>In the second-descent regime being explained, the training set is already sufficiently fitted and remains fitted with further training or increased capacity. Improvement occurs among different extensions satisfying the training constraints, rather than through a return to underfitting.</strong></p>
+<p>"Sufficiently simple" here means more economical relative to the current training constraints, not unconditionally selecting a constant function or ignoring difficult examples. If training labels contain noise, compatible solutions in the later regime must still satisfy the actual training labels. A possible improvement is that shared structure plus sample-specific exceptions is more economical than an extension globally distorted by sample details, not that the model forgets noise and sacrifices training accuracy again. Which extension is more economical and whether the optimizer can reach it remain protocol-dependent.</p>
+<p>The common picture can be divided into three observable regimes:</p>
+<table>
+<thead>
+<tr>
+<th>Test-error stage</th>
+<th>Account along the capacity axis</th>
+<th>Account along the training-time axis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>First descent</td>
+<td>Widening makes useful structure easier to represent and learn, reducing underfitting</td>
+<td>Useful shared structure or approximate rules are learned from the initial state</td>
+</tr>
+<tr>
+<td>Intermediate rise</td>
+<td>Near the fitting boundary, more sample details can be fitted, but the extensions selected temporarily may generalize worse</td>
+<td>Stricter fitting requirements eliminate insufficient shortcuts, and their replacements may temporarily rely more on sample-specific details</td>
+</tr>
+<tr>
+<td>Second descent</td>
+<td>While maintaining training fit, further widening can improve extensions if it increases the relative advantage of economical compatible solutions</td>
+<td>While maintaining training fit, continued tightening of continuous output requirements can improve extensions if it strengthens the advantage of economical compatible solutions</td>
+</tr>
+</tbody>
+</table>
+<h3 id="3-2-why-the-training-time-axis-connects-directly-to-the-existing-theory">3.2 Why the training-time axis connects directly to the existing theory</h3>
+<p>Simple early behavior need not be useless. An imperfect approximate rule can capture much of the shared structure first, reducing training and test error together. During further fitting, a rule with irreducible errors on some training points cannot lower loss indefinitely and must exit or be modified. As these additional details are satisfied, transient extensions may become more dependent on particular samples, producing an increase in test error. Shortcut exit alone does not guarantee this rise: the replacement must also perform worse on unseen inputs.</p>
+<p>Hard fit does not leave only one function compatible with the classification labels. Different compatible functions still have different continuous implementations; within the BCE windows studied, further loss reduction can change their relative mass, with some more economical extensions gaining dominance. Actual training has also exhibited functional migration while preserving training fit. Longer training therefore need not mean only an ever-growing memorization burden: it can also change the rule on unseen inputs while maintaining fit.</p>
+<p>This connects training-time double descent naturally to the existing framework: the first descent comes from learning useful structure, the intermediate rise can come from poor extensions while satisfying more training details, and the second descent can come from further strengthening of simplicity selection among compatible solutions. This account neither equates training time with a static temperature nor assumes that SGD samples the constrained reference measure at every moment. With amplitude regularization or other losses, the full output constraints must be considered rather than replaced by a single average BCE value.</p>
+<h3 id="3-3-the-capacity-axis-is-another-path-through-the-same-selection-picture">3.3 The capacity axis is another path through the same selection picture</h3>
+<p>Early widening first changes expressivity and accessibility within a finite training budget, allowing previously unsatisfied constraints to be met more fully. Near the fitting boundary, being able to memorize more training details does not imply that the best extension to unseen inputs has already been selected. If fitting temporarily relies on implementations more sensitive to sample details, test error can increase.</p>
+<p>Once capacity is sufficient, further widening does not revoke the training-set constraints. This sufficiently fitted regime is precisely the focus here: if a larger network gives economical compatible solutions a greater mass advantage over complex compatible solutions, and that advantage matters in actual training, test error can decrease again. The simple target's absolute mass need not increase, and absolute K values at different widths are not treated as a universal scale of intrinsic task complexity.</p>
+<p>Changing capacity is not equivalent to lowering a loss threshold in the same parameter space, so the set-filtering process along the time axis cannot be transferred literally. What the two axes share is the relationship between satisfying data constraints and selecting among compatible solutions: the time axis changes the training state and continuous output requirements of the same network; the capacity axis changes accessible implementations and their relative mass. Both require distinguishing fit from extension, and neither explains later improvement by sacrificing training-set fit.</p>
+<h3 id="3-4-explanatory-contribution-and-evidence-levels">3.4 Explanatory contribution and evidence levels</h3>
+<table>
+<thead>
+<tr>
+<th>Mechanism component</th>
+<th>Existing direct support</th>
+<th>What this alone does not establish</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Training constraints limit which shortcuts can remain, and candidate advantages can change across loss windows</td>
+<td>Coverage controls in <a href="experiments/e12.html">E12</a> show that filling missing patterns can exclude old shortcuts; <a href="experiments/e13.html">E13</a> shows that sample interventions change training distributions, with its single-sample replacement changing both coverage and label proportions</td>
+<td>That every shortcut must exit as loss decreases on fixed data, that the successor must be the external true rule, or that test error must increase</td>
+</tr>
+<tr>
+<td>Candidate redistribution and functional migration continue after hard fit</td>
+<td><a href="experiments/e07.html">E07</a> records post-fit migration of complete functions; <a href="experiments/e10.html">E10</a> observes relative-odds redistribution in reliable raw-BCE slices for predefined function pairs, while its broad proxy scan does not support universal monotonic simplification</td>
+<td>That an external symbolic proxy is Neural K ground truth, that every training trajectory becomes monotonically simpler, that static mass equals the optimizer distribution, or that every double-descent curve has already been explained stage by stage</td>
+</tr>
+<tr>
+<td>Widening increases the relative simplicity advantage</td>
+<td>In the completed two-hidden-layer W64/128/256/512 scan at BCE≤0.30, all 17/17 selected non-single-bit targets show a growing mass disadvantage relative to the same single-bit reference</td>
+<td>A measure-independent complexity law, all competitor odds for the same finite training set, or an SGD generalization curve determined by those gaps</td>
+</tr>
+</tbody>
+</table>
+<p>See the <a href="evidence-ledger.html">public evidence ledger</a> for the complete evidence chain and counterexamples from these public experiments. Coverage interventions, loss slices on fixed data, and migration during actual training are different controls and cannot substitute for one another.</p>
+<p>Capacity-wise and training-time double descent already have systematic empirical studies, such as <a href="https://arxiv.org/abs/1912.02292" target="_blank" rel="noopener">Nakkiran et al.</a>. <a href="https://arxiv.org/abs/2007.10099" target="_blank" rel="noopener">Heckel and Yilmaz</a> also provide an account based on superposed learning timescales in specific models. The shape of a double-descent curve therefore does not uniquely identify its mechanism. The contribution of this account is to connect the phenomenon to measurable candidate-function replacement, mass redistribution under continuous constraints, and relative costs after capacity changes, rather than to rename an established curve shape.</p>
+<p>Training-time double descent and grokking can share post-fit selection without being the same curve definition. If there is no marked early test improvement followed by an intermediate rise, and generalization only recovers late, a complete double-descent curve need not appear. Conversely, if simplicity selection does not correspond to a better test extension, or optimization cannot reach the relevant region, the second descent need not occur either. This account retains those conditions rather than forcing all tasks into the same stage sequence.</p>
+<h2 id="4-testing-the-account-with-function-complexity-along-training">4. Testing the account with function complexity along training</h2>
+<p>The accompanying <a href="complexity-methods.html">complexity measurement methods</a> propose using each training snapshot's hard predictions as a target and estimating Neural K with a fixed reference network, measure, and measurement precision. This separates the cost of the function actually selected from training's fitting capacity.</p>
+<p>Observable relationships include whether function cost increases as more details are satisfied; whether extensions on unseen inputs continue changing after the training set is sufficiently fitted; and whether the selected function's cost decreases during late generalization recovery. Even if internal representations keep changing after classification answers stabilize, hard-function cost records only behavior changes on its measurement domain.</p>
+<p>Tasks such as MNIST may involve useful structure learning, exception fitting, and economical extension selection simultaneously, so a final decline in complexity is not assumed.</p>
+<h2 id="5-complete-smc-results-and-existing-training-comparisons">5. Complete SMC results and existing training comparisons</h2>
+<h3 id="5-1-protocol-coverage-and-traceability">5.1 Protocol, coverage, and traceability</h3>
+<p>The experiment fixes the complete 16-point truth table for 4-bit inputs and one-bit outputs, 19 selected balanced targets, tanh hidden layers, and a linear output. Normalized parameters are sampled independently and uniformly from [-1,1], with fan-in scaling in the forward pass. The mutation kernel is a random walk reflected at the parameter-box boundary, with occasional uniform block refreshes, not Gaussian-pCN. Each level targets approximately one-half survival, with 8 adaptation sweeps followed by 24 sweeps at the selected fixed step sizes. Pools share the next threshold and step-size adaptation and must not be treated as fully independent complete runs.</p>
+<table>
+<thead>
+<tr>
+<th>Configuration</th>
+<th style="text-align: right;">Parameters</th>
+<th style="text-align: right;">Pools × particles per pool</th>
+<th style="text-align: right;">Completed targets</th>
+<th style="text-align: right;">Loss nodes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>W64 D2</td>
+<td style="text-align: right;">4,545</td>
+<td style="text-align: right;">8×4,096</td>
+<td style="text-align: right;">19/19</td>
+<td style="text-align: right;">9</td>
+</tr>
+<tr>
+<td>W128 D2</td>
+<td style="text-align: right;">17,281</td>
+<td style="text-align: right;">8×4,096</td>
+<td style="text-align: right;">19/19</td>
+<td style="text-align: right;">9</td>
+</tr>
+<tr>
+<td>W256 D2</td>
+<td style="text-align: right;">67,329</td>
+<td style="text-align: right;">4×2,048</td>
+<td style="text-align: right;">19/19</td>
+<td style="text-align: right;">9</td>
+</tr>
+<tr>
+<td>W512 D2</td>
+<td style="text-align: right;">265,729</td>
+<td style="text-align: right;">4×1,024</td>
+<td style="text-align: right;">19/19</td>
+<td style="text-align: right;">9</td>
+</tr>
+<tr>
+<td>W256 D1</td>
+<td style="text-align: right;">1,537</td>
+<td style="text-align: right;">8×4,096</td>
+<td style="text-align: right;">19/19</td>
+<td style="text-align: right;">9</td>
+</tr>
+</tbody>
+</table>
+<p>The common thresholds are 0.68, 0.65, 0.60, 0.55, 0.50, 0.45, 0.40, 0.35, and 0.30. All planned runs finished on 2026-10-21, totaling 95 target runs and 855 threshold records. Completion checks found no missing nodes, nonfinite log-volumes, or saved maximum losses exceeding the threshold plus 1e-6. All five ZIP archives passed CRC checks. These are record-integrity checks, not a proof of sufficient mixing.</p>
+<p>See the <a href="experiments/e38.html">E38 protocol</a> for the complete protocol, completed coverage, and reproduction entry points, and the <a href="experiments/e38.html">full results and conclusions</a> for results and sampling boundaries. Numbers in this section are recomputed from the original JSON by the <a href="../../experiments/experiment_38_width_depth_volume/analyze_results.py">read-only aggregation script</a> in the same directory; the script can produce a machine-readable summary and input-file hashes. Running the script launches no training or sampling and does not modify the original experiment directories.</p>
+<h3 id="5-2-width-effects-at-a-common-loss">5.2 Width effects at a common loss</h3>
+<p>The single-bit rule 0x0F0F is the fixed reference for target-event mass ratios. The table uses the median log-volume across pools and reports base-10 negative logarithms. These gaps are not K measured in bits; conversion to bits requires multiplication by log2(10).</p>
+<table>
+<thead>
+<tr>
+<th>Width</th>
+<th style="text-align: right;">-log10 V(0x0F0F)</th>
+<th style="text-align: right;">-log10 V(0xAE8C)</th>
+<th style="text-align: right;">log10[V(0x0F0F)/V(0xAE8C)]</th>
+<th style="text-align: right;">Median relative gap for the other 17 targets</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>64</td>
+<td style="text-align: right;">74.2142</td>
+<td style="text-align: right;">128.1042</td>
+<td style="text-align: right;">53.8901</td>
+<td style="text-align: right;">17.7023</td>
+</tr>
+<tr>
+<td>128</td>
+<td style="text-align: right;">91.4117</td>
+<td style="text-align: right;">167.4016</td>
+<td style="text-align: right;">75.9899</td>
+<td style="text-align: right;">25.0701</td>
+</tr>
+<tr>
+<td>256</td>
+<td style="text-align: right;">110.2689</td>
+<td style="text-align: right;">217.1203</td>
+<td style="text-align: right;">106.8514</td>
+<td style="text-align: right;">35.0872</td>
+</tr>
+<tr>
+<td>512</td>
+<td style="text-align: right;">129.1326</td>
+<td style="text-align: right;">276.6561</td>
+<td style="text-align: right;">147.5235</td>
+<td style="text-align: right;">48.0666</td>
+</tr>
+</tbody>
+</table>
+<p>Excluding the two single-bit rules 0x0F0F and 0xCCCC, the relative gaps of all remaining 17 targets strictly increase across the four widths, not just the extreme example in the table. This does not claim that every rule pair separates monotonically or that local complexity rankings never reverse.</p>
+<figure class="result-figure"><a href="../assets/figures/width_relative_mass_20261021.png" target="_blank" rel="noopener"><img src="../assets/figures/width_relative_mass_20261021.png" alt="Mass gaps of 17 selected targets relative to a single-bit reference at a common BCE threshold" loading="lazy"></a><figcaption>Mass gaps of 17 selected targets relative to a single-bit reference at a common BCE threshold</figcaption></figure>
+<p>Each curve follows the relative mass of the same target across widths. The vertical axis is a base-10 log mass ratio, not test error; the spread across pools with shared adaptation is not plotted as an independent confidence interval.</p>
+<p><strong>The main observation is a growing relative gap, not immunity of the simple target's absolute mass.</strong> Both simple and complex targets lose absolute mass, with the complex end losing more. This conclusion is restricted to the current uniform measure, scaling, target set, and BCE threshold; it is not an architecture-independent law.</p>
+<h3 id="5-3-depth-comparison-and-sampling-boundaries">5.3 Depth comparison and sampling boundaries</h3>
+<p>Both the one-hidden-layer and two-hidden-layer W256 configurations are complete. For the same 0x0F0F/0xAE8C example, the base-10 log mass ratio at BCE≤0.30 changes from 92.4818 at D1 to 106.8514 at D2. This is one depth comparison, not a complete depth law; D3 and D4 were not part of the final plan and have no corresponding completed data.</p>
+<p>The following boundaries must remain explicit:</p>
+<ul>
+<li>The threshold 0.30 exceeds the sufficient hard-exactness boundary ln(2)/16≈0.04332 for mean BCE on 16 points; a full-target loss event is not the target hard cell. No exact hard-target hits for 0xAE8C were observed among endpoint particles at W256 or W512, so the table must not be relabeled as a probability ratio of those hard functions.</li>
+<li>Particle budgets decrease with width; the width effect has not been separated by an independent budget-matching experiment. Both W256 D2 and W512 D2 include targets with only one surviving initial lineage. Agreement in direction does not eliminate finite-update mixing bias.</li>
+<li>The largest endpoint between-pool base-10 log-mass ranges in the configurations are approximately 0.55 to 0.94, but the pools share adaptation. These are neither independent confidence intervals nor upper bounds on systematic error.</li>
+<li>There is only one saved node at or below 0.30, so this scan does not fit a purported deep-tail contraction slope. The initialization hard-function prior, full-target loss mass, and actual training endpoints are three different objects.</li>
+</ul>
+<h3 id="5-4-mnist-an-unfinished-literature-inspired-attempt-to-reproduce-the-phenomenon">5.4 MNIST: an unfinished, literature-inspired attempt to reproduce the phenomenon</h3>
+<p>The comments in the local script <code>experiment_mnist_double_descent.py</code> name the setting family of <a href="https://arxiv.org/abs/1912.02292" target="_blank" rel="noopener">Nakkiran et al. (2019)</a> as a reference, while the implementation uses MNIST and a two-hidden-layer ReLU MLP. This is therefore a "literature-inspired attempt to reproduce the phenomenon," not a strict reproduction of an original paper's setting. Section 5 of <a href="https://arxiv.org/abs/2108.12006" target="_blank" rel="noopener">Stephenson and Lee (2021)</a> uses CIFAR10, ResNet18, 0-10% random label noise, and 10 random seeds, and explicitly states that CIFAR100 was not replicated. The local protocol differs; only the saved results of this exploration are reported below. See the <a href="../../supplementary/mnist_width_exploration/README_en.md">exploratory MNIST comparison</a> for the script, status of saved records, and reproduction provenance.</p>
+<p>The existing directory contains 13 conditions completed to 300 epochs out of a plan of seven widths and two seeds; W4096, seed1 is missing. The table summarizes only saved conditions and does not invent a second seed. The current script defaults to attempting uniform relabeling on 15% of examples and allows drawing the original class again, so 15% is not the realized mislabeling rate. The JSONL lacks a complete run-configuration snapshot; actual environment variables and data provenance still need verification for formal reproduction.</p>
+<table>
+<thead>
+<tr>
+<th>Width</th>
+<th style="text-align: right;">Saved seeds</th>
+<th style="text-align: right;">Final training error (actual training labels, %)</th>
+<th style="text-align: right;">Final test error (%)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>64</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">6.672</td>
+<td style="text-align: right;">16.140</td>
+</tr>
+<tr>
+<td>128</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1.256</td>
+<td style="text-align: right;">15.915</td>
+</tr>
+<tr>
+<td>256</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0.742</td>
+<td style="text-align: right;">11.240</td>
+</tr>
+<tr>
+<td>512</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0.408</td>
+<td style="text-align: right;">8.970</td>
+</tr>
+<tr>
+<td>1024</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0.468</td>
+<td style="text-align: right;">8.495</td>
+</tr>
+<tr>
+<td>2048</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0.539</td>
+<td style="text-align: right;">8.145</td>
+</tr>
+<tr>
+<td>4096</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.532</td>
+<td style="text-align: right;">8.420</td>
+</tr>
+</tbody>
+</table>
+<p>The scanned range mainly shows decreasing test error with increasing width, without covering a clear complete three-stage capacity-wise double descent. Every saved endpoint still has training errors, so this is not a direct confirmation of a second descent after strict interpolation. Nor can fluctuations across a few epochs automatically establish the mechanism of training-time double descent.</p>
+<p>The original script records agreement, gzip length of the prediction sequence, logit sensitivity, and weight norm as different proxies, not Neural K. This manuscript neither relabels those proxies as completed complexity measurements nor includes E28's likelihood-weighted HMC comparison as hard-threshold volume evidence.</p>
+<h3 id="5-5-what-this-round-establishes">5.5 What this round establishes</h3>
+<p>The new contribution is numerical evidence, without SGD, for redistribution of full-target mass with width under a specified protocol. It supports one candidate component of the later capacity-wise regime: wider networks may increase the mass advantage of simple targets relative to complex targets. Together with existing interventions on shortcut constraints and post-hard-fit migration results, it supports a conditional account covering both the capacity and time axes.</p>
+<p>What remains unestablished is that changes in static competitor mass on the same finite training set quantitatively determine a particular actual double-descent curve, or guarantee better generalization at every width. These remain boundaries of the account; the unfinished MNIST exploration is neither a complete reproduction of double descent nor validation of the new mechanism proposed here. This update organizes manuscripts and existing reproduction materials only for the Chinese and English websites, not the formal papers or PDFs, and launches no training or sampling.</p>
+<h2 id="6-connections-to-the-published-research">6. Connections to the published research</h2>
+<ul>
+<li><a href="theory-core.html">Core theory</a>: shortcut elimination and redistribution among compatible candidates as loss tightens.</li>
+<li><a href="experiments/e23.html">E23</a>: distinctions between full-target profiles, data identifiability, and the competitor denominator.</li>
+<li><a href="experiments/e31.html">E31</a>: effects of loss, target amplitude, and alignment direction on rule recovery.</li>
+<li><a href="complexity-methods.html">Complexity measurement methods</a>: snapshot targets and transition-calibrated estimation with finite queries.</li>
+</ul></div>
+
+      </article>
+    </main>
+  </div>
+</body>
+</html>

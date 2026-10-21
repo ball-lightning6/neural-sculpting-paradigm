@@ -21,9 +21,9 @@ $$
 
 ## 3. Full-target, fixed-D, and training endpoints are different distributions
 
-`K^{N,full}(f;ε)=-log₂ μ{L_{D_full(f)}≤ε}` measures the loss volume of a complete target. `K^{N,FD}_{U,D}(f;ε)=-log₂ Ω_{U,D}(f;ε)` measures the intersection of a fixed partial dataset event with a function cell. The cell factor can be omitted only when the full-target threshold already forces every hard output to be correct. In general these profiles must not share one suffix-free `K` symbol.
+`K^{N,full}(f;ε)=-log₂ μ{L_{D_full(f)}≤ε}` measures the loss volume of a complete target. `K^{N,FD}_{U,D}(f;ε)=-log₂ Ω_{U,D}(f;ε)` measures the intersection of a fixed training event with a function cell. When `D=D_full(f)`, thresholds agree, and the full-target event forces every hard output to be correct, the corresponding cell intersection can be omitted. A partial D still requires a separate event bridge. These profiles generally cannot share a suffix-free `K`, and negative log masses of overlapping full-target events are not directly prefix codelengths over all functions.
 
-The function distribution produced by SGD or Adam is the pushforward of the initialization measure under the training map; it is not the static conditional distribution above. Static mass can make first-order predictions, while entrances, gradients, connectivity, numerical noise, and history can still alter the endpoints. A change of parameter measure must be stated explicitly; Gaussian probability is not the Euclidean volume of an unbounded parameter space.
+The training map first pushes actual initialization and training randomness into a parameter distribution, which the readout `H_U` then maps into the SGD or Adam function distribution; it is not the static conditional distribution above. Static mass can make first-order predictions, while entrances, gradients, connectivity, numerical noise, and history can still alter the endpoints. A change of parameter measure must be stated explicitly; Gaussian probability is not the Euclidean volume of an unbounded parameter space.
 
 ## 4. Adding an example denotes three different operations
 
@@ -40,7 +40,7 @@ The third event can absorb parameters from outside the old event, so it is gener
 In the first operation the old ensemble predicts the new hard label with `p_E(y|x*)=μ(B_y|E)`. If that probability is positive, the information cost of the observed label is exactly `-log₂ p_E(y|x*)` bits. The direction of the KL identity is essential:
 
 $$
-D_{KL}(μ(\cdot|E∩B_y)\,\|\,μ(\cdot|E))=-\log p_E(y|x_*).
+D_{KL,2}(μ(\cdot|E∩B_y)\,\|\,μ(\cdot|E))=-\log_2 p_E(y|x_*).
 $$
 
 The reverse KL generally diverges. This is the surprise of an observed label, not expected information gain before observation and not the information acquired by retraining SGD. For a function partition, parameter KL further decomposes into KL between function probabilities plus conditional parameter KL within each hard cell. Large within-cell reallocation remains possible even if the distribution of complete hard functions is unchanged.

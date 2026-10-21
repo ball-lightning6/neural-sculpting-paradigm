@@ -1,0 +1,62 @@
+% 现有英文短论文的排版模板；正文由 Pandoc 从 Markdown 生成。
+\documentclass[11pt,a4paper]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{xurl}
+\usepackage{hyperref}
+\usepackage{longtable,booktabs,array,calc,etoolbox}
+\IfFileExists{microtype.sty}{\usepackage{microtype}}{}
+\usepackage[a4paper,top=24mm,bottom=25mm,left=27mm,right=27mm,headheight=15pt]{geometry}
+\definecolor{ink}{HTML}{18212B}
+\definecolor{accent}{HTML}{1F5A7A}
+\definecolor{rulegray}{HTML}{AAB4BE}
+\hypersetup{unicode=true,colorlinks=true,linkcolor=accent,urlcolor=accent,citecolor=accent,
+pdftitle={$title$},pdfauthor={Chao Zheng},pdfcreator={LaTeX via pandoc}}
+\urlstyle{same}
+\color{ink}
+\linespread{1.055}
+\setlength{\parindent}{1.25em}
+\setlength{\parskip}{0.25em plus 0.08em minus 0.04em}
+\setlength{\emergencystretch}{2.5em}
+\setlength{\abovedisplayskip}{8pt plus 2pt minus 2pt}
+\setlength{\belowdisplayskip}{8pt plus 2pt minus 2pt}
+\providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen}
+\renewcommand{\labelitemi}{}
+\pagestyle{plain}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\renewcommand{\maketitle}{
+  \begin{center}
+    \vspace*{0.3em}
+    {\fontsize{23}{28}\selectfont\bfseries\color{ink}\@title\par}
+    \vspace{1.0em}
+    {\large\@author\par}
+    \vspace{0.35em}
+    {\small\color{rulegray}\@date\par}
+    \vspace{1.0em}
+    {\color{rulegray}\rule{0.72\linewidth}{0.5pt}}
+  \end{center}
+  \vspace{0.4em}
+}
+\makeatother
+\renewenvironment{abstract}
+  {\begin{center}\bfseries Abstract\end{center}\fontsize{9.3}{11.1}\selectfont\setlength{\parskip}{0.15em}\noindent\ignorespaces}
+  {\par\normalsize\vspace{0.8em}}
+\AtBeginEnvironment{longtable}{\small}
+\title{$title$}
+\author{$author$}
+\date{$date$}
+\begin{document}
+\maketitle
+$if(abstract)$
+\begin{abstract}
+$abstract$
+\end{abstract}
+$endif$
+$body$
+\end{document}

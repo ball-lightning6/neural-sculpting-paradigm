@@ -1,0 +1,562 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Full protocol, results, and boundaries for E38 Width, depth, and relative target mass.">
+  <title>E38 Width, depth, and relative target mass · Neural K Research Archive</title>
+  <link rel="stylesheet" href="../../assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="../../assets/site.js"></script>
+</head>
+<body data-page-kind="post-upload">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+
+    <header class="topbar">
+      <a class="site-mark" href="../index.html" aria-label="Back to the research narrative">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K Research Archive</span>
+      </a>
+      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="../index.html">Research</a><a class="top-link" href="../theory-core.html">Core Theory</a><a class="top-link" href="../experiments/index.html">Experiments</a><a class="top-link active" href="../post-upload.html">Updates</a><a class="top-link" href="../references.html">References</a><a class="top-link" href="../evidence-ledger.html">Evidence</a></nav>
+      <nav class="language-switch" aria-label="Language"><a href="../../experiments/e38.html" lang="zh-CN">中文</a><span class="active" lang="en">EN</span></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>Contents</span>
+      </button>
+    </header>
+
+  <div class="page-shell">
+
+    <aside class="sidebar" id="sidebar" aria-label="On this page">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">On this page</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#1-research-question">1. Research Question</a></li>
+<li><a href="#2-main-results">2. Main Results</a></li>
+<li><a href="#3-completed-scope">3. Completed Scope</a></li>
+<li><a href="#4-files-in-this-directory">4. Files in This Directory</a></li>
+<li><a href="#5-reproduction-entry-points">5. Reproduction Entry Points</a></li>
+<li><a href="#6-historical-source-and-release-copies">6. Historical Source and Release Copies</a></li>
+<li><a href="#1-motivation-and-evidential-object">1. Motivation and Evidential Object</a></li>
+<li><a href="#2-fixed-inputs-and-targets">2. Fixed Inputs and Targets</a></li>
+<li><a href="#3-networks-and-reference-measure">3. Networks and Reference Measure</a></li>
+<li><a href="#4-common-output-events-and-comparison-quantities">4. Common Output Events and Comparison Quantities</a></li>
+<li><a href="#5-smc-protocol-and-budgets">5. SMC Protocol and Budgets</a></li>
+<li><a href="#6-retrospective-analysis-and-interpretation-rules">6. Retrospective Analysis and Interpretation Rules</a></li>
+<li><a href="#1-completion-status">1. Completion Status</a></li>
+<li><a href="#2-width-results-at-a-common-threshold">2. Width Results at a Common Threshold</a></li>
+<li><a href="#3-relative-gaps-for-all-17-targets">3. Relative Gaps for All 17 Targets</a></li>
+<li><a href="#4-depth-comparison-at-w256">4. Depth Comparison at W256</a></li>
+<li><a href="#5-bce-0-30-is-not-hard-exact">5. BCE 0.30 Is Not Hard-Exact</a></li>
+<li><a href="#6-sampling-diagnostics-and-uncertainty">6. Sampling Diagnostics and Uncertainty</a></li>
+<li><a href="#7-conclusions-and-scope">7. Conclusions and Scope</a></li>
+</ul>
+</div>
+</nav>
+        <a class="sidebar-action" href="../post-upload.html">Back to the increments overview →</a>
+      </div>
+    </aside>
+
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">Experiment increment · E38</div>
+          <h1>E38 Width, depth, and relative target mass</h1>
+          <p class="article-description">Full protocol, results, and boundaries for E38 Width, depth, and relative target mass.</p>
+        </header>
+        <div class="article-body"><blockquote>
+<p>Status: completed 4-bit constrained SMC scan. Completion checks and release documentation dated 2026-10-21; 5 configurations, 95 target runs, and 855 threshold records. The evidence concerns static relative mass under a specified reference measure and finite sampling protocol.</p>
+</blockquote>
+<h2 id="1-research-question">1. Research Question</h2>
+<p>With the full 16-point truth table and target labels fixed, does increasing network width change the relative probability mass assigned to different targets' low-BCE events? E38 compares the width axis of four two-hidden-layer networks and adds a one-hidden-layer versus two-hidden-layer comparison at W256. It measures continuous loss events for complete targets, not actual training trajectories or test-error curves.</p>
+<p>The networks have parameter spaces of different dimensions, but all induce probability distributions on the same 16-dimensional joint-logit space. The same target and BCE threshold define the same output event, allowing comparison of the probability each protocol assigns to that event. This is neither a direct comparison of unnormalized Euclidean volumes across dimensions nor a measure-independent intrinsic K.</p>
+<h2 id="2-main-results">2. Main Results</h2>
+<p>At the common threshold BCE = 0.30, using the single-bit rule <code>0x0F0F</code> as the reference and excluding the other single-bit rule <code>0xCCCC</code>, the relative mass disadvantages of all remaining 17 selected balanced targets strictly increase across W64, W128, W256, and W512. The medians of these 17 gaps are 17.7023, 25.0701, 35.0872, and 48.0666, respectively, in base-10 log mass ratios.</p>
+<p>For the example <code>0xAE8C</code>, <code>log10[V(0x0F0F)/V(0xAE8C)]</code> is 53.8901, 75.9899, 106.8514, and 147.5235, respectively. The corresponding depth comparison at W256 is 92.4818 for D1 and 106.8514 for D2. The simple reference also loses absolute mass with width: the main result is a growing relative gap, not constant absolute mass for the simple target.</p>
+<p>These results do not call BCE = 0.30 hard-exact, prove global SMC mixing, treat pools with shared adaptation as independent full-run repetitions, or directly validate all double descent or an equality between static mass and SGD selection probabilities. See <a href="../../../experiments/experiment_38_width_depth_volume/RESULTS_AND_CONCLUSION.md">Results and Conclusions</a> for the full limitations.</p>
+<h2 id="3-completed-scope">3. Completed Scope</h2>
+<p><code>D</code> denotes the number of hidden layers. Hidden layers use tanh and the output is a linear logit; each target's mean BCE is evaluated over all 16 inputs.</p>
+<table>
+<thead>
+<tr>
+<th>Configuration</th>
+<th style="text-align: right;">Parameters</th>
+<th style="text-align: right;">Pools x particles per pool</th>
+<th style="text-align: right;">Completed targets</th>
+<th style="text-align: right;">Thresholds</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>W64 D2</td>
+<td style="text-align: right;">4,545</td>
+<td style="text-align: right;">8 x 4,096</td>
+<td style="text-align: right;">19/19</td>
+<td style="text-align: right;">9</td>
+</tr>
+<tr>
+<td>W128 D2</td>
+<td style="text-align: right;">17,281</td>
+<td style="text-align: right;">8 x 4,096</td>
+<td style="text-align: right;">19/19</td>
+<td style="text-align: right;">9</td>
+</tr>
+<tr>
+<td>W256 D2</td>
+<td style="text-align: right;">67,329</td>
+<td style="text-align: right;">4 x 2,048</td>
+<td style="text-align: right;">19/19</td>
+<td style="text-align: right;">9</td>
+</tr>
+<tr>
+<td>W512 D2</td>
+<td style="text-align: right;">265,729</td>
+<td style="text-align: right;">4 x 1,024</td>
+<td style="text-align: right;">19/19</td>
+<td style="text-align: right;">9</td>
+</tr>
+<tr>
+<td>W256 D1</td>
+<td style="text-align: right;">1,537</td>
+<td style="text-align: right;">8 x 4,096</td>
+<td style="text-align: right;">19/19</td>
+<td style="text-align: right;">9</td>
+</tr>
+</tbody>
+</table>
+<p>The common thresholds are 0.68, 0.65, 0.60, 0.55, 0.50, 0.45, 0.40, 0.35, and 0.30. There are <code>5 x 19 = 95</code> target runs and <code>95 x 9 = 855</code> threshold records. W256 D2 is counted only once; D3 and D4 are outside the final scan scope, and smoke-test and reproduction-check directories are not included in the formal records.</p>
+<h2 id="4-files-in-this-directory">4. Files in This Directory</h2>
+<ul>
+<li><a href="../../../experiments/experiment_38_width_depth_volume/MOTIVATION_AND_PREREGISTRATION.md">Motivation and Retrospective Protocol</a>: a retrospective protocol description dated 2026-10-21, not a new preregistration.</li>
+<li><a href="../../../experiments/experiment_38_width_depth_volume/RESULTS_AND_CONCLUSION.md">Results and Conclusions</a>: all 17 relative gaps, the depth comparison, completeness checks, and sampling limitations.</li>
+<li><a href="../../../experiments/experiment_38_width_depth_volume/experiment_4bit_smc_width_depth.py">SMC numerical implementation</a>: parameterization, targets, constrained sampling, and diagnostics.</li>
+<li><a href="../../../experiments/experiment_38_width_depth_volume/experiment_4bit_smc_width_depth_driver.py">Five-configuration scan driver</a>: per-configuration execution and preflight.</li>
+<li><a href="../../../experiments/experiment_38_width_depth_volume/analyze_results.py">Offline analysis</a>: reads and summarizes results generated by a rerun without starting training or sampling.</li>
+</ul>
+<h2 id="5-reproduction-entry-points">5. Reproduction Entry Points</h2>
+<p>The following instructions describe how to rerun sampling; they do not imply that these commands were executed during this documentation update. Use a CUDA-enabled Python environment with PyTorch, NumPy, and Matplotlib installed; check available devices and memory first, and do not occupy a GPU already in use. Run from this directory:</p>
+<pre><code class="language-powershell">python -E -s experiment_4bit_smc_width_depth_driver.py
+</code></pre>
+<p>After completion, the driver generates <code>results_4bit_smc_width_depth/</code> in this directory, with five configuration subdirectories containing configurations, target definitions, and target summaries. Then run the offline analysis from this directory:</p>
+<pre><code class="language-powershell">python -E -s analyze_results.py
+</code></pre>
+<p>For a rerun, verify the five-configuration scope, 19 targets, 9 thresholds, and particle budgets in the table, and check preflight and final completion status. The driver selects a budget from memory estimates; the actual saved configuration must be retained, and new results obtained with a different budget must not silently replace the readings in this table. The historical W512 D2 summary records approximately 78.69 hours, so this entry point is not a quick demonstration.</p>
+<p>This release preserves the numerical sampling core of the completed experiment; changes to portable configuration, comments, analysis labels, and preflight failure handling do not change the scientific object declared here. Reproduction should check configurations and diagnostics, without promising bitwise equality across devices or software environments. The historical results in this document and results generated by rerunning must be identified separately.</p>
+<h2 id="6-historical-source-and-release-copies">6. Historical Source and Release Copies</h2>
+<p>The historical source and results are preserved unchanged. The SHA256 hashes of the original files at archival are:</p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>SHA256 of the historical original bytes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>experiment_4bit_smc_width_depth.py</td>
+<td>6a0cd94615ae6ae2d37770fd25ab451587c06bd81f9da18d8a6bff9e174aec8a</td>
+</tr>
+<tr>
+<td>experiment_4bit_smc_width_depth_driver.py</td>
+<td>e23c038c803e3641467074cfaca942a0984aff8d6c7e63bfe1d8998501c32ea9</td>
+</tr>
+</tbody>
+</table>
+<p>This directory contains release copies. Because of the explicitly listed changes below, their whole-file hashes must not be presented as historical source hashes. The numerical implementation only corrects the sampling-kernel name, reference-threshold descriptions, and analysis messages; 18 core definitions, including configuration, forward computation, survival selection, resampling, mutation, and result recording, pass an AST equivalence check with comments and docstrings removed.</p>
+<p>The driver additionally fixes a preflight boundary branch: when every protocol exceeds the memory budget, the original incorrectly fell back to the first tier; it now falls back to the smallest tier and retains the warning. This does not change the choice when a tier meets the budget. Three protocol-selection branches were checked with memory-estimate stubs, without starting SMC. The new offline analysis script reconstructs the numerical tables and website figure from saved results without rewriting the original results.</p>
+<h1 id="e38-motivation-and-retrospective-protocol">E38: Motivation and Retrospective Protocol</h1>
+<blockquote>
+<p>Documentation date: 2026-10-21. Written after scan completion from saved configurations and results, this document is a retrospective protocol account, not a preregistration made before the scan began. Its filename follows the experiment-directory convention and does not establish that the question framing, reference choice, or statistical summaries were prospectively registered.</p>
+</blockquote>
+<h2 id="1-motivation-and-evidential-object">1. Motivation and Evidential Object</h2>
+<p>Increasing network capacity can change both task representability and the relative probability mass of different realizable targets. E38 examines only the latter static question: with fixed targets and a common loss threshold, are changes in width and depth accompanied by changes in relative preference?</p>
+<p>This provides a measurable object for simplicity selection along the capacity axis, but does not simultaneously measure candidate competition on a finite training set, actual optimizer selection, or generalization curves. Connecting static mass to these dynamic phenomena still requires additional evidence; scan completion cannot substitute for it.</p>
+<h2 id="2-fixed-inputs-and-targets">2. Fixed Inputs and Targets</h2>
+<p>The inputs are all 4-bit strings ordered by integers 0 through 15, with each input encoded as four <code>0/1</code> coordinates from the most significant to the least significant bit, not as <code>-1/+1</code>. Bit i of the target ID, counted from the least significant bit, gives the label of input i: <code>y_i = (function_id &gt;&gt; i) &amp; 1</code>. The model assigns hard label 1 when <code>logit &gt;= 0</code>.</p>
+<p>All five configurations use exactly the same 19 targets, each a balanced rule with eight zeros and eight ones. The following IDs all carry the <code>fn_</code> prefix in the script:</p>
+<pre><code class="language-text">0x0F0F  0x88EE  0x3B23  0x1337  0x7F02  0xAE8C  0xCCCC
+0xF550  0xBB22  0x4D4D  0x055F  0xAB2A  0x2AAB  0xD554
+0x2F0B  0xF2B0  0x1F07  0xFD40  0xEAA8
+</code></pre>
+<p>This is a selected target set, not an enumeration of all 4-bit functions. <code>0x0F0F</code> and <code>0xCCCC</code> are the two single-bit rules; the 17 targets in the summary are the set remaining after excluding both. The description "complex-end example" refers to <code>0xAE8C</code> within this protocol, without treating target IDs or ANF metrics as measure-independent complexity ground truth.</p>
+<h2 id="3-networks-and-reference-measure">3. Networks and Reference Measure</h2>
+<p>Networks are <code>4 -&gt; W -&gt; 1</code> or <code>4 -&gt; W -&gt; W -&gt; 1</code>, with tanh hidden layers, a linear output logit, and biases in every layer. For parameter count p, the normalized parameter coordinates are independently distributed as <code>uniform[-1,1]</code>:</p>
+<div class="math-display">$$
+\mu_{W,D}=\operatorname{Unif}([-1,1]^{p(W,D)}).
+$$</div>
+<p>In the forward pass, both first-layer weights and biases are multiplied by <code>1/sqrt(4)</code>; both weights and biases in subsequent hidden layers and the output layer are multiplied by <code>1/sqrt(W)</code>. Width changes therefore also change the reference distribution as specified by this fixed scaling rule; they cannot be interpreted as adding neurons while leaving all other distributional properties unchanged. The reference measure is uniform on the normalized parameter box, not Gaussian.</p>
+<p>The completed runs used an NVIDIA GeForce RTX 3080 with 10GB memory, with recorded device <code>cuda:1</code>. Particles and forward calculations use float32, log-mass accumulation uses float64, and TF32 is disabled. Subsequent reproduction must record the actual software and device environment and must not present a change of precision as the same numerical protocol.</p>
+<h2 id="4-common-output-events-and-comparison-quantities">4. Common Output Events and Comparison Quantities</h2>
+<p>Let <code>U</code> contain all 16 inputs, let <code>z = Z_{W,D}(theta)</code> be their joint logit vector, and let the labels be <code>y_i = f(x_i)</code>. Define mean BCE using natural logarithms:</p>
+<div class="math-display">$$
+\mathcal L_f(z)=\frac{1}{16}\sum_{i=0}^{15}
+\left[\log(1+e^{z_i})-y_i z_i\right],
+\qquad
+E_f(\epsilon)=\{z\in\mathbb R^{16}:\mathcal L_f(z)\le\epsilon\}.
+$$</div>
+<p>The different parameter spaces all map into this common 16-dimensional output space. Their pushforward probability distributions and complete-target event masses are defined as:</p>
+<div class="math-display">$$
+\rho_{W,D}=(Z_{W,D})_\#\mu_{W,D},
+\qquad
+V_{W,D}(f;\epsilon)=\rho_{W,D}(E_f(\epsilon))
+=\mu_{W,D}\{\theta:L_{U,f}(\theta)\le\epsilon\}.
+$$</div>
+<p>This makes comparison across dimensions a question of how much probability different generative protocols assign to the same output event. Relative ratios remove overall normalization factors but not the redistribution of mass across regions by the reference measure. The results therefore cannot be elevated to a measure-independent K, nor can complete-target event masses be treated as the full candidate-competition odds on the same finite training set.</p>
+<p>Results use the median of the pools' <code>log10 V</code> estimates for each target, rather than averaging volumes before taking the logarithm. With <code>s = 0x0F0F</code>, define the reported quantities:</p>
+<div class="math-display">$$
+\widehat\ell_{W,D}(f;\epsilon)
+=\operatorname{median}_{r}\bigl[\widehat{\log_{10}V}_{W,D,r}(f;\epsilon)\bigr],
+\qquad
+\widehat C_{W,D}(f;\epsilon)=-\widehat\ell_{W,D}(f;\epsilon).
+$$</div>
+<div class="math-display">$$
+\widehat\Delta_{W,D}(f;\epsilon)
+=\widehat\ell_{W,D}(s;\epsilon)-\widehat\ell_{W,D}(f;\epsilon)
+=\widehat C_{W,D}(f;\epsilon)-\widehat C_{W,D}(s;\epsilon).
+$$</div>
+<p><code>Delta &gt; 0</code> means the reference event has greater estimated mass; this document abbreviates it as a base-10 log mass ratio. It is not a Neural K difference measured in bits; conversion to bits requires multiplication by <code>log2(10)</code>. The median of the gaps for 17 targets is a separate across-target summary and must not be confused with the within-target median across pools.</p>
+<h2 id="5-smc-protocol-and-budgets">5. SMC Protocol and Budgets</h2>
+<p>Saved nodes are fixed at 0.68, 0.65, 0.60, 0.55, 0.50, 0.45, 0.40, 0.35, and 0.30. Multiple adaptive SMC levels can occur between adjacent saved nodes; nine saved nodes do not mean only nine executed levels.</p>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Actual protocol</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Initial particles</td>
+<td>Independent uniform sampling within the normalized parameter box</td>
+</tr>
+<tr>
+<td>Intermediate threshold</td>
+<td>Maximum of the pools' 0.5 loss quantiles, further constrained by the next saved node and the current threshold</td>
+</tr>
+<tr>
+<td>Resampling</td>
+<td>Sampling survivors with replacement within each pool and accumulating log survival fractions across levels</td>
+</tr>
+<tr>
+<td>Local proposals</td>
+<td>Symmetric blockwise and all-parameter random walks, reflected at the parameter-box boundaries</td>
+</tr>
+<tr>
+<td>Refresh proposals</td>
+<td>Each block proposal is replaced by a uniform refresh of that block with probability 0.02</td>
+</tr>
+<tr>
+<td>Step-size adaptation</td>
+<td>8 sweeps per level, using acceptance aggregated across all pools, with target acceptance 0.30</td>
+</tr>
+<tr>
+<td>Fixed-step-size updates</td>
+<td>A further 24 sweeps per level</td>
+</tr>
+<tr>
+<td>Initial step sizes</td>
+<td>First layer 0.050, middle layers 0.030, output layer 0.050, all parameters 0.015</td>
+</tr>
+<tr>
+<td>Step-size range</td>
+<td>0.0002 to 0.30</td>
+</tr>
+<tr>
+<td>Maximum levels</td>
+<td>2,000 levels per target</td>
+</tr>
+<tr>
+<td>Numerical loss tolerance</td>
+<td>Sampling acceptance uses 1e-7; completion checks separately test saved maximum loss with 1e-6</td>
+</tr>
+</tbody>
+</table>
+<p>The random walk uses Gaussian perturbations, but the reference measure remains uniform within the box; this transition kernel is not pCN. At fixed thresholds and step sizes, the reflected random walk and uniform refresh are intended to preserve the constrained uniform measure; adaptation and finite updates in the actual runs do not provide a global mixing guarantee.</p>
+<p>W64 D2 and W128 D2 use <code>8 x 4096</code>, W256 D2 uses <code>4 x 2048</code>, W512 D2 uses <code>4 x 1024</code>, and W256 D1 uses <code>8 x 4096</code>. These are the number of particle pools and particles per pool, not numbers of independent full-run repetitions. Pools share the next threshold and step-size adaptation; resampling within individual pools does not justify constructing confidence intervals as if they were independent repetitions.</p>
+<p>The original protocol's base random seeds for prior sampling, resampling, mutation, and calibration are 2026082410, 2026082420, 2026082430, and 2026082440, respectively; seeds for the first three generators additionally include <code>1_000_003 * target_index</code>, and pools draw from the corresponding generators' sequences rather than independently starting full experimental runs. Additional direct-prior calibration uses 4,194,304 samples to check the three thresholds 0.68, 0.65, and 0.60; it does not replace mixing diagnostics at lower loss.</p>
+<h2 id="6-retrospective-analysis-and-interpretation-rules">6. Retrospective Analysis and Interpretation Rules</h2>
+<p>This account summarizes the width axis at BCE = 0.30, completed by every configuration: use <code>0x0F0F</code> as a fixed reference, exclude <code>0x0F0F</code> and <code>0xCCCC</code>, list the relative gap for each of the 17 remaining targets, and calculate their median; separately report the W256 D1/D2 example comparison. This is a descriptive account of completed records, without adding unrun conditions or retrospectively calling the summary a prospective significance test.</p>
+<p>Completion checks require 19 completed targets in each of the five configurations, all nine nodes for every target, finite log-volume estimates, and saved maximum loss no greater than the threshold plus the validation tolerance. Lineages, between-pool ranges, and hard-target hits are reported separately. Complete records do not imply unbiased estimates; consistent directions do not exclude shared mixing bias, and small between-pool differences do not bound systematic error.</p>
+<h1 id="e38-results-and-conclusions">E38: Results and Conclusions</h1>
+<blockquote>
+<p>Verification and documentation date: 2026-10-21. This report covers only the completed five-configuration 4-bit SMC scan, includes no other training tasks, and initiated no new experiments for this update. All numbers are finite-sampling estimates or diagnostic readings from saved records.</p>
+</blockquote>
+<h2 id="1-completion-status">1. Completion Status</h2>
+<p>All five configurations completed 19/19 targets and all nine saved thresholds, for 95 target runs and 855 threshold records. Record-by-record checks found no missing nodes, nonfinite log-volume estimates, or saved maximum loss exceeding the threshold plus 1e-6. All five result packages passed ZIP CRC checks, each containing 19 complete target summaries; these establish only record and package integrity, not global mixing.</p>
+<p>The last configuration to finish was W512 D2, whose overall summary records approximately 78.69 hours. The overall summaries of other configurations were rewritten when the resumed driver skipped completed targets, so <code>elapsed_seconds</code> records only that invocation's checking or aggregation time and cannot directly compare full execution costs.</p>
+<h2 id="2-width-results-at-a-common-threshold">2. Width Results at a Common Threshold</h2>
+<p>All results below use BCE = 0.30 and D2. <code>C(f) = -median_pool(log10 V(f))</code>, with relative gap <code>Delta(f) = C(f) - C(0x0F0F)</code>; the last column is the median of the 17 relative gaps after excluding the two single-bit rules. These are base-10 logarithmic quantities, not bit counts. Four decimal places faithfully transcribe the readings, not accuracy calibrated to that precision. Gaps are computed before rounding, so they may differ in the last digit from subtraction of the rounded first two columns.</p>
+<table>
+<thead>
+<tr>
+<th>Width</th>
+<th style="text-align: right;">C(0x0F0F)</th>
+<th style="text-align: right;">C(0xAE8C)</th>
+<th style="text-align: right;">Delta(0xAE8C)</th>
+<th style="text-align: right;">Median Delta across 17 targets</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>64</td>
+<td style="text-align: right;">74.2142</td>
+<td style="text-align: right;">128.1042</td>
+<td style="text-align: right;">53.8901</td>
+<td style="text-align: right;">17.7023</td>
+</tr>
+<tr>
+<td>128</td>
+<td style="text-align: right;">91.4117</td>
+<td style="text-align: right;">167.4016</td>
+<td style="text-align: right;">75.9899</td>
+<td style="text-align: right;">25.0701</td>
+</tr>
+<tr>
+<td>256</td>
+<td style="text-align: right;">110.2689</td>
+<td style="text-align: right;">217.1203</td>
+<td style="text-align: right;">106.8514</td>
+<td style="text-align: right;">35.0872</td>
+</tr>
+<tr>
+<td>512</td>
+<td style="text-align: right;">129.1326</td>
+<td style="text-align: right;">276.6561</td>
+<td style="text-align: right;">147.5235</td>
+<td style="text-align: right;">48.0666</td>
+</tr>
+</tbody>
+</table>
+<p>The absolute mass of <code>0x0F0F</code> also decreases with width, while that of <code>0xAE8C</code> decreases more. The supported observation is a growing mass advantage of the simple reference relative to this target, not immunity of the simple target's absolute mass to widening.</p>
+<figure class="result-figure"><a href="../../assets/figures/width_relative_mass_20261021.png" target="_blank" rel="noopener"><img src="../../assets/figures/width_relative_mass_20261021.png" alt="Base-10 log mass ratios of 17 selected targets relative to the single-bit reference at BCE 0.30" loading="lazy"></a><figcaption>Base-10 log mass ratios of 17 selected targets relative to the single-bit reference at BCE 0.30</figcaption></figure>
+<p>Each line follows the relative mass of the same target across the four widths. The vertical axis is not test error, and the ranges of pools with shared adaptation are not plotted as independent confidence intervals.</p>
+<h2 id="3-relative-gaps-for-all-17-targets">3. Relative Gaps for All 17 Targets</h2>
+<p>The table excludes the reference <code>0x0F0F</code> and the other single-bit rule <code>0xCCCC</code>, listing <code>Delta</code> for all remaining selected targets. All 17/17 sequences strictly increase across W64, W128, W256, and W512.</p>
+<table>
+<thead>
+<tr>
+<th>Target</th>
+<th style="text-align: right;">W64 D2</th>
+<th style="text-align: right;">W128 D2</th>
+<th style="text-align: right;">W256 D2</th>
+<th style="text-align: right;">W512 D2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0x88EE</td>
+<td style="text-align: right;">9.0126</td>
+<td style="text-align: right;">15.4183</td>
+<td style="text-align: right;">24.3574</td>
+<td style="text-align: right;">36.2827</td>
+</tr>
+<tr>
+<td>0x3B23</td>
+<td style="text-align: right;">17.7023</td>
+<td style="text-align: right;">25.0701</td>
+<td style="text-align: right;">35.0726</td>
+<td style="text-align: right;">48.0146</td>
+</tr>
+<tr>
+<td>0x1337</td>
+<td style="text-align: right;">38.6580</td>
+<td style="text-align: right;">55.3287</td>
+<td style="text-align: right;">77.6897</td>
+<td style="text-align: right;">106.9552</td>
+</tr>
+<tr>
+<td>0x7F02</td>
+<td style="text-align: right;">40.7925</td>
+<td style="text-align: right;">53.3776</td>
+<td style="text-align: right;">69.9674</td>
+<td style="text-align: right;">90.7186</td>
+</tr>
+<tr>
+<td>0xAE8C</td>
+<td style="text-align: right;">53.8901</td>
+<td style="text-align: right;">75.9899</td>
+<td style="text-align: right;">106.8514</td>
+<td style="text-align: right;">147.5235</td>
+</tr>
+<tr>
+<td>0xF550</td>
+<td style="text-align: right;">9.0389</td>
+<td style="text-align: right;">15.2343</td>
+<td style="text-align: right;">24.4020</td>
+<td style="text-align: right;">36.2785</td>
+</tr>
+<tr>
+<td>0xBB22</td>
+<td style="text-align: right;">9.0296</td>
+<td style="text-align: right;">15.4827</td>
+<td style="text-align: right;">24.2693</td>
+<td style="text-align: right;">36.3146</td>
+</tr>
+<tr>
+<td>0x4D4D</td>
+<td style="text-align: right;">9.0373</td>
+<td style="text-align: right;">15.3275</td>
+<td style="text-align: right;">24.3866</td>
+<td style="text-align: right;">36.4003</td>
+</tr>
+<tr>
+<td>0x055F</td>
+<td style="text-align: right;">26.5401</td>
+<td style="text-align: right;">40.8282</td>
+<td style="text-align: right;">60.4422</td>
+<td style="text-align: right;">86.3721</td>
+</tr>
+<tr>
+<td>0xAB2A</td>
+<td style="text-align: right;">17.6706</td>
+<td style="text-align: right;">24.9376</td>
+<td style="text-align: right;">34.9480</td>
+<td style="text-align: right;">48.0666</td>
+</tr>
+<tr>
+<td>0x2AAB</td>
+<td style="text-align: right;">17.3836</td>
+<td style="text-align: right;">24.1786</td>
+<td style="text-align: right;">33.3372</td>
+<td style="text-align: right;">45.7391</td>
+</tr>
+<tr>
+<td>0xD554</td>
+<td style="text-align: right;">17.3998</td>
+<td style="text-align: right;">24.1873</td>
+<td style="text-align: right;">33.5584</td>
+<td style="text-align: right;">45.4463</td>
+</tr>
+<tr>
+<td>0x2F0B</td>
+<td style="text-align: right;">17.6981</td>
+<td style="text-align: right;">25.0202</td>
+<td style="text-align: right;">35.0872</td>
+<td style="text-align: right;">47.8712</td>
+</tr>
+<tr>
+<td>0xF2B0</td>
+<td style="text-align: right;">22.8222</td>
+<td style="text-align: right;">33.0275</td>
+<td style="text-align: right;">47.0894</td>
+<td style="text-align: right;">65.5589</td>
+</tr>
+<tr>
+<td>0x1F07</td>
+<td style="text-align: right;">22.9634</td>
+<td style="text-align: right;">33.0437</td>
+<td style="text-align: right;">47.1258</td>
+<td style="text-align: right;">65.1122</td>
+</tr>
+<tr>
+<td>0xFD40</td>
+<td style="text-align: right;">22.8965</td>
+<td style="text-align: right;">33.0338</td>
+<td style="text-align: right;">46.9543</td>
+<td style="text-align: right;">65.0804</td>
+</tr>
+<tr>
+<td>0xEAA8</td>
+<td style="text-align: right;">38.8095</td>
+<td style="text-align: right;">55.2474</td>
+<td style="text-align: right;">77.7981</td>
+<td style="text-align: right;">106.8981</td>
+</tr>
+</tbody>
+</table>
+<p>This consistency statement concerns 17 specified targets relative to the same reference; it does not mean that gaps between all target pairs increase monotonically or that local rankings never reverse. This set does not represent all balanced functions, let alone all tasks or all loss windows.</p>
+<h2 id="4-depth-comparison-at-w256">4. Depth Comparison at W256</h2>
+<p>For the same <code>0x0F0F/0xAE8C</code> example, BCE = 0.30 gives:</p>
+<table>
+<thead>
+<tr>
+<th>Hidden layers</th>
+<th style="text-align: right;">C(0x0F0F)</th>
+<th style="text-align: right;">C(0xAE8C)</th>
+<th style="text-align: right;">Delta(0xAE8C)</th>
+<th style="text-align: right;">Pools x particles per pool</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>D1</td>
+<td style="text-align: right;">54.9400</td>
+<td style="text-align: right;">147.4218</td>
+<td style="text-align: right;">92.4818</td>
+<td style="text-align: right;">8 x 4,096</td>
+</tr>
+<tr>
+<td>D2</td>
+<td style="text-align: right;">110.2689</td>
+<td style="text-align: right;">217.1203</td>
+<td style="text-align: right;">106.8514</td>
+<td style="text-align: right;">4 x 2,048</td>
+</tr>
+</tbody>
+</table>
+<p>These are two depth points at one width, with different particle budgets, and cannot establish a general monotonic depth law. D3 and D4 have no corresponding completed results and are not inferred or extrapolated as missing values.</p>
+<h2 id="5-bce-0-30-is-not-hard-exact">5. BCE 0.30 Is Not Hard-Exact</h2>
+<p>Any misclassified point or zero-margin point contributes at least <code>ln(2)</code> to its individual BCE, while all other points contribute nonnegative BCE. A sufficient hard-exact condition for mean BCE over 16 points is therefore a value strictly below this boundary:</p>
+<div class="math-display">$$
+L_{U,f}(\theta)&lt;\frac{\ln 2}{16}\approx 0.04332
+\quad\Longrightarrow\quad
+\text{all 16 hard labels match }f.
+$$</div>
+<p>The common endpoint 0.30 exceeds this boundary, so mean loss does not establish correctness of all hard labels. Among D2 endpoint particles for <code>0xAE8C</code>, the exact hard-target hit fractions at W64 and W128 are 0.0002136230 and 0.0000610352, respectively; no hits were observed at W256 or W512. These are empirical fractions within conditional particle samples, not independently measured unconditional hard-function probabilities; zero observed hits do not prove zero true mass.</p>
+<p>Accordingly, the preceding tables and figure describe the mass of continuous loss events for the target labels, not mass ratios of the <code>0xAE8C</code> hard cell. Even where a historical field is named <code>HARD_EXACT_REFERENCE_THRESHOLD</code>, 0.30 must be interpreted only as this scan's common reference threshold; a field name provides no mathematical guarantee.</p>
+<h2 id="6-sampling-diagnostics-and-uncertainty">6. Sampling Diagnostics and Uncertainty</h2>
+<p>The minimum lineage count below is the smallest number of surviving initial lineages across targets and pools in that configuration at BCE = 0.30. The maximum between-pool range is obtained by taking the maximum minus minimum pool <code>log10 V</code> for each target, then the maximum across targets.</p>
+<table>
+<thead>
+<tr>
+<th>Configuration</th>
+<th style="text-align: right;">Minimum initial lineages</th>
+<th style="text-align: right;">Maximum between-pool log10 mass range</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>W64 D2</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0.6234</td>
+</tr>
+<tr>
+<td>W128 D2</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0.6042</td>
+</tr>
+<tr>
+<td>W256 D2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.9419</td>
+</tr>
+<tr>
+<td>W512 D2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.7942</td>
+</tr>
+<tr>
+<td>W256 D1</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">0.5450</td>
+</tr>
+</tbody>
+</table>
+<p>Both W256 D2 and W512 D2 include target pools with only one surviving initial lineage. This degeneration, particle budgets decreasing with width, thresholds and step-size adaptation shared across pools, and regions potentially missed by finite updates all limit precision claims. Without an independent budget-matching experiment, budget effects cannot be fully separated from width effects; agreement in direction for 17/17 targets does not eliminate shared mixing bias.</p>
+<p>The maximum between-pool ranges of approximately 0.55 to 0.94 are diagnostic readings, not independent-repetition confidence intervals or upper bounds on systematic error. No significance claims or calibrated error bars are derived from them here; likewise, reasonable acceptance rates and complete files alone cannot guarantee global mixing.</p>
+<p>There is only one saved node at or below 0.30, so no deep-tail contraction slope is fitted. The historical <code>deep_tail_slopes.csv</code> is empty because too few nodes are available; <code>parity_order_by_threshold.csv</code> is empty because targets are named <code>fn_0x</code> rather than <code>parity1</code> through <code>parity4</code>. Neither indicates missing target runs, nor justifies inventing the corresponding analyses.</p>
+<h2 id="7-conclusions-and-scope">7. Conclusions and Scope</h2>
+<p>The completed data support the following: under the specified uniform parameter box, fan-in scaling, 19 selected balanced targets, and common BCE = 0.30, after excluding the two single-bit rules, all 17 targets' estimated mass disadvantages relative to <code>0x0F0F</code> grow across the four two-hidden-layer widths; the single example at W256 also has a larger relative gap for D2 than D1.</p>
+<p>This is evidence of static relative preference under a finite protocol. It does not establish a measure-independent K, relabel loss events as hard cells, guarantee the same result for all rules, architectures, or thresholds, or prove that widening necessarily improves generalization. E38 has not established a causal correspondence between complete-target mass and actual optimization competition on the same finite training set, and therefore cannot directly validate all double descent or claim that static mass equals SGD selection probability.</p></div>
+
+      </article>
+    </main>
+  </div>
+</body>
+</html>

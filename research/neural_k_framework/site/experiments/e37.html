@@ -65,18 +65,17 @@
 <p>在无界参数空间上，普通 Lebesgue 体积通常为无穷，不能直接拿来比较事件。实际测量必须先选一个归一化参考测度：</p>
 <ul>
 <li><strong>Gaussian 测度</strong>：与随机初始化和 pCN 型 SMC 提议相容，远离中心的参数质量指数下降；</li>
-<li><strong>固定范数球内的均匀 Lebesgue 测度</strong>：在 (lVert    heta
-Vert_2le R) 内均匀，排除 Gaussian 密度对位置的直接加权，但引入球边界；</li>
+<li><strong>固定范数球内的均匀 Lebesgue 测度</strong>：在 <span class="math-inline">$\lVert\theta\rVert_2\le R$</span> 内均匀，排除 Gaussian 密度对位置的直接加权，但引入球边界；</li>
 <li><strong>输出参考中心/目标幅度的改变</strong>：不一定改变参数测度，但会改变联合输出事件在该测度下的位置和形状。</li>
 </ul>
 <p>因此，换测度后不能要求 K 的绝对值相等。真正要比较的是：</p>
 <ol>
 <li>简单/复杂规则的排序是否保留；</li>
-<li>随 loss 或输出截面收紧，复杂规则是否仍然更快损失相对质量；</li>
+<li>分别检验固定目标下收紧 loss、固定 MSE 下改变目标间距时，复杂规则的相对质量响应；</li>
 <li>测度改变的是统一平移项，还是改变了规则相关的响应系数。</li>
 </ol>
 <h2 id="2-gaussian-端点实验的纠偏">2. Gaussian 端点实验的纠偏</h2>
-<p>早期把输出端点从 ((-9,+9)) 推到 ((-10,+10)) 或 ((-9,+11)) 时，使用了 Gaussian 参数测度，并观察到很大的 K 增量。那部分增量主要包含“实现目标远离 Gaussian 中心后的先验密度惩罚”，不能直接解释成欧式参数区域真的缩小了多少。</p>
+<p>早期把输出端点从 <span class="math-inline">$(-9,+9)$</span> 推到 <span class="math-inline">$(-10,+10)$</span> 或 <span class="math-inline">$(-9,+11)$</span> 时，使用了 Gaussian 参数测度，并观察到很大的 K 增量。那部分增量主要包含“实现目标远离 Gaussian 中心后的先验密度惩罚”，不能直接解释成欧式参数区域真的缩小了多少。</p>
 <p>因此，早期 Gaussian 端点实验不再作为欧式体积证据。它仍然是一个合法的 Gaussian 参考测度实验，但回答的是另一个问题：<strong>在 Gaussian 初始化语言中，把联合输出事件移到远离先验中心的位置要付出多少概率成本。</strong></p>
 <h2 id="3-固定范数球内的欧式复测">3. 固定范数球内的欧式复测</h2>
 <p>复测固定</p>
@@ -86,6 +85,13 @@ R = 72，球内均匀 Lebesgue 测度
 4 个独立 SMC 副本，每副本 2048 粒子
 共同节点：MSE = 0.01
 </code></pre>
+<p>这里的 <code>(l,h)</code> 是二类 MSE 目标值，不是输出盒的边界。固定阈值时测量的事件为</p>
+<div class="math-display">$$
+A_f(l,h;\epsilon)=\left\{\theta:\frac{1}{8}\sum_{i=1}^{8}
+\bigl(g_\theta(x_i)-[l+(h-l)f_i]\bigr)^2\le\epsilon\right\},
+\qquad V_f=\mu_R(A_f),\quad K_f=-\log_2 V_f.
+$$</div>
+<p>移动目标值一般不产生嵌套事件，因此不同目标间的质量比不是“新增约束”的条件存活率。只有固定目标、收紧 MSE 阈值时，才有相应的嵌套关系。</p>
 <p>在共同节点得到：</p>
 <table>
 <thead>
@@ -123,13 +129,13 @@ R = 72，球内均匀 Lebesgue 测度
 </tr>
 </tbody>
 </table>
-<p>相对于 ((-9,+9)) 的增量为：</p>
+<p>相对于 <span class="math-inline">$(-9,+9)$</span> 的增量为：</p>
 <table>
 <thead>
 <tr>
 <th>规则</th>
-<th style="text-align: right;">对称扩张</th>
-<th style="text-align: right;">正端单侧扩张</th>
+<th style="text-align: right;">对称增大目标间距</th>
+<th style="text-align: right;">仅上移正类目标</th>
 </tr>
 </thead>
 <tbody>
@@ -155,8 +161,8 @@ R = 72，球内均匀 Lebesgue 测度
 </tr>
 </tbody>
 </table>
-<p>这里最重要的事实是：<strong>去掉 Gaussian 位置权重后，复杂规则仍然对输出截面扩张更敏感，且规则排序仍为常数 &lt; copy &lt; 多数 &lt; parity。</strong> 所以“复杂规则收缩更快”不能仅仅归因于它们离 Gaussian 中心更远。</p>
-<p>但这不是严格的欧式体积定律。对称与单侧扩张的差异只有约 0.06–0.18 bit，已经接近副本误差；固定球边界也会影响结果。更准确的表述是有限窗口内的经验响应：</p>
+<p>这里最重要的事实是：<strong>去掉 Gaussian 位置权重后，复杂规则仍然对本窗口内的目标间距增大更敏感，且规则排序仍为常数 &lt; copy &lt; 多数 &lt; parity。</strong> 因此这一非 Gaussian 排序及响应不必依赖 Gaussian 逐点密度因子；但不能把不同目标事件的质量下降解释为同一可行集合的嵌套收缩。</p>
+<p>但这不是严格的欧式体积定律。对称移动与只上移正类目标的差异只有约 0.06–0.18 bit，已经接近副本误差；固定球边界也会影响结果。更准确的表述是有限窗口内的经验响应：</p>
 <div class="math-display">$$
 K_f(l,h)\approx K_f(l_0,h_0)+A_f^-(l-l_0)+A_f^+(h-h_0)+\cdots,
 $$</div>
@@ -166,22 +172,23 @@ $$</div>
 <div class="math-display">$$
 \Gamma=K(l-1,r+1)-K(l-1,r)-K(l,r+1)+K(l,r).
 $$</div>
-<p>若 (Gamma) 接近零，两个端点新增的负对数体积代价在当前窗口内近似可加。</p>
-<p>在固定球 (R=72) 的深尾网格中，MSE 为 0.01、0.003、0.001 时，8 个可计算矩形的最大 (|Gamma|) 分别为 0.919、0.868、0.931 bit，均没有超过保守的副本波动代理。将半径改为 (R=96) 并在 MSE=0.001 做四点复核，常数、copy、多数、parity 的 Gamma 分别为 +0.46、-1.30、-0.46、-0.01 bit，也都没有超过对应的 replica SD 和。</p>
-<p>因此当前证据支持一个有限窗口近似：</p>
+<p>若 <span class="math-inline">$\Gamma$</span> 接近零，分别移动两个目标值所引起的 K 增量在当前窗口内近似可加；这不是新增嵌套约束的代价分解。</p>
+<p>在固定球 <span class="math-inline">$R=72$</span> 的深尾网格中，MSE 为 0.01、0.003、0.001 时，8 个可计算矩形的最大 <span class="math-inline">$|\Gamma|$</span> 分别为 0.919、0.868、0.931 bit，均没有超过保守的副本波动代理。将半径改为 <span class="math-inline">$R=96$</span> 并在 MSE=0.001 做四点复核，按上式统一符号后，常数、copy、多数、parity 的 Gamma 分别为 -0.464、+1.304、+0.458、+0.011 bit，也都没有超过对应的 replica SD 和。符号统一不改变基于绝对值的判决；SD 和仅为诊断代理，不是置信区间。</p>
+<p>结合当前中心对照及局部二阶差分诊断，现有证据与沿所测路径的有限窗口近似相容：</p>
 <div class="math-display">$$
 K_f(d)\approx A_f+\lambda_f d,
 \qquad
-V_f(d)\approx C_f e^{-\lambda_f d},
+V_f(d)\approx C_f 2^{-\lambda_f d}
+=C_f e^{-(\ln 2)\lambda_f d},
 $$</div>
-<p>但实验测到的是“Gamma 与零相容”，还没有高精度测出 Gamma 的真实非零值，不能把它写成严格定律。</p>
+<p>其中 <span class="math-inline">$d=h-l$</span>，固定 MSE 与球半径，K 以 bit 计，<span class="math-inline">$\lambda_f$</span> 的单位为 bit/目标间距单位。但实验测到的是“Gamma 与零相容”，还没有高精度测出 Gamma 的真实非零值；小 Gamma 本身也不能推出只依赖间距的严格定律。</p>
 <h2 id="5-输出中心-幅度和-bias-对照">5. 输出中心、幅度和 bias 对照</h2>
 <p>同一 <code>3 -&gt; 16 -&gt; 1 tanh</code> 网络的输出联合分布实验还比较了 Gaussian 参考语言中的几种干预：</p>
 <ul>
 <li>目标和输出参考中心同步从 0 平移到 10：四条规则曲线逐节点近似重合，排序相关为 1；</li>
 <li>只平移目标而不移动参考测度：K 增加约 124.5–154.1 bit，说明代价来自测度错位，而不是坐标平移本身；</li>
 <li>去掉最后一层 output bias：排序相关仍为 1，隐藏层 bias 可以补偿大部分全局平移路径；</li>
-<li>扫描目标半间距 (ain{0.01,0.1,0.5,1,3})：四条规则排序始终保持，但 (a=0.01) 时不同规则的 K 差异几乎塌缩，幅度主要改变区分度和中前段压缩强度。</li>
+<li>扫描目标半间距 <span class="math-inline">$a\in\{0.01,0.1,0.5,1,3\}$</span>：四条规则排序始终保持，但 <span class="math-inline">$a=0.01$</span> 时不同规则的 K 差异几乎塌缩，幅度主要改变区分度和中前段压缩强度。</li>
 </ul>
 <p>这组结果说明，输出联合分布必须同时记录“整体位置”和“函数间分离程度”。单看某个 loss 的绝对值，无法判断变化来自规则几何、输出编码还是参考测度位置。</p>
 <h2 id="6-为什么-gaussian-测度仍可能和真实训练对应">6. 为什么 Gaussian 测度仍可能和真实训练对应</h2>

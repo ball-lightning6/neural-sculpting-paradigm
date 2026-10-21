@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="E12 沿完整 raw-BCE 范围追踪简单目标函数，并定向调查 AND、n=10中出现的真实反例：为什么结构上更复杂的兼容 shortcut 会在更深 loss 截面超过 AND，以及只改变训练样本覆盖能否因果消除该优势。">
+  <meta name="description" content="E12 沿完整 raw-BCE 范围追踪简单目标函数，并定向调查 AND、n=10中出现的真实反例：为什么结构上更复杂的兼容 shortcut 会在更深 loss 截面超过 AND，以及保持标签比例的补洞对照能否因果消除该优势。另设最小样本替换，同时改变覆盖及正负标签比例（4:6变3:7），不能将其效果单独归因于覆盖。">
   <title>E12：AND shortcut 的静态 loss 几何 · Neural K 研究档案</title>
   <link rel="stylesheet" href="../assets/site.css">
   <script>
@@ -55,7 +55,7 @@
 </ul>
 </div>
 </nav>
-        <div class="sidebar-label experiment-label">全部实验</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>静态硬条件化不足以描述训练函数分布</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-bit 反事实不变性与训练 loss 中心原则</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>函数系综动力学与网络参考语言</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>在 Mingard 2025协议中延长 post-fit 观察</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>固定 NTK 足够时的特征学习</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>连续 loss 条件下的静态函数质量</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>函数 ID 迁移与 matched-loss 静态对照</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>共享中间表示与有限容量压力</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>MNIST 80%隐藏标签噪声长训</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>4-bit raw-BCE 简单/复杂规则竞争</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule30 数据量与训练/验证梯度对齐</span></a><a class="experiment-nav-link active" href="e12.html"><span>E12</span><span>AND shortcut 的静态 loss 几何</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>AND shortcut 的 SGD 运输与单样本干预</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>加权 Rule-bit 的 loss 阶段函数换序</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Mod97 grokking 的完整函数与边缘凝聚</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity 终点偏好、全局入口与局部恢复</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>静态低-loss 质量与 optimizer 运输</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>高函数共识与符号可读性</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>完整真值表规则的 loss-resolved 体积</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Full-rule、固定 D 与 hard-margin 测度闭环</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement 控制与共识复杂度前沿</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>逐样本自由能与信息不变量</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>完整目标体积前瞻预测数据相变</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>深尾 Neural K-profile 与排序交叉</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST 样本复杂度与静态体积分支预测</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>MNIST平衡无标签划分的静态体积</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Grokking前后的未见函数Agreement</span></a><a class="experiment-nav-link" href="e28.html"><span>E28</span><span>MNIST 50k整网HMC与同协议Adam</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Dead bit的loss-resolved静态预测</span></a><a class="experiment-nav-link" href="e30.html"><span>E30</span><span>Weight decay重塑完整静态函数地形</span></a></nav><div class="sidebar-label experiment-label">提交后增量实验</div><nav class="experiment-nav"><a class="experiment-nav-link" href="../experiments/e31.html"><span>E31</span><span>Loss 与幅度对齐</span></a><a class="experiment-nav-link" href="../experiments/e32.html"><span>E32</span><span>随机记忆缩放</span></a><a class="experiment-nav-link" href="../experiments/e33.html"><span>E33</span><span>跨架构联合输出体积</span></a><a class="experiment-nav-link" href="../experiments/e34.html"><span>E34</span><span>条件规则决斗</span></a><a class="experiment-nav-link" href="../experiments/e35.html"><span>E35</span><span>Mod97 冻结函数决斗</span></a><a class="experiment-nav-link" href="../experiments/e36.html"><span>E36</span><span>Peleg/G&amp;C 独立验证</span></a><a class="experiment-nav-link" href="../experiments/e37.html"><span>E37</span><span>测度鲁棒性与 Gaussian 对应</span></a></nav>
+        <div class="sidebar-label experiment-label">全部实验</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>静态硬条件化不足以描述训练函数分布</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-bit 反事实不变性与训练 loss 中心原则</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>函数系综动力学与网络参考语言</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>在 Mingard 2025协议中延长 post-fit 观察</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>固定 NTK 足够时的特征学习</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>连续 loss 条件下的静态函数质量</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>函数 ID 迁移与 matched-loss 静态对照</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>共享中间表示与有限容量压力</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>MNIST 80%隐藏标签噪声长训</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>4-bit raw-BCE 简单/复杂规则竞争</span></a><a class="experiment-nav-link" href="e11.html"><span>E11</span><span>Rule30 数据量与训练/验证梯度对齐</span></a><a class="experiment-nav-link active" href="e12.html"><span>E12</span><span>AND shortcut 的静态 loss 几何</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>AND shortcut 的 SGD 运输与单样本干预</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>加权 Rule-bit 的 loss 阶段函数换序</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Mod97 grokking 的完整函数与边缘凝聚</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity 终点偏好、全局入口与局部恢复</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>静态低-loss 质量与 optimizer 运输</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>高函数共识与符号可读性</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>完整真值表规则的 loss-resolved 体积</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Full-rule、固定 D 与 hard-margin 测度闭环</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement 控制与共识复杂度前沿</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>逐样本自由能与信息不变量</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>完整目标体积前瞻预测数据相变</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>深尾 Neural K-profile 与排序交叉</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST 样本复杂度与静态体积分支预测</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>MNIST平衡无标签划分的静态体积</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Grokking前后的未见函数Agreement</span></a><a class="experiment-nav-link" href="e28.html"><span>E28</span><span>MNIST 50k likelihood加权后验HMC与同协议Adam</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Dead bit的loss-resolved静态预测</span></a><a class="experiment-nav-link" href="e30.html"><span>E30</span><span>Weight decay重塑完整静态函数地形</span></a></nav><div class="sidebar-label experiment-label">提交后增量实验</div><nav class="experiment-nav"><a class="experiment-nav-link" href="../experiments/e31.html"><span>E31</span><span>Loss 与幅度对齐</span></a><a class="experiment-nav-link" href="../experiments/e32.html"><span>E32</span><span>随机记忆缩放</span></a><a class="experiment-nav-link" href="../experiments/e33.html"><span>E33</span><span>跨架构联合输出体积</span></a><a class="experiment-nav-link" href="../experiments/e34.html"><span>E34</span><span>条件规则决斗</span></a><a class="experiment-nav-link" href="../experiments/e35.html"><span>E35</span><span>Mod97 冻结函数决斗</span></a><a class="experiment-nav-link" href="../experiments/e36.html"><span>E36</span><span>Peleg/G&amp;C 独立验证</span></a><a class="experiment-nav-link" href="../experiments/e37.html"><span>E37</span><span>测度鲁棒性与 Gaussian 对应</span></a><a class="experiment-nav-link" href="../experiments/e38.html"><span>E38</span><span>宽深扫描与相对目标质量</span></a></nav>
       </div>
     </aside>
 
@@ -64,11 +64,11 @@
         <header class="article-header">
           <div class="eyebrow">E12 · 实验详情</div>
           <h1>E12：AND shortcut 的静态 loss 几何</h1>
-          <p class="article-description">E12 沿完整 raw-BCE 范围追踪简单目标函数，并定向调查 AND、n=10中出现的真实反例：为什么结构上更复杂的兼容 shortcut 会在更深 loss 截面超过 AND，以及只改变训练样本覆盖能否因果消除该优势。</p>
+          <p class="article-description">E12 沿完整 raw-BCE 范围追踪简单目标函数，并定向调查 AND、n=10中出现的真实反例：为什么结构上更复杂的兼容 shortcut 会在更深 loss 截面超过 AND，以及保持标签比例的补洞对照能否因果消除该优势。另设最小样本替换，同时改变覆盖及正负标签比例（4:6变3:7），不能将其效果单独归因于覆盖。</p>
         </header>
         <div class="article-body"><div class="source-bar"><span>复现脚本</span><div><a href="../../experiments/experiment_12_and_shortcut_static_geometry/analyze_and_shortcut_loss_geometry.py">analyze_and_shortcut_loss_geometry.py</a><a href="../../experiments/experiment_12_and_shortcut_static_geometry/experiment_4bit_simple_rule_loss_sweep.py">experiment_4bit_simple_rule_loss_sweep.py</a></div></div><h2 id="overview">实验概览</h2>
 <h2 id="目的">目的</h2>
-<p>E12 沿完整 raw-BCE 范围追踪简单目标函数，并定向调查 AND、n=10中出现的真实反例：为什么结构上更复杂的兼容 shortcut 会在更深 loss 截面超过 AND，以及只改变训练样本覆盖能否因果消除该优势。</p>
+<p>E12 沿完整 raw-BCE 范围追踪简单目标函数，并定向调查 AND、n=10中出现的真实反例：为什么结构上更复杂的兼容 shortcut 会在更深 loss 截面超过 AND，以及保持标签比例的补洞对照能否因果消除该优势。另设最小样本替换，同时改变覆盖及正负标签比例（4:6变3:7），不能将其效果单独归因于覆盖。</p>
 <h2 id="文件">文件</h2>
 <ul>
 <li><a href="#motivation">实验动机与预注册判据</a></li>
@@ -80,7 +80,7 @@
 <pre><code class="language-bash">python experiment_4bit_simple_rule_loss_sweep.py
 python analyze_and_shortcut_loss_geometry.py
 </code></pre>
-<p>发布副本的第二步默认同时分析原始缺口、三种补洞、镜像缺口和最小平衡干预。</p>
+<p>发布副本的第二步默认同时分析原始缺口、三种补洞、镜像缺口和最小平衡干预；这里“平衡”指输入模式覆盖，不是标签比例不变。</p>
 <h2 id="冻结来源">冻结来源</h2>
 <table>
 <thead>
@@ -132,7 +132,7 @@ python analyze_and_shortcut_loss_geometry.py
 <p>此前实验暴露了“简单函数是谁”可能依赖训练集与网络语言。8月20日冻结了两种可证伪策略：</p>
 <ol>
 <li>选择 copy、NOT、AND、OR 等极明显简单规则，并提供10--14个训练样本；</li>
-<li>构造 simple 及其加入明确例外后的 complex 函数对，使二者在训练集上一致，complex 在表示层级上严格更难。</li>
+<li>构造 simple 及其加入明确例外后的 complex 函数对，使二者在训练集上一致，并按指定外部符号代理和线性可分性区分 simple/complex，而不把这些指标视为多层网络 Neural K 真值。</li>
 </ol>
 <p>第一种用于全 loss 扫描，第二种已由 E10 检验。E12 追踪第一种策略中出现的 AND 反例。</p>
 <h2 id="2-全-loss-扫描">2. 全 loss 扫描</h2>
@@ -145,13 +145,13 @@ python analyze_and_shortcut_loss_geometry.py
 </ul>
 <p>XOR 先验只命中17次，低于预注册50次门槛，不参与正式裁决。</p>
 <h2 id="3-and-缺口干预">3. AND 缺口干预</h2>
-<p>原始 AND、n=10包含全部4个正例和6个负例，但遗漏若干 off-diagonal 负例，允许依赖<code>x4</code>的 F500/F550 等 shortcut。定向静态分析固定架构、样本数和标签比例，只改变负例位置：</p>
+<p>原始 AND、n=10包含全部4个正例和6个负例，但遗漏若干 off-diagonal 负例，允许依赖<code>x4</code>的 F500/F550 等 shortcut。定向静态分析均固定架构和样本数；原始缺口、补洞与镜像对照保持正负标签比例4:6，只改变负例位置，但最小替换不保持标签比例：</p>
 <ul>
 <li>原始逻辑缺口；</li>
 <li>分别封闭两条 shortcut 分支；</li>
 <li>同时封闭两边；</li>
 <li><code>x4=1</code>镜像缺口；</li>
-<li>最小平衡干预：只把<code>1101 -&gt; 1</code>替换成<code>1000 -&gt; 0</code>。</li>
+<li>最小平衡干预：只把<code>1101 -&gt; 1</code>替换成<code>1000 -&gt; 0</code>，正负标签比例由4:6变为3:7；“平衡”指输入模式覆盖，效果不能单独归因于覆盖变化。</li>
 </ul>
 <p>主要判据为 hard-exact cohort 内随 raw BCE 降低的函数概率、赔率、平均未见例外数、函数熵和每个函数在训练样本上的 signed margin。</p>
 <h2 id="4-解释边界">4. 解释边界</h2>
@@ -217,9 +217,9 @@ python analyze_and_shortcut_loss_geometry.py
 </table>
 <p>F550 和 F500 在外部逻辑代理上都比 AND 复杂，却能利用训练集未覆盖的<code>x4</code>模式，在已见样本上形成更大 margin。平均 signed margin 为 AND 0.378、F500 0.404、F550 0.444。lower raw BCE 因而系统偏向样本特异 shortcut。</p>
 <h2 id="3-补洞因果改变静态赢家">3. 补洞因果改变静态赢家</h2>
-<p>只补某一边会排除旧 shortcut，却可能暴露新的<code>copy x2</code>解释；同时覆盖四个关键 off-diagonal 负例后，AND 从 hard-exact 40.2%升至最低10%的49.3%、最低1%的54.9%。六组随机负例子集中，AND 五组富集、一组下降，证明决定因素是具体约束覆盖而非样本数或标签比例。</p>
+<p>只补某一边会排除旧 shortcut，却可能暴露新的<code>copy x2</code>解释；同时覆盖四个关键 off-diagonal 负例后，AND 从 hard-exact 40.2%升至最低10%的49.3%、最低1%的54.9%。六组随机负例子集中，AND 五组富集、一组下降。这些保持样本数和正负标签比例4:6的对照表明，具体约束覆盖会改变静态选择，不能仅由样本数或标签比例解释。</p>
 <h2 id="4-最小平衡干预显示两阶段静态换序">4. 最小平衡干预显示两阶段静态换序</h2>
-<p>只替换一个样本后，四种<code>(x1,x2)</code>模式覆盖由<code>3/2/1/4</code>变为<code>3/2/2/3</code>。在76,477个 hard-exact prior 样本中：</p>
+<p>只把正例<code>1101 -&gt; 1</code>替换为负例<code>1000 -&gt; 0</code>后，四种<code>(x1,x2)</code>模式覆盖由<code>3/2/1/4</code>变为<code>3/2/2/3</code>，正负标签比例同时由4:6变为3:7。因此该最小替换的效果不能单独归因于覆盖。在76,477个 hard-exact prior 样本中：</p>
 <ul>
 <li>AND：16.65% -&gt; 最低0.2%的28.10%；</li>
 <li>平均未见例外：1.733 -&gt; 1.242；</li>
@@ -232,7 +232,7 @@ python analyze_and_shortcut_loss_geometry.py
 <li>lower raw BCE 通常强烈富集可复用简单规则；</li>
 <li>在固定 hard-compatible 集合内，该倾向不是无条件定律；</li>
 <li>训练集的具体逻辑缺口可以让结构更复杂但 margin 更优的 shortcut 在某段 loss 区间占优；</li>
-<li>只改变一个有判别力样本即可重塑完整静态函数分布；</li>
+<li>只替换一个有判别力样本即可重塑完整静态函数分布，但本次替换同时改变覆盖与标签比例，未单独隔离覆盖效应；</li>
 <li>优势函数和复杂度排序应被视为 loss-resolved profile，而非固定标量。</li>
 </ol>
 <p>这不是核心理论失败，而是将“简单函数”从全程固定标签修正为必须观察完整 loss 尺度。后来的 Neural K-profile 和深尾交叉正是对此的正式化。</p></div>

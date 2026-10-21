@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="E11 检验：增加同一规则的训练样本，是否只改变最终泛化终点，还是会在相同 raw BCE 水平下系统性改变训练梯度与独立验证梯度的方向关系。">
+  <meta name="description" content="E11 检验：增加同一规则的训练样本，是否只改变最终泛化终点，还是会在近似匹配的 raw BCE 水平下系统性改变原始训练梯度与独立验证梯度的方向关系。冻结实现按 log-loss 距离选最近 checkpoint，允许最多1.35倍 loss 差，并不插值。">
   <title>E11：Rule30 数据量与训练/验证梯度对齐 · Neural K 研究档案</title>
   <link rel="stylesheet" href="../assets/site.css">
   <script>
@@ -49,13 +49,13 @@
 <li><a href="#5-预注册预测与边界">5. 预注册预测与边界</a></li>
 <li><a href="#results">结果、解读与边界</a></li>
 <li><a href="#1-完整性">1. 完整性</a></li>
-<li><a href="#2-相同-raw-bce-下的数据量次序">2. 相同 raw BCE 下的数据量次序</a></li>
+<li><a href="#2-近似匹配-raw-bce-下的数据量次序">2. 近似匹配 raw BCE 下的数据量次序</a></li>
 <li><a href="#3-从过拟合到同步泛化的连续谱">3. 从过拟合到同步泛化的连续谱</a></li>
 <li><a href="#4-阶段裁决">4. 阶段裁决</a></li>
 </ul>
 </div>
 </nav>
-        <div class="sidebar-label experiment-label">全部实验</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>静态硬条件化不足以描述训练函数分布</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-bit 反事实不变性与训练 loss 中心原则</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>函数系综动力学与网络参考语言</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>在 Mingard 2025协议中延长 post-fit 观察</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>固定 NTK 足够时的特征学习</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>连续 loss 条件下的静态函数质量</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>函数 ID 迁移与 matched-loss 静态对照</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>共享中间表示与有限容量压力</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>MNIST 80%隐藏标签噪声长训</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>4-bit raw-BCE 简单/复杂规则竞争</span></a><a class="experiment-nav-link active" href="e11.html"><span>E11</span><span>Rule30 数据量与训练/验证梯度对齐</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND shortcut 的静态 loss 几何</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>AND shortcut 的 SGD 运输与单样本干预</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>加权 Rule-bit 的 loss 阶段函数换序</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Mod97 grokking 的完整函数与边缘凝聚</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity 终点偏好、全局入口与局部恢复</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>静态低-loss 质量与 optimizer 运输</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>高函数共识与符号可读性</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>完整真值表规则的 loss-resolved 体积</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Full-rule、固定 D 与 hard-margin 测度闭环</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement 控制与共识复杂度前沿</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>逐样本自由能与信息不变量</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>完整目标体积前瞻预测数据相变</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>深尾 Neural K-profile 与排序交叉</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST 样本复杂度与静态体积分支预测</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>MNIST平衡无标签划分的静态体积</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Grokking前后的未见函数Agreement</span></a><a class="experiment-nav-link" href="e28.html"><span>E28</span><span>MNIST 50k整网HMC与同协议Adam</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Dead bit的loss-resolved静态预测</span></a><a class="experiment-nav-link" href="e30.html"><span>E30</span><span>Weight decay重塑完整静态函数地形</span></a></nav><div class="sidebar-label experiment-label">提交后增量实验</div><nav class="experiment-nav"><a class="experiment-nav-link" href="../experiments/e31.html"><span>E31</span><span>Loss 与幅度对齐</span></a><a class="experiment-nav-link" href="../experiments/e32.html"><span>E32</span><span>随机记忆缩放</span></a><a class="experiment-nav-link" href="../experiments/e33.html"><span>E33</span><span>跨架构联合输出体积</span></a><a class="experiment-nav-link" href="../experiments/e34.html"><span>E34</span><span>条件规则决斗</span></a><a class="experiment-nav-link" href="../experiments/e35.html"><span>E35</span><span>Mod97 冻结函数决斗</span></a><a class="experiment-nav-link" href="../experiments/e36.html"><span>E36</span><span>Peleg/G&amp;C 独立验证</span></a><a class="experiment-nav-link" href="../experiments/e37.html"><span>E37</span><span>测度鲁棒性与 Gaussian 对应</span></a></nav>
+        <div class="sidebar-label experiment-label">全部实验</div><nav class="experiment-nav"><a class="experiment-nav-link" href="e01.html"><span>E01</span><span>静态硬条件化不足以描述训练函数分布</span></a><a class="experiment-nav-link" href="e02.html"><span>E02</span><span>Rule-bit 反事实不变性与训练 loss 中心原则</span></a><a class="experiment-nav-link" href="e03.html"><span>E03</span><span>函数系综动力学与网络参考语言</span></a><a class="experiment-nav-link" href="e04.html"><span>E04</span><span>在 Mingard 2025协议中延长 post-fit 观察</span></a><a class="experiment-nav-link" href="e05.html"><span>E05</span><span>固定 NTK 足够时的特征学习</span></a><a class="experiment-nav-link" href="e06.html"><span>E06</span><span>连续 loss 条件下的静态函数质量</span></a><a class="experiment-nav-link" href="e07.html"><span>E07</span><span>函数 ID 迁移与 matched-loss 静态对照</span></a><a class="experiment-nav-link" href="e08.html"><span>E08</span><span>共享中间表示与有限容量压力</span></a><a class="experiment-nav-link" href="e09.html"><span>E09</span><span>MNIST 80%隐藏标签噪声长训</span></a><a class="experiment-nav-link" href="e10.html"><span>E10</span><span>4-bit raw-BCE 简单/复杂规则竞争</span></a><a class="experiment-nav-link active" href="e11.html"><span>E11</span><span>Rule30 数据量与训练/验证梯度对齐</span></a><a class="experiment-nav-link" href="e12.html"><span>E12</span><span>AND shortcut 的静态 loss 几何</span></a><a class="experiment-nav-link" href="e13.html"><span>E13</span><span>AND shortcut 的 SGD 运输与单样本干预</span></a><a class="experiment-nav-link" href="e14.html"><span>E14</span><span>加权 Rule-bit 的 loss 阶段函数换序</span></a><a class="experiment-nav-link" href="e15.html"><span>E15</span><span>Mod97 grokking 的完整函数与边缘凝聚</span></a><a class="experiment-nav-link" href="e16.html"><span>E16</span><span>Parity 终点偏好、全局入口与局部恢复</span></a><a class="experiment-nav-link" href="e17.html"><span>E17</span><span>静态低-loss 质量与 optimizer 运输</span></a><a class="experiment-nav-link" href="e18.html"><span>E18</span><span>高函数共识与符号可读性</span></a><a class="experiment-nav-link" href="e19.html"><span>E19</span><span>完整真值表规则的 loss-resolved 体积</span></a><a class="experiment-nav-link" href="e20.html"><span>E20</span><span>Full-rule、固定 D 与 hard-margin 测度闭环</span></a><a class="experiment-nav-link" href="e21.html"><span>E21</span><span>Agreement 控制与共识复杂度前沿</span></a><a class="experiment-nav-link" href="e22.html"><span>E22</span><span>逐样本自由能与信息不变量</span></a><a class="experiment-nav-link" href="e23.html"><span>E23</span><span>完整目标体积前瞻预测数据相变</span></a><a class="experiment-nav-link" href="e24.html"><span>E24</span><span>深尾 Neural K-profile 与排序交叉</span></a><a class="experiment-nav-link" href="e25.html"><span>E25</span><span>MNIST 样本复杂度与静态体积分支预测</span></a><a class="experiment-nav-link" href="e26.html"><span>E26</span><span>MNIST平衡无标签划分的静态体积</span></a><a class="experiment-nav-link" href="e27.html"><span>E27</span><span>Grokking前后的未见函数Agreement</span></a><a class="experiment-nav-link" href="e28.html"><span>E28</span><span>MNIST 50k likelihood加权后验HMC与同协议Adam</span></a><a class="experiment-nav-link" href="e29.html"><span>E29</span><span>Dead bit的loss-resolved静态预测</span></a><a class="experiment-nav-link" href="e30.html"><span>E30</span><span>Weight decay重塑完整静态函数地形</span></a></nav><div class="sidebar-label experiment-label">提交后增量实验</div><nav class="experiment-nav"><a class="experiment-nav-link" href="../experiments/e31.html"><span>E31</span><span>Loss 与幅度对齐</span></a><a class="experiment-nav-link" href="../experiments/e32.html"><span>E32</span><span>随机记忆缩放</span></a><a class="experiment-nav-link" href="../experiments/e33.html"><span>E33</span><span>跨架构联合输出体积</span></a><a class="experiment-nav-link" href="../experiments/e34.html"><span>E34</span><span>条件规则决斗</span></a><a class="experiment-nav-link" href="../experiments/e35.html"><span>E35</span><span>Mod97 冻结函数决斗</span></a><a class="experiment-nav-link" href="../experiments/e36.html"><span>E36</span><span>Peleg/G&amp;C 独立验证</span></a><a class="experiment-nav-link" href="../experiments/e37.html"><span>E37</span><span>测度鲁棒性与 Gaussian 对应</span></a><a class="experiment-nav-link" href="../experiments/e38.html"><span>E38</span><span>宽深扫描与相对目标质量</span></a></nav>
       </div>
     </aside>
 
@@ -64,12 +64,12 @@
         <header class="article-header">
           <div class="eyebrow">E11 · 实验详情</div>
           <h1>E11：Rule30 数据量与训练/验证梯度对齐</h1>
-          <p class="article-description">E11 检验：增加同一规则的训练样本，是否只改变最终泛化终点，还是会在相同 raw BCE 水平下系统性改变训练梯度与独立验证梯度的方向关系。</p>
+          <p class="article-description">E11 检验：增加同一规则的训练样本，是否只改变最终泛化终点，还是会在近似匹配的 raw BCE 水平下系统性改变原始训练梯度与独立验证梯度的方向关系。冻结实现按 log-loss 距离选最近 checkpoint，允许最多1.35倍 loss 差，并不插值。</p>
         </header>
         <div class="article-body"><div class="source-bar"><span>复现脚本</span><div><a href="../../experiments/experiment_11_rule30_gradient_alignment/experiment_rule30_train_val_gradient_alignment.py">experiment_rule30_train_val_gradient_alignment.py</a></div></div><h2 id="overview">实验概览</h2>
 <h2 id="目的">目的</h2>
-<p>E11 检验：增加同一规则的训练样本，是否只改变最终泛化终点，还是会在相同 raw BCE 水平下系统性改变训练梯度与独立验证梯度的方向关系。</p>
-<p>它为“有限训练集只支持规则对齐下降到有限 loss 深度；数据越多，该通道延伸得越深”提供局部动力学证据。</p>
+<p>E11 检验：增加同一规则的训练样本，是否只改变最终泛化终点，还是会在近似匹配的 raw BCE 水平下系统性改变原始训练梯度与独立验证梯度的方向关系。冻结实现按 log-loss 距离选最近 checkpoint，允许最多1.35倍 loss 差，并不插值。</p>
+<p>它为“有限训练集只支持规则对齐下降到有限 loss 深度；数据越多，该通道延伸得越深”提供局部梯度几何证据；沿负原始训练梯度的小步一阶预测不等于实际 Adam 更新效果。</p>
 <h2 id="文件">文件</h2>
 <ul>
 <li><a href="#motivation">实验动机与预注册判据</a></li>
@@ -101,13 +101,13 @@
 <h2 id="motivation">为什么做、怎样判决</h2>
 <h2 id="1-问题">1. 问题</h2>
 <p>在数据充分的合成任务中，train 与 validation loss 常从训练初期同步下降。一个过强解释是“高 loss 区域已几乎全是正确函数”；更局部、可测的解释是：数据越多，训练梯度越接近总体规则梯度，训练集特有方向在样本平均中越充分抵消。</p>
-<p>一步小学习率更新满足：</p>
+<p>沿负原始 full-train 梯度的一步小学习率 SGD 更新满足一阶近似：</p>
 <div class="math-display">$$
 \Delta L_{val}
 \approx
 -\eta\nabla L_{val}\cdot\nabla L_{train}.
 $$</div>
-<p>因此 train/validation 梯度余弦直接判断降低训练 loss 的局部方向是否也降低 validation loss。</p>
+<p>因此 train/validation 梯度余弦给出沿负原始训练梯度小步更新时 validation loss 变化的一阶预测。实际 Adam 的动量和自适应预条件会改变更新方向，不能把该余弦直接解释为实际 Adam 步的 validation loss 变化；后者需另测。</p>
 <h2 id="2-正式配置">2. 正式配置</h2>
 <ul>
 <li>任务：30-bit 循环边界 Rule30 单步更新，输出30 bit；</li>
@@ -127,11 +127,11 @@ $$</div>
 </ul>
 <p>第三项只是有限 validation 采样噪声的参考，不是严格数学上限。</p>
 <h2 id="4-关键控制-matched-raw-bce">4. 关键控制：matched raw BCE</h2>
-<p>不同样本量到达同一 step 时 loss 不同，不能直接比较。实验在每个 seed 的<code>log(raw BCE)</code>轨迹上插值，在：</p>
+<p>不同样本量到达同一 step 时 loss 不同，不能直接比较。冻结实现对每个样本量和 seed，在已保存的诊断 checkpoint 中按<code>log(raw BCE)</code>距离选择最接近下列目标 loss 的点，而不做插值：</p>
 <pre><code class="language-text">0.68, 0.6, 0.5, 0.4, 0.3, 0.2,
 0.1, 0.05, 0.02, 0.01, 0.003
 </code></pre>
-<p>逐层比较梯度余弦和 validation-train BCE gap。</p>
+<p>仅保留<code>max(actual_loss / target_loss, target_loss / actual_loss) &lt;= 1.35</code>的匹配点，再逐层比较梯度余弦和 validation-train BCE gap。这是带容差的近邻比较，不是精确同 loss 比较；归档<code>fixed_raw_bce_comparison.csv</code>保留每个点的实际 loss 和实际/目标比值。</p>
 <h2 id="5-预注册预测与边界">5. 预注册预测与边界</h2>
 <p>若数据量重塑的不只是终点，则在相同 raw BCE 下，训练样本越多：</p>
 <ol>
@@ -140,7 +140,7 @@ $$</div>
 <li>该顺序应跨 seed 保留；</li>
 <li>低数据条件可在深 loss 转为负余弦，高数据仍保持正向。</li>
 </ol>
-<p>该实验只使用一个嵌套数据排列和一个任务，不建立跨任务普适定律；梯度范数接近数值零时余弦失去意义，主分析限制在 BCE 不低于0.003的区域。</p>
+<p>该实验只使用一个嵌套数据排列和一个任务，不建立跨任务普适定律；梯度范数接近数值零时余弦失去意义，主分析采用不低于0.003的目标 BCE 层级，实际 checkpoint loss 受上述容差约束。</p>
 <h2 id="results">结果、解读与边界</h2>
 <h2 id="1-完整性">1. 完整性</h2>
 <ul>
@@ -148,14 +148,15 @@ $$</div>
 <li>全部运行20,000步，总耗时313.3秒；</li>
 <li>相同 seed 跨样本量具有完全相同初始化；</li>
 <li>训练集严格嵌套，validation 固定独立；</li>
-<li>matched-loss 使用逐 seed 对数 loss 插值，而非最近 checkpoint 代替。</li>
+<li>matched-loss 对每个样本量和 seed 按 log-loss 距离选择最近 checkpoint，仅保留<code>max(actual_loss / target_loss, target_loss / actual_loss) &lt;= 1.35</code>的点；历史实现未做插值。</li>
 </ul>
-<h2 id="2-相同-raw-bce-下的数据量次序">2. 相同 raw BCE 下的数据量次序</h2>
-<p>在 raw BCE 0.3至0.003的每个截面，五个 seed 分别都呈现训练样本量增加、梯度余弦严格上升的完整次序。以 BCE 0.1为例：</p>
+<h2 id="2-近似匹配-raw-bce-下的数据量次序">2. 近似匹配 raw BCE 下的数据量次序</h2>
+<p>归档<code>fixed_raw_bce_comparison.csv</code>显示：在目标 raw BCE 0.2、0.1、0.05、0.02、0.01和0.003的近邻匹配中，五个 seed 分别都呈现训练样本量增加、梯度余弦严格上升的完整次序。目标0.3只有4/5 seeds 严格保持该次序；seed 4在<code>n=256/512</code>的实际 BCE 为0.33647/0.26956，余弦为0.178/0.167。这是上述容差内的比较，不是精确同 loss 次序。以目标 BCE 0.1为例，余弦和 gap 为五个 seeds 的均值，实际 train BCE 列给出均值及范围：</p>
 <table>
 <thead>
 <tr>
 <th style="text-align: right;">n</th>
+<th style="text-align: right;">实际 train BCE，均值 [最小, 最大]</th>
 <th style="text-align: right;">train/val梯度余弦</th>
 <th style="text-align: right;">validation BCE - train BCE</th>
 </tr>
@@ -163,52 +164,60 @@ $$</div>
 <tbody>
 <tr>
 <td style="text-align: right;">256</td>
+<td style="text-align: right;">0.09056 [0.08318, 0.10133]</td>
 <td style="text-align: right;">-0.167</td>
 <td style="text-align: right;">0.482</td>
 </tr>
 <tr>
 <td style="text-align: right;">512</td>
+<td style="text-align: right;">0.09255 [0.08195, 0.10705]</td>
 <td style="text-align: right;">-0.018</td>
 <td style="text-align: right;">0.346</td>
 </tr>
 <tr>
 <td style="text-align: right;">768</td>
+<td style="text-align: right;">0.10144 [0.09380, 0.10908]</td>
 <td style="text-align: right;">0.245</td>
 <td style="text-align: right;">0.248</td>
 </tr>
 <tr>
 <td style="text-align: right;">1024</td>
+<td style="text-align: right;">0.08977 [0.08397, 0.09649]</td>
 <td style="text-align: right;">0.446</td>
 <td style="text-align: right;">0.173</td>
 </tr>
 <tr>
 <td style="text-align: right;">1280</td>
+<td style="text-align: right;">0.08959 [0.07922, 0.10595]</td>
 <td style="text-align: right;">0.564</td>
 <td style="text-align: right;">0.121</td>
 </tr>
 <tr>
 <td style="text-align: right;">1536</td>
+<td style="text-align: right;">0.09139 [0.08361, 0.10105]</td>
 <td style="text-align: right;">0.671</td>
 <td style="text-align: right;">0.091</td>
 </tr>
 <tr>
 <td style="text-align: right;">2048</td>
+<td style="text-align: right;">0.09092 [0.07892, 0.10456]</td>
 <td style="text-align: right;">0.803</td>
 <td style="text-align: right;">0.055</td>
 </tr>
 <tr>
 <td style="text-align: right;">4096</td>
+<td style="text-align: right;">0.09132 [0.07900, 0.10984]</td>
 <td style="text-align: right;">0.927</td>
 <td style="text-align: right;">0.019</td>
 </tr>
 </tbody>
 </table>
-<p>在 BCE 0.01时：</p>
+<p>在目标 BCE 0.01时：</p>
 <ul>
-<li><code>n=256</code>：余弦<code>-0.237</code>，gap 约0.693；</li>
-<li><code>n=4096</code>：余弦<code>0.950</code>，gap 约0.00137。</li>
+<li><code>n=256</code>：实际 train BCE 均值0.00977，范围 [0.00907, 0.01086]；余弦<code>-0.237</code>，gap 约0.693；</li>
+<li><code>n=4096</code>：实际 train BCE 均值0.00949，范围 [0.00858, 0.01074]；余弦<code>0.950</code>，gap 约0.00137。</li>
 </ul>
-<p>因此低数据条件继续降低训练 loss 时，局部方向已经主动提高 validation loss；高数据条件在同等深 loss 处仍几乎沿总体规则方向下降。</p>
+<p>因此，低数据条件下观测到的负余弦表示：在对应诊断点沿负原始 full-train 梯度的小步更新会在一阶近似下提高 validation loss；不能由组均值为负推断每个 seed 均为负。高数据条件在近似匹配的深 loss 处，原始训练梯度仍与独立验证梯度高度对齐。这不是对实际 Adam 更新方向或实际 validation loss 增量的测量，后者需另测。</p>
 <h2 id="3-从过拟合到同步泛化的连续谱">3. 从过拟合到同步泛化的连续谱</h2>
 <ul>
 <li><code>n=256/512</code>在31--50步完全拟合训练集，最终 validation bit accuracy 约74.84%/92.96%；</li>
@@ -220,13 +229,14 @@ $$</div>
 <h2 id="4-阶段裁决">4. 阶段裁决</h2>
 <p>E11 支持：</p>
 <blockquote>
-<p>增加同一规则的训练样本，不只改变最终泛化结果，也沿 optimizer 实际轨迹系统性改善给定 raw BCE 截面的训练/validation 梯度对齐，使规则一致的下降通道延伸到更深 loss。</p>
+<p>增加同一规则的训练样本，不只改变最终泛化结果，也在 optimizer 实际轨迹上近似匹配 raw BCE 的诊断点系统性改善原始训练/validation 梯度对齐，支持沿负原始梯度的规则一致下降方向延伸到更深 loss。</p>
 </blockquote>
 <p>它为 train/validation 同步下降、平滑延迟泛化和普通过拟合提供同一局部几何解释，也支持“任何有限 D 通常只支持规则对齐到有限 loss 深度”的修正图景。</p>
 <p>不能声称：</p>
 <ul>
 <li>高 loss 参数空间已经由正确 hard function 充满；</li>
 <li>梯度余弦直接等于函数体积；</li>
+<li>原始梯度余弦直接给出实际 Adam 更新的 validation loss 变化；</li>
 <li>validation-half 余弦是严格上界；</li>
 <li>单个 Rule30 数据排列足以建立跨任务定律；</li>
 <li>数值接近零梯度时的最终余弦仍有意义。</li>

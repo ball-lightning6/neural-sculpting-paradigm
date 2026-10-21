@@ -44,7 +44,7 @@ SGD 吸引子 ID 48/243的总质量：
 - hard-exact：21.4%；
 - raw 中间低-loss 区最高约29.0%；
 - raw 最低0.1%又降至23.0%；
-- normalized 深尾消失并向其他函数偏移。
+- normalized 最低0.1%中仍有48/366，约13.11%；相对 hard-exact 失去优势，质量向其他函数偏移，但并未消失。
 
 函数熵也没有持续下降：hard-exact 为3.715 bit，raw 最低0.1%为3.724 bit，normalized 最低0.1%为3.959 bit。真实 SGD 一步后却把 ID 48/243推至约77.2%。
 

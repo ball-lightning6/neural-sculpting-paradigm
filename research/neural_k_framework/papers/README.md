@@ -2,7 +2,9 @@
 
 [中文 Markdown](compression_is_intelligence_zh.md) | [English Markdown](compression_is_intelligence_en.md) | [English PDF on Zenodo](https://doi.org/10.5281/zenodo.22255552)
 
-本地修订版 PDF（Version 1.1，2026-09-20；尚未替换 Zenodo 上的 Version 1.0）：[English PDF](compression_is_intelligence_v1.1_en.pdf)
+当前本地修订版 PDF（Version 1.2，更新于2026-10-21）：[English PDF](compression_is_intelligence_v1.2_en.pdf)。修订统一了full-target与fixed-D的桥接条件、收窄边界、事件信息成本及英文对应；另已明确E28是likelihood加权后验对照，不是硬阈值体积或收缩律的直接证据。本次未替换远端Zenodo归档。
+
+历史本地版本保留：[Version 1.1，2026-09-20](compression_is_intelligence_v1.1_en.pdf)。
 
 - **English title:** *Compression Is Intelligence: Rethinking Neural Network Generalization*
 - **Author:** Chao Zheng, Independent Researcher

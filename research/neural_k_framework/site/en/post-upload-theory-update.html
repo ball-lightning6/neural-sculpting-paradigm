@@ -90,28 +90,35 @@ $$</div>
 </blockquote>
 <p>For the same <code>D</code> and nested loss sublevel sets, lowering <code>epsilon</code> can only shrink the feasible set, so <code>K^*_D(epsilon)</code> cannot decrease. This is a strict property of the set definition. It does not say that the network chooses that function, or that the function has the largest parameter volume.</p>
 <h2 id="3-simplicity-bias-among-the-remaining-candidates">3. Simplicity bias among the remaining candidates</h2>
-<p>The quantity that describes the network's actual selection is the full mass distribution:</p>
+<p>The candidate mass distribution in the static reference ensemble is:</p>
 <div class="math-display">$$
 Q_{D,\epsilon}(f)
 =
 \frac{\Omega_D(f;\epsilon)}
 {\sum_g\Omega_D(g;\epsilon)}.
 $$</div>
+<p>This is not the actual trained-function distribution. If <span class="math-inline">$T_{D,\tau}$</span> outputs parameters at training time <span class="math-inline">$\tau$</span> and <span class="math-inline">$H_U$</span> reads the hard function on a fixed input domain, then <span class="math-inline">$\nu_{D,\tau}=(T_{D,\tau})_\#\mu_{\rm init}$</span> is the parameter distribution and <span class="math-inline">$Q^{\rm opt}_{D,\tau}=(H_U)_\#\nu_{D,\tau}$</span> is the function distribution; training randomness is included in the initial joint distribution and protocol.</p>
 <p>Two processes must be distinguished:</p>
 <ol>
 <li><strong>Feasibility elimination:</strong> shortcuts or wrong extensions no longer reach the lower loss and leave <code>F_D(epsilon)</code>;</li>
 <li><strong>Reallocation among feasible candidates:</strong> functions that remain feasible lose implementation mass at different rates, so <code>Q</code> changes.</li>
 </ol>
-<p>With a monotone loss-depth coordinate <code>t</code> and</p>
+<p>With a monotone loss-depth coordinate <code>t</code>, not training time, and</p>
 <div class="math-display">$$
 s_t(f)=-\partial_t\log\Omega_t(f),
 $$</div>
-<p>the fixed-complexity-scale identity is:</p>
+<p>on intervals where positive-mass branches are differentiable, the relevant moments are finite, and differentiation can be exchanged with summation, the identity for a fixed complexity scale <code>kappa(f)</code> is:</p>
 <div class="math-display">$$
 \partial_tE_{Q_t}[\kappa]
 =-\operatorname{Cov}_{Q_t}(\kappa,s_t).
 $$</div>
-<p>If complex functions contract faster, the covariance is positive and mean complexity decreases. If no new distant mode appears, the complexity distribution narrows. This is the precise conditional version of “simplicity bias strengthens as BCE/loss decreases.”</p>
+<p>If complex functions contract faster so that this covariance is positive, mean complexity decreases. This is the mean-cost version of "simplicity bias strengthens as BCE/loss decreases", not a guarantee of narrowing. The absence of new modes is insufficient: mass reallocation among existing branches can still increase variance. Under the same regularity conditions:</p>
+<div class="math-display">$$
+\partial_t\operatorname{Var}_{Q_t}(\kappa)
+=-\operatorname{Cov}_{Q_t}
+\left((\kappa-E_{Q_t}[\kappa])^2,s_t\right).
+$$</div>
+<p>Narrowing requires a separate check of the variance or this covariance's sign; even zero cost variance need not produce unique consensus among distinct functions of equal cost. Complete-function concentration must be checked separately through collision, modal mass, or mass within a specified Hamming radius.</p>
 <p>It is still a conditional mechanism, not a theorem for every loss. <code>s_t</code> is jointly determined by the output distribution, parameter measure, architecture, and loss; BCE is only one measured direction.</p>
 <h2 id="4-relation-to-mdl">4. Relation to MDL</h2>
 <p>Two-part MDL is:</p>
@@ -119,7 +126,7 @@ $$</div>
 L_{\rm MDL}(f;D)
 =K_{\rm ref}(f)+L_{\rm residual}(D\mid f).
 $$</div>
-<p><code>K^*_D(epsilon)</code> describes the minimum model-code-length frontier under a residual budget; <code>Q_{D,epsilon}</code> describes the mass distribution over remaining candidates at that budget. The former is the “simplest feasible solution” frontier; the latter is what the network actually favors among surviving implementations.</p>
+<p><code>K^*_D(epsilon)</code> describes the minimum model-code-length frontier under a residual budget; <code>Q_{D,epsilon}</code> describes implementation mass in the static reference ensemble at that budget. The former is the "simplest feasible solution" frontier; the latter describes static mass preferences among surviving candidates. What training actually favors must still be checked through <code>Qopt</code>.</p>
 <p>It is therefore wrong to write “MDL selects the simplest function” as if training code contained a second explicit program-length objective. The code explicitly lowers training loss; MDL-like preference comes from the joint effect of the architecture's reference mass and the geometry of the loss cross-section.</p>
 <h2 id="5-relation-to-the-grokking-data-transition">5. Relation to the grokking data transition</h2>
 <p>Adding data and lowering loss are different axes:</p>

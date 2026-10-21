@@ -134,7 +134,7 @@
       <p>For verification or fuller context, consult the evidence ledger, experiment detail pages, original scripts, and preserved result notes. The author intends to continue revising the website and developing a formal paper.</p>
       <div class="disclosure-links">
         <a href="evidence-ledger.html">Open the evidence ledger</a>
-        <a href="experiments/index.html">Browse E01–E37 and scripts</a>
+        <a href="experiments/index.html">Browse E01–E38 and scripts</a>
       </div>
     </aside>
 
@@ -144,9 +144,9 @@
     </div>
 
     <div class="metric-strip" aria-label="Document overview">
-      <div><strong>37</strong><span>numbered evidence units</span></div>
+      <div><strong>38</strong><span>numbered evidence units</span></div>
       <div><strong>30</strong><span>historical archive experiments</span></div>
-      <div><strong>7</strong><span>post-upload experiments</span></div>
+      <div><strong>8</strong><span>post-upload experiments</span></div>
       <div><strong>22</strong><span>key experiments explained</span></div>
       <div><strong>4</strong><span>result figures</span></div>
     </div>
@@ -238,9 +238,9 @@
 <p><strong>What actually happened?</strong></p>
 <p>Static sampling preferred a shortcut with an extra condition at intermediate loss, and real training also first flowed into this function in large numbers. The odds of different candidates swap order with loss.</p>
 <p><strong>How was the intervention done?</strong></p>
-<p>We replaced only one training sample so that the four pattern classes of AND were roughly balanced, keeping everything else as unchanged as possible. After resampling and long training, the mass of AND in the deep-loss region increased markedly, and about 64% of real training endpoints became AND.</p>
+<p>We replaced the positive example <code>1101 -&gt; 1</code> with the negative example <code>1000 -&gt; 0</code>, making coverage of AND's four pattern classes more balanced, but also changing the positive-to-negative label ratio from 4:6 to 3:7. This is not a control changing only negative-example positions. After resampling and long training, the mass of AND in the deep-loss region increased markedly, and about 64% of real training endpoints became AND.</p>
 <p><strong>How to interpret it?</strong></p>
-<p>The problem is not that the network "rejected the truly simple AND," but that the original training set did not express AND in a balanced way at all. Changing just one sample greatly changes both the static geometry and the training endpoints, which shows that the so-called simple function is determined jointly by the network's language and the training constraints.</p>
+<p>The problem is not that the network "rejected the truly simple AND," but that the original training constraints still supported an advantageous shortcut. Changing just one sample greatly changes both the static geometry and training endpoints, showing that the so-called simple function is determined jointly by the network's language and training constraints; however, this minimal replacement changes both coverage and the label ratio, so its effect cannot be attributed to coverage alone. E12 also includes hole-filling controls that preserve the label ratio and separately support an effect of concrete coverage on static selection.</p>
 <h3 id="experiment-six-a-function-can-first-be-rejected-and-then-increase-again-as-loss-changes">Experiment six: a function can first be rejected and then increase again as loss changes</h3>
 <p><a href="experiments/e14.html">E14</a> constructs a weighted composite task: the vast majority of training samples follow Rule110, while a very small number of conflict regions require Rule30. The complete rule must handle both parts.</p>
 <p><strong>Why do this experiment?</strong></p>
@@ -286,18 +286,18 @@
 <p><strong>Layer two: four AND candidates.</strong> For the ten training points of balanced AND, measure the four main complete candidate functions separately, then count conditional events from the same ten-point parent. The maximum closure residual is about 0.049.</p>
 <p><strong>Layer three: tighten the margin further from a fixed hard function.</strong> First fix both the training loss and the complete hard output, then gradually require the predictions on the six unseen points to move farther from the zero threshold. The internal volumes of the four hard functions still separate continuously.</p>
 <p><strong>How to interpret it?</strong></p>
-<p>Full-rule volume and fixed-training-set candidate mass are not the same number, but they belong to the same parameter measure and can be connected rigorously through conditional probability. Gaps of tens or even hundreds of orders of magnitude can also arise entirely in the logit and margin geometry after the hard truth table has already been fixed.</p>
+<p>Full-rule volume and fixed-training-set candidate mass are not the same number, but they belong to the same parameter measure and can be connected rigorously through conditional probability when the events are nested. The full-target event must lie inside both the parent training event and the target hard cell before its mass can be written as candidate mass times a within-cell extra-precision retention rate; hard-exactness alone is insufficient. Gaps of tens or even hundreds of orders of magnitude can also arise entirely in the logit and margin geometry after the hard truth table has already been fixed.</p>
 <h3 id="experiment-eleven-can-the-information-from-adding-samples-one-by-one-become-an-invariant">Experiment eleven: can the information from adding samples one by one become an invariant</h3>
 <p>Early on we added samples to 3-bit rules one at a time and estimated the information gain by how surprised the current model was at each new label. Different addition orders gave different intermediate processes, and we could never find a reliable total.</p>
 <p><a href="experiments/e22.html">E22</a> exhausted this completely.</p>
 <p><strong>What exactly was done?</strong></p>
 <p>In one run, save the logits of 2,097,152 networks on the eight inputs. Each input can be in one of three states — not added, label 0, label 1 — so there are 6,561 partial training sets in total. For the 256 complete rules, enumerate all 40,320 sample addition orders of each rule.</p>
-<p>Each time a sample is added, compute how much it shrinks the remaining parameter mass, and call this change the generalized surprise of that step.</p>
+<p>Each time a sample is added, compute the increase in the static cost <span class="math-inline">$J=-\log_2 Z$</span>. This generalized cost increment is predictive surprise under pure hard conditioning or a standard likelihood at <span class="math-inline">$\beta=1$</span>; a general Gibbs score additionally requires normalization across labels.</p>
 <p><strong>What was the result?</strong></p>
-<p>The surprise of each step varies with the order, but after summing the eight steps it depends only on the final rule. The maximum numerical error across all orders is about 10^-14 bit. Rule150, i.e. parity3, is the rule with the highest endpoint cost among all 256 rules under the hard criterion.</p>
+<p>The cost increment of each step varies with the order, but after summing the eight steps it depends only on the final rule. The maximum numerical error across all orders is about 10^-14 bit. Rule150, i.e. parity3, is the rule with the highest endpoint cost among all 256 rules under the hard criterion.</p>
 <p><strong>How to interpret it?</strong></p>
-<p>This does not say that real SGD is conservative along the path. It shows that within the same static parameter measure, per-sample prediction cost and complete-rule endpoint difficulty do come from the same potential function. It connects our early intuitions about agreement, surprise, and rule difficulty to <a href="https://proceedings.neurips.cc/paper_files/paper/2018/hash/3b712de48137572f3849aabd5666a4e3-Abstract.html" target="_blank" rel="noopener">the prequential coding measurement of Blier and Ollivier (2018)</a> and <a href="https://mlanthology.org/colt/1989/levin1989colt-statistical/" target="_blank" rel="noopener">the statistical-mechanics framework for neural networks of Levin, Tishby, and Solla (1989)</a>.</p>
-<figure class="result-figure"><a href="../assets/figures/e22_free_energy.png" target="_blank" rel="noopener"><img src="../assets/figures/e22_free_energy.png" alt="Static free-energy costs of different complete rules separate as beta grows" loading="lazy"></a><figcaption>Static free-energy costs of different complete rules separate as beta grows</figcaption></figure>
+<p>This does not say that real SGD is conservative along the path. It shows that within the same static parameter measure, per-sample cost increments and complete-rule endpoint difficulty come from the same potential function; the former directly give predictive-coding costs only when predictive normalization holds. It connects our early intuitions about agreement, surprise, and rule difficulty to <a href="https://proceedings.neurips.cc/paper_files/paper/2018/hash/3b712de48137572f3849aabd5666a4e3-Abstract.html" target="_blank" rel="noopener">the prequential coding measurement of Blier and Ollivier (2018)</a> and <a href="https://mlanthology.org/colt/1989/levin1989colt-statistical/" target="_blank" rel="noopener">the statistical-mechanics framework for neural networks of Levin, Tishby, and Solla (1989)</a>.</p>
+<figure class="result-figure"><a href="../assets/figures/e22_free_energy.png" target="_blank" rel="noopener"><img src="../assets/figures/e22_free_energy.png" alt="Static endpoint costs of different complete rules separate as beta grows" loading="lazy"></a><figcaption>Static endpoint costs of different complete rules separate as beta grows</figcaption></figure>
 <p><em>Figure 1: Static endpoint costs of some representative rules in E22. Shown here is how rule costs separate under increasing precision pressure in the same reference measure.</em></p>
 <h2 id="6-the-most-important-prospective-verdict-can-the-volume-curve-predict-how-much-training-data-is-needed">6. The most important prospective verdict: can the volume curve predict how much training data is needed</h2>
 <p>Up to this point there is still a circularity risk: we define "hard" by small volume and then say hard functions have small volume, which produces no new knowledge.</p>
@@ -395,7 +395,7 @@
 <p>Per-image analysis shows that deep loss still corrects a small number of borderline images from wrong to right, while making the persistently wrong images more confident. Hard accuracy, probability calibration, and agreement can therefore turn at different locations.</p>
 <p>With the same four samples, the low-loss parameter-mass disadvantage of 3/8 relative to 0/1 grows from about half a decimal order of magnitude at shallow loss to about 55 orders of magnitude in the deep tail. This is in exactly the same direction as the identification gap between four samples and 512 samples. At this point, rule volume, real-image prediction, and the required data amount are connected in the same experiment for the first time.</p>
 <p>Two follow-up experiments pushed this real-image bridge further. <a href="experiments/e26.html">E26</a> no longer chooses between two options image by image; instead it compares complete partitions among the 126 balanced label combinations of two blind-test panels. The natural 0/1 partition ranks last at shallow loss, becomes top 1 in both panels at loss 0.6, and occupies about 99.97% of the normalized volume at 0.3. This result depends on the 5:5 ratio and one anchor, so it is a constrained unlabeled partition, not general clustering.</p>
-<p><a href="experiments/e28.html">E28</a> enlarges the training set to the full 50k MNIST and puts all 4,266 network parameters into HMC. The ensemble accuracies of static HMC, plain Adam, and MAP Adam are 99.03%, 98.95%, and 98.82% respectively; HMC and plain Adam should statistically be judged at the same level. The 480 HMC samples are still 480 different complete test functions, yet they agree highly on the vast majority of individual images. This shows that at real scale a function ensemble can be "still dispersed as complete functions, yet already condensed in pointwise prediction."</p>
+<p><a href="experiments/e28.html">E28</a> provides a separate likelihood-weighted posterior comparison: all 4,266 network parameters enter HMC on full 50k MNIST, targeting a Gaussian prior multiplied by the full training-data likelihood, rather than the hard-loss-threshold conditional distributions used in E25 and E26. Exponential weighting continues to change relative weights inside the low-loss region, so close distributions or predictions cannot be assumed. The ensemble accuracies of posterior HMC, plain Adam, and MAP Adam are 99.03%, 98.95%, and 98.82% respectively; HMC and plain Adam should statistically be judged at the same level. The 480 HMC samples are still 480 different complete test functions, yet they agree highly on the vast majority of individual images. This supports "still dispersed as complete functions, yet already condensed in pointwise prediction" in this posterior-sampling comparison, but does not directly validate hard-threshold volume, Neural K, or the volume-contraction law on full MNIST; HMC here uses gradients.</p>
 <h2 id="9-what-the-agreement-side-line-finally-told-us">9. What the agreement side line finally told us</h2>
 <p>Our early overfitting experiments trained many random initializations and then compared their predictions on a large number of probe inputs. If different seeds give almost the same answer on some input, that point is said to have high agreement; if the complete probe truth tables are also largely identical, the function distribution has truly converged.</p>
 <p>At first we tended to think of the low-agreement overfitting state as "the network found some special simple rule that humans cannot read." We later realized there is no evidence for this claim. The more direct meaning of low agreement is: the complete function has not converged at all yet; many extensions are still competing.</p>
@@ -447,15 +447,15 @@
 <h2 id="11-the-final-theoretical-framework-the-formulas-only-now">11. The final theoretical framework: the formulas only now</h2>
 <p>The preceding sections have explained what each quantity is meant to answer. Now we write them together in minimal form.</p>
 <h3 id="11-1-fixing-a-neural-reference-protocol">11.1 Fixing a neural reference protocol</h3>
-<p>Combine the network architecture and parameterization, the input-output encoding, the parameter reference measure, and the per-sample loss:</p>
+<p>Combine the network architecture and parameterization, the input-output encoding, the parameter reference probability measure, and the per-sample loss:</p>
 <div class="math-display">$$
 \Pi=(\mathcal A,\varphi,\mu,\ell).
 $$</div>
-<p>Given a training set:</p>
+<p>Write the continuous forward output as <span class="math-inline">$F_\theta(x)$</span> and the hard readout as <span class="math-inline">$h_\theta(x)=R(F_\theta(x))$</span>, with a fixed readout rule <span class="math-inline">$R$</span>. Given a training set:</p>
 <div class="math-display">$$
 D=\{(x_i,y_i)\}_{i=1}^{n},
 \qquad
-L_D(\theta)=\frac1n\sum_{i=1}^{n}\ell(h_\theta(x_i),y_i).
+L_D(\theta)=\frac1n\sum_{i=1}^{n}\ell(F_\theta(x_i),y_i).
 $$</div>
 <p>All parameters below some training loss form the sublevel set:</p>
 <div class="math-display">$$
@@ -463,7 +463,7 @@ A_D(\epsilon)=\{\theta:L_D(\theta)\le\epsilon\}.
 $$</div>
 <p>Architecture, encoding, loss, and data determine this terrain; the reference measure determines how we meter its different regions.</p>
 <h3 id="11-2-under-a-fixed-training-set-how-much-mass-each-complete-function-still-has">11.2 Under a fixed training set, how much mass each complete function still has</h3>
-<p>On the complete finite input or a fixed probe, record the network's hard output as a function. The parameter mass that function <span class="math-inline">$f$</span> has below a given training loss is:</p>
+<p>On the complete finite input domain or a fixed probe <span class="math-inline">$U$</span>, let <span class="math-inline">$H_U(\theta)=(h_\theta(x))_{x\in U}$</span> and define the function cell <span class="math-inline">$C_f=\{\theta:H_U(\theta)=f\}$</span>. Below, <span class="math-inline">$h_\theta=f$</span> means equality of this hard output table, not equality of continuous outputs. The parameter mass that function <span class="math-inline">$f$</span> has below a given training loss is:</p>
 <div class="math-display">$$
 \Omega_{\Pi,D}(f;\epsilon)
 =
@@ -484,7 +484,7 @@ V^{\mathrm{full}}_\Pi(f;\epsilon)
 =
 \mu_\Pi\{\theta:L_{D_{\mathrm{full}}(f)}(\theta)\le\epsilon\}.
 $$</div>
-<p>The corresponding protocol-relative code length is:</p>
+<p>The corresponding protocol-relative event information cost, in bits, is:</p>
 <div class="math-display">$$
 K^N_\Pi(f;\epsilon)
 =
@@ -494,15 +494,28 @@ $$</div>
 <div class="math-display">$$
 \kappa_f(s)=\frac{dK^N_\Pi(f;e^{-s})}{ds}.
 $$</div>
-<p>The volumes, local slopes, and curvatures of different functions can all cross, so any single prior probability or shallow slope is only part of the profile.</p>
-<h3 id="11-4-the-real-training-distribution-induced-by-the-optimizer">11.4 The real training distribution induced by the optimizer</h3>
-<p>Given an initialization distribution and a training algorithm, training to time <span class="math-inline">$t$</span> amounts to mapping the initialized parameters to new locations through the dynamics:</p>
+<p>The volumes, local slopes, and curvatures of different functions can all cross, so a single shallow slope cannot replace the whole profile. The hard prior <span class="math-inline">$p_0(f)=\mu_\Pi(C_f)$</span> is a separate baseline: for a positive-mass cell, a fixed-training-set branch satisfies <span class="math-inline">$\Omega_{\Pi,D}(f;\epsilon)=p_0(f)\Pr(A_D(\epsilon)\mid C_f)$</span>; for an almost-everywhere finite nonnegative loss, the full-target mass tends to 1 as the threshold tends to infinity, not generally to <span class="math-inline">$p_0(f)$</span>.</p>
+<p>Write the full-target event as <span class="math-inline">$A_{\mathrm{full}}(f;\epsilon_{\mathrm{full}})$</span>. Only when</p>
 <div class="math-display">$$
-Q^{\mathrm{opt}}_{\Pi,D,t}
-=
-(T_{\Pi,D,t})_\#\mu_\Pi.
+A_{\mathrm{full}}(f;\epsilon_{\mathrm{full}})
+\subseteq A_D(\epsilon_D)\cap C_f
 $$</div>
-<p>Static volume affects it, but so do entrances, gradients, connectivity, optimizer state, batch noise, and history. Therefore <span class="math-inline">$Q^{\mathrm{opt}}$</span> must not be treated as a synonym of <span class="math-inline">$Q^{\mathrm{static}}$</span>.</p>
+<p>do we have</p>
+<div class="math-display">$$
+V^{\mathrm{full}}_\Pi(f;\epsilon_{\mathrm{full}})
+=\Omega_{\Pi,D}(f;\epsilon_D)
+\Pr\!\left(A_{\mathrm{full}}(f;\epsilon_{\mathrm{full}})
+\mid A_D(\epsilon_D)\cap C_f\right).
+$$</div>
+<p>The conditioning event must have positive mass. For nonnegative per-sample losses and <span class="math-inline">$D\subseteq D_{\mathrm{full}}(f)$</span>, an equal total-loss budget guarantees containment in the parent training event: <span class="math-inline">$n\epsilon_D=N\epsilon_{\mathrm{full}}$</span>, where <span class="math-inline">$N$</span> is the full-target sample count; containment in the target hard cell must still be established separately. Without nesting, the intersection or mass outside the parent event must be retained, and full-target mass cannot be substituted directly for the fixed-<span class="math-inline">$D$</span> numerator. Different full-target events can also overlap, so negative log mass is not automatically a prefix-code length distinguishing functions; that interpretation requires a disjoint partition, suitable normalization, or an event family satisfying the corresponding conditions.</p>
+<h3 id="11-4-the-real-training-distribution-induced-by-the-optimizer">11.4 The real training distribution induced by the optimizer</h3>
+<p>Given an initialization distribution <span class="math-inline">$\mu_{\mathrm{init}}$</span> and a training algorithm, training to time <span class="math-inline">$t$</span> first yields a parameter distribution, then a function distribution through the hard readout:</p>
+<div class="math-display">$$
+\nu_{\Pi,D,t}=(T_{\Pi,D,t})_\#\mu_{\mathrm{init}},
+\qquad
+Q^{\mathrm{opt}}_{\Pi,D,t}=(H_U)_\#\nu_{\Pi,D,t}.
+$$</div>
+<p><span class="math-inline">$T$</span> outputs trained parameters; if training is stochastic, include random seeds and other randomness in the initial joint distribution and training protocol. <span class="math-inline">$\mu_{\mathrm{init}}$</span> need not equal the static reference measure <span class="math-inline">$\mu_\Pi$</span>. Static volume affects the function distribution, but so do entrances, gradients, connectivity, optimizer state, batch noise, and history. Therefore <span class="math-inline">$Q^{\mathrm{opt}}$</span> must not be treated as a synonym of <span class="math-inline">$Q^{\mathrm{static}}$</span>.</p>
 <h3 id="11-5-label-branches-and-free-energy-on-unseen-samples">11.5 Label branches and free energy on unseen samples</h3>
 <p>For an unseen input <span class="math-inline">$x$</span>, the hard-branch mass predicting label <span class="math-inline">$y$</span> in the fixed training set and loss parent is:</p>
 <div class="math-display">$$
@@ -517,9 +530,18 @@ Z_{\Pi,D}(\beta)
 =
 \int \exp[-\beta nL_D(\theta)]\,d\mu_\Pi(\theta),
 \qquad
-F_{\Pi,D}(\beta)=-\frac1\beta\log Z_{\Pi,D}(\beta).
+F_{\Pi,D}(\beta)=-\frac1\beta\ln Z_{\Pi,D}(\beta).
 $$</div>
-<p>The generalized surprise caused by adding a new sample is the free-energy difference between two training-set states. When accumulated along any sample order, the intermediate terms cancel, leaving only the difference between the complete-rule endpoint and the empty-training-set starting point.</p>
+<p>Separately define the bit cost <span class="math-inline">$J_{\Pi,D}(\beta)=-\log_2Z_{\Pi,D}(\beta)$</span>. At fixed <span class="math-inline">$\beta&gt;0$</span>, the generalized cost increment of a new sample satisfies</p>
+<div class="math-display">$$
+\Delta J=\frac{\beta}{\ln 2}\Delta F.
+$$</div>
+<p>Let <span class="math-inline">$r_\beta(y\mid x,D)=Z_{\Pi,D\cup\{(x,y)\}}(\beta)/Z_{\Pi,D}(\beta)$</span>. A general Gibbs score need not be normalized over labels; if the predictive probability is defined as <span class="math-inline">$p_\beta(y\mid x,D)=r_\beta(y\mid x,D)/\sum_{y'}r_\beta(y'\mid x,D)$</span>, then</p>
+<div class="math-display">$$
+-\log_2p_\beta(y\mid x,D)
+=\Delta J+\log_2\sum_{y'}r_\beta(y'\mid x,D).
+$$</div>
+<p>Pure hard conditional branches and a standard negative log likelihood at <span class="math-inline">$\beta=1$</span> satisfy label normalization, so the cost increment then directly equals predictive surprise. With the reference measure, loss definition, and <span class="math-inline">$\beta$</span> fixed, summing <span class="math-inline">$\Delta J$</span> along any sample order telescopes to the difference in <span class="math-inline">$J$</span> between the endpoint and the empty-training-set starting point; this state-function identity does not itself guarantee label normalization.</p>
 <h3 id="11-6-an-operational-sample-complexity">11.6 An operational sample complexity</h3>
 <p>For rule <span class="math-inline">$f$</span>, randomly draw <span class="math-inline">$n$</span> training samples, fixing the network, optimizer, training budget, and recovery criterion. The minimum number of samples needed for the recovery probability to first reach <span class="math-inline">$q$</span> is defined as:</p>
 <div class="math-display">$$
@@ -539,7 +561,7 @@ $$</div>
 <h2 id="12-what-is-the-relationship-between-this-framework-and-existing-theories">12. What is the relationship between this framework and existing theories</h2>
 <p>The parameter-to-function map and the simplicity prior come from the core contributions of <a href="https://www.nature.com/articles/s41467-018-03101-6" target="_blank" rel="noopener">Dingle et al. (2018)</a>, <a href="https://arxiv.org/abs/1805.08522" target="_blank" rel="noopener">Valle-Pérez et al. (2019)</a>, <a href="https://arxiv.org/abs/1909.11522" target="_blank" rel="noopener">Mingard et al. (2019)</a>, <a href="https://www.jmlr.org/papers/v22/20-676.html" target="_blank" rel="noopener">Mingard et al. (2021)</a>, and <a href="https://www.nature.com/articles/s41467-024-54813-x" target="_blank" rel="noopener">Mingard et al. (2025)</a>. We accept this static foundation, but add continuous loss, and use real training to show that hard conditioning of the initialization prior is not the complete dynamics.</p>
 <p><a href="https://mlanthology.org/misc/1964/solomonoff1964misc-formal/" target="_blank" rel="noopener">Solomonoff's (1964) algorithmic probability</a>, <a href="https://www.mathnet.ru/eng/ppi68" target="_blank" rel="noopener">Kolmogorov's (1965) descriptive complexity</a>, <a href="https://arxiv.org/abs/math/0406077" target="_blank" rel="noopener">Grünwald's (2004) MDL tutorial</a>, and <a href="https://proceedings.neurips.cc/paper_files/paper/2018/hash/3b712de48137572f3849aabd5666a4e3-Abstract.html" target="_blank" rel="noopener">the prequential coding experiments of Blier and Ollivier (2018)</a> all connect probability mass, description length, and predictive coding. Neural K is formally close to them, but depends on a concrete neural protocol; it does not claim to equal machine-independent Kolmogorov complexity, nor does it establish a neural coding theorem.</p>
-<p>More specifically, MDL's two-part code length is "describing the hypothesis" plus "encoding the remaining error"; in this framework, the <code>-log</code> full-target volume is the implementation code length of the current neural language at the specified precision, and the per-sample free-energy increment is the predictive-coding cost. The training program itself usually still only optimizes loss and does not secretly add a second program-length objective. MDL-style preference comes from the architecture's reference measure and the loss geometry, and <a href="experiments/e22.html">E22</a> and <a href="experiments/e23.html">E23</a> connect it respectively to order-independent endpoint code length and independent sample-identification thresholds.</p>
+<p>More specifically, MDL's two-part code length is "describing the hypothesis" plus "encoding the remaining error"; in this framework, the <code>-log2</code> full-target volume is the event information cost of the current neural language at the specified precision, with a function-code-length interpretation only under disjointness or normalization conditions. Per-sample <span class="math-inline">$\Delta J$</span> and <span class="math-inline">$\Delta F$</span> are related by the conversion above, and directly give predictive-coding costs only when label normalization holds. The training program itself usually still only optimizes loss and does not secretly add a second program-length objective. MDL-style preference comes from the architecture's reference measure and the loss geometry, and <a href="experiments/e22.html">E22</a> and <a href="experiments/e23.html">E23</a> connect it respectively to order-independent endpoint cost and independent sample-identification thresholds.</p>
 <p>The statistical-mechanics connection is not ours first either. Levin, Tishby, and Solla already wrote fixed-architecture networks as a Gibbs ensemble in their 1989 <a href="https://mlanthology.org/colt/1989/levin1989colt-statistical/" target="_blank" rel="noopener"><em>A Statistical Approach to Learning and Generalization in Layered Neural Networks</em></a>, connecting prediction, free energy, and predictive MDL. What we add is function-level, loss-resolved experiments on modern nonlinear networks: complete functions, fixed-training-set candidate cells, margin cores, optimizer transport, and the data transition are placed in the same measurement chain.</p>
 <p><a href="https://doi.org/10.1162/neco.1997.9.1.1" target="_blank" rel="noopener">The Flat Minima of Hochreiter and Schmidhuber (1997)</a>, <a href="https://arxiv.org/abs/1611.01838" target="_blank" rel="noopener">the Entropy-SGD/local entropy of Chaudhari et al. (2017)</a>, <a href="https://doi.org/10.1017/CBO9780511800474" target="_blank" rel="noopener">Watanabe's (2009) Singular Learning Theory</a>, and <a href="https://proceedings.mlr.press/v258/lau25a.html" target="_blank" rel="noopener">the Local Learning Coefficient of Lau et al. (2025)</a> likewise emphasize that one cannot look only at a single optimal parameter point. Our difference is that we insist on function resolution and loss resolution, and do not directly equate a parameter norm, Hessian flatness, or some local minimum with complete-function volume.</p>
 <h2 id="13-what-cannot-yet-be-claimed">13. What cannot yet be claimed</h2>
@@ -664,13 +686,13 @@ $$</div>
 </tr>
 <tr>
 <td><a href="experiments/e11.html">E11</a></td>
-<td>Compares the train/validation gradient alignment of Rule30 at different sample sizes under the same loss</td>
-<td>Whether adding data extends the rule direction to deeper loss</td>
+<td>Compares raw train/validation gradients at the nearest log-loss checkpoint within a factor of 1.35; strict sample-size ordering at target BCE 0.3 holds for 4/5 seeds</td>
+<td>Whether more data extends the rule direction to deeper loss, not an exact-loss or Adam-update comparison</td>
 </tr>
 <tr>
 <td><a href="experiments/e12.html">E12</a></td>
-<td>Scans the static odds of AND and the shortcut, and changes only one sample as a balancing intervention</td>
-<td>How training-set coverage changes the winner in different loss regions</td>
+<td>Scans static odds, label-ratio-preserving hole-filling controls, and a one-sample replacement changing both coverage and label ratio</td>
+<td>How training constraints change the winner across loss regions; the minimal replacement does not isolate coverage</td>
 </tr>
 <tr>
 <td><a href="experiments/e13.html">E13</a></td>
@@ -720,7 +742,7 @@ $$</div>
 <tr>
 <td><a href="experiments/e22.html">E22</a></td>
 <td>Exhausts all 3-bit partial training sets, rules, and sample orders</td>
-<td>Whether per-sample surprise can accumulate into a path-independent endpoint cost</td>
+<td>Whether per-sample static cost increments can accumulate into a path-independent endpoint cost</td>
 </tr>
 <tr>
 <td><a href="experiments/e23.html">E23</a></td>
@@ -749,8 +771,8 @@ $$</div>
 </tr>
 <tr>
 <td><a href="experiments/e28.html">E28</a></td>
-<td>Compares whole-network HMC, plain Adam, and MAP Adam on 50k MNIST</td>
-<td>Whether a static finite-width ensemble can reach the natural-task performance of a real optimizer</td>
+<td>Compares likelihood-weighted posterior HMC, plain Adam, and MAP Adam on 50k MNIST</td>
+<td>A posterior-sampling prediction and agreement comparison, not a hard-threshold volume validation</td>
 </tr>
 <tr>
 <td><a href="experiments/e29.html">E29</a></td>
@@ -797,10 +819,16 @@ $$</div>
 <td>Compares Gaussian with uniform Euclidean measure inside a fixed-norm ball</td>
 <td>Whether Gaussian alignment with training depends on density penalties or on a more robust complexity ordering</td>
 </tr>
+<tr>
+<td><a href="experiments/e38.html">E38</a></td>
+<td>Completes five-configuration SMC for 19 four-bit targets and compares relative mass at a common BCE threshold</td>
+<td>Whether widening increases a simple reference's mass advantage over other targets under the specified measure and scaling</td>
+</tr>
 </tbody>
 </table>
+<p>October 2026 website supplements: <a href="width-double-descent.html">Double descent and width evidence</a> treats the capacity and training-time axes separately and provides complete E38 results and sampling boundaries. <a href="complexity-methods.html">Two complexity measurement methods</a> describes using functions implemented by existing weights as targets and approximating full-rule measurements with finite queries beyond a data transition. The latter remains a method proposal, with no new validation experiments. Both supplements are added only to the website, not to the formal research note.</p>
 <p>\n</p></div>
-        <footer class="article-footer"><a href="experiments/index.html">Continue to the E01–E37 experiment index →</a></footer>
+        <footer class="article-footer"><a href="experiments/index.html">Continue to the E01–E38 experiment index →</a></footer>
       </article>
     </main>
   </div>

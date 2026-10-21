@@ -19,7 +19,7 @@
    - complex 经线性规划证明不可线性分；
    - complex 的 ANF、normal form 与 decision tree 代理均严格更大。
 
-训练样本只从两函数 agreement set 中抽取，使用`k=10,12,14`。
+训练样本只从两函数 agreement set 中抽取，使用`k=10,12,14`。这里的 simple/complex 顺序由上述外部符号代理和线性可分性构造；它们不是多层网络 Neural K 的独立真值，不能据此预先认定其 Neural K 严格有序。
 
 ## 3. 主判决量
 

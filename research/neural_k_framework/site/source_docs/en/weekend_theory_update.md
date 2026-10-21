@@ -40,7 +40,7 @@ For the same `D` and nested loss sublevel sets, lowering `epsilon` can only shri
 
 ## 3. Simplicity bias among the remaining candidates
 
-The quantity that describes the network's actual selection is the full mass distribution:
+The candidate mass distribution in the static reference ensemble is:
 
 \[
 Q_{D,\epsilon}(f)
@@ -49,25 +49,35 @@ Q_{D,\epsilon}(f)
 {\sum_g\Omega_D(g;\epsilon)}.
 \]
 
+This is not the actual trained-function distribution. If $T_{D,\tau}$ outputs parameters at training time $\tau$ and $H_U$ reads the hard function on a fixed input domain, then $\nu_{D,\tau}=(T_{D,\tau})_\#\mu_{\rm init}$ is the parameter distribution and $Q^{\rm opt}_{D,\tau}=(H_U)_\#\nu_{D,\tau}$ is the function distribution; training randomness is included in the initial joint distribution and protocol.
+
 Two processes must be distinguished:
 
 1. **Feasibility elimination:** shortcuts or wrong extensions no longer reach the lower loss and leave `F_D(epsilon)`;
 2. **Reallocation among feasible candidates:** functions that remain feasible lose implementation mass at different rates, so `Q` changes.
 
-With a monotone loss-depth coordinate `t` and
+With a monotone loss-depth coordinate `t`, not training time, and
 
 \[
 s_t(f)=-\partial_t\log\Omega_t(f),
 \]
 
-the fixed-complexity-scale identity is:
+on intervals where positive-mass branches are differentiable, the relevant moments are finite, and differentiation can be exchanged with summation, the identity for a fixed complexity scale `kappa(f)` is:
 
 \[
 \partial_tE_{Q_t}[\kappa]
 =-\operatorname{Cov}_{Q_t}(\kappa,s_t).
 \]
 
-If complex functions contract faster, the covariance is positive and mean complexity decreases. If no new distant mode appears, the complexity distribution narrows. This is the precise conditional version of “simplicity bias strengthens as BCE/loss decreases.”
+If complex functions contract faster so that this covariance is positive, mean complexity decreases. This is the mean-cost version of "simplicity bias strengthens as BCE/loss decreases", not a guarantee of narrowing. The absence of new modes is insufficient: mass reallocation among existing branches can still increase variance. Under the same regularity conditions:
+
+\[
+\partial_t\operatorname{Var}_{Q_t}(\kappa)
+=-\operatorname{Cov}_{Q_t}
+\left((\kappa-E_{Q_t}[\kappa])^2,s_t\right).
+\]
+
+Narrowing requires a separate check of the variance or this covariance's sign; even zero cost variance need not produce unique consensus among distinct functions of equal cost. Complete-function concentration must be checked separately through collision, modal mass, or mass within a specified Hamming radius.
 
 It is still a conditional mechanism, not a theorem for every loss. `s_t` is jointly determined by the output distribution, parameter measure, architecture, and loss; BCE is only one measured direction.
 
@@ -80,7 +90,7 @@ L_{\rm MDL}(f;D)
 =K_{\rm ref}(f)+L_{\rm residual}(D\mid f).
 \]
 
-`K^*_D(epsilon)` describes the minimum model-code-length frontier under a residual budget; `Q_{D,epsilon}` describes the mass distribution over remaining candidates at that budget. The former is the “simplest feasible solution” frontier; the latter is what the network actually favors among surviving implementations.
+`K^*_D(epsilon)` describes the minimum model-code-length frontier under a residual budget; `Q_{D,epsilon}` describes implementation mass in the static reference ensemble at that budget. The former is the "simplest feasible solution" frontier; the latter describes static mass preferences among surviving candidates. What training actually favors must still be checked through `Qopt`.
 
 It is therefore wrong to write “MDL selects the simplest function” as if training code contained a second explicit program-length objective. The code explicitly lowers training loss; MDL-like preference comes from the joint effect of the architecture's reference mass and the geometry of the loss cross-section.
 

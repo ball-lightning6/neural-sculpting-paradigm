@@ -297,7 +297,7 @@ fixed-D分布测的是：
 
 > 已经满足部分训练集loss以后，剩余候选完整函数怎样分配。
 
-完整目标事件通常比部分训练事件更严格。设 \(A_D\) 是父训练事件，\(A_{\rm extra}\) 是在目标cell内部对held-out连续输出施加的额外要求，并且完整事件确实满足 \(A_{\rm full}\subseteq C_U(f)\cap A_D\)。这时应写成：
+设 \(A_D\) 是父训练事件，完整事件满足 \(A_{\rm full}\subseteq C_U(f)\cap A_D\)，并选 \(A_{\rm extra}\) 使 \(A_{\rm full}=C_U(f)\cap A_D\cap A_{\rm extra}\)。这时才应写成下式。同一个平均loss阈值一般不保证这种包含；可用相同总loss预算并换算平均阈值建立嵌套，不能仅凭hard标签已正确判断：
 
 \[
 \mu_\Pi(A_{\rm full})
@@ -348,9 +348,9 @@ K^{N,\mathrm{FD}}_{\Pi,U,D}(f;\epsilon)
 
 因此：
 
-> Neural K是一种架构、参数化、参考测度、输入域和loss协议相对的实现质量码长。
+> Neural K是一种架构、参数化、参考测度、输入域和loss协议相对的实现信息成本。
 
-它和算法概率、MDL、Kolmogorov complexity有实质结构联系，因为它们都把“多个实现的总质量”转成负对数成本。但这不等于已经证明它和机器无关的经典Kolmogorov complexity相同。
+它和算法概率、MDL、Kolmogorov complexity有实质结构联系，因为它们都把“多个实现的总质量”转成负对数成本。但这不等于已经证明它和机器无关的经典Kolmogorov complexity相同。要将这些成本作为区分全部函数的前缀码长，还需互斥事件或合法编码分布；一般full-target事件可能重叠，不能直接使用码长概率预算。
 
 ## 9. 捷径淘汰和复杂函数收缩是两种不同效应
 

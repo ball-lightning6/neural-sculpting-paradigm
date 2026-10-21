@@ -1,0 +1,562 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="E38 宽深扫描与相对目标质量的完整协议、结果和边界。">
+  <title>E38 宽深扫描与相对目标质量 · Neural K 研究档案</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="../assets/site.js"></script>
+</head>
+<body data-page-kind="post-upload">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+
+    <header class="topbar">
+      <a class="site-mark" href="../index.html" aria-label="返回研究主文">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K 研究档案</span>
+      </a>
+      <nav class="top-nav" aria-label="全站导航"><a class="top-link" href="../index.html">研究主文</a><a class="top-link" href="../theory-core.html">理论核心</a><a class="top-link" href="../experiments/index.html">实验索引</a><a class="top-link active" href="../post-upload.html">提交后增量</a><a class="top-link" href="../references.html">参考文献</a><a class="top-link" href="../evidence-ledger.html">证据总账</a></nav>
+      <nav class="language-switch" aria-label="语言"><span class="active" lang="zh-CN">中文</span><a href="../en/experiments/e38.html" lang="en">EN</a></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>目录</span>
+      </button>
+    </header>
+
+  <div class="page-shell">
+
+    <aside class="sidebar" id="sidebar" aria-label="本页目录">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">本页目录</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#1-研究问题">1. 研究问题</a></li>
+<li><a href="#2-核心结果">2. 核心结果</a></li>
+<li><a href="#3-已完成范围">3. 已完成范围</a></li>
+<li><a href="#4-本目录文件">4. 本目录文件</a></li>
+<li><a href="#5-复现入口">5. 复现入口</a></li>
+<li><a href="#6-历史源码与发布副本">6. 历史源码与发布副本</a></li>
+<li><a href="#1-动机与证据对象">1. 动机与证据对象</a></li>
+<li><a href="#2-固定输入与目标">2. 固定输入与目标</a></li>
+<li><a href="#3-网络与参考测度">3. 网络与参考测度</a></li>
+<li><a href="#4-共同输出事件与比较量">4. 共同输出事件与比较量</a></li>
+<li><a href="#5-smc-协议与预算">5. SMC 协议与预算</a></li>
+<li><a href="#6-事后分析与解释规则">6. 事后分析与解释规则</a></li>
+<li><a href="#1-完成状态">1. 完成状态</a></li>
+<li><a href="#2-共同阈值下的宽度结果">2. 共同阈值下的宽度结果</a></li>
+<li><a href="#3-全部-17-个目标的相对差">3. 全部 17 个目标的相对差</a></li>
+<li><a href="#4-w256-深度对照">4. W256 深度对照</a></li>
+<li><a href="#5-bce-0-30-不是-hard-exact">5. BCE 0.30 不是 hard-exact</a></li>
+<li><a href="#6-采样诊断与不确定性">6. 采样诊断与不确定性</a></li>
+<li><a href="#7-结论与适用边界">7. 结论与适用边界</a></li>
+</ul>
+</div>
+</nav>
+        <a class="sidebar-action" href="../post-upload.html">返回增量总览 →</a>
+      </div>
+    </aside>
+
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">实验增量 · E38</div>
+          <h1>E38 宽深扫描与相对目标质量</h1>
+          <p class="article-description">E38 宽深扫描与相对目标质量的完整协议、结果和边界。</p>
+        </header>
+        <div class="article-body"><blockquote>
+<p>状态：已完成的 4-bit constrained SMC 扫描。2026-10-21 完成核验与发布整理；5 个配置、95 个目标运行、855 条阈值记录。证据层级为指定参考测度和有限采样协议下的静态相对质量证据。</p>
+</blockquote>
+<h2 id="1-研究问题">1. 研究问题</h2>
+<p>固定 16 点完整真值表和目标标签，增大网络宽度后，不同目标的低 BCE 事件获得的相对概率质量是否改变？E38 比较四个双隐藏层网络的宽度轴，并补充 W256 的单隐藏层与双隐藏层对照。它测量完整目标的连续 loss 事件，不测量实际训练轨迹或测试误差曲线。</p>
+<p>各网络的参数空间维数不同，但都向共同的 16 维联合 logit 空间诱导概率分布。相同目标和 BCE 阈值定义相同的输出事件，因此可以比较各协议分配给该事件的概率；这不是直接比较未归一化的跨维度欧式体积，也不是测度无关的内禀 K。</p>
+<h2 id="2-核心结果">2. 核心结果</h2>
+<p>在共同阈值 BCE = 0.30，以单 bit 规则 <code>0x0F0F</code> 为参照，并排除另一单 bit 规则 <code>0xCCCC</code> 后，其余 17 个选定平衡目标的相对质量劣势在 W64、W128、W256、W512 四点全部严格扩大。17 个差值的中位数依次为 17.7023、25.0701、35.0872、48.0666，单位为十进制 log 质量比。</p>
+<p>示例 <code>0xAE8C</code> 的 <code>log10[V(0x0F0F)/V(0xAE8C)]</code> 依次为 53.8901、75.9899、106.8514、147.5235。W256 的对应深度对照为 D1 的 92.4818 与 D2 的 106.8514。简单参照的绝对质量也随宽度下降，主结果是相对差距扩大，而不是简单目标的绝对质量不变。</p>
+<p>这些结果不把 BCE = 0.30 称为 hard-exact，不证明 SMC 全局混合，不把共享适应的粒子池当作独立整轮重复，也不直接验证所有双下降或静态质量等于 SGD 选择概率。完整边界见<a href="../../experiments/experiment_38_width_depth_volume/RESULTS_AND_CONCLUSION.md">结果与结论</a>。</p>
+<h2 id="3-已完成范围">3. 已完成范围</h2>
+<p><code>D</code> 表示隐藏层数。隐藏层为 tanh，输出层为线性 logit；每个目标在全部 16 个输入上计算平均 BCE。</p>
+<table>
+<thead>
+<tr>
+<th>配置</th>
+<th style="text-align: right;">参数量</th>
+<th style="text-align: right;">池数 x 每池粒子数</th>
+<th style="text-align: right;">完成目标</th>
+<th style="text-align: right;">阈值数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>W64 D2</td>
+<td style="text-align: right;">4,545</td>
+<td style="text-align: right;">8 x 4,096</td>
+<td style="text-align: right;">19/19</td>
+<td style="text-align: right;">9</td>
+</tr>
+<tr>
+<td>W128 D2</td>
+<td style="text-align: right;">17,281</td>
+<td style="text-align: right;">8 x 4,096</td>
+<td style="text-align: right;">19/19</td>
+<td style="text-align: right;">9</td>
+</tr>
+<tr>
+<td>W256 D2</td>
+<td style="text-align: right;">67,329</td>
+<td style="text-align: right;">4 x 2,048</td>
+<td style="text-align: right;">19/19</td>
+<td style="text-align: right;">9</td>
+</tr>
+<tr>
+<td>W512 D2</td>
+<td style="text-align: right;">265,729</td>
+<td style="text-align: right;">4 x 1,024</td>
+<td style="text-align: right;">19/19</td>
+<td style="text-align: right;">9</td>
+</tr>
+<tr>
+<td>W256 D1</td>
+<td style="text-align: right;">1,537</td>
+<td style="text-align: right;">8 x 4,096</td>
+<td style="text-align: right;">19/19</td>
+<td style="text-align: right;">9</td>
+</tr>
+</tbody>
+</table>
+<p>共同阈值为 0.68、0.65、0.60、0.55、0.50、0.45、0.40、0.35、0.30。共计 <code>5 x 19 = 95</code> 个目标运行，<code>95 x 9 = 855</code> 条阈值记录。W256 D2 只计一次；D3、D4 不在本次最终扫描范围内，smoke 和复现检查目录也不计入正式记录。</p>
+<h2 id="4-本目录文件">4. 本目录文件</h2>
+<ul>
+<li><a href="../../experiments/experiment_38_width_depth_volume/MOTIVATION_AND_PREREGISTRATION.md">动机与事后协议整理</a>：2026-10-21 的回溯性协议说明，不是新的预注册。</li>
+<li><a href="../../experiments/experiment_38_width_depth_volume/RESULTS_AND_CONCLUSION.md">结果与结论</a>：全部 17 个相对差值、深度对照、完整性检查与采样边界。</li>
+<li><a href="../../experiments/experiment_38_width_depth_volume/experiment_4bit_smc_width_depth.py">SMC 数值实现</a>：参数化、目标、受限采样与诊断。</li>
+<li><a href="../../experiments/experiment_38_width_depth_volume/experiment_4bit_smc_width_depth_driver.py">五配置扫描驱动</a>：逐配置运行与 preflight。</li>
+<li><a href="../../experiments/experiment_38_width_depth_volume/analyze_results.py">离线分析</a>：读取重跑生成的结果并汇总，不启动训练或采样。</li>
+</ul>
+<h2 id="5-复现入口">5. 复现入口</h2>
+<p>以下是重新采样的入口说明，不表示本次文档整理已执行这些命令。使用已配置 CUDA 的 Python 环境，并安装 PyTorch、NumPy、Matplotlib；先核对可用设备和显存，不要占用正在使用的 GPU。在本目录运行：</p>
+<pre><code class="language-powershell">python -E -s experiment_4bit_smc_width_depth_driver.py
+</code></pre>
+<p>驱动完成后在本目录生成 <code>results_4bit_smc_width_depth/</code>，其五个配置子目录包含配置、目标定义和目标 summary。然后在本目录运行离线分析：</p>
+<pre><code class="language-powershell">python -E -s analyze_results.py
+</code></pre>
+<p>重跑时应核对五配置范围、19 个目标、9 个阈值及上表粒子预算，并检查 preflight 和最终完成状态。驱动按显存估算选择预算；实际写入的配置必须留存，不能把不同预算产生的新结果无说明地替换为本表读数。历史 W512 D2 汇总记录约 78.69 小时，不能把此入口当作快速演示。</p>
+<p>本次发布保留已完成实验的数值采样核心；可移植配置、注释、分析标签与 preflight 失败处理的整理不改变这里声明的科学对象。复现应核对配置与诊断，不承诺不同设备或软件环境下逐位相同。本文的历史结果和重新运行后生成的结果须分别标识。</p>
+<h2 id="6-历史源码与发布副本">6. 历史源码与发布副本</h2>
+<p>历史源码与结果保留原样。归档时的原始文件 SHA256 为：</p>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>历史原始字节的 SHA256</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>experiment_4bit_smc_width_depth.py</td>
+<td>6a0cd94615ae6ae2d37770fd25ab451587c06bd81f9da18d8a6bff9e174aec8a</td>
+</tr>
+<tr>
+<td>experiment_4bit_smc_width_depth_driver.py</td>
+<td>e23c038c803e3641467074cfaca942a0984aff8d6c7e63bfe1d8998501c32ea9</td>
+</tr>
+</tbody>
+</table>
+<p>本目录是发布副本，因以下明确列出的改动，不应拿它的整文件哈希冒充历史源码哈希。数值实现只更正采样核名称、参考阈值说明和分析提示；配置、前向计算、幸存筛选、重采样、变异及结果记录等18个核心定义通过去除注释与docstring后的AST一致性核验。</p>
+<p>驱动另外修复了一个preflight边界分支：当所有协议都超过显存预算时，原实现错误地回退到第一档；现在回退到最低档并保留警告。这不改变已有某一档满足预算时的选择。三种协议选择分支已用内存估算桩核验，没有启动SMC。新增离线汇总脚本从保存结果重建数值表和网站图片，不改写原结果。</p>
+<h1 id="e38-动机与事后协议整理">E38：动机与事后协议整理</h1>
+<blockquote>
+<p>整理日期：2026-10-21。此文在扫描完成后依据已保存配置与结果撰写，是事后协议整理，不是扫描开始前的预注册。文件名沿用实验目录约定，不能据此声称问题表述、参照选择或统计摘要已经前瞻性注册。</p>
+</blockquote>
+<h2 id="1-动机与证据对象">1. 动机与证据对象</h2>
+<p>增大网络容量既可能改变任务的可表示性，也可能改变不同可实现目标的相对概率质量。E38 只考察后一个静态问题：在固定目标和共同 loss 阈值下，宽度与深度变化是否伴随相对偏好变化。</p>
+<p>这为容量轴上的简单性选择提供一个可测对象，但没有同时测量有限训练集上的候选竞争、优化器实际选择或泛化曲线。把静态质量与这些动态现象联系起来仍需要额外证据，不能由本次扫描的完成状态代替。</p>
+<h2 id="2-固定输入与目标">2. 固定输入与目标</h2>
+<p>输入是按整数 0 至 15 排列的全部 4-bit 字符串，每个输入按最高位到最低位编码为四个 <code>0/1</code> 坐标，不使用 <code>-1/+1</code> 输入编码。目标 ID 的第 i 个低位给出第 i 个输入的标签，即 <code>y_i = (function_id &gt;&gt; i) &amp; 1</code>；模型的 hard 标签按 <code>logit &gt;= 0</code> 判为 1。</p>
+<p>五个配置使用完全相同的 19 个目标，每个目标都是 8 个 0、8 个 1 的平衡规则。下列 ID 在脚本中均带 <code>fn_</code> 前缀：</p>
+<pre><code class="language-text">0x0F0F  0x88EE  0x3B23  0x1337  0x7F02  0xAE8C  0xCCCC
+0xF550  0xBB22  0x4D4D  0x055F  0xAB2A  0x2AAB  0xD554
+0x2F0B  0xF2B0  0x1F07  0xFD40  0xEAA8
+</code></pre>
+<p>这是选定目标集合，不是全部 4-bit 函数的枚举。<code>0x0F0F</code> 与 <code>0xCCCC</code> 是两个单 bit 规则；汇总中的 17 个目标是排除这两项后的集合。“复杂端示例”用于描述本协议中的 <code>0xAE8C</code>，不把目标 ID 或 ANF 指标当作测度无关的复杂度真值。</p>
+<h2 id="3-网络与参考测度">3. 网络与参考测度</h2>
+<p>网络为 <code>4 -&gt; W -&gt; 1</code> 或 <code>4 -&gt; W -&gt; W -&gt; 1</code>，隐藏层为 tanh，输出层为线性 logit，所有层均含 bias。设参数量为 p，归一化参数坐标独立服从 <code>uniform[-1,1]</code>：</p>
+<div class="math-display">$$
+\mu_{W,D}=\operatorname{Unif}([-1,1]^{p(W,D)}).
+$$</div>
+<p>前向计算中，首层 weight 与 bias 都乘以 <code>1/sqrt(4)</code>，后续隐藏层及输出层的 weight 与 bias 都乘以 <code>1/sqrt(W)</code>。因此，宽度变化还伴随这一固定缩放规则所规定的参考分布变化，不能解释成只增添神经元、其它分布性质完全不变。参考测度是归一化参数盒的均匀测度，不是 Gaussian 测度。</p>
+<p>已完成运行使用 NVIDIA GeForce RTX 3080 10GB，记录设备为 <code>cuda:1</code>。粒子与前向计算使用 float32，对数质量累计使用 float64，TF32 关闭。后续复现须记录实际软件与设备环境，不通过更换精度来冒充同一数值协议。</p>
+<h2 id="4-共同输出事件与比较量">4. 共同输出事件与比较量</h2>
+<p>令 <code>U</code> 为全部 16 个输入，<code>z = Z_{W,D}(theta)</code> 为其联合 logit 向量，标签为 <code>y_i = f(x_i)</code>。用自然对数定义平均 BCE：</p>
+<div class="math-display">$$
+\mathcal L_f(z)=\frac{1}{16}\sum_{i=0}^{15}
+\left[\log(1+e^{z_i})-y_i z_i\right],
+\qquad
+E_f(\epsilon)=\{z\in\mathbb R^{16}:\mathcal L_f(z)\le\epsilon\}.
+$$</div>
+<p>不同参数空间都映射到这个共同的 16 维输出空间。其推前概率分布和完整目标事件质量定义为：</p>
+<div class="math-display">$$
+\rho_{W,D}=(Z_{W,D})_\#\mu_{W,D},
+\qquad
+V_{W,D}(f;\epsilon)=\rho_{W,D}(E_f(\epsilon))
+=\mu_{W,D}\{\theta:L_{U,f}(\theta)\le\epsilon\}.
+$$</div>
+<p>这使跨维度比较成为“不同生成协议向同一输出事件分配多少概率”的问题。相对比值消除整体归一化因子，但不消除参考测度在不同区域间重新分配质量的影响。因此不能把结果升级为测度无关的 K，也不能把完整目标事件质量当作同一有限训练集中的全部候选竞争赔率。</p>
+<p>结果使用每个目标的池间 <code>log10 V</code> 中位数，而不是先平均体积再取对数。令 <code>s = 0x0F0F</code>，定义报告量：</p>
+<div class="math-display">$$
+\widehat\ell_{W,D}(f;\epsilon)
+=\operatorname{median}_{r}\bigl[\widehat{\log_{10}V}_{W,D,r}(f;\epsilon)\bigr],
+\qquad
+\widehat C_{W,D}(f;\epsilon)=-\widehat\ell_{W,D}(f;\epsilon).
+$$</div>
+<div class="math-display">$$
+\widehat\Delta_{W,D}(f;\epsilon)
+=\widehat\ell_{W,D}(s;\epsilon)-\widehat\ell_{W,D}(f;\epsilon)
+=\widehat C_{W,D}(f;\epsilon)-\widehat C_{W,D}(s;\epsilon).
+$$</div>
+<p><code>Delta &gt; 0</code> 表示参照事件的估计质量更大；本文将它简称为十进制 log 质量比。它不是以 bit 计的 Neural K 差；若转换成 bit，须乘以 <code>log2(10)</code>。17 个目标差值的中位数又是一次跨目标汇总，不能与每个目标内部的池间中位数混淆。</p>
+<h2 id="5-smc-协议与预算">5. SMC 协议与预算</h2>
+<p>保存节点固定为 0.68、0.65、0.60、0.55、0.50、0.45、0.40、0.35、0.30。相邻保存节点之间可以有多个自适应 SMC 层；9 个保存节点不等于只运行 9 层。</p>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>实际协议</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>初始粒子</td>
+<td>在归一化参数盒内独立均匀采样</td>
+</tr>
+<tr>
+<td>中间门槛</td>
+<td>各池 loss 的 0.5 分位数取最大值，再受下一保存节点及当前门槛约束</td>
+</tr>
+<tr>
+<td>重采样</td>
+<td>在各池内部从幸存粒子中有放回重采样，累计各层幸存比例的对数</td>
+</tr>
+<tr>
+<td>局部提案</td>
+<td>分块及全参数的对称随机游走，越过参数盒边界时反射</td>
+</tr>
+<tr>
+<td>刷新提案</td>
+<td>每次块提案以 0.02 概率替换为该块的均匀刷新</td>
+</tr>
+<tr>
+<td>步长适应</td>
+<td>每层 8 轮，按全部池汇总接受率调节，目标接受率 0.30</td>
+</tr>
+<tr>
+<td>固定步长更新</td>
+<td>每层再进行 24 轮</td>
+</tr>
+<tr>
+<td>初始步长</td>
+<td>首层 0.050，中间层 0.030，输出层 0.050，全参数 0.015</td>
+</tr>
+<tr>
+<td>步长范围</td>
+<td>0.0002 至 0.30</td>
+</tr>
+<tr>
+<td>最大层数</td>
+<td>每个目标 2,000 层</td>
+</tr>
+<tr>
+<td>loss 数值容差</td>
+<td>采样接受条件使用 1e-7；完成核验另以 1e-6 检查保存最大 loss</td>
+</tr>
+</tbody>
+</table>
+<p>随机游走使用正态扰动，但参考测度仍是盒内均匀分布；该更新核不是 pCN。对固定门槛与固定步长，反射随机游走和均匀刷新以保持受限均匀测度为目标；实际运行中的自适应和有限更新并不提供全局混合保证。</p>
+<p>W64 D2 与 W128 D2 使用 <code>8 x 4096</code>，W256 D2 使用 <code>4 x 2048</code>，W512 D2 使用 <code>4 x 1024</code>，W256 D1 使用 <code>8 x 4096</code>。这些是粒子池数与每池粒子数，不是独立整轮重复次数。池间共享下一门槛与步长适应，即使重采样在各池内进行，也不能按独立重复构造置信区间。</p>
+<p>原协议的 prior、resampling、mutation、calibration 基础随机种子分别为 2026082410、2026082420、2026082430、2026082440；前三类生成器的种子再加上 <code>1_000_003 * target_index</code>，各池从相应生成器的序列中取样，不是各池独立启动整轮实验。额外的直接 prior 校准使用 4,194,304 个样本，检查 0.68、0.65、0.60 三个阈值；它不能替代更低 loss 的混合诊断。</p>
+<h2 id="6-事后分析与解释规则">6. 事后分析与解释规则</h2>
+<p>本次在所有配置共同完成的 BCE = 0.30 汇总宽度轴：以 <code>0x0F0F</code> 为固定参照，排除 <code>0x0F0F</code> 与 <code>0xCCCC</code> 后逐一列出 17 个目标的相对差，并计算其中位数；另列 W256 的 D1/D2 示例对照。这是对已完成记录的描述性整理，不补充未运行条件，也不把该汇总追称为前瞻性显著性检验。</p>
+<p>完成检查要求五配置各有 19 个完成目标、每目标有完整 9 节点、log-volume 有限且保存最大 loss 不超过阈值加核验容差。谱系、池间跨度和 hard 目标命中单独报告。记录完整不等于估计无偏，方向一致不等于排除共同混合偏差，池间差异小也不是系统误差上界。</p>
+<h1 id="e38-结果与结论">E38：结果与结论</h1>
+<blockquote>
+<p>核验与整理日期：2026-10-21。本报告仅覆盖已完成的 4-bit SMC 五配置扫描，不包含其它训练任务，也没有因本次整理启动新实验。所有数值均是有限采样估计或保存记录的诊断读数。</p>
+</blockquote>
+<h2 id="1-完成状态">1. 完成状态</h2>
+<p>五个配置均完成 19/19 个目标和全部 9 个保存阈值，共 95 个目标运行、855 条阈值记录。逐条核验未发现缺少节点、非有限 log-volume 或保存最大 loss 超过阈值加 1e-6 的情况。五个结果包均通过 ZIP CRC 检查，每包包含 19 份完整目标 summary；这些仅证明记录与封装完整，不证明全局混合。</p>
+<p>最后完成的配置为 W512 D2，其总 summary 记录约 78.69 小时。其它配置的总 summary 在续跑驱动跳过已完成目标后被重写，<code>elapsed_seconds</code> 只记录当次检查或汇总耗时，不能直接用于比较完整运行成本。</p>
+<h2 id="2-共同阈值下的宽度结果">2. 共同阈值下的宽度结果</h2>
+<p>以下均为 BCE = 0.30、D2 的结果。<code>C(f) = -median_pool(log10 V(f))</code>，相对差 <code>Delta(f) = C(f) - C(0x0F0F)</code>；表中最后一列为排除两个单 bit 规则后 17 个相对差的中位数。它们都是十进制对数量，不是 bit 数，四位小数只用于忠实转录读数，不代表已校准到该位的准确度。差值在未舍入数据上计算，因此可与前两列舍入后的差相差末位。</p>
+<table>
+<thead>
+<tr>
+<th>宽度</th>
+<th style="text-align: right;">C(0x0F0F)</th>
+<th style="text-align: right;">C(0xAE8C)</th>
+<th style="text-align: right;">Delta(0xAE8C)</th>
+<th style="text-align: right;">17 个目标 Delta 的中位数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>64</td>
+<td style="text-align: right;">74.2142</td>
+<td style="text-align: right;">128.1042</td>
+<td style="text-align: right;">53.8901</td>
+<td style="text-align: right;">17.7023</td>
+</tr>
+<tr>
+<td>128</td>
+<td style="text-align: right;">91.4117</td>
+<td style="text-align: right;">167.4016</td>
+<td style="text-align: right;">75.9899</td>
+<td style="text-align: right;">25.0701</td>
+</tr>
+<tr>
+<td>256</td>
+<td style="text-align: right;">110.2689</td>
+<td style="text-align: right;">217.1203</td>
+<td style="text-align: right;">106.8514</td>
+<td style="text-align: right;">35.0872</td>
+</tr>
+<tr>
+<td>512</td>
+<td style="text-align: right;">129.1326</td>
+<td style="text-align: right;">276.6561</td>
+<td style="text-align: right;">147.5235</td>
+<td style="text-align: right;">48.0666</td>
+</tr>
+</tbody>
+</table>
+<p><code>0x0F0F</code> 的绝对质量也随宽度下降，<code>0xAE8C</code> 下降得更多。支持的读数是简单参照相对于该目标的质量优势扩大，不是“简单目标的绝对质量不受增宽惩罚”。</p>
+<figure class="result-figure"><a href="../assets/figures/width_relative_mass_20261021.png" target="_blank" rel="noopener"><img src="../assets/figures/width_relative_mass_20261021.png" alt="BCE 0.30 下 17 个选定目标相对单 bit 参照的十进制 log 质量比" loading="lazy"></a><figcaption>BCE 0.30 下 17 个选定目标相对单 bit 参照的十进制 log 质量比</figcaption></figure>
+<p>每条线跟踪同一目标在四个宽度上的相对质量。纵轴不是测试误差，也没有把共享适应池的跨度画成独立置信区间。</p>
+<h2 id="3-全部-17-个目标的相对差">3. 全部 17 个目标的相对差</h2>
+<p>下表排除参照 <code>0x0F0F</code> 和另一单 bit 规则 <code>0xCCCC</code>，列出其余全部选定目标的 <code>Delta</code>。17/17 条序列均在 W64、W128、W256、W512 四点严格递增。</p>
+<table>
+<thead>
+<tr>
+<th>目标</th>
+<th style="text-align: right;">W64 D2</th>
+<th style="text-align: right;">W128 D2</th>
+<th style="text-align: right;">W256 D2</th>
+<th style="text-align: right;">W512 D2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0x88EE</td>
+<td style="text-align: right;">9.0126</td>
+<td style="text-align: right;">15.4183</td>
+<td style="text-align: right;">24.3574</td>
+<td style="text-align: right;">36.2827</td>
+</tr>
+<tr>
+<td>0x3B23</td>
+<td style="text-align: right;">17.7023</td>
+<td style="text-align: right;">25.0701</td>
+<td style="text-align: right;">35.0726</td>
+<td style="text-align: right;">48.0146</td>
+</tr>
+<tr>
+<td>0x1337</td>
+<td style="text-align: right;">38.6580</td>
+<td style="text-align: right;">55.3287</td>
+<td style="text-align: right;">77.6897</td>
+<td style="text-align: right;">106.9552</td>
+</tr>
+<tr>
+<td>0x7F02</td>
+<td style="text-align: right;">40.7925</td>
+<td style="text-align: right;">53.3776</td>
+<td style="text-align: right;">69.9674</td>
+<td style="text-align: right;">90.7186</td>
+</tr>
+<tr>
+<td>0xAE8C</td>
+<td style="text-align: right;">53.8901</td>
+<td style="text-align: right;">75.9899</td>
+<td style="text-align: right;">106.8514</td>
+<td style="text-align: right;">147.5235</td>
+</tr>
+<tr>
+<td>0xF550</td>
+<td style="text-align: right;">9.0389</td>
+<td style="text-align: right;">15.2343</td>
+<td style="text-align: right;">24.4020</td>
+<td style="text-align: right;">36.2785</td>
+</tr>
+<tr>
+<td>0xBB22</td>
+<td style="text-align: right;">9.0296</td>
+<td style="text-align: right;">15.4827</td>
+<td style="text-align: right;">24.2693</td>
+<td style="text-align: right;">36.3146</td>
+</tr>
+<tr>
+<td>0x4D4D</td>
+<td style="text-align: right;">9.0373</td>
+<td style="text-align: right;">15.3275</td>
+<td style="text-align: right;">24.3866</td>
+<td style="text-align: right;">36.4003</td>
+</tr>
+<tr>
+<td>0x055F</td>
+<td style="text-align: right;">26.5401</td>
+<td style="text-align: right;">40.8282</td>
+<td style="text-align: right;">60.4422</td>
+<td style="text-align: right;">86.3721</td>
+</tr>
+<tr>
+<td>0xAB2A</td>
+<td style="text-align: right;">17.6706</td>
+<td style="text-align: right;">24.9376</td>
+<td style="text-align: right;">34.9480</td>
+<td style="text-align: right;">48.0666</td>
+</tr>
+<tr>
+<td>0x2AAB</td>
+<td style="text-align: right;">17.3836</td>
+<td style="text-align: right;">24.1786</td>
+<td style="text-align: right;">33.3372</td>
+<td style="text-align: right;">45.7391</td>
+</tr>
+<tr>
+<td>0xD554</td>
+<td style="text-align: right;">17.3998</td>
+<td style="text-align: right;">24.1873</td>
+<td style="text-align: right;">33.5584</td>
+<td style="text-align: right;">45.4463</td>
+</tr>
+<tr>
+<td>0x2F0B</td>
+<td style="text-align: right;">17.6981</td>
+<td style="text-align: right;">25.0202</td>
+<td style="text-align: right;">35.0872</td>
+<td style="text-align: right;">47.8712</td>
+</tr>
+<tr>
+<td>0xF2B0</td>
+<td style="text-align: right;">22.8222</td>
+<td style="text-align: right;">33.0275</td>
+<td style="text-align: right;">47.0894</td>
+<td style="text-align: right;">65.5589</td>
+</tr>
+<tr>
+<td>0x1F07</td>
+<td style="text-align: right;">22.9634</td>
+<td style="text-align: right;">33.0437</td>
+<td style="text-align: right;">47.1258</td>
+<td style="text-align: right;">65.1122</td>
+</tr>
+<tr>
+<td>0xFD40</td>
+<td style="text-align: right;">22.8965</td>
+<td style="text-align: right;">33.0338</td>
+<td style="text-align: right;">46.9543</td>
+<td style="text-align: right;">65.0804</td>
+</tr>
+<tr>
+<td>0xEAA8</td>
+<td style="text-align: right;">38.8095</td>
+<td style="text-align: right;">55.2474</td>
+<td style="text-align: right;">77.7981</td>
+<td style="text-align: right;">106.8981</td>
+</tr>
+</tbody>
+</table>
+<p>这个一致性结论针对同一参照下的 17 个指定目标，不表示所有目标对之间的差距都单调扩大，也不表示局部排序没有反转。该集合不能代表全部平衡函数，更不能代表所有任务或全部 loss 窗口。</p>
+<h2 id="4-w256-深度对照">4. W256 深度对照</h2>
+<p>对同一个 <code>0x0F0F/0xAE8C</code> 示例，在 BCE = 0.30 得到：</p>
+<table>
+<thead>
+<tr>
+<th>隐藏层数</th>
+<th style="text-align: right;">C(0x0F0F)</th>
+<th style="text-align: right;">C(0xAE8C)</th>
+<th style="text-align: right;">Delta(0xAE8C)</th>
+<th style="text-align: right;">池数 x 每池粒子数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>D1</td>
+<td style="text-align: right;">54.9400</td>
+<td style="text-align: right;">147.4218</td>
+<td style="text-align: right;">92.4818</td>
+<td style="text-align: right;">8 x 4,096</td>
+</tr>
+<tr>
+<td>D2</td>
+<td style="text-align: right;">110.2689</td>
+<td style="text-align: right;">217.1203</td>
+<td style="text-align: right;">106.8514</td>
+<td style="text-align: right;">4 x 2,048</td>
+</tr>
+</tbody>
+</table>
+<p>这是一个宽度上的两个深度点，且粒子预算不同，不能据此宣称完整深度单调律。D3、D4 没有对应的完成结果，不作为缺失值推断或外推。</p>
+<h2 id="5-bce-0-30-不是-hard-exact">5. BCE 0.30 不是 hard-exact</h2>
+<p>任一误分类或零 margin 点的单点 BCE 至少为 <code>ln(2)</code>，其它点的 BCE 非负。因此 16 点平均 BCE 的充分 hard-exact 条件是严格低于下列边界：</p>
+<div class="math-display">$$
+L_{U,f}(\theta)&lt;\frac{\ln 2}{16}\approx 0.04332
+\quad\Longrightarrow\quad
+\text{all 16 hard labels match }f.
+$$</div>
+<p>本轮共同终点 0.30 高于该边界，不能从平均 loss 推出全部 hard 标签正确。D2 的 <code>0xAE8C</code> 终点粒子中，W64、W128 的完整 hard 目标命中比例分别为 0.0002136230、0.0000610352；W256、W512 均未观察到命中。这些是条件粒子样本中的经验比例，不是独立测得的无条件 hard 函数概率；零命中也不证明其真实质量为零。</p>
+<p>因此，前述表格和图片描述的是目标标签的连续 loss 事件质量，不是 <code>0xAE8C</code> hard cell 的质量比。即使历史字段名含有 <code>HARD_EXACT_REFERENCE_THRESHOLD</code>，0.30 也只能作为本轮共同参考阈值解释，字段名不能提供数学保证。</p>
+<h2 id="6-采样诊断与不确定性">6. 采样诊断与不确定性</h2>
+<p>下表的最少谱系为该配置在 BCE = 0.30 时跨目标、跨池的最小存活初始谱系数；最大池间跨度则先对每个目标计算池间 <code>log10 V</code> 最大值减最小值，再跨目标取最大值。</p>
+<table>
+<thead>
+<tr>
+<th>配置</th>
+<th style="text-align: right;">最少初始谱系</th>
+<th style="text-align: right;">最大池间 log10 质量跨度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>W64 D2</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0.6234</td>
+</tr>
+<tr>
+<td>W128 D2</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0.6042</td>
+</tr>
+<tr>
+<td>W256 D2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.9419</td>
+</tr>
+<tr>
+<td>W512 D2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.7942</td>
+</tr>
+<tr>
+<td>W256 D1</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">0.5450</td>
+</tr>
+</tbody>
+</table>
+<p>W256 D2 与 W512 D2 都存在仅余 1 条初始谱系的目标池。这一退化、随宽度递减的粒子预算、池间共享门槛与步长适应，以及有限更新可能遗漏的区域，都限制了精度解释。没有独立预算配平实验，不能把预算效应与宽度效应完全分离；17/17 的方向一致也不能消除共同混合偏差。</p>
+<p>约 0.55 至 0.94 的最大池间跨度只是诊断读数，不是独立重复置信区间，也不是系统误差上界。这里不据此给出显著性或已校准的误差条；同样，接受率正常和文件完整都不能单独保证全局混合。</p>
+<p>本轮在 0.30 及以下只有一个保存节点，因此不拟合深尾收缩斜率。历史 <code>deep_tail_slopes.csv</code> 为空源于可用节点不足；<code>parity_order_by_threshold.csv</code> 为空源于目标使用 <code>fn_0x</code> 命名而非 <code>parity1</code> 至 <code>parity4</code>。这两项不表示漏跑目标，也不能补造相应分析。</p>
+<h2 id="7-结论与适用边界">7. 结论与适用边界</h2>
+<p>本次已完成数据支持：在指定的均匀参数盒、fan-in 缩放、选定 19 个平衡目标和共同 BCE = 0.30 下，排除两个单 bit 规则后，17 个目标相对于 <code>0x0F0F</code> 的估计质量劣势均随四个双隐藏层宽度扩大；W256 的单个示例也呈现 D2 比 D1 更大的相对差。</p>
+<p>这是有限协议下的静态相对偏好证据。它不建立测度无关的 K，不把 loss 事件改称 hard cell，不保证对所有规则、架构或阈值成立，也不证明增宽必然改善泛化。E38 没有把完整目标质量与同一有限训练集上的实际优化竞争建立因果对应，因而不能据此直接验证所有双下降，或宣称静态质量就是 SGD 的选择概率。</p></div>
+
+      </article>
+    </main>
+  </div>
+</body>
+</html>

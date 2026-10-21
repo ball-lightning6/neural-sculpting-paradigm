@@ -97,28 +97,35 @@ $$</div>
 </blockquote>
 <p>对于同一个 <code>D</code> 和嵌套的 loss 子水平集，<code>epsilon</code> 降低时可行集合只会缩小，所以 <code>K^*_D(epsilon)</code> 不会下降。这是集合定义带来的严格性质。但它只说明“最简单可行函数”的前沿，不说明该函数占据最大体积，也不说明 SGD 一定会找到它。</p>
 <h2 id="3-剩余候选中的简单性偏置">3. 剩余候选中的简单性偏置</h2>
-<p>真正描述神经网络选择的是完整质量分布：</p>
+<p>静态参考系综中的候选质量分布是：</p>
 <div class="math-display">$$
 Q_{D,\epsilon}(f)
 =
 \frac{\Omega_D(f;\epsilon)}
 {\sum_g\Omega_D(g;\epsilon)}.
 $$</div>
+<p>它不是实际训练函数分布。若 <span class="math-inline">$T_{D,\tau}$</span> 输出训练时刻 <span class="math-inline">$\tau$</span> 的参数、<span class="math-inline">$H_U$</span> 读取固定输入域上的 hard 函数，则 <span class="math-inline">$\nu_{D,\tau}=(T_{D,\tau})_\#\mu_{\rm init}$</span> 是参数分布，<span class="math-inline">$Q^{\rm opt}_{D,\tau}=(H_U)_\#\nu_{D,\tau}$</span> 才是函数分布；训练随机性一并纳入初始联合分布和协议。</p>
 <p>因此需要区分两个过程：</p>
 <ol>
 <li><strong>可行性淘汰</strong>：某些捷径或错误延拓不再满足更低的 loss，离开 <code>F_D(epsilon)</code>；</li>
 <li><strong>可行候选内重排</strong>：仍然可行的函数，其实现质量以不同速度下降，<code>Q</code>发生变化。</li>
 </ol>
-<p>若用单调的 loss 深度坐标 <code>t</code> 表示收紧过程，并记</p>
+<p>若用单调的 loss 深度坐标 <code>t</code> 表示收紧过程（不是训练时间），并记</p>
 <div class="math-display">$$
 s_t(f)=-\partial_t\log\Omega_t(f),
 $$</div>
-<p>则对固定的复杂度标尺 <code>kappa(f)</code> 有：</p>
+<p>则在正质量分支可微、相关矩有限且可交换微分与求和的区间，对固定的复杂度标尺 <code>kappa(f)</code> 有：</p>
 <div class="math-display">$$
 \partial_tE_{Q_t}[\kappa]
 =-\operatorname{Cov}_{Q_t}(\kappa,s_t).
 $$</div>
-<p>当复杂函数的收缩率更大时，协方差为正，平均复杂度下降；若同时没有新的远离主模态的质量出现，复杂度分布会收窄。这正是“随 BCE/loss 下降，简单性偏置还会增强”的精确定义版本。</p>
+<p>当复杂函数的收缩率更大、使该协方差为正时，平均复杂度下降。这是“随 BCE/loss 下降，简单性偏置还会增强”的均值版本，不保证复杂度分布收窄；没有新模态也不够，原有分支的质量重排仍可能增大方差。在同样的正则条件下：</p>
+<div class="math-display">$$
+\partial_t\operatorname{Var}_{Q_t}(\kappa)
+=-\operatorname{Cov}_{Q_t}
+\left((\kappa-E_{Q_t}[\kappa])^2,s_t\right).
+$$</div>
+<p>收窄须单独检查方差或这个协方差的符号；即使成本方差为零，同成本的不同函数也不必形成唯一共识。完整函数凝聚还须用 collision、modal mass 或指定 Hamming 半径质量单独检查。</p>
 <p>它仍是条件机制，不是任意 loss 的定理。<code>s_t</code>由联合输出分布、参数测度、架构和 loss 共同决定；BCE只是已测协议中的一种方向。</p>
 <h2 id="4-与-mdl-的关系">4. 与 MDL 的关系</h2>
 <p>两段式 MDL 写成：</p>
@@ -126,7 +133,7 @@ $$</div>
 L_{\rm MDL}(f;D)
 =K_{\rm ref}(f)+L_{\rm residual}(D\mid f).
 $$</div>
-<p><code>K^*_D(epsilon)</code>描述允许残差预算下的最低模型码长；<code>Q_{D,epsilon}</code>描述在该残差预算下不同模型实现的质量分布。前者是“最简单可行解”的前沿，后者才对应网络在剩余候选中实际偏向谁。</p>
+<p><code>K^*_D(epsilon)</code>描述允许残差预算下的最低模型码长；<code>Q_{D,epsilon}</code>描述静态参考系综在该残差预算下不同模型实现的质量分布。前者是“最简单可行解”的前沿，后者描述剩余候选的静态质量偏好；网络实际偏向谁仍须由 <code>Qopt</code> 检查。</p>
 <p>因此不能把“MDL选择最简单函数”写成网络训练代码中额外存在的第二个目标。网络显式降低的仍然是训练 loss；MDL式偏好来自架构参考质量和 loss 截面共同产生的质量重排。</p>
 <h2 id="5-与-grokking-数据相变的关系">5. 与 grokking 数据相变的关系</h2>
 <p>增加数据和降低 loss不是同一个轴：</p>

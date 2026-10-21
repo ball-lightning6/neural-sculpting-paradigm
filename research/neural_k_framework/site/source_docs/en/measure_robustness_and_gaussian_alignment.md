@@ -45,7 +45,7 @@ The common-node results were:
 | Majority 0x17 | 58.65 | 61.25 | 61.18 |
 | Parity 0x69 | 77.51 | 83.03 | 82.86 |
 
-The increments relative to \((-9,+9)\) were:
+The operation moves the two MSE target values. At fixed tolerance these target neighborhoods are generally not nested; it does not expand an allowed-output box. The increments relative to \((-9,+9)\) were:
 
 | Rule | Symmetric expansion | Positive-side expansion |
 |---|---:|---:|
@@ -54,7 +54,7 @@ The increments relative to \((-9,+9)\) were:
 | Majority | +2.60 bit | +2.54 bit |
 | Parity | +5.51 bit | +5.34 bit |
 
-The key fact is that **after removing Gaussian positional weighting, complex rules were still more sensitive to expansion of the output cross-section, and the basic ordering remained constant < copy < majority < parity.** Thus faster contraction of complex rules cannot be attributed solely to their being farther from the Gaussian center.
+The key fact is that **after removing Gaussian positional weighting, complex rules remain more sensitive to changes in target spacing, with the ordering constant < copy < majority < parity preserved.** This finite-window result does not require pointwise Gaussian density, but still includes the fixed-ball boundary and norm geometry.
 
 This is not a strict Euclidean volume law. The difference between symmetric and one-sided expansion was only about 0.06–0.18 bit, close to replica uncertainty, and the fixed ball introduces boundary effects. The more accurate description is a finite-window response:
 
@@ -72,19 +72,19 @@ Define the four-point interaction term:
 \Gamma=K(l-1,r+1)-K(l-1,r)-K(l,r+1)+K(l,r).
 \]
 
-If \(\Gamma\) is close to zero, the negative-log-volume costs of adding the two endpoint constraints are approximately additive in the current window.
+If \(\Gamma\) is close to zero, the K increments from moving the two MSE target values separately are approximately additive in the current window; this is not a conditional survival cost from adding nested constraints.
 
-In the fixed-ball \(R=72\) deep-tail grid, the maximum \(|\Gamma|\) over eight computable rectangles at MSE 0.01, 0.003, and 0.001 was 0.919, 0.868, and 0.931 bit, respectively. None exceeded the conservative replica-variation proxy. Repeating a four-point check at \(R=96\) and MSE=0.001 gave Gamma values of +0.46, -1.30, -0.46, and -0.01 bit for constant, copy, majority, and parity; these also did not exceed the corresponding replica SD sums.
+In the fixed-ball \(R=72\) deep-tail grid, the maximum \(|\Gamma|\) over eight computable rectangles at MSE 0.01, 0.003, and 0.001 was 0.919, 0.868, and 0.931 bit, respectively. None exceeded the conservative replica-variation proxy. Under this page's Gamma convention, the four-point recheck at \(R=96\) and MSE=0.001 gives -0.464, +1.304, +0.458, and +0.011 bit for constant, copy, majority, and parity, also within the corresponding replica SD sums.
 
-The current evidence is therefore compatible with a finite-window approximation:
+Only with additional assumptions such as approximate translation symmetry and stable responses within the window can the following finite-window model be considered. The results are compatible with it; small Gamma alone does not imply it:
 
 \[
 K_f(d)\approx A_f+\lambda_f d,
 \qquad
-V_f(d)\approx C_f e^{-\lambda_f d}.
+V_f(d)\approx C_f 2^{-\lambda_f d}.
 \]
 
-The experiment measured that Gamma is compatible with zero; it did not measure a genuinely nonzero Gamma with high precision. This must not be presented as an exact law.
+Here K and its slope are measured in bits, hence the base-two exponential. The experiment did not detect nonzero Gamma at its current uncertainty; this is neither a high-precision equivalence test nor proof of a linear law over arbitrary spacings.
 
 ## 5. Output Center, Amplitude, and Bias Controls
 

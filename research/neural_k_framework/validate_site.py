@@ -101,24 +101,75 @@ def local_target(page: Path, url: str) -> tuple[Path | None, str]:
     return target, fragment
 
 
+def validate_paper_sources(errors: list[str]) -> None:
+    """补查不直接渲染为HTML的正式论文，防止整段漏译未被站点校验发现。"""
+    paths = [
+        ROOT / "papers" / "compression_is_intelligence_zh.md",
+        ROOT / "papers" / "compression_is_intelligence_en.md",
+    ]
+    if not all(path.exists() for path in paths):
+        errors.append("缺少正式短论文中英文源稿。")
+        return
+    texts = [path.read_text(encoding="utf-8") for path in paths]
+    signatures = []
+    for text in texts:
+        displays = re.findall(r"\$\$(.*?)\$\$", text, re.S)
+        normalized = [
+            re.sub(r"\s+", "", formula).rstrip(".,")
+            for formula in displays
+        ]
+        signatures.append({
+            "段落": len(re.split(r"\n\s*\n", text.strip())),
+            "标题编号": re.findall(r"(?m)^#{1,4}\s+(\d+(?:\.\d+)*)", text),
+            "表格行": len(re.findall(r"(?m)^\|", text)),
+            "展示公式": normalized,
+            "行内公式分隔符": len(re.findall(r"(?<!\$)\$(?!\$)", text)),
+        })
+    for label, value in signatures[0].items():
+        if value != signatures[1][label]:
+            errors.append(f"正式短论文中英不对应：{label}。")
+    if "These two processes" not in texts[1]:
+        errors.append("英文正式论文缺少两种作用与收窄边界的对应段落。")
+    if "both are computable code lengths" in texts[1]:
+        errors.append("英文正式论文重新出现无条件可计算码长断言。")
+
+
+def validate_math_protection(errors: list[str]) -> None:
+    from build_site import protect_math
+
+    for example in ["$x_1+1$", r"\(x_1+1\)", r"\\(x_1+1\\)"]:
+        _, tokens = protect_math(example)
+        if len(tokens) != 1 or tokens[0][1:] != ("inline", "x_1+1"):
+            errors.append(f"行内公式保护失败：{example}")
+    _, tokens = protect_math("```text\n" + r"\(x_1\)" + "\n```")
+    if tokens:
+        errors.append("代码块内的公式不应被转换。")
+
+
 def main() -> int:
     errors: list[str] = []
+    validate_paper_sources(errors)
+    validate_math_protection(errors)
     pages = sorted(SITE.rglob("*.html"))
     parsed = {page.resolve(): parse_page(page) for page in pages}
 
-    if len(pages) != 110:
-        errors.append(f"预期 110 个 HTML 页面，实际 {len(pages)} 个。")
+    if len(pages) != 116:
+        errors.append(f"预期 116 个 HTML 页面，实际 {len(pages)} 个。")
 
     required = [
         SITE / "index.html",
         SITE / "evidence-ledger.html",
         SITE / "references.html",
         SITE / "theory-core.html",
+        SITE / "width-double-descent.html",
+        SITE / "complexity-methods.html",
         SITE / "experiments" / "index.html",
         SITE / "en" / "index.html",
         SITE / "en" / "evidence-ledger.html",
         SITE / "en" / "references.html",
         SITE / "en" / "theory-core.html",
+        SITE / "en" / "width-double-descent.html",
+        SITE / "en" / "complexity-methods.html",
         SITE / "en" / "experiments" / "index.html",
     ]
     for path in required:
@@ -164,11 +215,11 @@ def main() -> int:
                     errors.append(f"{page}: 锚点不存在 {url}")
 
     experiment_index = parsed.get((SITE / "experiments" / "index.html").resolve())
-    if experiment_index and experiment_index.cards != 37:
-        errors.append(f"实验索引卡片应为 37，实际 {experiment_index.cards}。")
+    if experiment_index and experiment_index.cards != 38:
+        errors.append(f"实验索引卡片应为 38，实际 {experiment_index.cards}。")
     experiment_index_en = parsed.get((SITE / "en" / "experiments" / "index.html").resolve())
-    if experiment_index_en and experiment_index_en.cards != 37:
-        errors.append(f"英文实验索引卡片应为 37，实际 {experiment_index_en.cards}。")
+    if experiment_index_en and experiment_index_en.cards != 38:
+        errors.append(f"英文实验索引卡片应为 38，实际 {experiment_index_en.cards}。")
 
     main_page = parsed.get((SITE / "index.html").resolve())
     if main_page:
@@ -188,8 +239,8 @@ def main() -> int:
             for url in main_page.hrefs
             if "experiments/e" in url or "post-upload-e" in url or "post-upload-peleg.html" in url
         }
-        if len(experiment_links) != 37:
-            errors.append(f"主文应链接全部 37 个编号实验页，实际 {len(experiment_links)}。")
+        if len(experiment_links) != 38:
+            errors.append(f"主文应链接全部 38 个编号实验页，实际 {len(experiment_links)}。")
 
     main_page_en = parsed.get((SITE / "en" / "index.html").resolve())
     if main_page_en:
@@ -201,8 +252,8 @@ def main() -> int:
             for url in main_page_en.hrefs
             if "experiments/e" in url or "post-upload-e" in url or "post-upload-peleg.html" in url
         }
-        if len(experiment_links_en) != 37:
-            errors.append(f"英文主文应链接全部 37 个编号实验页，实际 {len(experiment_links_en)}。")
+        if len(experiment_links_en) != 38:
+            errors.append(f"英文主文应链接全部 38 个编号实验页，实际 {len(experiment_links_en)}。")
 
     reference_page = parsed.get((SITE / "references.html").resolve())
     if reference_page:
@@ -272,11 +323,11 @@ def main() -> int:
     ]
     for relative in post_upload_experiment_pages:
         if not (SITE / relative).exists():
-            errors.append(f"缺少提交后实验页 E31–E37：{relative}")
+            errors.append(f"缺少历史兼容实验页：{relative}")
         if not (SITE / "en" / relative).exists():
-            errors.append(f"缺少英文提交后实验页 E31–E37：en/{relative}")
+            errors.append(f"缺少英文历史兼容实验页：en/{relative}")
 
-    canonical_increment_pages = [f"experiments/e{number:02d}.html" for number in range(31, 38)]
+    canonical_increment_pages = [f"experiments/e{number:02d}.html" for number in range(31, 39)]
     for relative in canonical_increment_pages:
         if not (SITE / relative).exists():
             errors.append(f"缺少 canonical 实验页：{relative}")
@@ -288,6 +339,8 @@ def main() -> int:
         (SITE / "evidence-ledger.html", SITE / "en" / "evidence-ledger.html"),
         (SITE / "references.html", SITE / "en" / "references.html"),
         (SITE / "theory-core.html", SITE / "en" / "theory-core.html"),
+        (SITE / "width-double-descent.html", SITE / "en" / "width-double-descent.html"),
+        (SITE / "complexity-methods.html", SITE / "en" / "complexity-methods.html"),
         (SITE / "experiments" / "index.html", SITE / "en" / "experiments" / "index.html"),
         (SITE / "post-upload.html", SITE / "en" / "post-upload.html"),
         (SITE / "post-upload-mdl.html", SITE / "en" / "post-upload-mdl.html"),
@@ -309,7 +362,7 @@ def main() -> int:
     )
     language_pairs.extend(
         (SITE / "experiments" / f"e{number:02d}.html", SITE / "en" / "experiments" / f"e{number:02d}.html")
-        for number in range(31, 38)
+        for number in range(31, 39)
     )
 
     def html_targets(page: Path, parser: PageParser) -> set[Path]:
@@ -400,7 +453,7 @@ def main() -> int:
             print(f"- {error}")
         return 1
 
-    print(f"Validated {len(pages)} HTML pages: links, anchors, assets, cards and zh/en structural parity all pass.")
+    print(f"Validated {len(pages)} HTML pages: links, anchors, assets, cards, zh/en structural parity and formal-paper source parity all pass.")
     return 0
 
 

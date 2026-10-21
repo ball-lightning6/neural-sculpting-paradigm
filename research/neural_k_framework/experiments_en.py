@@ -470,18 +470,18 @@ Across the 60%, 70%, 80%, and 90% training conditions, unseen agreement at hard 
 """,
     },
     28: {
-        "title": "Whole-Network HMC versus Adam on 50k MNIST",
-        "purpose": "Test whether a finite-width static HMC ensemble can reach optimizer-level prediction quality on the full MNIST training set.",
+        "title": "Likelihood-Weighted Posterior HMC versus Same-Protocol Adam on 50k MNIST",
+        "purpose": "Compare whole-network likelihood-weighted posterior HMC with same-protocol Adam on full MNIST; measure agreement and residual inter-chain differences, not hard-threshold volume.",
         "overview": """
-A 4,266-parameter small CNN is sampled with 16 full-batch HMC chains at beta equal to 50,000. Thirty retained snapshots yield 480 parameter samples. Plain Adam and Gaussian-prior MAP Adam use 32 matched initializations, batch size 256, and 50 epochs on the identical split without augmentation.
+A 4,266-parameter small CNN is sampled with 16 full-batch HMC chains at beta equal to 50,000, targeting a Gaussian prior multiplied by the training-data likelihood, not a hard-loss-threshold conditional distribution. Thirty retained snapshots yield 480 parameter samples. Plain Adam and Gaussian-prior MAP Adam use 32 matched initializations, batch size 256, and 50 epochs on the identical split without augmentation.
 """,
         "motivation": """
-Boolean and tiny-image results would remain scale-limited unless the complete static parameter ensemble could be constructed on a standard natural classification task and compared directly with practical optimization.
+This is a separate Bayesian posterior-sampling comparison on a natural classification task, not a direct scaling-up of the Boolean and tiny-image hard-threshold volume experiments. Its Gaussian prior is weighted by the full training-data likelihood.
 """,
         "results": """
 HMC, plain Adam, and MAP Adam reached ensemble test accuracies of 99.03%, 98.95%, and 98.82%. HMC and plain Adam differed on only eight net test examples; exact McNemar p was 0.2005. HMC mean pointwise agreement was 0.9877, although all 480 retained samples represented different complete 10,000-image functions. Between-chain function distance remained above within-chain distance.
 
-**Conclusion.** Whole-network HMC and Adam reach the same performance level at 50k MNIST, with a small nonsignificant HMC advantage under the frozen protocol. Strong prediction and pointwise concentration do not prove global MCMC mixing or equality of static and optimizer distributions.
+**Conclusion.** Likelihood-weighted posterior HMC and Adam reach similar performance levels on 50k MNIST, with a small nonsignificant HMC advantage under the frozen protocol. HMC uses gradients and this implementation estimates neither threshold volume nor Neural K. Strong prediction and pointwise concentration do not validate hard-threshold volume, prove global MCMC mixing, or establish equality of static and optimizer distributions.
 """,
     },
     29: {

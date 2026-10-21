@@ -4,7 +4,7 @@
 
 在数据充分的合成任务中，train 与 validation loss 常从训练初期同步下降。一个过强解释是“高 loss 区域已几乎全是正确函数”；更局部、可测的解释是：数据越多，训练梯度越接近总体规则梯度，训练集特有方向在样本平均中越充分抵消。
 
-一步小学习率更新满足：
+沿负原始 full-train 梯度的一步小学习率 SGD 更新满足一阶近似：
 
 $$
 \Delta L_{val}
@@ -12,7 +12,7 @@ $$
 -\eta\nabla L_{val}\cdot\nabla L_{train}.
 $$
 
-因此 train/validation 梯度余弦直接判断降低训练 loss 的局部方向是否也降低 validation loss。
+因此 train/validation 梯度余弦给出沿负原始训练梯度小步更新时 validation loss 变化的一阶预测。实际 Adam 的动量和自适应预条件会改变更新方向，不能把该余弦直接解释为实际 Adam 步的 validation loss 变化；后者需另测。
 
 ## 2. 正式配置
 
@@ -35,14 +35,14 @@ $$
 
 ## 4. 关键控制：matched raw BCE
 
-不同样本量到达同一 step 时 loss 不同，不能直接比较。实验在每个 seed 的`log(raw BCE)`轨迹上插值，在：
+不同样本量到达同一 step 时 loss 不同，不能直接比较。冻结实现对每个样本量和 seed，在已保存的诊断 checkpoint 中按`log(raw BCE)`距离选择最接近下列目标 loss 的点，而不做插值：
 
 ```text
 0.68, 0.6, 0.5, 0.4, 0.3, 0.2,
 0.1, 0.05, 0.02, 0.01, 0.003
 ```
 
-逐层比较梯度余弦和 validation-train BCE gap。
+仅保留`max(actual_loss / target_loss, target_loss / actual_loss) <= 1.35`的匹配点，再逐层比较梯度余弦和 validation-train BCE gap。这是带容差的近邻比较，不是精确同 loss 比较；归档`fixed_raw_bce_comparison.csv`保留每个点的实际 loss 和实际/目标比值。
 
 ## 5. 预注册预测与边界
 
@@ -53,4 +53,4 @@ $$
 3. 该顺序应跨 seed 保留；
 4. 低数据条件可在深 loss 转为负余弦，高数据仍保持正向。
 
-该实验只使用一个嵌套数据排列和一个任务，不建立跨任务普适定律；梯度范数接近数值零时余弦失去意义，主分析限制在 BCE 不低于0.003的区域。
+该实验只使用一个嵌套数据排列和一个任务，不建立跨任务普适定律；梯度范数接近数值零时余弦失去意义，主分析采用不低于0.003的目标 BCE 层级，实际 checkpoint loss 受上述容差约束。

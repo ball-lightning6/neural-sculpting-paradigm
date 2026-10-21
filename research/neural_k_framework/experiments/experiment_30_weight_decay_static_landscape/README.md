@@ -2,8 +2,10 @@
 
 ## 目的
 
-说明grokking并不需要weight decay；显式L2之所以能够帮助grokking，是因为它
-改变了同一套函数竞争的静态loss地形，而不是引入一种神秘或特殊的学习机制。
+测量显式L2如何改变同一套函数竞争的静态loss地形，为其影响grokking式规则选择
+提供一种静态贡献；本实验不独立裁决真实grokking的动力学因果，也不证明该贡献
+是唯一原因。无weight decay的grokking需另看真实训练证据，例如
+[E31的无WD Transformer训练](../experiment_31_loss_amplitude_grokking/POWER_MOD97_ALIGNMENT_REPORT.md)。
 
 ## 入口
 

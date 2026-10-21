@@ -12,11 +12,16 @@ site/index.html
 
 - `site/index.html`：研究主文；
 - `site/theory-core.html`：只保留最终命题与必要公式的独立理论核心；
-- `site/experiments/index.html`：E01–E30 实验索引；
-- `site/experiments/e01.html` 至 `e25.html`：实验详情；
+- `site/experiments/index.html`：E01–E38 实验索引；
+- `site/experiments/e01.html` 至 `e38.html`：实验详情；
 - `site/references.html`：明确引用、完整书目信息与论文原文入口；
 - `site/evidence-ledger.html`：完整证据总账。
-- `site/en/`：与上述29个中文页面一一对应的英文版本；每页顶部均可切换语言并保持当前页面。
+- `site/post-upload-*.html`：严格概率语言、MDL、架构估计和增量材料；
+- `site/width-double-descent.html`：容量轴、时间轴双下降解释与E38证据；
+- `site/complexity-methods.html`：给定规则与训练快照的两种复杂度测量方案，尚未新增验证实验；
+- `site/en/`：对应英文版本；当前共116个中英文HTML页面，每页可切换语言并保持当前页面。
+
+这两份10月理论增补仅接入网站，不加入正式论文或PDF。E38单列在实验索引中；MNIST探索性对照没有被标成已完成的严格文献复现。
 
 正文、图片、导航和实验搜索均为本地静态资源。公式使用 MathJax CDN，首次渲染公式时需要联网。
 
@@ -35,8 +40,10 @@ python validate_site.py
 
 `validate_site.py`检查：
 
-- 28 个 HTML 页面是否齐全；
+- 当前中英文 HTML 页面是否齐全；
 - 本地链接、图片、脚本和页内锚点是否存在；
-- 实验索引是否包含 25 张卡片；
-- 主文是否链接 E01–E30，并包含四张关键结果图；
-- 每个实验页是否包含概览、动机和结果三个主要分区。
+- 实验索引是否包含 38 张卡片；
+- 主文是否链接 E01–E38，并包含关键结果图；
+- 历史 E01–E30 页是否包含概览、动机和结果分区，E31–E38 是否有完整报告；
+- 中英文标题编号、表格、图片、公式和代码块结构是否对应。
+- 正式短论文中英文源稿是否有整段缺失、公式不对应，以及行内LaTeX分隔符是否被正确保护。

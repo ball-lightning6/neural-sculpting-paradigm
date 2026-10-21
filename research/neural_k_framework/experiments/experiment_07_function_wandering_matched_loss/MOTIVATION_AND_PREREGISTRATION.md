@@ -7,7 +7,7 @@ E06 已经证明静态低-loss 质量会重排完整函数，但四样本条件�
 - 单个模型在 hard fit 后是否继续跨函数 cell；
 - 迁移是随机跳跃还是集中到少数通道；
 - 多 seed 分布是否趋于稳定；
-- 静态先验在同等 loss 下是否给出相同分布。
+- 所测静态退火基线在平均 loss 近似匹配时是否给出相同分布。
 
 ## 2. 函数迁移实验
 
@@ -34,7 +34,7 @@ E06 已经证明静态低-loss 质量会重排完整函数，但四样本条件�
 - 多 seed 函数熵、top-state 质量与 agreement；
 - 静态/SGD 分布的 JS divergence；
 - ID 666与 ID 722的静态和动态赔率；
-- 相同 normalized loss 是否产生相同函数分布。
+- 平均 normalized loss 近似匹配时，所测静态退火基线与训练末态是否给出相同函数分布。
 
 ## 5. 边界
 
@@ -42,4 +42,5 @@ E06 已经证明静态低-loss 质量会重排完整函数，但四样本条件�
 - 极低 loss 接近 Adam `eps=1e-8`和 float32 数值尺度，晚期再扩张谨慎解释；
 - `wandering_overview.png`右下累计转换子图错误使用最终总数，禁止引用；
 - 原结果包自动生成的`normalized_loss_match_*`误拿 raw SGD loss 作匹配目标；正文 normalized 对照必须使用保存 logits 后的独立复算；
+- 平均 normalized loss 的近似匹配不等于逐模型 loss 或完整 loss 分布匹配，不能排除所有 Bayesian 条件分布；
 - hard function ID 相同不表示连续 logits、margin 或内部实现相同。

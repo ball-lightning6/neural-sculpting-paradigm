@@ -42,7 +42,7 @@
 <li><a href="#mdl解释">MDL解释</a></li>
 <li><a href="#与grokking的关系">与grokking的关系</a></li>
 <li><a href="#1-硬约束模型-样本怎样排除竞争函数">1. 硬约束模型：样本怎样排除竞争函数</a></li>
-<li><a href="#2-n_-50-n_-90-的条件公式">2. (n_{50})、(n_{90})的条件公式</a></li>
+<li><a href="#2-条件质量门槛-代理门槛与恢复率门槛">2. 条件质量门槛、代理门槛与恢复率门槛</a></li>
 <li><a href="#2-1-复杂度-分歧联合谱">2.1 复杂度—分歧联合谱</a></li>
 <li><a href="#3-mdl为什么会给出相同的交叉图景">3. MDL为什么会给出相同的交叉图景</a></li>
 <li><a href="#4-这怎样连接到grokking">4. 这怎样连接到grokking</a></li>
@@ -74,27 +74,34 @@ $$</div>
 <p>它是“允许最大误差时最简单的可行函数”这一问题的严格定义。对同一个训练集和嵌套子水平集，<code>epsilon</code>降低时 <code>F_D(epsilon)</code>只能缩小，因此 <code>K_D^*(epsilon)</code>不下降。</p>
 <p>这条严格性质不等于网络一定选择该函数，也不等于该函数的参数体积最大。</p>
 <h2 id="剩余候选中的简单性偏置">剩余候选中的简单性偏置</h2>
-<p>网络实际对应的是：</p>
+<p>静态参考系综中的候选质量分布是：</p>
 <div class="math-display">$$
 Q_{D,\epsilon}(f)=
 \frac{\Omega_D(f;\epsilon)}{\sum_g\Omega_D(g;\epsilon)}.
 $$</div>
+<p>它不直接等于实际训练选择。若 <span class="math-inline">$T_{D,\tau}$</span> 输出训练时刻 <span class="math-inline">$\tau$</span> 的参数、<span class="math-inline">$H_U$</span> 读取固定输入域上的 hard 函数，则参数分布为 <span class="math-inline">$\nu_{D,\tau}=(T_{D,\tau})_\#\mu_{\rm init}$</span>，函数分布为 <span class="math-inline">$Q^{\rm opt}_{D,\tau}=(H_U)_\#\nu_{D,\tau}$</span>；训练随机性一并纳入初始联合分布和协议。</p>
 <p>降低 loss 有两个效果：</p>
 <ol>
 <li>淘汰不再满足训练约束的捷径；</li>
 <li>在仍然可行的函数之间重新分配质量。</li>
 </ol>
-<p>若 <code>t</code> 是loss深度坐标，<code>s_t(f)=-partial_t log Omega_t(f)</code>是函数的局部收缩率，则：</p>
+<p>若 <code>t</code> 是loss深度坐标（不是训练时间），<code>s_t(f)=-partial_t log Omega_t(f)</code>是函数的局部收缩率，则在正质量分支可微、相关矩有限且可交换微分与求和的区间，对固定复杂度标尺 <code>kappa(f)</code> 有：</p>
 <div class="math-display">$$
 \partial_t E_{Q_t}[\kappa]
 =-\operatorname{Cov}_{Q_t}(\kappa,s_t).
 $$</div>
-<p>复杂函数收缩更快时，平均复杂度下降；若没有新模态重新出现，复杂度分布会收窄。这是联合输出分布、参数测度和loss共同决定的条件机制，而不是所有loss的普遍定理。</p>
+<p>复杂函数收缩更快、使该协方差为正时，平均复杂度下降。但这不保证方差下降；即使没有新模态，原有分支之间的质量重排也可以让方差增加。在同样的正则条件下：</p>
+<div class="math-display">$$
+\partial_t\operatorname{Var}_{Q_t}(\kappa)
+=-\operatorname{Cov}_{Q_t}
+\left((\kappa-E_{Q_t}[\kappa])^2,s_t\right).
+$$</div>
+<p>因此收窄须单独检查这个协方差的符号或实测方差。即使复杂度方差为零，同成本的不同函数也未必凝聚到唯一共识；还须检查完整函数 collision、modal mass 或指定 Hamming 半径质量。这是联合输出分布、参数测度和loss共同决定的条件机制，而不是所有loss的普遍定理。</p>
 <h2 id="mdl解释">MDL解释</h2>
 <div class="math-display">$$
 L_{\rm MDL}(f;D)=K_{\rm ref}(f)+L_{\rm residual}(D\mid f).
 $$</div>
-<p><code>K_D^*(epsilon)</code>对应最低模型码长前沿，<code>Q_D,epsilon</code>对应剩余可行候选的质量分布。网络没有显式优化第二个“程序长度”目标；MDL式偏好来自网络参考质量与loss几何的共同作用。</p>
+<p><code>K_D^*(epsilon)</code>对应最低模型码长前沿，<code>Q_D,epsilon</code>对应静态参考系综中剩余可行候选的质量分布；实际训练偏好仍须由 <code>Qopt</code> 检查。网络没有显式优化第二个“程序长度”目标；这里的静态 MDL式偏好来自网络参考质量与loss几何的共同作用。</p>
 <h2 id="与grokking的关系">与grokking的关系</h2>
 <p>数据量轴、loss轴和训练时间轴必须分开：数据样本按竞争函数分歧位置淘汰函数，loss收紧重排剩余实现质量，训练时间还包含optimizer transport。因而复杂度可以和 <code>n50/n90</code>有条件的近似关系，但不等于数据相变点或grokking时间点。</p>
 <h1 id="mdl可辨识样本-neural-k与grokking相变-条件推导">MDL可辨识样本、Neural K与grokking相变：条件推导</h1>
@@ -105,65 +112,68 @@ $$</div>
 <li>随机训练样本排除竞争函数的效率；</li>
 <li>固定训练集后，loss下降和optimizer运输造成的晚期函数重排。</li>
 </ol>
-<p>本文不把 (n_{50}/n_{90}) 直接定义成Neural K，也不把grokking时间点直接当作MDL交叉点。它给出的是在明确假设下的桥接模型。</p>
+<p>本文不把 <span class="math-inline">$n_{50}/n_{90}$</span> 直接定义成Neural K，也不把grokking时间点直接当作MDL交叉点。它给出的是在明确假设下的桥接模型。</p>
 <h2 id="1-硬约束模型-样本怎样排除竞争函数">1. 硬约束模型：样本怎样排除竞争函数</h2>
-<p>固定有限输入域 (\mathcal X)、目标函数 (f_*)、输入采样分布 (q(x))，以及一个函数参考质量 (\pi(f))。这里 (\pi(f)) 可以是初始化函数质量，也可以是某个固定静态协议下的函数质量；它必须在模型开始前冻结。</p>
-<p>从 (q) 独立抽取 (n) 个输入，并观察无噪声标签：</p>
+<p>固定有限输入域 <span class="math-inline">$\mathcal X$</span>、目标函数 <span class="math-inline">$f_*$</span>、输入采样分布 <span class="math-inline">$q(x)$</span>，以及一个归一化函数参考质量 <span class="math-inline">$\pi(f)$</span>，并假设 <span class="math-inline">$\pi(f_*)&gt;0$</span>。这里 <span class="math-inline">$\pi(f)$</span> 可以是初始化函数质量，也可以是某个固定静态协议下的函数质量；它必须在模型开始前冻结，不能直接用可能重叠的 full-target 事件质量替代。</p>
+<p>从 <span class="math-inline">$q$</span> 独立抽取 <span class="math-inline">$n$</span> 个输入，并观察无噪声标签：</p>
 <div class="math-display">$$
 y_i=f_*(x_i).
 $$</div>
-<p>对于竞争函数 (g)，定义它与目标函数的分歧概率：</p>
+<p>对于竞争函数 <span class="math-inline">$g$</span>，定义它与目标函数的分歧概率：</p>
 <div class="math-display">$$
 \delta_q(g,f_*)
 =
 \Pr_{x\sim q}[g(x)\ne f_*(x)].
 $$</div>
-<p>竞争函数 (g) 在一个随机样本上答对的概率是 (1-\delta_q(g,f_*))。在独立抽样下，它通过全部 (n) 个hard约束的概率是：</p>
+<p>竞争函数 <span class="math-inline">$g$</span> 在一个随机样本上答对的概率是 <span class="math-inline">$1-\delta_q(g,f_*)$</span>。在独立抽样下，它通过全部 <span class="math-inline">$n$</span> 个hard约束的概率是：</p>
 <div class="math-display">$$
 S_n(g)
 =
 (1-\delta_q(g,f_*))^n.
 $$</div>
 <p>这一步是纯粹的抽样概率，不涉及SGD。</p>
-<p>对一个已经实现的具体训练集 (D_n)，所有错误竞争函数在训练集之后剩余的总质量严格是：</p>
+<p>对一个已经实现的具体训练集 <span class="math-inline">$D_n$</span>，所有错误竞争函数在训练集之后剩余的总质量严格是：</p>
 <div class="math-display">$$
-M_n^{\rm comp}
+M_{D_n}^{\rm comp}
 =
 \sum_{g\ne f_*}
 \pi(g)\mathbf 1[g\models D_n].
 $$</div>
 <p>目标函数本身与所有真实标签一致，因此不会被排除。hard条件化后的目标概率为：</p>
 <div class="math-display">$$
-Q_n(f_*)
+Q_{D_n}(f_*)
 =
 \frac{\pi(f_*)}
-{\pi(f_*)+M_n^{\rm comp}}.
+{\pi(f_*)+M_{D_n}^{\rm comp}}.
 $$</div>
 <p>这给出一个严格的结论：</p>
 <blockquote>
-<p>数据量增加不是简单地给所有候选函数增加同样的信息，而是按照每个竞争函数与目标的分歧位置，分别衰减它们的剩余质量。</p>
+<p>沿嵌套数据序列，每个竞争函数按样本是否击中其分歧位置而保留或被排除；平滑的衰减谱描述的是随机数据集上的期望质量。</p>
 </blockquote>
 <p>对于随机抽样的数据集，单个竞争函数的存活指标满足：</p>
 <div class="math-display">$$
 \mathbb E_{D_n}\mathbf 1[g\models D_n]
 =(1-\delta_q(g,f_*))^n.
 $$</div>
-<p>这个等式本身是严格的。但把随机分母中的指标直接替换成其期望，得到</p>
+<p>因此期望竞争质量严格为</p>
 <div class="math-display">$$
 \bar M_n^{\rm comp}
+=\mathbb E_{D_n}M_{D_n}^{\rm comp}
 =\sum_{g\ne f_*}\pi(g)(1-\delta_q(g,f_*))^n,
-\qquad
-\bar Q_n(f_*)
-=\frac{\pi(f_*)}{\pi(f_*)+\bar M_n^{\rm comp}},
 $$</div>
-<p>只是“比值的期望”近似“期望的比值”。它需要候选足够多、剩余质量有自平均性等条件；一般不能把 (\bar Q_n) 直接等同于 (\mathbb E_{D_n}Q_{D_n}(f_*))。如果把 (\bar Q_n) 明确定义成平均未归一化质量再归一化的代理系综，则它是该代理定义下的精确量。</p>
-<p>如果一个错误函数只在极少数输入上与目标不同，它即使本身很复杂，也可能在大量随机样本后继续存活。这正是MUX3与Parity2错序的结构性解释。</p>
-<h2 id="2-n_-50-n_-90-的条件公式">2. (n_{50})、(n_{90})的条件公式</h2>
-<p>对上面的固定数据集，目标概率达到 (q_0\in(0,1)) 的条件是：</p>
+<p>而平均未归一化质量再归一化的代理定义为</p>
 <div class="math-display">$$
-Q_n(f_*)\ge q_0
+\bar Q_n(f_*)
+=\frac{\pi(f_*)}{\pi(f_*)+\bar M_n^{\rm comp}}.
+$$</div>
+<p>两式分别是期望恒等式和代理定义，不是同一个近似。只有进一步以 <span class="math-inline">$\bar Q_n$</span> 近似 <span class="math-inline">$\mathbb E_{D_n}Q_{D_n}(f_*)$</span> 时，才需要剩余质量集中、自平均等条件；一般不能把比值的期望等同于期望质量的比值，更不能把两者直接当作数据集级恢复率。</p>
+<p>如果一个错误函数只在极少数输入上与目标不同，它即使本身很复杂，也可能在大量随机样本后继续存活。这正是MUX3与Parity2错序的结构性解释。</p>
+<h2 id="2-条件质量门槛-代理门槛与恢复率门槛">2. 条件质量门槛、代理门槛与恢复率门槛</h2>
+<p>对上面的固定数据集，目标概率达到 <span class="math-inline">$q_0\in(0,1)$</span> 的条件是：</p>
+<div class="math-display">$$
+Q_{D_n}(f_*)\ge q_0
 \quad\Longleftrightarrow\quad
-M_n^{\rm comp}
+M_{D_n}^{\rm comp}
 \le
 \frac{1-q_0}{q_0}\pi(f_*).
 $$</div>
@@ -171,30 +181,44 @@ $$</div>
 <div class="math-display">$$
 K_*=-\log_2\pi(f_*),
 \qquad
-K_{\rm comp}^{\rm eff}(n)
+K_{\rm comp}^{\rm eff}(D_n)
 =
--\log_2M_n^{\rm comp}.
+-\log_2M_{D_n}^{\rm comp}.
 $$</div>
 <p>那么：</p>
 <div class="math-display">$$
-Q_n(f_*)
+Q_{D_n}(f_*)
 =
 \frac{1}
-{1+2^{K_*-K_{\rm comp}^{\rm eff}(n)}},
+{1+2^{K_*-K_{\rm comp}^{\rm eff}(D_n)}},
 $$</div>
-<p>达到 (q_0) 等价于：</p>
+<p>达到 <span class="math-inline">$q_0$</span> 等价于：</p>
 <div class="math-display">$$
-K_{\rm comp}^{\rm eff}(n)-K_*
+K_{\rm comp}^{\rm eff}(D_n)-K_*
 \ge
 \log_2\frac{q_0}{1-q_0}.
 $$</div>
-<p>因此，固定数据集的 (n_{50}) 和 (n_{90}) 是第一个满足该不等式的样本数；它的本质不是“目标函数复杂度本身”，而是：</p>
+<p>沿一条固定的嵌套数据序列 <span class="math-inline">$D_\bullet$</span>，把首次达到这个条件质量门槛的样本数记为</p>
+<div class="math-display">$$
+\tau_{q_0}(D_\bullet)=\inf\{n:Q_{D_n}(f_*)\ge q_0\}.
+$$</div>
+<p>平均质量代理的门槛另记为</p>
+<div class="math-display">$$
+\bar n_{q_0}=\inf\{n:\bar Q_n(f_*)\ge q_0\}.
+$$</div>
+<p>E23的 <code>n50/n90</code> 则是随机数据集级恢复率门槛。固定训练协议 <span class="math-inline">$\Pi$</span>、恢复判据和非完整样本数网格 <span class="math-inline">$\mathcal G$</span>，可写为</p>
+<div class="math-display">$$
+n^{\Pi}_{\mathrm{rec},r}
+=\min\{n\in\mathcal G:n&lt;|\mathcal X|,\;
+\Pr_{D_n}[\mathrm{Recover}_\Pi(f_*\mid D_n)]\ge r\}.
+$$</div>
+<p>这里 <span class="math-inline">$r=0.5$</span> 或 <span class="math-inline">$r=0.9$</span> 分别对应实验的 <code>n50</code> 或 <code>n90</code>；<span class="math-inline">$q_0$</span> 是单个条件分布或代理中的目标质量门槛，二者不属于同一概率层级。未 crossing 时保留右删失，不能用完整数据拟合替代。前两个门槛的本质不是“目标函数复杂度本身”，而是：</p>
 <blockquote>
 <p>样本增加后，竞争函数的有效总复杂度何时超过目标复杂度足够多。</p>
 </blockquote>
-<p>如果竞争函数有近似相同的分歧率 (\delta)，初始总质量为 (M_0)，则：</p>
+<p>如果竞争函数有近似相同的分歧率 <span class="math-inline">$0&lt;\delta&lt;1$</span>，初始总质量为 <span class="math-inline">$M_0$</span>，则期望质量满足：</p>
 <div class="math-display">$$
-M_n^{\rm comp}
+\bar M_n^{\rm comp}
 \approx M_0(1-\delta)^n.
 $$</div>
 <p>记：</p>
@@ -205,13 +229,14 @@ a_\delta=-\log_2(1-\delta),
 $$</div>
 <p>那么：</p>
 <div class="math-display">$$
-K_{\rm comp}^{\rm eff}(n)
+\bar K_{\rm comp}^{\rm eff}(n)
+=-\log_2\bar M_n^{\rm comp}
 \approx
 K_{\rm comp}^{0}+n a_\delta.
 $$</div>
-<p>在用 (\bar Q_n) 代替随机数据集上的真实恢复率，并进一步假设竞争函数有近似共同分歧率时，才得到下面的近似公式：</p>
+<p>这里 <span class="math-inline">$\bar K_{\rm comp}^{\rm eff}$</span> 是期望质量的负 log，不是随机成本的期望。共同分歧率近似下，解 <span class="math-inline">$\bar Q_n$</span> 的门槛得到下面的代理公式（正 crossing 区域，整数样本数还需取整）：</p>
 <div class="math-display">$$
-n_{q_0}
+\bar n_{q_0}
 \approx
 \frac{
 K_*-K_{\rm comp}^{0}
@@ -220,50 +245,50 @@ K_*-K_{\rm comp}^{0}
 a_\delta
 }.
 $$</div>
-<p>这个近似解释了为什么在一组分歧结构相似的规则中，复杂度和所需样本数可能近似成正比：目标 (K_*) 越高，目标初始质量越小，需要更多样本让竞争总质量衰减下去。</p>
+<p>这个近似解释了为什么在一组分歧结构相似的规则中，复杂度和代理所需样本数可能近似成正比：目标 <span class="math-inline">$K_*$</span> 越高，目标初始质量越小，需要更多样本让期望竞争总质量衰减下去。把它接到具体数据序列还需要质量集中或自平均；接到E23还需要恢复判据与静态目标质量的对应及优化可达性。因此它不是实验 <code>n50/n90</code> 的严格等式。</p>
 <p>但它也明确说明了为什么这种关系不是普遍定律：</p>
 <ul>
-<li>(K_*) 不同；</li>
-<li>竞争函数总质量 (M_0) 不同；</li>
-<li>竞争函数的分歧率 (\delta_g) 不同；</li>
-<li>样本分布 (q) 不同。</li>
+<li><span class="math-inline">$K_*$</span> 不同；</li>
+<li>竞争函数总质量 <span class="math-inline">$M_0$</span> 不同；</li>
+<li>竞争函数的分歧率 <span class="math-inline">$\delta_g$</span> 不同；</li>
+<li>样本分布 <span class="math-inline">$q$</span> 不同。</li>
 </ul>
 <p>MUX3反例主要改变了最后两项，而不是目标本身的实现质量。</p>
 <h2 id="2-1-复杂度-分歧联合谱">2.1 复杂度—分歧联合谱</h2>
-<p>截图中“不同hard function像连续分布或流形”的直觉，可以用竞争函数的联合谱表达。对每个竞争函数 (g)，同时记录：</p>
+<p>截图中“不同hard function像连续分布或流形”的直觉，可以用竞争函数的联合谱表达。对每个竞争函数 <span class="math-inline">$g$</span>，同时记录：</p>
 <div class="math-display">$$
 K_g=-\log_2\pi(g),
 \qquad
 \lambda_g=-\ln(1-\delta_q(g,f_*)).
 $$</div>
-<p>则：</p>
+<p>其期望竞争质量严格为：</p>
 <div class="math-display">$$
-M_n^{\rm comp}
+\bar M_n^{\rm comp}
 =
 \sum_{g\ne f_*}2^{-K_g}e^{-n\lambda_g}.
 $$</div>
-<p>这不是把hard function真的假设成连续流形，而是把离散函数集合嵌入一个“实现成本—样本分歧率”平面。若函数之间存在大量相近延拓，它们通常具有相近的 (\delta_q)，会在样本增加时一起缓慢衰减；若一个函数只在稀有输入上与目标不同，它的 (\lambda_g) 很小，即使 (K_g) 较高，也可能长期存活。</p>
-<p>因此有效竞争复杂度：</p>
+<p>这不是把hard function真的假设成连续流形，而是把离散函数集合嵌入一个“实现成本—样本分歧率”平面。若函数之间存在大量相近延拓，它们通常具有相近的 <span class="math-inline">$\delta_q$</span>，会在样本增加时一起缓慢衰减；若一个函数只在稀有输入上与目标不同，它的 <span class="math-inline">$\lambda_g$</span> 很小，即使 <span class="math-inline">$K_g$</span> 较高，也可能长期存活。</p>
+<p>因此代理有效竞争复杂度：</p>
 <div class="math-display">$$
-K_{\rm comp}^{\rm eff}(n)
+\bar K_{\rm comp}^{\rm eff}(n)
 =
 -\log_2\sum_{g\ne f_*}2^{-K_g}e^{-n\lambda_g}
 $$</div>
-<p>不是某个单一竞争函数的复杂度，而是整个竞争谱在样本数 (n) 下的对数总质量。每加入一个样本，相当于给每个竞争函数乘上一个与其分歧位置有关的衰减因子。</p>
+<p>不是某个单一竞争函数的复杂度，而是整个竞争谱在样本数 <span class="math-inline">$n$</span> 下的期望总质量的负 log。平均谱中每增加一个样本，相当于给每个竞争函数乘上一个与其分歧位置有关的存活因子；具体数据集上的 <span class="math-inline">$M_{D_n}^{\rm comp}$</span> 仍由 hard 存活指标决定。</p>
 <p>这正是复杂度与样本相变之间最干净的桥：</p>
 <ul>
-<li>如果不同规则族的 (\lambda_g) 分布相近，(K_*) 会主导 (n_{50}/n_{90}) 顺序；</li>
-<li>如果 (\lambda_g) 分布差异很大，样本覆盖会压过目标本身的实现复杂度；</li>
+<li>如果不同规则族的竞争总质量和 <span class="math-inline">$\lambda_g$</span> 分布相近，<span class="math-inline">$K_*$</span> 可以主导代理门槛 <span class="math-inline">$\bar n_{q_0}$</span> 的顺序；连接实验 <code>n50/n90</code> 仍需上述桥接条件；</li>
+<li>如果 <span class="math-inline">$\lambda_g$</span> 分布差异很大，样本覆盖会压过目标本身的实现复杂度；</li>
 <li>MUX3的困难来自大量低分歧竞争延拓，因此不能由完整目标Neural K单独预测；</li>
-<li>改变采样分布 (q) 会改变 (\delta_q)，从而直接改变相变点，即使网络、loss和目标函数都不变。</li>
+<li>改变采样分布 <span class="math-inline">$q$</span> 会改变 <span class="math-inline">$\delta_q$</span>，从而直接改变相变点，即使网络、loss和目标函数都不变。</li>
 </ul>
-<p>从连续近似看，若存在联合谱测度 (\rho(K,\lambda))，则可写成：</p>
+<p>从连续近似看，若存在联合谱测度 <span class="math-inline">$\rho(K,\lambda)$</span>，则可写成：</p>
 <div class="math-display">$$
-M_n^{\rm comp}
+\bar M_n^{\rm comp}
 \approx
 \iint 2^{-K}e^{-n\lambda}\,\rho(dK,d\lambda).
 $$</div>
-<p>这个表达比“复杂度与样本数线性关系”更一般。线性或近似线性只是当竞争谱集中在相近的 (\lambda) 区域，或者随机记忆的有效残差成本近似按样本独立增加时的特殊情形。</p>
+<p>这个表达比“复杂度与样本数线性关系”更一般。线性或近似线性只是当竞争谱集中在相近的 <span class="math-inline">$\lambda$</span> 区域，或者随机记忆的有效残差成本近似按样本独立增加时的特殊情形。</p>
 <h2 id="3-mdl为什么会给出相同的交叉图景">3. MDL为什么会给出相同的交叉图景</h2>
 <p>两段式MDL可以写成：</p>
 <div class="math-display">$$
@@ -273,32 +298,32 @@ L_{\rm code}(g)
 +
 L_{\rm code}(D\mid g).
 $$</div>
-<p>对于目标规则 (f_*)，在无噪声情形下，给定它以后训练标签几乎不需要额外残差码长：</p>
+<p>对于目标规则 <span class="math-inline">$f_*$</span>，在无噪声情形下，给定它以后训练标签几乎不需要额外残差码长：</p>
 <div class="math-display">$$
 L_{\rm code}(D\mid f_*)\approx0.
 $$</div>
-<p>对于一个错误延拓 (g)，它在训练样本上偶尔出错，残差码长会随样本数增加。若只用hard一致性近似，则其通过全部样本的概率对应：</p>
+<p>对于一个错误延拓 <span class="math-inline">$g$</span>，它在训练样本上偶尔出错，残差码长会随样本数增加。若只用hard一致性近似，则其通过全部样本的概率对应：</p>
 <div class="math-display">$$
 -\log_2 S_n(g)
 =
 n[-\log_2(1-\delta_q(g,f_*))].
 $$</div>
-<p>因此，竞争函数的有效总描述成本近似为：</p>
+<p>因此，可以构造基于随机样本存活概率的有效成本代理：</p>
 <div class="math-display">$$
-L_{\rm comp}(g;D)
+L_{\rm comp}^{\rm proxy}(g;n)
 \approx
 K_{\rm ref}(g)
 +
 n[-\log_2(1-\delta_q(g,f_*))].
 $$</div>
-<p>它随 (n) 增长，而目标规则的程序成本近似固定。于是会出现一个描述成本交叉：</p>
+<p>它随 <span class="math-inline">$n$</span> 增长，而目标规则的程序成本近似固定。这里的存活概率成本不是某个已实现数据集的实际残差码长；它给出平均质量层面的MDL式竞争类比。于是可以讨论代理成本交叉：</p>
 <div class="math-display">$$
-L_{\rm comp}(g;D)
+L_{\rm comp}^{\rm proxy}(g;n)
 \approx
-L_{\rm rule}(f_*;D).
+K_{\rm ref}(f_*).
 $$</div>
 <p>这就是“复杂规则需要更多样本才从记忆或错误延拓中被识别出来”的MDL原型。</p>
-<p>但这里的 (K_{\rm ref}) 必须明确是哪一种编码：</p>
+<p>但这里的 <span class="math-inline">$K_{\rm ref}$</span> 必须明确是哪一种编码：</p>
 <ul>
 <li>经典程序码长；</li>
 <li>Neural K；</li>
@@ -309,7 +334,7 @@ $$</div>
 <p>它们不能直接互换。MDL提供的是结构相似性和候选竞争语言，不证明SGD在显式最小化某个机器无关Kolmogorov复杂度。</p>
 <h2 id="4-这怎样连接到grokking">4. 这怎样连接到grokking</h2>
 <p>上面的模型描述的是数据量轴：增加样本如何排除竞争函数。</p>
-<p>grokking通常是在固定训练集后延长训练时间，属于另一条轴。固定训练集 (D_n) 后，定义：</p>
+<p>grokking通常是在固定训练集后延长训练时间，属于另一条轴。连续 loss 作用于前向输出 <span class="math-inline">$F_\theta$</span>，hard 输出 <span class="math-inline">$h_\theta=R(F_\theta)$</span> 仅用于标识完整函数；记固定输入域上的读取映射为 <span class="math-inline">$H_U$</span>。固定训练集 <span class="math-inline">$D_n$</span> 后，定义：</p>
 <div class="math-display">$$
 \Omega_{n}(f;\epsilon)
 =
@@ -325,7 +350,7 @@ Q^{\rm static}_{n,\epsilon}(f_*)
 \frac{\Omega_n(f_*;\epsilon)}
 {\sum_g\Omega_n(g;\epsilon)}.
 $$</div>
-<p>如果随着 (\epsilon) 降低，目标函数的质量相对竞争函数增长，那么可以定义一个静态转变区域：</p>
+<p>如果随着 <span class="math-inline">$\epsilon$</span> 降低，目标函数的质量相对竞争函数增长，那么可以定义一个静态转变区域：</p>
 <div class="math-display">$$
 \epsilon_{q}(n)
 =
@@ -334,16 +359,11 @@ $$</div>
 <p>注意这个转变可能不是严格单调的，因为不同函数profile可以交叉。实际应该记录第一次达到阈值的区间，而不是假设一个唯一精确点。</p>
 <p>真实训练得到的函数分布则是：</p>
 <div class="math-display">$$
-Q^{\rm opt}_{n,t}(f).
+\nu_{n,t}=(T_{n,t})_\#\mu_{\rm init},
+\qquad
+Q^{\rm opt}_{n,t}=(H_U)_\#\nu_{n,t}.
 $$</div>
-<p>它还受到optimizer transport影响。于是更准确的关系是：</p>
-<div class="math-display">$$
-\text{grokking时间}
-=
-\text{静态函数质量转变所在的loss深度}
-+
-\text{optimizer到达该区域的动力学延迟}.
-$$</div>
+<p><span class="math-inline">$T_{n,t}$</span> 输出训练后参数，训练随机性一并纳入初始联合分布和协议。静态质量转变所在的 loss 深度与 optimizer 到达、穿过该区域的动力学共同影响 grokking 时间；这是一条机制示意，不是“loss 深度加时间”的等式。若要做时间分解，必须先通过实际训练轨迹把 loss 深度转换成到达时间，再另行定义和测量后续延迟。</p>
 <p>这解释了三种现象：</p>
 <ul>
 <li>数据充分时，目标在较浅loss就占优势，出现direct learning；</li>
@@ -360,31 +380,19 @@ K_* \uparrow
 \quad\Longrightarrow\quad
 \text{需要更多样本排除竞争质量}.
 $$</div>
-<p>这会让复杂度排序和 (n_{50}/n_{90}) 排序大体一致。</p>
+<p>这可以让复杂度排序和代理门槛排序大体一致；在质量集中、恢复判据与静态质量对应且优化可达等桥接条件成立时，才进一步预期与实验 <span class="math-inline">$n_{50}/n_{90}$</span> 排序同向。</p>
 <p>但在竞争结构不同的规则之间，排序可能反转：</p>
 <ul>
 <li>一个目标本身参数质量很大，却有很多难以区分的错误延拓；</li>
 <li>另一个目标本身参数质量较小，但每个随机样本都能有效排除竞争函数。</li>
 </ul>
-<p>MUX3/Parity2正是这种情况。改变样本分布，使MUX selector真正出现冲突的输入更多，MUX3的恢复样本数就会下降，甚至反超Parity2。目标规则、网络和loss都没有变，变化的是 (\delta_q(g,f_*))。</p>
-<p>因此需要把样本相变拆成：</p>
-<div class="math-display">$$
-n_q
-=
-\text{目标实现成本}
-+
-\text{竞争质量}
-+
-\text{样本分歧覆盖}
-+
-\text{优化可达性}
-$$</div>
-<p>这不是严格的加法公式，而是四个必须分别控制的因素。</p>
+<p>MUX3/Parity2正是这种情况。改变样本分布，使MUX selector真正出现冲突的输入更多，MUX3的恢复样本数就会下降，甚至反超Parity2。目标规则、网络和loss都没有变，变化的是 <span class="math-inline">$\delta_q(g,f_*)$</span>。</p>
+<p>因此需要分别控制样本相变的四个因素：目标实现成本、竞争质量、样本分歧覆盖和优化可达性。它们共同影响数据集级恢复门槛 <span class="math-inline">$n^\Pi_{\mathrm{rec},r}$</span>，不是可直接相加的同量纲项。</p>
 <h2 id="6-当前可以形成的可检验预测">6. 当前可以形成的可检验预测</h2>
 <p>这个理论可以产生几条比“复杂规则需要更多数据”更具体的预测：</p>
 <ol>
-<li>对一组竞争分歧结构相近的规则，(n_{50})、(n_{90})应随完整目标Neural K大体增加。</li>
-<li>对MUX类任务，只要提高真正区分selector候选的输入比例，(n_{50}/n_{90})应下降，且可能发生复杂度排序反转。</li>
+<li>对一组竞争质量和分歧结构相近、满足上述静态到恢复桥接条件的规则，<span class="math-inline">$n_{50}$</span>、<span class="math-inline">$n_{90}$</span>应随完整目标Neural K大体增加。</li>
+<li>对MUX类任务，只要提高真正区分selector候选的输入比例，<span class="math-inline">$n_{50}/n_{90}$</span>应下降，且可能发生复杂度排序反转。</li>
 <li>如果固定数据量接近辨识边界，grokking前后的静态profile应显示目标函数质量在更深loss处超过竞争总质量。</li>
 <li>直接学习任务中，目标静态优势应在较浅loss出现，训练/验证曲线会同步下降。</li>
 <li>如果静态目标质量已占优势但真实训练仍不泛化，则差异主要来自optimizer可达性，而不是MDL竞争本身。</li>
@@ -397,7 +405,7 @@ $$</div>
 </blockquote>
 <p>目前不能说：</p>
 <ul>
-<li>(n_{50})等于Neural K；</li>
+<li><span class="math-inline">$n_{50}$</span>等于Neural K；</li>
 <li>grokking时间点等于MDL交叉点；</li>
 <li>复杂度单独决定样本需求；</li>
 <li>所有随机采样分布下复杂度排序都保持；</li>

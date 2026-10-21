@@ -128,7 +128,7 @@ K^{N,\mathrm{full}}_{\Pi,U}(f;\epsilon)
 J_{\Pi,D}(\epsilon)=-\log_2V_{\Pi,D}(\epsilon).
 \]
 
-其中 \(K^{N,\mathrm{FD}}\) 是fixed-D函数cell质量的profile，\(K^{N,\mathrm{full}}\) 是论文中原Neural K-profile的完整目标体积。二者只有在完整目标loss事件已经强制落入目标hard cell的低loss条件下才可相等；一般不能共用一个未加后缀的符号。
+其中 \(K^{N,\mathrm{FD}}\) 是fixed-D函数cell质量的profile，\(K^{N,\mathrm{full}}\) 是论文中原Neural K-profile的完整目标体积。当 \(D=D_{\rm full}(f)\)、阈值相同且完整目标事件包含于 \(C_f\) 时，相应cell交集可省去，两个量相等。部分训练集的fixed-D量还需要第6.2节的事件桥接，不能仅凭hard-exact就与完整目标量等同；一般不能共用未加后缀的符号。
 
 条件函数的剩余信息成本满足：
 
@@ -575,7 +575,7 @@ m_{\mathsf M}(\langle f\rangle)
 
 Chaitin停机概率 \(\Omega_{\mathsf M}^{\rm halt}=\sum_{\mathsf M(p)\downarrow}2^{-|p|}\) 是另一个对象；不能用它替换函数分支质量 \(\Omega_{\Pi,U,D}\)，也不能从其不可计算性直接推出有限网络的agreement不可计算。具体不完备性表述和前提见[已核查的AIT记录](20260920_ait_omega_mixture_agreement_audit_zh.md)，不进入本稿核心定理。
 
-MDL须先给出编码模型。例如两段式码长是 \(\mathcal L(f)+\mathcal L(D\mid f)\)。3节的概率负对数是理想码长；实际二元前缀编码还涉及取整和码本。7节的最低可行成本是受误差约束的优化问题；它没有证明SGD会取到该最小值。
+MDL须先给出编码模型。例如两段式码长是 \(\mathcal L(f)+\mathcal L(D\mid f)\)。3节的负log质量首先是事件信息成本；对互斥cell的概率或次概率质量，可以联系Kraft预算与取整后的前缀编码。一般full-target事件可重叠，其负log质量不能未经归一化或另行编码就当作区分全部函数的理想码长。7节的最低可行成本是受误差约束的优化问题；它没有证明SGD会取到该最小值。
 
 ## 12. 可保留的实质与验证范围
 

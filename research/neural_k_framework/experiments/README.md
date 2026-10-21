@@ -1,8 +1,8 @@
-# 短论文实验代码
+# 研究实验代码与证据索引
 
 本目录按短论文证据出现顺序冻结可上传脚本。每个 `experiment_XX_*` 文件夹对应正文中的一个明确实验单元，并包含：
 
-- 原样冻结的自包含脚本；
+- 冻结脚本或明确说明与历史版本差异的发布脚本；
 - 运行顺序和输出说明；
 - 源文件位置与 SHA256；
 - 该实验能支持和不能支持的主张。
@@ -53,9 +53,23 @@
 | E25 | MNIST样本复杂度与静态体积分支预测 | [`experiment_25_mnist_static_prediction`](experiment_25_mnist_static_prediction/README.md) |
 | E26 | MNIST平衡无标签划分的静态体积 | [`experiment_26_mnist_balanced_label_volume`](experiment_26_mnist_balanced_label_volume/README.md) |
 | E27 | Grokking前后的未见函数Agreement | [`experiment_27_grokking_agreement`](experiment_27_grokking_agreement/README.md) |
-| E28 | MNIST 50k整网HMC与同协议Adam | [`experiment_28_mnist50k_hmc_adam`](experiment_28_mnist50k_hmc_adam/README.md) |
+| E28 | MNIST 50k likelihood加权后验HMC与同协议Adam | [`experiment_28_mnist50k_hmc_adam`](experiment_28_mnist50k_hmc_adam/README.md) |
 | E29 | Dead bit的loss-resolved静态预测 | [`experiment_29_dead_bit_loss_resolved`](experiment_29_dead_bit_loss_resolved/README.md) |
 | E30 | Weight decay重塑完整静态函数地形 | [`experiment_30_weight_decay_static_landscape`](experiment_30_weight_decay_static_landscape/README.md) |
 
-当前选择性上传时间线已整理至2026年9月1日。E26--E30只收录本轮明确选择
-进入公开更新的五个实验单元；同期其他探索仍保留在开发目录，不自动进入本证据包。
+## 网站增量实验
+
+| ID | 实验 | 入口 |
+|---|---|---|
+| E31 | Loss与幅度对齐 | [实验目录](experiment_31_loss_amplitude_grokking/README.md) |
+| E32 | 随机记忆缩放 | [实验报告](experiment_32_random_memory/RANDOM_MEMORY_SCALING_REPORT.md) |
+| E33 | 跨架构联合输出体积 | [实验目录](experiment_33_cross_architecture/README_CROSS_ARCHITECTURE_RULE_VOLUME.md) |
+| E34 | 条件规则决斗 | [实验目录](experiment_34_conditional_rule_duel/README.md) |
+| E35 | Mod97冻结函数决斗 | [实验目录](experiment_35_mod97_frozen_function_duels/README.md) |
+| E36 | Peleg/G&C独立验证 | [实验目录](experiment_36_peleg_g_and_c_validation/README.md) |
+| E37 | 测度鲁棒性 | [实验目录](experiment_37_measure_robustness/README.md) |
+| E38 | 宽深扫描与相对目标质量 | [实验目录](experiment_38_width_depth_volume/README.md) |
+
+E01--E30保留历史选择性整理范围；后续网站编号延续至E38，不意味着每项增量都已
+进入正式短论文。事后整理的协议必须标明日期和性质，文件名不构成预注册证明。
+其它开发目录中的探索不自动进入本证据包。

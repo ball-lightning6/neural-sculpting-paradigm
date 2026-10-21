@@ -66,7 +66,7 @@
 <p>The estimator applies to the fixed protocol used here: a single-hidden-layer width-16 tanh network, 0/1 inputs, Gaussian whitened neural coordinates, the original fan-in scaling, and a full-truth-table mean raw-BCE sublevel event. It is not an exact algorithm for arbitrary depth, CNN, RNN, Transformer, encoding, or prior.</p>
 <p>The goal is to estimate the low-loss volume and the corresponding Neural K before running SMC. The reference SMC values are used for a frozen backtest, not to fit per-rule correction coefficients.</p>
 <h2 id="2-exact-finite-width-joint-output-cgf">2. Exact finite-width joint-output CGF</h2>
-<p>For the 3-bit and 4-bit experiments, let the input table have (r=2^b) rows and let the hidden width be (m=16). With independent Gaussian neural coordinates,
+<p>For the 3-bit and 4-bit experiments, let the input table have <span class="math-inline">$r=2^b$</span> rows and let the hidden width be <span class="math-inline">$m=16$</span>. With independent Gaussian neural coordinates,
 <div class="math-display">$$
 Z=\frac1{\sqrt m}\sum_{j=1}^{m}a_jh_j
 +\frac{b_o}{\sqrt m}\mathbf 1,
@@ -80,10 +80,10 @@ $$</div></p>
 +m\log\mathbb E_{w,b}
 \exp\left[\frac{(t^Th)^2}{2m}\right].
 $$</div></p>
-<p>This is an exact identity for the specified finite-width prior. It does not use an infinite-width approximation and does not calibrate parameters from SMC. The single-neuron integral has only (b+1) independent Gaussian coordinates and is evaluated by multidimensional Gauss–Hermite quadrature.</p>
+<p>This is an exact identity for the specified finite-width prior. It does not use an infinite-width approximation and does not calibrate parameters from SMC. The single-neuron integral has only <span class="math-inline">$b+1$</span> independent Gaussian coordinates and is evaluated by multidimensional Gauss–Hermite quadrature.</p>
 <p>Unlike a covariance-only Gaussian approximation, the CGF retains finite-width representation fluctuations of all orders. The derivation is inspired by finite-width Gaussian-mixture and feature-distribution work, but the BCE estimator and its reductions are specific to this project protocol.</p>
 <h2 id="3-chernoff-action-for-the-bce-event">3. Chernoff action for the BCE event</h2>
-<p>Let (s_i=2y_i-1) and let (E) be the event that the mean BCE over the full truth table is at most (\epsilon). Define
+<p>Let <span class="math-inline">$s_i=2y_i-1$</span> and let <span class="math-inline">$E$</span> be the event that the mean BCE over the full truth table is at most <span class="math-inline">$\\epsilon$</span>. Define
 <div class="math-display">$$
 I(E)=\sup_t\{\inf_{z\in E}t^Tz-\Lambda(t)\}.
 $$</div></p>

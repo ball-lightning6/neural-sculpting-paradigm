@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Proposed finite-query estimation of rules and measurement of functions implemented by checkpoints; no new validation experiments.">
+  <title>Complexity measurement methods · Neural K Research Archive</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="../assets/site.js"></script>
+</head>
+<body data-page-kind="core">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+
+    <header class="topbar">
+      <a class="site-mark" href="index.html" aria-label="Back to the research narrative">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K Research Archive</span>
+      </a>
+      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="index.html">Research</a><a class="top-link active" href="theory-core.html">Core Theory</a><a class="top-link" href="experiments/index.html">Experiments</a><a class="top-link" href="post-upload.html">Updates</a><a class="top-link" href="references.html">References</a><a class="top-link" href="evidence-ledger.html">Evidence</a></nav>
+      <nav class="language-switch" aria-label="Language"><a href="../complexity-methods.html" lang="zh-CN">中文</a><span class="active" lang="en">EN</span></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>Contents</span>
+      </button>
+    </header>
+
+  <div class="page-shell">
+
+    <aside class="sidebar" id="sidebar" aria-label="On this page">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">On this page</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#1-fixing-the-measurement-object">1. Fixing the measurement object</a></li>
+<li><a href="#2-method-one-generating-target-functions-from-training-snapshots">2. Method one Generating target functions from training snapshots</a><ul>
+<li><a href="#2-1-proposed-application-to-mnist-training-trajectories">2.1 Proposed application to MNIST training trajectories</a></li>
+</ul>
+</li>
+<li><a href="#3-method-two-approximating-a-full-rule-with-samples-beyond-its-transition">3. Method two Approximating a full rule with samples beyond its transition</a></li>
+<li><a href="#4-judging-whether-the-proxy-is-sufficient">4. Judging whether the proxy is sufficient</a></li>
+<li><a href="#5-using-the-two-methods-together">5. Using the two methods together</a></li>
+<li><a href="#6-relationship-to-existing-evidence">6. Relationship to existing evidence</a></li>
+</ul>
+</div>
+</nav>
+        <a class="sidebar-action" href="theory-core.html">Back to core theory →</a>
+      </div>
+    </aside>
+
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">Theory supplement · Evidence and proposals distinguished</div>
+          <h1>Complexity measurement methods</h1>
+          <p class="article-description">Proposed finite-query estimation of rules and measurement of functions implemented by checkpoints; no new validation experiments.</p>
+        </header>
+        <div class="article-body"><p>Date: 2026-10-21. Status: website methods draft, for the Chinese and English websites only, not the formal papers or PDFs. This document retains method definitions and estimation proposals awaiting calibration and reports no new measurements; the new MNIST snapshot measurements and Rule30 proxy-accuracy validation are unfinished, and this update launches no experiments.</p>
+<p>The two methods connect: first, treat the hard function implemented by any training snapshot as a target and measure its Neural K; second, use data transitions and query saturation to select finite target samples and reduce SMC evaluation costs on large tasks. The former expands what can be measured; the latter attempts to reduce measurement cost.</p>
+<h2 id="1-fixing-the-measurement-object">1. Fixing the measurement object</h2>
+<p>For source-network weights theta_t at training time t, define the hard output function</p>
+<div class="math-display">$$
+f_t(x)=h(F_{\theta_t}(x)).
+$$</div>
+<p>The measurement object is the function implemented by the source weights, not the byte count, compressed length, or numerical storage complexity of the source weight file. Source weights are used only to generate target behavior; identical hard functions on the same measurement domain specify the same target event even when the weight representations differ.</p>
+<p>Measurement uses a separate, fixed reference protocol Pi: a reference network and parameterization, parameter probability measure mu, input domain U or input distribution rho, hard readout rule, and output-error definition. The reference network may have the same architecture as the source network, but SMC estimates target-event mass under the reference measure, not the probability that SGD takes the source network to that state.</p>
+<p>Keep the same reference protocol Pi across all snapshots being compared. Changes in the reference network, measure, input scope, or precision nodes must be marked separately as changes in the measurement protocol, not interpreted directly as changes in source-function complexity.</p>
+<p>For a finite input domain U, let D_U(f_t) be the complete target table and define</p>
+<div class="math-display">$$
+V_{\Pi,U}^{\mathrm{full}}(f_t;\epsilon)
+=\mu_\Pi\{\phi:L_{D_U(f_t)}(\phi)\le\epsilon\},
+\qquad
+K_{\Pi,U}^{N,\mathrm{full}}(f_t;\epsilon)
+=-\log_2 V_{\Pi,U}^{\mathrm{full}}(f_t;\epsilon).
+$$</div>
+<p>For an input distribution rho, define the corresponding event using expected loss and specify how finite queries estimate that expectation. Record Neural K as a profile; compare snapshots at fixed measurement precision or the same set of precision nodes.</p>
+<p>For binary outputs, BCE can define the target event above; multiclass and other outputs require the corresponding loss and readout rule. An average-loss threshold need not force every hard output to be correct. Full-target mass and hard-cell mass remain distinct as in the <a href="post-upload-language.html">strict probability language</a>.</p>
+<h2 id="2-method-one-generating-target-functions-from-training-snapshots">2. Method one Generating target functions from training snapshots</h2>
+<p>Save the source network at prespecified training nodes and generate hard labels on a fixed input domain or set of query inputs. Each snapshot yields a full or partial target table; run SMC under the same reference protocol to obtain comparable Neural K curves.</p>
+<p>This permits measuring transient functions without readable rule names, structured overfitting functions, and final functions. Source networks with different neuron permutations or weight values but identical hard behavior specify the same target under the same measurement protocol.</p>
+<p>The measurement domain must include inputs outside the training set. After the source network fully fits the original training set, using hard labels only on those training inputs cannot observe continuing changes in extensions on unseen inputs.</p>
+<p>With hard targets, unchanged classification behavior on the same measurement domain means unchanged target-function cost. Changes in continuous logits or margins may be defined separately as output-reproduction cost, but are not mixed into this method.</p>
+<h3 id="2-1-proposed-application-to-mnist-training-trajectories">2.1 Proposed application to MNIST training trajectories</h3>
+<p>Fix a reference classification network, measure, and query protocol. Generate labels and measure complexity for initialization, early learning, snapshots around training-set fit, and late training. Record the source network's actual training loss, test performance against true labels, changes in hard predictions, and Neural K separately.</p>
+<p>The relationships to test are how cost changes while structure is learned and exceptions are fitted, and whether selection of economical extensions can lower cost after sufficient fitting in some settings. The eventual curve for a noisy task may keep rising, stabilize, or decline locally.</p>
+<p>The source network's predictions on query images supply measurement labels, which are distinct from the images' true classes. If the input domain is a fixed image library, conclusions are relative to that library; if a random input distribution is used, specify its construction and an independent audit set.</p>
+<h2 id="3-method-two-approximating-a-full-rule-with-samples-beyond-its-transition">3. Method two Approximating a full rule with samples beyond its transition</h2>
+<p>First use actual training to roughly locate a target function's data-recovery transition. Choose a sample count beyond that transition in a stable generalization region, and then run SMC on those target samples. The working hypothesis is that these queries distinguish the main incorrect extensions, so further queries have progressively less effect on target-event mass.</p>
+<p>The Rule30 example discussed is a one-step 30-bit to 30-bit mapping. Its complete input domain has 2^30 states; if the data transition is around 900, approximately 2000 samples are a candidate measurement design. These numbers describe a research proposal, not a completed validation of high-precision volume estimation with 2000 samples.</p>
+<p>What is directly measured is the mass for a finite target table D,</p>
+<div class="math-display">$$
+V_{\Pi,D}(\epsilon)
+=\mu_\Pi\{\phi:L_D(\phi)\le\epsilon\}.
+$$</div>
+<p>Use this to estimate full-rule Neural K only when it reliably approaches full-target mass in the specified measurement window. The SGD recovery transition locates candidate sample sizes; the extension distribution in static SMC, independent queries, and stability under added samples provide evidence about proxy accuracy. Crossing the SGD recovery transition is not sufficient for proxy calibration; before calibration, report only the mass of the finite-query target event, not a validated estimate of full-function complexity.</p>
+<p>Target functions from different snapshots may require different sample counts. The original task's transition cannot automatically cover the exceptions and error structure of intermediate functions; the same undersized query set may also underestimate complexity late in training.</p>
+<h2 id="4-judging-whether-the-proxy-is-sufficient">4. Judging whether the proxy is sufficient</h2>
+<p>Use nested query sets while holding the source target, reference protocol, and precision window fixed. Record changes in negative log mass as queries are added, and inspect candidates' extensions on independent inputs excluded from the SMC constraints. Evidence of saturation should come from multiple query sets and independent sampling replicas, rather than a single SGD curve.</p>
+<p>Distinguish agreement of hard behavior from agreement of continuous loss events. If the target's complete hard cell has conditional mass q inside a finite-target event A_D, the exact relation is</p>
+<div class="math-display">$$
+-\log_2\mu_\Pi(A_D\cap C_U(f))
+=-\log_2\mu_\Pi(A_D)-\log_2 q.
+$$</div>
+<p>For example, q=0.99 gives a hard-cell correction of approximately 0.0145 bits. This error connects only the finite-target event to its target-hard-cell branch; it does not automatically connect to the full-domain average-loss event at the same threshold.</p>
+<p>Implementations of the same hard function may have different logits and losses. Moreover, A_D and A_U defined by the same average-loss threshold are generally not nested: a network with low average loss over the full domain may still have relatively high loss on D, and conversely. High hard generalization alone therefore cannot guarantee a high-precision estimate of full-target volume.</p>
+<p>If pointwise-tolerance events are used instead, the full-domain constraints include the finite-query constraints, allowing exact accounting with a conditional retention rate. Such an event must be named separately and cannot silently replace the existing average-BCE protocol. The actual average-loss method requires auditing the loss distribution on unqueried outputs and checking stability under added queries within the chosen precision window.</p>
+<h2 id="5-using-the-two-methods-together">5. Using the two methods together</h2>
+<ol>
+<li>Fix the reference network, measure, input scope, readout rule, and measurement precision.</li>
+<li>Generate target hard labels from source-network snapshots.</li>
+<li>First compare full-target and finite-query SMC on enumerable tasks to calibrate error.</li>
+<li>For large tasks, locate sample counts using transitions or query saturation and retain an independent input audit.</li>
+<li>Use the same cost scale for snapshots, recording necessary query expansion and estimation uncertainty.</li>
+</ol>
+<p>When comparing training snapshots across widths, a fixed reference network avoids mixing changes in source functions with changes in the measurement language. If the object of study is each architecture's own complexity, retain architecture subscripts and report it separately from fixed-reference measurement.</p>
+<h2 id="6-relationship-to-existing-evidence">6. Relationship to existing evidence</h2>
+<p><a href="experiments/e23.html">E23</a> supports a relationship between static rule costs and data recovery, while showing that sampling identifiability and the competitor denominator cannot be omitted. It does not prove that any finite sample set beyond an SGD transition approximates full-target volume.</p>
+<p>Looking up fixed K values for functions along training trajectories on small truth tables was a precursor to method one. The new proposal aims to measure targets generated by arbitrary snapshots directly, using method two to reduce costs on large input spaces. MNIST trajectories and Rule30 proxy accuracy still require experimental validation; the <a href="width-double-descent.html">website explanation of width and double descent</a> describes the mechanism relationships these measurements would test. These steps are a method proposal, not experiments completed for this release or experimental tasks that must be executed now.</p></div>
+
+      </article>
+    </main>
+  </div>
+</body>
+</html>

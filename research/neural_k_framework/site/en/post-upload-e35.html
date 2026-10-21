@@ -103,7 +103,7 @@
 <ul>
 <li><strong>All 192 models fully fit the duel training set, and on the conflict points they side with A almost unanimously</strong>; the fraction recovering A in the complete 9,312-point mapping is 15/96 in the near tier and 17/96 in the far tier — <strong>no model ever ends up implementing B</strong>;</li>
 <li>The remaining functions are not arbitrarily scattered wrong mappings, but functions very close to A (differing from A on average at only about 2.3/9,312 inputs);</li>
-<li>Paired near-vs-far comparison: complete-A recoveries 15/96 → 17/96, a net gain of 2 (the interval contains 0) — <strong>a larger source-loss gap does not raise the exact-recovery rate</strong>;</li>
+<li>Paired near-vs-far comparison: complete-A recoveries 15/96 → 17/96, a net gain of 2, or +2.08 percentage points; the 95% interval from initialization-block resampling, conditional on the selected candidates and training sets, is [-8.33,+12.50] percentage points. <strong>No reliable increase in exact recovery was detected here</strong>; candidate functions and the eligible A/B-agreement input pools also changed, so the causal effect of the source-loss gap was not isolated;</li>
 <li>After fitting, the models keep concentrating toward the vicinity of A: the first complete A appears markedly later than the moment of hard fitting of the training set.</li>
 </ul>
 <h2 id="4-relationship-to-the-many-competitor-picture-of-grokking">4. Relationship to the "many-competitor" picture of grokking</h2>
@@ -113,7 +113,7 @@
 <li>This is <strong>dynamic-preference evidence across trained networks</strong>: the candidates come from the original Transformer trajectory, and the duels take place in a separate unified small MLP; it is not a static-volume or exact-K measurement of the original architecture, nor does it establish an architecture-independent K ordering;</li>
 <li>"Conflict points match A ≈99.9%" does not equal "≈99.9% of the models completely implement A" — the complete-A recovery rate is only about 16%;</li>
 <li>The K difference between the near-tier source and A was not directly measured; the loss gap is only the basis for choosing the stages;</li>
-<li>Single task (mod97), single reference network, 192 models; the fitting pre-check for the first-round far tiers 4/5 was not done (far 3 already passed).</li>
+<li>Single task (mod97), single reference network, 192 models; the first-round record stated that far tiers 4/5 had not yet been pre-checked, but both subsequently passed, with <code>capacity_passed=true</code> in both case summaries. The corresponding records are <code>capacity/case_04/summary.json</code> and <code>capacity/case_05/summary.json</code> under the result directory; these regenerable raw results are not uploaded with the website, and the reproduction entry point is the <a href="../../experiments/experiment_35_mod97_frozen_function_duels/experiment_mod97_frozen_function_duels.py">experiment script</a>. This updates a historical status, not a new scientific gap.</li>
 </ol>
 <h2 id="6-files">6. Files</h2>
 <ul>

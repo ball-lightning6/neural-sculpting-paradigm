@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import html
 import json
+import os
 import re
 import shutil
 import unicodedata
@@ -21,8 +22,7 @@ WEB_ASSETS = ROOT / "web_assets"
 FIGURE_ROOT = ROOT / "assets" / "figures"
 
 
-# 提交后新增的七组公开实验。物理目录仍保留历史名称，网站和公开叙事使用
-# 连续的 E31--E37 编号；这样不会把内部试验目录名误当成公开实验编号。
+# 提交后新增的公开实验使用连续E编号，不把内部探索目录名当作实验编号。
 POST_UPLOAD_EXPERIMENTS = (
     (
         "E31",
@@ -53,8 +53,8 @@ POST_UPLOAD_EXPERIMENTS = (
         "条件规则决斗",
         "Conditional rule duel",
         "experiments/e34.html",
-        "冻结的 4-bit Neural K 全序预测 75 次 8-bit 决斗。",
-        "A frozen 4-bit Neural K ordering predicts 75 conditional duels.",
+        "冻结的 4-bit Neural K 顺序预测 15 对规则在 5 个阈值上的 75 项判决。",
+        "A frozen 4-bit Neural K ordering predicts 75 verdicts across 15 rule pairs and 5 thresholds.",
     ),
     (
         "E35",
@@ -79,6 +79,14 @@ POST_UPLOAD_EXPERIMENTS = (
         "experiments/e37.html",
         "Gaussian 与固定范数球欧式测度下的规则排序、端点响应和真实训练对应边界。",
         "Rule ordering, endpoint response, and training correspondence under Gaussian and fixed-ball Euclidean measures.",
+    ),
+    (
+        "E38",
+        "宽深扫描与相对目标质量",
+        "Width, depth, and relative target mass",
+        "experiments/e38.html",
+        "五配置、19目标的完整SMC扫描，检验共同BCE阈值下的相对质量随宽度变化。",
+        "A complete five-configuration, 19-target SMC scan of relative mass at a common BCE threshold.",
     ),
 )
 
@@ -206,6 +214,11 @@ def rewrite_ledger_links_en(markdown_text: str, experiments: list[Experiment]) -
 
 def rewrite_experiment_links(markdown_text: str, experiment: Experiment) -> str:
     text = markdown_text
+    text = re.sub(
+        r"\((?:\.\./)+(?:experiments/)?(experiment_\d+_[^/)]+/[^)]+)\)",
+        r"(../../experiments/\1)",
+        text,
+    )
     text = text.replace("(MOTIVATION_AND_PREREGISTRATION.md)", "(#motivation)")
     text = text.replace("(RESULTS_AND_CONCLUSION.md)", "(#results)")
     text = text.replace("(../../assets/figures/", "(../assets/figures/")
@@ -235,6 +248,11 @@ def rewrite_experiment_links_en(markdown_text: str, experiment: Experiment) -> s
     site/assets/figures/，因此无需像中文页那样改写资源路径。
     """
     text = markdown_text
+    text = re.sub(
+        r"\((?:\.\./)+(?:experiments/)?(experiment_\d+_[^/)]+/[^)]+)\)",
+        r"(../../../experiments/\1)",
+        text,
+    )
     text = text.replace("(MOTIVATION_AND_PREREGISTRATION.md)", "(#motivation)")
     text = text.replace("(RESULTS_AND_CONCLUSION.md)", "(#results)")
     for document in experiment.directory.glob("*.md"):
@@ -278,13 +296,13 @@ def protect_math(markdown_text: str) -> tuple[str, list[tuple[str, str, str]]]:
     in_fence = False
     fence = ""
     inline_pattern = re.compile(
-        r"(?<!\$)\$(?!\$)(.+?)(?<!\$)\$(?!\$)|\\\\\((.+?)\\\\\)"
+        r"(?<!\$)\$(?!\$)(.+?)(?<!\$)\$(?!\$)|(?P<slashes>\\{1,2})\((?P<tex>.+?)(?P=slashes)\)"
     )
 
     def protect_inline(line: str) -> str:
         def replace(match: re.Match[str]) -> str:
             token = f"MATHINLINETOKEN{len(tokens):05d}X"
-            tokens.append((token, "inline", match.group(1) if match.group(1) is not None else match.group(2)))
+            tokens.append((token, "inline", match.group(1) if match.group(1) is not None else match.group("tex")))
             return token
 
         return inline_pattern.sub(replace, line)
@@ -555,9 +573,9 @@ def build_paper(experiments: list[Experiment]) -> None:
     body, toc = render_markdown(strip_first_h1(source))
     metrics = """
     <div class="metric-strip" aria-label="文档概览">
-      <div><strong>37</strong><span>组已编号证据单元</span></div>
+      <div><strong>38</strong><span>组已编号证据单元</span></div>
       <div><strong>30</strong><span>组历史档案实验</span></div>
-      <div><strong>7</strong><span>组提交后增量实验</span></div>
+      <div><strong>8</strong><span>组提交后增量实验</span></div>
       <div><strong>22</strong><span>组关键实验展开</span></div>
       <div><strong>4</strong><span>张关键结果图</span></div>
     </div>
@@ -571,7 +589,7 @@ def build_paper(experiments: list[Experiment]) -> None:
       <p>需要核查或寻找更详细解释时，请优先查看研究证据总账、各实验详情页、原始实验脚本及其完整说明。作者之后会继续修改当前网页，并推进正式论文写作。</p>
       <div class="disclosure-links">
         <a href="evidence-ledger.html">查看研究证据总账</a>
-        <a href="experiments/index.html">查看 E01–E37 实验与脚本</a>
+        <a href="experiments/index.html">查看 E01–E38 实验与脚本</a>
       </div>
     </aside>
     """
@@ -592,7 +610,7 @@ def build_paper(experiments: list[Experiment]) -> None:
         active="paper",
         page_kind="paper",
         switch_href="en/index.html",
-        article_footer='<footer class="article-footer"><a href="experiments/index.html">继续查看 E01–E37 实验索引 →</a></footer>',
+        article_footer='<footer class="article-footer"><a href="experiments/index.html">继续查看 E01–E38 实验索引 →</a></footer>',
     )
     (SITE_ROOT / "index.html").write_text(page, encoding="utf-8")
 
@@ -667,6 +685,8 @@ def build_theory_core() -> None:
       <div><strong><a href="post-upload-mdl.html">MDL—grokking 长推导</a></strong><span>竞争质量与样本相变</span></div>
       <div><strong><a href="post-upload-theory-update.html">理论增量全文</a></strong><span>统计语言和周末理论修正</span></div>
       <div><strong><a href="post-upload-estimator.html">Neural K 估计器</a></strong><span>CGF、鞍点与 520 节点回测</span></div>
+      <div><strong><a href="width-double-descent.html">双下降与宽度证据</a></strong><span>容量轴、时间轴与E38完整SMC结果</span></div>
+      <div><strong><a href="complexity-methods.html">复杂度测量方法</a></strong><span>规则有限查询与权重所实现的函数</span></div>
     </div>
     """
     body = body + supplement_links
@@ -698,6 +718,9 @@ def rewrite_post_upload_links(markdown_text: str, link_base: str, asset_prefix: 
             fragment = "#" + fragment
         if not target or target.startswith(("http://", "https://", "mailto:", "/")):
             return match.group(0)
+        figure = re.match(r"^(?:\.\./)*assets/figures/(.+)$", target)
+        if figure:
+            return f"]({asset_prefix.rsplit('/', 1)[0]}/figures/{figure[1]}{fragment})"
         if re.match(r"^[A-Za-z]:[\\/]", target):
             # 报告中遗留的本机绝对路径不能进入公开 HTML。若文件存在且足够
             # 轻量，复制到生成站点的共享资产目录；否则只保留链接文字。
@@ -772,7 +795,7 @@ def build_post_upload() -> None:
         return
     source = read_text(POST_UPLOAD / "POST_UPLOAD_EXPERIMENTS_ZH.md")
     notice = """
-    <div class="notice warning"><strong>提交后增量</strong><span>本组页面对应 2026-09-02 短论文提交之后新增的理论与实验材料。新增实验使用 E31–E37 公共编号，前三项关联既有 E15/E23 等证据。</span></div>
+    <div class="notice warning"><strong>提交后增量</strong><span>本组页面对应 2026-09-02 短论文提交之后新增的理论与实验材料。新增实验使用 E31–E38 公共编号，前三项关联既有 E15/E23 等证据。</span></div>
     """
     links = """
     <div class="metric-strip" aria-label="增量入口">
@@ -783,10 +806,13 @@ def build_post_upload() -> None:
       <div><strong><a href="experiments/e31.html">E31 Loss 与幅度</a></strong><span>目标幅度与联合输出</span></div>
       <div><strong><a href="experiments/e32.html">E32 随机记忆</a></strong><span>复杂度近线性缩放</span></div>
       <div><strong><a href="experiments/e33.html">E33 跨架构</a></strong><span>联合输出体积</span></div>
-      <div><strong><a href="experiments/e34.html">E34 规则决斗</a></strong><span>75 次事前预测全部命中</span></div>
+      <div><strong><a href="experiments/e34.html">E34 规则决斗</a></strong><span>15 对规则 × 5 阈值，75 项判决同向</span></div>
       <div><strong><a href="experiments/e35.html">E35 grokking 决斗</a></strong><span>真实候选函数偏好</span></div>
       <div><strong><a href="experiments/e36.html">E36 Peleg/G&C 验证</a></strong><span>静态 vs SGD 对照</span></div>
       <div><strong><a href="experiments/e37.html">E37 测度鲁棒性</a></strong><span>Gaussian、欧式球与训练对应</span></div>
+      <div><strong><a href="experiments/e38.html">E38 宽深SMC扫描</a></strong><span>95个目标运行与相对质量变化</span></div>
+      <div><strong><a href="width-double-descent.html">双下降解释</a></strong><span>容量轴、时间轴与证据边界</span></div>
+      <div><strong><a href="complexity-methods.html">复杂度测量方法</a></strong><span>规则与训练快照的测量方案</span></div>
       <div><strong><a href="post-upload-decision.html">上传裁决</a></strong><span>本批材料取舍清单</span></div>
     </div>
     """
@@ -864,7 +890,7 @@ def build_post_upload() -> None:
         peleg_source,
         "E36 Peleg/G&C 独立验证",
         "实验增量 · E36 Peleg/G&C 独立验证",
-        "收紧 raw BCE 后，无梯度静态采样达到与 SGD 相当的 MNIST 泛化；G&C 结论不构成反例。",
+        "在所测 MNIST 协议中，收紧 raw BCE 后无梯度静态采样与 SGD 的平均泛化差距缩小。",
         "post-upload-peleg.html",
         "en/post-upload-peleg.html",
         link_base="../experiments/experiment_36_peleg_g_and_c_validation",
@@ -902,6 +928,7 @@ def build_post_upload() -> None:
             read_text(EXPERIMENT_ROOT / "experiment_33_cross_architecture" / "README_CROSS_ARCHITECTURE_RULE_VOLUME.md"),
             read_text(EXPERIMENT_ROOT / "experiment_33_cross_architecture" / "CROSS_ARCHITECTURE_RULE_VOLUME_REPORT.md"),
             read_text(EXPERIMENT_ROOT / "experiment_33_cross_architecture" / "CROSS_ARCHITECTURE_SMC_FEASIBILITY.md"),
+            read_text(EXPERIMENT_ROOT / "experiment_33_cross_architecture" / "RESULTS_3BIT_CROSS_ARCHITECTURE_COMPLEXITY_ORDER.md"),
         ]
     )
     post_upload_page(
@@ -950,7 +977,7 @@ def build_post_upload_en() -> None:
         raise RuntimeError(f"缺少英文增量总览完整翻译：{overview_path}")
     source = read_text(overview_path)
     notice = """
-    <div class="notice warning"><strong>Post-upload increments</strong><span>This group of pages covers new theory and experimental material completed after the 2026-09-02 preprint. New experiments use the public numbering E31–E37; the first three connect to existing evidence such as E15/E23.</span></div>
+    <div class="notice warning"><strong>Post-upload increments</strong><span>This group of pages covers new theory and experimental material completed after the 2026-09-02 preprint. New experiments use the public numbering E31–E38; the first three connect to existing evidence such as E15/E23.</span></div>
     """
     links = """
     <div class="metric-strip" aria-label="Increment entries">
@@ -961,10 +988,13 @@ def build_post_upload_en() -> None:
       <div><strong><a href="experiments/e31.html">E31 Loss and amplitude</a></strong><span>Target amplitude and the joint output</span></div>
       <div><strong><a href="experiments/e32.html">E32 Random memory</a></strong><span>Near-linear complexity scaling</span></div>
       <div><strong><a href="experiments/e33.html">E33 Cross-architecture</a></strong><span>Joint-output volume</span></div>
-      <div><strong><a href="experiments/e34.html">E34 Rule duels</a></strong><span>75 preregistered predictions all confirmed</span></div>
+      <div><strong><a href="experiments/e34.html">E34 Rule duels</a></strong><span>15 pairs × 5 thresholds; all 75 verdicts agree</span></div>
       <div><strong><a href="experiments/e35.html">E35 Grokking duels</a></strong><span>Real candidate-function preference</span></div>
       <div><strong><a href="experiments/e36.html">E36 Peleg/G&amp;C recheck</a></strong><span>Static versus SGD comparison</span></div>
       <div><strong><a href="experiments/e37.html">E37 Measure robustness</a></strong><span>Gaussian, Euclidean balls, and training correspondence</span></div>
+      <div><strong><a href="experiments/e38.html">E38 Width/depth SMC scan</a></strong><span>95 target runs and changes in relative mass</span></div>
+      <div><strong><a href="width-double-descent.html">Double-descent account</a></strong><span>Capacity and time axes with evidence boundaries</span></div>
+      <div><strong><a href="complexity-methods.html">Complexity measurement methods</a></strong><span>Proposals for rules and training snapshots</span></div>
       <div><strong><a href="post-upload-decision.html">Upload decision</a></strong><span>What this increment includes</span></div>
     </div>
     """
@@ -1057,7 +1087,7 @@ def build_post_upload_en() -> None:
         read_text(TRANSLATIONS_EN / "post_upload" / "peleg.md"),
         "E36 Peleg/G&C independent verification",
         "Experiment increment · E36 Peleg/G&C independent verification",
-        "With a tightened raw-BCE constraint, gradient-free static sampling reaches SGD-level MNIST generalization; the G&C comparison does not falsify the static picture.",
+        "In the tested MNIST protocol, tightening raw BCE narrows the mean generalization gap between gradient-free static sampling and SGD.",
         "en/post-upload-peleg.html",
         "../post-upload-peleg.html",
         prefix="../",
@@ -1217,9 +1247,9 @@ def build_experiment_pages(experiments: list[Experiment]) -> None:
     <p class="empty-search" data-empty-search hidden>没有匹配的实验。</p>
     """
     index_page = page_template(
-        title="E01–E37 实验索引",
+        title="E01–E38 实验索引",
         description="每页合并实验目的、具体操作、判决标准、结果、边界和复现脚本。",
-        eyebrow="实验档案 · 36 组编号证据单元",
+        eyebrow=f"实验档案 · {total_experiments} 组编号证据单元",
         body=index_body,
         sidebar=toc_sidebar("", sidebar_list),
         prefix="../",
@@ -1258,7 +1288,7 @@ def build_experiment_pages(experiments: list[Experiment]) -> None:
 
 
 def build_canonical_increment_pages() -> None:
-    """把 E31--E37 生成为统一 experiments/eNN.html 主入口。
+    """把 E31--E38 生成为统一 experiments/eNN.html 主入口。
 
     post-upload-eNN.html 仍由 build_post_upload 保留，作为旧链接兼容别名；
     网站索引、主文和 manifest 使用这里的 canonical 页面。
@@ -1287,6 +1317,7 @@ def build_canonical_increment_pages() -> None:
             EXPERIMENT_ROOT / "experiment_33_cross_architecture" / "README_CROSS_ARCHITECTURE_RULE_VOLUME.md",
             EXPERIMENT_ROOT / "experiment_33_cross_architecture" / "CROSS_ARCHITECTURE_RULE_VOLUME_REPORT.md",
             EXPERIMENT_ROOT / "experiment_33_cross_architecture" / "CROSS_ARCHITECTURE_SMC_FEASIBILITY.md",
+            EXPERIMENT_ROOT / "experiment_33_cross_architecture" / "RESULTS_3BIT_CROSS_ARCHITECTURE_COMPLEXITY_ORDER.md",
         ),
         "e34": read_text(EXPERIMENT_ROOT / "experiment_34_conditional_rule_duel" / "README.md"),
         "e35": read_text(EXPERIMENT_ROOT / "experiment_35_mod97_frozen_function_duels" / "README.md"),
@@ -1295,6 +1326,11 @@ def build_canonical_increment_pages() -> None:
             EXPERIMENT_ROOT / "experiment_36_peleg_g_and_c_validation" / "CONCLUSION.md",
         ),
         "e37": read_text(EXPERIMENT_ROOT / "experiment_37_measure_robustness" / "README.md"),
+        "e38": joined(
+            EXPERIMENT_ROOT / "experiment_38_width_depth_volume" / "README.md",
+            EXPERIMENT_ROOT / "experiment_38_width_depth_volume" / "MOTIVATION_AND_PREREGISTRATION.md",
+            EXPERIMENT_ROOT / "experiment_38_width_depth_volume" / "RESULTS_AND_CONCLUSION.md",
+        ),
     }
     english = {
         "e31": read_text(TRANSLATIONS_EN / "post_upload" / "e31.md"),
@@ -1304,6 +1340,7 @@ def build_canonical_increment_pages() -> None:
         "e35": read_text(TRANSLATIONS_EN / "post_upload" / "e35.md"),
         "e36": read_text(TRANSLATIONS_EN / "post_upload" / "peleg.md"),
         "e37": read_text(TRANSLATIONS_EN / "post_upload" / "e37.md"),
+        "e38": read_text(TRANSLATIONS_EN / "post_upload" / "e38.md"),
     }
     meta = {
         "e31": ("E31 Loss 与幅度对齐", "E31 Loss and output amplitude", "实验增量 · E31", "Experiment increment · E31"),
@@ -1313,6 +1350,7 @@ def build_canonical_increment_pages() -> None:
         "e35": ("E35 Mod97 冻结函数决斗", "E35 Mod97 frozen-function duels", "实验增量 · E35", "Experiment increment · E35"),
         "e36": ("E36 Peleg/G&C 独立验证", "E36 Peleg/G&C independent verification", "实验增量 · E36", "Experiment increment · E36"),
         "e37": ("E37 测度鲁棒性与 Gaussian 对应", "E37 Measure robustness and Gaussian alignment", "实验增量 · E37", "Experiment increment · E37"),
+        "e38": ("E38 宽深扫描与相对目标质量", "E38 Width, depth, and relative target mass", "实验增量 · E38", "Experiment increment · E38"),
     }
     link_bases = {
         "e31": ("../../experiments/experiment_31_loss_amplitude_grokking", "../../../experiments/experiment_31_loss_amplitude_grokking"),
@@ -1322,6 +1360,7 @@ def build_canonical_increment_pages() -> None:
         "e35": ("../../experiments/experiment_35_mod97_frozen_function_duels", "../../../experiments/experiment_35_mod97_frozen_function_duels"),
         "e36": ("../../experiments/experiment_36_peleg_g_and_c_validation", "../../../experiments/experiment_36_peleg_g_and_c_validation"),
         "e37": ("../../experiments/experiment_37_measure_robustness", "../../../experiments/experiment_37_measure_robustness"),
+        "e38": ("../../experiments/experiment_38_width_depth_volume", "../../../experiments/experiment_38_width_depth_volume"),
     }
     for slug, zh_source in chinese.items():
         zh_title, en_title, zh_eyebrow, en_eyebrow = meta[slug]
@@ -1375,9 +1414,9 @@ def build_paper_en(experiments: list[Experiment], output: Path) -> None:
     body, toc = render_markdown(strip_first_h1(source))
     metrics = """
     <div class="metric-strip" aria-label="Document overview">
-      <div><strong>37</strong><span>numbered evidence units</span></div>
+      <div><strong>38</strong><span>numbered evidence units</span></div>
       <div><strong>30</strong><span>historical archive experiments</span></div>
-      <div><strong>7</strong><span>post-upload experiments</span></div>
+      <div><strong>8</strong><span>post-upload experiments</span></div>
       <div><strong>22</strong><span>key experiments explained</span></div>
       <div><strong>4</strong><span>result figures</span></div>
     </div>
@@ -1391,7 +1430,7 @@ def build_paper_en(experiments: list[Experiment], output: Path) -> None:
       <p>For verification or fuller context, consult the evidence ledger, experiment detail pages, original scripts, and preserved result notes. The author intends to continue revising the website and developing a formal paper.</p>
       <div class="disclosure-links">
         <a href="evidence-ledger.html">Open the evidence ledger</a>
-        <a href="experiments/index.html">Browse E01–E37 and scripts</a>
+        <a href="experiments/index.html">Browse E01–E38 and scripts</a>
       </div>
     </aside>
     """
@@ -1413,7 +1452,7 @@ def build_paper_en(experiments: list[Experiment], output: Path) -> None:
         page_kind="paper",
         language="en",
         switch_href="../index.html",
-        article_footer='<footer class="article-footer"><a href="experiments/index.html">Continue to the E01–E37 experiment index →</a></footer>',
+        article_footer='<footer class="article-footer"><a href="experiments/index.html">Continue to the E01–E38 experiment index →</a></footer>',
     )
     (output / "index.html").write_text(page, encoding="utf-8")
 
@@ -1486,6 +1525,8 @@ def build_theory_core_en(output: Path) -> None:
       <div><strong><a href="experiments/e37.html">E37 Measure robustness</a></strong><span>Gaussian, Euclidean balls, and training correspondence</span></div>
       <div><strong><a href="post-upload-theory-update.html">Full theory increment</a></strong><span>Strict language and weekend theory corrections</span></div>
       <div><strong><a href="post-upload-estimator.html">Neural K estimator</a></strong><span>CGF, saddlepoint, and 520-node backtest</span></div>
+      <div><strong><a href="width-double-descent.html">Double descent and width evidence</a></strong><span>Capacity and time axes with the complete E38 SMC results</span></div>
+      <div><strong><a href="complexity-methods.html">Complexity measurement methods</a></strong><span>Finite rule queries and functions implemented by weights</span></div>
     </div>
     """
     body = body + supplement_links
@@ -1545,9 +1586,9 @@ def build_experiment_pages_en(experiments: list[Experiment], output: Path) -> No
     <p class="empty-search" data-empty-search hidden>No matching experiment.</p>
     """
     index_page = page_template(
-        title="E01–E37 Experiment Index",
+        title="E01–E38 Experiment Index",
         description="Each page combines the motivation, actual design, decision criteria, results, limits, and source-script links.",
-        eyebrow="Experiment archive · 36 numbered evidence units",
+        eyebrow=f"Experiment archive · {total_experiments} numbered evidence units",
         body=index_body,
         sidebar=toc_sidebar("", sidebar_list, language="en"),
         prefix="../../",
@@ -1629,6 +1670,10 @@ def copy_assets() -> None:
 def copy_public_theory_sources() -> None:
     """把理论源稿放入静态站点，方便从网页直接复查完整版本。"""
     sources = {
+        "zh/width_double_descent_zh.md": ROOT / "width_double_descent_zh.md",
+        "en/width_double_descent_en.md": ROOT / "width_double_descent_en.md",
+        "zh/complexity_measurement_methods_zh.md": ROOT / "complexity_measurement_methods_zh.md",
+        "en/complexity_measurement_methods_en.md": ROOT / "complexity_measurement_methods_en.md",
         "zh/minimal_strict_statistical_language_tutorial_zh.md": ROOT / "minimal_strict_statistical_language_tutorial_zh.md",
         "zh/minimal_strict_statistical_language_zh.md": POST_UPLOAD / "theory" / "minimal_strict_statistical_language_zh.md",
         "zh/minimal_statistical_language_audit_zh.md": POST_UPLOAD / "theory" / "minimal_statistical_language_audit_zh.md",
@@ -1649,6 +1694,81 @@ def copy_public_theory_sources() -> None:
         destination = output / relative
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(source, destination)
+
+
+def build_october_theory_pages() -> None:
+    """发布两份双语理论说明，不改正式论文，也不将方法方案伪装成新实验。"""
+    specifications = (
+        ("width_double_descent", "width-double-descent.html",
+         "双下降解释与宽度证据", "Double descent and width evidence",
+         "容量轴与时间轴的条件解释、E38完整SMC结果及明确标注的探索对照。",
+         "A conditional account of capacity and time axes, complete E38 SMC results, and explicitly labeled exploratory comparisons."),
+        ("complexity_measurement_methods", "complexity-methods.html",
+         "复杂度测量方法", "Complexity measurement methods",
+         "规则的有限查询估计与训练快照所实现函数的测量方案；尚未新增验证实验。",
+         "Proposed finite-query estimation of rules and measurement of functions implemented by checkpoints; no new validation experiments."),
+    )
+    for language in ("zh", "en"):
+        output = SITE_ROOT if language == "zh" else SITE_ROOT / "en"
+        routes = {
+            (ROOT / f"theory_core_{language}.md").resolve(): output / "theory-core.html",
+            (ROOT / f"evidence_ledger_{language}.md").resolve(): output / "evidence-ledger.html",
+            (ROOT / f"width_double_descent_{language}.md").resolve(): output / "width-double-descent.html",
+            (ROOT / f"complexity_measurement_methods_{language}.md").resolve(): output / "complexity-methods.html",
+            (POST_UPLOAD / "theory/minimal_strict_statistical_language_zh.md").resolve(): output / "post-upload-language.html",
+            (TRANSLATIONS_EN / "theory/probability_language.md").resolve(): output / "post-upload-language.html",
+        }
+        for directory in EXPERIMENT_ROOT.glob("experiment_*"):
+            match = re.match(r"experiment_(\d+)_", directory.name)
+            if not match or not 1 <= int(match[1]) <= 38:
+                continue
+            number = int(match[1])
+            destination = output / f"experiments/e{number:02d}.html"
+            for source in directory.glob("*.md"):
+                routes[source.resolve()] = destination
+            routes[(TRANSLATIONS_EN / f"experiments/e{number:02d}.md").resolve()] = destination
+            routes[(TRANSLATIONS_EN / f"post_upload/e{number:02d}.md").resolve()] = destination
+
+        def rewrite_link(match: re.Match[str]) -> str:
+            raw = match.group(1)
+            target, separator, fragment = raw.partition("#")
+            if not target or re.match(r"^[A-Za-z][A-Za-z0-9+.-]*:", target):
+                return match.group(0)
+            source = (ROOT / target).resolve()
+            if source in routes:
+                destination = routes[source]
+                # 源Markdown标题slug未必与拼接网页一致，使用实验或理论页入口。
+                fragment = ""
+            elif source.is_relative_to(ROOT / "assets"):
+                destination = SITE_ROOT / "assets" / source.relative_to(ROOT / "assets")
+            elif source.is_relative_to(ROOT):
+                destination = source
+            else:
+                raise RuntimeError(f"公开理论页不能链接框架目录外的本地材料：{raw}")
+            relative = Path(os.path.relpath(destination, output)).as_posix()
+            return f"]({relative}{'#' + fragment if separator and fragment else ''})"
+
+        for stem, filename, title_zh, title_en, description_zh, description_en in specifications:
+            source = read_text(ROOT / f"{stem}_{language}.md")
+            source = re.sub(r"\]\(([^)]+)\)", rewrite_link, source)
+            body, toc = render_markdown(strip_first_h1(source))
+            is_chinese = language == "zh"
+            title = title_zh if is_chinese else title_en
+            back = "返回理论核心 →" if is_chinese else "Back to core theory →"
+            page = page_template(
+                title=title,
+                description=description_zh if is_chinese else description_en,
+                eyebrow="理论补充 · 证据与方案分开" if is_chinese else "Theory supplement · Evidence and proposals distinguished",
+                body=body,
+                sidebar=toc_sidebar(toc, f'<a class="sidebar-action" href="theory-core.html">{back}</a>', language=language),
+                prefix="" if is_chinese else "../",
+                nav_prefix="",
+                active="core",
+                page_kind="core",
+                language=language,
+                switch_href=f"en/{filename}" if is_chinese else f"../{filename}",
+            )
+            (output / filename).write_text(page, encoding="utf-8")
 
 
 def prepare_site_root() -> None:
@@ -1686,6 +1806,10 @@ def write_manifest(experiments: list[Experiment]) -> None:
         "entry": "index.html",
         "languages": {"zh-CN": "index.html", "en": "en/index.html"},
         "core_theory": {"zh-CN": "theory-core.html", "en": "en/theory-core.html"},
+        "october_theory": {
+            "double_descent": {"zh-CN": "width-double-descent.html", "en": "en/width-double-descent.html"},
+            "complexity_methods": {"zh-CN": "complexity-methods.html", "en": "en/complexity-methods.html"},
+        },
         "experiment_count": len(experiment_items),
         "experiments": experiment_items,
     }
@@ -1717,6 +1841,7 @@ def main() -> None:
     build_post_upload()
     build_english_site(experiments)
     build_canonical_increment_pages()
+    build_october_theory_pages()
     write_manifest(experiments)
     normalize_generated_html()
     html_count = len(list(SITE_ROOT.rglob("*.html")))

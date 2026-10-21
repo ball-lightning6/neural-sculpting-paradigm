@@ -66,7 +66,7 @@
 <p>估计器适用于本项目固定协议：单隐藏层宽16的 tanh 网络、0/1输入、Gaussian白化神经坐标、原fan-in缩放，以及完整真值表平均 raw-BCE 子水平事件。它不能直接推广到任意深度、CNN、RNN、Transformer、编码或先验。</p>
 <p>目标是在运行SMC之前，根据架构和参数先验估计低loss体积及对应Neural K。SMC只用于冻结回测参考，不用于按规则拟合校正系数。</p>
 <h2 id="2-精确的有限宽联合输出-cgf">2. 精确的有限宽联合输出 CGF</h2>
-<p>3-bit和4-bit实验有 (r=2^b) 个输入表行，隐藏宽度为 (m=16)。独立Gaussian神经坐标下：
+<p>3-bit和4-bit实验有 <span class="math-inline">$r=2^b$</span> 个输入表行，隐藏宽度为 <span class="math-inline">$m=16$</span>。独立Gaussian神经坐标下：
 <div class="math-display">$$
 Z=\frac1{\sqrt m}\sum_{j=1}^{m}a_jh_j
 +\frac{b_o}{\sqrt m}\mathbf1,
@@ -80,10 +80,10 @@ $$</div></p>
 +m\log\mathbb E_{w,b}
 \exp\left[\frac{(t^Th)^2}{2m}\right].
 $$</div></p>
-<p>这是指定有限宽先验下的精确恒等式，不使用无限宽近似，也没有从SMC数据标定参数。单神经元积分只有 (b+1) 个独立Gaussian坐标，用多维Gauss-Hermite求积计算。</p>
+<p>这是指定有限宽先验下的精确恒等式，不使用无限宽近似，也没有从SMC数据标定参数。单神经元积分只有 <span class="math-inline">$b+1$</span> 个独立Gaussian坐标，用多维Gauss-Hermite求积计算。</p>
 <p>与只保留协方差的Gaussian近似不同，CGF保留有限宽表示涨落的高阶结构。该推导受到有限宽Gaussian混合与特征分布工作的启发，但BCE估计器及其化简是本项目协议特定的实现。</p>
 <h2 id="3-bce事件的-chernoff-作用量">3. BCE事件的 Chernoff 作用量</h2>
-<p>令 (s_i=2y_i-1)，事件 (E) 为完整真值表平均BCE不超过 (\epsilon)。定义：
+<p>令 <span class="math-inline">$s_i=2y_i-1$</span>，事件 <span class="math-inline">$E$</span> 为完整真值表平均BCE不超过 <span class="math-inline">$\\epsilon$</span>。定义：
 <div class="math-display">$$
 I(E)=\sup_t\{\inf_{z\in E}t^Tz-\Lambda(t)\}.
 $$</div></p>

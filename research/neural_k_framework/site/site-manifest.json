@@ -9,7 +9,17 @@
     "zh-CN": "theory-core.html",
     "en": "en/theory-core.html"
   },
-  "experiment_count": 37,
+  "october_theory": {
+    "double_descent": {
+      "zh-CN": "width-double-descent.html",
+      "en": "en/width-double-descent.html"
+    },
+    "complexity_methods": {
+      "zh-CN": "complexity-methods.html",
+      "en": "en/complexity-methods.html"
+    }
+  },
+  "experiment_count": 38,
   "experiments": [
     {
       "id": "E01",
@@ -202,8 +212,8 @@
     },
     {
       "id": "E28",
-      "title_zh": "E28：MNIST 50k整网HMC与同协议Adam",
-      "title_en": "Whole-Network HMC versus Adam on 50k MNIST",
+      "title_zh": "E28：MNIST 50k likelihood加权后验HMC与同协议Adam",
+      "title_en": "Likelihood-Weighted Posterior HMC versus Same-Protocol Adam on 50k MNIST",
       "page_zh": "experiments/e28.html",
       "page_en": "en/experiments/e28.html"
     },
@@ -269,6 +279,13 @@
       "title_en": "Measure robustness and Gaussian alignment",
       "page_zh": "experiments/e37.html",
       "page_en": "en/experiments/e37.html"
+    },
+    {
+      "id": "E38",
+      "title_zh": "宽深扫描与相对目标质量",
+      "title_en": "Width, depth, and relative target mass",
+      "page_zh": "experiments/e38.html",
+      "page_en": "en/experiments/e38.html"
     }
   ]
 }
