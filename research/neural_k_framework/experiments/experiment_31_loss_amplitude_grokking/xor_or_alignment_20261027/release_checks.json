@@ -1,0 +1,51 @@
+{
+  "passed": true,
+  "compiled_and_imported": [
+    "analyze.py",
+    "bridge_diagnostic.py",
+    "build_figures.py",
+    "check_release.py",
+    "run_experiment.py",
+    "test_experiment.py",
+    "test_offline.py",
+    "verify_bridge.py"
+  ],
+  "imports": [
+    "__future__",
+    "ast",
+    "copy",
+    "csv",
+    "hashlib",
+    "importlib",
+    "io",
+    "json",
+    "math",
+    "matplotlib",
+    "numpy",
+    "os",
+    "pathlib",
+    "platform",
+    "py_compile",
+    "re",
+    "run_experiment",
+    "signal",
+    "sys",
+    "time",
+    "torch",
+    "unittest",
+    "zipfile"
+  ],
+  "bilingual_blocks": 58,
+  "block_counts": {
+    "anchor": 1,
+    "code": 3,
+    "heading": 9,
+    "image": 2,
+    "math": 4,
+    "paragraph": 35,
+    "table": 4
+  },
+  "public_links": 10,
+  "source_data_hashes_verified": true,
+  "scope": "仅编译、导入和静态文档/数据核验；没有调用训练、SMC或证书求解入口。"
+}

@@ -1,0 +1,194 @@
+{
+  "original_static": {
+    "scientific_sha256": "68d8965488629830643d66012d67033b04eee5d03131043855f628424a938198",
+    "source_sha256": "fa25ff63ff04ffa269f700db83d02e37d223b277485d45657f52c8fd5c8829af",
+    "config": {
+      "device": "cuda:0",
+      "allow_cpu": false,
+      "output_dir": "runs/original_static",
+      "mnist_root": "runs/mnist",
+      "networks": [
+        {
+          "name": "cnn_w4",
+          "kind": "cnn",
+          "scale": 4
+        },
+        {
+          "name": "mlp_256_128",
+          "kind": "mlp",
+          "hidden": [
+            256,
+            128
+          ]
+        },
+        {
+          "name": "cnn_w8",
+          "kind": "cnn",
+          "scale": 8
+        }
+      ],
+      "include_anchor": true,
+      "partitions": 3,
+      "datasets_per_partition": 3,
+      "sample_sizes": [
+        32
+      ],
+      "include_label_controls": true,
+      "data_seed": 202610230,
+      "probe_count": 2048,
+      "prior_scale": 0.2,
+      "fixed_zero_bias": true,
+      "replicas": 4,
+      "particles": 1024,
+      "nodes": [
+        0.3,
+        0.1,
+        0.03,
+        0.01,
+        0.003
+      ],
+      "loss_band_fractions": [
+        0.5,
+        0.8
+      ],
+      "model_chunk": 128,
+      "input_chunk": 16,
+      "mutation_chunk": 128,
+      "sweeps": 8,
+      "refresh_sweeps": 24,
+      "proposal_factors": [
+        0.1,
+        0.03,
+        0.01,
+        0.003,
+        0.001,
+        0.0003
+      ],
+      "gc_target": 512,
+      "gc_max_draws": 2000000,
+      "gc_seconds": 90,
+      "sgd_models": 128,
+      "sgd_lr": 0.001,
+      "sgd_epochs": 2000,
+      "sgd_batch_size": 2,
+      "sgd_model_chunk": 16,
+      "total_hours": 4,
+      "replica_seconds": 1200,
+      "sgd_seconds": 900,
+      "max_replica_attempts": 3,
+      "max_levels": 20000,
+      "checkpoint_seconds": 120,
+      "audit_weights": 2,
+      "keep_completed_checkpoints": false,
+      "keep_failed_checkpoints": false
+    },
+    "models": [
+      {
+        "name": "cnn_w4",
+        "parameters": 173890
+      },
+      {
+        "name": "mlp_256_128",
+        "parameters": 234114
+      },
+      {
+        "name": "cnn_w8",
+        "parameters": 693378
+      }
+    ],
+    "measure": "所有weight独立U[-a,a]；bias固定0；原始坐标概率质量。",
+    "kernel": "独立于状态的预定尺度混合，分层/全局反射对称随机游走，无梯度、无SGD预热。"
+  },
+  "extension": {
+    "scientific_sha256": "8a83a7dd020f943de501748073c55d05533204b463aeaf35da2577e47f6e6618",
+    "source_sha256": "fa25ff63ff04ffa269f700db83d02e37d223b277485d45657f52c8fd5c8829af",
+    "config": {
+      "device": "cuda:0",
+      "allow_cpu": false,
+      "output_dir": "runs/extension",
+      "mnist_root": "runs/mnist",
+      "networks": [
+        {
+          "name": "cnn_w4",
+          "kind": "cnn",
+          "scale": 4
+        },
+        {
+          "name": "mlp_256_128",
+          "kind": "mlp",
+          "hidden": [
+            256,
+            128
+          ]
+        }
+      ],
+      "include_anchor": false,
+      "partitions": 3,
+      "datasets_per_partition": 2,
+      "sample_sizes": [
+        8,
+        64
+      ],
+      "include_label_controls": false,
+      "data_seed": 202610230,
+      "probe_count": 2048,
+      "prior_scale": 0.2,
+      "fixed_zero_bias": true,
+      "replicas": 4,
+      "particles": 1024,
+      "nodes": [
+        0.3,
+        0.1,
+        0.03,
+        0.01,
+        0.003
+      ],
+      "loss_band_fractions": [
+        0.5,
+        0.8
+      ],
+      "model_chunk": 128,
+      "input_chunk": 16,
+      "mutation_chunk": 128,
+      "sweeps": 32,
+      "refresh_sweeps": 96,
+      "proposal_factors": [
+        0.1,
+        0.03,
+        0.01,
+        0.003,
+        0.001,
+        0.0003
+      ],
+      "gc_target": 512,
+      "gc_max_draws": 2000000,
+      "gc_seconds": 90,
+      "sgd_models": 128,
+      "sgd_lr": 0.001,
+      "sgd_epochs": 2000,
+      "sgd_batch_size": 2,
+      "sgd_model_chunk": 16,
+      "total_hours": 4.0,
+      "replica_seconds": 1200,
+      "sgd_seconds": 900,
+      "max_replica_attempts": 3,
+      "max_levels": 20000,
+      "checkpoint_seconds": 120,
+      "audit_weights": 2,
+      "keep_completed_checkpoints": false,
+      "keep_failed_checkpoints": false
+    },
+    "models": [
+      {
+        "name": "cnn_w4",
+        "parameters": 173890
+      },
+      {
+        "name": "mlp_256_128",
+        "parameters": 234114
+      }
+    ],
+    "measure": "所有weight独立U[-a,a]；bias固定0；原始坐标概率质量。",
+    "kernel": "独立于状态的预定尺度混合，分层/全局反射对称随机游走，无梯度、无SGD预热。"
+  }
+}

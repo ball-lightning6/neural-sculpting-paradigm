@@ -1,0 +1,4 @@
+__pycache__/
+.matplotlib/
+runs/
+validation/compile_*.pyc

@@ -62,12 +62,12 @@
 | ID | 实验 | 入口 |
 |---|---|---|
 | E31 | Loss与幅度对齐 | [实验目录](experiment_31_loss_amplitude_grokking/README.md) |
-| E32 | 随机记忆缩放 | [实验报告](experiment_32_random_memory/RANDOM_MEMORY_SCALING_REPORT.md) |
-| E33 | 跨架构联合输出体积 | [实验目录](experiment_33_cross_architecture/README_CROSS_ARCHITECTURE_RULE_VOLUME.md) |
+| E32 | 随机记忆与跨层标定 | [原实验报告](experiment_32_random_memory/RANDOM_MEMORY_SCALING_REPORT.md) / [2026-10扩展](experiment_32_random_memory/MEMORY_EXTENSION_20261027.md) |
+| E33 | 跨架构联合输出与复杂度校准 | [原实验](experiment_33_cross_architecture/README_CROSS_ARCHITECTURE_RULE_VOLUME.md) / [外部校准](experiment_33_cross_architecture/COMPLEXITY_CALIBRATION_20261027.md) |
 | E34 | 条件规则决斗 | [实验目录](experiment_34_conditional_rule_duel/README.md) |
 | E35 | Mod97冻结函数决斗 | [实验目录](experiment_35_mod97_frozen_function_duels/README.md) |
-| E36 | Peleg/G&C独立验证 | [实验目录](experiment_36_peleg_g_and_c_validation/README.md) |
-| E37 | 测度鲁棒性 | [实验目录](experiment_37_measure_robustness/README.md) |
+| E36 | Peleg/G&C与跨方法训练对照 | [原实验](experiment_36_peleg_g_and_c_validation/README.md) / [2026-10扩展](experiment_36_peleg_g_and_c_validation/VALIDATION_EXTENSION_20261027.md) |
+| E37 | 测度鲁棒性与固定半径 | [原实验](experiment_37_measure_robustness/README.md) / [固定半径增补](experiment_37_measure_robustness/FIXED_RADIUS_20261027.md) |
 | E38 | 宽深扫描与相对目标质量 | [实验目录](experiment_38_width_depth_volume/README.md) |
 
 E01--E30保留历史选择性整理范围；后续网站编号延续至E38，不意味着每项增量都已

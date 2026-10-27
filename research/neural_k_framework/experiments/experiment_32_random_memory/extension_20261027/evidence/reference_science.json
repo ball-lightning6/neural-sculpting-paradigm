@@ -1,0 +1,92 @@
+{
+  "protocol": "random_memory_independent_pcn_smc_v1",
+  "checkpoint_version": 1,
+  "scientific_source_sha256": "193faebfdcd6600f7c35b633b28ec9ca3870b48c68b97bdb39dabd29ffb4fb94",
+  "config": {
+    "DEVICE": "cuda:0",
+    "DTYPE": "float32",
+    "TF32": false,
+    "DETERMINISTIC": true,
+    "CPU_THREADS": 4,
+    "INPUT_BITS": 8,
+    "ARCHITECTURES": [
+      [
+        32
+      ],
+      [
+        64,
+        32
+      ],
+      [
+        32,
+        32,
+        32
+      ]
+    ],
+    "COUNTS": [
+      16,
+      32,
+      48,
+      64,
+      80,
+      96,
+      112,
+      128,
+      144,
+      160,
+      176,
+      192,
+      208,
+      224,
+      240,
+      256
+    ],
+    "DATASETS": 12,
+    "POOLS": 4,
+    "PARTICLES": 2048,
+    "THRESHOLDS": [
+      0.7,
+      0.69,
+      0.65,
+      0.6,
+      0.5,
+      0.4,
+      0.3,
+      0.2,
+      0.1,
+      0.05,
+      0.025,
+      0.01,
+      0.005,
+      0.002,
+      0.001
+    ],
+    "PRIMARY_WINDOW": [
+      0.002,
+      0.001
+    ],
+    "DATA_SEED": 202609112301,
+    "PRIOR_SEED": 202609112311,
+    "RESAMPLE_SEED": 202609112312,
+    "MUTATION_SEED": 202609112313,
+    "SURVIVAL_QUANTILE": 0.5,
+    "ADAPT_SWEEPS": 2,
+    "MUTATION_SWEEPS": 12,
+    "HIDDEN_FIRST_SCALE": 0.08,
+    "HIDDEN_OTHER_SCALE": 0.06,
+    "OUTPUT_SCALE": 0.08,
+    "ALL_SCALE": 0.025,
+    "TARGET_ACCEPTANCE": 0.3,
+    "ADAPT_RATE": 0.35,
+    "MIN_PROPOSAL_SCALE": 0.0001,
+    "MAX_PROPOSAL_SCALE": 0.95,
+    "LOSS_TOLERANCE": 1e-9,
+    "EVAL_MICRO_BATCH": 2048,
+    "DIAGNOSTIC_PARTICLES": 64
+  },
+  "coordinate_prior": "iid N(0,1); weights AND biases scaled by 1/sqrt(fan_in)",
+  "loss": "mean signed-logaddexp BCE on selected training prefix only",
+  "log_volume_dtype": "IEEE float64",
+  "amp": false,
+  "independence": "各池独立随机流、阈值、自适应步长和重采样；无跨池状态共享"
+}

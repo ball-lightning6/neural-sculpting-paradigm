@@ -38,6 +38,7 @@
         <nav class="toc"><div class="toc">
 <ul>
 <li><a href="#state-the-final-conclusion-first">State the final conclusion first</a></li>
+<li><a href="#latest-evidence">October 2026 evidence: four questions, retaining the existing experiment numbers</a></li>
 <li><a href="#what-we-saw-before-proposing-this-theory">What we saw before proposing this theory</a></li>
 <li><a href="#1-the-initial-question-can-the-initialization-prior-alone-explain-post-training-function-selection">1. The initial question: can the initialization prior alone explain post-training function selection</a><ul>
 <li><a href="#experiment-one-directly-counting-complete-functions-in-3-bit-space">Experiment one: directly counting complete functions in 3-bit space</a></li>
@@ -109,8 +110,8 @@
 <li><a href="#12-what-is-the-relationship-between-this-framework-and-existing-theories">12. What is the relationship between this framework and existing theories</a></li>
 <li><a href="#13-what-cannot-yet-be-claimed">13. What cannot yet be claimed</a></li>
 <li><a href="#14-summary">14. Summary</a></li>
-<li><a href="#post-submission-increment-e31-e37">Post-submission increment: E31--E37</a></li>
-<li><a href="#appendix-e01-e37-evidence-map">Appendix: E01--E37 evidence map</a></li>
+<li><a href="#post-submission-increment-e31-e38">Post-submission increment: E31--E38</a></li>
+<li><a href="#appendix-e01-e38-evidence-map">Appendix: E01--E38 evidence map</a></li>
 </ul>
 </div>
 </nav>
@@ -130,7 +131,7 @@
       <div class="disclosure-kicker" id="research-disclosure-title-en">Research status notice</div>
       <p>This website summarizes a large body of research and experiments completed by the author in a short period. Turning the full record into a rigorous, submission-ready paper is a substantial additional project; given the author’s current time and energy constraints, the present archive has been summarized and organized by AI.</p>
       <p><strong>Except for the Core Theory page, the specific prose of the research narrative, evidence ledger, and experiment descriptions was written by AI and still contains unclear explanations, immature structure, and missing detail.</strong> The research questions, theoretical judgments, and experiments come from the author. The current site should not be treated as a finished paper.</p>
-      <p><strong>The <a href="theory-core.html">Core Theory page</a> is the sole authorship exception:</strong> the author reviewed it paragraph by paragraph and participated deeply in revising it, so it is currently the relatively most accurate statement of the core research claims. The author did not participate in writing the specific prose on the other pages.</p>
+      <p><strong>The previous version of the <a href="theory-core.html">Core Theory page</a> is an authorship exception:</strong> the author reviewed it paragraph by paragraph and participated deeply in revising it. The October 2026 additions were organized by AI from the author's discussions and still await author review; the prose on the other pages was also organized by AI and should not be treated as having received the author's sentence-by-sentence approval.</p>
       <p>For verification or fuller context, consult the evidence ledger, experiment detail pages, original scripts, and preserved result notes. The author intends to continue revising the website and developing a formal paper.</p>
       <div class="disclosure-links">
         <a href="evidence-ledger.html">Open the evidence ledger</a>
@@ -147,7 +148,7 @@
       <div><strong>38</strong><span>numbered evidence units</span></div>
       <div><strong>30</strong><span>historical archive experiments</span></div>
       <div><strong>8</strong><span>post-upload experiments</span></div>
-      <div><strong>22</strong><span>key experiments explained</span></div>
+      <div><strong>4</strong><span>areas of October evidence</span></div>
       <div><strong>4</strong><span>result figures</span></div>
     </div>
     <blockquote>
@@ -159,7 +160,42 @@
 <p>But different parameters implement the training set in different ways. Some implementations can barely answer a few training points correctly; some can reuse the same rule to process a large number of inputs. Some implementations need many mutually independent exceptions; others need only one shared computation. The network architecture and parameterization make these implementations occupy parameter regions of different sizes. As the training loss is driven further down, they also lose parameter volume at different rates.</p>
 <p>Therefore, training loss is not merely a switch for "have the training samples been answered correctly." It is also a continuous resolution knob: the stricter the requirement, the more easily certain functions and implementations are eliminated, while other functions gain a relative advantage. This process is not monotone for every function, nor is it determined by a single complexity score. The more appropriate object is a curve: how much parameter volume a target still has at different loss precisions. We later called it the Neural K-profile.</p>
 <p>The optimizer is a separate layer. Static volume tells us what the landscape contains and how large each part is; SGD or AdamW determines where one actually ends up from a random initialization, whether one is blocked by an entrance, and along which path one moves. The two are closely related, but they are not the same thing.</p>
-<p>Below we present things in the order in which we actually arrived at these conclusions.</p>
+<p>Below we first list the latest supporting evidence, then present things in the order in which we actually arrived at these conclusions.</p>
+<h2 id="latest-evidence">October 2026 evidence: four questions, retaining the existing experiment numbers</h2>
+<p>This update integrates new results into the existing experiments instead of assigning new numbers to working directories. Original results and added checks are retained together, including discrepancies, unreached conditions, and findings without a settled explanation.</p>
+<table>
+<thead>
+<tr>
+<th>Research question</th>
+<th>Public entry</th>
+<th>Added evidence and limits of the conclusion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Do static distributions correspond to actual training?</td>
+<td><a href="experiments/e36.html#update-20261027">E36 training-method extension</a></td>
+<td>58 CV conditions, direct G&amp;C calibration, and 48 broad STP groups; low-loss predictions work well for the smaller CNN and MLP, while the wider CNN retains optimization-protocol differences.</td>
+</tr>
+<tr>
+<td>Does complexity have an independent logical interpretation?</td>
+<td><a href="experiments/e31.html#update-20261027">E31 amplitude intervention</a>, <a href="experiments/e33.html#update-20261027">E33 external calibration</a></td>
+<td>The logical comparison of f/g preceded sampling, and the K-order reversal under amplitude alignment matched the prediction; external proxies exhibit a shared ordering as well as robust local reversals.</td>
+</tr>
+<tr>
+<td>Is contraction only a Gaussian radial-tail effect?</td>
+<td><a href="experiments/e37.html#update-20261027">E37 fixed-radius control</a></td>
+<td>Rule-dependent angular contraction persists at fixed radius; the main trend is not exclusive to Gaussian measures, while specific coefficients and shapes remain measure-dependent.</td>
+</tr>
+<tr>
+<td>Can sample count calibrate the memory coefficient?</td>
+<td><a href="experiments/e32.html#update-20261027">E32 cross-depth memory extension</a></td>
+<td>384 main pools across one to three hidden layers, plus additional diagnostics; growth persists, but systematic curvature and sampling disagreements remain, and the strict-linearity mechanism is deferred.</td>
+</tr>
+</tbody>
+</table>
+<p>The small five-digits-versus-five MNIST training sets primarily compare predictions under the same finite constraints; arbitrary class grouping is not independent random labeling. STP is a mechanistic control testing whether the distinctive gradient updates of SGD/Adam are indispensable, not a replacement for SMC, and it does not rule out all optimization bias.</p>
+<p>The f/g result also exposes a limitation of mean BCE as a universal complexity ruler: a valid volume measurement can still combine logical cost with the allocation of precision across examples. Further work should refine the constraint family within the joint-output framework rather than declare amplitude alignment the uniquely correct definition. See the <a href="theory-core.html#open-questions-20261027">theory core</a> for the six open questions and the hypothesis status of the unified picture.</p>
 <h2 id="what-we-saw-before-proposing-this-theory">What we saw before proposing this theory</h2>
 <p>This research did not start with 3-bit toy tasks. Over more than a year before that, the repository had already accumulated more than a hundred directions and experimental variants. Their reproduction completeness is not uniform: some saved formal curves, weights, and multi-seed results; some have only partial results; and some are just generators or failed attempts. So "a hundred-plus experiments" must not be read as a hundred-plus success stories that all meet publication standards.</p>
 <p>But together they formed a family of phenomena that is hard to ignore.</p>
@@ -573,7 +609,7 @@ $$</div>
 <p>This research began by asking: is the initialization function prior plus hard filtering by the training set already enough to explain why neural networks generalize? The experiments answer "not enough," but the initialization prior has not been discarded either. It is still an important zeroth-order term; continuous training loss continues to rearrange function mass, and the optimizer additionally imposes path-dependent transport on top of the static geometry.</p>
 <p>The new object really needed is not a universal complexity score, but a Neural K-profile. It allows the same function to present different difficulties at different precisions, allows a shortcut to legitimately dominate at intermediate loss, and allows internal implementations to keep changing after the hard function is fixed. It can also prospectively predict how much data is needed in controlled experiments, and gives static predictions for unseen images and the overfitting turning point on MNIST.</p>
 <p>In this language, the network does not need to know the true rule in the researcher's mind. It only keeps lowering the loss under the current network language and training-set constraints. When data is sufficient, this process points toward reusable rules very early; when data is critical, it appears as grokking; when data is insufficient or noisy, it keeps condensing toward training-set-specific extensions. Generalization is not another hidden objective; it is that the training set, the network language, the loss depth, and the optimization path jointly select a transferable function.</p>
-<h2 id="post-submission-increment-e31-e37">Post-submission increment: E31--E37</h2>
+<h2 id="post-submission-increment-e31-e38">Post-submission increment: E31--E38</h2>
 <p>After the short paper was submitted, seven more groups of experiments with their own protocols and result boundaries were completed. They do not change the historical numbering of E01--E30; instead they enter the same research archive as consecutive new evidence units.</p>
 <p>E31 introduced a framework-level correction that places the <strong>joint output distribution</strong> upstream of the loss: the architecture, parameterization, encoding, and reference measure first induce a continuous joint distribution over outputs on multiple examples; BCE, MSE, and amplitude regularization then define different cross-sections or selection events on that distribution, thereby changing the retained mass of each function cell. The specific loss still affects function selection through the geometry of its cross-section, but there is no unique compression mechanism carried by the name BCE itself. The theory and experiments should therefore be stated in terms of how a specified loss/amplitude event reallocates function mass within the joint output distribution.</p>
 <table>
@@ -592,8 +628,8 @@ $$</div>
 </tr>
 <tr>
 <td><a href="experiments/e32.html">E32</a></td>
-<td>Random memorization scaling</td>
-<td>The complexity of random-label memorization increases approximately linearly with sample count, providing an external calibration for the empirical link between Neural K and capacity.</td>
+<td>Random memory and cross-depth calibration</td>
+<td>The original protocol showed a near-linear trend; the added same-data, cross-depth comparisons retain growth but reveal systematic curvature, window dependence, and limits of memory calibration.</td>
 </tr>
 <tr>
 <td><a href="experiments/e33.html">E33</a></td>
@@ -623,7 +659,7 @@ $$</div>
 </tbody>
 </table>
 <p>The architecture pre-training estimator, the MDL--grokking conditional derivation, and the measure-robustness recheck belong to the supplementary material of the same period; the Peleg/G&amp;C independent check is listed as <a href="experiments/e36.html">E36</a>, and the measure recheck as <a href="experiments/e37.html">E37</a>. They are collected in the <a href="post-upload.html">post-submission increment overview</a>.</p>
-<h2 id="appendix-e01-e37-evidence-map">Appendix: E01--E37 evidence map</h2>
+<h2 id="appendix-e01-e38-evidence-map">Appendix: E01--E38 evidence map</h2>
 <p>The main text only expands the experiments that carry the key turns. The other experiments have not been deleted; below we explain what each number actually measures.</p>
 <table>
 <thead>

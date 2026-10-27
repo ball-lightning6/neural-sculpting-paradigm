@@ -1,0 +1,271 @@
+{
+  "base": "research/neural_k_framework",
+  "files": [
+    {
+      "file": "assets/figures/e36_ext_cv_mae.png",
+      "bytes": 68260,
+      "sha256": "5fc8267c946e0fb84c73a19dd956e26196cf4e851a4d2af6e067c7c9768c911d"
+    },
+    {
+      "file": "assets/figures/e36_ext_stp_steps.png",
+      "bytes": 87493,
+      "sha256": "f46b5085969b7ad6b6e04f47e8a36951acbdf7e9ac0fa94fc7191ee3f1a3cd3e"
+    },
+    {
+      "file": "assets/figures/e36_ext_wide_boundary.png",
+      "bytes": 126173,
+      "sha256": "90cbb570d60bd6f4e6f0c73f4c566b508b61ea8ae3047772077a648650e2a8fe"
+    },
+    {
+      "file": "experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/.gitignore",
+      "bytes": 53,
+      "sha256": "e9da83b54758006bdb711919ea7fd521e9eb1755a6a4b221a186f434933b0c7b"
+    },
+    {
+      "file": "experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/config/anchor_dataset.json",
+      "bytes": 1415,
+      "sha256": "e471484fc26e0743a45b9b6d92f16035a68728fac2d5ad8b4688cf16882b7b4d"
+    },
+    {
+      "file": "experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/config/cv_datasets.json",
+      "bytes": 65691,
+      "sha256": "ecbd4c71515c3d87448277cbc03b2161d8c1d51ec01291d3c3b1083ff3c17675"
+    },
+    {
+      "file": "experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/config/cv_protocols.json",
+      "bytes": 4856,
+      "sha256": "cef4bc8bff3e4a842584ab2ca81c95413cd47a40bd6688a46a8fcc1f5aa68725"
+    },
+    {
+      "file": "experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/config/stp_plan.json",
+      "bytes": 32032,
+      "sha256": "b575c776b6237372e333c2d3a65540b7325015cf0ec6b3007e09f0f5d939c83e"
+    },
+    {
+      "file": "experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/config/wide_plan.json",
+      "bytes": 12474,
+      "sha256": "2bb43668c440c0caae2ffec7616d69555bed6f6f6c1fec70339f693420b979f3"
+    },
+    {
+      "file": "experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/EVIDENCE_MANIFEST.json",
+      "bytes": 93843,
+      "sha256": "a145b609be6c57d90f9ff4ff9e6abd045bd28de07a13219967cc4611bde4c152"
+    },
+    {
+      "file": "experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/evidence/adam_probe.json",
+      "bytes": 44737,
+      "sha256": "aafa9b87eb3160cc02217ef9a054507049226aa86db37ae93c101956c3b157ff"
+    },
+    {
+      "file": "experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/evidence/anchor_step_scan.json",
+      "bytes": 208348,
+      "sha256": "3203596d29cb65b9e637c13b964d1be1d35f0098c78c6f340b26f376e48806aa"
+    },
+    {
+      "file": "experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/evidence/completion58.json",
+      "bytes": 1001934,
+      "sha256": "ae6a0f2d55f93625df94f2847a8c0d19d64414f5da4956395104fd62f06858cf"
+    },
+    {
+      "file": "experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/evidence/cv_all_nodes.json",
+      "bytes": 1020978,
+      "sha256": "dc656959ea26983a33d5c93730bb20fa8d5ee0659028abede734afa1084df3d0"
+    },
+    {
+      "file": "experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/evidence/cv_group_mae.csv",
+      "bytes": 646,
+      "sha256": "919f11f945e89c549fbc342940068d5a9956eb57e4d45a34b55eee301d180798"
+    },
+    {
+      "file": "experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/evidence/cv58_table.csv",
+      "bytes": 10688,
+      "sha256": "cd0f70869f57cf60921961748a10add490b3bb8134235d23fdca465d2c8dc94e"
+    },
+    {
+      "file": "experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/evidence/cv58.json",
+      "bytes": 290089,
+      "sha256": "b49650200747b7837d1b6f93d498d7782c68111afa2b89b61e026fc7019f5dde"
+    },
+    {
+      "file": "experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/evidence/derived_summary.json",
+      "bytes": 3421,
+      "sha256": "95f4e43d36e3a91c23c2f0848c65274c40dc39d1ecc6095dd28f0d8d2f73eceb"
+    },
+    {
+      "file": "experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/evidence/direct_gc58.json",
+      "bytes": 30820,
+      "sha256": "e569fdf9ae1202fef8fc763b55f36924842aa4cb9fe11f1b3f312aa2193b1d92"
+    },
+    {
+      "file": "experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/evidence/gc_calibration13.json",
+      "bytes": 3551,
+      "sha256": "113306ac56475d0d5995c17c1a3303d4f2ca4db4e5d26612cb1a66e60fd823ec"
+    },
+    {
+      "file": "experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/evidence/gc58_table.csv",
+      "bytes": 12249,
+      "sha256": "f695096be51bbdc0c2953a6ba7923570131785fe1b1bde5b41a5068a6fd85233"
+    },
+    {
+      "file": "experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/evidence/recheck_table.csv",
+      "bytes": 789,
+      "sha256": "1fda8fc8028248aa4980f7bc846901a6dec9f1817500bfd6b744b8cc4a7227a5"
+    },
+    {
+      "file": "experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/evidence/recheck24.json",
+      "bytes": 342693,
+      "sha256": "2155e2a9fca0b65586d084c4a4684baa591090746d74211592231fe03538c8eb"
+    },
+    {
+      "file": "experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/evidence/stp48_table.csv",
+      "bytes": 44266,
+      "sha256": "f256c335299c2cf1aa404b2ec56619701f3d28a7bf2105310cc970eb7e85daa8"
+    },
+    {
+      "file": "experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/evidence/stp48.json",
+      "bytes": 602767,
+      "sha256": "160435214e210e5ea1ff8ffec1b3af923b20c36fcd3716f27961ca5a2894fcd5"
+    },
+    {
+      "file": "experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/evidence/wide_deep.json",
+      "bytes": 170604,
+      "sha256": "16d3d3c566f7e9d31aa8bf4aba18b611e1b7f829bf31acca92d25099db7802a8"
+    },
+    {
+      "file": "experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/evidence/wide_local.json",
+      "bytes": 102329,
+      "sha256": "0ea2f70507ef6fd11b97b0dd4c50de83ac7708efe95e8f559462415ead19e825"
+    },
+    {
+      "file": "experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/evidence/wide_nodes.csv",
+      "bytes": 12395,
+      "sha256": "c933a56ce58a497667deb06945258afaa60e257d8401a78c9f1e9388d38573a3"
+    },
+    {
+      "file": "experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/frozen/adam_probe.py",
+      "bytes": 9217,
+      "sha256": "64bf1639c6445f0348ea11e475dd25a23718d5c5b12b462027ae4cd860f6cc5f"
+    },
+    {
+      "file": "experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/frozen/anchor_budget.py",
+      "bytes": 6689,
+      "sha256": "4b556499ebdcf16983a6647bcba205bf35736cbb0d1ff9b837cb9776a60946cf"
+    },
+    {
+      "file": "experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/frozen/anchor_control.py",
+      "bytes": 16825,
+      "sha256": "06880279e978b4c62b9a4d728f377c28a745c4666652e36c64290c50e8b8d3dc"
+    },
+    {
+      "file": "experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/frozen/anchor_reference.py",
+      "bytes": 34254,
+      "sha256": "7d0702ef2dcf3ffebf18b780e88721c617d3eead8135ce600683bedad94d8939"
+    },
+    {
+      "file": "experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/frozen/broad_worker.py",
+      "bytes": 8875,
+      "sha256": "3ba2d456ada3dfa21bc45d3711470a06bfce7bce944a45051e03acf03dab94bc"
+    },
+    {
+      "file": "experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/frozen/cloud_worker.py",
+      "bytes": 11231,
+      "sha256": "77924e27ab18aed0d94e0e8f8a7b5b20ae7c5530999108499fe0aaa7769e725d"
+    },
+    {
+      "file": "experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/frozen/common.py",
+      "bytes": 8361,
+      "sha256": "34be5c34d01313597914e51385a213ff74b195f75dd1824806a41138a85dbdca"
+    },
+    {
+      "file": "experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/frozen/cv_extension.py",
+      "bytes": 2956,
+      "sha256": "52c99b70e429471f8a246159124b502fdb5457755d32870b34a8bb402a3b52a7"
+    },
+    {
+      "file": "experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/frozen/engine.py",
+      "bytes": 26625,
+      "sha256": "417a04b558fe13511aa9973d39adf0285ef2ae57d49738eb0be5586449ecbe1c"
+    },
+    {
+      "file": "experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/frozen/legacy_adapter.py",
+      "bytes": 12505,
+      "sha256": "63c60f4ab9d47d06e5bcf243c6234a357a1e98b4b910c0712d53c8a3694096c7"
+    },
+    {
+      "file": "experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/frozen/legacy_static_reference.py",
+      "bytes": 40702,
+      "sha256": "fa25ff63ff04ffa269f700db83d02e37d223b277485d45657f52c8fd5c8829af"
+    },
+    {
+      "file": "experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/frozen/local_engine.py",
+      "bytes": 27455,
+      "sha256": "cbd60ad0988021999861fed1c607f9d5e2a015390e5b3d6933e66eafd1a6ac96"
+    },
+    {
+      "file": "experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/frozen/recheck.py",
+      "bytes": 10270,
+      "sha256": "cfdc57bf0e3f392724e728b6d71c31307783e45dd1d59a079c19c342952eb6ec"
+    },
+    {
+      "file": "experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/frozen/wide_stp_control.py",
+      "bytes": 12880,
+      "sha256": "d2645bb4dd47b16e5ce032e1b5e6e74a226f5852a15d5aeaa6d992156f9c0485"
+    },
+    {
+      "file": "experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/frozen/wide_worker.py",
+      "bytes": 10886,
+      "sha256": "ff585746e7f8515ee923f919921aa51ebc5ea3d956822c72e4623dad79a7ba7d"
+    },
+    {
+      "file": "experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/portable.py",
+      "bytes": 5452,
+      "sha256": "c30b71522c5d7a90895418a3ff61994bca9791fb1c6b1cf00e126dc6e7b87025"
+    },
+    {
+      "file": "experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/reproduce.py",
+      "bytes": 14109,
+      "sha256": "5726846acd5319270d16d871d7daa9718dc1e8a450b19659ce37555fbf5c1e90"
+    },
+    {
+      "file": "experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/requirements.txt",
+      "bytes": 80,
+      "sha256": "7a139b7dc0d9b35bc0baa0c6bf31128b7cb0dc96025303cb2f6dbbe3ed430c37"
+    },
+    {
+      "file": "experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/SOURCE_MANIFEST.json",
+      "bytes": 3363,
+      "sha256": "d5dca978c6c2b6dd6785a4168c552fd41dc55540d1d361cf587d08d86ff30753"
+    },
+    {
+      "file": "experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/summarize.py",
+      "bytes": 8237,
+      "sha256": "9140d25c849799cfb1eb95b1903583818bc10737757c70b598b3be0f29ec2e36"
+    },
+    {
+      "file": "experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/validate_package.py",
+      "bytes": 9939,
+      "sha256": "bc93d46848b68c7437223cf453ead95e37ba003e50c7e5187f88d8d232d652b8"
+    },
+    {
+      "file": "experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/VALIDATION.json",
+      "bytes": 3474,
+      "sha256": "bf8c1d609f582c5b53d91554d65774f9071a800972bbcb338314521843af206b"
+    },
+    {
+      "file": "experiments/experiment_36_peleg_g_and_c_validation/VALIDATION_EXTENSION_20261027.md",
+      "bytes": 24794,
+      "sha256": "0536d558d7172e66df5785c401b919ed93bab3ad0cf922b3258db703bafd7146"
+    },
+    {
+      "file": "translations_en/post_upload/e36_update_20261027.md",
+      "bytes": 30343,
+      "sha256": "e208a68d36e7408028fb7618cf38ad833d07bba5ef44cd1a49abf0587af70550"
+    }
+  ],
+  "self": "experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/PUBLICATION_FILES.json",
+  "excluded_local_residuals": [
+    "__pycache__",
+    "_compile_check_6jwickrg"
+  ],
+  "note": "全部为本轮新增文件；旧E36正文/代码未修改；没有创建E39。残留缓存与自建临时目录已忽略，清理被权限或策略拒绝。"
+}

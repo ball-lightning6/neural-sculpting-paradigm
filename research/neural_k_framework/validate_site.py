@@ -146,10 +146,47 @@ def validate_math_protection(errors: list[str]) -> None:
         errors.append("代码块内的公式不应被转换。")
 
 
+def validate_extension_sources(errors: list[str]) -> None:
+    """检查本轮完整译文，避免只凭HTML标题数量放过漏段或数值变化。"""
+    from build_site import OCTOBER_EXTENSIONS, october_extension_paths, protect_math
+
+    def signature(source: str) -> dict[str, object]:
+        _, formulas = protect_math(source)
+        table_rows = re.findall(r"(?m)^\|.*\|\s*$", source)
+        numbers = [
+            re.findall(r"(?<![0-9.])[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][-+]?\d+)?", row.replace("−", "-"))
+            for row in table_rows
+        ]
+        return {
+            "段落块": len(re.split(r"\n\s*\n", source.strip())),
+            "标题层级": re.findall(r"(?m)^(#{1,6})\s+", source),
+            "表格列数": [len(row.split("|")) for row in table_rows],
+            "表格数字": numbers,
+            "图片数": len(re.findall(r"!\[[^\]]*\]\(", source)),
+            "代码围栏": len(re.findall(r"(?m)^```", source)),
+            "公式": [(kind, re.sub(r"\s+", "", formula)) for _, kind, formula in formulas],
+        }
+
+    for slug in OCTOBER_EXTENSIONS:
+        paths = october_extension_paths(slug)
+        if not all(path.is_file() for path in paths):
+            errors.append(f"{slug}: 缺少本轮完整双语增补。")
+            continue
+        sources = [path.read_text(encoding="utf-8") for path in paths]
+        for path, source in zip(paths, sources):
+            if re.search(r"(?<![A-Za-z0-9_\\])[A-Za-z]:[\\/]", source):
+                errors.append(f"{path}: 新公开源稿包含本机绝对路径。")
+        signatures = [signature(source) for source in sources]
+        for label, value in signatures[0].items():
+            if value != signatures[1][label]:
+                errors.append(f"{slug}新增中英源稿不对应：{label}。")
+
+
 def main() -> int:
     errors: list[str] = []
     validate_paper_sources(errors)
     validate_math_protection(errors)
+    validate_extension_sources(errors)
     pages = sorted(SITE.rglob("*.html"))
     parsed = {page.resolve(): parse_page(page) for page in pages}
 
@@ -333,6 +370,19 @@ def main() -> int:
             errors.append(f"缺少 canonical 实验页：{relative}")
         if not (SITE / "en" / relative).exists():
             errors.append(f"缺少英文 canonical 实验页：en/{relative}")
+
+    for slug in ("e31", "e32", "e33", "e36", "e37"):
+        for language in ("", "en"):
+            path = (SITE / language / "experiments" / f"{slug}.html").resolve()
+            parser = parsed.get(path)
+            if parser is None or "update-20261027" not in parser.ids:
+                errors.append(f"{path}: 缺少2026-10增补锚点。")
+
+    for language in ("", "en"):
+        path = (SITE / language / "theory-core.html").resolve()
+        parser = parsed.get(path)
+        if parser is None or "open-questions-20261027" not in parser.ids:
+            errors.append(f"{path}: 缺少六个开放问题的入口。")
 
     language_pairs = [
         (SITE / "index.html", SITE / "en" / "index.html"),

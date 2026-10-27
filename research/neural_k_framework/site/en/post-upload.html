@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Theory and experiments added after the 2026-09-02 preprint: MDL-grokking, rule duels, amplitude alignment, random memory, cross-architecture volume, architecture estimator, and the Peleg/G&amp;C recheck.">
-  <title>Incremental materials to be uploaded in this batch · Neural K Research Archive</title>
+  <title>Theory and experiment additions after submission · Neural K Research Archive</title>
   <link rel="stylesheet" href="../assets/site.css">
   <script>
     window.MathJax = {
@@ -37,6 +37,7 @@
         <div class="sidebar-label">On this page</div>
         <nav class="toc"><div class="toc">
 <ul>
+<li><a href="#latest-evidence">Four areas updated on 2026-10-27, integrated into existing experiments</a></li>
 <li><a href="#1-existing-evidence-4-bit-rule-curves-and-rule-duels-e10-e19-e23-e24">1. Existing evidence: 4-bit rule curves and rule duels (E10/E19/E23/E24)</a></li>
 <li><a href="#2-existing-experiments-e15-e27-agreement-around-grokking">2. Existing experiments: E15/E27 Agreement around grokking</a></li>
 <li><a href="#3-existing-experiment-e23-parity2-mux3-data-transition">3. Existing experiment: E23 Parity2/MUX3 data transition</a></li>
@@ -56,8 +57,8 @@
     <main class="main-content" id="main-content">
       <article class="article">
         <header class="article-header">
-          <div class="eyebrow">Post-upload increments · 2026-09</div>
-          <h1>Incremental materials to be uploaded in this batch</h1>
+          <div class="eyebrow">Post-upload increments · 2026-09 to 10</div>
+          <h1>Theory and experiment additions after submission</h1>
           <p class="article-description">Theory and experiments added after the 2026-09-02 preprint: MDL-grokking, rule duels, amplitude alignment, random memory, cross-architecture volume, architecture estimator, and the Peleg/G&amp;C recheck.</p>
         </header>
         <div class="article-body">
@@ -69,18 +70,53 @@
       <div><strong><a href="post-upload-theory-update.html">Full theory increment</a></strong><span>Strict language, MDL, narrowing, and weekend corrections</span></div>
       <div><strong><a href="post-upload-estimator.html">Architecture estimator</a></strong><span>Estimate Neural K before training</span></div>
       <div><strong><a href="experiments/e31.html">E31 Loss and amplitude</a></strong><span>Target amplitude and the joint output</span></div>
-      <div><strong><a href="experiments/e32.html">E32 Random memory</a></strong><span>Near-linear complexity scaling</span></div>
+      <div><strong><a href="experiments/e32.html#update-20261027">E32 Random memory</a></strong><span>Cross-depth growth, curvature, and calibration limits</span></div>
       <div><strong><a href="experiments/e33.html">E33 Cross-architecture</a></strong><span>Joint-output volume</span></div>
       <div><strong><a href="experiments/e34.html">E34 Rule duels</a></strong><span>15 pairs × 5 thresholds; all 75 verdicts agree</span></div>
       <div><strong><a href="experiments/e35.html">E35 Grokking duels</a></strong><span>Real candidate-function preference</span></div>
-      <div><strong><a href="experiments/e36.html">E36 Peleg/G&amp;C recheck</a></strong><span>Static versus SGD comparison</span></div>
+      <div><strong><a href="experiments/e36.html#update-20261027">E36 Peleg/G&amp;C recheck</a></strong><span>58 conditions, STP, and wider-CNN limits</span></div>
       <div><strong><a href="experiments/e37.html">E37 Measure robustness</a></strong><span>Gaussian, Euclidean balls, and training correspondence</span></div>
       <div><strong><a href="experiments/e38.html">E38 Width/depth SMC scan</a></strong><span>95 target runs and changes in relative mass</span></div>
       <div><strong><a href="width-double-descent.html">Double-descent account</a></strong><span>Capacity and time axes with evidence boundaries</span></div>
       <div><strong><a href="complexity-methods.html">Complexity measurement methods</a></strong><span>Proposals for rules and training snapshots</span></div>
       <div><strong><a href="post-upload-decision.html">Upload decision</a></strong><span>What this increment includes</span></div>
     </div>
-    <h2 id="1-existing-evidence-4-bit-rule-curves-and-rule-duels-e10-e19-e23-e24">1. Existing evidence: 4-bit rule curves and rule duels (E10/E19/E23/E24)</h2>
+    <h2 id="latest-evidence">Four areas updated on 2026-10-27, integrated into existing experiments</h2>
+<p>This update retains the existing numbers and all earlier results, adding new protocols, findings, and limits to the corresponding experiments. Four research themes do not imply four new experiment numbers.</p>
+<table>
+<thead>
+<tr>
+<th>Area</th>
+<th>Pages</th>
+<th>Latest content</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Static and training correspondence</td>
+<td><a href="experiments/e36.html#update-20261027">E36</a></td>
+<td>58 CV conditions, direct G&amp;C, broad STP, and wider-CNN checks; the purpose of arbitrary small-sample grouping and optimization-protocol boundaries are explicit.</td>
+</tr>
+<tr>
+<td>Complexity</td>
+<td><a href="experiments/e31.html#update-20261027">E31</a>, <a href="experiments/e33.html#update-20261027">E33</a></td>
+<td>Independent logical criteria, the prospective f/g reversal under amplitude alignment, and external proxy/certificate calibration, retaining local reversals.</td>
+</tr>
+<tr>
+<td>Measures</td>
+<td><a href="experiments/e37.html#update-20261027">E37</a></td>
+<td>Earlier multi-measure evidence and fixed-radius angular contraction; shared trends are not presented as a measure-independent universal formula.</td>
+</tr>
+<tr>
+<td>Memory</td>
+<td><a href="experiments/e32.html#update-20261027">E32</a></td>
+<td>Same-data comparisons across one to three hidden layers, enhanced sampling, amplitude tubes, and diagnostics of the memory definition, reporting curvature and unresolved results.</td>
+</tr>
+</tbody>
+</table>
+<p>STP tests whether the distinctive gradient updates of SGD/Adam are indispensable, not whether it can replace SMC; a valid mean-BCE volume is not automatically independent logical complexity. The six open questions, the deferral of memory exploration, and the status of the core working hypothesis are reflected in the <a href="theory-core.html#open-questions-20261027">theory core</a>.</p>
+<p>The overview of earlier batches is retained below; their latest supporting evidence is included in the existing experiment pages linked above.</p>
+<h2 id="1-existing-evidence-4-bit-rule-curves-and-rule-duels-e10-e19-e23-e24">1. Existing evidence: 4-bit rule curves and rule duels (E10/E19/E23/E24)</h2>
 <p>This is the foundational evidence of the main package in this batch: function mass curves over the full rule space, complex-function contraction at low loss, rule duels, and changes in the complexity distribution.</p>
 <h2 id="2-existing-experiments-e15-e27-agreement-around-grokking">2. Existing experiments: E15/E27 Agreement around grokking</h2>
 <p>In the mod97 task, after the hard fit, agreement on unseen inputs remains close to random, and then rises together with target accuracy. This supports the picture that "many different training-set-compatible functions exist before grokking", and does not support the simple picture that "all seeds have long shared a single wrong function".</p>
@@ -89,7 +125,7 @@
 <h2 id="4-e31-raw-mse-and-magnitude-alignment">4. E31 raw MSE and magnitude alignment</h2>
 <p>raw 0/1 and 0/15 MSE can exhibit grokking; the BCE intervention with output-magnitude alignment can generalize at a higher mean CE. The conclusion is not that BCE is uniquely correct, but that the loss and the target magnitude jointly select the direction of the output joint distribution.</p>
 <h2 id="5-e32-random-memorization">5. E32 random memorization</h2>
-<p>The memorization complexity of random labels grows approximately linearly with the number of samples, providing an external calibration for the complexity/capacity relationship.</p>
+<p>The earlier protocol observed near-linear growth with sample count as a lead for external complexity/capacity calibration; the added cross-depth findings retain growth but exhibit systematic curvature and cannot be upgraded to strict proportionality.</p>
 <h2 id="6-e33-cross-architecture-joint-output">6. E33 cross-architecture joint output</h2>
 <p>Rule-dependent joint output volume curves also appear across different architectures, but the coefficients and local ordering depend on the protocol.</p>
 <h2 id="7-e34-8-bit-conditional-rule-duel">7. E34 8-bit conditional rule duel</h2>

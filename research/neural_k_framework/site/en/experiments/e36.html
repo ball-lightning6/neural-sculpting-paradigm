@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Full protocol, results, and boundaries for E36 Peleg/G&amp;C independent verification.">
-  <title>E36 Peleg/G&amp;C independent verification · Neural K Research Archive</title>
+  <meta name="description" content="Full protocol, results, and boundaries for E36 Peleg/G&amp;C and cross-method training comparisons.">
+  <title>E36 Peleg/G&amp;C and cross-method training comparisons · Neural K Research Archive</title>
   <link rel="stylesheet" href="../../assets/site.css">
   <script>
     window.MathJax = {
@@ -46,6 +46,18 @@
 </li>
 <li><a href="#which-step-is-still-missing-for-bce-matching">Which Step Is Still Missing for BCE Matching</a></li>
 <li><a href="#quality-time-and-files">Quality, Time, and Files</a></li>
+<li><a href="#2026-10-27-validation-extension-correspondence-between-static-conditional-distributions-and-training-outcomes">2026-10-27 Validation Extension: Correspondence Between Static Conditional Distributions and Training Outcomes</a><ul>
+<li><a href="#1-motivation-and-question">1. Motivation and Question</a></li>
+<li><a href="#2-comparison-targets-and-protocol">2. Comparison Targets and Protocol</a></li>
+<li><a href="#3-results-across-58-conditions">3. Results Across 58 Conditions</a></li>
+<li><a href="#4-direct-g-c-and-enhanced-sampling-calibration">4. Direct G&amp;C and Enhanced-Sampling Calibration</a></li>
+<li><a href="#5-stp-testing-whether-gradient-updates-are-necessary">5. STP: Testing Whether Gradient Updates Are Necessary</a></li>
+<li><a href="#6-the-wide-cnn-protocol-boundary">6. The Wide-CNN Protocol Boundary</a></li>
+<li><a href="#7-supported-conclusions">7. Supported Conclusions</a></li>
+<li><a href="#8-public-reproduction-materials-and-entry-points">8. Public Reproduction Materials and Entry Points</a></li>
+<li><a href="#9-checks-in-this-round-and-limitations">9. Checks in This Round and Limitations</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </nav>
@@ -57,10 +69,11 @@
       <article class="article">
         <header class="article-header">
           <div class="eyebrow">Experiment increment · E36</div>
-          <h1>E36 Peleg/G&amp;C independent verification</h1>
-          <p class="article-description">Full protocol, results, and boundaries for E36 Peleg/G&amp;C independent verification.</p>
+          <h1>E36 Peleg/G&amp;C and cross-method training comparisons</h1>
+          <p class="article-description">Full protocol, results, and boundaries for E36 Peleg/G&amp;C and cross-method training comparisons.</p>
         </header>
-        <div class="article-body"><p>The first round is complete. Read the <a href="../../../experiments/experiment_36_peleg_g_and_c_validation/CONCLUSION.md">conclusion</a> or the <a href="../../../experiments/experiment_36_peleg_g_and_c_validation/analysis/REPORT.md">full table</a> first. This is not a reproduction of the full paper; there is only one 16-sample training set.</p>
+        <div class="article-body"><p><strong>October 2026 update:</strong> The original report is retained; <a href="#update-20261027">jump to the added experiments, checks, and limitations</a>.</p>
+<p>The first round is complete. Read the <a href="../../../experiments/experiment_36_peleg_g_and_c_validation/CONCLUSION.md">conclusion</a> or the <a href="../../../experiments/experiment_36_peleg_g_and_c_validation/analysis/REPORT.md">full table</a> first. This is not a reproduction of the full paper; there is only one 16-sample training set.</p>
 <h2 id="running">Running</h2>
 <p><code>experiment.py</code> implements training and SMC in one place; the configuration is at the top and there is no argparse. It requires the GPU build of PyTorch, torchvision, and NumPy; the analysis additionally requires Matplotlib. The precheck also depends on the authors' data classes in the <code>upstream</code> directory alongside it, so this round is runnable as a complete directory, not as a ready-made single-file migration package. The default is physical GPU1 RTX3080; see the <a href="../../../experiments/experiment_36_peleg_g_and_c_validation/PROTOCOL.md">protocol</a> for all mathematical and sampling settings.</p>
 <p>Run from the root of this repository:</p>
@@ -153,7 +166,699 @@
 <li><a href="../../../experiments/experiment_36_peleg_g_and_c_validation/endpoint_check.py">Endpoint check</a></li>
 <li><a href="../../../experiments/experiment_36_peleg_g_and_c_validation/analyze.py">Independent analysis</a></li>
 </ul>
-<figure class="result-figure"><a href="../../../experiments/experiment_36_peleg_g_and_c_validation/analysis/overview.png" target="_blank" rel="noopener"><img src="../../../experiments/experiment_36_peleg_g_and_c_validation/analysis/overview.png" alt="Overview" loading="lazy"></a><figcaption>Overview</figcaption></figure></div>
+<figure class="result-figure"><a href="../../../experiments/experiment_36_peleg_g_and_c_validation/analysis/overview.png" target="_blank" rel="noopener"><img src="../../../experiments/experiment_36_peleg_g_and_c_validation/analysis/overview.png" alt="Overview" loading="lazy"></a><figcaption>Overview</figcaption></figure>
+<p><a id="update-20261027"></a></p>
+<h2 id="2026-10-27-validation-extension-correspondence-between-static-conditional-distributions-and-training-outcomes">2026-10-27 Validation Extension: Correspondence Between Static Conditional Distributions and Training Outcomes</h2>
+<p>This supplement extends the single-dataset raw-BCE recheck in E36 with the subsequent 58-condition CV matrix, direct Guess &amp; Check (G&amp;C), enhanced SMC, gradient-free STP, and the wide-CNN boundary. It extends the same validation question, does not replace the historical text above, and does not count old experiments as new independent evidence.</p>
+<p><strong>Document status:</strong> the motivation and protocol account below was assembled on 2026-10-27 as a retrospective explanation based on completed programs, configurations, and results. It is not a formally submitted preregistration from the time of the experiments. The original matrix froze static predictions before running SGD; the bridge condition was not a new blind prediction, and the later sampling checks, step-scale scans, broad STP comparison, and wide-CNN diagnostics are not presented as independent blind predictions either. This round only organized materials, produced figures, and performed lightweight checks; it did not retrain models or run SMC.</p>
+<h3 id="1-motivation-and-question">1. Motivation and Question</h3>
+<p>A nonuniform function distribution induced by a parameter prior does not, by itself, explain which functions actual training selects. The question here is: <strong>under the same network, training data, and explicitly specified reference measure, does adding continuous training loss to the static condition predict the function predictions of different training methods on unseen inputs more accurately than requiring correct classification alone?</strong> The comparison concerns predictions and does not assume identical parameter distributions.</p>
+<p>The main task randomly divides the ten MNIST digit classes into two groups of five and assigns binary labels by digit group. This is an arbitrary <strong>5 vs 5 class partition, not iid random labels</strong>: all images of the same digit still share a label, and image and digit-class structure remain. Separate controls flip training labels or assign sample-level random balanced labels; the latter fixes equal class counts and is also not unconditional iid Bernoulli labeling. Test labels still follow the original digit partition.</p>
+<p>A small training set may not provide enough information to identify the complete digit partition uniquely. These tasks therefore should not be presented as strong demonstrations that very few examples fully specify a natural visual concept. Even when the true partition is not uniquely identifiable, agreement between methods on unseen inputs under the same information-limited training constraints remains testable. Conversely, two methods both approaching 50% accuracy in a random-label control do not automatically establish fine-grained predictive correspondence.</p>
+<p>The mechanistic question for STP is whether the gradient updates specific to SGD/Adam are necessary sources of these generalization behaviors. If STP, using only forward-loss comparisons, still yields similar generalization and per-image predictions under the same network, data, and fitting requirements, this weakens explanations attributing those phenomena exclusively to SGD/Adam-specific updates. STP is not a replacement for SMC, and finding low-loss solutions does not measure the static mass of that region.</p>
+<h3 id="2-comparison-targets-and-protocol">2. Comparison Targets and Protocol</h3>
+<h4 id="2-1-static-events-and-training-endpoints">2.1 Static Events and Training Endpoints</h4>
+<p>Let the binary logit difference be <span class="math-inline">$d_\theta(x)=z_1(x)-z_0(x)$</span>. For fixed data <span class="math-inline">$D=\{(x_i,y_i)\}_{i=1}^n$</span>, define the mean raw BCE and the event of correct classification on every training example:</p>
+<div class="math-display">$$
+L_D(\theta)=\frac{1}{n}\sum_{i=1}^{n}\log\left(1+\exp\left[-(2y_i-1)d_\theta(x_i)\right]\right),\qquad
+H_D=\{\theta : \operatorname{argmax}z_\theta(x_i)=y_i\ \forall i\}.
+$$</div>
+<p>The reference measure <span class="math-inline">$\mu$</span> assigns independent <span class="math-inline">$U[-0.2,0.2]$</span> weights and fixes biases to zero. Direct G&amp;C independently draws parameters and rejects samples outside <span class="math-inline">$H_D$</span>; hard-fit SMC estimates the same conditional target, whereas low-loss SMC estimates the following cumulative sublevel event:</p>
+<div class="math-display">$$
+\mu_\epsilon(A)=\frac{\mu(A\cap H_D\cap\{L_D\leq\epsilon\})}{\mu(H_D\cap\{L_D\leq\epsilon\})},\qquad
+K_D(\epsilon)=-\log_2\mu(H_D\cap\{L_D\leq\epsilon\}).
+$$</div>
+<p>SMC first reaches hard-fit through a maximum signed-margin violation constraint and then tightens mean BCE. It uses reflection inside the box and a fixed, state-independent mixture of proposal scales. Incorrect logit ties are excluded; correct ties follow the argmax rule. Networks use float32 and constraint scores use float64; neither gradients nor SGD warm starts are used. Preservation of the target measure by a fixed-threshold kernel does not imply that finite particles and finite updates have globally mixed.</p>
+<p>SGD starts from the same prior but may leave the initialization box; STP and Adam are likewise not projected back, while SMC remains inside the box. The original matrix checks nodes after each epoch and records the first observed model satisfying hard-fit and crossing the BCE upper bound; subsequent wide-CNN diagnostics check after every update. The first observed endpoint and the full static sublevel set are therefore different distributional objects. A common nominal threshold does not establish exact matching of actual loss.</p>
+<p>The original matrix retains both cumulative events and the intervals <span class="math-inline">$0.5\epsilon&lt;L_D\leq\epsilon$</span> and <span class="math-inline">$0.8\epsilon&lt;L_D\leq\epsilon$</span>. Interval comparisons use the same SGD subset and report retained static counts, the initialization denominator, and the unreached fraction; changing the population is not treated as an improvement. Later STP/wide-CNN analyses also report lower-bound ratios of 0.8 and 0.95. Within-interval loss histograms are not forced to match, and a finite interval is not a measure-zero equal-loss section. All nodes and intervals are retained in the <a href="../../../experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/evidence/cv_all_nodes.json">main-matrix node table</a>, <a href="../../../experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/evidence/stp48.json">STP node data</a>, and <a href="../../../experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/evidence/wide_deep.json">wide-CNN deep-node data</a>.</p>
+<h4 id="2-2-matrix-budgets-and-measurements">2.2 Matrix, Budgets, and Measurements</h4>
+<p>The original 34 conditions comprise nine clean n32 conditions and two label controls for each of three networks, plus a CNN W4 bridge condition on 0/7 with n16. The additional 24 conditions combine CNN W4 and MLP, three partitions, two data seeds, and n8/n64; they do not extend the wide CNN. Binary-label-balanced sampling is part of the data distribution, not coverage of every possible training set. Test probes usually contain 2048 images; the 0/7 bridge condition contains 2008.</p>
+<table>
+<thead>
+<tr>
+<th>Network</th>
+<th>Architecture</th>
+<th style="text-align: right;">Parameter slots (including fixed biases)</th>
+<th style="text-align: right;">Original conditions</th>
+<th style="text-align: right;">Additional conditions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CNN W4</td>
+<td>Two convolutional layers, channels 12/32, fully connected 512→240→168→2</td>
+<td style="text-align: right;">173890</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">12</td>
+</tr>
+<tr>
+<td>MLP 256/128</td>
+<td>784→256→128→2, ReLU</td>
+<td style="text-align: right;">234114</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">12</td>
+</tr>
+<tr>
+<td>CNN W8</td>
+<td>Two convolutional layers, channels 24/64, fully connected 1024→480→336→2</td>
+<td style="text-align: right;">693378</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table>
+<p>Each condition has four SMC pools of 1024 particles and 128 SGD initializations, lr=0.001, batch=2, and at most 2000 epochs; the main nodes are 0.3, 0.1, 0.03, 0.01, and 0.003. Per-level updates/node refreshes are 8/24 in the original matrix and 32/96 in the extension. Across the 58 conditions, all 232 pools reached every main node, and SGD reached every main node in 128/128 initializations. This does not remove G&amp;C shortfalls or unreached nodes in later tasks. See the <a href="../../../experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/config/cv_protocols.json">configurations</a>, <a href="../../../experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/config/cv_datasets.json">dataset identities</a>, and <a href="../../../experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/evidence/completion58.json">completion records</a>.</p>
+<p>Accuracy means the average single-model test accuracy, not majority-vote ensemble accuracy. The following expressions define the cross-condition MAE of mean-accuracy predictions and the within-condition per-image label-frequency MAE, both in percentage points (pp):</p>
+<div class="math-display">$$
+\operatorname{MAE}_{\rm acc}=\frac{100}{C}\sum_{c=1}^{C}|\bar a_{S,c}-\bar a_{T,c}|,\qquad
+\operatorname{MAE}_{\rm point}=\frac{100}{m}\sum_{j=1}^{m}|\hat p_S(y=1\mid x_j)-\hat p_T(y=1\mid x_j)|.
+$$</div>
+<p>Here <span class="math-inline">$S$</span> is the static ensemble, <span class="math-inline">$T$</span> is the training ensemble, and <span class="math-inline">$m$</span> is the number of test probes. Similar per-image marginal frequencies still do not imply the same joint function distribution over all inputs; finite-initialization noise and within-pool correlations also affect error estimates. The 4096 particles across four pools must not be treated as 4096 independent replicates.</p>
+<h3 id="3-results-across-58-conditions">3. Results Across 58 Conditions</h3>
+<p>The clean subsets below are compared at nominal BCE≤0.003. The numbers are errors in predicting SGD's mean test accuracy, not the models' classification error rates. Each of the first three rows contains nine conditions, and each of the four additional rows contains six; controls are not mixed into clean averages to change the comparison population.</p>
+<table>
+<thead>
+<tr>
+<th>Network and data</th>
+<th style="text-align: right;">Conditions</th>
+<th style="text-align: right;">Hard-fit SMC MAE (pp)</th>
+<th style="text-align: right;">Low-loss SMC MAE (pp)</th>
+<th style="text-align: right;">Per-image frequency MAE (pp)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CNN W4, original n32</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">8.18</td>
+<td style="text-align: right;">0.74</td>
+<td style="text-align: right;">4.93</td>
+</tr>
+<tr>
+<td>MLP, original n32</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">6.05</td>
+<td style="text-align: right;">1.16</td>
+<td style="text-align: right;">5.26</td>
+</tr>
+<tr>
+<td>CNN W8, original n32</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">8.43</td>
+<td style="text-align: right;">5.02</td>
+<td style="text-align: right;">8.78</td>
+</tr>
+<tr>
+<td>CNN W4, additional n8</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">5.54</td>
+<td style="text-align: right;">1.43</td>
+<td style="text-align: right;">5.05</td>
+</tr>
+<tr>
+<td>CNN W4, additional n64</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">8.13</td>
+<td style="text-align: right;">0.58</td>
+<td style="text-align: right;">4.06</td>
+</tr>
+<tr>
+<td>MLP, additional n8</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">3.23</td>
+<td style="text-align: right;">2.01</td>
+<td style="text-align: right;">5.32</td>
+</tr>
+<tr>
+<td>MLP, additional n64</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">6.63</td>
+<td style="text-align: right;">0.26</td>
+<td style="text-align: right;">3.88</td>
+</tr>
+</tbody>
+</table>
+<p>Continuous-loss conditioning substantially improves the hard-fit baseline for the small CNN and MLP. The wide CNN also improves, but 5.02 pp remains a substantial discrepancy. Predictions of mean accuracy are closer in the additional n64 conditions, but n8/n64 alone cannot establish a universally monotonic decline in error with sample size. Per-image frequency errors around 4 pp can coexist with very small mean-accuracy errors. Per-condition values, loss quantiles, and pool information are available in the <a href="../../../experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/evidence/cv58.json">58-condition data</a> and <a href="../../../experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/evidence/cv58_table.csv">readable CSV</a>.</p>
+<figure class="result-figure"><a href="../../assets/figures/e36_ext_cv_mae.png" target="_blank" rel="noopener"><img src="../../assets/figures/e36_ext_cv_mae.png" alt="Mean-accuracy prediction errors for clean conditions" loading="lazy"></a><figcaption>Mean-accuracy prediction errors for clean conditions</figcaption></figure>
+<p>All six label controls are retained. The table reports mean accuracy for partition0, seed0, n32. “Flipped” changes one quarter of the training labels only; “random balanced” randomizes training labels only, not test labels.</p>
+<table>
+<thead>
+<tr>
+<th>Network</th>
+<th>Label control</th>
+<th style="text-align: right;">Hard-fit SMC (%)</th>
+<th style="text-align: right;">Low-loss SMC (%)</th>
+<th style="text-align: right;">SGD (%)</th>
+<th style="text-align: right;">Per-image frequency MAE (pp)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CNN W4</td>
+<td>Flipped</td>
+<td style="text-align: right;">58.83</td>
+<td style="text-align: right;">64.81</td>
+<td style="text-align: right;">64.72</td>
+<td style="text-align: right;">7.72</td>
+</tr>
+<tr>
+<td>CNN W4</td>
+<td>Random balanced</td>
+<td style="text-align: right;">52.46</td>
+<td style="text-align: right;">52.21</td>
+<td style="text-align: right;">53.19</td>
+<td style="text-align: right;">6.19</td>
+</tr>
+<tr>
+<td>MLP</td>
+<td>Flipped</td>
+<td style="text-align: right;">57.67</td>
+<td style="text-align: right;">62.31</td>
+<td style="text-align: right;">61.40</td>
+<td style="text-align: right;">8.49</td>
+</tr>
+<tr>
+<td>MLP</td>
+<td>Random balanced</td>
+<td style="text-align: right;">51.82</td>
+<td style="text-align: right;">52.05</td>
+<td style="text-align: right;">52.30</td>
+<td style="text-align: right;">7.40</td>
+</tr>
+<tr>
+<td>CNN W8</td>
+<td>Flipped</td>
+<td style="text-align: right;">59.48</td>
+<td style="text-align: right;">61.45</td>
+<td style="text-align: right;">65.55</td>
+<td style="text-align: right;">11.45</td>
+</tr>
+<tr>
+<td>CNN W8</td>
+<td>Random balanced</td>
+<td style="text-align: right;">51.40</td>
+<td style="text-align: right;">52.13</td>
+<td style="text-align: right;">53.07</td>
+<td style="text-align: right;">7.70</td>
+</tr>
+</tbody>
+</table>
+<p>Accuracy in the random-balanced controls is near chance, so similar means alone are not strong confirmation; the wide-CNN flipped condition retains a substantial gap. The 0/7 bridge condition gives 82.28%, 93.15%, and 92.85% for hard-fit, low-loss SMC, and SGD, respectively. These belong to this round's CNN W4 and lr=0.001 protocol, not the earlier narrower-network, lr=0.01 protocol above.</p>
+<h3 id="4-direct-g-c-and-enhanced-sampling-calibration">4. Direct G&amp;C and Enhanced-Sampling Calibration</h3>
+<p>Direct G&amp;C ultimately obtained sufficient samples in more than the initial bridge condition: the bridge plus all twelve n8 conditions yield <strong>13 conditions with 512 independent accepted samples each</strong>. The other <strong>45 conditions have zero hits within budget</strong>; SMC particles are not substituted for independent rejection samples in those conditions. Actual draws, accepted counts, hit counts, elapsed times, and terminal states are retained in the <a href="../../../experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/evidence/direct_gc58.json">58-condition G&amp;C records</a> and <a href="../../../experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/evidence/gc58_table.csv">CSV</a>.</p>
+<table>
+<thead>
+<tr>
+<th>Condition category</th>
+<th style="text-align: right;">Conditions</th>
+<th style="text-align: right;">Direct G&amp;C accepted samples per condition</th>
+<th>Interpretation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CNN W4, 0/7 bridge</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">512</td>
+<td>Sufficient direct rejection samples</td>
+</tr>
+<tr>
+<td>CNN W4/MLP, additional n8</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">512</td>
+<td>Sufficient direct rejection samples</td>
+</tr>
+<tr>
+<td>Original n32 and additional n64</td>
+<td style="text-align: right;">45</td>
+<td style="text-align: right;">0</td>
+<td>Budget limitation, not zero mass or zero accuracy</td>
+</tr>
+</tbody>
+</table>
+<p>Across the twelve n8 conditions, the mean-accuracy MAE between hard-fit SMC and direct G&amp;C is 0.119539 pp, approximately 0.120 pp; the <a href="../../../experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/evidence/gc_calibration13.json">thirteen-condition calibration table</a> retains every difference. Original wide-CNN draws range from 1304448–1314432, rather than all conditions exhausting 2000000 draws. Zero hits within budget show that direct rejection sampling is expensive, not that the target is infeasible. Hard-fit calibration on easier conditions is not proof of adequate deep-tail SMC mixing.</p>
+<p>The regular/enhanced check completed three conditions×two budgets×four pools, totaling 24 pools. The regular tier uses 1024 particles and 8/24 updates/refreshes; the enhanced tier uses 2048 particles and 32/96. The target, data, network, and reference box are unchanged, and original SGD is not retrained. Complete BCE≤0.003 results follow; the K range is the maximum minus the minimum across the four pools:</p>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+<th>Tier</th>
+<th style="text-align: right;">SMC (%)</th>
+<th style="text-align: right;">Original SGD (%)</th>
+<th style="text-align: right;">Absolute accuracy gap (pp)</th>
+<th style="text-align: right;">K range (bit)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CNN W4, 0/7 n16</td>
+<td>Regular</td>
+<td style="text-align: right;">93.021</td>
+<td style="text-align: right;">92.846</td>
+<td style="text-align: right;">0.175</td>
+<td style="text-align: right;">1.245</td>
+</tr>
+<tr>
+<td>CNN W4, 0/7 n16</td>
+<td>Enhanced</td>
+<td style="text-align: right;">93.071</td>
+<td style="text-align: right;">92.846</td>
+<td style="text-align: right;">0.225</td>
+<td style="text-align: right;">0.514</td>
+</tr>
+<tr>
+<td>CNN W4, partition0 seed1 n32</td>
+<td>Regular</td>
+<td style="text-align: right;">76.589</td>
+<td style="text-align: right;">77.362</td>
+<td style="text-align: right;">0.773</td>
+<td style="text-align: right;">7.517</td>
+</tr>
+<tr>
+<td>CNN W4, partition0 seed1 n32</td>
+<td>Enhanced</td>
+<td style="text-align: right;">75.888</td>
+<td style="text-align: right;">77.362</td>
+<td style="text-align: right;">1.474</td>
+<td style="text-align: right;">2.326</td>
+</tr>
+<tr>
+<td>MLP, partition0 seed0 n32 flipped</td>
+<td>Regular</td>
+<td style="text-align: right;">63.484</td>
+<td style="text-align: right;">61.402</td>
+<td style="text-align: right;">2.082</td>
+<td style="text-align: right;">4.757</td>
+</tr>
+<tr>
+<td>MLP, partition0 seed0 n32 flipped</td>
+<td>Enhanced</td>
+<td style="text-align: right;">63.673</td>
+<td style="text-align: right;">61.402</td>
+<td style="text-align: right;">2.271</td>
+<td style="text-align: right;">3.266</td>
+</tr>
+</tbody>
+</table>
+<p>The between-pool K range decreases, but none of these three conditions becomes closer to SGD at this node after increasing the budget. Improved repeatability is not disappearance of prediction error, much less exact convergence of absolute volume. The <a href="../../../experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/evidence/recheck24.json">24-pool check data</a> also retain other nodes, finite-interval counts, and all pool values.</p>
+<h3 id="5-stp-testing-whether-gradient-updates-are-necessary">5. STP: Testing Whether Gradient Updates Are Necessary</h3>
+<p>STP compares the current parameters with positive and negative perturbations along the same random direction and accepts only a candidate with lower forward training loss. Biases remain zero, test labels do not select updates, and no explicit gradients are used. The step scale decays as <span class="math-inline">$\sigma_t=\sigma_0/\sqrt{1+t/2000}$</span>, with <span class="math-inline">$t$</span> starting at zero. It is a greedy search with optimization bias, does not preserve the static conditional measure, and cannot estimate volume by counting endpoints. It is not proposed here as a faster training algorithm.</p>
+<p>The early exploratory four-scale scan on the small 0/7 network uses the same 128 initializations; every row below reaches 128/128. The scan followed the known first-round discrepancy, so the best-matching scale is not independent confirmation. Within the 58-condition matrix, the CNN W4 bridge uses a different network/learning-rate protocol. Full actual losses, narrow-band counts, and paired intervals are retained in the <a href="../../../experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/evidence/anchor_step_scan.json">early step-scale data</a>.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">BCE upper bound</th>
+<th style="text-align: right;">Initial scale</th>
+<th style="text-align: right;">STP (%)</th>
+<th style="text-align: right;">SGD (%)</th>
+<th style="text-align: right;">SMC (%)</th>
+<th style="text-align: right;">Actual STP mean BCE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">0.003</td>
+<td style="text-align: right;">0.01</td>
+<td style="text-align: right;">94.821</td>
+<td style="text-align: right;">96.276</td>
+<td style="text-align: right;">96.248</td>
+<td style="text-align: right;">0.0026455</td>
+</tr>
+<tr>
+<td style="text-align: right;">0.003</td>
+<td style="text-align: right;">0.003</td>
+<td style="text-align: right;">95.760</td>
+<td style="text-align: right;">96.276</td>
+<td style="text-align: right;">96.248</td>
+<td style="text-align: right;">0.0029229</td>
+</tr>
+<tr>
+<td style="text-align: right;">0.003</td>
+<td style="text-align: right;">0.001</td>
+<td style="text-align: right;">96.054</td>
+<td style="text-align: right;">96.276</td>
+<td style="text-align: right;">96.248</td>
+<td style="text-align: right;">0.0029791</td>
+</tr>
+<tr>
+<td style="text-align: right;">0.003</td>
+<td style="text-align: right;">0.0003</td>
+<td style="text-align: right;">96.206</td>
+<td style="text-align: right;">96.276</td>
+<td style="text-align: right;">96.248</td>
+<td style="text-align: right;">0.0029961</td>
+</tr>
+<tr>
+<td style="text-align: right;">0.001</td>
+<td style="text-align: right;">0.01</td>
+<td style="text-align: right;">94.960</td>
+<td style="text-align: right;">96.314</td>
+<td style="text-align: right;">96.398</td>
+<td style="text-align: right;">0.0008846</td>
+</tr>
+<tr>
+<td style="text-align: right;">0.001</td>
+<td style="text-align: right;">0.003</td>
+<td style="text-align: right;">95.846</td>
+<td style="text-align: right;">96.314</td>
+<td style="text-align: right;">96.398</td>
+<td style="text-align: right;">0.0009727</td>
+</tr>
+<tr>
+<td style="text-align: right;">0.001</td>
+<td style="text-align: right;">0.001</td>
+<td style="text-align: right;">96.146</td>
+<td style="text-align: right;">96.314</td>
+<td style="text-align: right;">96.398</td>
+<td style="text-align: right;">0.0009911</td>
+</tr>
+<tr>
+<td style="text-align: right;">0.001</td>
+<td style="text-align: right;">0.0003</td>
+<td style="text-align: right;">96.282</td>
+<td style="text-align: right;">96.314</td>
+<td style="text-align: right;">96.398</td>
+<td style="text-align: right;">0.0009985</td>
+</tr>
+</tbody>
+</table>
+<p>At the smallest scale, the STP−SGD gap at 0.003 is approximately −0.070 pp, but pushing the large-scale run to lower loss does not remove its discrepancy. Changing the scale changes the path, not just computation time; the result cannot be summarized as “running longer necessarily becomes equivalent to SMC.”</p>
+<p>The broad comparison covers CNN W4 and MLP, each with six clean conditions from three partitions×two data seeds, plus two label controls, totaling 16 conditions×three scales＝48 groups, each with 128 initializations and five BCE nodes. Predictions are saved for all 240 job nodes, with 128/128 reached at every node. Clean-condition summaries at BCE≤0.003 follow; the <a href="../../../experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/evidence/stp48.json">full-node JSON</a> and <a href="../../../experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/evidence/stp48_table.csv">CSV</a> retain every scale, control, actual loss, and interval count.</p>
+<table>
+<thead>
+<tr>
+<th>Network</th>
+<th style="text-align: right;">Initial scale</th>
+<th style="text-align: right;">Clean conditions</th>
+<th style="text-align: right;">STP–SGD accuracy MAE (pp)</th>
+<th style="text-align: right;">STP–low-loss SMC accuracy MAE (pp)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CNN W4</td>
+<td style="text-align: right;">0.003</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">1.543</td>
+<td style="text-align: right;">1.973</td>
+</tr>
+<tr>
+<td>CNN W4</td>
+<td style="text-align: right;">0.001</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">0.656</td>
+<td style="text-align: right;">1.246</td>
+</tr>
+<tr>
+<td>CNN W4</td>
+<td style="text-align: right;">0.0003</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">0.793</td>
+<td style="text-align: right;">1.403</td>
+</tr>
+<tr>
+<td>MLP</td>
+<td style="text-align: right;">0.003</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">0.658</td>
+<td style="text-align: right;">1.891</td>
+</tr>
+<tr>
+<td>MLP</td>
+<td style="text-align: right;">0.001</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">0.226</td>
+<td style="text-align: right;">1.456</td>
+</tr>
+<tr>
+<td>MLP</td>
+<td style="text-align: right;">0.0003</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">0.192</td>
+<td style="text-align: right;">1.424</td>
+</tr>
+</tbody>
+</table>
+<figure class="result-figure"><a href="../../assets/figures/e36_ext_stp_steps.png" target="_blank" rel="noopener"><img src="../../assets/figures/e36_ext_stp_steps.png" alt="All step scales in the broad STP comparison" loading="lazy"></a><figcaption>All step scales in the broad STP comparison</figcaption></figure>
+<p>At the smallest scale, STP–SGD MAE across six clean conditions is 0.793 pp for CNN and 0.192 pp for MLP; the intermediate scale is actually closer for CNN, so scales must not be selected retrospectively by agreement with SMC or SGD. Methods still differ in actual loss and per-image frequencies; similar mean accuracy is not equality of the full function distribution. Broad STP was a robustness check with configurations fixed after the SMC/SGD results were known, not a new fully blind prediction.</p>
+<p>These results support the statement that SGD/Adam-style gradient updates are not necessary for similar generalization in the tested conditions and support a role for shared static structure imposed by architecture, data, and continuous precision constraints. They do not prove static volume to be the sole cause. STP may still share geometric preferences with gradient methods, and optimizers may change function-selection probabilities rather than only the speed of reaching solutions.</p>
+<h3 id="6-the-wide-cnn-protocol-boundary">6. The Wide-CNN Protocol Boundary</h3>
+<h4 id="6-1-enhanced-smc-and-deep-loss">6.1 Enhanced SMC and Deep Loss</h4>
+<p>For each of two original training sets, partition0/partition2, seed0, n32, four enhanced pools of 2048 particles completed, using 32 per-level updates and 96 node-refresh updates down to BCE≤1e-5. The two local and two cloud pools for partition0 were combined after checking identical data, models, and scientific settings; checkpoints were not spliced across hardware. Partition2 has four cloud pools. The final SGD/STP runs use a new independent initialization cohort with seed offset=1000000 and must not be directly paired with the old local trajectories by matching identifiers.</p>
+<table>
+<thead>
+<tr>
+<th>Training set</th>
+<th style="text-align: right;">Original SMC, BCE≤0.003 (%)</th>
+<th style="text-align: right;">Enhanced SMC, BCE≤0.003 (%)</th>
+<th style="text-align: right;">Enhanced SMC, BCE≤1e-5 (%)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>partition0</td>
+<td style="text-align: right;">71.54</td>
+<td style="text-align: right;">71.94</td>
+<td style="text-align: right;">75.59</td>
+</tr>
+<tr>
+<td>partition2</td>
+<td style="text-align: right;">70.92</td>
+<td style="text-align: right;">71.77</td>
+<td style="text-align: right;">75.16</td>
+</tr>
+</tbody>
+</table>
+<p>At the deepest node below, SMC is the equal-weight mean of four pools, and every listed optimizer group reaches 128/128. The unreached smaller-learning-rate SGD results are listed separately, not inserted as 0% accuracy.</p>
+<table>
+<thead>
+<tr>
+<th>Method, BCE≤1e-5</th>
+<th style="text-align: right;">partition0 (%)</th>
+<th style="text-align: right;">partition2 (%)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Enhanced SMC</td>
+<td style="text-align: right;">75.59</td>
+<td style="text-align: right;">75.16</td>
+</tr>
+<tr>
+<td>SGD lr=0.001</td>
+<td style="text-align: right;">79.68</td>
+<td style="text-align: right;">77.25</td>
+</tr>
+<tr>
+<td>STP scale=0.003</td>
+<td style="text-align: right;">70.85</td>
+<td style="text-align: right;">70.85</td>
+</tr>
+<tr>
+<td>STP scale=0.001</td>
+<td style="text-align: right;">70.33</td>
+<td style="text-align: right;">70.33</td>
+</tr>
+<tr>
+<td>STP scale=0.0003</td>
+<td style="text-align: right;">69.93</td>
+<td style="text-align: right;">69.65</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Node for SGD lr=0.0001</th>
+<th style="text-align: right;">partition0 reached</th>
+<th style="text-align: right;">partition2 reached</th>
+<th>Interpretation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1e-4</td>
+<td style="text-align: right;">128/128</td>
+<td style="text-align: right;">128/128</td>
+<td>Accuracies are 68.39% / 68.29%, respectively</td>
+</tr>
+<tr>
+<td>3e-5</td>
+<td style="text-align: right;">58/128</td>
+<td style="text-align: right;">28/128</td>
+<td>Reached subsets only</td>
+</tr>
+<tr>
+<td>1e-5</td>
+<td style="text-align: right;">0/128</td>
+<td style="text-align: right;">0/128</td>
+<td>Unreached within the budget/step limit after 4000 epochs and 64000 updates</td>
+</tr>
+</tbody>
+</table>
+<p>The SGD lr=0.001 gaps from SMC decrease from the 0.003-node values of approximately 6.99/4.60 pp to the 1e-5-node values of approximately 4.08/2.09 pp, but do not disappear. At the deepest node, actual mean BCE is approximately 9.2e-6/9.4e-6 for SGD and 6.8e-6/7.0e-6 for SMC; SGD's higher accuracy therefore cannot be attributed here to reaching a lower mean loss. Complete data are in the <a href="../../../experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/evidence/wide_deep.json">deep-node JSON</a> and <a href="../../../experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/evidence/wide_nodes.csv">CSV</a>.</p>
+<figure class="result-figure"><a href="../../assets/figures/e36_ext_wide_boundary.png" target="_blank" rel="noopener"><img src="../../assets/figures/e36_ext_wide_boundary.png" alt="Wide-CNN deep-loss comparison and unreached nodes" loading="lazy"></a><figcaption>Wide-CNN deep-loss comparison and unreached nodes</figcaption></figure>
+<p>At 0.003, enhanced-pool accuracy standard deviations are approximately 0.068/0.371 pp; at 1e-5 they are approximately 0.255/0.177 pp. Historical audits recomputed survival accounting over 488 levels in eight pools; for 160 sampled sets of node parameters, float64 standard-layer forward evaluation differed in training BCE by at most 4.51e-7, with no differences in 10240 test prediction bits. These historical implementation and accounting checks were not rerun in this round and do not establish global mixing or absence of shared systematic bias.</p>
+<h4 id="6-2-optimizers-the-last-step-and-data-composition">6.2 Optimizers, the Last Step, and Data Composition</h4>
+<p>The Adam probe has four groups of 16 initializations, totaling 64 trajectories, all reaching 0.001; it must not be treated as a formal 128-initialization comparison. The table compares the actual first landing below 0.003 with read-only interpolation along the final threshold-crossing update segment. For partition0/partition2, original SMC accuracy is 71.54%/70.92%.</p>
+<table>
+<thead>
+<tr>
+<th>Training set</th>
+<th style="text-align: right;">Adam lr</th>
+<th style="text-align: right;">Actual landing (%)</th>
+<th style="text-align: right;">Interpolated point (%)</th>
+<th style="text-align: right;">Interpolated mean BCE</th>
+<th style="text-align: right;">Actual landing at 0.001 (%)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>partition0</td>
+<td style="text-align: right;">0.0001</td>
+<td style="text-align: right;">70.17</td>
+<td style="text-align: right;">69.89</td>
+<td style="text-align: right;">0.00299767</td>
+<td style="text-align: right;">70.65</td>
+</tr>
+<tr>
+<td>partition0</td>
+<td style="text-align: right;">0.001</td>
+<td style="text-align: right;">82.87</td>
+<td style="text-align: right;">82.58</td>
+<td style="text-align: right;">0.00299743</td>
+<td style="text-align: right;">83.61</td>
+</tr>
+<tr>
+<td>partition2</td>
+<td style="text-align: right;">0.0001</td>
+<td style="text-align: right;">72.48</td>
+<td style="text-align: right;">72.51</td>
+<td style="text-align: right;">0.00299732</td>
+<td style="text-align: right;">72.68</td>
+</tr>
+<tr>
+<td>partition2</td>
+<td style="text-align: right;">0.001</td>
+<td style="text-align: right;">79.54</td>
+<td style="text-align: right;">79.22</td>
+<td style="text-align: right;">0.00299727</td>
+<td style="text-align: right;">79.56</td>
+</tr>
+</tbody>
+</table>
+<p>Every interpolated point meets the 0.2% relative-loss tolerance, while accuracy changes by only about 0–0.3 pp. Thus, merely crossing the threshold on the final update does not explain the main discrepancy. Approximately 1%–3% of test labels still change, and interpolation neither replays the earlier path nor alters subsequent Adam state; it is not static conditional sampling. Separation between learning rates remains at 0.001. Detailed data and threshold-crossing records are in the <a href="../../../experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/evidence/adam_probe.json">Adam data</a>.</p>
+<p>Separate local data-composition interventions compare two 0/1 data seeds and partition0 at n16/n64. All entries below are at BCE≤0.003, with 128/128 optimizer initializations reaching the node; each SMC entry uses four pools of 1024 particles. These are reported separately from the new cloud initialization cohort in the previous subsection.</p>
+<table>
+<thead>
+<tr>
+<th>Data</th>
+<th style="text-align: right;">SMC (%)</th>
+<th style="text-align: right;">SGD lr=0.001 (%)</th>
+<th style="text-align: right;">SGD lr=0.0001 (%)</th>
+<th style="text-align: right;">STP scale=0.001 (%)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>pair01 n32 seed0</td>
+<td style="text-align: right;">97.497</td>
+<td style="text-align: right;">99.238</td>
+<td style="text-align: right;">94.923</td>
+<td style="text-align: right;">93.915</td>
+</tr>
+<tr>
+<td>pair01 n32 seed1</td>
+<td style="text-align: right;">97.195</td>
+<td style="text-align: right;">98.920</td>
+<td style="text-align: right;">93.557</td>
+<td style="text-align: right;">92.860</td>
+</tr>
+<tr>
+<td>partition0 n16 seed0</td>
+<td style="text-align: right;">66.803</td>
+<td style="text-align: right;">72.798</td>
+<td style="text-align: right;">60.712</td>
+<td style="text-align: right;">60.093</td>
+</tr>
+<tr>
+<td>partition0 n64 seed0</td>
+<td style="text-align: right;">78.400</td>
+<td style="text-align: right;">83.827</td>
+<td style="text-align: right;">73.643</td>
+<td style="text-align: right;">72.680</td>
+</tr>
+</tbody>
+</table>
+<p>Easier tasks do not make all protocols coincide. If even the hard-fit baseline is highly accurate on 0/1, high accuracy alone cannot be credited to low-loss SMC. Actual loss, hard-fit/G&amp;C baselines, and other nodes are retained in the <a href="../../../experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/evidence/wide_local.json">local diagnostic data</a>. Unmatched actual losses and permission to leave the initialization box should be documented, but without causal interventions none of these factors can be declared to have explained the discrepancy.</p>
+<h4 id="6-3-what-this-boundary-means">6.3 What This Boundary Means</h4>
+<p>The wide CNN cannot be summarized as all actual optimizers agreeing while only SMC is wrong: SGD, Adam, STP, and different step scales themselves differ substantially, and one static distribution cannot exactly equal all these different distributions simultaneously. Conversely, optimizer disagreement does not cancel the prediction error under a specified protocol. This is an optimizer-protocol-sensitive boundary of applicability, not a declaration that the entire static picture is invalid, nor that the discrepancy has disappeared or been fully explained.</p>
+<h3 id="7-supported-conclusions">7. Supported Conclusions</h3>
+<p>Across multiple fixed small-data conditions, low-loss static distributions predict actual training more accurately than hard-fit conditioning alone, and similar generalization is not confined to one gradient-based optimization method. STP adds a control for testing whether a particular update mechanism is necessary, but it is not a volume estimator and does not establish shared static structure as the sole cause. The evidence comes from nontrivial predictions, per-image measurements, and multiple interventions, not from describing the task as a fully specified natural rule.</p>
+<p>Applicability is limited by the network, data, reference measure, optimization protocol, actual loss distributions, finite initializations, and sampling precision. Enhanced sampling cannot automatically eliminate systematic error; low reach rates cannot be filled in as full-population results; near-chance means in random controls cannot serve as fine-grained confirmation; and wide-CNN discrepancies must be retained alongside positive results. This supplement does not derive a theorem equating every optimizer distribution with static sampling.</p>
+<h3 id="8-public-reproduction-materials-and-entry-points">8. Public Reproduction Materials and Entry Points</h3>
+<p>All added programs are in <a href="../../../experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/reproduce.py">extension_20261027</a>. The <a href="../../../experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/SOURCE_MANIFEST.json">source manifest</a> preserves the original-byte SHA-256 hashes of fifteen historical scientific-code files. For files that need separation from old queues, the <a href="../../../experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/portable.py">local loader</a> selects original AST functions/constants without rewriting scientific function bodies or executing old paths, private-archive loading, or historical main functions. Runtime does not depend on scripts outside the framework, private ZIP files, or old checkpoints; official MNIST and the public seeds/dataset manifests reconstruct the data and verify array hashes.</p>
+<p>From the original experiment directory, use Python with matching PyTorch/torchvision installations. Dependencies include NumPy, PyTorch, torchvision, Matplotlib, and the other entries in <a href="../../../experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/requirements.txt">requirements.txt</a>. First run the following read-only or offline commands. By default, <code>reproduce.py</code> sets <code>TASK="inspect"</code> and <code>RUN_COMPUTE=False</code>, so it does not download data, train, or sample.</p>
+<pre><code class="language-text">python -E -s -B extension_20261027/validate_package.py
+python -E -s -B extension_20261027/summarize.py
+python -E -s -B extension_20261027/reproduce.py
+</code></pre>
+<p>Only when explicitly preparing an expensive reproduction should the top configuration in <code>reproduce.py</code> be edited: <code>TASK</code>, <code>RUN_COMPUTE</code>, <code>DEVICE</code>, <code>OUTPUT_NAME</code>, and the time budget. GPU subtasks require explicit CUDA and never silently fall back to CPU; the Adam probe retains its historical CPU protocol. Outputs are confined to <code>runs/</code> inside the new subdirectory. Historical result directories must not be reused, and different scientific configurations must not be mixed. Time limits are operational budgets; unfinished runs retain terminal records/checkpoints, with no promise of completion in one invocation.</p>
+<table>
+<thead>
+<tr>
+<th>TASK</th>
+<th>Subtask</th>
+<th>Scientific scale and notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cv34</td>
+<td>Original matrix: G&amp;C, SMC, frozen predictions, SGD</td>
+<td>34 conditions; four pools×1024; 128 initializations</td>
+</tr>
+<tr>
+<td>cv24</td>
+<td>Sample-size extension</td>
+<td>24 conditions; four pools×1024; 32/96 updates/refreshes</td>
+</tr>
+<tr>
+<td>recheck</td>
+<td>Regular/enhanced static recheck</td>
+<td>Three conditions×two tiers×four pools; no SGD retraining</td>
+</tr>
+<tr>
+<td>anchor_steps</td>
+<td>Early 0/7 step-scale scan</td>
+<td>Four scales×128 STP; paired SGD; separate from the large-matrix bridge</td>
+</tr>
+<tr>
+<td>stp48</td>
+<td>Broad gradient-free comparison</td>
+<td>16 conditions×three scales×128; at most 50000 steps</td>
+</tr>
+<tr>
+<td>wide_data</td>
+<td>Wide-CNN data-composition interventions</td>
+<td>Four data conditions, each with four pools and three training settings</td>
+</tr>
+<tr>
+<td>wide_deep</td>
+<td>Enhanced wide CNN and deep-node training</td>
+<td>Eight pools and ten optimizer groups over two data conditions; independent seed cohort</td>
+</tr>
+<tr>
+<td>adam</td>
+<td>Small-sample Adam and threshold-crossing interpolation</td>
+<td>Two data conditions×two learning rates×16; not a substitute for the formal initialization count</td>
+</tr>
+</tbody>
+</table>
+<p><code>JOB_IDS</code> can split STP/wide-CNN jobs; the main matrix retains its frozen full design. Full reproduction requires downloading MNIST and substantial GPU time and storage, with wide-CNN particle budgets especially demanding in memory. Dtype or scientific budgets must not be reduced to claim a completed reproduction. The public package contains no large raw-image datasets, parameter particles, training checkpoints, or temporary outputs. The <a href="../../../experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/EVIDENCE_MANIFEST.json">evidence manifest</a> maps public data files to historical source hashes, so the text does not depend on working drafts or private download links.</p>
+<h3 id="9-checks-in-this-round-and-limitations">9. Checks in This Round and Limitations</h3>
+<p>Checks in this round include <code>py_compile</code> for all Python files, frozen-source hashes, actual local imports, lightweight model-forward consistency, record counts for 58 conditions/13 sufficient G&amp;C conditions/45 zero-hit conditions/48 STP groups, recomputed tables, and Chinese–English structural and link correspondence. Results are saved in the <a href="../../../experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/VALIDATION.json">validation record</a>. Figures are generated from public historical values by the <a href="../../../experiments/experiment_36_peleg_g_and_c_validation/extension_20261027/summarize.py">offline script</a>, using English axis labels shared by both languages.</p>
+<p>The current GPU virtual environment's Python launcher fails while importing <code>_ctypes</code>. Lightweight checks instead use the same-version system Python launcher with the installed GPU-environment dependencies; no environment was installed or modified. This does not certify long GPU tasks, bitwise cross-device reproduction, or SMC mixing. Offline recomputation uses public scalar and node summaries, not a fresh read of every original prediction matrix or a new forward audit of all historical particles. Full raw predictions require running the corresponding subtask. This round ran no long experiments, retraining, or sampling, and made no commit or push; website build integration is handled separately.</p></div>
 
       </article>
     </main>

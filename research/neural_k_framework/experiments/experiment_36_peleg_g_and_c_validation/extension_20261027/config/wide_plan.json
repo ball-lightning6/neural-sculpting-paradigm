@@ -1,0 +1,459 @@
+{
+  "version": "local_wide_diagnostics_v1",
+  "physical_gpu": 1,
+  "network": {
+    "name": "cnn_w8",
+    "kind": "cnn",
+    "scale": 8
+  },
+  "smoke": false,
+  "jobs": [
+    {
+      "id": "pair01_n32_s0__smc",
+      "case": "pair01_n32_s0",
+      "method": "smc",
+      "enhanced": false,
+      "max_seconds": 7200.0
+    },
+    {
+      "id": "pair01_n32_s0__sgd_0.001",
+      "case": "pair01_n32_s0",
+      "method": "sgd",
+      "value": 0.001,
+      "max_seconds": 900.0
+    },
+    {
+      "id": "pair01_n32_s0__sgd_0.0001",
+      "case": "pair01_n32_s0",
+      "method": "sgd",
+      "value": 0.0001,
+      "max_seconds": 900.0
+    },
+    {
+      "id": "pair01_n32_s0__stp_0.001",
+      "case": "pair01_n32_s0",
+      "method": "stp",
+      "value": 0.001,
+      "max_seconds": 900.0
+    },
+    {
+      "id": "pair01_n32_s1__smc",
+      "case": "pair01_n32_s1",
+      "method": "smc",
+      "enhanced": false,
+      "max_seconds": 7200.0
+    },
+    {
+      "id": "pair01_n32_s1__sgd_0.001",
+      "case": "pair01_n32_s1",
+      "method": "sgd",
+      "value": 0.001,
+      "max_seconds": 900.0
+    },
+    {
+      "id": "pair01_n32_s1__sgd_0.0001",
+      "case": "pair01_n32_s1",
+      "method": "sgd",
+      "value": 0.0001,
+      "max_seconds": 900.0
+    },
+    {
+      "id": "pair01_n32_s1__stp_0.001",
+      "case": "pair01_n32_s1",
+      "method": "stp",
+      "value": 0.001,
+      "max_seconds": 900.0
+    },
+    {
+      "id": "partition0_n16_s0__smc",
+      "case": "partition0_n16_s0",
+      "method": "smc",
+      "enhanced": false,
+      "max_seconds": 7200.0
+    },
+    {
+      "id": "partition0_n16_s0__sgd_0.001",
+      "case": "partition0_n16_s0",
+      "method": "sgd",
+      "value": 0.001,
+      "max_seconds": 900.0
+    },
+    {
+      "id": "partition0_n16_s0__sgd_0.0001",
+      "case": "partition0_n16_s0",
+      "method": "sgd",
+      "value": 0.0001,
+      "max_seconds": 900.0
+    },
+    {
+      "id": "partition0_n16_s0__stp_0.001",
+      "case": "partition0_n16_s0",
+      "method": "stp",
+      "value": 0.001,
+      "max_seconds": 900.0
+    },
+    {
+      "id": "partition0_n64_s0__smc",
+      "case": "partition0_n64_s0",
+      "method": "smc",
+      "enhanced": false,
+      "max_seconds": 7200.0
+    },
+    {
+      "id": "partition0_n64_s0__sgd_0.001",
+      "case": "partition0_n64_s0",
+      "method": "sgd",
+      "value": 0.001,
+      "max_seconds": 900.0
+    },
+    {
+      "id": "partition0_n64_s0__sgd_0.0001",
+      "case": "partition0_n64_s0",
+      "method": "sgd",
+      "value": 0.0001,
+      "max_seconds": 900.0
+    },
+    {
+      "id": "partition0_n64_s0__stp_0.001",
+      "case": "partition0_n64_s0",
+      "method": "stp",
+      "value": 0.001,
+      "max_seconds": 900.0
+    },
+    {
+      "id": "partition0_n32_s0__smc_enhanced",
+      "case": "partition0_n32_s0",
+      "method": "smc",
+      "enhanced": true,
+      "max_seconds": 14400.0
+    },
+    {
+      "id": "partition0_n32_s0__deep_sgd_0.001",
+      "case": "partition0_n32_s0",
+      "method": "sgd",
+      "value": 0.001,
+      "deep": true,
+      "max_seconds": 1200.0
+    },
+    {
+      "id": "partition0_n32_s0__deep_sgd_0.0001",
+      "case": "partition0_n32_s0",
+      "method": "sgd",
+      "value": 0.0001,
+      "deep": true,
+      "max_seconds": 1200.0
+    },
+    {
+      "id": "partition0_n32_s0__deep_stp_0.001",
+      "case": "partition0_n32_s0",
+      "method": "stp",
+      "value": 0.001,
+      "deep": true,
+      "max_seconds": 1200.0
+    },
+    {
+      "id": "partition2_n32_s0__smc_enhanced",
+      "case": "partition2_n32_s0",
+      "method": "smc",
+      "enhanced": true,
+      "max_seconds": 14400.0
+    },
+    {
+      "id": "partition2_n32_s0__deep_sgd_0.001",
+      "case": "partition2_n32_s0",
+      "method": "sgd",
+      "value": 0.001,
+      "deep": true,
+      "max_seconds": 1200.0
+    },
+    {
+      "id": "partition2_n32_s0__deep_sgd_0.0001",
+      "case": "partition2_n32_s0",
+      "method": "sgd",
+      "value": 0.0001,
+      "deep": true,
+      "max_seconds": 1200.0
+    },
+    {
+      "id": "partition2_n32_s0__deep_stp_0.001",
+      "case": "partition2_n32_s0",
+      "method": "stp",
+      "value": 0.001,
+      "deep": true,
+      "max_seconds": 1200.0
+    }
+  ],
+  "datasets": {
+    "pair01_n32_s0": {
+      "case": {
+        "name": "pair01_n32_s0",
+        "kind": "pair",
+        "digits": [
+          0,
+          1
+        ],
+        "n": 32,
+        "seed": 202611230,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "62026f097e5dd063153c5dc7459643f7954e28a336725ea6728a27fce360fb84",
+        "y": "6971dd112fe744e712fd8d1a3b84a1d75d8a7557081253dff90fcb47a382ef60",
+        "train_ids": "fb00f9e16d4ec3277ae93c3d5ca1222f411ec91b2d37dc6e30bf61709cca153e",
+        "probe_x": "6fd2aaf5058790c182d2a6212e1bd7aedf64c33ee76bb78e863eb84ac969e6b2",
+        "probe_y": "39f286a1e0cf2332a560b18946d16f8c58b11ad0201898a047bd46bdd43d9018",
+        "probe_ids": "7f44832344c08e5d70401d61deff3ef39afdfa30907820152f813ab54e6de383"
+      },
+      "source_reference": "partition0_seed0_n32"
+    },
+    "pair01_n32_s1": {
+      "case": {
+        "name": "pair01_n32_s1",
+        "kind": "pair",
+        "digits": [
+          0,
+          1
+        ],
+        "n": 32,
+        "seed": 202611231,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "ffe7aad2457d106eeee68e3212327d08b65389379076660dd7bbca70fa0d7e08",
+        "y": "672c2b3b691ed4e4543bcf6ebcfe18590b206132dc097ba5e02869ff0410ffde",
+        "train_ids": "2228d9bf823fc3e19396c4901971d6c7e11da5cc0708fe775faa3b1e66640356",
+        "probe_x": "6fd2aaf5058790c182d2a6212e1bd7aedf64c33ee76bb78e863eb84ac969e6b2",
+        "probe_y": "39f286a1e0cf2332a560b18946d16f8c58b11ad0201898a047bd46bdd43d9018",
+        "probe_ids": "7f44832344c08e5d70401d61deff3ef39afdfa30907820152f813ab54e6de383"
+      },
+      "source_reference": "partition0_seed1_n32"
+    },
+    "partition0_n16_s0": {
+      "case": {
+        "name": "partition0_n16_s0",
+        "kind": "partition",
+        "digits": [
+          2,
+          4,
+          7,
+          8,
+          9
+        ],
+        "n": 16,
+        "seed": 202611230,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "44b8301d57fb8e417d022999235bb033cfa56e9eb4e5481bae7374f85c7f257a",
+        "y": "7301aa65470b437e30c76e968ac328a2dce29d619413fae3a883b8573869feb3",
+        "train_ids": "b5ed7e0026a3f74c5000ff7bdcab899505908ba702fc1382f9f538a92cecb3a8",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "d48ebcc5207f43ab8317d56cb8c8c9a756512aca9ffb0a83442cca039c03fe73",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "source_reference": "partition0_seed0_n32"
+    },
+    "partition0_n64_s0": {
+      "case": {
+        "name": "partition0_n64_s0",
+        "kind": "partition",
+        "digits": [
+          2,
+          4,
+          7,
+          8,
+          9
+        ],
+        "n": 64,
+        "seed": 202611230,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "23e4b7e7574fd57296a8d95ca0ec0ea281845db329b76c228abcd2e0551af52b",
+        "y": "17a189bb99727631f2acca8b6424812bde35e2607786b599d4cba966ffc3f5c3",
+        "train_ids": "c8378deaed0ae0c4ca8200d403499b374b5b25ece59ff58e0780483ffa0d35e5",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "d48ebcc5207f43ab8317d56cb8c8c9a756512aca9ffb0a83442cca039c03fe73",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "source_reference": "partition0_seed0_n32"
+    },
+    "partition0_n32_s0": {
+      "case": {
+        "name": "partition0_n32_s0",
+        "kind": "partition",
+        "digits": [
+          2,
+          4,
+          7,
+          8,
+          9
+        ],
+        "n": 32,
+        "seed": 202611230,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "140bf8b69ed08b45b68eba69c6a8f602c691961589ef414e522f6503612b16d6",
+        "y": "a3ab9e3cffe5079758d48d22e83f08507abbb6858d30f28636484d5bed9a74d0",
+        "train_ids": "de13394f081ab0f703b9450dab154a1c7492cf78729e4691e619408f45cfa711",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "d48ebcc5207f43ab8317d56cb8c8c9a756512aca9ffb0a83442cca039c03fe73",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "source_reference": "partition0_seed0_n32"
+    },
+    "partition2_n32_s0": {
+      "case": {
+        "name": "partition2_n32_s0",
+        "kind": "partition",
+        "digits": [
+          1,
+          3,
+          4,
+          8,
+          9
+        ],
+        "n": 32,
+        "seed": 202611430,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "d971a13151b84a8bbe51a5c46c4470dc80fc0dbe2aca4a11afbc94f43fc3f0df",
+        "y": "9aaebf9885cdd7ebdbc3c9063593df24aba626fb5d955838d297686c2cd85b5c",
+        "train_ids": "e216fe8a988fa4ffadcfa6da8eb915ec54a466ae0e7a03d4afa146c49b792ed8",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "d45eca1952489461b708436e1f84a634d4500d26fa65d8dca3ea2ac64b455a2c",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "source_reference": "partition2_seed0_n32"
+    }
+  },
+  "reference_config": {
+    "device": "cuda:0",
+    "allow_cpu": false,
+    "output_dir": "runs/original_static",
+    "mnist_root": "runs/mnist",
+    "networks": [
+      {
+        "name": "cnn_w4",
+        "kind": "cnn",
+        "scale": 4
+      },
+      {
+        "name": "mlp_256_128",
+        "kind": "mlp",
+        "hidden": [
+          256,
+          128
+        ]
+      },
+      {
+        "name": "cnn_w8",
+        "kind": "cnn",
+        "scale": 8
+      }
+    ],
+    "include_anchor": true,
+    "partitions": 3,
+    "datasets_per_partition": 3,
+    "sample_sizes": [
+      32
+    ],
+    "include_label_controls": true,
+    "data_seed": 202610230,
+    "probe_count": 2048,
+    "prior_scale": 0.2,
+    "fixed_zero_bias": true,
+    "replicas": 4,
+    "particles": 1024,
+    "nodes": [
+      0.3,
+      0.1,
+      0.03,
+      0.01,
+      0.003
+    ],
+    "loss_band_fractions": [
+      0.5,
+      0.8
+    ],
+    "model_chunk": 128,
+    "input_chunk": 16,
+    "mutation_chunk": 128,
+    "sweeps": 8,
+    "refresh_sweeps": 24,
+    "proposal_factors": [
+      0.1,
+      0.03,
+      0.01,
+      0.003,
+      0.001,
+      0.0003
+    ],
+    "gc_target": 512,
+    "gc_max_draws": 2000000,
+    "gc_seconds": 90,
+    "sgd_models": 128,
+    "sgd_lr": 0.001,
+    "sgd_epochs": 2000,
+    "sgd_batch_size": 2,
+    "sgd_model_chunk": 16,
+    "total_hours": 4,
+    "replica_seconds": 1200,
+    "sgd_seconds": 900,
+    "max_replica_attempts": 3,
+    "max_levels": 20000,
+    "checkpoint_seconds": 120,
+    "audit_weights": 2,
+    "keep_completed_checkpoints": false,
+    "keep_failed_checkpoints": false
+  },
+  "primary_nodes": [
+    0.3,
+    0.1,
+    0.03,
+    0.01,
+    0.003
+  ],
+  "deep_nodes": [
+    0.3,
+    0.1,
+    0.03,
+    0.01,
+    0.003,
+    0.001,
+    0.0003,
+    0.0001,
+    3E-05,
+    1E-05
+  ],
+  "policy": "已见原结果的机制和精度诊断；全部预列条件保留，不以测试吻合停止或选参。不改AutoDL。",
+  "optimizer_models": 128,
+  "initialization": "与原CPU初始化协议和seed一致，固定零bias",
+  "total_hours_budget": 12.0
+}

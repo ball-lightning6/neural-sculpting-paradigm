@@ -1,0 +1,558 @@
+{
+  "release": "E32_extension_20261027",
+  "status": "追溯性整理，不是事前正式预注册",
+  "source_code": [
+    {
+      "source": "research/memory_depth_night_20261026/frozen_memory.py",
+      "original_sha256": "2dcd52f9cf97ab8c55642a8be4474d5c0806e4a0fcfd0f63d375eca8163a7be5",
+      "published": "core/frozen_memory.py",
+      "unchanged_function_or_class_AST": [
+        "CheckpointMismatch",
+        "SamplingFailure",
+        "Block",
+        "PoolState",
+        "StopRequest",
+        "ready",
+        "json_hash",
+        "array_digest",
+        "_replace",
+        "atomic_write",
+        "atomic_json",
+        "atomic_text",
+        "atomic_npz",
+        "resolve_config",
+        "make_data",
+        "parameter_blocks",
+        "forward_logits",
+        "evaluate_losses",
+        "make_generators",
+        "initialize_state",
+        "choose_next_threshold",
+        "resample",
+        "pcn_proposal",
+        "mutate_block",
+        "rejuvenate",
+        "prediction_change",
+        "node_diagnostics",
+        "one_level",
+        "node_key",
+        "science_signature",
+        "pack_state",
+        "save_checkpoint",
+        "load_checkpoint",
+        "source_sha256",
+        "execution_environment",
+        "stop_signals",
+        "make_jobs",
+        "prepare_manifest",
+        "job_signature",
+        "update_job",
+        "export_pool",
+        "run_slice",
+        "pool_window",
+        "summarize",
+        "write_reports",
+        "run",
+        "main"
+      ],
+      "adapted_function_or_class_AST": []
+    },
+    {
+      "source": "research/cloud_followup_memory_depth_20261025/memory_followup.py",
+      "original_sha256": "67a5a42adca14fce3221a0e05d5291000576bc2bee5930bb77bb9abbd296bbf5",
+      "published": "smc/memory_followup.py",
+      "unchanged_function_or_class_AST": [
+        "geometry",
+        "enriched_node",
+        "smc_config",
+        "check_data",
+        "raw_forward",
+        "fit_seed",
+        "fit_one"
+      ],
+      "adapted_function_or_class_AST": [
+        "run_smc",
+        "run_fit",
+        "main"
+      ]
+    },
+    {
+      "source": "research/cloud_remaining_suite_20261025/alignment_bridge.py",
+      "original_sha256": "10849ad264fcf6fc2396dd11deb0ed9de97f5cb440aede4e6661aeec4f3043e2",
+      "published": "alignment/alignment_bridge.py",
+      "unchanged_function_or_class_AST": [
+        "neural_scores",
+        "mutate",
+        "save",
+        "run_bridge"
+      ],
+      "adapted_function_or_class_AST": []
+    },
+    {
+      "source": "research/cloud_remaining_suite_20261025/run_alignment.py",
+      "original_sha256": "cc0cad382e064173e4a7ab5e6c53402a6f3c552e6c84df55a7dfa57e626b141e",
+      "published": "alignment/run_alignment.py",
+      "unchanged_function_or_class_AST": [
+        "now",
+        "parent_data",
+        "snapshot_name",
+        "audit_arrays",
+        "parent_node",
+        "parent_slice",
+        "parent_report",
+        "parent_config",
+        "parent_folder",
+        "summarize"
+      ],
+      "adapted_function_or_class_AST": [
+        "load_data",
+        "main"
+      ]
+    },
+    {
+      "source": "research/memory_depth_night_20261026/train_agreement.py",
+      "original_sha256": "241081080f662d871e8f9511aebac6894d142c87001f7c857bc9b8202bbc2f75",
+      "published": "agreement/train_agreement.py",
+      "unchanged_function_or_class_AST": [
+        "agreement_stats",
+        "jobs",
+        "write_report"
+      ],
+      "adapted_function_or_class_AST": [
+        "train_case",
+        "main"
+      ]
+    },
+    {
+      "source": "research/memory_depth_night_20261026/analyze_agreement.py",
+      "original_sha256": "8bf310706c5bc298d9f53f4b5e480a26e06efd0d30915d9bcff22e4087963263",
+      "published": "agreement/analyze_agreement.py",
+      "unchanged_function_or_class_AST": [
+        "metrics",
+        "main"
+      ],
+      "adapted_function_or_class_AST": []
+    },
+    {
+      "source": "research/memory_depth_night_20261026/audit_data.py",
+      "original_sha256": "a8b80da1af9a4c0c0783380e11e3a124799f974894cfd1850c2718e8dca13bae",
+      "published": "structure/audit_data.py",
+      "unchanged_function_or_class_AST": [
+        "clog2",
+        "dictionary",
+        "gf2_consistent",
+        "polynomial_features",
+        "full_structure"
+      ],
+      "adapted_function_or_class_AST": [
+        "main"
+      ]
+    },
+    {
+      "source": "research/memory_dataset_shortcuts_20261026/audit.py",
+      "original_sha256": "f3a706167c0dd8d5a315059488a831457d8a3f7d24f4aadfa525c0e034df4b54",
+      "published": "structure/audit.py",
+      "unchanged_function_or_class_AST": [
+        "mask_int",
+        "atomic_json",
+        "data",
+        "digest",
+        "parity_fit",
+        "linear_fit",
+        "minimum_tree_leaves",
+        "local_cubes",
+        "corr"
+      ],
+      "adapted_function_or_class_AST": [
+        "main",
+        "report"
+      ]
+    },
+    {
+      "source": "research/memory_loss_heterogeneity_20261026/experiment.py",
+      "original_sha256": "bd880e401c137b26cb4db219543bbdc5a7d5b63a6a3af7120408f83a92c6420e",
+      "published": "loss/experiment.py",
+      "unchanged_function_or_class_AST": [
+        "stamp",
+        "atomic_json",
+        "array_hash",
+        "make_data",
+        "layout",
+        "forward",
+        "numpy_forward",
+        "train_case"
+      ],
+      "adapted_function_or_class_AST": [
+        "prepare_data",
+        "main"
+      ]
+    },
+    {
+      "source": "research/memory_loss_heterogeneity_20261026/analyze.py",
+      "original_sha256": "987c5430e2c7f7cebbd955227778aed3a0c69335919de171a07aec23c207eeca",
+      "published": "loss/analyze.py",
+      "unchanged_function_or_class_AST": [
+        "scalar",
+        "spearman",
+        "pair_rank",
+        "summarize_losses",
+        "independent_forward",
+        "local_support",
+        "main"
+      ],
+      "adapted_function_or_class_AST": []
+    },
+    {
+      "source": "research/memory_minimax_20261026/analyze.py",
+      "original_sha256": "54e2d218be8fdce92c8983eebb248622db75ad613ed13a08d6dbf85c843d2223",
+      "published": "minimax/analyze.py",
+      "unchanged_function_or_class_AST": [
+        "read_csv",
+        "write_json",
+        "finite_number",
+        "Catalogue",
+        "partial_minima",
+        "observed_counts",
+        "decode_dataset",
+        "complete_witness",
+        "linear_description",
+        "summarize_table",
+        "run_case",
+        "cross_evaluate",
+        "run_envelope_slope",
+        "main"
+      ],
+      "adapted_function_or_class_AST": [
+        "source_info",
+        "load_three_bit",
+        "load_four_bit"
+      ]
+    },
+    {
+      "source": "research/cloud_memory_remaining_20261026/run_remaining.py",
+      "original_sha256": "f6c03e7aca517086c3aea915ec5396d6770913088ab70e46d0930284edafafef",
+      "published": null,
+      "scope": "仅记录两层40池导入/88池从先验重启的历史调度来源；公开复现从先验重跑，不依赖旧导入包。"
+    },
+    {
+      "source": "cloud_remaining_suite_20261025/bundle.zip#calibration/run_calibration.py",
+      "original_sha256": "2941ef4bd745d0b282f1799533e2e282d5006ad46ab6a9c83bccf295324852e0",
+      "published": "smc/run_calibration.py",
+      "unchanged_function_or_class_AST": [
+        "rule_data",
+        "calibration_data",
+        "calibration_slice",
+        "calibration_node",
+        "calibration_report",
+        "configure",
+        "pool_mass_K",
+        "summarize",
+        "run"
+      ],
+      "adapted_function_or_class_AST": [
+        "verify_bundle"
+      ]
+    }
+  ],
+  "source_tables": [
+    {
+      "source": "research/memory_complete_review_20261026/RESULTS.json",
+      "sha256": "f9a5894d622d1a313156765fe757231aced08bfa036fa4e6d3ae69eebd5f5952"
+    },
+    {
+      "source": "research/memory_depth_night_20261026/BASELINE.json",
+      "sha256": "c90705097f50eb89211ac401698e25db6c575ea45f6fa6299c2d2ab704098c60"
+    },
+    {
+      "source": "research/memory_depth_night_20261026/PLAN.json",
+      "sha256": "e7d5101629f1f132d5b7825a7aff0a3b754331b7266766bc18743c5f358e76ec"
+    },
+    {
+      "source": "research/smc_followup_review_20261025_2055/RESULTS.json",
+      "sha256": "f98248dc8ce78b8ff2fc89b144007e7aa2ec6359880e33e5a9612407385399f2"
+    },
+    {
+      "source": "research/smc_followup_review_20261025_2055/fit_diagnostics.csv",
+      "sha256": "a2af9a9398de2c26b77e03eb28ecf04f30bde1f580178f0b10fcba60ce82c3ac"
+    },
+    {
+      "source": "research/smc_final_checks_review_20261026/RESULTS.json",
+      "sha256": "39d436e5630444dc84c1defaf3be8df0b956dacbb7d163e3035b1ab326614955"
+    },
+    {
+      "source": "research/memory_depth_night_20261026/AGREEMENT_ANALYSIS.json",
+      "sha256": "2156bc016e2f9e8a97da18404e104e45c2ab883b2eb08d5b55008647ca548c7d"
+    },
+    {
+      "source": "research/memory_depth_night_20261026/DATA_AUDIT.json",
+      "sha256": "2d4c658cb1fec5ee50e9de3f52ed6de7134f047c6ed867b2f74a000a7e4a1318"
+    },
+    {
+      "source": "research/memory_loss_heterogeneity_20261026/ANALYSIS.json",
+      "sha256": "5669c26338cf4671b52f8103d0f879f9c6ecb674191e4108af6d85e826e97c19"
+    },
+    {
+      "source": "research/memory_dataset_shortcuts_20261026/SUMMARY.json",
+      "sha256": "f84d7fedf089439ff8711a90f9e9ca9c388d53c3c17183b6797f7916dbd78dbc"
+    },
+    {
+      "source": "research/memory_dataset_shortcuts_20261026/RESULTS.json",
+      "sha256": "581d4e57f4d9f16dd5098f1f9c83dac1cd0652d7cc526f961c61defcc7aeed4d"
+    },
+    {
+      "source": "research/memory_minimax_20261026/RESULTS.json",
+      "sha256": "2fca0fb6ac1867dd4b74e0fe34f881423308f545b32abcc2c68f04fe00b40668"
+    }
+  ],
+  "historical_e32_files": [
+    {
+      "file": "RANDOM_MEMORY_PILOT.md",
+      "sha256": "6a4e16b94f219a37963a207840ef120722d5e3044195d5e1c821135dcf5b9e33"
+    },
+    {
+      "file": "RANDOM_MEMORY_SCALING_REPORT.md",
+      "sha256": "8c497dc4a9aafd83a13543c7837347aad3957496c802a2b845f8599447a0f5f8"
+    },
+    {
+      "file": "README.md",
+      "sha256": "65d031904e7a28bfa4da5611735787cf44d9f5255e031bf52147ebf6be29a56f"
+    },
+    {
+      "file": "analyze_8bit_random_memory_scaling.py",
+      "sha256": "38d3e922701da0db222bf2e0c71f02db0c8253da7be28187041d90e04f342682"
+    },
+    {
+      "file": "analyze_8bit_random_memory_scaling_full.py",
+      "sha256": "714d38f0758c896241df929c26d0759175ce166563e6e7315526be714eb7639c"
+    },
+    {
+      "file": "experiment_8bit_random_memory_scaling.py",
+      "sha256": "f7959583f8b8cdd118a204976864823263e0a94ef8177eaafb2d4292cc0b4ebc"
+    }
+  ],
+  "published_files": [
+    {
+      "file": ".gitignore",
+      "sha256": "6cbe51b459faf9611316a54bea09c3cf432355e2b2a249e1beaa2bb2b489fad2",
+      "bytes": 30
+    },
+    {
+      "file": "agreement/analyze_agreement.py",
+      "sha256": "fc06bf4e1b47b0c8c2f0707cacc4b11a572acc0d30207d58adf23db681d12c16",
+      "bytes": 7565
+    },
+    {
+      "file": "agreement/train_agreement.py",
+      "sha256": "31d6e1906a25f3ff951da539b0c315e9a603710c46e76401af6c8e760dc807b5",
+      "bytes": 9737
+    },
+    {
+      "file": "alignment/alignment_bridge.py",
+      "sha256": "10849ad264fcf6fc2396dd11deb0ed9de97f5cb440aede4e6661aeec4f3043e2",
+      "bytes": 8887
+    },
+    {
+      "file": "alignment/run_alignment.py",
+      "sha256": "e10a5ae9a45c31efd417f7d67a0a4abb32201132622d36d23552572e6122d358",
+      "bytes": 15867
+    },
+    {
+      "file": "check_report_pair.py",
+      "sha256": "4731cfdae1a1a175a4ada6a07020fa281dcb0316a24db07ac6dc8237d843f9f5",
+      "bytes": 2305
+    },
+    {
+      "file": "config.py",
+      "sha256": "ce5b05ff638207d75137c95b54dacec6c0143513c396d4ac49d2821bb76fbff5",
+      "bytes": 632
+    },
+    {
+      "file": "core/frozen_memory.py",
+      "sha256": "82d80a765c32c910bd1134167d35b68bddfbbb8b8f801edeead27e387e7e07ad",
+      "bytes": 48148
+    },
+    {
+      "file": "core/memory_geometry.py",
+      "sha256": "88132fa9176c16c56d4bc900d694f176a4d091e12b3460160b85fa4519a41692",
+      "bytes": 147
+    },
+    {
+      "file": "data.py",
+      "sha256": "12c0415248d60a9462cbe0af565c8978dfb111d75e1c541a5905464e217fa223",
+      "bytes": 1474
+    },
+    {
+      "file": "evidence/agreement.json",
+      "sha256": "24025545b217f8098b296666c43093606471731d6c9c16cd29afd6fbcb09ce6a",
+      "bytes": 20773
+    },
+    {
+      "file": "evidence/calibration_alignment.json",
+      "sha256": "a595b030c1fa2f6e7c36d7a2645ae8f6bf6e110246a8dd1b21ebe9c8cbfa09f1",
+      "bytes": 15487
+    },
+    {
+      "file": "evidence/datasets.json",
+      "sha256": "474aa06d7902804dc18715ec9f655202bf6e55e6b22014f1632b5c75c0b2f634",
+      "bytes": 3115
+    },
+    {
+      "file": "evidence/dictionary.json",
+      "sha256": "7a1d046a1412eaffbc944d8d4f806bc95267994d1142c8f1f0a0388b181c5330",
+      "bytes": 12729
+    },
+    {
+      "file": "evidence/enhanced.json",
+      "sha256": "f27750ed6ec673038fef1b51838583f728301cdd416a56ba16d96734fe9517e1",
+      "bytes": 13897
+    },
+    {
+      "file": "evidence/fit_diagnostics.csv",
+      "sha256": "be37d05a12b996da984fc06ee0b770a40b65669d480b456a44b2e5d76399bcd8",
+      "bytes": 1653
+    },
+    {
+      "file": "evidence/loss.json",
+      "sha256": "49c8062ca392fcf9c196bfcb837bd71038960d6cf22a38abb7a7ac1ee1d9f410",
+      "bytes": 47107
+    },
+    {
+      "file": "evidence/main_curve.json",
+      "sha256": "c4da542efdb7de2c9817193b22a2d48f8485fd3812a3a2a8829a072cd3b6857f",
+      "bytes": 8944
+    },
+    {
+      "file": "evidence/main_pools.json",
+      "sha256": "e1162875d043a9c67ea0139431e8fe7ec91fb809eb35d9e67596c23e63181c44",
+      "bytes": 32585
+    },
+    {
+      "file": "evidence/minimax.json",
+      "sha256": "8b2543eb0cb79a018a27140a79079f3bb9eb20c0d925ab0bf9545a61d826ce83",
+      "bytes": 85336
+    },
+    {
+      "file": "evidence/reference_science.json",
+      "sha256": "876d7a7fac83ad4f8a18ef59aee2b783a145d733c34a475e316c9264d87accd8",
+      "bytes": 1846
+    },
+    {
+      "file": "evidence/shortcuts.json",
+      "sha256": "1bed46b15f4208d0e2bcd9d1c843e576f42898c36c786b5639c0bd156cced566",
+      "bytes": 3822
+    },
+    {
+      "file": "evidence/structure_original.json",
+      "sha256": "ea082a22681640f3aaa848df45bcf56e4ff7a3d557a0f6825bf369a6cd50f254",
+      "bytes": 32283
+    },
+    {
+      "file": "loss/analyze.py",
+      "sha256": "0f1bb97152ec16c993845ff79177f3fccf46a5ab4cd460f8c8ba2c005311e5a7",
+      "bytes": 13620
+    },
+    {
+      "file": "loss/experiment.py",
+      "sha256": "16640b58ac1195bc1ed1806dd6da6e9ae2363ba85a47ca575d848e5768619dd1",
+      "bytes": 10458
+    },
+    {
+      "file": "minimax/analyze.py",
+      "sha256": "3a734a8647a0f40a31f2c7dea76c78fa514ebd2671c5cb5ef0b4e1146bf9a744",
+      "bytes": 21621
+    },
+    {
+      "file": "minimax/test_analyze.py",
+      "sha256": "7e8797281883ed8e54038a7d12a803981bb4c46e547de1ba91fcbe486c80d781",
+      "bytes": 2170
+    },
+    {
+      "file": "plot_evidence.py",
+      "sha256": "071c191aff83419612431f12e6343a1326de5720b23882c4336745ea115bae17",
+      "bytes": 5415
+    },
+    {
+      "file": "README.md",
+      "sha256": "298dab568f4c08d73c578e7a40accf7f34c82a21b0cafc9ca7ac57e4abee6103",
+      "bytes": 8690
+    },
+    {
+      "file": "requirements.txt",
+      "sha256": "93c0f04fcc0c2c383d616f7209d0fa3b2e2740d4dfd183588ceddba91c8b91d3",
+      "bytes": 30
+    },
+    {
+      "file": "review.py",
+      "sha256": "8eb93fafe95cd34de952bd5682ecf77becc5a8fd9b6608bfd8be1788a62f5c29",
+      "bytes": 3681
+    },
+    {
+      "file": "run.py",
+      "sha256": "fd41480b7bdbf79eba7b19714ea87d0c5ce220db32923556276c1952e17d60ab",
+      "bytes": 2772
+    },
+    {
+      "file": "smc/memory_followup.py",
+      "sha256": "f8b9c4d027f71f2621d606a0d0eaac819dc630e5e170bb9711ee51a7cd951b9d",
+      "bytes": 12254
+    },
+    {
+      "file": "smc/protocols.py",
+      "sha256": "9585fc113dba2b42b1b2703bb4bd424177f041e381f6a772f74b20ade23743aa",
+      "bytes": 1241
+    },
+    {
+      "file": "smc/run_calibration.py",
+      "sha256": "60fed314bf574f3bdb830b0a79627decbe2b8332f76d33de1085ba630d34bc73",
+      "bytes": 11974
+    },
+    {
+      "file": "structure/audit.py",
+      "sha256": "8bc6e05d684b7a90971f55ddb8ba8a4ec6d23f9080a98fc4e61f318f824d798f",
+      "bytes": 15168
+    },
+    {
+      "file": "structure/audit_data.py",
+      "sha256": "6c086e0e7eda065cb3e1da5fee3390f0a93beafb32e541e0b882a79d4e5cf0d5",
+      "bytes": 8107
+    },
+    {
+      "file": "verify.py",
+      "sha256": "b8f7b9bbdf46c1d3b019d6130959765693a3ac99548416ddbc8b836b72e1cd3e",
+      "bytes": 6543
+    },
+    {
+      "file": "../MEMORY_EXTENSION_20261027.md",
+      "sha256": "08ef7a15a6b188217710d8e4f3e35717cea636019f90300291d277845945b4af",
+      "bytes": 25503
+    },
+    {
+      "file": "../../../translations_en/post_upload/e32_update_20261027.md",
+      "sha256": "825f1862dff580a808d690bac000c5f23e9fe72e19d0f762cdc4ccc1e859c672",
+      "bytes": 31889
+    },
+    {
+      "file": "../../../assets/figures/e32_ext_depth.png",
+      "sha256": "961cde3d995a3c8b812bd10e106767644a5579a6ab3556bf3304b45efb9fd1b9",
+      "bytes": 222788
+    },
+    {
+      "file": "../../../assets/figures/e32_ext_controls.png",
+      "sha256": "0c4b583c752b911d6266637d28fef47c79ba3dd3321bdb23cfc8ffe738efe830",
+      "bytes": 118351
+    },
+    {
+      "file": "../../../assets/figures/e32_ext_alignment.png",
+      "sha256": "ca15dbb19d445d69da065429071f06e249418eae71d9bebf0d85814b7c3aa7ef",
+      "bytes": 203672
+    },
+    {
+      "file": "../../../assets/figures/e32_ext_diagnostics.png",
+      "sha256": "a0ac27257d4a8f0c8e033a782e68713a243887ef1b11957601f3a02fda15f76b",
+      "bytes": 218629
+    }
+  ],
+  "adaptation_scope": "仅路径、输入再生/目录适配、显式开关、发布校验；原采样核/桥接核科学函数AST不变。原脚本主入口禁用。主矩阵配置限于已报告的四表八档；不跨硬件接历史半池。",
+  "excluded": "完整权重、原始输出、大日志、重复随机数组、完整旧SMC目录",
+  "runtime_external_dependency": "仅完整min-max需要使用者提供CATALOGUE_ROOT；默认不运行。"
+}

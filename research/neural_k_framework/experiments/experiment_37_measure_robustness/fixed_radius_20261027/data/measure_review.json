@@ -1,0 +1,730 @@
+{
+  "status": {
+    "status": "completed_with_failures",
+    "jobs_total": 24,
+    "jobs_terminal": 24,
+    "jobs_failed": 8,
+    "stop_reason": "all_jobs_terminal"
+  },
+  "terminal_details": [
+    {
+      "target": "projection",
+      "radius": 20,
+      "replica": 0,
+      "phase": "completed",
+      "reason": null,
+      "last_support": 0.001,
+      "nodes_reached": 9,
+      "level": 110
+    },
+    {
+      "target": "projection",
+      "radius": 20,
+      "replica": 1,
+      "phase": "completed",
+      "reason": null,
+      "last_support": 0.001,
+      "nodes_reached": 9,
+      "level": 113
+    },
+    {
+      "target": "projection",
+      "radius": 20,
+      "replica": 2,
+      "phase": "completed",
+      "reason": null,
+      "last_support": 0.001,
+      "nodes_reached": 9,
+      "level": 111
+    },
+    {
+      "target": "projection",
+      "radius": 20,
+      "replica": 3,
+      "phase": "completed",
+      "reason": null,
+      "last_support": 0.001,
+      "nodes_reached": 9,
+      "level": 111
+    },
+    {
+      "target": "majority3",
+      "radius": 20,
+      "replica": 0,
+      "phase": "failed",
+      "reason": "stalled_levels_budget",
+      "last_support": 0.003950954517106454,
+      "nodes_reached": 7,
+      "level": 1735
+    },
+    {
+      "target": "majority3",
+      "radius": 20,
+      "replica": 1,
+      "phase": "failed",
+      "reason": "stalled_levels_budget",
+      "last_support": 0.003950996415900716,
+      "nodes_reached": 7,
+      "level": 1380
+    },
+    {
+      "target": "majority3",
+      "radius": 20,
+      "replica": 2,
+      "phase": "failed",
+      "reason": "stalled_levels_budget",
+      "last_support": 0.003950951035398343,
+      "nodes_reached": 7,
+      "level": 1489
+    },
+    {
+      "target": "majority3",
+      "radius": 20,
+      "replica": 3,
+      "phase": "failed",
+      "reason": "stalled_levels_budget",
+      "last_support": 0.003951071470390744,
+      "nodes_reached": 7,
+      "level": 1304
+    },
+    {
+      "target": "parity2",
+      "radius": 20,
+      "replica": 0,
+      "phase": "failed",
+      "reason": "stalled_levels_budget",
+      "last_support": 0.07078065290976496,
+      "nodes_reached": 5,
+      "level": 941
+    },
+    {
+      "target": "parity2",
+      "radius": 20,
+      "replica": 1,
+      "phase": "failed",
+      "reason": "stalled_levels_budget",
+      "last_support": 0.07078066015973335,
+      "nodes_reached": 5,
+      "level": 885
+    },
+    {
+      "target": "parity2",
+      "radius": 20,
+      "replica": 2,
+      "phase": "failed",
+      "reason": "stalled_levels_budget",
+      "last_support": 0.07078085930090697,
+      "nodes_reached": 5,
+      "level": 890
+    },
+    {
+      "target": "parity2",
+      "radius": 20,
+      "replica": 3,
+      "phase": "failed",
+      "reason": "stalled_levels_budget",
+      "last_support": 0.07339495355079867,
+      "nodes_reached": 5,
+      "level": 888
+    },
+    {
+      "target": "projection",
+      "radius": 40,
+      "replica": 0,
+      "phase": "completed",
+      "reason": null,
+      "last_support": 0.001,
+      "nodes_reached": 9,
+      "level": 35
+    },
+    {
+      "target": "projection",
+      "radius": 40,
+      "replica": 1,
+      "phase": "completed",
+      "reason": null,
+      "last_support": 0.001,
+      "nodes_reached": 9,
+      "level": 34
+    },
+    {
+      "target": "projection",
+      "radius": 40,
+      "replica": 2,
+      "phase": "completed",
+      "reason": null,
+      "last_support": 0.001,
+      "nodes_reached": 9,
+      "level": 36
+    },
+    {
+      "target": "projection",
+      "radius": 40,
+      "replica": 3,
+      "phase": "completed",
+      "reason": null,
+      "last_support": 0.001,
+      "nodes_reached": 9,
+      "level": 36
+    },
+    {
+      "target": "majority3",
+      "radius": 40,
+      "replica": 0,
+      "phase": "completed",
+      "reason": null,
+      "last_support": 0.001,
+      "nodes_reached": 9,
+      "level": 60
+    },
+    {
+      "target": "majority3",
+      "radius": 40,
+      "replica": 1,
+      "phase": "completed",
+      "reason": null,
+      "last_support": 0.001,
+      "nodes_reached": 9,
+      "level": 60
+    },
+    {
+      "target": "majority3",
+      "radius": 40,
+      "replica": 2,
+      "phase": "completed",
+      "reason": null,
+      "last_support": 0.001,
+      "nodes_reached": 9,
+      "level": 56
+    },
+    {
+      "target": "majority3",
+      "radius": 40,
+      "replica": 3,
+      "phase": "completed",
+      "reason": null,
+      "last_support": 0.001,
+      "nodes_reached": 9,
+      "level": 58
+    },
+    {
+      "target": "parity2",
+      "radius": 40,
+      "replica": 0,
+      "phase": "completed",
+      "reason": null,
+      "last_support": 0.001,
+      "nodes_reached": 9,
+      "level": 119
+    },
+    {
+      "target": "parity2",
+      "radius": 40,
+      "replica": 1,
+      "phase": "completed",
+      "reason": null,
+      "last_support": 0.001,
+      "nodes_reached": 9,
+      "level": 123
+    },
+    {
+      "target": "parity2",
+      "radius": 40,
+      "replica": 2,
+      "phase": "completed",
+      "reason": null,
+      "last_support": 0.001,
+      "nodes_reached": 9,
+      "level": 121
+    },
+    {
+      "target": "parity2",
+      "radius": 40,
+      "replica": 3,
+      "phase": "completed",
+      "reason": null,
+      "last_support": 0.001,
+      "nodes_reached": 9,
+      "level": 127
+    }
+  ],
+  "aggregates": [
+    {
+      "target": "projection",
+      "radius": 20,
+      "epsilon": 2,
+      "K_pooled": 0.008478153924304704,
+      "K_median": 0.007769908879245439,
+      "K_min": 0.0028205190623786626,
+      "K_max": 0.01558154119886184
+    },
+    {
+      "target": "projection",
+      "radius": 20,
+      "epsilon": 1,
+      "K_pooled": 0.696757714595777,
+      "K_median": 0.7029987238970993,
+      "K_min": 0.66862815103968,
+      "K_max": 0.7128016721297603
+    },
+    {
+      "target": "projection",
+      "radius": 20,
+      "epsilon": 0.7,
+      "K_pooled": 2.248039852536389,
+      "K_median": 2.2594481294671773,
+      "K_min": 2.1669881716427257,
+      "K_max": 2.310433030465823
+    },
+    {
+      "target": "projection",
+      "radius": 20,
+      "epsilon": 0.3,
+      "K_pooled": 9.487248516486336,
+      "K_median": 9.53486411390636,
+      "K_min": 9.212456885646796,
+      "K_max": 9.720146579281497
+    },
+    {
+      "target": "projection",
+      "radius": 20,
+      "epsilon": 0.1,
+      "K_pooled": 21.349857120580566,
+      "K_median": 21.416501059686958,
+      "K_min": 21.100833197683418,
+      "K_max": 21.501486084746738
+    },
+    {
+      "target": "projection",
+      "radius": 20,
+      "epsilon": 0.03,
+      "K_pooled": 36.70428496114643,
+      "K_median": 36.66197916981438,
+      "K_min": 36.548349213054415,
+      "K_max": 36.98557519878093
+    },
+    {
+      "target": "projection",
+      "radius": 20,
+      "epsilon": 0.01,
+      "K_pooled": 53.83096648818193,
+      "K_median": 53.88060207457407,
+      "K_min": 53.58489643229075,
+      "K_max": 54.02641077154768
+    },
+    {
+      "target": "projection",
+      "radius": 20,
+      "epsilon": 0.003,
+      "K_pooled": 77.64745486062891,
+      "K_median": 77.65019857020684,
+      "K_min": 77.56830137117838,
+      "K_max": 77.72973464239081
+    },
+    {
+      "target": "projection",
+      "radius": 20,
+      "epsilon": 0.001,
+      "K_pooled": 107.3168500026896,
+      "K_median": 107.27674155355544,
+      "K_min": 107.06734113468201,
+      "K_max": 107.76137768718564
+    },
+    {
+      "target": "projection",
+      "radius": 40,
+      "epsilon": 2,
+      "K_pooled": 0.5011507934682754,
+      "K_median": 0.5012503650251029,
+      "K_min": 0.47839956027627323,
+      "K_max": 0.5242665690336022
+    },
+    {
+      "target": "projection",
+      "radius": 40,
+      "epsilon": 1,
+      "K_pooled": 2.209169005478036,
+      "K_median": 2.216143964052388,
+      "K_min": 2.149628227456336,
+      "K_max": 2.257530346426036
+    },
+    {
+      "target": "projection",
+      "radius": 40,
+      "epsilon": 0.7,
+      "K_pooled": 3.519789010216316,
+      "K_median": 3.5384901215074116,
+      "K_min": 3.460897750457422,
+      "K_max": 3.542923457918576
+    },
+    {
+      "target": "projection",
+      "radius": 40,
+      "epsilon": 0.3,
+      "K_pooled": 6.942513885001194,
+      "K_median": 6.928229130034446,
+      "K_min": 6.904335140391955,
+      "K_max": 7.011668699159341
+    },
+    {
+      "target": "projection",
+      "radius": 40,
+      "epsilon": 0.1,
+      "K_pooled": 11.335736786561078,
+      "K_median": 11.28912891310758,
+      "K_min": 11.256934166781093,
+      "K_max": 11.52313061539697
+    },
+    {
+      "target": "projection",
+      "radius": 40,
+      "epsilon": 0.03,
+      "K_pooled": 16.122621368262905,
+      "K_median": 16.08494759801267,
+      "K_min": 16.023563710332514,
+      "K_max": 16.314106682502345
+    },
+    {
+      "target": "projection",
+      "radius": 40,
+      "epsilon": 0.01,
+      "K_pooled": 20.552594264370608,
+      "K_median": 20.48447731297403,
+      "K_min": 20.444263883125608,
+      "K_max": 20.83007608983999
+    },
+    {
+      "target": "projection",
+      "radius": 40,
+      "epsilon": 0.003,
+      "K_pooled": 25.71131180974014,
+      "K_median": 25.622732141656105,
+      "K_min": 25.51455014034252,
+      "K_max": 26.17269255052197
+    },
+    {
+      "target": "projection",
+      "radius": 40,
+      "epsilon": 0.001,
+      "K_pooled": 30.7822811581583,
+      "K_median": 30.674713384958178,
+      "K_min": 30.59688734840175,
+      "K_max": 31.28087003021293
+    },
+    {
+      "target": "majority3",
+      "radius": 20,
+      "epsilon": 2,
+      "K_pooled": 0.007415655994197746,
+      "K_median": 0.006354113487664119,
+      "K_min": 0.005646563141142063,
+      "K_max": 0.011315313227834146
+    },
+    {
+      "target": "majority3",
+      "radius": 20,
+      "epsilon": 1,
+      "K_pooled": 0.6438796011030261,
+      "K_median": 0.6477033310174575,
+      "K_min": 0.5955735449377437,
+      "K_max": 0.6859744421941477
+    },
+    {
+      "target": "majority3",
+      "radius": 20,
+      "epsilon": 0.7,
+      "K_pooled": 2.617940888328551,
+      "K_median": 2.624339635509068,
+      "K_min": 2.577058202291974,
+      "K_max": 2.647029735633816
+    },
+    {
+      "target": "majority3",
+      "radius": 20,
+      "epsilon": 0.3,
+      "K_pooled": 15.763395419682901,
+      "K_median": 15.740411382052976,
+      "K_min": 15.617826519813926,
+      "K_max": 15.978782836447436
+    },
+    {
+      "target": "majority3",
+      "radius": 20,
+      "epsilon": 0.1,
+      "K_pooled": 41.235812898815254,
+      "K_median": 41.27552341137845,
+      "K_min": 40.78708748247788,
+      "K_max": 41.77241910591848
+    },
+    {
+      "target": "majority3",
+      "radius": 20,
+      "epsilon": 0.03,
+      "K_pooled": 80.43478767992032,
+      "K_median": 80.35978232465041,
+      "K_min": 80.03902939341718,
+      "K_max": 81.22668088121472
+    },
+    {
+      "target": "majority3",
+      "radius": 20,
+      "epsilon": 0.01,
+      "K_pooled": 145.06241311279248,
+      "K_median": 145.06155239384026,
+      "K_min": 144.53177548081277,
+      "K_max": 146.05712577679122
+    },
+    {
+      "target": "majority3",
+      "radius": 40,
+      "epsilon": 2,
+      "K_pooled": 0.4430150424055368,
+      "K_median": 0.43976967585450677,
+      "K_min": 0.4206840624199859,
+      "K_max": 0.47252299393960395
+    },
+    {
+      "target": "majority3",
+      "radius": 40,
+      "epsilon": 1,
+      "K_pooled": 2.3567125932860464,
+      "K_median": 2.3748489076461845,
+      "K_min": 2.2911494813597697,
+      "K_max": 2.388093471262312
+    },
+    {
+      "target": "majority3",
+      "radius": 40,
+      "epsilon": 0.7,
+      "K_pooled": 4.2476906858411105,
+      "K_median": 4.276453365780445,
+      "K_min": 4.121576743389086,
+      "K_max": 4.324536021771569
+    },
+    {
+      "target": "majority3",
+      "radius": 40,
+      "epsilon": 0.3,
+      "K_pooled": 10.59062175609259,
+      "K_median": 10.578895831012733,
+      "K_min": 10.472059658011048,
+      "K_max": 10.746587824524854
+    },
+    {
+      "target": "majority3",
+      "radius": 40,
+      "epsilon": 0.1,
+      "K_pooled": 18.903028767332763,
+      "K_median": 18.90939338736628,
+      "K_min": 18.595138213219606,
+      "K_max": 19.305795450947638
+    },
+    {
+      "target": "majority3",
+      "radius": 40,
+      "epsilon": 0.03,
+      "K_pooled": 27.62601658115795,
+      "K_median": 27.65905290521217,
+      "K_min": 27.20162581797418,
+      "K_max": 28.147911488552595
+    },
+    {
+      "target": "majority3",
+      "radius": 40,
+      "epsilon": 0.01,
+      "K_pooled": 35.781162504321195,
+      "K_median": 35.68865577878398,
+      "K_min": 35.36296357498637,
+      "K_max": 36.70866148981003
+    },
+    {
+      "target": "majority3",
+      "radius": 40,
+      "epsilon": 0.003,
+      "K_pooled": 45.55971353019096,
+      "K_median": 45.414805572887886,
+      "K_min": 45.208911855678984,
+      "K_max": 46.521702082367874
+    },
+    {
+      "target": "majority3",
+      "radius": 40,
+      "epsilon": 0.001,
+      "K_pooled": 55.4371865946678,
+      "K_median": 55.26463716285775,
+      "K_min": 55.00319950037854,
+      "K_max": 56.79384909306951
+    },
+    {
+      "target": "parity2",
+      "radius": 20,
+      "epsilon": 2,
+      "K_pooled": 0.0031734719793412892,
+      "K_median": 0.002821209688434933,
+      "K_min": 0.0014095702546713536,
+      "K_max": 0.005646563141142063
+    },
+    {
+      "target": "parity2",
+      "radius": 20,
+      "epsilon": 1,
+      "K_pooled": 0.5463123891792891,
+      "K_median": 0.5445132415957479,
+      "K_min": 0.5256761392882736,
+      "K_max": 0.5709570185891399
+    },
+    {
+      "target": "parity2",
+      "radius": 20,
+      "epsilon": 0.7,
+      "K_pooled": 5.027358062062777,
+      "K_median": 5.045037796957393,
+      "K_min": 4.92068993416822,
+      "K_max": 5.105771414829257
+    },
+    {
+      "target": "parity2",
+      "radius": 20,
+      "epsilon": 0.3,
+      "K_pooled": 42.27032403683908,
+      "K_median": 42.26602318520704,
+      "K_min": 42.165296454294186,
+      "K_max": 42.39885075206585
+    },
+    {
+      "target": "parity2",
+      "radius": 20,
+      "epsilon": 0.1,
+      "K_pooled": 152.1974209681643,
+      "K_median": 153.3874886653181,
+      "K_min": 150.7120558389203,
+      "K_max": 154.28146431863118
+    },
+    {
+      "target": "parity2",
+      "radius": 40,
+      "epsilon": 2,
+      "K_pooled": 0.3940575603746321,
+      "K_median": 0.40567660329375466,
+      "K_min": 0.3453639714720326,
+      "K_max": 0.4206840624199859
+    },
+    {
+      "target": "parity2",
+      "radius": 40,
+      "epsilon": 1,
+      "K_pooled": 3.0571682300779517,
+      "K_median": 3.0450632648853833,
+      "K_min": 2.984636199353618,
+      "K_max": 3.1596502264098416
+    },
+    {
+      "target": "parity2",
+      "radius": 40,
+      "epsilon": 0.7,
+      "K_pooled": 6.794438074142522,
+      "K_median": 6.7893898689638155,
+      "K_min": 6.566740946406272,
+      "K_max": 7.077871620878062
+    },
+    {
+      "target": "parity2",
+      "radius": 40,
+      "epsilon": 0.3,
+      "K_pooled": 18.234525980726872,
+      "K_median": 18.404297156046567,
+      "K_min": 17.710049323772623,
+      "K_max": 18.58704607244726
+    },
+    {
+      "target": "parity2",
+      "radius": 40,
+      "epsilon": 0.1,
+      "K_pooled": 32.31488257617373,
+      "K_median": 32.42845942159558,
+      "K_min": 31.670670466833556,
+      "K_max": 33.07988203112635
+    },
+    {
+      "target": "parity2",
+      "radius": 40,
+      "epsilon": 0.03,
+      "K_pooled": 48.88053807974279,
+      "K_median": 48.8543929025958,
+      "K_min": 48.334953147830575,
+      "K_max": 49.898720504048605
+    },
+    {
+      "target": "parity2",
+      "radius": 40,
+      "epsilon": 0.01,
+      "K_pooled": 66.86496671377634,
+      "K_median": 66.82663846988694,
+      "K_min": 66.2948765857303,
+      "K_max": 68.14890269978777
+    },
+    {
+      "target": "parity2",
+      "radius": 40,
+      "epsilon": 0.003,
+      "K_pooled": 90.34158905518736,
+      "K_median": 90.55479802966319,
+      "K_min": 89.36082845327276,
+      "K_max": 92.08198657347478
+    },
+    {
+      "target": "parity2",
+      "radius": 40,
+      "epsilon": 0.001,
+      "K_pooled": 117.92063626446048,
+      "K_median": 118.77391969572209,
+      "K_min": 116.55416850835277,
+      "K_max": 120.20361894208595
+    }
+  ],
+  "contrasts": [
+    {
+      "radius": 20,
+      "target": "projection",
+      "epsilon_high": 0.03,
+      "epsilon_low": 0.001,
+      "delta_K": 70.61256504154318,
+      "finite_window_power_exponent": 14.390491017822722
+    },
+    {
+      "radius": 40,
+      "target": "projection",
+      "epsilon_high": 0.03,
+      "epsilon_low": 0.001,
+      "delta_K": 14.659659789895393,
+      "finite_window_power_exponent": 2.9875660572125318
+    },
+    {
+      "radius": 40,
+      "target": "majority3",
+      "epsilon_high": 0.03,
+      "epsilon_low": 0.001,
+      "delta_K": 27.81117001350985,
+      "finite_window_power_exponent": 5.667778702545314
+    },
+    {
+      "radius": 40,
+      "target": "parity2",
+      "epsilon_high": 0.03,
+      "epsilon_low": 0.001,
+      "delta_K": 69.04009818471769,
+      "finite_window_power_exponent": 14.070030060687712
+    }
+  ],
+  "audits": {
+    "files": 24,
+    "records": 200,
+    "weights": 3200,
+    "predictions": 51200,
+    "max_logit_error": 7.105427357601002e-15,
+    "max_loss_error": 4.440892098500626e-16,
+    "max_relative_radius_error": 4.440892098500626e-16,
+    "warnings": []
+  },
+  "limits": "核验可行性、半径与端点聚合，不是充分混合证明；导出包没有逐层存活日志，不能独立重建整条体积估计。"
+}

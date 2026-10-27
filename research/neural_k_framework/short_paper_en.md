@@ -14,7 +14,22 @@ Therefore, training loss is not merely a switch for "have the training samples b
 
 The optimizer is a separate layer. Static volume tells us what the landscape contains and how large each part is; SGD or AdamW determines where one actually ends up from a random initialization, whether one is blocked by an entrance, and along which path one moves. The two are closely related, but they are not the same thing.
 
-Below we present things in the order in which we actually arrived at these conclusions.
+Below we first list the latest supporting evidence, then present things in the order in which we actually arrived at these conclusions.
+
+## October 2026 evidence: four questions, retaining the existing experiment numbers {#latest-evidence}
+
+This update integrates new results into the existing experiments instead of assigning new numbers to working directories. Original results and added checks are retained together, including discrepancies, unreached conditions, and findings without a settled explanation.
+
+| Research question | Public entry | Added evidence and limits of the conclusion |
+|---|---|---|
+| Do static distributions correspond to actual training? | [E36 training-method extension](experiments/e36.html#update-20261027) | 58 CV conditions, direct G&C calibration, and 48 broad STP groups; low-loss predictions work well for the smaller CNN and MLP, while the wider CNN retains optimization-protocol differences. |
+| Does complexity have an independent logical interpretation? | [E31 amplitude intervention](experiments/e31.html#update-20261027), [E33 external calibration](experiments/e33.html#update-20261027) | The logical comparison of f/g preceded sampling, and the K-order reversal under amplitude alignment matched the prediction; external proxies exhibit a shared ordering as well as robust local reversals. |
+| Is contraction only a Gaussian radial-tail effect? | [E37 fixed-radius control](experiments/e37.html#update-20261027) | Rule-dependent angular contraction persists at fixed radius; the main trend is not exclusive to Gaussian measures, while specific coefficients and shapes remain measure-dependent. |
+| Can sample count calibrate the memory coefficient? | [E32 cross-depth memory extension](experiments/e32.html#update-20261027) | 384 main pools across one to three hidden layers, plus additional diagnostics; growth persists, but systematic curvature and sampling disagreements remain, and the strict-linearity mechanism is deferred. |
+
+The small five-digits-versus-five MNIST training sets primarily compare predictions under the same finite constraints; arbitrary class grouping is not independent random labeling. STP is a mechanistic control testing whether the distinctive gradient updates of SGD/Adam are indispensable, not a replacement for SMC, and it does not rule out all optimization bias.
+
+The f/g result also exposes a limitation of mean BCE as a universal complexity ruler: a valid volume measurement can still combine logical cost with the allocation of precision across examples. Further work should refine the constraint family within the joint-output framework rather than declare amplitude alignment the uniquely correct definition. See the [theory core](theory-core.html#open-questions-20261027) for the six open questions and the hypothesis status of the unified picture.
 
 ## What we saw before proposing this theory
 
@@ -691,7 +706,7 @@ The new object really needed is not a universal complexity score, but a Neural K
 
 In this language, the network does not need to know the true rule in the researcher's mind. It only keeps lowering the loss under the current network language and training-set constraints. When data is sufficient, this process points toward reusable rules very early; when data is critical, it appears as grokking; when data is insufficient or noisy, it keeps condensing toward training-set-specific extensions. Generalization is not another hidden objective; it is that the training set, the network language, the loss depth, and the optimization path jointly select a transferable function.
 
-## Post-submission increment: E31--E37
+## Post-submission increment: E31--E38
 
 After the short paper was submitted, seven more groups of experiments with their own protocols and result boundaries were completed. They do not change the historical numbering of E01--E30; instead they enter the same research archive as consecutive new evidence units.
 
@@ -700,7 +715,7 @@ E31 introduced a framework-level correction that places the **joint output distr
 | ID | Experiment | New conclusion |
 |---|---|---|
 | [E31](experiments/e31.html) | Loss and magnitude alignment | raw MSE can also produce rule recovery; magnitude alignment can promote generalization in higher mean-CE regions; the key variable is the output joint distribution, not the name BCE. |
-| [E32](experiments/e32.html) | Random memorization scaling | The complexity of random-label memorization increases approximately linearly with sample count, providing an external calibration for the empirical link between Neural K and capacity. |
+| [E32](experiments/e32.html) | Random memory and cross-depth calibration | The original protocol showed a near-linear trend; the added same-data, cross-depth comparisons retain growth but reveal systematic curvature, window dependence, and limits of memory calibration. |
 | [E33](experiments/e33.html) | Cross-architecture joint output volume | Finite-architecture protocols beyond the MLP also show rule-dependent joint output volume curves, but the coefficients and local orderings depend on the architecture and the measure. |
 | [E34](experiments/e34.html) | Conditional rule duels | The independently frozen 4-bit Neural K total order predicted 75/75 population preferences in 8-bit conditional rule duels; this is a protocol-relative external prediction, not a universal softmax law. |
 | [E35](experiments/e35.html) | Mod97 frozen-function duels | When the real complete functions before and after grokking compete in new networks, the conflict points almost all favor the completed rule, but full recovery is still not high, showing this is a function-population preference rather than per-network copying. |
@@ -709,7 +724,7 @@ E31 introduced a framework-level correction that places the **joint output distr
 
 The architecture pre-training estimator, the MDL--grokking conditional derivation, and the measure-robustness recheck belong to the supplementary material of the same period; the Peleg/G&C independent check is listed as [E36](experiments/e36.html), and the measure recheck as [E37](experiments/e37.html). They are collected in the [post-submission increment overview](post-upload.html).
 
-## Appendix: E01--E37 evidence map
+## Appendix: E01--E38 evidence map
 
 The main text only expands the experiments that carry the key turns. The other experiments have not been deleted; below we explain what each number actually measures.
 

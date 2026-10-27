@@ -1,0 +1,19 @@
+{
+  "python": "3.13.5",
+  "numpy": "2.4.1",
+  "torch": "2.11.0+cu130",
+  "compiled_modules": 22,
+  "imported_modules": 19,
+  "unit_tests": 13,
+  "failures": 0,
+  "errors": 0,
+  "bilingual": {
+    "paired_blocks": 80,
+    "images": 4,
+    "anchor": "update-20261027"
+  },
+  "training_started": false,
+  "smc_started": false,
+  "full_minimax_started": false,
+  "raw_snapshot_audit_repeated": false
+}

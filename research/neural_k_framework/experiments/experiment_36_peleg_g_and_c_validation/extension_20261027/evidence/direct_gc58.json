@@ -1,0 +1,872 @@
+[
+  {
+    "stage": "original_static",
+    "condition": "cnn_w4__anchor_0_7_n16",
+    "source_member": "cv/original_static/cnn_w4__anchor_0_7_n16/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 308608,
+      "accepted": 512,
+      "hard_hits": 512,
+      "seconds": 14.904599137007608,
+      "status": "sufficient",
+      "acceptance_estimate": 0.0016590626296142678,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "cnn_w4__partition0_seed0_n32",
+    "source_member": "cv/original_static/cnn_w4__partition0_seed0_n32/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 2000000,
+      "accepted": 0,
+      "hard_hits": 0,
+      "seconds": 32.55687100099749,
+      "status": "budget_limited",
+      "acceptance_estimate": 0.0,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "cnn_w4__partition0_seed0_n32_flip_quarter",
+    "source_member": "cv/original_static/cnn_w4__partition0_seed0_n32_flip_quarter/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 2000000,
+      "accepted": 0,
+      "hard_hits": 0,
+      "seconds": 32.59557022100489,
+      "status": "budget_limited",
+      "acceptance_estimate": 0.0,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "cnn_w4__partition0_seed0_n32_random_balanced",
+    "source_member": "cv/original_static/cnn_w4__partition0_seed0_n32_random_balanced/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 2000000,
+      "accepted": 0,
+      "hard_hits": 0,
+      "seconds": 32.64773705000698,
+      "status": "budget_limited",
+      "acceptance_estimate": 0.0,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "cnn_w4__partition0_seed1_n32",
+    "source_member": "cv/original_static/cnn_w4__partition0_seed1_n32/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 2000000,
+      "accepted": 0,
+      "hard_hits": 0,
+      "seconds": 32.454409354002564,
+      "status": "budget_limited",
+      "acceptance_estimate": 0.0,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "cnn_w4__partition0_seed2_n32",
+    "source_member": "cv/original_static/cnn_w4__partition0_seed2_n32/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 2000000,
+      "accepted": 0,
+      "hard_hits": 0,
+      "seconds": 32.64419843698852,
+      "status": "budget_limited",
+      "acceptance_estimate": 0.0,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "cnn_w4__partition1_seed0_n32",
+    "source_member": "cv/original_static/cnn_w4__partition1_seed0_n32/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 2000000,
+      "accepted": 0,
+      "hard_hits": 0,
+      "seconds": 32.48323827399872,
+      "status": "budget_limited",
+      "acceptance_estimate": 0.0,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "cnn_w4__partition1_seed1_n32",
+    "source_member": "cv/original_static/cnn_w4__partition1_seed1_n32/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 2000000,
+      "accepted": 0,
+      "hard_hits": 0,
+      "seconds": 32.48257118900074,
+      "status": "budget_limited",
+      "acceptance_estimate": 0.0,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "cnn_w4__partition1_seed2_n32",
+    "source_member": "cv/original_static/cnn_w4__partition1_seed2_n32/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 2000000,
+      "accepted": 0,
+      "hard_hits": 0,
+      "seconds": 32.539911853004014,
+      "status": "budget_limited",
+      "acceptance_estimate": 0.0,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "cnn_w4__partition2_seed0_n32",
+    "source_member": "cv/original_static/cnn_w4__partition2_seed0_n32/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 2000000,
+      "accepted": 0,
+      "hard_hits": 0,
+      "seconds": 32.75843133199669,
+      "status": "budget_limited",
+      "acceptance_estimate": 0.0,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "cnn_w4__partition2_seed1_n32",
+    "source_member": "cv/original_static/cnn_w4__partition2_seed1_n32/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 2000000,
+      "accepted": 0,
+      "hard_hits": 0,
+      "seconds": 32.60788554500323,
+      "status": "budget_limited",
+      "acceptance_estimate": 0.0,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "cnn_w4__partition2_seed2_n32",
+    "source_member": "cv/original_static/cnn_w4__partition2_seed2_n32/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 2000000,
+      "accepted": 0,
+      "hard_hits": 0,
+      "seconds": 32.64524935100053,
+      "status": "budget_limited",
+      "acceptance_estimate": 0.0,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "cnn_w8__partition0_seed0_n32",
+    "source_member": "cv/original_static/cnn_w8__partition0_seed0_n32/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 1313792,
+      "accepted": 0,
+      "hard_hits": 0,
+      "seconds": 90.0053265880124,
+      "status": "budget_limited",
+      "acceptance_estimate": 0.0,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "cnn_w8__partition0_seed0_n32_flip_quarter",
+    "source_member": "cv/original_static/cnn_w8__partition0_seed0_n32_flip_quarter/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 1308288,
+      "accepted": 0,
+      "hard_hits": 0,
+      "seconds": 90.00092648700229,
+      "status": "budget_limited",
+      "acceptance_estimate": 0.0,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "cnn_w8__partition0_seed0_n32_random_balanced",
+    "source_member": "cv/original_static/cnn_w8__partition0_seed0_n32_random_balanced/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 1304576,
+      "accepted": 0,
+      "hard_hits": 0,
+      "seconds": 90.00440575400717,
+      "status": "budget_limited",
+      "acceptance_estimate": 0.0,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "cnn_w8__partition0_seed1_n32",
+    "source_member": "cv/original_static/cnn_w8__partition0_seed1_n32/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 1313792,
+      "accepted": 0,
+      "hard_hits": 0,
+      "seconds": 90.00224386699847,
+      "status": "budget_limited",
+      "acceptance_estimate": 0.0,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "cnn_w8__partition0_seed2_n32",
+    "source_member": "cv/original_static/cnn_w8__partition0_seed2_n32/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 1309312,
+      "accepted": 0,
+      "hard_hits": 0,
+      "seconds": 90.00220040700515,
+      "status": "budget_limited",
+      "acceptance_estimate": 0.0,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "cnn_w8__partition1_seed0_n32",
+    "source_member": "cv/original_static/cnn_w8__partition1_seed0_n32/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 1313920,
+      "accepted": 0,
+      "hard_hits": 0,
+      "seconds": 90.00559730200621,
+      "status": "budget_limited",
+      "acceptance_estimate": 0.0,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "cnn_w8__partition1_seed1_n32",
+    "source_member": "cv/original_static/cnn_w8__partition1_seed1_n32/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 1314304,
+      "accepted": 0,
+      "hard_hits": 0,
+      "seconds": 90.00241585099138,
+      "status": "budget_limited",
+      "acceptance_estimate": 0.0,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "cnn_w8__partition1_seed2_n32",
+    "source_member": "cv/original_static/cnn_w8__partition1_seed2_n32/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 1311744,
+      "accepted": 0,
+      "hard_hits": 0,
+      "seconds": 90.0079229450057,
+      "status": "budget_limited",
+      "acceptance_estimate": 0.0,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "cnn_w8__partition2_seed0_n32",
+    "source_member": "cv/original_static/cnn_w8__partition2_seed0_n32/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 1304448,
+      "accepted": 0,
+      "hard_hits": 0,
+      "seconds": 90.0059370980016,
+      "status": "budget_limited",
+      "acceptance_estimate": 0.0,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "cnn_w8__partition2_seed1_n32",
+    "source_member": "cv/original_static/cnn_w8__partition2_seed1_n32/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 1314432,
+      "accepted": 0,
+      "hard_hits": 0,
+      "seconds": 90.00509982800577,
+      "status": "budget_limited",
+      "acceptance_estimate": 0.0,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "cnn_w8__partition2_seed2_n32",
+    "source_member": "cv/original_static/cnn_w8__partition2_seed2_n32/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 1306240,
+      "accepted": 0,
+      "hard_hits": 0,
+      "seconds": 90.00852257202496,
+      "status": "budget_limited",
+      "acceptance_estimate": 0.0,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "mlp_256_128__partition0_seed0_n32",
+    "source_member": "cv/original_static/mlp_256_128__partition0_seed0_n32/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 2000000,
+      "accepted": 0,
+      "hard_hits": 0,
+      "seconds": 14.89024480500666,
+      "status": "budget_limited",
+      "acceptance_estimate": 0.0,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "mlp_256_128__partition0_seed0_n32_flip_quarter",
+    "source_member": "cv/original_static/mlp_256_128__partition0_seed0_n32_flip_quarter/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 2000000,
+      "accepted": 0,
+      "hard_hits": 0,
+      "seconds": 14.94730638799956,
+      "status": "budget_limited",
+      "acceptance_estimate": 0.0,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "mlp_256_128__partition0_seed0_n32_random_balanced",
+    "source_member": "cv/original_static/mlp_256_128__partition0_seed0_n32_random_balanced/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 2000000,
+      "accepted": 0,
+      "hard_hits": 0,
+      "seconds": 15.06010531600623,
+      "status": "budget_limited",
+      "acceptance_estimate": 0.0,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "mlp_256_128__partition0_seed1_n32",
+    "source_member": "cv/original_static/mlp_256_128__partition0_seed1_n32/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 2000000,
+      "accepted": 0,
+      "hard_hits": 0,
+      "seconds": 14.900162325997371,
+      "status": "budget_limited",
+      "acceptance_estimate": 0.0,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "mlp_256_128__partition0_seed2_n32",
+    "source_member": "cv/original_static/mlp_256_128__partition0_seed2_n32/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 2000000,
+      "accepted": 0,
+      "hard_hits": 0,
+      "seconds": 14.918963424002868,
+      "status": "budget_limited",
+      "acceptance_estimate": 0.0,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "mlp_256_128__partition1_seed0_n32",
+    "source_member": "cv/original_static/mlp_256_128__partition1_seed0_n32/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 2000000,
+      "accepted": 0,
+      "hard_hits": 0,
+      "seconds": 14.968505887998617,
+      "status": "budget_limited",
+      "acceptance_estimate": 0.0,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "mlp_256_128__partition1_seed1_n32",
+    "source_member": "cv/original_static/mlp_256_128__partition1_seed1_n32/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 2000000,
+      "accepted": 0,
+      "hard_hits": 0,
+      "seconds": 14.914121494002757,
+      "status": "budget_limited",
+      "acceptance_estimate": 0.0,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "mlp_256_128__partition1_seed2_n32",
+    "source_member": "cv/original_static/mlp_256_128__partition1_seed2_n32/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 2000000,
+      "accepted": 0,
+      "hard_hits": 0,
+      "seconds": 14.887859156995546,
+      "status": "budget_limited",
+      "acceptance_estimate": 0.0,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "mlp_256_128__partition2_seed0_n32",
+    "source_member": "cv/original_static/mlp_256_128__partition2_seed0_n32/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 2000000,
+      "accepted": 0,
+      "hard_hits": 0,
+      "seconds": 14.909603963009431,
+      "status": "budget_limited",
+      "acceptance_estimate": 0.0,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "mlp_256_128__partition2_seed1_n32",
+    "source_member": "cv/original_static/mlp_256_128__partition2_seed1_n32/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 2000000,
+      "accepted": 0,
+      "hard_hits": 0,
+      "seconds": 14.937602303005406,
+      "status": "budget_limited",
+      "acceptance_estimate": 0.0,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "mlp_256_128__partition2_seed2_n32",
+    "source_member": "cv/original_static/mlp_256_128__partition2_seed2_n32/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 2000000,
+      "accepted": 0,
+      "hard_hits": 0,
+      "seconds": 14.958170090991189,
+      "status": "budget_limited",
+      "acceptance_estimate": 0.0,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "extension",
+    "condition": "cnn_w4__partition0_seed0_n64",
+    "source_member": "cv/extension/cnn_w4__partition0_seed0_n64/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 2000000,
+      "accepted": 0,
+      "hard_hits": 0,
+      "seconds": 61.991360059008,
+      "status": "budget_limited",
+      "acceptance_estimate": 0.0,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "extension",
+    "condition": "cnn_w4__partition0_seed0_n8",
+    "source_member": "cv/extension/cnn_w4__partition0_seed0_n8/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 248576,
+      "accepted": 512,
+      "hard_hits": 512,
+      "seconds": 14.155863727995893,
+      "status": "sufficient",
+      "acceptance_estimate": 0.0020597322348094747,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "extension",
+    "condition": "cnn_w4__partition0_seed1_n64",
+    "source_member": "cv/extension/cnn_w4__partition0_seed1_n64/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 2000000,
+      "accepted": 0,
+      "hard_hits": 0,
+      "seconds": 61.6890840579872,
+      "status": "budget_limited",
+      "acceptance_estimate": 0.0,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "extension",
+    "condition": "cnn_w4__partition0_seed1_n8",
+    "source_member": "cv/extension/cnn_w4__partition0_seed1_n8/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 908800,
+      "accepted": 512,
+      "hard_hits": 512,
+      "seconds": 17.920135432999814,
+      "status": "sufficient",
+      "acceptance_estimate": 0.0005633802816901409,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "extension",
+    "condition": "cnn_w4__partition1_seed0_n64",
+    "source_member": "cv/extension/cnn_w4__partition1_seed0_n64/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 2000000,
+      "accepted": 0,
+      "hard_hits": 0,
+      "seconds": 61.5987729189801,
+      "status": "budget_limited",
+      "acceptance_estimate": 0.0,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "extension",
+    "condition": "cnn_w4__partition1_seed0_n8",
+    "source_member": "cv/extension/cnn_w4__partition1_seed0_n8/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 270592,
+      "accepted": 512,
+      "hard_hits": 512,
+      "seconds": 13.427980968001066,
+      "status": "sufficient",
+      "acceptance_estimate": 0.001892147587511826,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "extension",
+    "condition": "cnn_w4__partition1_seed1_n64",
+    "source_member": "cv/extension/cnn_w4__partition1_seed1_n64/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 2000000,
+      "accepted": 0,
+      "hard_hits": 0,
+      "seconds": 62.13765734899789,
+      "status": "budget_limited",
+      "acceptance_estimate": 0.0,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "extension",
+    "condition": "cnn_w4__partition1_seed1_n8",
+    "source_member": "cv/extension/cnn_w4__partition1_seed1_n8/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 228608,
+      "accepted": 512,
+      "hard_hits": 512,
+      "seconds": 13.09389788901899,
+      "status": "sufficient",
+      "acceptance_estimate": 0.0022396416573348264,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "extension",
+    "condition": "cnn_w4__partition2_seed0_n64",
+    "source_member": "cv/extension/cnn_w4__partition2_seed0_n64/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 2000000,
+      "accepted": 0,
+      "hard_hits": 0,
+      "seconds": 62.0701554719999,
+      "status": "budget_limited",
+      "acceptance_estimate": 0.0,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "extension",
+    "condition": "cnn_w4__partition2_seed0_n8",
+    "source_member": "cv/extension/cnn_w4__partition2_seed0_n8/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 778368,
+      "accepted": 512,
+      "hard_hits": 512,
+      "seconds": 18.078023522975855,
+      "status": "sufficient",
+      "acceptance_estimate": 0.000657786548265088,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "extension",
+    "condition": "cnn_w4__partition2_seed1_n64",
+    "source_member": "cv/extension/cnn_w4__partition2_seed1_n64/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 2000000,
+      "accepted": 0,
+      "hard_hits": 0,
+      "seconds": 62.16929143600282,
+      "status": "budget_limited",
+      "acceptance_estimate": 0.0,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "extension",
+    "condition": "cnn_w4__partition2_seed1_n8",
+    "source_member": "cv/extension/cnn_w4__partition2_seed1_n8/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 222080,
+      "accepted": 512,
+      "hard_hits": 512,
+      "seconds": 14.196665864990791,
+      "status": "sufficient",
+      "acceptance_estimate": 0.0023054755043227667,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "extension",
+    "condition": "mlp_256_128__partition0_seed0_n64",
+    "source_member": "cv/extension/mlp_256_128__partition0_seed0_n64/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 2000000,
+      "accepted": 0,
+      "hard_hits": 0,
+      "seconds": 26.25484950200189,
+      "status": "budget_limited",
+      "acceptance_estimate": 0.0,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "extension",
+    "condition": "mlp_256_128__partition0_seed0_n8",
+    "source_member": "cv/extension/mlp_256_128__partition0_seed0_n8/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 169216,
+      "accepted": 512,
+      "hard_hits": 512,
+      "seconds": 7.4175806530111,
+      "status": "sufficient",
+      "acceptance_estimate": 0.0030257186081694403,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "extension",
+    "condition": "mlp_256_128__partition0_seed1_n64",
+    "source_member": "cv/extension/mlp_256_128__partition0_seed1_n64/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 2000000,
+      "accepted": 0,
+      "hard_hits": 0,
+      "seconds": 26.243463963008253,
+      "status": "budget_limited",
+      "acceptance_estimate": 0.0,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "extension",
+    "condition": "mlp_256_128__partition0_seed1_n8",
+    "source_member": "cv/extension/mlp_256_128__partition0_seed1_n8/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 520704,
+      "accepted": 512,
+      "hard_hits": 512,
+      "seconds": 9.630804929998703,
+      "status": "sufficient",
+      "acceptance_estimate": 0.0009832841691248771,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "extension",
+    "condition": "mlp_256_128__partition1_seed0_n64",
+    "source_member": "cv/extension/mlp_256_128__partition1_seed0_n64/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 2000000,
+      "accepted": 0,
+      "hard_hits": 0,
+      "seconds": 26.24830705401837,
+      "status": "budget_limited",
+      "acceptance_estimate": 0.0,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "extension",
+    "condition": "mlp_256_128__partition1_seed0_n8",
+    "source_member": "cv/extension/mlp_256_128__partition1_seed0_n8/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 214912,
+      "accepted": 512,
+      "hard_hits": 512,
+      "seconds": 7.74187205999624,
+      "status": "sufficient",
+      "acceptance_estimate": 0.0023823704586063135,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "extension",
+    "condition": "mlp_256_128__partition1_seed1_n64",
+    "source_member": "cv/extension/mlp_256_128__partition1_seed1_n64/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 2000000,
+      "accepted": 0,
+      "hard_hits": 0,
+      "seconds": 26.37158596899826,
+      "status": "budget_limited",
+      "acceptance_estimate": 0.0,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "extension",
+    "condition": "mlp_256_128__partition1_seed1_n8",
+    "source_member": "cv/extension/mlp_256_128__partition1_seed1_n8/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 134272,
+      "accepted": 512,
+      "hard_hits": 513,
+      "seconds": 7.0935900599870365,
+      "status": "sufficient",
+      "acceptance_estimate": 0.0038206029551954243,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "extension",
+    "condition": "mlp_256_128__partition2_seed0_n64",
+    "source_member": "cv/extension/mlp_256_128__partition2_seed0_n64/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 2000000,
+      "accepted": 0,
+      "hard_hits": 0,
+      "seconds": 26.21387384700938,
+      "status": "budget_limited",
+      "acceptance_estimate": 0.0,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "extension",
+    "condition": "mlp_256_128__partition2_seed0_n8",
+    "source_member": "cv/extension/mlp_256_128__partition2_seed0_n8/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 351232,
+      "accepted": 512,
+      "hard_hits": 512,
+      "seconds": 8.631009859003825,
+      "status": "sufficient",
+      "acceptance_estimate": 0.0014577259475218659,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "extension",
+    "condition": "mlp_256_128__partition2_seed1_n64",
+    "source_member": "cv/extension/mlp_256_128__partition2_seed1_n64/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 2000000,
+      "accepted": 0,
+      "hard_hits": 0,
+      "seconds": 26.193778420012677,
+      "status": "budget_limited",
+      "acceptance_estimate": 0.0,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  },
+  {
+    "stage": "extension",
+    "condition": "mlp_256_128__partition2_seed1_n8",
+    "source_member": "cv/extension/mlp_256_128__partition2_seed1_n8/gc.json",
+    "record": {
+      "method": "direct_rejection_G_and_C",
+      "draws": 153728,
+      "accepted": 512,
+      "hard_hits": 512,
+      "seconds": 7.380120108020492,
+      "status": "sufficient",
+      "acceptance_estimate": 0.0033305578684429643,
+      "warning": "无命中不等于零质量；预算停止后不以精度或性能理由删条件。"
+    }
+  }
+]

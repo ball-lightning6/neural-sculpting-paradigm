@@ -1,0 +1,124 @@
+{
+  "cv_groups": [
+    {
+      "stage": "original_static",
+      "network": "cnn_w4",
+      "n": 32,
+      "conditions": 9,
+      "hard_mae_pp": 8.177918857998318,
+      "low_loss_mae_pp": 0.7396207915412055,
+      "point_mae_pp": 4.928349124060737
+    },
+    {
+      "stage": "original_static",
+      "network": "mlp_256_128",
+      "n": 32,
+      "conditions": 9,
+      "hard_mae_pp": 6.0504105356004505,
+      "low_loss_mae_pp": 1.1592520607842338,
+      "point_mae_pp": 5.25615480211046
+    },
+    {
+      "stage": "original_static",
+      "network": "cnn_w8",
+      "n": 32,
+      "conditions": 9,
+      "hard_mae_pp": 8.430266380310059,
+      "low_loss_mae_pp": 5.018084579043918,
+      "point_mae_pp": 8.775635560353596
+    },
+    {
+      "stage": "extension",
+      "network": "cnn_w4",
+      "n": 8,
+      "conditions": 6,
+      "hard_mae_pp": 5.54413398106893,
+      "low_loss_mae_pp": 1.4346460501352944,
+      "point_mae_pp": 5.048996210098267
+    },
+    {
+      "stage": "extension",
+      "network": "cnn_w4",
+      "n": 64,
+      "conditions": 6,
+      "hard_mae_pp": 8.132121960322063,
+      "low_loss_mae_pp": 0.5772888660430908,
+      "point_mae_pp": 4.057929913202921
+    },
+    {
+      "stage": "extension",
+      "network": "mlp_256_128",
+      "n": 8,
+      "conditions": 6,
+      "hard_mae_pp": 3.2296021779378257,
+      "low_loss_mae_pp": 2.0098666350046797,
+      "point_mae_pp": 5.318150917689005
+    },
+    {
+      "stage": "extension",
+      "network": "mlp_256_128",
+      "n": 64,
+      "conditions": 6,
+      "hard_mae_pp": 6.633847951889038,
+      "low_loss_mae_pp": 0.2582728862762451,
+      "point_mae_pp": 3.8812180360158286
+    }
+  ],
+  "direct_gc": {
+    "sufficient": 13,
+    "zero_hits": 45,
+    "target": 512,
+    "n8_calibration_mae_pp": 0.1195391019185384
+  },
+  "stp_clean": [
+    {
+      "network": "cnn_w4",
+      "sigma0": 0.003,
+      "control": "clean",
+      "complete_conditions": 6,
+      "stp_sgd_accuracy_mae_pp": 1.5433629353841145,
+      "stp_smc_accuracy_mae_pp": 1.973162094751994
+    },
+    {
+      "network": "cnn_w4",
+      "sigma0": 0.001,
+      "control": "clean",
+      "complete_conditions": 6,
+      "stp_sgd_accuracy_mae_pp": 0.6562550862630209,
+      "stp_smc_accuracy_mae_pp": 1.245679457982381
+    },
+    {
+      "network": "cnn_w4",
+      "sigma0": 0.0003,
+      "control": "clean",
+      "complete_conditions": 6,
+      "stp_sgd_accuracy_mae_pp": 0.7928212483723959,
+      "stp_smc_accuracy_mae_pp": 1.4025906721750896
+    },
+    {
+      "network": "mlp_256_128",
+      "sigma0": 0.003,
+      "control": "clean",
+      "complete_conditions": 6,
+      "stp_sgd_accuracy_mae_pp": 0.6580352783203125,
+      "stp_smc_accuracy_mae_pp": 1.8907467524210613
+    },
+    {
+      "network": "mlp_256_128",
+      "sigma0": 0.001,
+      "control": "clean",
+      "complete_conditions": 6,
+      "stp_sgd_accuracy_mae_pp": 0.2257664998372396,
+      "stp_smc_accuracy_mae_pp": 1.455553372701009
+    },
+    {
+      "network": "mlp_256_128",
+      "sigma0": 0.0003,
+      "control": "clean",
+      "complete_conditions": 6,
+      "stp_sgd_accuracy_mae_pp": 0.19168853759765625,
+      "stp_smc_accuracy_mae_pp": 1.424400011698405
+    }
+  ],
+  "source_note": "由公开历史数值复算；不是重新训练、采样或独立前向审计。"
+}

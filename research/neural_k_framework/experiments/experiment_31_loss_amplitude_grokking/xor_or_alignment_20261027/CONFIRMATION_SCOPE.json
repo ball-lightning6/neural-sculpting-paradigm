@@ -1,0 +1,5 @@
+{
+  "jobs": ["f__max_bce", "g__max_bce", "f__aligned", "g__aligned"],
+  "reason": "首轮出现排序反转和强约束池间波动，追加两个干预条件的独立加预算复核。普通 BCE 已与历史 8 池扫描核对，本档不重跑。",
+  "sampling_selection": "确认档开始前已在对话和 XOR_ALIGNMENT_JOBS 调度中指定；两个规则均保留。"
+}

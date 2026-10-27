@@ -1,0 +1,322 @@
+{
+  "planned_new_jobs": 60,
+  "completed_new_jobs": 60,
+  "missing": [],
+  "primary_spherical_group": [
+    "unit_gaussian",
+    "uniform_ball",
+    "wide_gaussian",
+    "spherical_t8"
+  ],
+  "directional_stress_group": [
+    "uniform_cube"
+  ],
+  "comparisons": [
+    {
+      "reference": "unit_gaussian",
+      "compared": "uniform_ball",
+      "metric": "K",
+      "n": 20,
+      "spearman": 0.9834586466165413,
+      "kendall": 0.9263157894736842,
+      "pairs": 190,
+      "inversions": 7,
+      "pair_order_agreement": 0.9631578947368421,
+      "resolved_pairs": 179,
+      "resolved_inversions": 5
+    },
+    {
+      "reference": "unit_gaussian",
+      "compared": "uniform_ball",
+      "metric": "slope",
+      "n": 20,
+      "spearman": 0.9834586466165413,
+      "kendall": 0.9263157894736842,
+      "pairs": 190,
+      "inversions": 7,
+      "pair_order_agreement": 0.9631578947368421,
+      "resolved_pairs": 167,
+      "resolved_inversions": 0
+    },
+    {
+      "reference": "unit_gaussian",
+      "compared": "wide_gaussian",
+      "metric": "K",
+      "n": 20,
+      "spearman": 0.9774436090225563,
+      "kendall": 0.9052631578947369,
+      "pairs": 190,
+      "inversions": 9,
+      "pair_order_agreement": 0.9526315789473684,
+      "resolved_pairs": 182,
+      "resolved_inversions": 6
+    },
+    {
+      "reference": "unit_gaussian",
+      "compared": "wide_gaussian",
+      "metric": "slope",
+      "n": 20,
+      "spearman": 0.9774436090225563,
+      "kendall": 0.9052631578947369,
+      "pairs": 190,
+      "inversions": 9,
+      "pair_order_agreement": 0.9526315789473684,
+      "resolved_pairs": 170,
+      "resolved_inversions": 0
+    },
+    {
+      "reference": "unit_gaussian",
+      "compared": "spherical_t8",
+      "metric": "K",
+      "n": 20,
+      "spearman": 0.9669172932330825,
+      "kendall": 0.8631578947368421,
+      "pairs": 190,
+      "inversions": 13,
+      "pair_order_agreement": 0.9315789473684211,
+      "resolved_pairs": 169,
+      "resolved_inversions": 6
+    },
+    {
+      "reference": "unit_gaussian",
+      "compared": "spherical_t8",
+      "metric": "slope",
+      "n": 20,
+      "spearman": 0.8902255639097743,
+      "kendall": 0.7578947368421053,
+      "pairs": 190,
+      "inversions": 23,
+      "pair_order_agreement": 0.8789473684210526,
+      "resolved_pairs": 54,
+      "resolved_inversions": 0
+    },
+    {
+      "reference": "unit_gaussian",
+      "compared": "uniform_cube",
+      "metric": "K",
+      "n": 20,
+      "spearman": 0.9218045112781955,
+      "kendall": 0.7473684210526316,
+      "pairs": 190,
+      "inversions": 24,
+      "pair_order_agreement": 0.8736842105263158,
+      "resolved_pairs": 186,
+      "resolved_inversions": 23
+    },
+    {
+      "reference": "unit_gaussian",
+      "compared": "uniform_cube",
+      "metric": "slope",
+      "n": 20,
+      "spearman": 0.9248120300751879,
+      "kendall": 0.7368421052631579,
+      "pairs": 190,
+      "inversions": 25,
+      "pair_order_agreement": 0.868421052631579,
+      "resolved_pairs": 178,
+      "resolved_inversions": 17
+    },
+    {
+      "reference": "uniform_ball",
+      "compared": "wide_gaussian",
+      "metric": "K",
+      "n": 20,
+      "spearman": 0.9969924812030074,
+      "kendall": 0.9789473684210527,
+      "pairs": 190,
+      "inversions": 2,
+      "pair_order_agreement": 0.9894736842105263,
+      "resolved_pairs": 179,
+      "resolved_inversions": 0
+    },
+    {
+      "reference": "uniform_ball",
+      "compared": "wide_gaussian",
+      "metric": "slope",
+      "n": 20,
+      "spearman": 0.9954887218045112,
+      "kendall": 0.9789473684210527,
+      "pairs": 190,
+      "inversions": 2,
+      "pair_order_agreement": 0.9894736842105263,
+      "resolved_pairs": 168,
+      "resolved_inversions": 0
+    },
+    {
+      "reference": "uniform_ball",
+      "compared": "spherical_t8",
+      "metric": "K",
+      "n": 20,
+      "spearman": 0.9894736842105262,
+      "kendall": 0.9368421052631579,
+      "pairs": 190,
+      "inversions": 6,
+      "pair_order_agreement": 0.968421052631579,
+      "resolved_pairs": 166,
+      "resolved_inversions": 0
+    },
+    {
+      "reference": "uniform_ball",
+      "compared": "spherical_t8",
+      "metric": "slope",
+      "n": 20,
+      "spearman": 0.9052631578947368,
+      "kendall": 0.768421052631579,
+      "pairs": 190,
+      "inversions": 22,
+      "pair_order_agreement": 0.8842105263157894,
+      "resolved_pairs": 54,
+      "resolved_inversions": 0
+    },
+    {
+      "reference": "uniform_ball",
+      "compared": "uniform_cube",
+      "metric": "K",
+      "n": 20,
+      "spearman": 0.9488721804511278,
+      "kendall": 0.8210526315789474,
+      "pairs": 190,
+      "inversions": 17,
+      "pair_order_agreement": 0.9105263157894736,
+      "resolved_pairs": 175,
+      "resolved_inversions": 8
+    },
+    {
+      "reference": "uniform_ball",
+      "compared": "uniform_cube",
+      "metric": "slope",
+      "n": 20,
+      "spearman": 0.9413533834586465,
+      "kendall": 0.8105263157894737,
+      "pairs": 190,
+      "inversions": 18,
+      "pair_order_agreement": 0.9052631578947369,
+      "resolved_pairs": 163,
+      "resolved_inversions": 4
+    },
+    {
+      "reference": "wide_gaussian",
+      "compared": "spherical_t8",
+      "metric": "K",
+      "n": 20,
+      "spearman": 0.993984962406015,
+      "kendall": 0.9578947368421054,
+      "pairs": 190,
+      "inversions": 4,
+      "pair_order_agreement": 0.9789473684210527,
+      "resolved_pairs": 168,
+      "resolved_inversions": 0
+    },
+    {
+      "reference": "wide_gaussian",
+      "compared": "spherical_t8",
+      "metric": "slope",
+      "n": 20,
+      "spearman": 0.9037593984962405,
+      "kendall": 0.768421052631579,
+      "pairs": 190,
+      "inversions": 22,
+      "pair_order_agreement": 0.8842105263157894,
+      "resolved_pairs": 54,
+      "resolved_inversions": 0
+    },
+    {
+      "reference": "wide_gaussian",
+      "compared": "uniform_cube",
+      "metric": "K",
+      "n": 20,
+      "spearman": 0.9593984962406013,
+      "kendall": 0.8421052631578948,
+      "pairs": 190,
+      "inversions": 15,
+      "pair_order_agreement": 0.9210526315789473,
+      "resolved_pairs": 178,
+      "resolved_inversions": 10
+    },
+    {
+      "reference": "wide_gaussian",
+      "compared": "uniform_cube",
+      "metric": "slope",
+      "n": 20,
+      "spearman": 0.9473684210526315,
+      "kendall": 0.8315789473684211,
+      "pairs": 190,
+      "inversions": 16,
+      "pair_order_agreement": 0.9157894736842105,
+      "resolved_pairs": 166,
+      "resolved_inversions": 5
+    },
+    {
+      "reference": "spherical_t8",
+      "compared": "uniform_cube",
+      "metric": "K",
+      "n": 20,
+      "spearman": 0.9699248120300751,
+      "kendall": 0.8842105263157894,
+      "pairs": 190,
+      "inversions": 11,
+      "pair_order_agreement": 0.9421052631578948,
+      "resolved_pairs": 167,
+      "resolved_inversions": 4
+    },
+    {
+      "reference": "spherical_t8",
+      "compared": "uniform_cube",
+      "metric": "slope",
+      "n": 20,
+      "spearman": 0.9112781954887217,
+      "kendall": 0.7473684210526316,
+      "pairs": 190,
+      "inversions": 24,
+      "pair_order_agreement": 0.8736842105263158,
+      "resolved_pairs": 53,
+      "resolved_inversions": 0
+    }
+  ],
+  "relative_to_constant": [
+    {
+      "measure": "unit_gaussian",
+      "compared_rules": 19,
+      "larger_slope_than_constant": 19,
+      "min_slope_gap": 20.025346531315165,
+      "constant_slope": 16.875711333751333
+    },
+    {
+      "measure": "uniform_ball",
+      "compared_rules": 19,
+      "larger_slope_than_constant": 19,
+      "min_slope_gap": 1.3612780829997688,
+      "constant_slope": 0.6004581806792636
+    },
+    {
+      "measure": "wide_gaussian",
+      "compared_rules": 19,
+      "larger_slope_than_constant": 19,
+      "min_slope_gap": 1.3086406017070975,
+      "constant_slope": 0.5979118864209692
+    },
+    {
+      "measure": "spherical_t8",
+      "compared_rules": 19,
+      "larger_slope_than_constant": 19,
+      "min_slope_gap": 0.8265160544130148,
+      "constant_slope": 0.6085980050402131
+    },
+    {
+      "measure": "uniform_cube",
+      "compared_rules": 19,
+      "larger_slope_than_constant": 19,
+      "min_slope_gap": 2.001737461375741,
+      "constant_slope": 0.6276944136916248
+    }
+  ],
+  "direct_calibration_checked": 139,
+  "direct_calibration_alarms": [],
+  "limitations": [
+    "20个已选规则，不是全规则普遍结论。",
+    "单位高斯与其余分布的二阶矩不同；其余四种匹配。",
+    "多元t所有坐标共享尺度，保持球对称；立方体另作方向偏置对照。",
+    "系数比较仅为0.01到0.001有限窗口，不证明无限低loss规律。",
+    "本次不新增真实训练，不将静态测度相关性等同于SGD采样定律。"
+  ]
+}

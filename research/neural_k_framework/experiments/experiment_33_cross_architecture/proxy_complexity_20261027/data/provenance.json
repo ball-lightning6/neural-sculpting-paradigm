@@ -1,0 +1,257 @@
+{
+  "publication_date": "2026-10-27",
+  "source_files": [
+    {
+      "source": "research/proxy_complexity_validation_20261024/exact_circuits.py",
+      "sha256": "d4532ad9d9efd6fab321e9c639a567bbc534f587327ee3879de6f2852f2d8e90"
+    },
+    {
+      "source": "research/proxy_complexity_validation_20261024/run_synthesis.py",
+      "sha256": "c1912f80f9505d92aa1cb961290729115f512dcdad65d6b45a1a8f3b5de0a4bd"
+    },
+    {
+      "source": "research/proxy_complexity_validation_20261024/analyze_certificates.py",
+      "sha256": "6a73c5998809d806c01b5f789ef3699e4c8804372e218a1cee3dc1b653c9e690"
+    },
+    {
+      "source": "research/proxy_complexity_validation_20261024/test_exact_circuits.py",
+      "sha256": "a0ed11c3e7b5f82d6d68283b4df32b5eddfa2f363c95784de7a738a3a42a1228"
+    },
+    {
+      "source": "research/proxy_complexity_validation_20261024/verify_small_world.py",
+      "sha256": "e7b063f7972dc11582c36b16fe62cc6a35a5acf999cd7d1fc1f2c712d2fb237d"
+    },
+    {
+      "source": "research/proxy_complexity_validation_20261024/RESULTS.md",
+      "sha256": "9c2fc5e9cc54fafd2a8c7043efc79d3088068c53919deab0583d6d7dffc8c009"
+    },
+    {
+      "source": "research/proxy_complexity_validation_20261024/FAMILY_STRUCTURE.md",
+      "sha256": "759a110c589062dd6e3388cb258751f1b099743da61641cf9b95c4c45edd1981"
+    },
+    {
+      "source": "research/proxy_complexity_validation_20261024/REPLICA_UNCERTAINTY.md",
+      "sha256": "2024315091f8f873d15d30034566618eb673d3e3a41a727f3feb6156f8acbc31"
+    },
+    {
+      "source": "research/proxy_complexity_validation_20261024/results/SUMMARY.json",
+      "sha256": "31e0e8c6b58bc1c47bfe14a43d512cd8334aea3b79a4f18a10853383984903ff"
+    },
+    {
+      "source": "research/proxy_complexity_validation_20261024/results/ANALYSIS.json",
+      "sha256": "b5894613c5c368dde757fe292465533a2726d1a329238c09e2a3b56a6c58ff07"
+    },
+    {
+      "source": "research/proxy_complexity_audit_20261024/audit_existing_proxies.py",
+      "sha256": "c16c201c65135e86d541ec2833cd2e28e29de073177f21243faf2dfd213eef4b"
+    },
+    {
+      "source": "research/proxy_complexity_audit_20261024/LOCAL_EVIDENCE_AUDIT.md",
+      "sha256": "2b1b81e165719545ca26223af91d888683ae8857a1b078dc2799c71ec2e2cef1"
+    },
+    {
+      "source": "research/work_review_20261027/publication_drafts/02_complexity_zh.md",
+      "sha256": "cd1239880b733e9e9199afaa7b62275813e00a9745d229de98a267f79d4e9b2d"
+    },
+    {
+      "source": ".tmp_3bit_cross_architecture_complexity_order_analysis_20260903/results_3bit_cross_architecture_complexity_order/analysis/function_complexity_panel.csv",
+      "sha256": "5f018c3b9a8725cc77eb731bfb97aa1a6d47e374bd8f4029c4d89e0ec22ef2e9"
+    },
+    {
+      "source": ".tmp_3bit_cross_architecture_complexity_order_analysis_20260903/results_3bit_cross_architecture_complexity_order/analysis/complexity_proxy_correlations.csv",
+      "sha256": "63b5e3ef4cf3829f8a0b00341b5f86de61af78a75044c41889a591cd4b80d9c2"
+    },
+    {
+      "source": ".tmp_3bit_cross_architecture_complexity_order_analysis_20260903/results_3bit_cross_architecture_complexity_order/analysis/rank_trajectories.csv",
+      "sha256": "68d2c7d82864e8fdabaa510ba81e9526404d6cf45661213678574d40060d79ad"
+    },
+    {
+      "source": ".tmp_3bit_cross_architecture_complexity_order_analysis_20260903/results_3bit_cross_architecture_complexity_order/architectures/relu_w16_d1/targets/orbit_011_rep_0x0F/replica_volume_curve.csv",
+      "sha256": "d479344f3a7a2c5e3ab0662b03080e86852789e343e708a2f18ee7d03451055a"
+    },
+    {
+      "source": ".tmp_3bit_cross_architecture_complexity_order_analysis_20260903/results_3bit_cross_architecture_complexity_order/architectures/relu_w16_d1/targets/orbit_013_rep_0x17/replica_volume_curve.csv",
+      "sha256": "b8dfd5df4fe05d8e66a39a4ec2414080b32578fcbb6707ba7d1c75600f12bfc6"
+    },
+    {
+      "source": ".tmp_3bit_cross_architecture_complexity_order_analysis_20260903/results_3bit_cross_architecture_complexity_order/architectures/relu_w16_d1/targets/orbit_017_rep_0x1B/replica_volume_curve.csv",
+      "sha256": "5d96e2157d3768212abfc94e609eaaefd6c0ed72cf433d0cc6dd1d43335d8f62"
+    },
+    {
+      "source": ".tmp_3bit_cross_architecture_complexity_order_analysis_20260903/results_3bit_cross_architecture_complexity_order/architectures/relu_w16_d1/targets/orbit_018_rep_0x1E/replica_volume_curve.csv",
+      "sha256": "711d6c44f8a3a25a378c3181df9bed1610267a829eb13ea1441c305dcea0d1c3"
+    },
+    {
+      "source": ".tmp_3bit_cross_architecture_complexity_order_analysis_20260903/results_3bit_cross_architecture_complexity_order/architectures/relu_w16_d1/targets/orbit_023_rep_0x2B/replica_volume_curve.csv",
+      "sha256": "b08dcf8dbf8d9cb9b72090330d5846fd68428faa759754cb70288d4b7323f280"
+    },
+    {
+      "source": ".tmp_3bit_cross_architecture_complexity_order_analysis_20260903/results_3bit_cross_architecture_complexity_order/architectures/relu_w16_d1/targets/orbit_025_rep_0x2D/replica_volume_curve.csv",
+      "sha256": "1497bca4f69692301544924b426eb1e67b851cc2c4496d45a0f969437d5a3f27"
+    },
+    {
+      "source": ".tmp_3bit_cross_architecture_complexity_order_analysis_20260903/results_3bit_cross_architecture_complexity_order/architectures/relu_w16_d1/targets/orbit_026_rep_0x2E/replica_volume_curve.csv",
+      "sha256": "d138909c6df09559ac0788999840e4d8ccf84fa717c131f9889dfb783dfc2685"
+    },
+    {
+      "source": ".tmp_3bit_cross_architecture_complexity_order_analysis_20260903/results_3bit_cross_architecture_complexity_order/architectures/relu_w16_d1/targets/orbit_028_rep_0x3C/replica_volume_curve.csv",
+      "sha256": "45ba11df8cf9c1fc60a6087b68434adbe685118bd5d66f9613cff181677a90e0"
+    },
+    {
+      "source": ".tmp_3bit_cross_architecture_complexity_order_analysis_20260903/results_3bit_cross_architecture_complexity_order/architectures/relu_w16_d1/targets/orbit_033_rep_0x69/replica_volume_curve.csv",
+      "sha256": "9a991a97f5690347bb8b66e9853da88671d0f063aeb877b66d9136c3a512a993"
+    },
+    {
+      "source": ".tmp_3bit_cross_architecture_complexity_order_analysis_20260903/results_3bit_cross_architecture_complexity_order/architectures/relu_w16_d1/targets/orbit_034_rep_0x6A/replica_volume_curve.csv",
+      "sha256": "650e709b1fe0a4c72b68f5071217dd484bfb02b5a7403f05decfe01eb0d47bb3"
+    },
+    {
+      "source": ".tmp_3bit_cross_architecture_complexity_order_analysis_20260903/results_3bit_cross_architecture_complexity_order/architectures/tanh_w16_d1/targets/orbit_011_rep_0x0F/replica_volume_curve.csv",
+      "sha256": "987e69f5a59e92076ceabf80547a742c8d594b1a97cb67e80a64b44c52dcf925"
+    },
+    {
+      "source": ".tmp_3bit_cross_architecture_complexity_order_analysis_20260903/results_3bit_cross_architecture_complexity_order/architectures/tanh_w16_d1/targets/orbit_013_rep_0x17/replica_volume_curve.csv",
+      "sha256": "e585f6a3120dc06623c21ea88e761c9a4df7f5c1abbe36f766a8ed0dd389cdf0"
+    },
+    {
+      "source": ".tmp_3bit_cross_architecture_complexity_order_analysis_20260903/results_3bit_cross_architecture_complexity_order/architectures/tanh_w16_d1/targets/orbit_017_rep_0x1B/replica_volume_curve.csv",
+      "sha256": "acfd5757b34ca429f073ddf1c5942324c3dcbfd19b8c9aff6c66a5b7b3b6af5a"
+    },
+    {
+      "source": ".tmp_3bit_cross_architecture_complexity_order_analysis_20260903/results_3bit_cross_architecture_complexity_order/architectures/tanh_w16_d1/targets/orbit_018_rep_0x1E/replica_volume_curve.csv",
+      "sha256": "71a91808bdf3473178d3dd37a998b3057eea11572289d482b690225ecd26d31c"
+    },
+    {
+      "source": ".tmp_3bit_cross_architecture_complexity_order_analysis_20260903/results_3bit_cross_architecture_complexity_order/architectures/tanh_w16_d1/targets/orbit_023_rep_0x2B/replica_volume_curve.csv",
+      "sha256": "16a252567bdc86db6c8f8a780c8fd9222fab268a58a6e985218d1dd0b7597357"
+    },
+    {
+      "source": ".tmp_3bit_cross_architecture_complexity_order_analysis_20260903/results_3bit_cross_architecture_complexity_order/architectures/tanh_w16_d1/targets/orbit_025_rep_0x2D/replica_volume_curve.csv",
+      "sha256": "e5f9595e67805cd6e860a20a673f843b916c7c23d83d36f3731a66c3761149b7"
+    },
+    {
+      "source": ".tmp_3bit_cross_architecture_complexity_order_analysis_20260903/results_3bit_cross_architecture_complexity_order/architectures/tanh_w16_d1/targets/orbit_026_rep_0x2E/replica_volume_curve.csv",
+      "sha256": "94dd99261293282524a18a0c5e31687885d681c91527a49bd77151d582205db0"
+    },
+    {
+      "source": ".tmp_3bit_cross_architecture_complexity_order_analysis_20260903/results_3bit_cross_architecture_complexity_order/architectures/tanh_w16_d1/targets/orbit_028_rep_0x3C/replica_volume_curve.csv",
+      "sha256": "bc856a07377ff144cab14cedabb469467e7d9aa87d325e133a428b6bb0d50c96"
+    },
+    {
+      "source": ".tmp_3bit_cross_architecture_complexity_order_analysis_20260903/results_3bit_cross_architecture_complexity_order/architectures/tanh_w16_d1/targets/orbit_033_rep_0x69/replica_volume_curve.csv",
+      "sha256": "f7f0f0f726524a01007d6feaa7e2c4a3caa9c9939166255e452199e4432584d6"
+    },
+    {
+      "source": ".tmp_3bit_cross_architecture_complexity_order_analysis_20260903/results_3bit_cross_architecture_complexity_order/architectures/tanh_w16_d1/targets/orbit_034_rep_0x6A/replica_volume_curve.csv",
+      "sha256": "2a4f8f1fb28f056b47013bce3d1a735cc4caadfe745dda1313b55bd541d3b229"
+    },
+    {
+      "source": ".tmp_3bit_cross_architecture_complexity_order_analysis_20260903/results_3bit_cross_architecture_complexity_order/architectures/tanh_w16_d2/targets/orbit_011_rep_0x0F/replica_volume_curve.csv",
+      "sha256": "55f0886577554ea6dd3cf5e4db32eedf50025e82a12a5fe39374cb1c13e60518"
+    },
+    {
+      "source": ".tmp_3bit_cross_architecture_complexity_order_analysis_20260903/results_3bit_cross_architecture_complexity_order/architectures/tanh_w16_d2/targets/orbit_013_rep_0x17/replica_volume_curve.csv",
+      "sha256": "6edae2e3feae1ebb99ad611dfa23142e27660af70d432a7b8e46fbb4ee4f7c73"
+    },
+    {
+      "source": ".tmp_3bit_cross_architecture_complexity_order_analysis_20260903/results_3bit_cross_architecture_complexity_order/architectures/tanh_w16_d2/targets/orbit_017_rep_0x1B/replica_volume_curve.csv",
+      "sha256": "621771664a89962dcc74b3eb03a4bae2cbd59532d6f41ff0418b0ddd2f5ae7b6"
+    },
+    {
+      "source": ".tmp_3bit_cross_architecture_complexity_order_analysis_20260903/results_3bit_cross_architecture_complexity_order/architectures/tanh_w16_d2/targets/orbit_018_rep_0x1E/replica_volume_curve.csv",
+      "sha256": "8463affb6ec85135598e0c0ee92146b08e32c87d6f36d8e75277db7b35e70651"
+    },
+    {
+      "source": ".tmp_3bit_cross_architecture_complexity_order_analysis_20260903/results_3bit_cross_architecture_complexity_order/architectures/tanh_w16_d2/targets/orbit_023_rep_0x2B/replica_volume_curve.csv",
+      "sha256": "e82e5c4512ef086e07a417b874ea549e25fdb4d1f7671139de47347f83b555fd"
+    },
+    {
+      "source": ".tmp_3bit_cross_architecture_complexity_order_analysis_20260903/results_3bit_cross_architecture_complexity_order/architectures/tanh_w16_d2/targets/orbit_025_rep_0x2D/replica_volume_curve.csv",
+      "sha256": "55381eddcd79a7a2457f22b2f8529fdd3d5df088def4d0c54a03f9a4ae1c417e"
+    },
+    {
+      "source": ".tmp_3bit_cross_architecture_complexity_order_analysis_20260903/results_3bit_cross_architecture_complexity_order/architectures/tanh_w16_d2/targets/orbit_026_rep_0x2E/replica_volume_curve.csv",
+      "sha256": "6f9f3a9cd6a33e6058167691de17fa97ccf777e550c865b48efd5337df46d5ad"
+    },
+    {
+      "source": ".tmp_3bit_cross_architecture_complexity_order_analysis_20260903/results_3bit_cross_architecture_complexity_order/architectures/tanh_w16_d2/targets/orbit_028_rep_0x3C/replica_volume_curve.csv",
+      "sha256": "820c074cbee751bf36cc36c48789a7c1be05b1c8b0f0a3ee9bd4c63b4135dda2"
+    },
+    {
+      "source": ".tmp_3bit_cross_architecture_complexity_order_analysis_20260903/results_3bit_cross_architecture_complexity_order/architectures/tanh_w16_d2/targets/orbit_033_rep_0x69/replica_volume_curve.csv",
+      "sha256": "7249a049b9fa806d99cf6a2486f82a7b181553f4ba830a782b26d5d1f50a3eda"
+    },
+    {
+      "source": ".tmp_3bit_cross_architecture_complexity_order_analysis_20260903/results_3bit_cross_architecture_complexity_order/architectures/tanh_w16_d2/targets/orbit_034_rep_0x6A/replica_volume_curve.csv",
+      "sha256": "7a83bcee960a49dcb7e769d63f1bd80a56083f73e6b09dd339b90f5dd13c91cf"
+    },
+    {
+      "source": ".tmp_3bit_cross_architecture_complexity_order_analysis_20260903/results_3bit_cross_architecture_complexity_order/architectures/tanh_w32_d1/targets/orbit_011_rep_0x0F/replica_volume_curve.csv",
+      "sha256": "7bbbed27c09f307913fc6b0be531fc5c762b3cf7ea67974ed77ef2838aa17416"
+    },
+    {
+      "source": ".tmp_3bit_cross_architecture_complexity_order_analysis_20260903/results_3bit_cross_architecture_complexity_order/architectures/tanh_w32_d1/targets/orbit_013_rep_0x17/replica_volume_curve.csv",
+      "sha256": "d19e5c3ba29b81c76c9e057419e95056d7210e990449347ca1c0f52e6caa00e2"
+    },
+    {
+      "source": ".tmp_3bit_cross_architecture_complexity_order_analysis_20260903/results_3bit_cross_architecture_complexity_order/architectures/tanh_w32_d1/targets/orbit_017_rep_0x1B/replica_volume_curve.csv",
+      "sha256": "5cabe5cf7381376e4115daf94b4a32c8e5655767b2993e4e984fe53ce2f105d8"
+    },
+    {
+      "source": ".tmp_3bit_cross_architecture_complexity_order_analysis_20260903/results_3bit_cross_architecture_complexity_order/architectures/tanh_w32_d1/targets/orbit_018_rep_0x1E/replica_volume_curve.csv",
+      "sha256": "0484eb05d691349082502aec11c6c1a9d5c19058b31992bce124676a1b45d9b4"
+    },
+    {
+      "source": ".tmp_3bit_cross_architecture_complexity_order_analysis_20260903/results_3bit_cross_architecture_complexity_order/architectures/tanh_w32_d1/targets/orbit_023_rep_0x2B/replica_volume_curve.csv",
+      "sha256": "7544f106cd050be3b6c85da3c7f5cc7ee47322edbb587600596194d1c8ef8ae0"
+    },
+    {
+      "source": ".tmp_3bit_cross_architecture_complexity_order_analysis_20260903/results_3bit_cross_architecture_complexity_order/architectures/tanh_w32_d1/targets/orbit_025_rep_0x2D/replica_volume_curve.csv",
+      "sha256": "45870cc0c1c25d835f242d15d3d9235529ecb1e672a2bc99e66e71e68569e7ae"
+    },
+    {
+      "source": ".tmp_3bit_cross_architecture_complexity_order_analysis_20260903/results_3bit_cross_architecture_complexity_order/architectures/tanh_w32_d1/targets/orbit_026_rep_0x2E/replica_volume_curve.csv",
+      "sha256": "3a3ef7c75f3627f110a75a7f9f1327b3d99de63ae164549f67b0baecb5da5671"
+    },
+    {
+      "source": ".tmp_3bit_cross_architecture_complexity_order_analysis_20260903/results_3bit_cross_architecture_complexity_order/architectures/tanh_w32_d1/targets/orbit_028_rep_0x3C/replica_volume_curve.csv",
+      "sha256": "cae33a428f5c068587d751a72c95c5879d6db8d2b6713f1d0bf7de2d275e3eee"
+    },
+    {
+      "source": ".tmp_3bit_cross_architecture_complexity_order_analysis_20260903/results_3bit_cross_architecture_complexity_order/architectures/tanh_w32_d1/targets/orbit_033_rep_0x69/replica_volume_curve.csv",
+      "sha256": "1f741389e56be8dd50f13fbc122a2a004f072a5c37be4abd8282b9e7f0578d7b"
+    },
+    {
+      "source": ".tmp_3bit_cross_architecture_complexity_order_analysis_20260903/results_3bit_cross_architecture_complexity_order/architectures/tanh_w32_d1/targets/orbit_034_rep_0x6A/replica_volume_curve.csv",
+      "sha256": "59e5e6f03e08f727acab9318cdf9ef10d7b67b70ae16beecad150aa88db039cc"
+    }
+  ],
+  "data_files": [
+    {
+      "file": "complexity_proxy_correlations.csv",
+      "sha256": "ae42d6181e72499c1360ec5821c7a0bb7621ae83a0bfb2daed93f650aa0e655c",
+      "bytes": 45668
+    },
+    {
+      "file": "dag_costs.csv",
+      "sha256": "997d575f3509494aa2e61ba59958a9dd053cab99c3716efd50e45c72c0ac2097",
+      "bytes": 4177
+    },
+    {
+      "file": "function_complexity_panel.csv",
+      "sha256": "5f018c3b9a8725cc77eb731bfb97aa1a6d47e374bd8f4029c4d89e0ec22ef2e9",
+      "bytes": 63923
+    },
+    {
+      "file": "rank_trajectories.csv",
+      "sha256": "c6a249b3405b5cc89d055d2f578c3656ea25d6e9704bfc7ebc8754f081129d18",
+      "bytes": 228962
+    },
+    {
+      "file": "replica_endpoints.csv",
+      "sha256": "266559e221d3e3facc2eb77b242249e318714197cebd16f47d03bfc42d3d80b6",
+      "bytes": 16884
+    }
+  ],
+  "scope": "只读历史结果的发布整理；未运行神经训练、SMC或新证书求解。聚合数据不等于原始快照或证书。"
+}

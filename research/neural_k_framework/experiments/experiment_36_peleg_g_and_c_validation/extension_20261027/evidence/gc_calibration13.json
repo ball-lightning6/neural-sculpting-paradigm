@@ -1,0 +1,106 @@
+[
+  {
+    "condition": "cnn_w4__anchor_0_7_n16",
+    "direct_gc_models": 512,
+    "direct_gc_accuracy": 0.8226595570841634,
+    "hard_fit_smc_accuracy": 0.8228416898811006,
+    "absolute_gap_pp": 0.018213279693723994,
+    "point_mae_pp": 1.534900437313247
+  },
+  {
+    "condition": "cnn_w4__partition0_seed0_n8",
+    "direct_gc_models": 512,
+    "direct_gc_accuracy": 0.5936374664306641,
+    "hard_fit_smc_accuracy": 0.5915213823318481,
+    "absolute_gap_pp": 0.2116084098815918,
+    "point_mae_pp": 1.7774224281311035
+  },
+  {
+    "condition": "cnn_w4__partition0_seed1_n8",
+    "direct_gc_models": 512,
+    "direct_gc_accuracy": 0.5874271392822266,
+    "hard_fit_smc_accuracy": 0.5887560844421387,
+    "absolute_gap_pp": 0.13289451599121094,
+    "point_mae_pp": 1.7677783966064453
+  },
+  {
+    "condition": "cnn_w4__partition1_seed0_n8",
+    "direct_gc_models": 512,
+    "direct_gc_accuracy": 0.5635786056518555,
+    "hard_fit_smc_accuracy": 0.5630866289138794,
+    "absolute_gap_pp": 0.04919767379760742,
+    "point_mae_pp": 1.7287611961364746
+  },
+  {
+    "condition": "cnn_w4__partition1_seed1_n8",
+    "direct_gc_models": 512,
+    "direct_gc_accuracy": 0.5109663009643555,
+    "hard_fit_smc_accuracy": 0.5123097896575928,
+    "absolute_gap_pp": 0.13434886932373047,
+    "point_mae_pp": 1.5363454818725586
+  },
+  {
+    "condition": "cnn_w4__partition2_seed0_n8",
+    "direct_gc_models": 512,
+    "direct_gc_accuracy": 0.589726448059082,
+    "hard_fit_smc_accuracy": 0.5884350538253784,
+    "absolute_gap_pp": 0.12913942337036133,
+    "point_mae_pp": 1.6897797584533691
+  },
+  {
+    "condition": "cnn_w4__partition2_seed1_n8",
+    "direct_gc_models": 512,
+    "direct_gc_accuracy": 0.5701866149902344,
+    "hard_fit_smc_accuracy": 0.5713013410568237,
+    "absolute_gap_pp": 0.11147260665893555,
+    "point_mae_pp": 1.5697836875915527
+  },
+  {
+    "condition": "mlp_256_128__partition0_seed0_n8",
+    "direct_gc_models": 512,
+    "direct_gc_accuracy": 0.5719318389892578,
+    "hard_fit_smc_accuracy": 0.5704402923583984,
+    "absolute_gap_pp": 0.1491546630859375,
+    "point_mae_pp": 1.641988754272461
+  },
+  {
+    "condition": "mlp_256_128__partition0_seed1_n8",
+    "direct_gc_models": 512,
+    "direct_gc_accuracy": 0.5714473724365234,
+    "hard_fit_smc_accuracy": 0.5724217891693115,
+    "absolute_gap_pp": 0.0974416732788086,
+    "point_mae_pp": 1.9345760345458984
+  },
+  {
+    "condition": "mlp_256_128__partition1_seed0_n8",
+    "direct_gc_models": 512,
+    "direct_gc_accuracy": 0.54412841796875,
+    "hard_fit_smc_accuracy": 0.5455398559570312,
+    "absolute_gap_pp": 0.141143798828125,
+    "point_mae_pp": 1.6937255859375
+  },
+  {
+    "condition": "mlp_256_128__partition1_seed1_n8",
+    "direct_gc_models": 512,
+    "direct_gc_accuracy": 0.5200939178466797,
+    "hard_fit_smc_accuracy": 0.5187427997589111,
+    "absolute_gap_pp": 0.13511180877685547,
+    "point_mae_pp": 1.6994476318359375
+  },
+  {
+    "condition": "mlp_256_128__partition2_seed0_n8",
+    "direct_gc_models": 512,
+    "direct_gc_accuracy": 0.5640115737915039,
+    "hard_fit_smc_accuracy": 0.5644088983535767,
+    "absolute_gap_pp": 0.03973245620727539,
+    "point_mae_pp": 1.6345858573913574
+  },
+  {
+    "condition": "mlp_256_128__partition2_seed1_n8",
+    "direct_gc_models": 512,
+    "direct_gc_accuracy": 0.5528564453125,
+    "hard_fit_smc_accuracy": 0.5538886785507202,
+    "absolute_gap_pp": 0.10322332382202148,
+    "point_mae_pp": 1.7710566520690918
+  }
+]

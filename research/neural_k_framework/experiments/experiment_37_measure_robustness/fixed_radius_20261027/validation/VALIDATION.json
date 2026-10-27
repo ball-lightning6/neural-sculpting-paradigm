@@ -1,0 +1,35 @@
+{
+  "date": "2026-10-27",
+  "python": "3.13.5",
+  "dependencies": {
+    "numpy": "2.4.1",
+    "torch": "2.11.0+cu130",
+    "matplotlib": "3.10.9"
+  },
+  "compiled_files": [
+    "analyze_published.py",
+    "check_publication.py",
+    "frozen/measure_diagnostic.py",
+    "historical_20260913/source/experiment_4bit_full_curve_scan.py",
+    "historical_20260913/source/experiment_4bit_natural_measures.py",
+    "historical_20260913/source/experiment_4bit_uniform_ball_volume.py",
+    "run_fixed_radius.py",
+    "run_natural_measures.py",
+    "runtime.py",
+    "test_lightweight.py",
+    "validate_lightweight.py"
+  ],
+  "source_files_verified": 15,
+  "historical_imports": [
+    "experiment_4bit_natural_measures",
+    "experiment_4bit_uniform_ball_volume",
+    "experiment_4bit_full_curve_scan"
+  ],
+  "tests_run": 11,
+  "failures": 0,
+  "errors": 0,
+  "sampling_started": false,
+  "training_started": false,
+  "gpu_exercised": false,
+  "test_output": "test_default_entrypoints_do_not_sample_or_write (test_lightweight.LightweightTests.test_default_entrypoints_do_not_sample_or_write) ... ok\ntest_detach_cpu_precedes_kthvalue (test_lightweight.LightweightTests.test_detach_cpu_precedes_kthvalue) ... ok\ntest_frozen_files_and_24_pool_science (test_lightweight.LightweightTests.test_frozen_files_and_24_pool_science) ... ok\ntest_historical_core_and_portable_panel (test_lightweight.LightweightTests.test_historical_core_and_portable_panel) ... ok\ntest_kthvalue_all_orders_dtype_and_rng (test_lightweight.LightweightTests.test_kthvalue_all_orders_dtype_and_rng) ... ok\ntest_labels_and_independent_numpy_forward (test_lightweight.LightweightTests.test_labels_and_independent_numpy_forward) ... ok\ntest_missing_nodes_not_zero_and_failure_categories (test_lightweight.LightweightTests.test_missing_nodes_not_zero_and_failure_categories) ... ok\ntest_output_cannot_overwrite_sources (test_lightweight.LightweightTests.test_output_cannot_overwrite_sources) ... ok\ntest_probability_pooling_not_mean_K (test_lightweight.LightweightTests.test_probability_pooling_not_mean_K) ... ok\ntest_sphere_proposal_preserves_radius (test_lightweight.LightweightTests.test_sphere_proposal_preserves_radius) ... ok\ntest_two_precision_coordinates_are_distinct (test_lightweight.LightweightTests.test_two_precision_coordinates_are_distinct) ... ok\n\n----------------------------------------------------------------------\nRan 11 tests in 2.324s\n\nOK\n"
+}

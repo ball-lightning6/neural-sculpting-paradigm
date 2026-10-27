@@ -1340,7 +1340,7 @@ Five negative boundaries must also be made explicit:
 4. it is not claimed that high agreement guarantees external correctness, or that all high-agreement mappings have been proven human-readable;
 5. it is not claimed that static volume eliminates the independent roles of the optimizer, initialization, and global accessibility.
 
-This document's strongest results are concentrated on finite Boolean rules, cellular automata, modular arithmetic, tiny MLPs, and two MNIST binary-classification tasks. The more than one hundred synthetic tasks provide breadth, and the SMC and closure experiments provide depth, but there is still a clear scope gap from "a universal law for arbitrary modern architectures and real tasks". All quantities should be reported together with the protocol.
+The early evidence concentrated on finite Boolean rules, cellular automata, modular arithmetic, tiny MLPs, and two MNIST binary-classification tasks. The October 2026 work further extends to multiple MNIST digit partitions, data seeds, sample sizes, and training methods, as summarized later on this page. The more than one hundred synthetic tasks provide breadth, and the SMC and closure experiments provide depth, but there is still a clear scope gap from "a universal law for arbitrary modern architectures and real tasks". All quantities should be reported together with the protocol.
 
 Next-step falsifiable predictions include:
 
@@ -1369,6 +1369,67 @@ This framework has not yet resolved "why a concrete architecture produces a conc
 [E38](experiments/e38.html) completes a width/depth SMC scan with five configurations, 19 targets, and nine thresholds. At BCE≤0.30, the estimated mass disadvantage of all 17 selected non-single-bit targets relative to the same single-bit reference grows across four two-hidden-layer widths. This is evidence about continuous-loss events under the specified uniform measure and scaling, not hard-cell mass, measure-independent complexity, or a causal proof of double descent. The experiment page retains the width-dependent budgets, shared pool adaptation, and mixing boundaries.
 
 The website also provides [Double descent and width evidence](width-double-descent.html) and [Complexity measurement methods](complexity-methods.html). The latter proposes measurements of rules and functions implemented by weights; no new method-validation experiment was performed in this round.
+
+## Four areas of evidence and updated limits on 2026-10-27 {#evidence-update-20261027}
+
+The additions are integrated into E36, E31/E33, E37, and E32 while retaining the original reports; research topics do not receive new experiment numbers merely because they have expanded. This section summarizes completed results without deleting unreached conditions, sampling uncertainty, or unresolved explanations.
+
+### Static prediction and different training methods
+
+[The E36 extension](experiments/e36.html#update-20261027) completes 34 original and 24 added conditions, totaling 58. The small training sets use five-versus-five partitions of the ten MNIST digits, multiple sample seeds, and label interventions. They are relatively arbitrary small-sample constraints, not certified pure random labels, and the training set need not uniquely identify the full rule.
+
+| Condition group | Conditions | Hard-fit accuracy MAE for predicting SGD / percentage points | Low-loss SMC MAE / percentage points |
+|---|---:|---:|---:|
+| CNN W4, clean n32 | 9 | 8.18 | 0.74 |
+| MLP, clean n32 | 9 | 6.05 | 1.16 |
+| CNN W8, clean n32 | 9 | 8.43 | 5.02 |
+| CNN W4, added n64 | 6 | 8.13 | 0.58 |
+| MLP, added n64 | 6 | 6.63 | 0.26 |
+
+The low-loss node is BCE≤0.003. The comparison concerns mean single-model accuracy, not ensemble accuracy or equality of full function distributions. Direct G&C reaches its sample quota in 13 conditions; across 12 n8 conditions, its accuracy MAE against hard-fit SMC is about 0.120 percentage points, which cannot be extrapolated into certification of deep-tail mixing.
+
+STP completes 16 conditions, three step sizes, and 128 initializations each, totaling 48 groups. It is a mechanistic control testing whether the distinctive gradient updates of SGD/Adam are indispensable; correspondence with low-loss static predictions is more informative than merely demonstrating fit. At the smallest step size, STP–SGD accuracy MAE across six clean conditions is 0.793/0.192 percentage points for the smaller CNN/MLP, but smaller steps do not monotonically improve CNN agreement.
+
+For the two original wider-CNN conditions, enhanced SMC reaches 1e-5 with accuracies 75.59%/75.16%, versus 79.68%/77.25% for SGD at lr=.001 and about 69.65%–70.85% for STP. The optimizers themselves disagree, so there is no unique answer shared by all training methods from which SMC alone departs; these concrete discrepancies nevertheless constrain exact correspondence and must not be set to zero or hidden.
+
+### Independent complexity criteria and amplitude intervention
+
+[The added f/g experiment in E31](experiments/e31.html#update-20261027) starts from an independent logical comparison: f is two-bit XOR, while g ORs its result with a third bit. In a fixed gate library containing XOR and OR, with at most two inputs per gate, their minimum gate counts are strictly 1 and 2; this comparison does not depend on Neural K. After observing that g was cheaper under raw BCE, the user prospectively proposed an easy-branch precision-allocation explanation and predicted that amplitude alignment could reverse the ordering.
+
+| Score threshold 0.001 | K_g−K_f / bit | Estimation basis |
+|---|---:|---|
+| Original mean BCE | −37.79 | First pass |
+| Pointwise BCE bound | +29.47 | Increased budget |
+| BCE plus margin-variance constraint | +50.28 | Increased budget |
+| Bridge from the original BCE parent event to amplitude alignment | +49.77 | Inherits parent-pool error |
+
+The two branch-mean BCE values for g change from 0.0018534/0.0001242 to 0.0009212/0.0009130 under alignment. The result supports the prospective intervention direction while showing that mean BCE may be unsuitable as a universal logical-complexity ruler: a valid original volume measurement does not imply that precision-allocation effects have been removed, nor does it prove alignment the uniquely correct definition.
+
+[The added external calibration in E33](experiments/e33.html#update-20261027) includes proxy recalculation and 60 logical-cost problems, with 59 exact results and 1 bounded result. Of 45 pairs among ten balanced orbits, 43 share their direction across four architectures, yet robust local reversals remain against specified external logical costs. Shared ordering is independent evidence, not a theorem of equivalence to classical Kolmogorov complexity.
+
+### Measures and fixed radius
+
+[The E37 extension](experiments/e37.html#update-20261027) presents earlier multi-measure evidence alongside the new fixed-sphere controls, explicitly dating the older data. At R=40, the ΔK values from BCE 0.03 to 0.001 are 14.66, 27.81, and 69.04 bit for projection, majority3, and parity2, respectively; rule-dependent angular contraction persists at fixed radius.
+
+Eight pools for the more complex rules at R=20 do not reach every node; projection has ΔK=70.61 bit at that radius, so the change is not only an intercept shift. The original operator failure across 96 pools is an implementation issue; of the 24 pools after repair, 16 reach all nodes and 8 stall. The conclusion is that the main phenomenon is not exclusive to Gaussian radial tails, not that all natural measures share the same formula or local ordering.
+
+### Memory-coefficient calibration and the decision to defer
+
+[The E32 extension](experiments/e32.html#update-20261027) asks whether proportionality between independent memory burden and the coefficient can provide strong external calibration, rather than being guaranteed by definition. It completes 384 main pools across one to three hidden layers, four tables, eight sample sizes, and four pools per table; additions include 24 enhanced three-layer pools, 20 five-rule pools, and margin-range bridges.
+
+| n | c for one layer, 32 | c for two layers, 32/32 | c for three layers, 32/32/32 |
+|---:|---:|---:|---:|
+| 16 | 153.93 | 57.45 | 35.98 |
+| 32 | 274.87 | 82.62 | 46.78 |
+| 64 | 508.54 | 121.45 | 62.58 |
+| 96 | 668.14 | 148.72 | 74.07 |
+| 128 | 815.48 | 169.82 | 83.07 |
+
+c uses the within-pool difference K(.001)−K(.002), taking the median across four pools before averaging four tables. Growth persists, but the two- and three-layer curves have systematic curvature that enhanced sampling does not remove. Strict amplitude tubes have insufficient reproducibility at larger n and cannot be said to restore linearity.
+
+Additional diagnostics comprise 3840 agreement-training trajectories, 720 per-example-loss trajectories, structural checks of 132 random tables, and min–max enumeration using existing full-function catalogues. The two candidate memory criteria are maximum cost at fixed n and the weakest unseen-input prediction tendency; domination by the cheapest compatible candidate is a mechanistic hypothesis connecting them, not a third established definition. Full-rule catalogue min–max is not a direct measurement of actual fixed-D mass.
+
+The three current difficulties are certifying individual memory datasets, the cost of reliable SMC, and the lack of a necessity theorem for linear neural implementation costs. Additional exploration is deferred while nonlinearity, unreached conditions, and sampling disagreements remain reported; strict linearity is not treated as a necessary foundation for the entire framework. See the [current boundaries](theory-core.html#open-questions-20261027) for the six theoretical open questions.
 
 ## Planned Appendices
 

@@ -19,6 +19,32 @@
       "en": "en/complexity-methods.html"
     }
   },
+  "october_2026_extensions": {
+    "date": "2026-10-27",
+    "experiments": [
+      "E31",
+      "E32",
+      "E33",
+      "E36",
+      "E37"
+    ],
+    "anchor": "update-20261027",
+    "categories": {
+      "training_correspondence": [
+        "E36"
+      ],
+      "complexity": [
+        "E31",
+        "E33"
+      ],
+      "measure_robustness": [
+        "E37"
+      ],
+      "memory_calibration": [
+        "E32"
+      ]
+    }
+  },
   "experiment_count": 38,
   "experiments": [
     {
@@ -240,8 +266,8 @@
     },
     {
       "id": "E32",
-      "title_zh": "随机记忆缩放",
-      "title_en": "Random-memory scaling",
+      "title_zh": "随机记忆与跨层标定",
+      "title_en": "Random memory and cross-depth calibration",
       "page_zh": "experiments/e32.html",
       "page_en": "en/experiments/e32.html"
     },
@@ -268,8 +294,8 @@
     },
     {
       "id": "E36",
-      "title_zh": "Peleg/G&C 独立验证",
-      "title_en": "Independent Peleg/G&C recheck",
+      "title_zh": "Peleg/G&C 与跨方法训练对照",
+      "title_en": "Peleg/G&C and cross-method training comparisons",
       "page_zh": "experiments/e36.html",
       "page_en": "en/experiments/e36.html"
     },

@@ -1,0 +1,213 @@
+{
+  "verified_files": 15,
+  "completed_pools": 16,
+  "stalled_pools": 8,
+  "curve_rows": 48,
+  "contrasts": [
+    {
+      "radius": 20.0,
+      "target": "projection",
+      "K_003": 36.70428496114643,
+      "K_0001": 107.3168500026896,
+      "delta_K": 70.61256504154318,
+      "c_log2_precision": 14.390491017822722
+    },
+    {
+      "radius": 20.0,
+      "target": "majority3",
+      "K_003": 80.43478767992032,
+      "K_0001": null,
+      "delta_K": null,
+      "c_log2_precision": null
+    },
+    {
+      "radius": 20.0,
+      "target": "parity2",
+      "K_003": null,
+      "K_0001": null,
+      "delta_K": null,
+      "c_log2_precision": null
+    },
+    {
+      "radius": 40.0,
+      "target": "projection",
+      "K_003": 16.122621368262905,
+      "K_0001": 30.7822811581583,
+      "delta_K": 14.659659789895393,
+      "c_log2_precision": 2.9875660572125318
+    },
+    {
+      "radius": 40.0,
+      "target": "majority3",
+      "K_003": 27.62601658115795,
+      "K_0001": 55.4371865946678,
+      "delta_K": 27.81117001350985,
+      "c_log2_precision": 5.667778702545314
+    },
+    {
+      "radius": 40.0,
+      "target": "parity2",
+      "K_003": 48.88053807974279,
+      "K_0001": 117.92063626446048,
+      "delta_K": 69.04009818471769,
+      "c_log2_precision": 14.070030060687712
+    }
+  ],
+  "historical_comparisons": [
+    {
+      "reference": "unit_gaussian",
+      "compared": "uniform_ball",
+      "metric": "K",
+      "spearman": 0.9834586466165414,
+      "same_order_pairs": 183
+    },
+    {
+      "reference": "unit_gaussian",
+      "compared": "uniform_ball",
+      "metric": "slope",
+      "spearman": 0.9834586466165414,
+      "same_order_pairs": 183
+    },
+    {
+      "reference": "unit_gaussian",
+      "compared": "wide_gaussian",
+      "metric": "K",
+      "spearman": 0.9774436090225563,
+      "same_order_pairs": 181
+    },
+    {
+      "reference": "unit_gaussian",
+      "compared": "wide_gaussian",
+      "metric": "slope",
+      "spearman": 0.9774436090225563,
+      "same_order_pairs": 181
+    },
+    {
+      "reference": "unit_gaussian",
+      "compared": "spherical_t8",
+      "metric": "K",
+      "spearman": 0.9669172932330827,
+      "same_order_pairs": 177
+    },
+    {
+      "reference": "unit_gaussian",
+      "compared": "spherical_t8",
+      "metric": "slope",
+      "spearman": 0.8902255639097745,
+      "same_order_pairs": 167
+    },
+    {
+      "reference": "unit_gaussian",
+      "compared": "uniform_cube",
+      "metric": "K",
+      "spearman": 0.9218045112781955,
+      "same_order_pairs": 166
+    },
+    {
+      "reference": "unit_gaussian",
+      "compared": "uniform_cube",
+      "metric": "slope",
+      "spearman": 0.924812030075188,
+      "same_order_pairs": 165
+    },
+    {
+      "reference": "uniform_ball",
+      "compared": "wide_gaussian",
+      "metric": "K",
+      "spearman": 0.9969924812030075,
+      "same_order_pairs": 188
+    },
+    {
+      "reference": "uniform_ball",
+      "compared": "wide_gaussian",
+      "metric": "slope",
+      "spearman": 0.9954887218045113,
+      "same_order_pairs": 188
+    },
+    {
+      "reference": "uniform_ball",
+      "compared": "spherical_t8",
+      "metric": "K",
+      "spearman": 0.9894736842105263,
+      "same_order_pairs": 184
+    },
+    {
+      "reference": "uniform_ball",
+      "compared": "spherical_t8",
+      "metric": "slope",
+      "spearman": 0.9052631578947369,
+      "same_order_pairs": 168
+    },
+    {
+      "reference": "uniform_ball",
+      "compared": "uniform_cube",
+      "metric": "K",
+      "spearman": 0.9488721804511279,
+      "same_order_pairs": 173
+    },
+    {
+      "reference": "uniform_ball",
+      "compared": "uniform_cube",
+      "metric": "slope",
+      "spearman": 0.9413533834586466,
+      "same_order_pairs": 172
+    },
+    {
+      "reference": "wide_gaussian",
+      "compared": "spherical_t8",
+      "metric": "K",
+      "spearman": 0.9939849624060151,
+      "same_order_pairs": 186
+    },
+    {
+      "reference": "wide_gaussian",
+      "compared": "spherical_t8",
+      "metric": "slope",
+      "spearman": 0.9037593984962407,
+      "same_order_pairs": 168
+    },
+    {
+      "reference": "wide_gaussian",
+      "compared": "uniform_cube",
+      "metric": "K",
+      "spearman": 0.9593984962406015,
+      "same_order_pairs": 175
+    },
+    {
+      "reference": "wide_gaussian",
+      "compared": "uniform_cube",
+      "metric": "slope",
+      "spearman": 0.9473684210526315,
+      "same_order_pairs": 174
+    },
+    {
+      "reference": "spherical_t8",
+      "compared": "uniform_cube",
+      "metric": "K",
+      "spearman": 0.9699248120300752,
+      "same_order_pairs": 179
+    },
+    {
+      "reference": "spherical_t8",
+      "compared": "uniform_cube",
+      "metric": "slope",
+      "spearman": 0.9112781954887218,
+      "same_order_pairs": 166
+    }
+  ],
+  "historical_audit_summary_only": {
+    "files": 24,
+    "records": 200,
+    "weights": 3200,
+    "predictions": 51200,
+    "max_logit_error": 7.105427357601002e-15,
+    "max_loss_error": 4.440892098500626e-16,
+    "max_relative_radius_error": 4.440892098500626e-16,
+    "warnings": []
+  },
+  "sampling_started": false,
+  "figures": [
+    "e37_ext_fixed_radius.png",
+    "e37_ext_natural_rank.png"
+  ]
+}

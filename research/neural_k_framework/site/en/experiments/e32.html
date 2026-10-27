@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Full protocol, results, and boundaries for E32 Random memory.">
-  <title>E32 Random memory · Neural K Research Archive</title>
+  <meta name="description" content="Full protocol, results, and boundaries for E32 Random memory and cross-depth calibration.">
+  <title>E32 Random memory and cross-depth calibration · Neural K Research Archive</title>
   <link rel="stylesheet" href="../../assets/site.css">
   <script>
     window.MathJax = {
@@ -50,6 +50,21 @@
 <li><a href="#why-this-calibrates-the-complexity-definition">Why this calibrates the complexity definition</a></li>
 <li><a href="#conclusions-that-can-be-supported">Conclusions that can be supported</a></li>
 <li><a href="#artifacts">Artifacts</a></li>
+<li><a href="#e32-2026-10-27-memory-calibration-extension">E32: 2026-10-27 Memory Calibration Extension</a><ul>
+<li><a href="#1-motivation-independent-calibration-not-linearity-by-definition">1. Motivation: Independent Calibration, Not Linearity by Definition</a></li>
+<li><a href="#2-objects-measure-and-primary-statistic">2. Objects, Measure, and Primary Statistic</a></li>
+<li><a href="#3-complete-primary-matrix-clear-growth-unestablished-proportionality">3. Complete Primary Matrix: Clear Growth, Unestablished Proportionality</a></li>
+<li><a href="#4-enhanced-sampling-and-actual-fitting-supplement">4. Enhanced Sampling and Actual-Fitting Supplement</a></li>
+<li><a href="#5-five-rule-calibration-and-parity4-disagreement">5. Five-Rule Calibration and parity4 Disagreement</a></li>
+<li><a href="#6-margin-range-bridges-completion-does-not-establish-restored-linearity">6. Margin-Range Bridges: Completion Does Not Establish Restored Linearity</a></li>
+<li><a href="#7-what-counts-as-memory-two-candidate-criteria-and-one-mechanistic-conjecture">7. What Counts as Memory: Two Candidate Criteria and One Mechanistic Conjecture</a></li>
+<li><a href="#8-completed-training-and-dataset-diagnostics">8. Completed Training and Dataset Diagnostics</a></li>
+<li><a href="#9-full-target-min-max-supplement-and-its-limits">9. Full-Target Min-Max Supplement and Its Limits</a></li>
+<li><a href="#10-verification-and-three-difficulties">10. Verification and Three Difficulties</a></li>
+<li><a href="#11-current-conclusion-and-the-decision-to-defer-further-runs">11. Current Conclusion and the Decision to Defer Further Runs</a></li>
+<li><a href="#12-public-reproduction-entry-points-and-dependencies">12. Public Reproduction Entry Points and Dependencies</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </nav>
@@ -61,10 +76,11 @@
       <article class="article">
         <header class="article-header">
           <div class="eyebrow">Experiment increment · E32</div>
-          <h1>E32 Random memory</h1>
-          <p class="article-description">Full protocol, results, and boundaries for E32 Random memory.</p>
+          <h1>E32 Random memory and cross-depth calibration</h1>
+          <p class="article-description">Full protocol, results, and boundaries for E32 Random memory and cross-depth calibration.</p>
         </header>
-        <div class="article-body"><h2 id="scope-and-status">Scope and status</h2>
+        <div class="article-body"><p><strong>October 2026 update:</strong> The original report is retained; <a href="#update-20261027">jump to the added experiments, checks, and limitations</a>.</p>
+<h2 id="scope-and-status">Scope and status</h2>
 <p>The user provided <code>results_8bit_random_memory_scaling_w16_v1_package (1).zip</code>. This package is the complete set of results re-run on the 5090, not the earlier 10-item stage package from the 4090 D.</p>
 <ul>
 <li>10 sample-size tiers: 32, 48, 64, 80, 96, 128, 160, 192, 224, 256.</li>
@@ -220,7 +236,703 @@ $$</div>
 <li><a href="../../assets/post_upload/d8801989ec_replica_uncertainty.png">Replica disagreement figure</a></li>
 <li>[Full audit and statistics]</li>
 <li>[Re-runnable analysis script]</li>
-</ul></div>
+</ul>
+<p><a id="update-20261027"></a></p>
+<h2 id="e32-2026-10-27-memory-calibration-extension">E32: 2026-10-27 Memory Calibration Extension</h2>
+<p>This section is appended to the historical E32 page; the original text and historical code remain unchanged. It retrospectively organizes completed measurements: settings frozen at the time are documented, but later interpretations or diagnostics are not presented as a formal prospective preregistration. No new training or SMC was run for this release; further experiments have been deferred rather than pursued to obtain a more attractive linear relationship.</p>
+<h3 id="1-motivation-independent-calibration-not-linearity-by-definition">1. Motivation: Independent Calibration, Not Linearity by Definition</h3>
+<p>The original purpose of testing linear random-memory scaling was to independently calibrate the complexity interpretation of the volume-contraction coefficient. With inputs known, the source information in independent fair random labels grows on average with sample count. Approximately proportional growth of the coefficient within one architecture would therefore provide external support, rather than using the coefficient to justify itself.</p>
+<p>This is a testable calibration conjecture, not a defining axiom. Even successful linear scaling would not establish equality with classical Kolmogorov complexity. Curvature instead requires separating compatible finite-sample structure, neural representation cost, the loss section, precision allocation, and sampling bias. Average information from a random source and parameter-space constraint cost for an individual training set are different objects.</p>
+<h3 id="2-objects-measure-and-primary-statistic">2. Objects, Measure, and Primary Statistic</h3>
+<p>The task uses 8-bit inputs and 1-bit labels. Four complete random label tables over 256 inputs, together with their input permutations, are shared across architectures; n takes 16, 32, 48, 64, 80, 96, 112, and 128 as nested prefixes of the same permutation. The generator is NumPy default_rng, with seed 202609112301 + 1000003 × dataset_id, generating the permutation before the labels. The public generator checks original array hashes byte for byte, without duplicating random data.</p>
+<p>The comparison uses tanh hidden layers [32], [32,32], and [32,32,32]. Each architecture has four tables, eight n values, and four independent pools per condition, totaling 384 primary pools. The base budget uses 2048 particles, 2 adaptation sweeps, and 12 production mutation sweeps, with independent random streams, thresholds, and proposal scales across pools. The two-layer set of 128 pools combines 40 completed local pools with 88 cloud pools restarted from the prior, without joining partial pools across hardware. An additional 4-pool single-layer rerun is not included in the primary means.</p>
+<p>The reference measure is standard-normal neural coordinates, with both weights and biases scaled by the square root of the corresponding fan-in. Sampling forward passes use float32 with TF32 disabled; accumulated log mass uses float64, and spot checks use an independent float64 forward pass. The fixed-training-set event, its mass cost, and the primary window coefficient are defined as:</p>
+<div class="math-display">$$
+E_D(\epsilon)=\left\{\theta:\frac{1}{n}\sum_{i=1}^{n}\log(1+\exp[-y_i^\pm z_\theta(x_i)])\leq\epsilon\right\},\quad
+K_D(\epsilon)=-\log_2\mu(E_D(\epsilon)),
+\quad
+c_n=\frac{K_D(0.001)-K_D(0.002)}{\log_2(0.002/0.001)}.
+$$</div>
+<p>Here the signed label is ±1, BCE uses natural logarithms, and K is measured in bits. The coefficient c is the contraction rate of fixed training constraints over a finite loss window, not total K or the complexity of the entire 256-point function. Differences are computed within each pool, followed by the median of four pools within each table and the mean across four tables; missing endpoints are never replaced by zero. Different n values share nested data and are not independent dataset replicates. Absolute values across architectures are not treated as one common scale.</p>
+<h3 id="3-complete-primary-matrix-clear-growth-unestablished-proportionality">3. Complete Primary Matrix: Clear Growth, Unestablished Proportionality</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">n</th>
+<th style="text-align: right;">[32]</th>
+<th style="text-align: right;">[32,32]</th>
+<th style="text-align: right;">[32,32] Between-table SD</th>
+<th style="text-align: right;">[32,32,32]</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">153.93</td>
+<td style="text-align: right;">57.45</td>
+<td style="text-align: right;">5.48</td>
+<td style="text-align: right;">35.98</td>
+</tr>
+<tr>
+<td style="text-align: right;">32</td>
+<td style="text-align: right;">274.87</td>
+<td style="text-align: right;">82.62</td>
+<td style="text-align: right;">7.33</td>
+<td style="text-align: right;">46.78</td>
+</tr>
+<tr>
+<td style="text-align: right;">48</td>
+<td style="text-align: right;">403.95</td>
+<td style="text-align: right;">105.67</td>
+<td style="text-align: right;">5.15</td>
+<td style="text-align: right;">55.76</td>
+</tr>
+<tr>
+<td style="text-align: right;">64</td>
+<td style="text-align: right;">508.54</td>
+<td style="text-align: right;">121.45</td>
+<td style="text-align: right;">3.51</td>
+<td style="text-align: right;">62.58</td>
+</tr>
+<tr>
+<td style="text-align: right;">80</td>
+<td style="text-align: right;">588.87</td>
+<td style="text-align: right;">136.49</td>
+<td style="text-align: right;">3.91</td>
+<td style="text-align: right;">68.80</td>
+</tr>
+<tr>
+<td style="text-align: right;">96</td>
+<td style="text-align: right;">668.14</td>
+<td style="text-align: right;">148.72</td>
+<td style="text-align: right;">5.06</td>
+<td style="text-align: right;">74.07</td>
+</tr>
+<tr>
+<td style="text-align: right;">112</td>
+<td style="text-align: right;">732.95</td>
+<td style="text-align: right;">159.07</td>
+<td style="text-align: right;">5.71</td>
+<td style="text-align: right;">78.14</td>
+</tr>
+<tr>
+<td style="text-align: right;">128</td>
+<td style="text-align: right;">815.48</td>
+<td style="text-align: right;">169.82</td>
+<td style="text-align: right;">8.77</td>
+<td style="text-align: right;">83.07</td>
+</tr>
+</tbody>
+</table>
+<p>All three architectures show within-architecture growth as memory load increases, without relying on a single training table. Diminishing late increments remain after the two-layer endpoint is completed. For three layers, the increase from n=16 to 32 is about 10.80, whereas the increase from 96 to 112 is only about 4.07. This differs from the stronger expectation that every random label contributes the same fixed cost.</p>
+<p>The following descriptive recalculation uses the eight unrounded means above, fitting an affine line c=an+b and a through-origin model c=qn separately. Both R² columns use the same centered total sum of squares; they must not be mixed with software-reported uncentered R² for no-intercept models. A negative value is not a calculation error. These are neither independent-sample inference nor proof of model validity.</p>
+<table>
+<thead>
+<tr>
+<th>Architecture</th>
+<th style="text-align: right;">a</th>
+<th style="text-align: right;">b</th>
+<th style="text-align: right;">Affine R²</th>
+<th style="text-align: right;">q</th>
+<th style="text-align: right;">Through-origin R²</th>
+<th style="text-align: right;">c/n: n16</th>
+<th style="text-align: right;">c/n: n128</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[32]</td>
+<td style="text-align: right;">5.799237</td>
+<td style="text-align: right;">100.795924</td>
+<td style="text-align: right;">0.985239</td>
+<td style="text-align: right;">6.910957</td>
+<td style="text-align: right;">0.939645</td>
+<td style="text-align: right;">9.620697</td>
+<td style="text-align: right;">6.370939</td>
+</tr>
+<tr>
+<td>[32,32]</td>
+<td style="text-align: right;">0.976971</td>
+<td style="text-align: right;">52.321094</td>
+<td style="text-align: right;">0.971258</td>
+<td style="text-align: right;">1.554042</td>
+<td style="text-align: right;">0.544537</td>
+<td style="text-align: right;">3.590618</td>
+<td style="text-align: right;">1.326739</td>
+</tr>
+<tr>
+<td>[32,32,32]</td>
+<td style="text-align: right;">0.407453</td>
+<td style="text-align: right;">33.809558</td>
+<td style="text-align: right;">0.973278</td>
+<td style="text-align: right;">0.780353</td>
+<td style="text-align: right;">-0.053273</td>
+<td style="text-align: right;">2.248605</td>
+<td style="text-align: right;">0.649010</td>
+</tr>
+</tbody>
+</table>
+<p>High affine R² supports a coarse approximately linear description over the finite interval, but does not establish strict proportionality; even one layer has systematic residuals. The intercept is a fitted parameter within this interval and should not be extrapolated into the actual cost at n=0. The main figure shows both fits and c/n so that curvature is not concealed by high R² alone.</p>
+<figure class="result-figure"><a href="../../assets/figures/e32_ext_depth.png" target="_blank" rel="noopener"><img src="../../assets/figures/e32_ext_depth.png" alt="Same-data curves across three depths and per-sample coefficients" loading="lazy"></a><figcaption>Same-data curves across three depths and per-sample coefficients</figcaption></figure>
+<p>The earlier cross-depth relationship c_two=2.372920 c_three−28.224598 was not refitted here. Across all 32 conditions, the median relative error is 1.49% and the maximum is 3.65%; for the four previously missing n128 conditions, these are 1.62% and 2.14%. This supports a regular response relationship within the current fixed family, not a universal conversion, validity across loss windows, or equivalence to algorithmic information. The three-layer reference remains the base-budget result, not a mixture with enhanced-budget estimates.</p>
+<h3 id="4-enhanced-sampling-and-actual-fitting-supplement">4. Enhanced Sampling and Actual-Fitting Supplement</h3>
+<p>The enhanced three-layer measurement uses original tables 0 and 1, n=32, 80, and 128, with four pools per condition, totaling 24 pools. The budget increases to 4096 particles and 48 production sweeps, extending to BCE=0.0001. The comparison below is restricted to the same two tables; subtracting the new two-table mean from the old four-table mean would be inappropriate.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">n</th>
+<th style="text-align: right;">Base c: .002→.001</th>
+<th style="text-align: right;">Enhanced c: .002→.001</th>
+<th style="text-align: right;">Relative change</th>
+<th style="text-align: right;">Enhanced c: .0002→.0001</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">32</td>
+<td style="text-align: right;">46.26</td>
+<td style="text-align: right;">45.96</td>
+<td style="text-align: right;">-0.6%</td>
+<td style="text-align: right;">42.03</td>
+</tr>
+<tr>
+<td style="text-align: right;">80</td>
+<td style="text-align: right;">69.15</td>
+<td style="text-align: right;">67.62</td>
+<td style="text-align: right;">-2.2%</td>
+<td style="text-align: right;">60.09</td>
+</tr>
+<tr>
+<td style="text-align: right;">128</td>
+<td style="text-align: right;">85.65</td>
+<td style="text-align: right;">81.88</td>
+<td style="text-align: right;">-4.4%</td>
+<td style="text-align: right;">71.44</td>
+</tr>
+</tbody>
+</table>
+<p>Curvature does not disappear under the enhanced budget, and c varies with the selected loss window. At n128, for tables 0 and 1, median K(.001) falls from 1512.43 to 1461.38 and from 1611.63 to 1561.49, respectively, about 50 bits each, implying large mass ratios. This must not be dismissed as a small percentage change or described as precisely converged absolute volume. The three anchors do not replace the eight-point primary curve with a new universal fit.</p>
+<p>An additional 36 groups with 576 completed training trajectories compare three networks, three sample counts, two tables, and two Adam learning rates. All reach BCE=0.0001. At n128, the median steps to that node across 32 initializations pooled over two tables are shown below. Optimization uses raw parameters, initialization follows the Gaussian parameterization above, and training uses full-batch BCE without weight decay.</p>
+<table>
+<thead>
+<tr>
+<th>Hidden layers</th>
+<th style="text-align: right;">Parameters</th>
+<th style="text-align: right;">Adam lr=.001</th>
+<th style="text-align: right;">Adam lr=.003</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[32]</td>
+<td style="text-align: right;">321</td>
+<td style="text-align: right;">9757</td>
+<td style="text-align: right;">5966.5</td>
+</tr>
+<tr>
+<td>[240]</td>
+<td style="text-align: right;">2401</td>
+<td style="text-align: right;">5616.5</td>
+<td style="text-align: right;">3193.5</td>
+</tr>
+<tr>
+<td>[32,32,32]</td>
+<td style="text-align: right;">2433</td>
+<td style="text-align: right;">1955</td>
+<td style="text-align: right;">855.5</td>
+</tr>
+</tbody>
+</table>
+<p>Three layers reach low loss faster under this optimization protocol, so they should not be described as an anomalous network unable to fit random labels; they are also faster than the roughly parameter-matched single layer. However, steps are not equal FLOPs, parameter matching does not control all representational and optimization differences, and this table alone cannot explain static curvature. The maximum per-sample BCE divided by mean BCE in static particles at n=32, 80, and 128 is about 4.04, 6.10, and 8.21. Since maxima themselves depend on n, this is only a clue about precision allocation.</p>
+<h3 id="5-five-rule-calibration-and-parity4-disagreement">5. Five-Rule Calibration and parity4 Disagreement</h3>
+<p>The same three-layer tanh architecture is calibrated on complete 256-point targets with 4096 particles, 48 sweeps, and four pools per rule, totaling 20 pools. In the table, K is the median of poolwise K values and c is the median of poolwise endpoint differences; neither substitutes for averaging masses before taking the negative logarithm.</p>
+<table>
+<thead>
+<tr>
+<th>Rule</th>
+<th style="text-align: right;">Median K(.001)</th>
+<th style="text-align: right;">Median primary c</th>
+<th style="text-align: right;">Minimum primary c</th>
+<th style="text-align: right;">Maximum primary c</th>
+<th style="text-align: right;">Median deep-window c: .0002→.0001</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>parity1</td>
+<td style="text-align: right;">251.116</td>
+<td style="text-align: right;">22.919</td>
+<td style="text-align: right;">22.746</td>
+<td style="text-align: right;">22.987</td>
+<td style="text-align: right;">22.865</td>
+</tr>
+<tr>
+<td>majority3</td>
+<td style="text-align: right;">355.898</td>
+<td style="text-align: right;">29.209</td>
+<td style="text-align: right;">29.103</td>
+<td style="text-align: right;">29.314</td>
+<td style="text-align: right;">27.967</td>
+</tr>
+<tr>
+<td>mux3</td>
+<td style="text-align: right;">514.995</td>
+<td style="text-align: right;">37.121</td>
+<td style="text-align: right;">36.849</td>
+<td style="text-align: right;">37.363</td>
+<td style="text-align: right;">34.800</td>
+</tr>
+<tr>
+<td>parity2</td>
+<td style="text-align: right;">557.598</td>
+<td style="text-align: right;">38.397</td>
+<td style="text-align: right;">38.276</td>
+<td style="text-align: right;">38.481</td>
+<td style="text-align: right;">36.308</td>
+</tr>
+<tr>
+<td>parity4</td>
+<td style="text-align: right;">1205.160</td>
+<td style="text-align: right;">75.355</td>
+<td style="text-align: right;">52.723</td>
+<td style="text-align: right;">76.646</td>
+<td style="text-align: right;">66.469</td>
+</tr>
+</tbody>
+</table>
+<p>The primary ordering remains parity1 &lt; majority3 &lt; mux3 &lt; parity2 &lt; parity4, so memory curvature cannot simply be attributed to a complete loss of simplicity bias. However, parity4 pool 0 has K(.001)=1124.95 and c=52.72, whereas the other three pools have K around 1205–1210 and c around 75–77. Mass-pooled K is about 1126.95, almost entirely dominated by pool 0 and far from the median 1205.16. An unchanged ordering does not remove concerns about mixing or multimodality.</p>
+<figure class="result-figure"><a href="../../assets/figures/e32_ext_controls.png" target="_blank" rel="noopener"><img src="../../assets/figures/e32_ext_controls.png" alt="Enhanced windows and poolwise five-rule calibration" loading="lazy"></a><figcaption>Enhanced windows and poolwise five-rule calibration</figcaption></figure>
+<h3 id="6-margin-range-bridges-completion-does-not-establish-restored-linearity">6. Margin-Range Bridges: Completion Does Not Establish Restored Linearity</h3>
+<p>For random labels from the same original table and a projection positive control, the parent mean-BCE event is retained while constraining the signed-margin range across training samples. Three n values, two label types, and two parent pools per condition give 12 parent pools; separate bridges at two BCE endpoints give 24 conditional branches. Parents use 2048 particles and 48 production sweeps; bridges use 2 adaptation sweeps, 64 mutation sweeps, and 96 node-refresh sweeps. The primary range bound is δ=.1; δ=1 and .3 are wider intermediate nodes in the original setup.</p>
+<div class="math-display">$$
+A_{D,\epsilon,\delta}=E_D(\epsilon)\cap\{\max_i m_i-\min_i m_i\leq\delta\},\qquad
+K_A=K_D-\log_2 P(\max_i m_i-\min_i m_i\leq\delta\mid E_D),\quad m_i=y_i^\pm z_\theta(x_i).
+$$</div>
+<table>
+<thead>
+<tr>
+<th>Labels</th>
+<th style="text-align: right;">n</th>
+<th>Parent c: pool0 / pool1</th>
+<th>δ=.1: pool0 / pool1</th>
+<th>δ=1: pool0 / pool1</th>
+<th>δ=.3: pool0 / pool1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>random</td>
+<td style="text-align: right;">32</td>
+<td>47.649 / 47.628</td>
+<td>49.200 / 48.364</td>
+<td>48.505 / 48.868</td>
+<td>48.885 / 48.796</td>
+</tr>
+<tr>
+<td>projection</td>
+<td style="text-align: right;">32</td>
+<td>22.907 / 22.658</td>
+<td>23.592 / 23.955</td>
+<td>23.367 / 23.040</td>
+<td>23.886 / 23.820</td>
+</tr>
+<tr>
+<td>random</td>
+<td style="text-align: right;">80</td>
+<td>67.163 / 67.233</td>
+<td>124.751 / 52.711</td>
+<td>83.820 / 71.351</td>
+<td>115.966 / 71.919</td>
+</tr>
+<tr>
+<td>projection</td>
+<td style="text-align: right;">80</td>
+<td>22.911 / 22.658</td>
+<td>24.673 / 23.036</td>
+<td>23.438 / 23.007</td>
+<td>24.333 / 23.257</td>
+</tr>
+<tr>
+<td>random</td>
+<td style="text-align: right;">128</td>
+<td>82.658 / 80.198</td>
+<td>98.368 / 206.870</td>
+<td>125.837 / 123.856</td>
+<td>131.516 / 136.492</td>
+</tr>
+<tr>
+<td>projection</td>
+<td style="text-align: right;">128</td>
+<td>22.796 / 22.927</td>
+<td>26.398 / 25.351</td>
+<td>23.306 / 23.851</td>
+<td>23.313 / 24.479</td>
+</tr>
+</tbody>
+</table>
+<p>All parents and branches have finished, but at large n the between-pool differences for the primary δ=.1 greatly exceed the parent-pool differences. Their midpoint cannot be presented as a high-precision result, nor can alignment be said to have restored linearity. Some wider-tube readings are more stable, but selecting a different δ after observing the primary result would not establish success. Projection-control c remains around 23–26, showing that an amplitude constraint need not make every task scale proportionally with n.</p>
+<p>This is a finite-width margin-range tube, not the exact equal-amplitude limit or the variance-regularized score used in other f/g experiments. Nested constraints necessarily increase total K, but the difference between endpoint-specific additional costs may be negative and must not be clipped to zero. Bridges inherit parent errors and have their own conditional-sampling errors. These results establish neither restored linearity nor unavoidable nonlinearity in an ideal equal-amplitude limit.</p>
+<figure class="result-figure"><a href="../../assets/figures/e32_ext_alignment.png" target="_blank" rel="noopener"><img src="../../assets/figures/e32_ext_alignment.png" alt="Two-pool alignment readings and sensitivity" loading="lazy"></a><figcaption>Two-pool alignment readings and sensitivity</figcaption></figure>
+<h3 id="7-what-counts-as-memory-two-candidate-criteria-and-one-mechanistic-conjecture">7. What Counts as Memory: Two Candidate Criteria and One Mechanistic Conjecture</h3>
+<p>The first candidate criterion searches for the largest K among datasets with the same sample count, aiming at constraints with the least exploitable correlation. This can define the hardest training set relative to an architecture and protocol, but “largest K means purest memory” has not been proved. Data consistency and target realizability must be required first, so that infinite cost from an impossible event is not mistaken for pure memory. A symbolically short rule can be expensive for a network, and maximizing noisy estimates can amplify measurement error.</p>
+<p>The second candidate criterion is minimal predictive tendency on unseen inputs, as an indicator of less reusable structure. Pointwise probabilities, joint output structure, and information added relative to the prior must be distinguished: pointwise probabilities near 1/2 do not guarantee an unstructured joint distribution, and high agreement can reflect a shared interpolation preference rather than a true rule. The first criterion measures fitting rarity, whereas the second measures continuation preference; their equivalence has not been proved.</p>
+<p>The third point is not a competing definition, but a mechanistic conjecture linking the first two: as continuous precision increases, if more complex candidates lose relative mass, the cheapest compatible candidate may dominate the training event. When ε&lt;ln(2)/n, ensuring agreement with the training labels, for mutually exclusive candidate masses q_D(f) partitioned by complete symbolic outputs within the actual fixed-D event, one may write:</p>
+<div class="math-display">$$
+K_D=-\log_2\sum_{f\sim D}q_D(f)
+=C_{\min}-\log_2\!\left(1+\sum_{f\ne f_\star}2^{-[C_f-C_{\min}]}\right),
+\qquad C_f=-\log_2q_D(f).
+$$</div>
+<p>Lowest-cost dominance requires gaps large enough to overcome candidate multiplicity; inspecting the minimum alone is insufficient. The C_f here is not automatically K_full(f): fixed-D constrains continuous loss only on observed samples and does not require complete-target precision on all unseen inputs. The full-target min-max below is a finite-catalogue exploration of this mechanism, not actual fixed-D mass.</p>
+<h3 id="8-completed-training-and-dataset-diagnostics">8. Completed Training and Dataset Diagnostics</h3>
+<p>The agreement check covers 120 groups with 32 initializations each, totaling 3840 trajectories: three depths, four original tables, eight n values, plus one projection0 positive-control table. Adam uses lr=.003, full batches, and no weight decay, recording actual loss at the first crossing of BCE=.001. The last 128 points in each table's permutation form a fixed common unseen probe. Endpoints are shown below, with complete per-n summaries in the public compact tables. Pointwise agreement differs from collision probability of an entire probe function, and model pairs are not independent replicates.</p>
+<table>
+<thead>
+<tr>
+<th>Hidden layers</th>
+<th style="text-align: right;">n</th>
+<th style="text-align: right;">Random pointwise agreement</th>
+<th style="text-align: right;">Random probe collision</th>
+<th style="text-align: right;">Random unseen accuracy</th>
+<th style="text-align: right;">projection0 unseen accuracy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[32]</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">0.9383</td>
+<td style="text-align: right;">0.0071</td>
+<td style="text-align: right;">0.4896</td>
+<td style="text-align: right;">0.9375</td>
+</tr>
+<tr>
+<td>[32]</td>
+<td style="text-align: right;">128</td>
+<td style="text-align: right;">0.7718</td>
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: right;">0.5060</td>
+<td style="text-align: right;">1.0000</td>
+</tr>
+<tr>
+<td>[32,32]</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">0.9399</td>
+<td style="text-align: right;">0.0040</td>
+<td style="text-align: right;">0.4867</td>
+<td style="text-align: right;">0.9690</td>
+</tr>
+<tr>
+<td>[32,32]</td>
+<td style="text-align: right;">128</td>
+<td style="text-align: right;">0.7956</td>
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: right;">0.4996</td>
+<td style="text-align: right;">1.0000</td>
+</tr>
+<tr>
+<td>[32,32,32]</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">0.9219</td>
+<td style="text-align: right;">0.0010</td>
+<td style="text-align: right;">0.4858</td>
+<td style="text-align: right;">0.9636</td>
+</tr>
+<tr>
+<td>[32,32,32]</td>
+<td style="text-align: right;">128</td>
+<td style="text-align: right;">0.7900</td>
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: right;">0.5004</td>
+<td style="text-align: right;">1.0000</td>
+</tr>
+</tbody>
+</table>
+<p>Random datasets can have high agreement at small n while unseen random-label accuracy remains around 50%. Sequential scoring first charges 16 bits for the first 16 labels, then uses models trained on the preceding prefix to predict the next 16 points, with fixed smoothing (positive votes+0.5)/(model count+1). All totals across three architectures and four tables exceed the fair-coin baseline of 128 bits, ranging from 210.20–258.62 bits; projection0 scores are 24.49, 21.32, and 20.01 bits. A shared interpolation preference does not automatically predict subsequent random labels, nor does this exclude computation sharing within observed constraints.</p>
+<p>The per-sample loss check covers 45 groups and 720 trajectories: four random tables plus one projection0 table, three architectures, n=32, 80, and 128, and 16 initializations per group with Adam lr=.003. Per-sample losses are recorded when mean BCE first falls below .01, .001, and .0001, using float32 training and float64 recomputation. <strong>The following table uses the first-hit node at mean BCE≤0.001</strong>, taking medians across initializations and then across the four random tables:</p>
+<table>
+<thead>
+<tr>
+<th>Hidden layers</th>
+<th style="text-align: right;">n</th>
+<th style="text-align: right;">Maximum/mean BCE</th>
+<th style="text-align: right;">P90/P10</th>
+<th style="text-align: right;">Hardest10% loss share</th>
+<th style="text-align: right;">Cross-initialization sample-rank Spearman</th>
+<th style="text-align: right;">Hardest-quartile overlap</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[32]</td>
+<td style="text-align: right;">32</td>
+<td style="text-align: right;">2.79</td>
+<td style="text-align: right;">76.67</td>
+<td style="text-align: right;">29.9%</td>
+<td style="text-align: right;">0.859</td>
+<td style="text-align: right;">0.762</td>
+</tr>
+<tr>
+<td>[32]</td>
+<td style="text-align: right;">80</td>
+<td style="text-align: right;">3.35</td>
+<td style="text-align: right;">16.29</td>
+<td style="text-align: right;">24.4%</td>
+<td style="text-align: right;">0.658</td>
+<td style="text-align: right;">0.596</td>
+</tr>
+<tr>
+<td>[32]</td>
+<td style="text-align: right;">128</td>
+<td style="text-align: right;">3.91</td>
+<td style="text-align: right;">55.64</td>
+<td style="text-align: right;">27.4%</td>
+<td style="text-align: right;">0.618</td>
+<td style="text-align: right;">0.570</td>
+</tr>
+<tr>
+<td>[32,32]</td>
+<td style="text-align: right;">32</td>
+<td style="text-align: right;">3.49</td>
+<td style="text-align: right;">97.87</td>
+<td style="text-align: right;">35.7%</td>
+<td style="text-align: right;">0.870</td>
+<td style="text-align: right;">0.754</td>
+</tr>
+<tr>
+<td>[32,32]</td>
+<td style="text-align: right;">80</td>
+<td style="text-align: right;">4.25</td>
+<td style="text-align: right;">55.61</td>
+<td style="text-align: right;">29.9%</td>
+<td style="text-align: right;">0.721</td>
+<td style="text-align: right;">0.603</td>
+</tr>
+<tr>
+<td>[32,32]</td>
+<td style="text-align: right;">128</td>
+<td style="text-align: right;">4.59</td>
+<td style="text-align: right;">281.77</td>
+<td style="text-align: right;">32.1%</td>
+<td style="text-align: right;">0.716</td>
+<td style="text-align: right;">0.585</td>
+</tr>
+<tr>
+<td>[32,32,32]</td>
+<td style="text-align: right;">32</td>
+<td style="text-align: right;">3.41</td>
+<td style="text-align: right;">34.00</td>
+<td style="text-align: right;">34.9%</td>
+<td style="text-align: right;">0.836</td>
+<td style="text-align: right;">0.696</td>
+</tr>
+<tr>
+<td>[32,32,32]</td>
+<td style="text-align: right;">80</td>
+<td style="text-align: right;">4.11</td>
+<td style="text-align: right;">59.01</td>
+<td style="text-align: right;">29.8%</td>
+<td style="text-align: right;">0.711</td>
+<td style="text-align: right;">0.595</td>
+</tr>
+<tr>
+<td>[32,32,32]</td>
+<td style="text-align: right;">128</td>
+<td style="text-align: right;">4.97</td>
+<td style="text-align: right;">284.10</td>
+<td style="text-align: right;">33.7%</td>
+<td style="text-align: right;">0.704</td>
+<td style="text-align: right;">0.602</td>
+</tr>
+</tbody>
+</table>
+<p>Easy/hard sample rankings recur across initializations rather than being an accidental allocation in one optimization run. The 16 models form 120 pairs that share models and are not independent replicates. At n128 and BCE=.0001, random-table P90/P10 values remain about 57.61, 496.15, and 227.88, whereas projection0 has 1.85, 1.78, and 1.51. Lower absolute loss does not imply disappearing relative differences, and the simple rule is more uniform. Loss differences alone neither establish a true label rule nor explain the SMC curvature.</p>
+<p>The structure audit uses the four original tables plus 128 additional independent random tables, totaling 132 tables, with CPU analysis only. Constant/single-bit, affine-parity, and linear-separability checks cover every reference table; exact minimum tree leaves and local pure-label subcubes use the original tables and the first 32 reference tables. Among the new references, at n=2, 128/128 are fitted by a constant or single bit; at n=8, 126/128 are linearly separable, compared with n=16 at 62/128 and n=32 at 1/128, with none found at n≥48.</p>
+<p>Two of the four original tables are linearly separable at n=16, but at n=32, 80, and 128 none has a global explanation in the tested constant/single-bit, affine-parity, or affine-threshold families. Local shared branches still exist. A witness for the first permuted point of original table0 at n128 is x0=1, x3=1, x4=0, x6=1, x7=1, covering inputs 151, 179, 247, 243, and 147 with observed labels all equal to 1. This neither guarantees unseen labels nor shows that the network uses this branch. Median paired rank correlations of local literal count with per-sample BCE are about +0.47–+0.50, and those of local coverage with BCE are about -0.52–-0.58; both are exploratory correlations, not causal evidence. Median minimum tree leaves in reference tables increase from n32 at 13 to n128 at 51.5, without the same degree of overall sublinearity. This result against a simple attribution must not be omitted.</p>
+<p>The fixed finite dictionary contains 25888 distinct Boolean functions with Kraft sum 0.433716, covering constants, parity, signed AND/OR, majority functions, shallow trees, and conditional branches. Structure selection uses training labels only; model-plus-residual coding explicitly charges for structure, while the raw-label branch costs n+1 bits. No positive saving is found for any of the eight prefixes of the four original tables: savings range from -4 to -8 bits, so an actual encoder would choose the raw branch. This is not negative complexity. A negative result in a finite dictionary cannot exclude neural representation gains outside it, and low ANF degree does not automatically imply a short description.</p>
+<div class="math-display">$$
+L_{\mathrm{dict}}=1+L(f)+\lceil\log_2(n+1)\rceil+\lceil\log_2 {n\choose k}\rceil,\qquad
+L_{\mathrm{raw}}=1+n.
+$$</div>
+<figure class="result-figure"><a href="../../assets/figures/e32_ext_diagnostics.png" target="_blank" rel="noopener"><img src="../../assets/figures/e32_ext_diagnostics.png" alt="Agreement, unseen accuracy, loss heterogeneity, and structural references" loading="lazy"></a><figcaption>Agreement, unseen accuracy, loss heterogeneity, and structural references</figcaption></figure>
+<h3 id="9-full-target-min-max-supplement-and-its-limits">9. Full-Target Min-Max Supplement and Its Limits</h3>
+<p>CPU reanalysis is applied only to existing complete-function cost catalogues, without new SMC. For 3-bit inputs, each of four architectures expands 40 symmetry orbits into 256 functions and enumerates 6561 partial datasets. For 4-bit tanh [16], 1992 orbits expand into 65536 functions, with complete coverage at BCE=.004, and 43046721 partial datasets are enumerated, including the empty set in both cases. Each input has three states, label0, label1, or unknown, and dynamic programming minimizes along unknown axes:</p>
+<div class="math-display">$$
+M_n(C)=\max_{\substack{S\subseteq U\\|S|=n}}\max_{y\in\{0,1\}^{S}}\min_{f|_S=y}C(f),
+\qquad C(f)=K_{\mathrm{full}}(f;\epsilon).
+$$</div>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">n</th>
+<th style="text-align: right;">3-bit tanh [16]</th>
+<th style="text-align: right;">3-bit tanh [32]</th>
+<th style="text-align: right;">3-bit tanh [16,16]</th>
+<th style="text-align: right;">3-bit ReLU [16]</th>
+<th style="text-align: right;">4-bit tanh [16]</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">80.26</td>
+<td style="text-align: right;">96.54</td>
+<td style="text-align: right;">82.94</td>
+<td style="text-align: right;">47.68</td>
+<td style="text-align: right;">61.41</td>
+</tr>
+<tr>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">80.26</td>
+<td style="text-align: right;">96.54</td>
+<td style="text-align: right;">82.94</td>
+<td style="text-align: right;">47.68</td>
+<td style="text-align: right;">61.41</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">199.97</td>
+<td style="text-align: right;">258.29</td>
+<td style="text-align: right;">158.32</td>
+<td style="text-align: right;">161.08</td>
+<td style="text-align: right;">175.64</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">326.10</td>
+<td style="text-align: right;">437.10</td>
+<td style="text-align: right;">213.86</td>
+<td style="text-align: right;">268.34</td>
+<td style="text-align: right;">289.72</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">676.48</td>
+<td style="text-align: right;">918.00</td>
+<td style="text-align: right;">354.51</td>
+<td style="text-align: right;">438.83</td>
+<td style="text-align: right;">604.28</td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">785.13</td>
+<td style="text-align: right;">1068.53</td>
+<td style="text-align: right;">394.11</td>
+<td style="text-align: right;">536.15</td>
+<td style="text-align: right;">662.03</td>
+</tr>
+<tr>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">849.12</td>
+<td style="text-align: right;">1163.24</td>
+<td style="text-align: right;">420.91</td>
+<td style="text-align: right;">604.44</td>
+<td style="text-align: right;">747.94</td>
+</tr>
+<tr>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">877.63</td>
+<td style="text-align: right;">1203.23</td>
+<td style="text-align: right;">434.07</td>
+<td style="text-align: right;">766.57</td>
+<td style="text-align: right;">894.48</td>
+</tr>
+<tr>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">892.34</td>
+<td style="text-align: right;">1208.63</td>
+<td style="text-align: right;">434.36</td>
+<td style="text-align: right;">1078.71</td>
+<td style="text-align: right;">925.34</td>
+</tr>
+<tr>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">N/A</td>
+<td style="text-align: right;">N/A</td>
+<td style="text-align: right;">N/A</td>
+<td style="text-align: right;">N/A</td>
+<td style="text-align: right;">985.18</td>
+</tr>
+<tr>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">N/A</td>
+<td style="text-align: right;">N/A</td>
+<td style="text-align: right;">N/A</td>
+<td style="text-align: right;">N/A</td>
+<td style="text-align: right;">1050.90</td>
+</tr>
+<tr>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">N/A</td>
+<td style="text-align: right;">N/A</td>
+<td style="text-align: right;">N/A</td>
+<td style="text-align: right;">N/A</td>
+<td style="text-align: right;">1084.21</td>
+</tr>
+<tr>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">N/A</td>
+<td style="text-align: right;">N/A</td>
+<td style="text-align: right;">N/A</td>
+<td style="text-align: right;">N/A</td>
+<td style="text-align: right;">1152.33</td>
+</tr>
+<tr>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">N/A</td>
+<td style="text-align: right;">N/A</td>
+<td style="text-align: right;">N/A</td>
+<td style="text-align: right;">N/A</td>
+<td style="text-align: right;">1187.99</td>
+</tr>
+<tr>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">N/A</td>
+<td style="text-align: right;">N/A</td>
+<td style="text-align: right;">N/A</td>
+<td style="text-align: right;">N/A</td>
+<td style="text-align: right;">1234.56</td>
+</tr>
+<tr>
+<td style="text-align: right;">15</td>
+<td style="text-align: right;">N/A</td>
+<td style="text-align: right;">N/A</td>
+<td style="text-align: right;">N/A</td>
+<td style="text-align: right;">N/A</td>
+<td style="text-align: right;">1305.81</td>
+</tr>
+<tr>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">N/A</td>
+<td style="text-align: right;">N/A</td>
+<td style="text-align: right;">N/A</td>
+<td style="text-align: right;">N/A</td>
+<td style="text-align: right;">1322.80</td>
+</tr>
+</tbody>
+</table>
+<p>Values are in bits; the 3-bit columns use BCE=.001 and the 4-bit column uses BCE=.004. N/A means the input domain is too small, not a zero imputation for missing mass. M0 is nonzero because even without observed labels the calculation still selects a complete target and requires full-domain precision; the actual empty fixed-D event instead has zero K. This directly illustrates why the min-max cannot be identified with fixed-training-set cost.</p>
+<p>For the three 3-bit tanh architectures, by n=4 the cumulative increase after subtracting M0 reaches about 73.4%, 73.9%, and 77.3% of the total increase, versus 37.9% for ReLU, rather than a common 50%. The full-interval affine R² for 4-bit inputs is about 0.935, but the maximum residual still occupies 13.4% of the total increase. High R² can coexist with steps; it establishes neither strict proportionality nor a direct refutation of approximate linearity in larger random-memory tasks.</p>
+<p>One maximizing witness for 4-bit inputs at n=4 and BCE=.004 assigns inputs 1100, 1101, 1110, and 1111 the labels 0, 1, 1, and 0: an embedded complete 2-bit XOR face. Its cheapest complete extension is 0x6FFF, with K≈604.28 and output 1 on all other unseen inputs; at the same n, the median minimum-extension cost of typical partial constraints is only 175.64. At some n, a small world may contain no dataset that excludes cheap structure, while thresholds such as first excluding linear separators can produce steps. A short name for XOR neither automatically certifies nor disqualifies it as a memory-comparison object; that depends on the operational definition, not the symbolic name.</p>
+<p>“Compute c for complete rules before min-max” must also be distinguished from “take the minimum-K envelope before computing its window slope.” For 4-bit inputs over .0063→.004 at n=4, the two are about 84.55 and 92.80, respectively. The minimum-K rule need not have the smallest slope, and the lower envelope may change ordering within the window.</p>
+<p>Combinatorial enumeration is exact, but the input SMC estimates are not. The 4-bit .001 node lacks orbit 0x1AA3, comprising 24 functions. Completing them with K(.004) and positive infinity as lower and upper bounds leaves M_n identical for n=0–15, while the upper bound at n=16 remains unknown; this is not a confidence interval accounting for SMC error. Splitting eight replicas into the first and last four changes the .004 curve by at most about 4.86 bits; switching to mean-mass aggregation changes it by at most about 19.15 bits. Shared adaptation in the old replicas cannot exclude common mixing bias. The old catalogue still has 959 orbits awaiting rechecks and 40 unresolved warnings; the maximum full-domain target parity4 0x6996 is marked UNRESOLVED_WARNING, so the final extremal ordering is not fully certified.</p>
+<h3 id="10-verification-and-three-difficulties">10. Verification and Three Difficulties</h3>
+<p>In the existing result audits, the completed two-layer matrix checks survival-ratio ledgers across 216308 levels, with maximum discrepancy 1.41e-10 bits; independent BCE checks on 512 snapshots and 4096 inspected particles have maximum discrepancy 1.39e-17. Enhanced three-layer checks cover 32138 levels, with maximum K discrepancy 5.71e-11 bits and across 192 parameter samples the maximum BCE discrepancy is 1.54e-10. Five-rule and bridge checks cover 31529 levels, with maximum K discrepancy 5.53e-11 bits; 432 snapshots and 3456 inspected particles have maximum BCE discrepancy 2.22e-16. Per-sample loss checks cover 2160 node-model snapshots with maximum discrepancy 3.33e-16. These verify provenance, implementation, and accounting, not adequate MCMC mixing or absence of systematic SMC bias. This release package did not rerun those complete raw-snapshot audits.</p>
+<p>The first difficulty is certifying individual noise instances. Independent random sources usually lack substantial compression, but one generally cannot certify the shortest description of a particular dataset; small finite samples may commonly admit cheap extensions. Averaging more random tables can measure that property better, not guarantee its elimination, and continually selecting larger K cannot legitimately force linearity.</p>
+<p>The second difficulty is the SMC cost of reliable volume measurement. Larger sample counts, more tables, more particles, longer mixing budgets, or tighter alignment all increase expense; between-pool stability still cannot exclude shared bias. Cheap training diagnostics or SGD hitting times can support screening, but do not thereby replace absolute mass and precise contraction coefficients.</p>
+<p>The third difficulty is that linearity has not been proved necessary. Approximately additive source information in labels does not imply independently additive parameter-constraint costs; shared representations, architectural geometry, and continuous precision allocation can alter the response. The cost difference for parity between ordinary networks and symbolic languages warns against directly importing another description language's scale.</p>
+<h3 id="11-current-conclusion-and-the-decision-to-defer-further-runs">11. Current Conclusion and the Decision to Defer Further Runs</h3>
+<p>The existing results support increasing complexity with memory load within an architecture and permit a coarse affine approximation over a finite range. They also explicitly retain curvature, loss-window dependence, architecture differences, budget sensitivity of absolute K, parity4 disagreement, and unstable amplitude alignment. Strict proportionality, a universal per-sample cost, and a complete causal explanation of the curvature remain unestablished.</p>
+<p>Expensive follow-up runs are therefore deferred, retaining irregular and negative results without running new experiments for publication. The complexity interpretation of the contraction coefficient can still be examined through independent rule orderings, intervention predictions, and correspondence with actual training. Memory linearity was intended as a strong external calibration, not the only acceptance criterion that must be made to succeed, nor does curvature alone invalidate every ordering.</p>
+<h3 id="12-public-reproduction-entry-points-and-dependencies">12. Public Reproduction Entry Points and Dependencies</h3>
+<p>Entry points are the <a href="../../../experiments/experiment_32_random_memory/extension_20261027/README.md">reproduction guide</a>, <a href="../../../experiments/experiment_32_random_memory/extension_20261027/config.py">top-level configuration</a>, and <a href="../../../experiments/experiment_32_random_memory/extension_20261027/run.py">unified runner</a>. Dependencies are Python, NumPy, PyTorch, SciPy, and Matplotlib. The default TASK=review checks only existing compact tables, aggregation of 384 pools, data hashes, and descriptive fits, without training or SMC. The following commands run from this experiment directory and are identical in both languages:</p>
+<pre><code class="language-bash">python -m pip install -r extension_20261027/requirements.txt
+python extension_20261027/run.py
+python extension_20261027/verify.py
+python extension_20261027/plot_evidence.py
+</code></pre>
+<p>Original scientific functions are retained in topic-specific directories; release adaptations address input paths, entry points, and safe defaults only. Changes and source hashes are recorded in the <a href="../../../experiments/experiment_32_random_memory/extension_20261027/SOURCE_MANIFEST.json">manifest</a>. Random tables are regenerated directly by the <a href="../../../experiments/experiment_32_random_memory/extension_20261027/data.py">generator</a>; complete weights, large logs, and raw outputs are not bundled. Actual training and SMC require explicit ALLOW_TRAINING or ALLOW_SMC flags, respectively, and a verified CUDA device; neither was enabled here. New runs are independent reproductions, not promises of bitwise identity across hardware, and do not reuse historical partial pools.</p>
+<p>The <a href="../../../experiments/experiment_32_random_memory/extension_20261027/minimax/analyze.py">min-max analysis</a> explicitly requires an external complete-function directory through CATALOGUE_ROOT, with its structure specified in the reproduction guide. This package contains existing compact result tables and small combinatorial unit checks, not the entire old SMC catalogue, and does not claim dependency-free reproduction. Full agreement recomputation requires prediction files produced by retraining; independent forward audits of loss require observation files produced by retraining. Loss pairing in the structural audit is an explicit optional input; absent input is skipped and marked, never replaced by zero.</p>
+<p>The public compact tables cover the <a href="../../../experiments/experiment_32_random_memory/extension_20261027/evidence/main_curve.json">primary matrix</a>, <a href="../../../experiments/experiment_32_random_memory/extension_20261027/evidence/main_pools.json">poolwise primary coefficients</a>, <a href="../../../experiments/experiment_32_random_memory/extension_20261027/evidence/enhanced.json">enhanced measurements</a>, <a href="../../../experiments/experiment_32_random_memory/extension_20261027/evidence/fit_diagnostics.csv">fitting supplement</a>, <a href="../../../experiments/experiment_32_random_memory/extension_20261027/evidence/calibration_alignment.json">rules and bridges</a>, <a href="../../../experiments/experiment_32_random_memory/extension_20261027/evidence/agreement.json">agreement</a>, <a href="../../../experiments/experiment_32_random_memory/extension_20261027/evidence/loss.json">per-sample loss</a>, <a href="../../../experiments/experiment_32_random_memory/extension_20261027/evidence/shortcuts.json">structural references</a>, <a href="../../../experiments/experiment_32_random_memory/extension_20261027/evidence/structure_original.json">original-table structure and loss pairing</a>, <a href="../../../experiments/experiment_32_random_memory/extension_20261027/evidence/dictionary.json">fixed dictionary</a>, and <a href="../../../experiments/experiment_32_random_memory/extension_20261027/evidence/minimax.json">min-max</a>. They are lightweight extracts of completed results, not newly measured raw masses; figures are generated from the same tables.</p></div>
 
       </article>
     </main>

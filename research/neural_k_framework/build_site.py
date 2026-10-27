@@ -29,24 +29,24 @@ POST_UPLOAD_EXPERIMENTS = (
         "Loss 与幅度对齐",
         "Loss and output amplitude",
         "experiments/e31.html",
-        "raw MSE、BCE 幅度对齐和目标幅度对规则恢复与 grokking 的影响。",
-        "Raw MSE, BCE amplitude alignment, and target amplitude in rule recovery.",
+        "原版 grokking、目标幅度，以及 XOR/XOR-OR 幅度对齐的前瞻换序验证。",
+        "Original grokking, target amplitude, and a prospective XOR/XOR-OR ordering-reversal test.",
     ),
     (
         "E32",
-        "随机记忆缩放",
-        "Random-memory scaling",
+        "随机记忆与跨层标定",
+        "Random memory and cross-depth calibration",
         "experiments/e32.html",
-        "随机标签记忆复杂度随样本数近似线性增加。",
-        "Approximate linear growth of random-memory complexity.",
+        "一至三层的样本量扫描、系统曲率、幅度对齐与记忆定义的边界。",
+        "Sample-size scans across one to three hidden layers, curvature, amplitude alignment, and limits of memory calibration.",
     ),
     (
         "E33",
         "跨架构联合输出体积",
         "Cross-architecture output volume",
         "experiments/e33.html",
-        "不同架构下规则联合输出体积的有限协议测量。",
-        "Finite-protocol joint-output volume across architectures.",
+        "跨架构联合输出体积、外部复杂度代理与逻辑成本证书的对应和局部倒序。",
+        "Cross-architecture output volume, external complexity proxies, and logical-cost certificates with local reversals.",
     ),
     (
         "E34",
@@ -66,19 +66,19 @@ POST_UPLOAD_EXPERIMENTS = (
     ),
     (
         "E36",
-        "Peleg/G&C 独立验证",
-        "Independent Peleg/G&C recheck",
+        "Peleg/G&C 与跨方法训练对照",
+        "Peleg/G&C and cross-method training comparisons",
         "experiments/e36.html",
-        "复现 Peleg/G&C 的静态插值对照，并检查收紧 raw BCE 后静态采样与 SGD 的差距。",
-        "Independent replication of the Peleg/G&C comparison under tightened raw BCE.",
+        "58 条件 CV、直接 G&C、SGD/Adam/STP 对照及宽 CNN 的协议敏感边界。",
+        "58 CV conditions, direct G&C, SGD/Adam/STP comparisons, and protocol-sensitive limits in wider CNNs.",
     ),
     (
         "E37",
         "测度鲁棒性与 Gaussian 对应",
         "Measure robustness and Gaussian alignment",
         "experiments/e37.html",
-        "Gaussian 与固定范数球欧式测度下的规则排序、端点响应和真实训练对应边界。",
-        "Rule ordering, endpoint response, and training correspondence under Gaussian and fixed-ball Euclidean measures.",
+        "多测度规则排序与固定半径球面收缩；区分共同趋势、半径依赖和未达条件。",
+        "Rule ordering across measures and fixed-radius spherical contraction, separating shared trends, radius dependence, and unreached conditions.",
     ),
     (
         "E38",
@@ -89,6 +89,56 @@ POST_UPLOAD_EXPERIMENTS = (
         "A complete five-configuration, 19-target SMC scan of relative mass at a common BCE threshold.",
     ),
 )
+
+
+# 10月补证并入原编号；这里只指定源稿，不把工作目录或研究主题变成新实验编号。
+OCTOBER_EXTENSIONS = {
+    "e31": ("experiment_31_loss_amplitude_grokking", "XOR_OR_ALIGNMENT_20261027.md", "e31_update_20261027.md"),
+    "e32": ("experiment_32_random_memory", "MEMORY_EXTENSION_20261027.md", "e32_update_20261027.md"),
+    "e33": ("experiment_33_cross_architecture", "COMPLEXITY_CALIBRATION_20261027.md", "e33_update_20261027.md"),
+    "e36": ("experiment_36_peleg_g_and_c_validation", "VALIDATION_EXTENSION_20261027.md", "e36_update_20261027.md"),
+    "e37": ("experiment_37_measure_robustness", "FIXED_RADIUS_20261027.md", "e37_update_20261027.md"),
+}
+
+
+def october_extension_paths(slug: str) -> tuple[Path, Path]:
+    directory, chinese, english = OCTOBER_EXTENSIONS[slug]
+    return EXPERIMENT_ROOT / directory / chinese, ROOT / "translations_en" / "post_upload" / english
+
+
+def append_october_extension(source: str, outfile: str, language: str) -> str:
+    slug = Path(outfile).stem.removeprefix("post-upload-")
+    if slug == "peleg":
+        slug = "e36"
+    if slug not in OCTOBER_EXTENSIONS:
+        return source
+    is_chinese = language == "zh"
+    path = october_extension_paths(slug)[0 if is_chinese else 1]
+    heading = "2026年10月扩展与复核" if is_chinese else "October 2026 extension and verification"
+    notice = (
+        "**2026年10月更新：** 本页保留原报告；[跳转至新增实验、复核和边界](#update-20261027)。"
+        if is_chinese else
+        "**October 2026 update:** The original report is retained; [jump to the added experiments, checks, and limitations](#update-20261027)."
+    )
+    source = re.sub(r"\A(\s*#\s+[^\r\n]+\r?\n)", lambda m: m[1] + "\n" + notice + "\n", source, count=1)
+    extension = strip_first_h1(read_text(path))
+    if re.search(r'(?:id=["\']update-20261027["\']|\{#update-20261027\})', extension):
+        return source + "\n\n" + extension
+    return source + f"\n\n## {heading} {{#update-20261027}}\n\n" + extension
+
+
+def october_navigation(language: str = "zh", prefix: str = "") -> str:
+    labels = (
+        ("本轮四类补证", "训练对应 · E36", "幅度与复杂度 · E31", "外部校准 · E33", "测度 · E37", "记忆 · E32")
+        if language == "zh" else
+        ("Four areas updated", "Training correspondence · E36", "Amplitude and complexity · E31", "External calibration · E33", "Measures · E37", "Memory · E32")
+    )
+    routes = ("e36", "e31", "e33", "e37", "e32")
+    links = "".join(
+        f'<a href="{prefix}experiments/{slug}.html#update-20261027">{label}</a>'
+        for slug, label in zip(routes, labels[1:])
+    )
+    return f'<nav class="ledger-path" aria-label="{labels[0]}"><span>{labels[0]}</span>{links}</nav>'
 
 
 @dataclass(frozen=True)
@@ -576,7 +626,7 @@ def build_paper(experiments: list[Experiment]) -> None:
       <div><strong>38</strong><span>组已编号证据单元</span></div>
       <div><strong>30</strong><span>组历史档案实验</span></div>
       <div><strong>8</strong><span>组提交后增量实验</span></div>
-      <div><strong>22</strong><span>组关键实验展开</span></div>
+      <div><strong>4</strong><span>类10月新增补证</span></div>
       <div><strong>4</strong><span>张关键结果图</span></div>
     </div>
     """
@@ -585,7 +635,7 @@ def build_paper(experiments: list[Experiment]) -> None:
       <div class="disclosure-kicker" id="research-disclosure-title">研究状态说明</div>
       <p>本网页汇总的是作者近期密集完成的大量研究与实验。把这些材料整理成严谨、完整的论文，需要投入非常大的额外工作量；限于作者目前的精力，现阶段暂时由 AI 对研究进行总结和网页化整理。</p>
       <p><strong>除“理论核心”外，本站主文、研究证据总账和实验说明的具体文字均由 AI 撰写，仍有不少表达不清、结构不成熟和细节解释不足之处。</strong>研究问题、理论判断和实验工作来自作者；AI 负责整理现有对话、脚本、结果包与文档，不应把当前网页视为已经完成的正式论文。</p>
-      <p><strong><a href="theory-core.html">“理论核心”页</a>是唯一的文字写作例外：</strong>作者对该页进行了逐段审阅和深度修改，因此它是目前对核心研究主张相对更准确的表述。除该页外，作者没有参与本站其他页面的具体文字写作。</p>
+      <p><strong><a href="theory-core.html">“理论核心”页</a>的既有版本是文字写作例外：</strong>作者对该页进行了逐段审阅和深度修改。2026年10月新增段落由 AI 根据作者讨论整理，仍待作者审阅；其余页面的具体文字也由 AI 整理，不应视为作者已经逐句认可。</p>
       <p>需要核查或寻找更详细解释时，请优先查看研究证据总账、各实验详情页、原始实验脚本及其完整说明。作者之后会继续修改当前网页，并推进正式论文写作。</p>
       <div class="disclosure-links">
         <a href="evidence-ledger.html">查看研究证据总账</a>
@@ -764,6 +814,7 @@ def post_upload_page(
     language: str = "zh",
     nav_prefix: str | None = None,
 ) -> None:
+    source = append_october_extension(source, outfile, language)
     if link_base:
         source = rewrite_post_upload_links(source, link_base, f"{prefix}assets/post_upload")
     body, toc = render_markdown(strip_first_h1(source))
@@ -804,11 +855,11 @@ def build_post_upload() -> None:
       <div><strong><a href="post-upload-theory-update.html">理论增量全文</a></strong><span>统计语言、MDL、复杂度收窄与周末修正</span></div>
       <div><strong><a href="post-upload-estimator.html">架构估计器</a></strong><span>训练前估算 Neural K</span></div>
       <div><strong><a href="experiments/e31.html">E31 Loss 与幅度</a></strong><span>目标幅度与联合输出</span></div>
-      <div><strong><a href="experiments/e32.html">E32 随机记忆</a></strong><span>复杂度近线性缩放</span></div>
+      <div><strong><a href="experiments/e32.html#update-20261027">E32 随机记忆</a></strong><span>跨层增长、曲率与标定边界</span></div>
       <div><strong><a href="experiments/e33.html">E33 跨架构</a></strong><span>联合输出体积</span></div>
       <div><strong><a href="experiments/e34.html">E34 规则决斗</a></strong><span>15 对规则 × 5 阈值，75 项判决同向</span></div>
       <div><strong><a href="experiments/e35.html">E35 grokking 决斗</a></strong><span>真实候选函数偏好</span></div>
-      <div><strong><a href="experiments/e36.html">E36 Peleg/G&C 验证</a></strong><span>静态 vs SGD 对照</span></div>
+      <div><strong><a href="experiments/e36.html#update-20261027">E36 Peleg/G&C 验证</a></strong><span>58条件、STP与宽CNN边界</span></div>
       <div><strong><a href="experiments/e37.html">E37 测度鲁棒性</a></strong><span>Gaussian、欧式球与训练对应</span></div>
       <div><strong><a href="experiments/e38.html">E38 宽深SMC扫描</a></strong><span>95个目标运行与相对质量变化</span></div>
       <div><strong><a href="width-double-descent.html">双下降解释</a></strong><span>容量轴、时间轴与证据边界</span></div>
@@ -820,7 +871,7 @@ def build_post_upload() -> None:
     page = page_template(
         title=first_heading(source, "提交后增量"),
         description="2026-09-02 短论文提交之后的新增理论与实验：MDL—grokking、规则对决、幅度对齐、随机记忆、跨架构、架构估计器与 Peleg 复核。",
-        eyebrow="提交后增量 · 2026-09",
+        eyebrow="提交后增量 · 2026-09至10",
         body=notice + links + body,
         sidebar=toc_sidebar(toc, '<a class="sidebar-action" href="index.html">返回研究主文 →</a>'),
         prefix="",
@@ -986,11 +1037,11 @@ def build_post_upload_en() -> None:
       <div><strong><a href="post-upload-theory-update.html">Full theory increment</a></strong><span>Strict language, MDL, narrowing, and weekend corrections</span></div>
       <div><strong><a href="post-upload-estimator.html">Architecture estimator</a></strong><span>Estimate Neural K before training</span></div>
       <div><strong><a href="experiments/e31.html">E31 Loss and amplitude</a></strong><span>Target amplitude and the joint output</span></div>
-      <div><strong><a href="experiments/e32.html">E32 Random memory</a></strong><span>Near-linear complexity scaling</span></div>
+      <div><strong><a href="experiments/e32.html#update-20261027">E32 Random memory</a></strong><span>Cross-depth growth, curvature, and calibration limits</span></div>
       <div><strong><a href="experiments/e33.html">E33 Cross-architecture</a></strong><span>Joint-output volume</span></div>
       <div><strong><a href="experiments/e34.html">E34 Rule duels</a></strong><span>15 pairs × 5 thresholds; all 75 verdicts agree</span></div>
       <div><strong><a href="experiments/e35.html">E35 Grokking duels</a></strong><span>Real candidate-function preference</span></div>
-      <div><strong><a href="experiments/e36.html">E36 Peleg/G&amp;C recheck</a></strong><span>Static versus SGD comparison</span></div>
+      <div><strong><a href="experiments/e36.html#update-20261027">E36 Peleg/G&amp;C recheck</a></strong><span>58 conditions, STP, and wider-CNN limits</span></div>
       <div><strong><a href="experiments/e37.html">E37 Measure robustness</a></strong><span>Gaussian, Euclidean balls, and training correspondence</span></div>
       <div><strong><a href="experiments/e38.html">E38 Width/depth SMC scan</a></strong><span>95 target runs and changes in relative mass</span></div>
       <div><strong><a href="width-double-descent.html">Double-descent account</a></strong><span>Capacity and time axes with evidence boundaries</span></div>
@@ -1002,7 +1053,7 @@ def build_post_upload_en() -> None:
     page = page_template(
         title=first_heading(source, "Post-upload increments"),
         description="Theory and experiments added after the 2026-09-02 preprint: MDL-grokking, rule duels, amplitude alignment, random memory, cross-architecture volume, architecture estimator, and the Peleg/G&C recheck.",
-        eyebrow="Post-upload increments · 2026-09",
+        eyebrow="Post-upload increments · 2026-09 to 10",
         body=notice + links + body,
         sidebar=toc_sidebar(toc, '<a class="sidebar-action" href="index.html">Back to the research narrative →</a>', language="en"),
         prefix="../",
@@ -1238,6 +1289,7 @@ def build_experiment_pages(experiments: list[Experiment]) -> None:
       <input id="experiment-search" type="search" placeholder="输入 E23、parity、MNIST…" data-experiment-search autocomplete="off">
       <span class="search-count" data-search-count>{total_experiments} / {total_experiments}</span>
     </div>
+    {october_navigation("zh", "../")}
     <div class="experiment-grid">{''.join(cards)}</div>
     <section class="supplement-experiments">
       <div class="section-label">提交后增量实验</div>
@@ -1344,11 +1396,11 @@ def build_canonical_increment_pages() -> None:
     }
     meta = {
         "e31": ("E31 Loss 与幅度对齐", "E31 Loss and output amplitude", "实验增量 · E31", "Experiment increment · E31"),
-        "e32": ("E32 随机记忆", "E32 Random memory", "实验增量 · E32", "Experiment increment · E32"),
+        "e32": ("E32 随机记忆与跨层标定", "E32 Random memory and cross-depth calibration", "实验增量 · E32", "Experiment increment · E32"),
         "e33": ("E33 跨架构联合输出", "E33 Cross-architecture joint output", "实验增量 · E33", "Experiment increment · E33"),
         "e34": ("E34 条件规则决斗", "E34 Conditional rule duel", "实验增量 · E34", "Experiment increment · E34"),
         "e35": ("E35 Mod97 冻结函数决斗", "E35 Mod97 frozen-function duels", "实验增量 · E35", "Experiment increment · E35"),
-        "e36": ("E36 Peleg/G&C 独立验证", "E36 Peleg/G&C independent verification", "实验增量 · E36", "Experiment increment · E36"),
+        "e36": ("E36 Peleg/G&C 与跨方法训练对照", "E36 Peleg/G&C and cross-method training comparisons", "实验增量 · E36", "Experiment increment · E36"),
         "e37": ("E37 测度鲁棒性与 Gaussian 对应", "E37 Measure robustness and Gaussian alignment", "实验增量 · E37", "Experiment increment · E37"),
         "e38": ("E38 宽深扫描与相对目标质量", "E38 Width, depth, and relative target mass", "实验增量 · E38", "Experiment increment · E38"),
     }
@@ -1417,7 +1469,7 @@ def build_paper_en(experiments: list[Experiment], output: Path) -> None:
       <div><strong>38</strong><span>numbered evidence units</span></div>
       <div><strong>30</strong><span>historical archive experiments</span></div>
       <div><strong>8</strong><span>post-upload experiments</span></div>
-      <div><strong>22</strong><span>key experiments explained</span></div>
+      <div><strong>4</strong><span>areas of October evidence</span></div>
       <div><strong>4</strong><span>result figures</span></div>
     </div>
     """
@@ -1426,7 +1478,7 @@ def build_paper_en(experiments: list[Experiment], output: Path) -> None:
       <div class="disclosure-kicker" id="research-disclosure-title-en">Research status notice</div>
       <p>This website summarizes a large body of research and experiments completed by the author in a short period. Turning the full record into a rigorous, submission-ready paper is a substantial additional project; given the author’s current time and energy constraints, the present archive has been summarized and organized by AI.</p>
       <p><strong>Except for the Core Theory page, the specific prose of the research narrative, evidence ledger, and experiment descriptions was written by AI and still contains unclear explanations, immature structure, and missing detail.</strong> The research questions, theoretical judgments, and experiments come from the author. The current site should not be treated as a finished paper.</p>
-      <p><strong>The <a href="theory-core.html">Core Theory page</a> is the sole authorship exception:</strong> the author reviewed it paragraph by paragraph and participated deeply in revising it, so it is currently the relatively most accurate statement of the core research claims. The author did not participate in writing the specific prose on the other pages.</p>
+      <p><strong>The previous version of the <a href="theory-core.html">Core Theory page</a> is an authorship exception:</strong> the author reviewed it paragraph by paragraph and participated deeply in revising it. The October 2026 additions were organized by AI from the author's discussions and still await author review; the prose on the other pages was also organized by AI and should not be treated as having received the author's sentence-by-sentence approval.</p>
       <p>For verification or fuller context, consult the evidence ledger, experiment detail pages, original scripts, and preserved result notes. The author intends to continue revising the website and developing a formal paper.</p>
       <div class="disclosure-links">
         <a href="evidence-ledger.html">Open the evidence ledger</a>
@@ -1577,6 +1629,7 @@ def build_experiment_pages_en(experiments: list[Experiment], output: Path) -> No
       <input id="experiment-search-en" type="search" placeholder="Try E23, parity, MNIST…" data-experiment-search autocomplete="off">
       <span class="search-count" data-search-count>{total_experiments} / {total_experiments}</span>
     </div>
+    {october_navigation("en", "../")}
     <div class="experiment-grid">{''.join(cards)}</div>
     <section class="supplement-experiments">
       <div class="section-label">Post-upload experiments</div>
@@ -1810,6 +1863,17 @@ def write_manifest(experiments: list[Experiment]) -> None:
             "double_descent": {"zh-CN": "width-double-descent.html", "en": "en/width-double-descent.html"},
             "complexity_methods": {"zh-CN": "complexity-methods.html", "en": "en/complexity-methods.html"},
         },
+        "october_2026_extensions": {
+            "date": "2026-10-27",
+            "experiments": [slug.upper() for slug in OCTOBER_EXTENSIONS],
+            "anchor": "update-20261027",
+            "categories": {
+                "training_correspondence": ["E36"],
+                "complexity": ["E31", "E33"],
+                "measure_robustness": ["E37"],
+                "memory_calibration": ["E32"],
+            },
+        },
         "experiment_count": len(experiment_items),
         "experiments": experiment_items,
     }
@@ -1830,6 +1894,12 @@ def main() -> None:
     experiments = [e for e in load_experiments() if e.number <= 30]
     if len(experiments) != 30:
         raise RuntimeError(f"预期 30 个实验目录，实际得到 {len(experiments)} 个。")
+    missing_extensions = [
+        str(path) for slug in OCTOBER_EXTENSIONS for path in october_extension_paths(slug)
+        if not path.is_file()
+    ]
+    if missing_extensions:
+        raise RuntimeError(f"新增双语源稿未齐，不清理现有站点：{missing_extensions}")
     prepare_site_root()
     copy_assets()
     copy_public_theory_sources()

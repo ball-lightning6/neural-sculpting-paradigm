@@ -1,4 +1,19 @@
-# Incremental materials to be uploaded in this batch
+# Theory and experiment additions after submission
+
+## Four areas updated on 2026-10-27, integrated into existing experiments {#latest-evidence}
+
+This update retains the existing numbers and all earlier results, adding new protocols, findings, and limits to the corresponding experiments. Four research themes do not imply four new experiment numbers.
+
+| Area | Pages | Latest content |
+|---|---|---|
+| Static and training correspondence | [E36](experiments/e36.html#update-20261027) | 58 CV conditions, direct G&C, broad STP, and wider-CNN checks; the purpose of arbitrary small-sample grouping and optimization-protocol boundaries are explicit. |
+| Complexity | [E31](experiments/e31.html#update-20261027), [E33](experiments/e33.html#update-20261027) | Independent logical criteria, the prospective f/g reversal under amplitude alignment, and external proxy/certificate calibration, retaining local reversals. |
+| Measures | [E37](experiments/e37.html#update-20261027) | Earlier multi-measure evidence and fixed-radius angular contraction; shared trends are not presented as a measure-independent universal formula. |
+| Memory | [E32](experiments/e32.html#update-20261027) | Same-data comparisons across one to three hidden layers, enhanced sampling, amplitude tubes, and diagnostics of the memory definition, reporting curvature and unresolved results. |
+
+STP tests whether the distinctive gradient updates of SGD/Adam are indispensable, not whether it can replace SMC; a valid mean-BCE volume is not automatically independent logical complexity. The six open questions, the deferral of memory exploration, and the status of the core working hypothesis are reflected in the [theory core](theory-core.html#open-questions-20261027).
+
+The overview of earlier batches is retained below; their latest supporting evidence is included in the existing experiment pages linked above.
 
 ## 1. Existing evidence: 4-bit rule curves and rule duels (E10/E19/E23/E24)
 
@@ -18,7 +33,7 @@ raw 0/1 and 0/15 MSE can exhibit grokking; the BCE intervention with output-magn
 
 ## 5. E32 random memorization
 
-The memorization complexity of random labels grows approximately linearly with the number of samples, providing an external calibration for the complexity/capacity relationship.
+The earlier protocol observed near-linear growth with sample count as a lead for external complexity/capacity calibration; the added cross-depth findings retain growth but exhibit systematic curvature and cannot be upgraded to strict proportionality.
 
 ## 6. E33 cross-architecture joint output
 

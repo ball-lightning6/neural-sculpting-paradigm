@@ -1,0 +1,335 @@
+{
+  "source": "memory_complete_review_20261026/RESULTS.json",
+  "curve": [
+    {
+      "n": 16,
+      "one": 153.93115980244676,
+      "two": 57.449887192448045,
+      "two_dataset_sd": 5.479818164543162,
+      "three": 35.97768124451631
+    },
+    {
+      "n": 32,
+      "one": 274.8661212030191,
+      "two": 82.62176113926799,
+      "two_dataset_sd": 7.3321654962064065,
+      "three": 46.77629423825563
+    },
+    {
+      "n": 48,
+      "one": 403.94800344876,
+      "two": 105.67125196011659,
+      "two_dataset_sd": 5.148672199028789,
+      "three": 55.75777942500055
+    },
+    {
+      "n": 64,
+      "one": 508.5417894578439,
+      "two": 121.45121980264585,
+      "two_dataset_sd": 3.512472195553084,
+      "three": 62.582135003077
+    },
+    {
+      "n": 80,
+      "one": 588.8698322239294,
+      "two": 136.49353236405622,
+      "two_dataset_sd": 3.911471602080384,
+      "three": 68.79779667038281
+    },
+    {
+      "n": 96,
+      "one": 668.1381636039055,
+      "two": 148.72472336796488,
+      "two_dataset_sd": 5.064343061356756,
+      "three": 74.0677856225434
+    },
+    {
+      "n": 112,
+      "one": 732.952787365385,
+      "two": 159.06927761788245,
+      "two_dataset_sd": 5.706085367513071,
+      "three": 78.13667140739352
+    },
+    {
+      "n": 128,
+      "one": 815.4801478525121,
+      "two": 169.82264389885478,
+      "two_dataset_sd": 8.767737703559677,
+      "three": 83.07331082043328
+    }
+  ],
+  "conversion": {
+    "a_frozen": 2.3729199311915137,
+    "b_frozen": -28.224598410008134,
+    "all": {
+      "median_relative_error": 0.014863233809021822,
+      "maximum_relative_error": 0.036524024667451624
+    },
+    "old_holdout_data2_3_n_le112": {
+      "median_relative_error": 0.014759483140624783,
+      "maximum_relative_error": 0.027231528590374122
+    },
+    "previously_missing_n128": {
+      "median_relative_error": 0.016195119653892306,
+      "maximum_relative_error": 0.021418158850986507
+    },
+    "rows": [
+      {
+        "dataset": 0,
+        "n": 16,
+        "observed": 55.53689180401523,
+        "predicted": 55.27970817440559,
+        "relative_error": -0.0046308610592975434
+      },
+      {
+        "dataset": 1,
+        "n": 16,
+        "observed": 57.9316399527915,
+        "predicted": 57.78241297792858,
+        "relative_error": -0.0025759149056461183
+      },
+      {
+        "dataset": 2,
+        "n": 16,
+        "observed": 64.691202206816,
+        "predicted": 64.48317563797801,
+        "relative_error": -0.003215685622489108
+      },
+      {
+        "dataset": 3,
+        "n": 16,
+        "observed": 51.639814806169454,
+        "predicted": 51.04493718232671,
+        "relative_error": -0.011519747428909656
+      },
+      {
+        "dataset": 0,
+        "n": 32,
+        "observed": 85.68535314268536,
+        "predicted": 85.48465156520086,
+        "relative_error": -0.002342309042600096
+      },
+      {
+        "dataset": 1,
+        "n": 32,
+        "observed": 75.40333759930559,
+        "predicted": 77.62137181386663,
+        "relative_error": 0.02941559730880494
+      },
+      {
+        "dataset": 2,
+        "n": 32,
+        "observed": 91.45045107161718,
+        "predicted": 89.20899378926336,
+        "relative_error": -0.024510073554459326
+      },
+      {
+        "dataset": 3,
+        "n": 32,
+        "observed": 77.94790274346383,
+        "predicted": 78.7721928125788,
+        "relative_error": 0.010574884507512743
+      },
+      {
+        "dataset": 0,
+        "n": 48,
+        "observed": 112.6645922039504,
+        "predicted": 109.27468965369329,
+        "relative_error": -0.030088446458143375
+      },
+      {
+        "dataset": 1,
+        "n": 48,
+        "observed": 100.59218510307869,
+        "predicted": 102.1655436133461,
+        "relative_error": 0.015640961657758617
+      },
+      {
+        "dataset": 2,
+        "n": 48,
+        "observed": 105.93692494838865,
+        "predicted": 103.3170132249536,
+        "relative_error": -0.024730864377189028
+      },
+      {
+        "dataset": 3,
+        "n": 48,
+        "observed": 103.49130558504862,
+        "predicted": 101.57934433423011,
+        "relative_error": -0.01847460750456247
+      },
+      {
+        "dataset": 0,
+        "n": 64,
+        "observed": 125.58212264085307,
+        "predicted": 123.18851243280153,
+        "relative_error": -0.01906011904972274
+      },
+      {
+        "dataset": 1,
+        "n": 64,
+        "observed": 120.04333855438551,
+        "predicted": 120.90171783919811,
+        "relative_error": 0.00715057824240461
+      },
+      {
+        "dataset": 2,
+        "n": 64,
+        "observed": 117.41964612301683,
+        "predicted": 114.22212967254629,
+        "relative_error": -0.027231528590374122
+      },
+      {
+        "dataset": 3,
+        "n": 64,
+        "observed": 122.75977189232799,
+        "predicted": 122.79882835669954,
+        "relative_error": 0.00031815360821793647
+      },
+      {
+        "dataset": 0,
+        "n": 80,
+        "observed": 138.0683246393179,
+        "predicted": 133.02551374439773,
+        "relative_error": -0.036524024667451624
+      },
+      {
+        "dataset": 1,
+        "n": 80,
+        "observed": 140.79045613715402,
+        "predicted": 138.7039549004326,
+        "relative_error": -0.014819905368364049
+      },
+      {
+        "dataset": 2,
+        "n": 80,
+        "observed": 131.59339572123224,
+        "predicted": 131.55628819031745,
+        "relative_error": -0.0002819862707502749
+      },
+      {
+        "dataset": 3,
+        "n": 80,
+        "observed": 135.52195295852073,
+        "predicted": 136.82250128966982,
+        "relative_error": 0.009596587879361119
+      },
+      {
+        "dataset": 0,
+        "n": 96,
+        "observed": 148.67008433519163,
+        "predicted": 147.70703270997322,
+        "relative_error": -0.00647777681384182
+      },
+      {
+        "dataset": 1,
+        "n": 96,
+        "observed": 151.02974042804,
+        "predicted": 152.40997652822037,
+        "relative_error": 0.00913883647199946
+      },
+      {
+        "dataset": 2,
+        "n": 96,
+        "observed": 141.72184253586533,
+        "predicted": 138.85989353252504,
+        "relative_error": -0.020194127822011843
+      },
+      {
+        "dataset": 3,
+        "n": 96,
+        "observed": 153.47722617276258,
+        "predicted": 151.15240264106274,
+        "relative_error": -0.01514767753935621
+      },
+      {
+        "dataset": 0,
+        "n": 112,
+        "observed": 155.38527601389308,
+        "predicted": 157.2750316860964,
+        "relative_error": 0.012161742223467633
+      },
+      {
+        "dataset": 1,
+        "n": 112,
+        "observed": 164.9489859842231,
+        "predicted": 161.9132209122762,
+        "relative_error": -0.018404266348368302
+      },
+      {
+        "dataset": 2,
+        "n": 112,
+        "observed": 153.11731112103314,
+        "predicted": 150.91681803153045,
+        "relative_error": -0.014371288741893357
+      },
+      {
+        "dataset": 3,
+        "n": 112,
+        "observed": 162.82553735238048,
+        "predicted": 158.64479548832904,
+        "relative_error": -0.025676204924806406
+      },
+      {
+        "dataset": 0,
+        "n": 128,
+        "observed": 169.0904365471588,
+        "predicted": 171.6109936653745,
+        "relative_error": 0.014906562249679595
+      },
+      {
+        "dataset": 1,
+        "n": 128,
+        "observed": 182.3099688606519,
+        "predicted": 178.40522498747606,
+        "relative_error": -0.021418158850986507
+      },
+      {
+        "dataset": 2,
+        "n": 128,
+        "observed": 162.35466596756555,
+        "predicted": 159.51610941891212,
+        "relative_error": -0.017483677058105017
+      },
+      {
+        "dataset": 3,
+        "n": 128,
+        "observed": 165.53550422004287,
+        "predicted": 166.07453827169985,
+        "relative_error": 0.0032563047679515142
+      }
+    ],
+    "scope": "沿用上传前已报告的系数，不用新包重拟合；只是当前随机记忆家族和有限loss/采样预算的经验关系。"
+  },
+  "verification": {
+    "archive": {
+      "files": 464,
+      "decoded_file_bytes": 134485279,
+      "warnings": [],
+      "statuses": {
+        "smc_memory_remaining_20261026/STATUS.json": {
+          "status": "completed",
+          "total_pools": 128,
+          "completed_pools": 128,
+          "failed_pools": 0,
+          "active_stage": null
+        },
+        "smc_memory_remaining_20261026/results/two_layer/STATUS.json": {
+          "status": "completed",
+          "total_pools": 128,
+          "completed_pools": 128,
+          "failed_pools": 0
+        }
+      },
+      "changed": []
+    },
+    "imported_local_jobs_unchanged": 40,
+    "new_cloud_jobs": 88,
+    "ledger_levels": 216308,
+    "max_ledger_error_bits": 1.4142642612569034e-10,
+    "audited_snapshots": 512,
+    "audited_particles_not_independent": 4096,
+    "max_float64_logit_error": 1.0658141036401503e-14,
+    "max_float64_BCE_error": 1.3877787807814457e-17
+  }
+}

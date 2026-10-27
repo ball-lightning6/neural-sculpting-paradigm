@@ -1,0 +1,64 @@
+{
+  "train_x": {
+    "shape": [
+      16,
+      1,
+      28,
+      28
+    ],
+    "sha256": "90a3c8eae5a71e66dffa76ecf10c7e6acea8da9cf31aaf7e663f0356274dfa11"
+  },
+  "train_y": {
+    "shape": [
+      16
+    ],
+    "sha256": "617e68376fdabdad143eeb7ebecc8ab8b129d6f3cc03d6e70747a6607b2edf6c"
+  },
+  "test_x": {
+    "shape": [
+      2008,
+      1,
+      28,
+      28
+    ],
+    "sha256": "c1b18f5370a735446fe662703232fee224edbaae9171cce82239ec91cda4f2b3"
+  },
+  "test_y": {
+    "shape": [
+      2008
+    ],
+    "sha256": "9585382923a3c987d4dea913cc935a68ff6250d43529e8c92015f6bfd9677441"
+  },
+  "train_ids": {
+    "shape": [
+      16
+    ],
+    "sha256": "e34913116cdf9867b3a66d218dfb7890e3cdb7c3bdaa47d3bf3e38bdaf88d1ca"
+  },
+  "val_ids": {
+    "shape": [
+      256
+    ],
+    "sha256": "cef9c5da7801c0e68c086091b26993c3264e8faae757103a5f20a2b669eb66b4"
+  },
+  "test_ids": {
+    "shape": [
+      2008
+    ],
+    "sha256": "de89cafacd087a45b597029b902700a85636901b0bd705a8a29666ac536636c6"
+  },
+  "classes": {
+    "shape": [
+      2
+    ],
+    "sha256": "76108f84396dc2d72ce275fdb0e0ef37b229b2898bf5a31d576fea11a766a42b"
+  },
+  "mean": {
+    "shape": [],
+    "sha256": "f145ddc12636b6437e769811edeb3e78e6f8c88ba1e3e6ac8de2a2d844aa7410"
+  },
+  "std": {
+    "shape": [],
+    "sha256": "5d2eae2f0c07552c7c3809eacfafde91b443344e36604490058308e44b293441"
+  }
+}

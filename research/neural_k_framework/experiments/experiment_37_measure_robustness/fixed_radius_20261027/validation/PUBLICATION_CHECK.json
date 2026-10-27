@@ -1,0 +1,19 @@
+{
+  "blocks_per_language": 76,
+  "block_types": {
+    "anchor": 1,
+    "heading": 10,
+    "paragraph": 47,
+    "table": 6,
+    "formula": 8,
+    "image": 2,
+    "code": 2
+  },
+  "links_per_language": 16,
+  "images_per_language": 2,
+  "anchor": "update-20261027",
+  "link_base": "experiment_37_measure_robustness",
+  "legacy_e37_files_unchanged": 12,
+  "paragraph_number_multisets_match": true,
+  "passed": true
+}

@@ -1,0 +1,522 @@
+{
+  "alignment": [
+    {
+      "kind": "random",
+      "n": 32,
+      "pools": [
+        {
+          "pool": 0,
+          "raw_c": 47.648757714149724,
+          "aligned": {
+            "1.0": {
+              "c": 48.50540829747865,
+              "extra_c": 0.8566505833289284,
+              "conditional_K_high": 48.63258524875317,
+              "conditional_K_low": 49.48923583208211,
+              "ancestors_high": 2,
+              "ancestors_low": 2
+            },
+            "0.3": {
+              "c": 48.88483927434538,
+              "extra_c": 1.2360815601956574,
+              "conditional_K_high": 101.68140162838287,
+              "conditional_K_low": 102.91748318857856,
+              "ancestors_high": 2,
+              "ancestors_low": 2
+            },
+            "0.1": {
+              "c": 49.199853482002595,
+              "extra_c": 1.5510957678528712,
+              "conditional_K_high": 150.3934356723821,
+              "conditional_K_low": 151.94453144023498,
+              "ancestors_high": 2,
+              "ancestors_low": 2
+            }
+          }
+        },
+        {
+          "pool": 1,
+          "raw_c": 47.627904398799615,
+          "aligned": {
+            "1.0": {
+              "c": 48.868285375911114,
+              "extra_c": 1.2403809771114993,
+              "conditional_K_high": 48.83258185416826,
+              "conditional_K_low": 50.0729628312797,
+              "ancestors_high": 2,
+              "ancestors_low": 1
+            },
+            "0.3": {
+              "c": 48.796434938846005,
+              "extra_c": 1.1685305400463903,
+              "conditional_K_high": 102.03897854488886,
+              "conditional_K_low": 103.2075090849353,
+              "ancestors_high": 1,
+              "ancestors_low": 1
+            },
+            "0.1": {
+              "c": 48.36404988042261,
+              "extra_c": 0.736145481622998,
+              "conditional_K_high": 151.5121724304556,
+              "conditional_K_low": 152.24831791207856,
+              "ancestors_high": 1,
+              "ancestors_low": 1
+            }
+          }
+        }
+      ]
+    },
+    {
+      "kind": "projection",
+      "n": 32,
+      "pools": [
+        {
+          "pool": 0,
+          "raw_c": 22.90707119155013,
+          "aligned": {
+            "1.0": {
+              "c": 23.367419680279227,
+              "extra_c": 0.46034848872909606,
+              "conditional_K_high": 12.379780174492513,
+              "conditional_K_low": 12.840128663221611,
+              "ancestors_high": 7,
+              "ancestors_low": 7
+            },
+            "0.3": {
+              "c": 23.886045768757356,
+              "extra_c": 0.9789745772072251,
+              "conditional_K_high": 44.39253004309636,
+              "conditional_K_low": 45.3715046203036,
+              "ancestors_high": 6,
+              "ancestors_low": 7
+            },
+            "0.1": {
+              "c": 23.591777115778484,
+              "extra_c": 0.6847059242283535,
+              "conditional_K_high": 87.15011512506162,
+              "conditional_K_low": 87.83482104928999,
+              "ancestors_high": 6,
+              "ancestors_low": 7
+            }
+          }
+        },
+        {
+          "pool": 1,
+          "raw_c": 22.6579253320009,
+          "aligned": {
+            "1.0": {
+              "c": 23.04010852088416,
+              "extra_c": 0.3821831888832605,
+              "conditional_K_high": 12.701937432280983,
+              "conditional_K_low": 13.084120621164226,
+              "ancestors_high": 7,
+              "ancestors_low": 7
+            },
+            "0.3": {
+              "c": 23.820432941850925,
+              "extra_c": 1.1625076098500244,
+              "conditional_K_high": 44.19910562821424,
+              "conditional_K_low": 45.36161323806423,
+              "ancestors_high": 7,
+              "ancestors_low": 7
+            },
+            "0.1": {
+              "c": 23.9552014098374,
+              "extra_c": 1.2972760778365,
+              "conditional_K_high": 86.61415691306298,
+              "conditional_K_low": 87.91143299089947,
+              "ancestors_high": 6,
+              "ancestors_low": 6
+            }
+          }
+        }
+      ]
+    },
+    {
+      "kind": "random",
+      "n": 80,
+      "pools": [
+        {
+          "pool": 0,
+          "raw_c": 67.1631630407162,
+          "aligned": {
+            "1.0": {
+              "c": 83.82035221232832,
+              "extra_c": 16.657189171612117,
+              "conditional_K_high": 289.34640031788143,
+              "conditional_K_low": 306.00358948949366,
+              "ancestors_high": 1,
+              "ancestors_low": 1
+            },
+            "0.3": {
+              "c": 115.96632491254809,
+              "extra_c": 48.80316187183189,
+              "conditional_K_high": 488.42938992219024,
+              "conditional_K_low": 537.2325517940221,
+              "ancestors_high": 1,
+              "ancestors_low": 1
+            },
+            "0.1": {
+              "c": 124.7511245907881,
+              "extra_c": 57.587961550071896,
+              "conditional_K_high": 646.0067660860815,
+              "conditional_K_low": 703.5947276361533,
+              "ancestors_high": 1,
+              "ancestors_low": 1
+            }
+          }
+        },
+        {
+          "pool": 1,
+          "raw_c": 67.23301229121103,
+          "aligned": {
+            "1.0": {
+              "c": 71.35119289822478,
+              "extra_c": 4.118180607013755,
+              "conditional_K_high": 301.51565103607265,
+              "conditional_K_low": 305.63383164308635,
+              "ancestors_high": 1,
+              "ancestors_low": 1
+            },
+            "0.3": {
+              "c": 71.91937870632296,
+              "extra_c": 4.686366415111934,
+              "conditional_K_high": 510.6753112158806,
+              "conditional_K_low": 515.3616776309924,
+              "ancestors_high": 1,
+              "ancestors_low": 1
+            },
+            "0.1": {
+              "c": 52.71110961977183,
+              "extra_c": -14.521902671439193,
+              "conditional_K_high": 699.551964439791,
+              "conditional_K_low": 685.0300617683516,
+              "ancestors_high": 1,
+              "ancestors_low": 1
+            }
+          }
+        }
+      ]
+    },
+    {
+      "kind": "projection",
+      "n": 80,
+      "pools": [
+        {
+          "pool": 0,
+          "raw_c": 22.91121176128317,
+          "aligned": {
+            "1.0": {
+              "c": 23.43768918161763,
+              "extra_c": 0.5264774203344587,
+              "conditional_K_high": 14.85789294269745,
+              "conditional_K_low": 15.384370363031902,
+              "ancestors_high": 13,
+              "ancestors_low": 10
+            },
+            "0.3": {
+              "c": 24.333245953852668,
+              "extra_c": 1.4220341925694981,
+              "conditional_K_high": 61.123469426618676,
+              "conditional_K_low": 62.54550361918822,
+              "ancestors_high": 11,
+              "ancestors_low": 9
+            },
+            "0.1": {
+              "c": 24.672805584359423,
+              "extra_c": 1.7615938230762538,
+              "conditional_K_high": 126.67489315319871,
+              "conditional_K_low": 128.43648697627495,
+              "ancestors_high": 5,
+              "ancestors_low": 5
+            }
+          }
+        },
+        {
+          "pool": 1,
+          "raw_c": 22.6579253320009,
+          "aligned": {
+            "1.0": {
+              "c": 23.006873640821965,
+              "extra_c": 0.34894830882106476,
+              "conditional_K_high": 14.998591805607191,
+              "conditional_K_low": 15.347540114428263,
+              "ancestors_high": 7,
+              "ancestors_low": 6
+            },
+            "0.3": {
+              "c": 23.25666187533767,
+              "extra_c": 0.59873654333677,
+              "conditional_K_high": 61.79242741384181,
+              "conditional_K_low": 62.39116395717859,
+              "ancestors_high": 7,
+              "ancestors_low": 5
+            },
+            "0.1": {
+              "c": 23.035630045447476,
+              "extra_c": 0.3777047134465761,
+              "conditional_K_high": 128.05576569832473,
+              "conditional_K_low": 128.43347041177134,
+              "ancestors_high": 4,
+              "ancestors_low": 5
+            }
+          }
+        }
+      ]
+    },
+    {
+      "kind": "random",
+      "n": 128,
+      "pools": [
+        {
+          "pool": 0,
+          "raw_c": 82.65839548332656,
+          "aligned": {
+            "1.0": {
+              "c": 125.83695895382425,
+              "extra_c": 43.17856347049769,
+              "conditional_K_high": 412.501512602254,
+              "conditional_K_low": 455.6800760727516,
+              "ancestors_high": 1,
+              "ancestors_low": 1
+            },
+            "0.3": {
+              "c": 131.5158580793409,
+              "extra_c": 48.85746259601433,
+              "conditional_K_high": 689.4369003306209,
+              "conditional_K_low": 738.2943629266351,
+              "ancestors_high": 1,
+              "ancestors_low": 1
+            },
+            "0.1": {
+              "c": 98.36777391221995,
+              "extra_c": 15.709378428893388,
+              "conditional_K_high": 1026.1856570128548,
+              "conditional_K_low": 1041.895035441748,
+              "ancestors_high": 1,
+              "ancestors_low": 1
+            }
+          }
+        },
+        {
+          "pool": 1,
+          "raw_c": 80.19838594810017,
+          "aligned": {
+            "1.0": {
+              "c": 123.8563099042392,
+              "extra_c": 43.65792395613903,
+              "conditional_K_high": 429.63517973972785,
+              "conditional_K_low": 473.2931036958668,
+              "ancestors_high": 1,
+              "ancestors_low": 1
+            },
+            "0.3": {
+              "c": 136.4920327722857,
+              "extra_c": 56.293646824185544,
+              "conditional_K_high": 747.2366270313161,
+              "conditional_K_low": 803.5302738555014,
+              "ancestors_high": 1,
+              "ancestors_low": 1
+            },
+            "0.1": {
+              "c": 206.86973522654125,
+              "extra_c": 126.67134927844108,
+              "conditional_K_high": 1030.3207141915516,
+              "conditional_K_low": 1156.992063469993,
+              "ancestors_high": 1,
+              "ancestors_low": 1
+            }
+          }
+        }
+      ]
+    },
+    {
+      "kind": "projection",
+      "n": 128,
+      "pools": [
+        {
+          "pool": 0,
+          "raw_c": 22.79646798177677,
+          "aligned": {
+            "1.0": {
+              "c": 23.306142355193714,
+              "extra_c": 0.5096743734169422,
+              "conditional_K_high": 17.21536515444248,
+              "conditional_K_low": 17.725039527859398,
+              "ancestors_high": 8,
+              "ancestors_low": 6
+            },
+            "0.3": {
+              "c": 23.31310950587539,
+              "extra_c": 0.5166415240986169,
+              "conditional_K_high": 68.70772977802402,
+              "conditional_K_low": 69.22437130212266,
+              "ancestors_high": 5,
+              "ancestors_low": 6
+            },
+            "0.1": {
+              "c": 26.39761687066448,
+              "extra_c": 3.601148888887707,
+              "conditional_K_high": 137.90827722881693,
+              "conditional_K_low": 141.50942611770463,
+              "ancestors_high": 4,
+              "ancestors_low": 4
+            }
+          }
+        },
+        {
+          "pool": 1,
+          "raw_c": 22.927197465455862,
+          "aligned": {
+            "1.0": {
+              "c": 23.851094486370073,
+              "extra_c": 0.923897020914211,
+              "conditional_K_high": 17.09310940439148,
+              "conditional_K_low": 18.01700642530569,
+              "ancestors_high": 7,
+              "ancestors_low": 7
+            },
+            "0.3": {
+              "c": 24.478914936148442,
+              "extra_c": 1.55171747069258,
+              "conditional_K_high": 67.89448451688862,
+              "conditional_K_low": 69.4462019875812,
+              "ancestors_high": 6,
+              "ancestors_low": 5
+            },
+            "0.1": {
+              "c": 25.351116322840596,
+              "extra_c": 2.4239188573847343,
+              "conditional_K_high": 137.5294142227091,
+              "conditional_K_low": 139.9533330800938,
+              "ancestors_high": 4,
+              "ancestors_low": 3
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "calibration": [
+    {
+      "rule": "parity1",
+      "K001_by_pool": [
+        251.38966969356196,
+        251.15591796822727,
+        251.07652855250114,
+        250.98602965469814
+      ],
+      "K001_median": 251.11622326036422,
+      "K001_pooled_mass": 251.1444356874185,
+      "c_by_pool": [
+        22.897368111145056,
+        22.987369664681978,
+        22.7458134937998,
+        22.939951270164357
+      ],
+      "c_median": 22.918659690654707,
+      "deep_c_by_pool": [
+        22.717150879177268,
+        23.09846500633546,
+        22.897384123811662,
+        22.832828978927978
+      ]
+    },
+    {
+      "rule": "majority3",
+      "K001_by_pool": [
+        355.41451657580063,
+        356.38201654052307,
+        354.95165146014716,
+        356.5286959645056
+      ],
+      "K001_median": 355.8982665581618,
+      "K001_pooled_mass": 355.66965729465244,
+      "c_by_pool": [
+        29.102798260182567,
+        29.31367089126246,
+        29.223219555521496,
+        29.193859004913577
+      ],
+      "c_median": 29.208539280217536,
+      "deep_c_by_pool": [
+        28.18979457279363,
+        27.897587635617356,
+        27.72970867961527,
+        28.035967689862332
+      ]
+    },
+    {
+      "rule": "mux3",
+      "K001_by_pool": [
+        515.0035147832833,
+        514.9864073561592,
+        514.5887414938968,
+        515.1063373954917
+      ],
+      "K001_median": 514.9949610697213,
+      "K001_pooled_mass": 514.9071763325788,
+      "c_by_pool": [
+        37.08363387326676,
+        37.363029280230535,
+        36.849273730001755,
+        37.15868340486952
+      ],
+      "c_median": 37.12115863906814,
+      "deep_c_by_pool": [
+        34.58348111876023,
+        34.79487290256316,
+        34.84227017803039,
+        34.80598098466123
+      ]
+    },
+    {
+      "rule": "parity2",
+      "K001_by_pool": [
+        557.5206286225173,
+        557.802359319751,
+        557.3596773927235,
+        557.6753253698475
+      ],
+      "K001_median": 557.5979769961824,
+      "K001_pooled_mass": 557.5799172878116,
+      "c_by_pool": [
+        38.40612849354807,
+        38.48148308567124,
+        38.276360728958934,
+        38.38824671852967
+      ],
+      "c_median": 38.39718760603887,
+      "deep_c_by_pool": [
+        36.29104370944458,
+        36.18719464551759,
+        36.32558310683112,
+        36.335920454885354
+      ]
+    },
+    {
+      "rule": "parity4",
+      "K001_by_pool": [
+        1124.9468917029524,
+        1205.3406280303748,
+        1209.5132164422862,
+        1204.978591497805
+      ],
+      "K001_median": 1205.15960976409,
+      "K001_pooled_mass": 1126.9468917029524,
+      "c_by_pool": [
+        52.72290282000199,
+        76.64558917545537,
+        75.61005759775458,
+        75.10048345190785
+      ],
+      "c_median": 75.35527052483121,
+      "deep_c_by_pool": [
+        47.19939670724739,
+        66.99806203239154,
+        66.41875422995918,
+        66.51983835362535
+      ]
+    }
+  ]
+}

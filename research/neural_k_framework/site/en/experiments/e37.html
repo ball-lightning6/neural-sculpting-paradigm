@@ -45,6 +45,18 @@
 <li><a href="#6-why-gaussian-measure-can-still-align-with-real-training">6. Why Gaussian Measure Can Still Align with Real Training</a></li>
 <li><a href="#7-remaining-boundaries">7. Remaining Boundaries</a></li>
 <li><a href="#8-reproducible-materials">8. Reproducible Materials</a></li>
+<li><a href="#2026-10-27-supplement-contraction-across-measures-and-a-fixed-radius-angular-control">2026-10-27 Supplement: Contraction Across Measures and a Fixed-Radius Angular Control</a><ul>
+<li><a href="#1-motivation-and-scope-of-the-conclusions">1. Motivation and Scope of the Conclusions</a></li>
+<li><a href="#2-timeline-protocol-and-registration-status">2. Timeline, Protocol, and Registration Status</a></li>
+<li><a href="#3-measurement-target-and-two-precision-coordinates">3. Measurement Target and Two Precision Coordinates</a></li>
+<li><a href="#4-historical-20-rule-natural-measure-background">4. Historical 20-Rule Natural-Measure Background</a></li>
+<li><a href="#5-new-fixed-radius-protocol">5. New Fixed-Radius Protocol</a></li>
+<li><a href="#6-fixed-radius-results">6. Fixed-Radius Results</a></li>
+<li><a href="#7-verification-strength-and-unresolved-issues">7. Verification Strength and Unresolved Issues</a></li>
+<li><a href="#8-public-reproduction-entry-points-and-dependencies">8. Public Reproduction Entry Points and Dependencies</a></li>
+<li><a href="#9-checks-performed-and-remaining-work">9. Checks Performed and Remaining Work</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </nav>
@@ -59,7 +71,8 @@
           <h1>E37 Measure robustness and Gaussian alignment</h1>
           <p class="article-description">Full protocol, results, and boundaries for E37 Measure robustness and Gaussian alignment.</p>
         </header>
-        <div class="article-body"><p>Date: 2026-09-21</p>
+        <div class="article-body"><p><strong>October 2026 update:</strong> The original report is retained; <a href="#update-20261027">jump to the added experiments, checks, and limitations</a>.</p>
+<p>Date: 2026-09-21</p>
 <p>This report closes a necessary gap: is Neural K “volume” Euclidean volume, Gaussian probability, or another reference measure? If changing the measure made the conclusion disappear, the volume picture could merely be an artifact of initialization density. If absolute values change while the complexity direction remains, measure dependence and simplicity bias are distinct layers.</p>
 <h2 id="1-separate-the-questions-first">1. Separate the Questions First</h2>
 <p>On an unbounded parameter space, ordinary Lebesgue volume is usually infinite and cannot be compared directly. A normalized reference measure must be chosen:</p>
@@ -219,7 +232,373 @@ $$</div>
 <li><code>RESULTS.md</code>: translation, output-bias, and amplitude scans;</li>
 <li><code>run_endpoint_uniform_ball.py</code>, <code>run_output_box_experiments.py</code>, <code>experiment_3bit_cross_architecture_complexity_order.py</code>: self-contained rerunnable scripts;</li>
 <li><code>summary.json</code>, <code>grid_analysis.json</code>: lightweight machine-readable summaries.</li>
-</ul></div>
+</ul>
+<p><a id="update-20261027"></a></p>
+<h2 id="2026-10-27-supplement-contraction-across-measures-and-a-fixed-radius-angular-control">2026-10-27 Supplement: Contraction Across Measures and a Fixed-Radius Angular Control</h2>
+<p>This supplement adds evidence after the existing E37 text without replacing it or creating a new experiment number. It distinguishes the historical 20-rule natural-measure panel of 2026-09-13 from the 24 fixed-radius sphere pools that had all reached terminal states by 2026-10-25. Work on 2026-10-27 was limited to preparing public materials, recomputing lightweight tables, and checking code; no new training or SMC sampling was performed.</p>
+<h3 id="1-motivation-and-scope-of-the-conclusions">1. Motivation and Scope of the Conclusions</h3>
+<p>The "volume" in Neural K is event mass under an explicitly specified reference measure. Gaussian is a convenient reference choice, but a necessary question is whether mass contraction and rule ordering as loss tightens are entirely caused by Gaussian radial-tail penalties. This supplement examines shared phenomena and major orderings across measures, without requiring equal absolute K values.</p>
+<p>The representative controls in the original E37 used <code>3 -&gt; 16 -&gt; 1 tanh</code>, a uniform measure inside a ball, and moving MSE targets; this supplement uses <code>4 -&gt; 16 -&gt; 1 tanh</code> and tightening BCE thresholds on a complete truth table. A uniform ball measure differs from a fixed-radius sphere measure, and moving MSE targets differs from tightening BCE events around a fixed target. These curves or response coefficients cannot be combined directly into a single law.</p>
+<p>The supported conclusion is that, within the tested reference measures, architecture, rule panels, and finite loss windows, low-loss contraction, rule-dependent contraction differences, and relatively stable major complexity orderings are not unique to Gaussian measures. The fixed-radius results further show rule-dependent angular contraction after removing a radial-tail mechanism that changes with loss.</p>
+<p>"Normal measures" is not a mathematical class that has been defined here and proved to exhibit universality. A shared trend does not imply the same formula, coefficient, local ordering, or infinitely deep-tail asymptotics for all measures; nor does it imply that actual training is conditional sampling from a static measure.</p>
+<h3 id="2-timeline-protocol-and-registration-status">2. Timeline, Protocol, and Registration Status</h3>
+<p>This document organizes the motivation, protocol, and conclusions after completed results were available. It is <strong>not a formal preregistration</strong>, and its date cannot substitute for prospective registration. The historical natural-measure panel preserves the rules selected before sampling the new measures at that time. The fixed-radius configuration preserves the corrected core and the condition selection actually scheduled, but this supplement does not claim that it or all analysis windows were preregistered on an independent registry.</p>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Material and scope</th>
+<th>Status in this supplement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-09-13</td>
+<td>20 rules, wide Gaussian / spherical t8 / uniform cube, totaling 60 measure-rule jobs</td>
+<td>Historical background, not new October sampling</td>
+</tr>
+<tr>
+<td>2026-10-24</td>
+<td>Repair of the deterministic CUDA <code>kthvalue</code> failure while preserving scientific computation parameters</td>
+<td>Implementation repair, not a scientific result</td>
+</tr>
+<tr>
+<td>2026-10-25</td>
+<td>R20 / R40, projection / majority3 / parity2, all 24 pools terminal</td>
+<td>New fixed-radius evidence: 16 pools reached all nodes; 8 stalled</td>
+</tr>
+<tr>
+<td>2026-10-27</td>
+<td>Frozen sources moved into the public directory, lightweight table recomputation, CPU checks, and bilingual preparation</td>
+<td>Public supplement, no new sampling</td>
+</tr>
+</tbody>
+</table>
+<p>The failure of the original 96 pools at deterministic CUDA <code>kthvalue</code> was an implementation error, not scientific evidence of low mass, infeasibility, or failure of the measure hypothesis. The corrected entry point uses the separate protocol <code>fixed_radius_angular_smc_independent_pilot_v2_cpu_kthvalue</code> and rejects checkpoints from the old protocol. The 24 pools in this supplement are not the original 96 failures relabeled as successes.</p>
+<h3 id="3-measurement-target-and-two-precision-coordinates">3. Measurement Target and Two Precision Coordinates</h3>
+<p>Inputs comprise all 16 binary 0/1 vectors ordered from <code>0000</code> to <code>1111</code>, with fixed labels. The network has 97 standardized parameter coordinates; actual weights and biases are both scaled by <code>1/sqrt(fan_in)</code> for their layer. The 80 first-layer coordinates are multiplied by <code>1/2</code>, and the 17 output-layer coordinates by <code>1/4</code>. Spherical symmetry, radius, and second moments are defined in these standardized coordinates; the same Euclidean rotational invariance is not asserted in actual-weight coordinates.</p>
+<p>Writing the output logit as <code>g_theta(x_i)</code> and the label as <code>y_i</code>, mean BCE, event mass, and Neural K are defined as:</p>
+<div class="math-display">$$
+L_f(\theta)=\frac{1}{16}\sum_{i=1}^{16}
+\log\!\left(1+\exp\left((1-2y_i)g_\theta(x_i)\right)\right),
+\qquad V_{\mu,f}(\epsilon)=\Pr_{\theta\sim\mu}[L_f(\theta)\le\epsilon],
+\qquad K_{\mu,f}(\epsilon)=-\log_2 V_{\mu,f}(\epsilon).
+$$</div>
+<p>The fixed-radius control sets <code>theta = R U</code>, where U is uniform on the unit sphere. Normalizing a standard Gaussian vector is only a method for generating a uniform direction; it does not introduce Gaussian radial weighting that changes with loss. The target is normalized sphere mass, not Lebesgue volume inside a ball:</p>
+<div class="math-display">$$
+U\sim\operatorname{Unif}(S^{96}),\qquad
+A_f(R,\epsilon)=\Pr[L_f(RU)\le\epsilon],\qquad
+K_{R,f}(\epsilon)=-\log_2 A_f(R,\epsilon).
+$$</div>
+<p>Independent pools are combined by taking an arithmetic mean in probability space and then a negative logarithm. For m complete pools, the aggregate is given below. One must neither average K directly nor discard unreached pools and average only successful ones:</p>
+<div class="math-display">$$
+\widehat K_{\mathrm{pooled}}(\epsilon)
+=-\log_2\!\left(\frac{1}{m}\sum_{j=1}^{m}2^{-\widehat K_j(\epsilon)}\right).
+$$</div>
+<p>The historical natural-measure panel uses a margin-style coordinate for its coefficient, measured in bits per margin-coordinate unit over <code>0.01 -&gt; 0.001</code>:</p>
+<div class="math-display">$$
+a(\epsilon)=-\ln(\operatorname{expm1}(\epsilon)),\qquad
+c_a=\frac{K(0.001)-K(0.01)}{a(0.001)-a(0.01)}.
+$$</div>
+<p>The new sphere control reports a finite-window coefficient in the log2 precision-ratio coordinate, measured in bits per log2 precision unit over <code>0.03 -&gt; 0.001</code>:</p>
+<div class="math-display">$$
+\Delta K=K(0.001)-K(0.03),\qquad
+c_{\log_2}=\frac{\Delta K}{\log_2(0.03/0.001)}
+=\frac{\Delta K}{\log_2(30)}.
+$$</div>
+<p>These coefficients must not be compared as if they were interchangeable. The frozen sphere core's auxiliary field <code>finite_window_dK_da_from_previous</code> still uses the margin coordinate. The tables in this supplement and <code>analyze_published.py</code> explicitly recompute the log2 precision ratio without modifying or reinterpreting that historical field. A finite-window coefficient is not a proven universal power-law exponent.</p>
+<h3 id="4-historical-20-rule-natural-measure-background">4. Historical 20-Rule Natural-Measure Background</h3>
+<p>All results in this section come from the existing data of 2026-09-13. The panel combines the 4 anchors from an earlier 36-rule set, the original first sample in each of 12 strata, and four near-tie or reversal cases: <code>0x01EF</code>, <code>0x2ABE</code>, <code>0x2FF4</code>, and <code>0x09A0</code>. Selection did not use the new-measure results. Each measure-rule job used 8 replicas with 2048 particles each and 24 updates per level, in float32 without TF32 / AMP. All 60 jobs for the three measures introduced at that time reached BCE <code>0.001</code>.</p>
+<p>The reference is a uniform ball of radius 72 in 97-dimensional standardized coordinates. The wide Gaussian, spherical multivariate Student-t8, and uniform cube match its mean squared norm:</p>
+<div class="math-display">$$
+\sigma=\frac{72}{\sqrt{99}}\approx7.236272,
+\qquad \mathbb E\|\theta\|^2=97\sigma^2\approx5079.273.
+$$</div>
+<div class="math-display">$$
+\begin{aligned}
+\text{wide Gaussian:}\quad &amp;\theta=\sigma Z,\quad Z\sim N(0,I_{97});\\
+\text{spherical t8:}\quad &amp;\theta=\sigma\sqrt{6/G}\,Z,\quad G\sim\chi^2_8,\quad G\perp Z;\\
+\text{uniform cube:}\quad &amp;\theta_i\overset{\mathrm{iid}}{\sim}
+\operatorname{Unif}[-\sqrt{3}\sigma,+\sqrt{3}\sigma].
+\end{aligned}
+$$</div>
+<p>The entire t8 vector shares one G; independent coordinatewise t distributions are not a substitute. Wide Gaussian and t8 have no hard radius bound: R72 is only a second-moment scale. The cube preserves coordinate permutations and sign flips, but not arbitrary rotations. The historical unit Gaussian has a different scale and is not part of this second-moment-matched group. The initially planned independent Laplace distribution was replaced with spherical t8 before the formal new-measure scan; no Laplace rule scan was run.</p>
+<p>All K rankings below use BCE <code>0.001</code>, and all coefficient rankings use the historical coordinate <code>c_a</code> defined in this supplement. The comparison reference is the scale-matched uniform ball:</p>
+<table>
+<thead>
+<tr>
+<th>Measure</th>
+<th style="text-align: right;">K-rank Spearman</th>
+<th style="text-align: right;">Coefficient-rank Spearman</th>
+<th style="text-align: right;">Concordant K pairs</th>
+<th style="text-align: right;">Concordant coefficient pairs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Wide Gaussian</td>
+<td style="text-align: right;">0.99699</td>
+<td style="text-align: right;">0.99549</td>
+<td style="text-align: right;">188/190</td>
+<td style="text-align: right;">188/190</td>
+</tr>
+<tr>
+<td>Spherical t8</td>
+<td style="text-align: right;">0.98947</td>
+<td style="text-align: right;">0.90526</td>
+<td style="text-align: right;">184/190</td>
+<td style="text-align: right;">168/190</td>
+</tr>
+<tr>
+<td>Uniform cube</td>
+<td style="text-align: right;">0.94887</td>
+<td style="text-align: right;">0.94135</td>
+<td style="text-align: right;">173/190</td>
+<td style="text-align: right;">172/190</td>
+</tr>
+</tbody>
+</table>
+<p>The major orderings for wide Gaussian and the uniform ball are very close. t8 retains a similar K ordering, but its late-window curves flatten and its coefficients become closer together. The cube has more local reversals, but it changes both directional structure and the radial distribution; the causal contribution of reversals cannot be attributed entirely to directional bias. The 190 pairs are not independent experiments and do not represent a population probability over all 65536 functions.</p>
+<p>Among reversed point estimates relative to the uniform ball, neither wide Gaussian nor t8 has a pair whose replica ranges are separated under both measures. For the cube, 8 K pairs and 4 coefficient pairs meet that diagnostic. Replica ranges are not formal confidence intervals, overlapping ranges do not prove identical ordering, and not every local reversal was retested with an independent update kernel in this round.</p>
+<table>
+<thead>
+<tr>
+<th>Rule</th>
+<th style="text-align: right;">Uniform ball <code>c_a</code></th>
+<th style="text-align: right;">Wide Gaussian <code>c_a</code></th>
+<th style="text-align: right;">Spherical t8 <code>c_a</code></th>
+<th style="text-align: right;">Uniform cube <code>c_a</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Constant</td>
+<td style="text-align: right;">0.600</td>
+<td style="text-align: right;">0.598</td>
+<td style="text-align: right;">0.609</td>
+<td style="text-align: right;">0.628</td>
+</tr>
+<tr>
+<td>copy / complement</td>
+<td style="text-align: right;">1.962</td>
+<td style="text-align: right;">1.907</td>
+<td style="text-align: right;">1.435</td>
+<td style="text-align: right;">2.668</td>
+</tr>
+<tr>
+<td>parity2</td>
+<td style="text-align: right;">5.716</td>
+<td style="text-align: right;">5.046</td>
+<td style="text-align: right;">1.975</td>
+<td style="text-align: right;">6.948</td>
+</tr>
+<tr>
+<td>parity4</td>
+<td style="text-align: right;">12.488</td>
+<td style="text-align: right;">8.828</td>
+<td style="text-align: right;">2.163</td>
+<td style="text-align: right;">9.938</td>
+</tr>
+</tbody>
+</table>
+<p>Similar average coefficients for parity2 and parity4 under t8 do not imply equal mass. At BCE <code>0.001</code>, their K values are approximately 33.119 and 46.702, still differing by approximately 13.58 bits. Across this window, their adjacent-node margin-coordinate slopes decrease from approximately 2.248 to 1.753 and from approximately 2.520 to 1.857, respectively. These cannot be described as the same stable straight lines as for the uniform ball.</p>
+<p>Under each of the three measures introduced at that time, all 19 tested nonconstant rules contracted faster than the constant over <code>0.01 -&gt; 0.001</code>. This is a comparison against the constant within this panel and is the same evidence represented by the coefficients, not proof that every rule pair preserves its order or that bias keeps strengthening in an infinitely deep tail.</p>
+<figure class="result-figure"><a href="../../assets/figures/e37_ext_natural_rank.png" target="_blank" rel="noopener"><img src="../../assets/figures/e37_ext_natural_rank.png" alt="Rank correlations in the historical natural-measure panel" loading="lazy"></a><figcaption>Rank correlations in the historical natural-measure panel</figcaption></figure>
+<p>Figure: the historical 20-rule panel of 2026-09-13. Left: K-rank correlations at BCE <code>0.001</code>; right: margin-coordinate coefficient-rank correlations over <code>0.01 -&gt; 0.001</code>. Chinese and English share this English-axis figure. These data are not new October sampling.</p>
+<h3 id="5-new-fixed-radius-protocol">5. New Fixed-Radius Protocol</h3>
+<p>The fixed-radius control uses the same <code>4 -&gt; 16 -&gt; 1 tanh</code> network, standardized coordinates, and complete truth table. With encoding in truth-table row order, projection is <code>0xFF00</code>, majority3 is <code>0xFCC0</code>, and parity2 is <code>0x0FF0</code>: copying the first bit, majority of the first three bits, and XOR of the first two bits, respectively. Radii are 20 and 40, with 4 independent pools per condition, totaling 24 pools.</p>
+<table>
+<thead>
+<tr>
+<th>Configuration item</th>
+<th>Fixed value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Architecture / dimension</td>
+<td><code>[16]</code> / 97</td>
+</tr>
+<tr>
+<td>Evaluation particles / independent pilot particles</td>
+<td>1024 / 256 per pool</td>
+</tr>
+<tr>
+<td>dtype / TF32 / AMP</td>
+<td>float64 / off / off</td>
+</tr>
+<tr>
+<td>Deterministic algorithms</td>
+<td><code>torch.use_deterministic_algorithms(True)</code></td>
+</tr>
+<tr>
+<td>BCE nodes</td>
+<td><code>[2.0, 1.0, 0.7, 0.3, 0.1, 0.03, 0.01, 0.003, 0.001]</code></td>
+</tr>
+<tr>
+<td>Pilot target survival fraction</td>
+<td>0.5</td>
+</tr>
+<tr>
+<td>Update steps per level</td>
+<td>56</td>
+</tr>
+<tr>
+<td>Fixed-cycle eta multipliers</td>
+<td><code>[1.0, 0.3, 0.1, 0.03, 0.01, 0.003, 0.001] / sqrt(97)</code></td>
+</tr>
+<tr>
+<td>Micro-batch / audited parameter vectors per node</td>
+<td>2048 / 16</td>
+</tr>
+<tr>
+<td>Base seed</td>
+<td>2026102301; each pool derives its seed from a fixed hash of condition identity</td>
+</tr>
+<tr>
+<td>Level budget / consecutive stalled-level budget per pool</td>
+<td>2048 / 32</td>
+</tr>
+<tr>
+<td>Minimum relative progress</td>
+<td><code>1e-10</code></td>
+</tr>
+<tr>
+<td>Cumulative budget per pool / global budget per invocation</td>
+<td>1800 / 14400 seconds, checked at complete level boundaries</td>
+</tr>
+</tbody>
+</table>
+<p>The proposal normalizes <code>u + eta Z</code> and preserves the sphere radius. Its transition density depends only on the directional inner product, making it reversible with respect to the uniform sphere; BCE rejection then enforces the constraint. Eta follows a fixed cycle and is not tuned online using evaluation particles. An independent pilot selects intermediate thresholds, while evaluation particles accumulate actual survival fractions. Neither kernel reversibility nor radius preservation implies sufficient mixing in a nonconvex conditional distribution.</p>
+<p>The repair only changes threshold selection to <code>torch.kthvalue(pilot_losses.detach().cpu(), order).values</code>, preserving the input dtype, k, random streams, and deterministic settings. The frozen core still defaults to a larger condition panel. The public entry point selects the conditions reported here through the <a href="../../../experiments/experiment_37_measure_robustness/fixed_radius_20261027/fixed_radius_config.json">24-pool configuration</a>, without changing the sampler's scientific parameters. Source provenance and hashes are in the <a href="../../../experiments/experiment_37_measure_robustness/fixed_radius_20261027/SOURCE_MANIFEST.json">source manifest</a>.</p>
+<p>Global-budget stops or interruptions can resume at complete level boundaries; scientifically unreached pools that are already terminal are not retried automatically. <code>stalled_levels_budget</code>, <code>level_budget</code>, <code>replica_time_budget</code>, <code>analytic_loss_lower_bound</code>, and <code>zero_evaluation_survivors</code> remain unreached, not estimates of true zero mass. <code>internal_error</code> and numerical-audit failures are reported separately as errors. Changes to scientific configuration, source code, or environment require a new result directory rather than continuation of incompatible historical checkpoints.</p>
+<h3 id="6-fixed-radius-results">6. Fixed-Radius Results</h3>
+<p>At R40, all 4 pools for each of the three rules reached BCE <code>0.001</code>. The table uses probability-pooled K over <code>0.03 -&gt; 0.001</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Rule</th>
+<th style="text-align: right;">K(0.03) / bits</th>
+<th style="text-align: right;">K(0.001) / bits</th>
+<th style="text-align: right;">ΔK / bits</th>
+<th style="text-align: right;"><code>c_log2 = ΔK/log2(30)</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>projection</td>
+<td style="text-align: right;">16.12</td>
+<td style="text-align: right;">30.78</td>
+<td style="text-align: right;">14.66</td>
+<td style="text-align: right;">2.99</td>
+</tr>
+<tr>
+<td>majority3</td>
+<td style="text-align: right;">27.63</td>
+<td style="text-align: right;">55.44</td>
+<td style="text-align: right;">27.81</td>
+<td style="text-align: right;">5.67</td>
+</tr>
+<tr>
+<td>parity2</td>
+<td style="text-align: right;">48.88</td>
+<td style="text-align: right;">117.92</td>
+<td style="text-align: right;">69.04</td>
+<td style="text-align: right;">14.07</td>
+</tr>
+</tbody>
+</table>
+<p>At the deepest node, the four-pool K ranges are 30.60 to 31.28, 55.00 to 56.79, and 116.55 to 120.20 bits, respectively. These between-pool differences do not alter the major separation of the three curves, but the ranges are not confidence intervals. Radius remains fixed throughout loss tightening, so the decline in mass cannot be explained by moving into a more distant Gaussian radial tail. Contraction of the directional region satisfying the joint-output constraints must also be considered.</p>
+<p>The upper endpoint <code>0.03</code> is already below <code>ln(2)/16 ≈ 0.0433</code>. Under unweighted mean BCE over the complete truth table, a single wrong-sign sample or zero logit contributes at least <code>ln(2)</code>, so this window forces correct signs at all 16 points. This avoids treating potentially overlapping full-target events at high loss as mutually exclusive hard function cells.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">Radius</th>
+<th>Rule</th>
+<th style="text-align: right;">Pools reaching all nodes</th>
+<th style="text-align: right;">Deepest reached scheduled node</th>
+<th>Terminal state</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">20</td>
+<td>projection</td>
+<td style="text-align: right;">4/4</td>
+<td style="text-align: right;">0.001</td>
+<td>Completed</td>
+</tr>
+<tr>
+<td style="text-align: right;">20</td>
+<td>majority3</td>
+<td style="text-align: right;">0/4</td>
+<td style="text-align: right;">0.01</td>
+<td>4 stalled pools</td>
+</tr>
+<tr>
+<td style="text-align: right;">20</td>
+<td>parity2</td>
+<td style="text-align: right;">0/4</td>
+<td style="text-align: right;">0.1</td>
+<td>4 stalled pools</td>
+</tr>
+<tr>
+<td style="text-align: right;">40</td>
+<td>projection</td>
+<td style="text-align: right;">4/4</td>
+<td style="text-align: right;">0.001</td>
+<td>Completed</td>
+</tr>
+<tr>
+<td style="text-align: right;">40</td>
+<td>majority3</td>
+<td style="text-align: right;">4/4</td>
+<td style="text-align: right;">0.001</td>
+<td>Completed</td>
+</tr>
+<tr>
+<td style="text-align: right;">40</td>
+<td>parity2</td>
+<td style="text-align: right;">4/4</td>
+<td style="text-align: right;">0.001</td>
+<td>Completed</td>
+</tr>
+</tbody>
+</table>
+<p>All 24 pools are terminal: 16 reached every node, while 8 reached <code>stalled_levels_budget</code>. <code>completed_with_failures</code> only means that scheduling ended with unreached pools retained, not that all scientific objectives were achieved. At R20, the final support threshold for majority3 was approximately 0.00395, and those for parity2 ranged from 0.0708 to 0.0734. These are neither reached scheduled nodes nor proven global minimum losses.</p>
+<p>For projection at R20 over <code>0.03 -&gt; 0.001</code>, K rises from 36.70 to 107.32 bits, giving ΔK = 70.61 bits; at R40, the same rule has ΔK of only 14.66 bits. Changing radius therefore does not always change only a loss-independent intercept. No full-window coefficient is available for majority3 or parity2 at R20. Unreached nodes are not filled with zeros, interpolated, or extrapolated.</p>
+<figure class="result-figure"><a href="../../assets/figures/e37_ext_fixed_radius.png" target="_blank" rel="noopener"><img src="../../assets/figures/e37_ext_fixed_radius.png" alt="Angular contraction on fixed-radius spheres" loading="lazy"></a><figcaption>Angular contraction on fixed-radius spheres</figcaption></figure>
+<p>Figure: curves show probability-pooled K; shaded bands span the minimum to maximum K across four pools and are not confidence intervals. The horizontal coordinate is <code>log2(0.3/epsilon)</code>, showing only reached nodes with <code>epsilon &lt;= 0.3</code>. The main text's window <code>0.03 -&gt; 0.001</code> still has horizontal length <code>log2(30)</code>. The two incomplete R20 curves end at their last reached scheduled node; stalled support thresholds are not presented as complete node estimates. Chinese and English share this English-axis figure.</p>
+<h3 id="7-verification-strength-and-unresolved-issues">7. Verification Strength and Unresolved Issues</h3>
+<p>The historical independent audit of 2026-10-25 read 200 records containing 3200 parameter vectors from 24 audit files, recomputed 51200 outputs with NumPy float64, and checked scaling, radius, labels, BCE, predicted signs, and constraint feasibility. The maximum logit discrepancy was <code>7.11e-15</code>, the maximum BCE discrepancy was <code>4.44e-16</code>, and the maximum relative radius error was <code>4.44e-16</code>, with no audit warnings. This supplement preserves that <a href="../../../experiments/experiment_37_measure_robustness/fixed_radius_20261027/data/measure_review.json">historical audit summary</a>; it does not describe these as results obtained by rereading the original parameters on 2026-10-27.</p>
+<p>These checks are stronger than inspecting final tables alone, but they do not prove sufficient mixing. The historical measure export lacked per-level survival logs, preventing independent reconstruction of the complete volume ledger. This lightweight public package also omits the original audited parameter arrays, full particle sets, and large checkpoints. The public scripts can therefore check tables, coordinates, terminal states, and orderings, or rerun the protocol from the prior, but the supplied summaries alone cannot reproduce every historical parameter audit or guarantee bitwise reproduction across hardware.</p>
+<p>Unreached R20 conditions may reflect fixed-radius limits on margin, finite proposals, mixing difficulties, or local exploration; the current results do not fully separate these causes. An unreached node proves neither zero volume nor infeasibility. Agreement between independent pools, acceptance rates, short refreshes, and numerical audits cannot individually rule out shared mixing bias.</p>
+<p>For a spherically symmetric reference measure, mass can formally be decomposed into an integral of angular mass against the full radial density, which must include the Jacobian. Only two spheres were measured here; this continuous integral was not performed, and sparse radius points were not used to fit an unknown deep tail:</p>
+<div class="math-display">$$
+V_{\mu,f}(\epsilon)=\int_0^\infty A_f(r,\epsilon)\rho_\mu(r)\,dr,
+\qquad \rho_\mu(r)\propto r^{96}p_\mu(r).
+$$</div>
+<p>The most defensible conclusion is therefore: <strong>Several tested reference measures share some contraction phenomena and robustness of major orderings; specific mass, local ordering, contraction shape, and rate still depend on the measure. Fixed-radius evidence rules out an explanation in which all phenomena arise solely from Gaussian radial tails, but it does not establish a theorem that all normal measures share the same formula, coefficients, or infinitely deep-tail law.</strong></p>
+<h3 id="8-public-reproduction-entry-points-and-dependencies">8. Public Reproduction Entry Points and Dependencies</h3>
+<p>All required execution sources are in <code>fixed_radius_20261027/</code>. The sphere core and the three required historical natural-measure sources were copied byte for byte; the original E37 README and frozen sources were not overwritten. The historical 20-rule panel, source panel, scientific configuration, and lightweight ranking tables are also included. Only machine-local paths unrelated to execution were cleaned up, with provenance recorded. No temporary script outside the framework or machine-local result ZIP is required.</p>
+<p>Execution requires Python, NumPy, and PyTorch; redrawing figures additionally requires Matplotlib. <a href="../../../experiments/experiment_37_measure_robustness/fixed_radius_20261027/requirements.txt">requirements.txt</a> records NumPy <code>2.4.1</code>, PyTorch <code>2.11.0</code>, and Matplotlib <code>3.10.9</code> from the lightweight verification environment. The actual checks used Python <code>3.13.5</code> and PyTorch <code>2.11.0+cu130</code>, with CPU computations only. This is not a complete lockfile for the original cloud environment. A full rerun requires a device-compatible CUDA build of PyTorch and an environment check; there is no automatic fallback to a long CPU experiment.</p>
+<p>Run the following commands from <code>fixed_radius_20261027/</code>. Both execution entry points set <code>RUN_SAMPLING = False</code> at the top. By default, they only import modules, verify provenance, and display configuration; they create no sampling results. The analysis command consumes only the supplied lightweight data. When copying an entry point into a Notebook, retain the complete reproduction directory and point the top-level <code>BUNDLE_DIR</code> to it (default <code>.</code>). The entry point ignores Notebook kernel command-line arguments and requires no command-line options; it is not a single-file package embedding all dependencies:</p>
+<pre><code class="language-bash">python -E -s -B run_fixed_radius.py
+python -E -s -B run_natural_measures.py
+python -E -s -B validate_lightweight.py
+python -E -s -B analyze_published.py --figures --write-summary
+python -E -s -B check_publication.py
+</code></pre>
+<p>Explicitly setting the top-level <code>RUN_SAMPLING</code> to <code>True</code> enables sampling without command-line arguments. The <code>--run</code> command-line option remains available, while <code>--check</code> forces check-only mode. Top-level <code>DEVICE</code>, <code>OUTPUT_DIR</code>, and either <code>RUN_HOURS</code> in the sphere entry point or <code>MAX_SECONDS</code> in the historical-panel entry point configure the device, output, and budget; explicit command-line options take precedence. The following commands are for later reproduction and <strong>were not executed in this update</strong>; first confirm that the selected GPU is free. The sphere entry point defaults to <code>cuda:0</code>, and outputs are restricted to subdirectories of this supplement's <code>runs/</code> directory. Reusing a path resumes only compatible nonterminal states:</p>
+<pre><code class="language-bash">python -E -s -B run_fixed_radius.py --run --device cuda:0 --hours 4 --output runs/fixed_radius
+python -E -s -B run_natural_measures.py --run --device cuda:0 --max-seconds 120 --output runs/natural_measures
+</code></pre>
+<p>The historical natural-measure entry point reuses the frozen sampler, seeds, and all 60 measure-rule jobs. <code>--max-seconds 120</code> is its original per-job invocation budget, and unfinished states can be advanced by calling it again. It does not calculate the new fixed-radius results or read the old machine-local data directory. The frozen sources retain their historical defaults; use the public entry points rather than directly executing the frozen files' main programs.</p>
+<p>Public files include the <a href="../../../experiments/experiment_37_measure_robustness/fixed_radius_20261027/run_fixed_radius.py">sphere entry point</a>, <a href="../../../experiments/experiment_37_measure_robustness/fixed_radius_20261027/run_natural_measures.py">historical-panel entry point</a>, <a href="../../../experiments/experiment_37_measure_robustness/fixed_radius_20261027/analyze_published.py">lightweight analysis and plotting</a>, <a href="../../../experiments/experiment_37_measure_robustness/fixed_radius_20261027/test_lightweight.py">independent CPU tests</a>, <a href="../../../experiments/experiment_37_measure_robustness/fixed_radius_20261027/data/measure_curves.csv">per-node curves</a>, <a href="../../../experiments/experiment_37_measure_robustness/fixed_radius_20261027/data/measure_terminal_status.csv">24-pool terminal states</a>, <a href="../../../experiments/experiment_37_measure_robustness/fixed_radius_20261027/historical_20260913/rules.csv">historical rule table</a>, and <a href="../../../experiments/experiment_37_measure_robustness/fixed_radius_20261027/analysis/recomputed.json">recomputed summary</a>.</p>
+<h3 id="9-checks-performed-and-remaining-work">9. Checks Performed and Remaining Work</h3>
+<p>Lightweight verification on 2026-10-27 actually completed <code>py_compile</code> for 11 Python files; import checks for NumPy / PyTorch / Matplotlib and all required frozen modules; hash verification of 15 source files; and 11 pure-CPU unit tests. All passed. Tests cover every order statistic for the deterministic quantile, unchanged dtype and random streams, detach/cpu before kthvalue, independent NumPy forward computation, radius preservation, probability pooling, retention of unreached nodes, failure classification, the two precision coordinates, panel identity, and nonsampling default entry points. Details are in <a href="../../../experiments/experiment_37_measure_robustness/fixed_radius_20261027/validation/VALIDATION.json">VALIDATION.json</a>.</p>
+<p>The Windows virtual-environment executable initially could not import PyTorch because <code>_ctypes</code> failed to load a DLL. Checks were completed with the base interpreter loading libraries from the same installed environment, without modifying the installation or invoking an execution script outside the framework. This environment issue is distinct from the historical CUDA <code>kthvalue</code> failure and is not a scientific failure. No GPU acceptance check, training, new SMC, or deep-tail mixing validation was performed in this update.</p>
+<p>Further work requiring separate authorization includes public archiving of complete parameter-audit data and per-level survival logs, stronger checks with independent kernels and larger budgets, separating the causes of unreached R20 conditions, continuous radial integration across more radii, and external validation on broader rule and measure panels. The integration workflow is responsible for the top-of-page jump link, concatenating the old text with this supplement, and the site build. This supplement does not modify the build, main text, ledger, theory, or other experiments.</p></div>
 
       </article>
     </main>

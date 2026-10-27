@@ -1,0 +1,92 @@
+[
+  {
+    "file": "frozen/legacy_static_reference.py",
+    "source": "research/smc_dual_5090_20261024/static_reference.py",
+    "sha256": "fa25ff63ff04ffa269f700db83d02e37d223b277485d45657f52c8fd5c8829af",
+    "bytes": 40702
+  },
+  {
+    "file": "frozen/common.py",
+    "source": "research/smc_focus_20261024/followup/common.py",
+    "sha256": "34be5c34d01313597914e51385a213ff74b195f75dd1824806a41138a85dbdca",
+    "bytes": 8361
+  },
+  {
+    "file": "frozen/legacy_adapter.py",
+    "source": "research/smc_focus_20261024/followup/legacy_adapter.py",
+    "sha256": "63c60f4ab9d47d06e5bcf243c6234a357a1e98b4b910c0712d53c8a3694096c7",
+    "bytes": 12505
+  },
+  {
+    "file": "frozen/engine.py",
+    "source": "research/smc_focus_20261024/followup/engine.py",
+    "sha256": "417a04b558fe13511aa9973d39adf0285ef2ae57d49738eb0be5586449ecbe1c",
+    "bytes": 26625
+  },
+  {
+    "file": "frozen/local_engine.py",
+    "source": "research/wide_cnn_local_diagnostics_20261025/local_engine.py",
+    "sha256": "cbd60ad0988021999861fed1c607f9d5e2a015390e5b3d6933e66eafd1a6ac96",
+    "bytes": 27455
+  },
+  {
+    "file": "frozen/wide_worker.py",
+    "source": "research/wide_cnn_local_diagnostics_20261025/worker.py",
+    "sha256": "ff585746e7f8515ee923f919921aa51ebc5ea3d956822c72e4623dad79a7ba7d",
+    "bytes": 10886
+  },
+  {
+    "file": "frozen/broad_worker.py",
+    "source": "research/stp_broad_comparison_20261025/worker.py",
+    "sha256": "3ba2d456ada3dfa21bc45d3711470a06bfce7bce944a45051e03acf03dab94bc",
+    "bytes": 8875
+  },
+  {
+    "file": "frozen/wide_stp_control.py",
+    "source": "research/smc_review_20261024_2313/wide_stp_control.py",
+    "sha256": "d2645bb4dd47b16e5ce032e1b5e6e74a226f5852a15d5aeaa6d992156f9c0485",
+    "bytes": 12880
+  },
+  {
+    "file": "frozen/adam_probe.py",
+    "source": "research/wide_cnn_adam_probe_20261025/run_adam.py",
+    "sha256": "64bf1639c6445f0348ea11e475dd25a23718d5c5b12b462027ae4cd860f6cc5f",
+    "bytes": 9217
+  },
+  {
+    "file": "frozen/recheck.py",
+    "source": "research/smc_focus_20261024/followup/run_recheck.py",
+    "sha256": "cfdc57bf0e3f392724e728b6d71c31307783e45dd1d59a079c19c342952eb6ec",
+    "bytes": 10270
+  },
+  {
+    "file": "frozen/cv_extension.py",
+    "source": "research/smc_dual_5090_20261024/cv_extension.py",
+    "sha256": "52c99b70e429471f8a246159124b502fdb5457755d32870b34a8bb402a3b52a7",
+    "bytes": 2956
+  },
+  {
+    "file": "frozen/cloud_worker.py",
+    "source": "research/wide_cnn_cloud_split_20261025/b_complete/worker.py",
+    "sha256": "77924e27ab18aed0d94e0e8f8a7b5b20ae7c5530999108499fe0aaa7769e725d",
+    "bytes": 11231
+  },
+  {
+    "file": "frozen/anchor_reference.py",
+    "source": "research/peleg_static_recheck_20260919/experiment.py",
+    "sha256": "7d0702ef2dcf3ffebf18b780e88721c617d3eead8135ce600683bedad94d8939",
+    "bytes": 34254
+  },
+  {
+    "file": "frozen/anchor_control.py",
+    "source": "research/gradient_free_control_20261024/run_experiment.py",
+    "sha256": "06880279e978b4c62b9a4d728f377c28a745c4666652e36c64290c50e8b8d3dc",
+    "bytes": 16825
+  },
+  {
+    "file": "frozen/anchor_budget.py",
+    "source": "research/gradient_free_budget_20261024/run_budget.py",
+    "sha256": "4b556499ebdcf16983a6647bcba205bf35736cbb0d1ff9b837cb9776a60946cf",
+    "bytes": 6689
+  }
+]

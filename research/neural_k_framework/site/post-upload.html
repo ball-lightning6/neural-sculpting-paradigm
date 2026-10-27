@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="2026-09-02 短论文提交之后的新增理论与实验：MDL—grokking、规则对决、幅度对齐、随机记忆、跨架构、架构估计器与 Peleg 复核。">
-  <title>本次应上传的增量材料 · Neural K 研究档案</title>
+  <title>提交后的理论与实验增补 · Neural K 研究档案</title>
   <link rel="stylesheet" href="assets/site.css">
   <script>
     window.MathJax = {
@@ -37,6 +37,7 @@
         <div class="sidebar-label">本页目录</div>
         <nav class="toc"><div class="toc">
 <ul>
+<li><a href="#latest-evidence">2026-10-27 四类更新，合并到原实验</a></li>
 <li><a href="#1-既有证据-4-bit规则曲线与规则对决-e10-e19-e23-e24">1. 既有证据：4-bit规则曲线与规则对决（E10/E19/E23/E24）</a></li>
 <li><a href="#2-既有实验-e15-e27-agreement-around-grokking">2. 既有实验：E15/E27 Agreement around grokking</a></li>
 <li><a href="#3-既有实验-e23-parity2-mux3-数据相变">3. 既有实验：E23 Parity2/MUX3 数据相变</a></li>
@@ -56,8 +57,8 @@
     <main class="main-content" id="main-content">
       <article class="article">
         <header class="article-header">
-          <div class="eyebrow">提交后增量 · 2026-09</div>
-          <h1>本次应上传的增量材料</h1>
+          <div class="eyebrow">提交后增量 · 2026-09至10</div>
+          <h1>提交后的理论与实验增补</h1>
           <p class="article-description">2026-09-02 短论文提交之后的新增理论与实验：MDL—grokking、规则对决、幅度对齐、随机记忆、跨架构、架构估计器与 Peleg 复核。</p>
         </header>
         <div class="article-body">
@@ -69,18 +70,53 @@
       <div><strong><a href="post-upload-theory-update.html">理论增量全文</a></strong><span>统计语言、MDL、复杂度收窄与周末修正</span></div>
       <div><strong><a href="post-upload-estimator.html">架构估计器</a></strong><span>训练前估算 Neural K</span></div>
       <div><strong><a href="experiments/e31.html">E31 Loss 与幅度</a></strong><span>目标幅度与联合输出</span></div>
-      <div><strong><a href="experiments/e32.html">E32 随机记忆</a></strong><span>复杂度近线性缩放</span></div>
+      <div><strong><a href="experiments/e32.html#update-20261027">E32 随机记忆</a></strong><span>跨层增长、曲率与标定边界</span></div>
       <div><strong><a href="experiments/e33.html">E33 跨架构</a></strong><span>联合输出体积</span></div>
       <div><strong><a href="experiments/e34.html">E34 规则决斗</a></strong><span>15 对规则 × 5 阈值，75 项判决同向</span></div>
       <div><strong><a href="experiments/e35.html">E35 grokking 决斗</a></strong><span>真实候选函数偏好</span></div>
-      <div><strong><a href="experiments/e36.html">E36 Peleg/G&C 验证</a></strong><span>静态 vs SGD 对照</span></div>
+      <div><strong><a href="experiments/e36.html#update-20261027">E36 Peleg/G&C 验证</a></strong><span>58条件、STP与宽CNN边界</span></div>
       <div><strong><a href="experiments/e37.html">E37 测度鲁棒性</a></strong><span>Gaussian、欧式球与训练对应</span></div>
       <div><strong><a href="experiments/e38.html">E38 宽深SMC扫描</a></strong><span>95个目标运行与相对质量变化</span></div>
       <div><strong><a href="width-double-descent.html">双下降解释</a></strong><span>容量轴、时间轴与证据边界</span></div>
       <div><strong><a href="complexity-methods.html">复杂度测量方法</a></strong><span>规则与训练快照的测量方案</span></div>
       <div><strong><a href="post-upload-decision.html">上传裁决</a></strong><span>本批材料取舍清单</span></div>
     </div>
-    <h2 id="1-既有证据-4-bit规则曲线与规则对决-e10-e19-e23-e24">1. 既有证据：4-bit规则曲线与规则对决（E10/E19/E23/E24）</h2>
+    <h2 id="latest-evidence">2026-10-27 四类更新，合并到原实验</h2>
+<p>本轮沿用既有编号，完整保留旧结果，在对应实验中追加新协议、结果和边界。四类研究主题不是四个新的实验编号。</p>
+<table>
+<thead>
+<tr>
+<th>类别</th>
+<th>页面</th>
+<th>最新内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>静态与训练对应</td>
+<td><a href="experiments/e36.html#update-20261027">E36</a></td>
+<td>58条件CV、直接G&amp;C、广泛STP和宽CNN复核；明确小样本任意分组的用途与优化协议边界。</td>
+</tr>
+<tr>
+<td>复杂度</td>
+<td><a href="experiments/e31.html#update-20261027">E31</a>、<a href="experiments/e33.html#update-20261027">E33</a></td>
+<td>独立逻辑判据、f/g幅度对齐的前瞻换序、外部代理与证书校准；保留局部倒序。</td>
+</tr>
+<tr>
+<td>测度</td>
+<td><a href="experiments/e37.html#update-20261027">E37</a></td>
+<td>多测度背景和固定半径角向收缩；不将共同趋势写成测度无关的普遍公式。</td>
+</tr>
+<tr>
+<td>记忆</td>
+<td><a href="experiments/e32.html#update-20261027">E32</a></td>
+<td>一至三层同数据比较、增强采样、幅度管及记忆定义诊断；公开曲率和未解决结果。</td>
+</tr>
+</tbody>
+</table>
+<p>STP检验SGD/Adam特有梯度更新是否不可替代，不是SMC替代；平均BCE的合法体积也不自动等于独立逻辑复杂度。六个开放问题、记忆探索暂缓及核心工作假说的地位已同步至<a href="theory-core.html#open-questions-20261027">理论核心</a>。</p>
+<p>以下保留较早批次的材料概览；它们的最新补证在上表对应的原实验页中。</p>
+<h2 id="1-既有证据-4-bit规则曲线与规则对决-e10-e19-e23-e24">1. 既有证据：4-bit规则曲线与规则对决（E10/E19/E23/E24）</h2>
 <p>这是本次主包的基础证据：完整规则空间中的函数质量曲线、低loss下的复杂函数收缩、规则对决和复杂度分布变化。</p>
 <h2 id="2-既有实验-e15-e27-agreement-around-grokking">2. 既有实验：E15/E27 Agreement around grokking</h2>
 <p>Mod97任务中，hard fit之后未见输入 Agreement 仍接近随机，随后与目标准确率共同上升。它支持“grokking前存在很多不同训练集兼容函数”，不支持“所有seed早已共享一个错误函数”的简单图景。</p>
@@ -89,7 +125,7 @@
 <h2 id="4-e31-raw-mse与幅度对齐">4. E31 raw MSE与幅度对齐</h2>
 <p>raw 0/1、0/15 MSE可以出现grokking；输出幅度对齐的BCE干预能在更高平均CE处泛化。结论不是BCE唯一正确，而是loss和目标幅度共同选择联合输出分布的方向。</p>
 <h2 id="5-e32-随机记忆">5. E32 随机记忆</h2>
-<p>随机标签记忆复杂度随样本数近似线性，为复杂度/容量关系提供外部校准。</p>
+<p>早期协议观察到随样本数近线性增长，作为复杂度/容量关系的外部校准线索；新增跨层结果保留增长但有系统曲率，不能升级为严格正比。</p>
 <h2 id="6-e33-跨架构联合输出">6. E33 跨架构联合输出</h2>
 <p>不同架构也出现规则相关的联合输出体积曲线，但系数和局部排序依赖协议。</p>
 <h2 id="7-e34-8-bit条件规则决斗">7. E34 8-bit条件规则决斗</h2>

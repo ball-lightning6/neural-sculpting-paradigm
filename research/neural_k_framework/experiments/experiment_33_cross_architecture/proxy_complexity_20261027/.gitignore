@@ -1,0 +1,10 @@
+__pycache__/
+results/
+test_artifacts/
+logic_check_*/
+_validation/
+PROGRESS.md
+RESULTS.md
+LOCAL_EVIDENCE_AUDIT.json
+LOCAL_EVIDENCE_AUDIT.md
+SMALL_WORLD_VERIFICATION.json

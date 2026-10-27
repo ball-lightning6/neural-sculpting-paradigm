@@ -1,0 +1,4 @@
+# 版本为本次轻量检查环境；CUDA 版 PyTorch 须按目标平台另外安装。
+numpy==2.4.1
+torch==2.11.0
+matplotlib==3.10.9

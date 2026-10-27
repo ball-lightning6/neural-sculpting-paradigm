@@ -72,6 +72,16 @@
 <li><a href="#4-theoretical-correspondence-and-what-was-not-proven">4. Theoretical Correspondence and What Was Not Proven</a></li>
 <li><a href="#5-computation-checks-and-residual-risk">5. Computation, Checks, and Residual Risk</a></li>
 <li><a href="#6-file-entry-points">6. File Entry Points</a></li>
+<li><a href="#1-motivation-and-advance-prediction">1. Motivation and Advance Prediction</a></li>
+<li><a href="#2-protocol-and-measurement-objects">2. Protocol and Measurement Objects</a><ul>
+<li><a href="#2-1-fixed-network-reference-measure-and-events">2.1 Fixed Network, Reference Measure, and Events</a></li>
+<li><a href="#2-2-original-sampling-and-follow-up-checks">2.2 Original Sampling and Follow-Up Checks</a></li>
+</ul>
+</li>
+<li><a href="#3-results-a-k-ordering-reversal-not-merely-a-slope-change">3. Results: A K-Ordering Reversal, Not Merely a Slope Change</a></li>
+<li><a href="#4-branch-loss-and-precision-budget-allocation">4. Branch Loss and Precision-Budget Allocation</a></li>
+<li><a href="#5-conclusions-and-boundaries">5. Conclusions and Boundaries</a></li>
+<li><a href="#6-public-reproduction-entry-points-and-release-checks">6. Public Reproduction Entry Points and Release Checks</a></li>
 </ul>
 </div>
 </nav>
@@ -86,7 +96,8 @@
           <h1>E31: Loss, target amplitude, and grokking</h1>
           <p class="article-description">How raw MSE, BCE amplitude alignment, and target amplitude change rule recovery and grokking.</p>
         </header>
-        <div class="article-body"><p>The core of public experiment E31 is not an isolated loss comparison, but an evidence chain on the same Power-architecture mod97 task: <strong>original grokking with amplitude-alignment regularization -&gt; raw-MSE target-amplitude controls -&gt; amplitude series and static checks on smaller networks</strong>. The question is how the loss selects a joint output distribution and changes rule recovery, rather than treating "lower training CE" as the only explanation.</p>
+        <div class="article-body"><p><strong>October 2026 update:</strong> The original report is retained; <a href="#update-20261027">jump to the added experiments, checks, and limitations</a>.</p>
+<p>The core of public experiment E31 is not an isolated loss comparison, but an evidence chain on the same Power-architecture mod97 task: <strong>original grokking with amplitude-alignment regularization -&gt; raw-MSE target-amplitude controls -&gt; amplitude series and static checks on smaller networks</strong>. The question is how the loss selects a joint output distribution and changes rule recovery, rather than treating "lower training CE" as the only explanation.</p>
 <h2 id="core-experimental-chain">Core experimental chain</h2>
 <ol>
 <li><strong>CE + amplitude-alignment regularization on the original Power mod97 task</strong>: the unregularized CE baseline still had not recovered the rule when training CE reached about <code>4e-11</code>; both amplitude-alignment conditions achieved complete generalization in 3/3 runs, while retaining a post-fitting grokking delay. This is the most important original-Transformer result in this experiment; see <code>POWER_MOD97_ALIGNMENT_REPORT.md</code>.</li>
@@ -587,7 +598,215 @@
 <li>[Independent matching audit]</li>
 <li>[Result package]</li>
 </ul>
-<p>The original weights, logits, function IDs, layer diagnostics, and resume checkpoints remain in the local formal directory. The result package contains the final particles and analysis materials needed for analysis, but omits the larger <code>.pt</code> resume checkpoints.</p></div>
+<p>The original weights, logits, function IDs, layer diagnostics, and resume checkpoints remain in the local formal directory. The result package contains the final particles and analysis materials needed for analysis, but omits the larger <code>.pt</code> resume checkpoints.</p>
+<p><a id="update-20261027"></a></p>
+<h1 id="2026-10-27-supplement-amplitude-alignment-and-complexity-reordering-for-xor-xor-or">2026-10-27 Supplement: Amplitude Alignment and Complexity Reordering for XOR / XOR-OR</h1>
+<p>This supplement organizes experiments completed on 2026-10-24 for publication on 2026-10-27. It extends E31's discussion of amplitude and precision without replacing earlier results. It is not a formal preregistration written retrospectively: the qualitative advance prediction, settings fixed before sampling, and checks added after observing the results are distinguished below. No new training or neural sampling was performed for this release.</p>
+<p><strong>The core conclusion is not only the success of amplitude alignment, but also a limitation of mean BCE as a complexity scale: raw-BCE volume is a valid measurement, yet in some cases it is not an adequate unified scale for independent logical complexity because it mixes in precision allocation across examples and branches. The measurement protocol therefore needs revision or supplementation within the existing joint-output framework; alignment is not a proven uniquely correct scale either.</strong></p>
+<h2 id="1-motivation-and-advance-prediction">1. Motivation and Advance Prediction</h2>
+<p>Defining greater complexity as faster contraction when loss decreases, and then using that definition to explain why complex rules contract faster, provides no test beyond the definition. Here an independent judgment about logical structure comes first, followed by a test of whether a specific output-precision intervention can change a counterintuitive neural-volume ordering.</p>
+<p><strong>The evidence chain is: independently judge g to be strictly more complex, identify the anomalous raw-K ordering, make an advance prediction that amplitude alignment may reverse it, and test that prediction through the measured reordering.</strong> The independent logical judgment is not inferred from K values or curve slopes; both the original logical expectation and the intervention prediction preceded this round of sampling.</p>
+<p>The fixed rules are:</p>
+<pre><code class="language-text">f(a,b,c,d) = a XOR b
+g(a,b,c,d) = (a XOR b) OR c
+</code></pre>
+<p>The fourth bit d does not enter either rule. Relative to f, g has an additional control variable c that genuinely affects its output, rather than merely a longer expression that simplifies away. To state the independent logical judgment rigorously and checkably, this website supplement specifies the language before presenting the proof: the gate library is AND2, OR2, XOR2, NOT1, each gate has at most 2 inputs and costs 1, and wiring is free. A 0-gate program may output one original input or a constant. Cost is the minimum circuit gate count in this fixed library.</p>
+<p>The function f has two essential variables, a and b, so a 0-gate program cannot implement it, whereas one XOR2 gate can; its minimum cost is therefore 1. The function g has three essential variables, a, b, and c: changing a with b=c=0 changes the output, changing b with a=c=0 changes the output, and changing c with a=b=0 changes the output. A single gate with at most 2 inputs cannot depend on three original variables, so g requires at least 2 gates. An XOR2 followed by an OR2 implements it with exactly 2 gates. Thus, in this explicitly specified language:</p>
+<div class="math-display">$$
+C_{\mathcal L}(f)=1&lt;2=C_{\mathcal L}(g).
+$$</div>
+<p>This proof is independent of neural sampling and Neural K and supplies a strict logical criterion for noncircular calibration. It formalizes the original logical expectation in the present website supplement; it does not claim that this gate library was formally preregistered at the time or that SAT minimality synthesis was performed for f/g. The separately obtained AND2 and AND2-OR certificates are not conflated with this proof. Strict gate-count ordering is not strict ordering in every universal description language, nor does it directly imply neural-K order preservation for arbitrary networks, measures, or continuous-output precision protocols.</p>
+<p>Contrary to that logical criterion, existing low-loss measurements under ordinary mean BCE gave K_g&lt;K_f. Here the anomaly means disagreement with an independent logical ordering, not defining complexity through neural volume and then treating another neural ordering as a logical proof.</p>
+<p>Before this round of sampling, the user proposed that when c=1, g is constantly 1: the easy constant branch might achieve very low BCE, allowing the c=0 branch, which still distinguishes XOR, to retain higher loss. Restricting output-amplitude differences across examples might reduce the reversed ordering or even make g more costly than f. Reducing the gap and reversing the ordering are distinct outcomes. This was a qualitative prospective intervention prediction; neither numerical K differences nor a crossing threshold were predicted in advance.</p>
+<h2 id="2-protocol-and-measurement-objects">2. Protocol and Measurement Objects</h2>
+<h3 id="2-1-fixed-network-reference-measure-and-events">2.1 Fixed Network, Reference Measure, and Events</h3>
+<p>The experiment uses all 16 0/1 inputs of the complete 4-bit world, enumerating a,b,c,d from the most to the least significant bit. The truth-table IDs are f=0x0FF0 and g=0xCFFC. The network is fixed at 4→16→1 tanh with 97 independent standard Gaussian neural coordinates; hidden-layer weights and biases are divided by 2, and output-layer weights and bias by 4. All pools are initialized from the prior, without trained weights.</p>
+<p>For target h, let z_i denote the logit. The signed margin, pointwise BCE, and population margin variance are:</p>
+<div class="math-display">$$
+m_i=(2h(x_i)-1)z_i,\qquad
+\ell_i=\log(1+e^{-m_i}),\qquad
+\bar m=\frac1{16}\sum_{i=1}^{16}m_i,\qquad
+\operatorname{Var}(m)=\frac1{16}\sum_{i=1}^{16}(m_i-\bar m)^2.
+$$</div>
+<p>The three scores define three different selection events. The coefficient lambda=0.1 follows the historical amplitude-alignment protocol and was fixed before this round of sampling, not tuned according to whether a reversal occurred.</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Score s_h</th>
+<th>Meaning of the constraint</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>mean_bce</td>
+<td><span class="math-inline">$\frac1{16}\sum_i\ell_i$</span></td>
+<td>Allows the mean-loss budget to be redistributed across examples</td>
+</tr>
+<tr>
+<td>max_bce</td>
+<td><span class="math-inline">$\max_i\ell_i$</span></td>
+<td>Applies the same BCE cap to every example</td>
+</tr>
+<tr>
+<td>aligned</td>
+<td><span class="math-inline">$\frac1{16}\sum_i\ell_i+0.1\operatorname{Var}(m)$</span></td>
+<td>Penalizes both mean BCE and unequal signed amplitudes</td>
+</tr>
+</tbody>
+</table>
+<div class="math-display">$$
+V_h^{(s)}(\epsilon)=\Pr_{\theta\sim N(0,I_{97})}[s_h(\theta)\le\epsilon],\qquad
+K_h^{(s)}(\epsilon)=-\log_2 V_h^{(s)}(\epsilon),\qquad
+\Delta K^{(s)}=K_g^{(s)}-K_f^{(s)}.
+$$</div>
+<p>A positive Delta K means that g has less mass and higher Neural K. The groups use the same numerical thresholds but not the same event; an aligned threshold is not raw BCE. The objects are the separate full-target masses of the two targets, not candidate-function competition within one fixed training set. No additional hard-function cell is intersected with the event. A mean_bce or aligned threshold below ln(2)/16 already implies complete hard correctness; the corresponding bound for max_bce is ln(2).</p>
+<h3 id="2-2-original-sampling-and-follow-up-checks">2.2 Original Sampling and Follow-Up Checks</h3>
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th style="text-align: right;">Jobs</th>
+<th style="text-align: right;">Independent pools per job</th>
+<th style="text-align: right;">Particles per pool</th>
+<th>Adaptation / fixed updates per level</th>
+<th style="text-align: right;">Fixed updates at reporting nodes</th>
+<th style="text-align: right;">Seed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Initial: two rules, three events</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">2048</td>
+<td>4 / 16</td>
+<td style="text-align: right;">96</td>
+<td style="text-align: right;">202610241701</td>
+</tr>
+<tr>
+<td>Increased budget: two rules, two intervention events</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">4096</td>
+<td>4 / 32</td>
+<td style="text-align: right;">96</td>
+<td style="text-align: right;">202610241702</td>
+</tr>
+<tr>
+<td>Parent-event bridge: two rules, two interventions, two nodes</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">Reuses 4 parent pools</td>
+<td style="text-align: right;">2048</td>
+<td>4 / 64</td>
+<td style="text-align: right;">128</td>
+<td style="text-align: right;">202610241905</td>
+</tr>
+</tbody>
+</table>
+<p>The initial and increased-budget runs contain 40 pools initialized from the prior. Particles are not exchanged across pools; each pool has independent prior, resampling, and mutation random streams. pCN updates three blocks in sequence: hidden layer, output layer, and all parameters, accepting proposals within the current event. Parameters and forward passes use float32, log mass is accumulated in float64, and AMP/TF32 are disabled. The original environment was Python 3.13.5, NumPy 2.4.1, PyTorch 2.11.0+cu130, and an NVIDIA GeForce RTX 3080 on cuda:1.</p>
+<p>The fixed reporting nodes are 0.7, 0.5, 0.3, 0.2, 0.12, 0.08, 0.06, 0.04, 0.025, 0.016, 0.01, 0.0063, 0.004, 0.0025, 0.0016, and 0.001. The primary statistic is the median of pool K values, not the negative logarithm of mean pool mass. The released tables retain both statistics and pool ranges; particles must not be treated as independent replicates.</p>
+<p>The increased-budget and bridge runs were precision checks added after the initial reversal and variation in absolute K under strong constraints were observed, not new formal preregistrations. The increased-budget stage retained both intervention conditions for f/g but did not rerun ordinary BCE. The bridge starts from the original mean_bce≤epsilon parent pools at epsilon=0.01 and 0.001, retains the parent constraint, and tightens max_bce or aligned. Accounting is performed separately for each pool:</p>
+<div class="math-display">$$
+K_{\mathrm{child},r}=K_{\mathrm{parent},r}-\log_2\Pr(E_{\mathrm{child}}\mid E_{\mathrm{parent}})_r.
+$$</div>
+<p>The bridge uses new subsequent random streams but inherits parent-pool error. Its 32 endpoint pool records are not 32 independent prior replicates or a third independent estimator. Additivity within each pool does not imply exact term-by-term additivity of medians of different quantities.</p>
+<h2 id="3-results-a-k-ordering-reversal-not-merely-a-slope-change">3. Results: A K-Ordering Reversal, Not Merely a Slope Change</h2>
+<p>The table reports the median pool K for g minus the median pool K for f at a score cap of 0.001, in bits. Differences are calculated from unrounded estimates; subtracting separately rounded K values can differ by 0.01.</p>
+<table>
+<thead>
+<tr>
+<th>Selection event</th>
+<th style="text-align: right;">Initial Delta K</th>
+<th style="text-align: right;">Increased-budget Delta K</th>
+<th style="text-align: right;">Parent-event bridge Delta K</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>mean_bce</td>
+<td style="text-align: right;">-37.79</td>
+<td style="text-align: right;">Not separately scheduled</td>
+<td style="text-align: right;">Used as the parent event</td>
+</tr>
+<tr>
+<td>max_bce</td>
+<td style="text-align: right;">+22.14</td>
+<td style="text-align: right;">+29.47</td>
+<td style="text-align: right;">+24.60</td>
+</tr>
+<tr>
+<td>aligned</td>
+<td style="text-align: right;">+48.91</td>
+<td style="text-align: right;">+50.28</td>
+<td style="text-align: right;">+49.77</td>
+</tr>
+</tbody>
+</table>
+<p>The new ordinary-BCE estimates are K_f=823.33 and K_g=785.55; the historical scan gave 823.54 and 786.93, and the historical increased-budget estimate for f was 821.91. The new increased-budget aligned estimates are K_f=869.31 and K_g=919.60, with nonoverlapping four-pool ranges of 868.41–869.96 and 912.23–927.45. These ranges describe observed between-pool variation, not formal confidence intervals or global-mixing certification.</p>
+<p>Aligned also reverses the ordering at 0.01: +30.04 bits initially, +31.78 with the increased budget, and +32.45 with the bridge. In the initial run the difference is -7.86 at 0.12 and +1.14 at 0.08; the increased-budget run is likewise negative at 0.12 and positive at 0.08. Thus 0.08 is the first sampled grid node with an observed positive difference, not a predicted threshold or a precisely located continuous crossing point. The direction does not rely on selecting only the deepest node.</p>
+<figure class="result-figure"><a href="../assets/figures/e31_ext_xor_or_order.png" target="_blank" rel="noopener"><img src="../assets/figures/e31_ext_xor_or_order.png" alt="Delta K curves and endpoint comparisons for the three events" loading="lazy"></a><figcaption>Delta K curves and endpoint comparisons for the three events</figcaption></figure>
+<p>At 0.001, the median conditional cost of adding aligned through the bridge is approximately 42.79 bits for f and 130.97 bits for g. The median total K values are 866.15 and 915.92, a difference of +49.77 bits. The added constraint retains a smaller fraction for g, agreeing in direction with direct estimation from the prior.</p>
+<h2 id="4-branch-loss-and-precision-budget-allocation">4. Branch Loss and Precision-Budget Allocation</h2>
+<p>The table retains actual BCE for both branches of g. The max_bce and aligned rows use increased-budget results; mean_bce uses the initial results.</p>
+<table>
+<thead>
+<tr>
+<th>Selection condition for g</th>
+<th style="text-align: right;">Mean BCE in the c=0 branch</th>
+<th style="text-align: right;">Mean BCE in the c=1 branch</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>mean_bce≤0.001</td>
+<td style="text-align: right;">0.0018534</td>
+<td style="text-align: right;">0.0001242</td>
+</tr>
+<tr>
+<td>max_bce≤0.001</td>
+<td style="text-align: right;">0.0009211</td>
+<td style="text-align: right;">0.0003277</td>
+</tr>
+<tr>
+<td>aligned≤0.001</td>
+<td style="text-align: right;">0.0009212</td>
+<td style="text-align: right;">0.0009130</td>
+</tr>
+</tbody>
+</table>
+<p>The ordinary event permits the harder branch's mean loss to approach twice the overall cap because each branch contains 8 inputs and the easier branch contributes very small nonnegative loss. Easy examples do not contribute negative loss. For f, the corresponding ordinary-event branch values are approximately 0.001013 and 0.000965, without comparable imbalance.</p>
+<p>The pointwise cap prevents the harder branch from exceeding the shared cap while still allowing extra confidence on the easier branch, and the ordering already reverses. Aligned further brings the branch BCE values together and reduces g's mean margin variance from approximately 2.461 to 0.000730. The actual mean BCE under increased-budget aligned is 0.0009199 for f and 0.0009171 for g. These are close to each other but were not strictly continuously matched to the ordinary group.</p>
+<figure class="result-figure"><a href="../assets/figures/e31_ext_branch_bce.png" target="_blank" rel="noopener"><img src="../assets/figures/e31_ext_branch_bce.png" alt="Branch BCE and margin variance for g" loading="lazy"></a><figcaption>Branch BCE and margin variance for g</figcaption></figure>
+<p>These observations support the predicted intervention direction and the mean-loss budget-allocation explanation. They do not establish that the network internally executes a program that first tests c and then decides whether to compute XOR. The three selection events jointly change precision and amplitude allocation; all causal contributions have not been separated.</p>
+<h2 id="5-conclusions-and-boundaries">5. Conclusions and Boundaries</h2>
+<p>This experiment provides both a prediction test and a warning about the measurement definition. A qualitative advance judgment supported by independent logical structure and output-precision allocation successfully predicted a K-ordering reversal for this function pair after amplitude intervention, but this also shows that calibrating complexity solely through mean BCE loss is inadequate in some cases. The lower cost of g under the original mean-BCE event is not an invalid measurement; it may reflect cheaper continuous implementations and redistributable precision budgets. Using this valid volume directly as a unified scale for independent logical complexity requires revising or supplementing the protocol. Agreement with logical ordering after changing the event does not establish a uniquely correct, loss-independent complexity measure.</p>
+<p>The joint output distribution is already a foundational object in the framework. What remains to be improved is the choice of comparable sections and the complexity definition on that distribution. Equal amplitude is only one particular choice. Different target amplitudes at different inputs or output positions may also be specified in advance, but regions, tolerances, and precision coordinates must be explicit, without selecting favorable sections after seeing results. Taking ordinary BCE toward zero does not automatically impose amplitude alignment, and this experiment does not imply that unregularized curves must eventually cross in an arbitrarily deep tail.</p>
+<p>The historical independent float64 recomputation covered 672 snapshots and 1,900,544 parameter vectors. The maximum float32/float64 score discrepancy for direct estimation was approximately 1.80e-7; per-level survivor counts and K accumulation were checked separately. Bridge verification checked parent-snapshot identity, endpoint constraints, and additive accounting, but did not independently reconstruct bridge survivor counts at every level. The four historical engineering tests included an analytic Gaussian half-space, random-stream replay, and pool isolation. These are historical verification records; their sampling tests were not rerun for this release.</p>
+<p>Absolute K remains sensitive to budget and path: median max_bce K for f is 883.91 initially, 860.10 with increased budget, and 851.47 through the bridge. Decimal places therefore do not indicate convergence precision, and shared finite-MCMC bias remains possible. The original increased-budget g-aligned run encountered one temporary access denial while saving progress JSON. It resumed from saved weights and RNG checkpoints with the original source and configuration, without changing sampling parameters or excluding replicas. No new SGD control was run for this function pair, and this supplement contains no SGD hitting-time material.</p>
+<h2 id="6-public-reproduction-entry-points-and-release-checks">6. Public Reproduction Entry Points and Release Checks</h2>
+<p>Reproduction files are in <code>xor_or_alignment_20261027/</code>. <a href="../../experiments/experiment_31_loss_amplitude_grokking/xor_or_alignment_20261027/run_experiment.py">run_experiment.py</a>, <a href="../../experiments/experiment_31_loss_amplitude_grokking/xor_or_alignment_20261027/bridge_diagnostic.py">bridge_diagnostic.py</a>, and <a href="../../experiments/experiment_31_loss_amplitude_grokking/xor_or_alignment_20261027/verify_bridge.py">verify_bridge.py</a> are byte-identical to their historical sources. The sampler SHA256 is <code>7960cbdeac3554850eefeb9f596637ed77ba615eaf56e68c4fd4268ece1b0aeb</code>. <a href="../../experiments/experiment_31_loss_amplitude_grokking/xor_or_alignment_20261027/analyze.py">analyze.py</a> only adapts release paths and figure labels, removing the private drive-path entry point. Source and required-data hashes are retained in <a href="../../experiments/experiment_31_loss_amplitude_grokking/xor_or_alignment_20261027/data/provenance.json">data/provenance.json</a>; this does not imply that the historical experiments were rerun.</p>
+<p>From this experiment directory, after installing the dependencies in <a href="../../experiments/experiment_31_loss_amplitude_grokking/xor_or_alignment_20261027/requirements.txt">requirements.txt</a>, the following commands perform only lightweight checks and redraw the website figures, without training or sampling:</p>
+<pre><code class="language-powershell">cd xor_or_alignment_20261027
+python -E -s test_offline.py
+python -E -s build_figures.py
+python -E -s check_release.py
+</code></pre>
+<p>Run the following commands only after explicitly deciding to repeat the original SMC; they were not executed for this release. The sampler retains the original cuda:1 selection and requires the corresponding visible CUDA device, with no automatic CPU fallback. A changed device or numerical configuration should have a new run identity and must not be represented as a bitwise continuation of the original checkpoint.</p>
+<pre><code class="language-powershell">$env:XOR_ALIGNMENT_TIER = 'primary'
+Remove-Item Env:XOR_ALIGNMENT_JOBS -ErrorAction SilentlyContinue
+python -E -s run_experiment.py
+$env:XOR_ALIGNMENT_TIER = 'confirm'
+$env:XOR_ALIGNMENT_JOBS = 'f__max_bce,g__max_bce,f__aligned,g__aligned'
+python -E -s run_experiment.py
+python -E -s analyze.py
+$env:XOR_ALIGNMENT_TIER = 'primary'
+Remove-Item Env:XOR_ALIGNMENT_JOBS -ErrorAction SilentlyContinue
+python -E -s bridge_diagnostic.py
+python -E -s verify_bridge.py
+</code></pre>
+<p>Initial output goes to <code>results_primary/</code>, increased-budget output to <code>results_confirm/</code>, and bridge output to <code>bridge_results/</code>. Bridging requires the mean_bce node snapshots saved by the initial run, and full per-parameter verification likewise requires snapshots generated by rerunning. The release contains only small aggregate CSV files and a bridge summary, not weights, checkpoints, or large raw results, so it cannot directly reverify the original 672 snapshots. The historical scan archive is also not bundled. The optional environment variable <code>XOR_ALIGNMENT_HISTORICAL_PACKAGE</code> is its explicit data entry point; without it, analysis reports that the archive is unavailable, without affecting recomputation of this round's direct results.</p>
+<p>This release completed py_compile and import checks for all added Python files, 4 nonsampling offline tests, and two English-labeled figures generated from existing aggregate data. <a href="../../experiments/experiment_31_loss_amplitude_grokking/xor_or_alignment_20261027/test_experiment.py">test_experiment.py</a> retains the historical GPU/SMC engineering tests; it is not the offline test entry point and was not run. The public code does not depend on research sources outside the framework. Resampling, original-snapshot verification, and global-mixing validation remain distinct levels of work.</p></div>
 
       </article>
     </main>

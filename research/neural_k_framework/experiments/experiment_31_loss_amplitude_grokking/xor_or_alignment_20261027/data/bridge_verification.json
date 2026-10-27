@@ -1,0 +1,54 @@
+{
+  "passed": true,
+  "jobs": 8,
+  "snapshots": 32,
+  "particles_recomputed": 65536,
+  "maximum_stored_logit_error": 5.329070518200751e-15,
+  "note": "父快照身份、终点事件及加法账本通过；没有独立重建桥接的逐层存活计数，不是混合认证。",
+  "differences": [
+    {
+      "threshold": 0.01,
+      "kind": "max_bce",
+      "K_f": 568.1631265731687,
+      "K_g": 582.3298687260535,
+      "delta_K": 14.166742152884808,
+      "cross_pool_min": 12.441590472548569,
+      "cross_pool_max": 15.666831437806081,
+      "conditional_K_f": 27.077069316978907,
+      "conditional_K_g": 85.53741218272395
+    },
+    {
+      "threshold": 0.01,
+      "kind": "aligned",
+      "K_f": 562.8555140698983,
+      "K_g": 595.3086108814625,
+      "delta_K": 32.45309681156425,
+      "cross_pool_min": 31.621177706976823,
+      "cross_pool_max": 33.63062624896895,
+      "conditional_K_f": 21.839950103396575,
+      "conditional_K_g": 98.70895867560998
+    },
+    {
+      "threshold": 0.001,
+      "kind": "max_bce",
+      "K_f": 851.4748895767565,
+      "K_g": 876.0763858931415,
+      "delta_K": 24.60149631638501,
+      "cross_pool_min": 21.476557028808088,
+      "cross_pool_max": 31.991093521521066,
+      "conditional_K_f": 28.14027918801355,
+      "conditional_K_g": 90.4983062138657
+    },
+    {
+      "threshold": 0.001,
+      "kind": "aligned",
+      "K_f": 866.1499734468775,
+      "K_g": 915.9155623686488,
+      "delta_K": 49.76558892177127,
+      "cross_pool_min": 47.98756889797153,
+      "cross_pool_max": 57.90399702500736,
+      "conditional_K_f": 42.790707711531184,
+      "conditional_K_g": 130.97064474473638
+    }
+  ]
+}

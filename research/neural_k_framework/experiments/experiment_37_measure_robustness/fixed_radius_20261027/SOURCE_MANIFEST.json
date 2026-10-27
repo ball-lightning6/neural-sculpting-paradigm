@@ -1,0 +1,99 @@
+{
+  "assembled_date": "2026-10-27",
+  "preregistration": false,
+  "frozen_core_original_sha256": "5befe724b94e48a7d705cfd5dc45e1bc94ead41abe708da8db69707dc99af2f5",
+  "frozen_core_fixed_sha256": "ec0e3bae06287768cbb7ad44288eae65aa20b87b089603f87467e13430d6bafd",
+  "core_fix": "pilot_losses.detach().cpu() 后进行相同 dtype 的 torch.kthvalue；保留确定性设置、k、随机流与其余科学参数。",
+  "data_scope": "只包含公开表格复算所需轻量摘要，不含原审计参数数组、逐层存活日志或 checkpoint。历史原始参数核验结果不代表本次重做。",
+  "portable_changes": "冻结 Python 文件未修改。历史面板与配置只清理本机路径；没有重新抽样、训练或重新选择规则。",
+  "files": {
+    "frozen/measure_diagnostic.py": {
+      "sha256": "ec0e3bae06287768cbb7ad44288eae65aa20b87b089603f87467e13430d6bafd",
+      "bytes": 52955,
+      "origin": "measure_diagnostic_fix_20261024 的冻结核心，与 smc_focus_20261024/measure_reference.py 字节相同"
+    },
+    "data/measure_curves.csv": {
+      "sha256": "3ce6ba46089a0326e7c274103c36dfec10f66804f9f0ae8b60a5586222496b5d",
+      "bytes": 4605,
+      "origin": "2026-10-25 最终复核的 measure_curves.csv 原样复制"
+    },
+    "data/measure_review.json": {
+      "sha256": "436969d5732d997d20b4868411b0e22396bcc55e74b9c7c6c858f2ff45755861",
+      "bytes": 17600,
+      "origin": "2026-10-25 RESULTS.json 的 measure 字段；只重排 JSON 格式"
+    },
+    "data/measure_terminal_status.csv": {
+      "sha256": "73d9883f340daca4223892973bbd52378bf3bc0a120504b592b79f45ed53fc59",
+      "bytes": 1304,
+      "origin": "2026-10-25 最终复核的 measure_terminal_status.csv 原样复制"
+    },
+    "historical_20260913/comparisons.csv": {
+      "sha256": "5a10517e486a70863ab62fb0d57d36bc31c381d88c0bd47033b1e7d9b72e35a8",
+      "bytes": 2204,
+      "origin": "2026-09-13 自然测度冻结文件，字节不变"
+    },
+    "historical_20260913/config.json": {
+      "sha256": "046d25bb29ece12b3423f179ec153787a4e2f9dc7882cafe1bfab213d00e1e11",
+      "bytes": 3067,
+      "origin": "2026-09-13 config.json；仅将 source_panel 本机路径改为包内来源标签"
+    },
+    "historical_20260913/panel.json": {
+      "sha256": "9d820519f90958ebfcf4621e67b59abbf2f8eb11a71eb3e5f65b090079678eb9",
+      "bytes": 1216,
+      "origin": "2026-09-13 config.json.prior_definitions；仅将 source_panel 本机路径改为包内来源标签"
+    },
+    "historical_20260913/rules.csv": {
+      "sha256": "9cb1afd37aeb9abd0592d18057b4d49ed12a6578a0a856a5e0863b1a8de7972e",
+      "bytes": 11130,
+      "origin": "2026-09-13 自然测度冻结文件，字节不变"
+    },
+    "historical_20260913/summary.json": {
+      "sha256": "da1ecd6d9e8542f4984a7c119afa0c63559659b5c3857d36339c117aaf18826d",
+      "bytes": 9107,
+      "origin": "2026-09-13 自然测度冻结文件，字节不变"
+    },
+    "historical_20260913/tail_shape.csv": {
+      "sha256": "c228add07f23e219639c148e69dab14c9e794dd41c9da806b474a315579d9ee6",
+      "bytes": 9036,
+      "origin": "2026-09-13 自然测度冻结文件，字节不变"
+    },
+    "historical_20260913/source/experiment_4bit_full_curve_scan.py": {
+      "sha256": "f6761c0677bbb0f4aaa6027ed00464a27b073faff5767ebd7be8392ddc709131",
+      "bytes": 57072,
+      "origin": "2026-09-13 自然测度冻结文件，字节不变"
+    },
+    "historical_20260913/source/experiment_4bit_natural_measures.py": {
+      "sha256": "ea5c80f66bb5b3ffea606b03a21ec657abf83a2b57beb1ad5095ccd1f420b778",
+      "bytes": 17666,
+      "origin": "2026-09-13 自然测度冻结文件，字节不变"
+    },
+    "historical_20260913/source/experiment_4bit_uniform_ball_volume.py": {
+      "sha256": "33818215c2f7823e5b006d1048fd95620a340003a914e2f5dd99cdea984824e9",
+      "bytes": 30235,
+      "origin": "2026-09-13 自然测度冻结文件，字节不变"
+    },
+    "historical_20260913/source_panel/panel.json": {
+      "sha256": "6a77105d75c8e4a296adea1e47b2766d79806595b3a1c1f2b3a78ec12d0fed2b",
+      "bytes": 16568,
+      "origin": "2026-09-13 原 36 规则面板；移除未使用的本机 source_cache 路径，保留选择及 hash"
+    },
+    "fixed_radius_config.json": {
+      "sha256": "30a63c5277e3dc1167b7a142ccc8a7f3ad8375e28f3b36572874e46e66abaf15",
+      "origin": "原修复核心 CONFIG + focus 中 targets/radii/replicas 的 24 池筛选；输出路径由入口在包内设置"
+    }
+  },
+  "legacy_e37_files": {
+    "analyze_endpoint_grid.py": "44c0a01571fbfc3ffe01c6b22657a975efd69419fa0acec77e3dccd688e87752",
+    "DEEP_TAIL_RESULTS.md": "7d4234b5ad164c710fe4d4edd3e464d2d2a2f17fdc065b3bed95669c820d228e",
+    "ENDPOINT_GRID_RECHECK.md": "ee18d6b6dea8693cce9bc3ba016e46e161fc84da2f5567569a14d09a59019d4f",
+    "ENDPOINT_RESULTS_EUCLIDEAN.md": "0678a6853ff425b98190d38f2dd3561d16ec56021234d7e77d5987fb3dac4c23",
+    "experiment_3bit_cross_architecture_complexity_order.py": "a1bfc92539104ab0818da4dbcfdb7af50733eee984ea4e5f27b8a71a515bc687",
+    "grid_analysis.json": "4a95019bfe389c17f092ca02402bec3d9f51df2195c6e2f79adc1a052f8a1fa9",
+    "PROTOCOL.md": "9a3f1f84292ec173dedf588dfd19284d81ea06fe3fb2531922057839bfa9f66a",
+    "README.md": "e77a2efea8a94a0e1190c7b4b6cf7d339f2b92abc40891a4c84d17a7a1e7a3c5",
+    "RESULTS.md": "7d5f3b853e02a114598b2c18495fc2f7a8d9cace97b8091dd6fea3e427bcda45",
+    "run_endpoint_uniform_ball.py": "8d57a2996bb0295663f5c009aea6598377f571a08e466a3c04ddb0c46f9885ba",
+    "run_output_box_experiments.py": "f2fd872756e43a7e294eaf81d5dbd6f53ea8835abab34392da2a54dd3c49bf76",
+    "summary.json": "f336c869e8e4788e4412768a9172c859641ecc77005f0521e5f5258bb2921c1b"
+  }
+}

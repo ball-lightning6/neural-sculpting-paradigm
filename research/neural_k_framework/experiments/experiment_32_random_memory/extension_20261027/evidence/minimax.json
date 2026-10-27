@@ -1,0 +1,3020 @@
+{
+  "cases": [
+    {
+      "rows": [
+        {
+          "n": 0,
+          "datasets": 1,
+          "maximum": 80.25663226760517,
+          "maximum_is_infinite": false,
+          "maximum_minus_n0": 0,
+          "increment": null,
+          "mean": 80.25663226760517,
+          "median": 80.25663226760517,
+          "p90": 80.25663226760517,
+          "p99": 80.25663226760517,
+          "maximizing_datasets": 1,
+          "witness": {
+            "ternary_index": 6560,
+            "observed_mask": 0,
+            "label_mask": 0,
+            "observations": [],
+            "compatible_functions": 256,
+            "minimum_cost": 80.25663226760517,
+            "minimum_is_infinite": false,
+            "cheapest_function_count": 2,
+            "cheapest_functions_first_16": [
+              "0x00",
+              "0xFF"
+            ],
+            "cheapest_representatives": [
+              "0x00"
+            ],
+            "representative_quality": {
+              "0x00": "未分级"
+            }
+          }
+        },
+        {
+          "n": 1,
+          "datasets": 16,
+          "maximum": 80.25663226760517,
+          "maximum_is_infinite": false,
+          "maximum_minus_n0": 0,
+          "increment": 0,
+          "mean": 80.25663226760517,
+          "median": 80.25663226760517,
+          "p90": 80.25663226760517,
+          "p99": 80.25663226760517,
+          "maximizing_datasets": 16,
+          "witness": {
+            "ternary_index": 2186,
+            "observed_mask": 128,
+            "label_mask": 0,
+            "observations": [
+              {
+                "input_index": 7,
+                "label": 0
+              }
+            ],
+            "compatible_functions": 128,
+            "minimum_cost": 80.25663226760517,
+            "minimum_is_infinite": false,
+            "cheapest_function_count": 1,
+            "cheapest_functions_first_16": [
+              "0x00"
+            ],
+            "cheapest_representatives": [
+              "0x00"
+            ],
+            "representative_quality": {
+              "0x00": "未分级"
+            }
+          }
+        },
+        {
+          "n": 2,
+          "datasets": 112,
+          "maximum": 199.97156284490822,
+          "maximum_is_infinite": false,
+          "maximum_minus_n0": 119.71493057730305,
+          "increment": 119.71493057730305,
+          "mean": 140.1140975562567,
+          "median": 140.1140975562567,
+          "p90": 199.97156284490822,
+          "p99": 199.97156284490822,
+          "maximizing_datasets": 56,
+          "witness": {
+            "ternary_index": 1457,
+            "observed_mask": 192,
+            "label_mask": 64,
+            "observations": [
+              {
+                "input_index": 6,
+                "label": 1
+              },
+              {
+                "input_index": 7,
+                "label": 0
+              }
+            ],
+            "compatible_functions": 64,
+            "minimum_cost": 199.97156284490822,
+            "minimum_is_infinite": false,
+            "cheapest_function_count": 1,
+            "cheapest_functions_first_16": [
+              "0x55"
+            ],
+            "cheapest_representatives": [
+              "0x0F"
+            ],
+            "representative_quality": {
+              "0x0F": "未分级"
+            }
+          }
+        },
+        {
+          "n": 3,
+          "datasets": 448,
+          "maximum": 326.0985506682413,
+          "maximum_is_infinite": false,
+          "maximum_minus_n0": 245.8419184006361,
+          "increment": 126.12698782333305,
+          "mean": 182.1166793159243,
+          "median": 199.97156284490822,
+          "p90": 244.4322212196469,
+          "p99": 326.0985506682413,
+          "maximizing_datasets": 6,
+          "witness": {
+            "ternary_index": 1454,
+            "observed_mask": 194,
+            "label_mask": 66,
+            "observations": [
+              {
+                "input_index": 1,
+                "label": 1
+              },
+              {
+                "input_index": 6,
+                "label": 1
+              },
+              {
+                "input_index": 7,
+                "label": 0
+              }
+            ],
+            "compatible_functions": 32,
+            "minimum_cost": 326.0985506682413,
+            "minimum_is_infinite": false,
+            "cheapest_function_count": 2,
+            "cheapest_functions_first_16": [
+              "0x5F",
+              "0x77"
+            ],
+            "cheapest_representatives": [
+              "0x3F"
+            ],
+            "representative_quality": {
+              "0x3F": "未分级"
+            }
+          }
+        },
+        {
+          "n": 4,
+          "datasets": 1120,
+          "maximum": 676.4798720427098,
+          "maximum_is_infinite": false,
+          "maximum_minus_n0": 596.2232397751046,
+          "increment": 350.3813213744685,
+          "mean": 232.56069122781668,
+          "median": 240.92926603628223,
+          "p90": 326.0985506682413,
+          "p99": 667.405497798874,
+          "maximizing_datasets": 6,
+          "witness": {
+            "ternary_index": 5010,
+            "observed_mask": 85,
+            "label_mask": 20,
+            "observations": [
+              {
+                "input_index": 0,
+                "label": 0
+              },
+              {
+                "input_index": 2,
+                "label": 1
+              },
+              {
+                "input_index": 4,
+                "label": 1
+              },
+              {
+                "input_index": 6,
+                "label": 0
+              }
+            ],
+            "compatible_functions": 16,
+            "minimum_cost": 676.4798720427098,
+            "minimum_is_infinite": false,
+            "cheapest_function_count": 1,
+            "cheapest_functions_first_16": [
+              "0xBE"
+            ],
+            "cheapest_representatives": [
+              "0x09"
+            ],
+            "representative_quality": {
+              "0x09": "未分级"
+            }
+          }
+        },
+        {
+          "n": 5,
+          "datasets": 1792,
+          "maximum": 785.1290202732782,
+          "maximum_is_infinite": false,
+          "maximum_minus_n0": 704.8723880056731,
+          "increment": 108.64914823056847,
+          "mean": 304.18700977247664,
+          "median": 244.4322212196469,
+          "p90": 631.6909748835394,
+          "p99": 687.5399179009346,
+          "maximizing_datasets": 2,
+          "witness": {
+            "ternary_index": 1185,
+            "observed_mask": 233,
+            "label_mask": 104,
+            "observations": [
+              {
+                "input_index": 0,
+                "label": 0
+              },
+              {
+                "input_index": 3,
+                "label": 1
+              },
+              {
+                "input_index": 5,
+                "label": 1
+              },
+              {
+                "input_index": 6,
+                "label": 1
+              },
+              {
+                "input_index": 7,
+                "label": 0
+              }
+            ],
+            "compatible_functions": 8,
+            "minimum_cost": 785.1290202732782,
+            "minimum_is_infinite": false,
+            "cheapest_function_count": 3,
+            "cheapest_functions_first_16": [
+              "0x6E",
+              "0x7A",
+              "0x7C"
+            ],
+            "cheapest_representatives": [
+              "0x6E"
+            ],
+            "representative_quality": {
+              "0x6E": "未分级"
+            }
+          }
+        },
+        {
+          "n": 6,
+          "datasets": 1792,
+          "maximum": 849.117013343503,
+          "maximum_is_infinite": false,
+          "maximum_minus_n0": 768.8603810758979,
+          "increment": 63.987993070224775,
+          "mean": 393.0334321137384,
+          "median": 326.0985506682413,
+          "p90": 712.4521815058781,
+          "p99": 826.2867442959966,
+          "maximizing_datasets": 6,
+          "witness": {
+            "ternary_index": 1007,
+            "observed_mask": 252,
+            "label_mask": 104,
+            "observations": [
+              {
+                "input_index": 2,
+                "label": 0
+              },
+              {
+                "input_index": 3,
+                "label": 1
+              },
+              {
+                "input_index": 4,
+                "label": 0
+              },
+              {
+                "input_index": 5,
+                "label": 1
+              },
+              {
+                "input_index": 6,
+                "label": 1
+              },
+              {
+                "input_index": 7,
+                "label": 0
+              }
+            ],
+            "compatible_functions": 4,
+            "minimum_cost": 849.117013343503,
+            "minimum_is_infinite": false,
+            "cheapest_function_count": 1,
+            "cheapest_functions_first_16": [
+              "0x68"
+            ],
+            "cheapest_representatives": [
+              "0x68"
+            ],
+            "representative_quality": {
+              "0x68": "未分级"
+            }
+          }
+        },
+        {
+          "n": 7,
+          "datasets": 1024,
+          "maximum": 877.6320438815421,
+          "maximum_is_infinite": false,
+          "maximum_minus_n0": 797.375411613937,
+          "increment": 28.515030538039127,
+          "mean": 486.8565195710489,
+          "median": 407.4826586961637,
+          "p90": 758.1917123241449,
+          "p99": 868.8147064010286,
+          "maximizing_datasets": 6,
+          "witness": {
+            "ternary_index": 1004,
+            "observed_mask": 254,
+            "label_mask": 106,
+            "observations": [
+              {
+                "input_index": 1,
+                "label": 1
+              },
+              {
+                "input_index": 2,
+                "label": 0
+              },
+              {
+                "input_index": 3,
+                "label": 1
+              },
+              {
+                "input_index": 4,
+                "label": 0
+              },
+              {
+                "input_index": 5,
+                "label": 1
+              },
+              {
+                "input_index": 6,
+                "label": 1
+              },
+              {
+                "input_index": 7,
+                "label": 0
+              }
+            ],
+            "compatible_functions": 2,
+            "minimum_cost": 877.6320438815421,
+            "minimum_is_infinite": false,
+            "cheapest_function_count": 1,
+            "cheapest_functions_first_16": [
+              "0x6B"
+            ],
+            "cheapest_representatives": [
+              "0x6B"
+            ],
+            "representative_quality": {
+              "0x6B": "未分级"
+            }
+          }
+        },
+        {
+          "n": 8,
+          "datasets": 256,
+          "maximum": 892.3404843270666,
+          "maximum_is_infinite": false,
+          "maximum_minus_n0": 812.0838520594615,
+          "increment": 14.708440445524502,
+          "mean": 578.284648041853,
+          "median": 655.3320758062989,
+          "p90": 834.2910222752109,
+          "p99": 892.3404843270666,
+          "maximizing_datasets": 6,
+          "witness": {
+            "ternary_index": 1002,
+            "observed_mask": 255,
+            "label_mask": 106,
+            "observations": [
+              {
+                "input_index": 0,
+                "label": 0
+              },
+              {
+                "input_index": 1,
+                "label": 1
+              },
+              {
+                "input_index": 2,
+                "label": 0
+              },
+              {
+                "input_index": 3,
+                "label": 1
+              },
+              {
+                "input_index": 4,
+                "label": 0
+              },
+              {
+                "input_index": 5,
+                "label": 1
+              },
+              {
+                "input_index": 6,
+                "label": 1
+              },
+              {
+                "input_index": 7,
+                "label": 0
+              }
+            ],
+            "compatible_functions": 1,
+            "minimum_cost": 892.3404843270666,
+            "minimum_is_infinite": false,
+            "cheapest_function_count": 1,
+            "cheapest_functions_first_16": [
+              "0x6A"
+            ],
+            "cheapest_representatives": [
+              "0x6A"
+            ],
+            "representative_quality": {
+              "0x6A": "未分级"
+            }
+          }
+        }
+      ],
+      "linear_fit_description_only": {
+        "range_n": [
+          0,
+          8
+        ],
+        "slope_with_intercept": 123.29638356136469,
+        "intercept": 36.51244485637012,
+        "r_squared": 0.9161937974469118,
+        "max_residual_as_fraction_of_total_rise": 0.1807472129493019,
+        "baseline_subtracted_origin_slope": 115.5768210770291,
+        "baseline_subtracted_max_residual_fraction": 0.16490409842207132
+      },
+      "enumerated_datasets_including_empty": 6561,
+      "id": "b3_tanh_w16_d1_K_0.001",
+      "bits": 3,
+      "architecture": "tanh_w16_d1",
+      "meaning": "M_n = max_{|D|=n} min_{f compatible D} K_full(f; epsilon)",
+      "seconds": 0.003131799981929362,
+      "epsilon": 0.001,
+      "aggregation": "median",
+      "quantity": "K_minimax"
+    },
+    {
+      "rows": [
+        {
+          "n": 0,
+          "datasets": 1,
+          "maximum": 96.5428347801076,
+          "maximum_is_infinite": false,
+          "maximum_minus_n0": 0,
+          "increment": null,
+          "mean": 96.5428347801076,
+          "median": 96.5428347801076,
+          "p90": 96.5428347801076,
+          "p99": 96.5428347801076,
+          "maximizing_datasets": 1,
+          "witness": {
+            "ternary_index": 6560,
+            "observed_mask": 0,
+            "label_mask": 0,
+            "observations": [],
+            "compatible_functions": 256,
+            "minimum_cost": 96.5428347801076,
+            "minimum_is_infinite": false,
+            "cheapest_function_count": 2,
+            "cheapest_functions_first_16": [
+              "0x00",
+              "0xFF"
+            ],
+            "cheapest_representatives": [
+              "0x00"
+            ],
+            "representative_quality": {
+              "0x00": "未分级"
+            }
+          }
+        },
+        {
+          "n": 1,
+          "datasets": 16,
+          "maximum": 96.5428347801076,
+          "maximum_is_infinite": false,
+          "maximum_minus_n0": 0,
+          "increment": 0,
+          "mean": 96.5428347801076,
+          "median": 96.5428347801076,
+          "p90": 96.5428347801076,
+          "p99": 96.5428347801076,
+          "maximizing_datasets": 16,
+          "witness": {
+            "ternary_index": 2186,
+            "observed_mask": 128,
+            "label_mask": 0,
+            "observations": [
+              {
+                "input_index": 7,
+                "label": 0
+              }
+            ],
+            "compatible_functions": 128,
+            "minimum_cost": 96.5428347801076,
+            "minimum_is_infinite": false,
+            "cheapest_function_count": 1,
+            "cheapest_functions_first_16": [
+              "0x00"
+            ],
+            "cheapest_representatives": [
+              "0x00"
+            ],
+            "representative_quality": {
+              "0x00": "未分级"
+            }
+          }
+        },
+        {
+          "n": 2,
+          "datasets": 112,
+          "maximum": 258.29385677904037,
+          "maximum_is_infinite": false,
+          "maximum_minus_n0": 161.75102199893277,
+          "increment": 161.75102199893277,
+          "mean": 177.41834577957394,
+          "median": 177.418345779574,
+          "p90": 258.29385677904037,
+          "p99": 258.29385677904037,
+          "maximizing_datasets": 56,
+          "witness": {
+            "ternary_index": 1457,
+            "observed_mask": 192,
+            "label_mask": 64,
+            "observations": [
+              {
+                "input_index": 6,
+                "label": 1
+              },
+              {
+                "input_index": 7,
+                "label": 0
+              }
+            ],
+            "compatible_functions": 64,
+            "minimum_cost": 258.29385677904037,
+            "minimum_is_infinite": false,
+            "cheapest_function_count": 1,
+            "cheapest_functions_first_16": [
+              "0x55"
+            ],
+            "cheapest_representatives": [
+              "0x0F"
+            ],
+            "representative_quality": {
+              "0x0F": "未分级"
+            }
+          }
+        },
+        {
+          "n": 3,
+          "datasets": 448,
+          "maximum": 437.09519214190084,
+          "maximum_is_infinite": false,
+          "maximum_minus_n0": 340.55235736179327,
+          "increment": 178.80133536286047,
+          "mean": 234.97118836287174,
+          "median": 258.29385677904037,
+          "p90": 321.482257812894,
+          "p99": 437.09519214190084,
+          "maximizing_datasets": 6,
+          "witness": {
+            "ternary_index": 1454,
+            "observed_mask": 194,
+            "label_mask": 66,
+            "observations": [
+              {
+                "input_index": 1,
+                "label": 1
+              },
+              {
+                "input_index": 6,
+                "label": 1
+              },
+              {
+                "input_index": 7,
+                "label": 0
+              }
+            ],
+            "compatible_functions": 32,
+            "minimum_cost": 437.09519214190084,
+            "minimum_is_infinite": false,
+            "cheapest_function_count": 2,
+            "cheapest_functions_first_16": [
+              "0x5F",
+              "0x77"
+            ],
+            "cheapest_representatives": [
+              "0x3F"
+            ],
+            "representative_quality": {
+              "0x3F": "未分级"
+            }
+          }
+        },
+        {
+          "n": 4,
+          "datasets": 1120,
+          "maximum": 917.9974250329577,
+          "maximum_is_infinite": false,
+          "maximum_minus_n0": 821.4545902528502,
+          "increment": 480.9022328910569,
+          "mean": 304.9308321469868,
+          "median": 315.9674007016188,
+          "p90": 437.09519214190084,
+          "p99": 902.5419444028644,
+          "maximizing_datasets": 6,
+          "witness": {
+            "ternary_index": 5010,
+            "observed_mask": 85,
+            "label_mask": 20,
+            "observations": [
+              {
+                "input_index": 0,
+                "label": 0
+              },
+              {
+                "input_index": 2,
+                "label": 1
+              },
+              {
+                "input_index": 4,
+                "label": 1
+              },
+              {
+                "input_index": 6,
+                "label": 0
+              }
+            ],
+            "compatible_functions": 16,
+            "minimum_cost": 917.9974250329577,
+            "minimum_is_infinite": false,
+            "cheapest_function_count": 1,
+            "cheapest_functions_first_16": [
+              "0xBE"
+            ],
+            "cheapest_representatives": [
+              "0x09"
+            ],
+            "representative_quality": {
+              "0x09": "未分级"
+            }
+          }
+        },
+        {
+          "n": 5,
+          "datasets": 1792,
+          "maximum": 1068.5343670272523,
+          "maximum_is_infinite": false,
+          "maximum_minus_n0": 971.9915322471447,
+          "increment": 150.53694199429458,
+          "mean": 403.92350875917316,
+          "median": 321.482257812894,
+          "p90": 846.6415556018741,
+          "p99": 931.7153714244307,
+          "maximizing_datasets": 2,
+          "witness": {
+            "ternary_index": 1185,
+            "observed_mask": 233,
+            "label_mask": 104,
+            "observations": [
+              {
+                "input_index": 0,
+                "label": 0
+              },
+              {
+                "input_index": 3,
+                "label": 1
+              },
+              {
+                "input_index": 5,
+                "label": 1
+              },
+              {
+                "input_index": 6,
+                "label": 1
+              },
+              {
+                "input_index": 7,
+                "label": 0
+              }
+            ],
+            "compatible_functions": 8,
+            "minimum_cost": 1068.5343670272523,
+            "minimum_is_infinite": false,
+            "cheapest_function_count": 3,
+            "cheapest_functions_first_16": [
+              "0x6E",
+              "0x7A",
+              "0x7C"
+            ],
+            "cheapest_representatives": [
+              "0x6E"
+            ],
+            "representative_quality": {
+              "0x6E": "未分级"
+            }
+          }
+        },
+        {
+          "n": 6,
+          "datasets": 1792,
+          "maximum": 1163.2393436286425,
+          "maximum_is_infinite": false,
+          "maximum_minus_n0": 1066.696508848535,
+          "increment": 94.70497660139017,
+          "mean": 526.7600112464731,
+          "median": 437.09519214190084,
+          "p90": 971.9609818313265,
+          "p99": 1125.9713720861887,
+          "maximizing_datasets": 6,
+          "witness": {
+            "ternary_index": 1007,
+            "observed_mask": 252,
+            "label_mask": 104,
+            "observations": [
+              {
+                "input_index": 2,
+                "label": 0
+              },
+              {
+                "input_index": 3,
+                "label": 1
+              },
+              {
+                "input_index": 4,
+                "label": 0
+              },
+              {
+                "input_index": 5,
+                "label": 1
+              },
+              {
+                "input_index": 6,
+                "label": 1
+              },
+              {
+                "input_index": 7,
+                "label": 0
+              }
+            ],
+            "compatible_functions": 4,
+            "minimum_cost": 1163.2393436286425,
+            "minimum_is_infinite": false,
+            "cheapest_function_count": 1,
+            "cheapest_functions_first_16": [
+              "0x68"
+            ],
+            "cheapest_representatives": [
+              "0x68"
+            ],
+            "representative_quality": {
+              "0x68": "未分级"
+            }
+          }
+        },
+        {
+          "n": 7,
+          "datasets": 1024,
+          "maximum": 1203.2318565394532,
+          "maximum_is_infinite": false,
+          "maximum_minus_n0": 1106.6890217593457,
+          "increment": 39.992512910810774,
+          "mean": 656.3399248735446,
+          "median": 550.2050081911543,
+          "p90": 1031.9544434809522,
+          "p99": 1197.5864365344469,
+          "maximizing_datasets": 2,
+          "witness": {
+            "ternary_index": 4467,
+            "observed_mask": 127,
+            "label_mask": 22,
+            "observations": [
+              {
+                "input_index": 0,
+                "label": 0
+              },
+              {
+                "input_index": 1,
+                "label": 1
+              },
+              {
+                "input_index": 2,
+                "label": 1
+              },
+              {
+                "input_index": 3,
+                "label": 0
+              },
+              {
+                "input_index": 4,
+                "label": 1
+              },
+              {
+                "input_index": 5,
+                "label": 0
+              },
+              {
+                "input_index": 6,
+                "label": 0
+              }
+            ],
+            "compatible_functions": 2,
+            "minimum_cost": 1203.2318565394532,
+            "minimum_is_infinite": false,
+            "cheapest_function_count": 1,
+            "cheapest_functions_first_16": [
+              "0x96"
+            ],
+            "cheapest_representatives": [
+              "0x69"
+            ],
+            "representative_quality": {
+              "0x69": "未分级"
+            }
+          }
+        },
+        {
+          "n": 8,
+          "datasets": 256,
+          "maximum": 1208.628602608215,
+          "maximum_is_infinite": false,
+          "maximum_minus_n0": 1112.0857678281075,
+          "increment": 5.396746068761786,
+          "mean": 781.5761571742319,
+          "median": 883.7166662022018,
+          "p90": 1137.3028349117121,
+          "p99": 1203.2318565394532,
+          "maximizing_datasets": 2,
+          "witness": {
+            "ternary_index": 93,
+            "observed_mask": 255,
+            "label_mask": 22,
+            "observations": [
+              {
+                "input_index": 0,
+                "label": 0
+              },
+              {
+                "input_index": 1,
+                "label": 1
+              },
+              {
+                "input_index": 2,
+                "label": 1
+              },
+              {
+                "input_index": 3,
+                "label": 0
+              },
+              {
+                "input_index": 4,
+                "label": 1
+              },
+              {
+                "input_index": 5,
+                "label": 0
+              },
+              {
+                "input_index": 6,
+                "label": 0
+              },
+              {
+                "input_index": 7,
+                "label": 0
+              }
+            ],
+            "compatible_functions": 1,
+            "minimum_cost": 1208.628602608215,
+            "minimum_is_infinite": false,
+            "cheapest_function_count": 1,
+            "cheapest_functions_first_16": [
+              "0x16"
+            ],
+            "cheapest_representatives": [
+              "0x16"
+            ],
+            "representative_quality": {
+              "0x16": "未分级"
+            }
+          }
+        }
+      ],
+      "linear_fit_description_only": {
+        "range_n": [
+          0,
+          8
+        ],
+        "slope_with_intercept": 170.16233808625032,
+        "intercept": 36.029126912518436,
+        "r_squared": 0.9144152040774367,
+        "max_residual_as_fraction_of_total_rise": 0.1810282548338083,
+        "baseline_subtracted_origin_slope": 159.48344846255813,
+        "baseline_subtracted_max_residual_fraction": 0.16502395922306598
+      },
+      "enumerated_datasets_including_empty": 6561,
+      "id": "b3_tanh_w32_d1_K_0.001",
+      "bits": 3,
+      "architecture": "tanh_w32_d1",
+      "meaning": "M_n = max_{|D|=n} min_{f compatible D} K_full(f; epsilon)",
+      "seconds": 0.004292499972507358,
+      "epsilon": 0.001,
+      "aggregation": "median",
+      "quantity": "K_minimax"
+    },
+    {
+      "rows": [
+        {
+          "n": 0,
+          "datasets": 1,
+          "maximum": 82.94038055305077,
+          "maximum_is_infinite": false,
+          "maximum_minus_n0": 0,
+          "increment": null,
+          "mean": 82.94038055305077,
+          "median": 82.94038055305077,
+          "p90": 82.94038055305077,
+          "p99": 82.94038055305077,
+          "maximizing_datasets": 1,
+          "witness": {
+            "ternary_index": 6560,
+            "observed_mask": 0,
+            "label_mask": 0,
+            "observations": [],
+            "compatible_functions": 256,
+            "minimum_cost": 82.94038055305077,
+            "minimum_is_infinite": false,
+            "cheapest_function_count": 2,
+            "cheapest_functions_first_16": [
+              "0x00",
+              "0xFF"
+            ],
+            "cheapest_representatives": [
+              "0x00"
+            ],
+            "representative_quality": {
+              "0x00": "未分级"
+            }
+          }
+        },
+        {
+          "n": 1,
+          "datasets": 16,
+          "maximum": 82.94038055305077,
+          "maximum_is_infinite": false,
+          "maximum_minus_n0": 0,
+          "increment": 0,
+          "mean": 82.94038055305077,
+          "median": 82.94038055305077,
+          "p90": 82.94038055305077,
+          "p99": 82.94038055305077,
+          "maximizing_datasets": 16,
+          "witness": {
+            "ternary_index": 2186,
+            "observed_mask": 128,
+            "label_mask": 0,
+            "observations": [
+              {
+                "input_index": 7,
+                "label": 0
+              }
+            ],
+            "compatible_functions": 128,
+            "minimum_cost": 82.94038055305077,
+            "minimum_is_infinite": false,
+            "cheapest_function_count": 1,
+            "cheapest_functions_first_16": [
+              "0x00"
+            ],
+            "cheapest_representatives": [
+              "0x00"
+            ],
+            "representative_quality": {
+              "0x00": "未分级"
+            }
+          }
+        },
+        {
+          "n": 2,
+          "datasets": 112,
+          "maximum": 158.32086833596787,
+          "maximum_is_infinite": false,
+          "maximum_minus_n0": 75.3804877829171,
+          "increment": 75.3804877829171,
+          "mean": 120.63062444450931,
+          "median": 120.63062444450932,
+          "p90": 158.32086833596787,
+          "p99": 158.32086833596787,
+          "maximizing_datasets": 56,
+          "witness": {
+            "ternary_index": 1457,
+            "observed_mask": 192,
+            "label_mask": 64,
+            "observations": [
+              {
+                "input_index": 6,
+                "label": 1
+              },
+              {
+                "input_index": 7,
+                "label": 0
+              }
+            ],
+            "compatible_functions": 64,
+            "minimum_cost": 158.32086833596787,
+            "minimum_is_infinite": false,
+            "cheapest_function_count": 1,
+            "cheapest_functions_first_16": [
+              "0x55"
+            ],
+            "cheapest_representatives": [
+              "0x0F"
+            ],
+            "representative_quality": {
+              "0x0F": "未分级"
+            }
+          }
+        },
+        {
+          "n": 3,
+          "datasets": 448,
+          "maximum": 213.85958790736882,
+          "maximum_is_infinite": false,
+          "maximum_minus_n0": 130.91920735431805,
+          "increment": 55.53871957140095,
+          "mean": 144.6590401293724,
+          "median": 158.32086833596787,
+          "p90": 177.5572191183825,
+          "p99": 213.85958790736882,
+          "maximizing_datasets": 6,
+          "witness": {
+            "ternary_index": 1454,
+            "observed_mask": 194,
+            "label_mask": 66,
+            "observations": [
+              {
+                "input_index": 1,
+                "label": 1
+              },
+              {
+                "input_index": 6,
+                "label": 1
+              },
+              {
+                "input_index": 7,
+                "label": 0
+              }
+            ],
+            "compatible_functions": 32,
+            "minimum_cost": 213.85958790736882,
+            "minimum_is_infinite": false,
+            "cheapest_function_count": 2,
+            "cheapest_functions_first_16": [
+              "0x5F",
+              "0x77"
+            ],
+            "cheapest_representatives": [
+              "0x3F"
+            ],
+            "representative_quality": {
+              "0x3F": "未分级"
+            }
+          }
+        },
+        {
+          "n": 4,
+          "datasets": 1120,
+          "maximum": 354.5067169786672,
+          "maximum_is_infinite": false,
+          "maximum_minus_n0": 271.56633642561644,
+          "increment": 140.6471290712984,
+          "mean": 169.08812512696827,
+          "median": 175.48557861585488,
+          "p90": 213.85958790736882,
+          "p99": 350.09323885841974,
+          "maximizing_datasets": 6,
+          "witness": {
+            "ternary_index": 5010,
+            "observed_mask": 85,
+            "label_mask": 20,
+            "observations": [
+              {
+                "input_index": 0,
+                "label": 0
+              },
+              {
+                "input_index": 2,
+                "label": 1
+              },
+              {
+                "input_index": 4,
+                "label": 1
+              },
+              {
+                "input_index": 6,
+                "label": 0
+              }
+            ],
+            "compatible_functions": 16,
+            "minimum_cost": 354.5067169786672,
+            "minimum_is_infinite": false,
+            "cheapest_function_count": 1,
+            "cheapest_functions_first_16": [
+              "0xBE"
+            ],
+            "cheapest_representatives": [
+              "0x09"
+            ],
+            "representative_quality": {
+              "0x09": "未分级"
+            }
+          }
+        },
+        {
+          "n": 5,
+          "datasets": 1792,
+          "maximum": 394.1071520733784,
+          "maximum_is_infinite": false,
+          "maximum_minus_n0": 311.16677152032764,
+          "increment": 39.6004350947112,
+          "mean": 200.376625978691,
+          "median": 177.5572191183825,
+          "p90": 335.92946989692655,
+          "p99": 359.6111132105798,
+          "maximizing_datasets": 2,
+          "witness": {
+            "ternary_index": 1185,
+            "observed_mask": 233,
+            "label_mask": 104,
+            "observations": [
+              {
+                "input_index": 0,
+                "label": 0
+              },
+              {
+                "input_index": 3,
+                "label": 1
+              },
+              {
+                "input_index": 5,
+                "label": 1
+              },
+              {
+                "input_index": 6,
+                "label": 1
+              },
+              {
+                "input_index": 7,
+                "label": 0
+              }
+            ],
+            "compatible_functions": 8,
+            "minimum_cost": 394.1071520733784,
+            "minimum_is_infinite": false,
+            "cheapest_function_count": 3,
+            "cheapest_functions_first_16": [
+              "0x6E",
+              "0x7A",
+              "0x7C"
+            ],
+            "cheapest_representatives": [
+              "0x6E"
+            ],
+            "representative_quality": {
+              "0x6E": "未分级"
+            }
+          }
+        },
+        {
+          "n": 6,
+          "datasets": 1792,
+          "maximum": 420.91168030784667,
+          "maximum_is_infinite": false,
+          "maximum_minus_n0": 337.9712997547959,
+          "increment": 26.80452823446825,
+          "mean": 237.58877572003135,
+          "median": 213.85958790736882,
+          "p90": 372.7300485022823,
+          "p99": 409.41694753553827,
+          "maximizing_datasets": 6,
+          "witness": {
+            "ternary_index": 1007,
+            "observed_mask": 252,
+            "label_mask": 104,
+            "observations": [
+              {
+                "input_index": 2,
+                "label": 0
+              },
+              {
+                "input_index": 3,
+                "label": 1
+              },
+              {
+                "input_index": 4,
+                "label": 0
+              },
+              {
+                "input_index": 5,
+                "label": 1
+              },
+              {
+                "input_index": 6,
+                "label": 1
+              },
+              {
+                "input_index": 7,
+                "label": 0
+              }
+            ],
+            "compatible_functions": 4,
+            "minimum_cost": 420.91168030784667,
+            "minimum_is_infinite": false,
+            "cheapest_function_count": 1,
+            "cheapest_functions_first_16": [
+              "0x68"
+            ],
+            "cheapest_representatives": [
+              "0x68"
+            ],
+            "representative_quality": {
+              "0x68": "未分级"
+            }
+          }
+        },
+        {
+          "n": 7,
+          "datasets": 1024,
+          "maximum": 434.06578535989877,
+          "maximum_is_infinite": false,
+          "maximum_minus_n0": 351.125404806848,
+          "increment": 13.154105052052103,
+          "mean": 275.636127366908,
+          "median": 244.83852286076547,
+          "p90": 383.8532351801605,
+          "p99": 423.1866093278815,
+          "maximizing_datasets": 2,
+          "witness": {
+            "ternary_index": 4467,
+            "observed_mask": 127,
+            "label_mask": 22,
+            "observations": [
+              {
+                "input_index": 0,
+                "label": 0
+              },
+              {
+                "input_index": 1,
+                "label": 1
+              },
+              {
+                "input_index": 2,
+                "label": 1
+              },
+              {
+                "input_index": 3,
+                "label": 0
+              },
+              {
+                "input_index": 4,
+                "label": 1
+              },
+              {
+                "input_index": 5,
+                "label": 0
+              },
+              {
+                "input_index": 6,
+                "label": 0
+              }
+            ],
+            "compatible_functions": 2,
+            "minimum_cost": 434.06578535989877,
+            "minimum_is_infinite": false,
+            "cheapest_function_count": 1,
+            "cheapest_functions_first_16": [
+              "0x16"
+            ],
+            "cheapest_representatives": [
+              "0x16"
+            ],
+            "representative_quality": {
+              "0x16": "未分级"
+            }
+          }
+        },
+        {
+          "n": 8,
+          "datasets": 256,
+          "maximum": 434.36274232547663,
+          "maximum_is_infinite": false,
+          "maximum_minus_n0": 351.42236177242586,
+          "increment": 0.2969569655778628,
+          "mean": 311.3870410226207,
+          "median": 345.0189531040861,
+          "p90": 411.5822529256918,
+          "p99": 434.06578535989877,
+          "maximizing_datasets": 2,
+          "witness": {
+            "ternary_index": 1000,
+            "observed_mask": 255,
+            "label_mask": 105,
+            "observations": [
+              {
+                "input_index": 0,
+                "label": 1
+              },
+              {
+                "input_index": 1,
+                "label": 0
+              },
+              {
+                "input_index": 2,
+                "label": 0
+              },
+              {
+                "input_index": 3,
+                "label": 1
+              },
+              {
+                "input_index": 4,
+                "label": 0
+              },
+              {
+                "input_index": 5,
+                "label": 1
+              },
+              {
+                "input_index": 6,
+                "label": 1
+              },
+              {
+                "input_index": 7,
+                "label": 0
+              }
+            ],
+            "compatible_functions": 1,
+            "minimum_cost": 434.36274232547663,
+            "minimum_is_infinite": false,
+            "cheapest_function_count": 1,
+            "cheapest_functions_first_16": [
+              "0x69"
+            ],
+            "cheapest_representatives": [
+              "0x69"
+            ],
+            "representative_quality": {
+              "0x69": "未分级"
+            }
+          }
+        }
+      ],
+      "linear_fit_description_only": {
+        "range_n": [
+          0,
+          8
+        ],
+        "slope_with_intercept": 52.74158082700023,
+        "intercept": 75.25759829141087,
+        "r_squared": 0.9145800291928352,
+        "max_residual_as_fraction_of_total_rise": 0.19430407056302818,
+        "baseline_subtracted_origin_slope": 51.38579572200495,
+        "baseline_subtracted_max_residual_fraction": 0.18787408178752132
+      },
+      "enumerated_datasets_including_empty": 6561,
+      "id": "b3_tanh_w16_d2_K_0.001",
+      "bits": 3,
+      "architecture": "tanh_w16_d2",
+      "meaning": "M_n = max_{|D|=n} min_{f compatible D} K_full(f; epsilon)",
+      "seconds": 0.0034072999842464924,
+      "epsilon": 0.001,
+      "aggregation": "median",
+      "quantity": "K_minimax"
+    },
+    {
+      "rows": [
+        {
+          "n": 0,
+          "datasets": 1,
+          "maximum": 47.683487399344074,
+          "maximum_is_infinite": false,
+          "maximum_minus_n0": 0,
+          "increment": null,
+          "mean": 47.683487399344074,
+          "median": 47.683487399344074,
+          "p90": 47.683487399344074,
+          "p99": 47.683487399344074,
+          "maximizing_datasets": 1,
+          "witness": {
+            "ternary_index": 6560,
+            "observed_mask": 0,
+            "label_mask": 0,
+            "observations": [],
+            "compatible_functions": 256,
+            "minimum_cost": 47.683487399344074,
+            "minimum_is_infinite": false,
+            "cheapest_function_count": 2,
+            "cheapest_functions_first_16": [
+              "0x00",
+              "0xFF"
+            ],
+            "cheapest_representatives": [
+              "0x00"
+            ],
+            "representative_quality": {
+              "0x00": "未分级"
+            }
+          }
+        },
+        {
+          "n": 1,
+          "datasets": 16,
+          "maximum": 47.683487399344074,
+          "maximum_is_infinite": false,
+          "maximum_minus_n0": 0,
+          "increment": 0,
+          "mean": 47.683487399344074,
+          "median": 47.683487399344074,
+          "p90": 47.683487399344074,
+          "p99": 47.683487399344074,
+          "maximizing_datasets": 16,
+          "witness": {
+            "ternary_index": 2186,
+            "observed_mask": 128,
+            "label_mask": 0,
+            "observations": [
+              {
+                "input_index": 7,
+                "label": 0
+              }
+            ],
+            "compatible_functions": 128,
+            "minimum_cost": 47.683487399344074,
+            "minimum_is_infinite": false,
+            "cheapest_function_count": 1,
+            "cheapest_functions_first_16": [
+              "0x00"
+            ],
+            "cheapest_representatives": [
+              "0x00"
+            ],
+            "representative_quality": {
+              "0x00": "未分级"
+            }
+          }
+        },
+        {
+          "n": 2,
+          "datasets": 112,
+          "maximum": 161.0796867334374,
+          "maximum_is_infinite": false,
+          "maximum_minus_n0": 113.39619933409332,
+          "increment": 113.39619933409332,
+          "mean": 104.38158706639076,
+          "median": 104.38158706639074,
+          "p90": 161.0796867334374,
+          "p99": 161.0796867334374,
+          "maximizing_datasets": 56,
+          "witness": {
+            "ternary_index": 1457,
+            "observed_mask": 192,
+            "label_mask": 64,
+            "observations": [
+              {
+                "input_index": 6,
+                "label": 1
+              },
+              {
+                "input_index": 7,
+                "label": 0
+              }
+            ],
+            "compatible_functions": 64,
+            "minimum_cost": 161.0796867334374,
+            "minimum_is_infinite": false,
+            "cheapest_function_count": 1,
+            "cheapest_functions_first_16": [
+              "0x55"
+            ],
+            "cheapest_representatives": [
+              "0x0F"
+            ],
+            "representative_quality": {
+              "0x0F": "未分级"
+            }
+          }
+        },
+        {
+          "n": 3,
+          "datasets": 448,
+          "maximum": 268.3373936565638,
+          "maximum_is_infinite": false,
+          "maximum_minus_n0": 220.65390625721972,
+          "increment": 107.25770692312639,
+          "mean": 143.738409403905,
+          "median": 161.0796867334374,
+          "p90": 201.37996423269925,
+          "p99": 268.3373936565638,
+          "maximizing_datasets": 12,
+          "witness": {
+            "ternary_index": 1454,
+            "observed_mask": 194,
+            "label_mask": 66,
+            "observations": [
+              {
+                "input_index": 1,
+                "label": 1
+              },
+              {
+                "input_index": 6,
+                "label": 1
+              },
+              {
+                "input_index": 7,
+                "label": 0
+              }
+            ],
+            "compatible_functions": 32,
+            "minimum_cost": 268.3373936565638,
+            "minimum_is_infinite": false,
+            "cheapest_function_count": 2,
+            "cheapest_functions_first_16": [
+              "0x5F",
+              "0x77"
+            ],
+            "cheapest_representatives": [
+              "0x3F"
+            ],
+            "representative_quality": {
+              "0x3F": "未分级"
+            }
+          }
+        },
+        {
+          "n": 4,
+          "datasets": 1120,
+          "maximum": 438.8317324204207,
+          "maximum_is_infinite": false,
+          "maximum_minus_n0": 391.1482450210766,
+          "increment": 170.4943387638569,
+          "mean": 185.9287846950441,
+          "median": 201.37996423269925,
+          "p90": 268.3373936565638,
+          "p99": 434.2622583007157,
+          "maximizing_datasets": 6,
+          "witness": {
+            "ternary_index": 5010,
+            "observed_mask": 85,
+            "label_mask": 20,
+            "observations": [
+              {
+                "input_index": 0,
+                "label": 0
+              },
+              {
+                "input_index": 2,
+                "label": 1
+              },
+              {
+                "input_index": 4,
+                "label": 1
+              },
+              {
+                "input_index": 6,
+                "label": 0
+              }
+            ],
+            "compatible_functions": 16,
+            "minimum_cost": 438.8317324204207,
+            "minimum_is_infinite": false,
+            "cheapest_function_count": 1,
+            "cheapest_functions_first_16": [
+              "0xBE"
+            ],
+            "cheapest_representatives": [
+              "0x09"
+            ],
+            "representative_quality": {
+              "0x09": "未分级"
+            }
+          }
+        },
+        {
+          "n": 5,
+          "datasets": 1792,
+          "maximum": 536.1528618816908,
+          "maximum_is_infinite": false,
+          "maximum_minus_n0": 488.4693744823467,
+          "increment": 97.32112946127012,
+          "mean": 235.98955290027567,
+          "median": 201.61036957391988,
+          "p90": 416.30512940420795,
+          "p99": 459.10441353892844,
+          "maximizing_datasets": 2,
+          "witness": {
+            "ternary_index": 1185,
+            "observed_mask": 233,
+            "label_mask": 104,
+            "observations": [
+              {
+                "input_index": 0,
+                "label": 0
+              },
+              {
+                "input_index": 3,
+                "label": 1
+              },
+              {
+                "input_index": 5,
+                "label": 1
+              },
+              {
+                "input_index": 6,
+                "label": 1
+              },
+              {
+                "input_index": 7,
+                "label": 0
+              }
+            ],
+            "compatible_functions": 8,
+            "minimum_cost": 536.1528618816908,
+            "minimum_is_infinite": false,
+            "cheapest_function_count": 3,
+            "cheapest_functions_first_16": [
+              "0x6E",
+              "0x7A",
+              "0x7C"
+            ],
+            "cheapest_representatives": [
+              "0x6E"
+            ],
+            "representative_quality": {
+              "0x6E": "未分级"
+            }
+          }
+        },
+        {
+          "n": 6,
+          "datasets": 1792,
+          "maximum": 604.4402345209559,
+          "maximum_is_infinite": false,
+          "maximum_minus_n0": 556.7567471216119,
+          "increment": 68.28737263926507,
+          "mean": 291.28368158418783,
+          "median": 268.3373936565638,
+          "p90": 456.12262578787954,
+          "p99": 530.2995278831163,
+          "maximizing_datasets": 6,
+          "witness": {
+            "ternary_index": 1007,
+            "observed_mask": 252,
+            "label_mask": 104,
+            "observations": [
+              {
+                "input_index": 2,
+                "label": 0
+              },
+              {
+                "input_index": 3,
+                "label": 1
+              },
+              {
+                "input_index": 4,
+                "label": 0
+              },
+              {
+                "input_index": 5,
+                "label": 1
+              },
+              {
+                "input_index": 6,
+                "label": 1
+              },
+              {
+                "input_index": 7,
+                "label": 0
+              }
+            ],
+            "compatible_functions": 4,
+            "minimum_cost": 604.4402345209559,
+            "minimum_is_infinite": false,
+            "cheapest_function_count": 1,
+            "cheapest_functions_first_16": [
+              "0x6B"
+            ],
+            "cheapest_representatives": [
+              "0x6B"
+            ],
+            "representative_quality": {
+              "0x6B": "未分级"
+            }
+          }
+        },
+        {
+          "n": 7,
+          "datasets": 1024,
+          "maximum": 766.5703822165108,
+          "maximum_is_infinite": false,
+          "maximum_minus_n0": 718.8868948171666,
+          "increment": 162.1301476955549,
+          "mean": 347.90695790110345,
+          "median": 313.07228206065315,
+          "p90": 515.2595519206823,
+          "p99": 604.4402345209559,
+          "maximizing_datasets": 2,
+          "witness": {
+            "ternary_index": 1001,
+            "observed_mask": 254,
+            "label_mask": 104,
+            "observations": [
+              {
+                "input_index": 1,
+                "label": 0
+              },
+              {
+                "input_index": 2,
+                "label": 0
+              },
+              {
+                "input_index": 3,
+                "label": 1
+              },
+              {
+                "input_index": 4,
+                "label": 0
+              },
+              {
+                "input_index": 5,
+                "label": 1
+              },
+              {
+                "input_index": 6,
+                "label": 1
+              },
+              {
+                "input_index": 7,
+                "label": 0
+              }
+            ],
+            "compatible_functions": 2,
+            "minimum_cost": 766.5703822165108,
+            "minimum_is_infinite": false,
+            "cheapest_function_count": 1,
+            "cheapest_functions_first_16": [
+              "0x68"
+            ],
+            "cheapest_representatives": [
+              "0x68"
+            ],
+            "representative_quality": {
+              "0x68": "未分级"
+            }
+          }
+        },
+        {
+          "n": 8,
+          "datasets": 256,
+          "maximum": 1078.7143285735237,
+          "maximum_is_infinite": false,
+          "maximum_minus_n0": 1031.0308411741796,
+          "increment": 312.14394635701296,
+          "mean": 407.2600317689407,
+          "median": 428.5070736173377,
+          "p90": 537.270953989062,
+          "p99": 766.5703822165108,
+          "maximizing_datasets": 2,
+          "witness": {
+            "ternary_index": 1000,
+            "observed_mask": 255,
+            "label_mask": 105,
+            "observations": [
+              {
+                "input_index": 0,
+                "label": 1
+              },
+              {
+                "input_index": 1,
+                "label": 0
+              },
+              {
+                "input_index": 2,
+                "label": 0
+              },
+              {
+                "input_index": 3,
+                "label": 1
+              },
+              {
+                "input_index": 4,
+                "label": 0
+              },
+              {
+                "input_index": 5,
+                "label": 1
+              },
+              {
+                "input_index": 6,
+                "label": 1
+              },
+              {
+                "input_index": 7,
+                "label": 0
+              }
+            ],
+            "compatible_functions": 1,
+            "minimum_cost": 1078.7143285735237,
+            "minimum_is_infinite": false,
+            "cheapest_function_count": 1,
+            "cheapest_functions_first_16": [
+              "0x69"
+            ],
+            "cheapest_representatives": [
+              "0x69"
+            ],
+            "representative_quality": {
+              "0x69": "未分级"
+            }
+          }
+        }
+      ],
+      "linear_fit_description_only": {
+        "range_n": [
+          0,
+          8
+        ],
+        "slope_with_intercept": 123.92201021580635,
+        "intercept": -56.855419218581716,
+        "r_squared": 0.9538613474930658,
+        "max_residual_as_fraction_of_total_rise": 0.1398538824517034,
+        "baseline_subtracted_origin_slope": 105.47396787146648,
+        "baseline_subtracted_max_residual_fraction": 0.18160378014416356
+      },
+      "enumerated_datasets_including_empty": 6561,
+      "id": "b3_relu_w16_d1_K_0.001",
+      "bits": 3,
+      "architecture": "relu_w16_d1",
+      "meaning": "M_n = max_{|D|=n} min_{f compatible D} K_full(f; epsilon)",
+      "seconds": 0.002810399979352951,
+      "epsilon": 0.001,
+      "aggregation": "median",
+      "quantity": "K_minimax"
+    },
+    {
+      "rows": [
+        {
+          "n": 0,
+          "datasets": 1,
+          "maximum": 61.40841432716351,
+          "maximum_is_infinite": false,
+          "maximum_minus_n0": 0,
+          "increment": null,
+          "mean": 61.40841432716351,
+          "median": 61.40841432716351,
+          "p90": 61.40841432716351,
+          "p99": 61.40841432716351,
+          "maximizing_datasets": 1,
+          "witness": {
+            "ternary_index": 43046720,
+            "observed_mask": 0,
+            "label_mask": 0,
+            "observations": [],
+            "compatible_functions": 65536,
+            "minimum_cost": 61.40841432716351,
+            "minimum_is_infinite": false,
+            "cheapest_function_count": 2,
+            "cheapest_functions_first_16": [
+              "0x0000",
+              "0xFFFF"
+            ],
+            "cheapest_representatives": [
+              "0x0000"
+            ],
+            "representative_quality": {
+              "0x0000": "CONSISTENT_RECHECK"
+            }
+          }
+        },
+        {
+          "n": 1,
+          "datasets": 32,
+          "maximum": 61.40841432716351,
+          "maximum_is_infinite": false,
+          "maximum_minus_n0": 0,
+          "increment": 0,
+          "mean": 61.40841432716351,
+          "median": 61.40841432716351,
+          "p90": 61.40841432716351,
+          "p99": 61.40841432716351,
+          "maximizing_datasets": 32,
+          "witness": {
+            "ternary_index": 14348906,
+            "observed_mask": 32768,
+            "label_mask": 0,
+            "observations": [
+              {
+                "input_index": 15,
+                "label": 0
+              }
+            ],
+            "compatible_functions": 32768,
+            "minimum_cost": 61.40841432716351,
+            "minimum_is_infinite": false,
+            "cheapest_function_count": 1,
+            "cheapest_functions_first_16": [
+              "0x0000"
+            ],
+            "cheapest_representatives": [
+              "0x0000"
+            ],
+            "representative_quality": {
+              "0x0000": "CONSISTENT_RECHECK"
+            }
+          }
+        },
+        {
+          "n": 2,
+          "datasets": 480,
+          "maximum": 175.637671424717,
+          "maximum_is_infinite": false,
+          "maximum_minus_n0": 114.2292570975535,
+          "increment": 114.2292570975535,
+          "mean": 118.52304287594025,
+          "median": 118.52304287594026,
+          "p90": 175.637671424717,
+          "p99": 175.637671424717,
+          "maximizing_datasets": 240,
+          "witness": {
+            "ternary_index": 9565937,
+            "observed_mask": 49152,
+            "label_mask": 16384,
+            "observations": [
+              {
+                "input_index": 14,
+                "label": 1
+              },
+              {
+                "input_index": 15,
+                "label": 0
+              }
+            ],
+            "compatible_functions": 16384,
+            "minimum_cost": 175.637671424717,
+            "minimum_is_infinite": false,
+            "cheapest_function_count": 1,
+            "cheapest_functions_first_16": [
+              "0x5555"
+            ],
+            "cheapest_representatives": [
+              "0x00FF"
+            ],
+            "representative_quality": {
+              "0x00FF": "CONSISTENT_RECHECK"
+            }
+          }
+        },
+        {
+          "n": 3,
+          "datasets": 4480,
+          "maximum": 289.71826955876094,
+          "maximum_is_infinite": false,
+          "maximum_minus_n0": 228.30985523159742,
+          "increment": 114.08059813404392,
+          "mean": 155.2961677336465,
+          "median": 175.637671424717,
+          "p90": 215.6767101360506,
+          "p99": 265.0176794191925,
+          "maximizing_datasets": 14,
+          "witness": {
+            "ternary_index": 9565934,
+            "observed_mask": 49154,
+            "label_mask": 16386,
+            "observations": [
+              {
+                "input_index": 1,
+                "label": 1
+              },
+              {
+                "input_index": 14,
+                "label": 1
+              },
+              {
+                "input_index": 15,
+                "label": 0
+              }
+            ],
+            "compatible_functions": 8192,
+            "minimum_cost": 289.71826955876094,
+            "minimum_is_infinite": false,
+            "cheapest_function_count": 3,
+            "cheapest_functions_first_16": [
+              "0x55FF",
+              "0x5F5F",
+              "0x7777"
+            ],
+            "cheapest_representatives": [
+              "0x0FFF"
+            ],
+            "representative_quality": {
+              "0x0FFF": "NO_INTERNAL_ALARM_NOT_RECHECKED"
+            }
+          }
+        },
+        {
+          "n": 4,
+          "datasets": 29120,
+          "maximum": 604.2822133667776,
+          "maximum_is_infinite": false,
+          "maximum_minus_n0": 542.873799039614,
+          "increment": 314.56394380801663,
+          "mean": 192.12764025197552,
+          "median": 175.637671424717,
+          "p90": 259.3815336031167,
+          "p99": 373.28394110544923,
+          "maximizing_datasets": 12,
+          "witness": {
+            "ternary_index": 6908732,
+            "observed_mask": 61440,
+            "label_mask": 24576,
+            "observations": [
+              {
+                "input_index": 12,
+                "label": 0
+              },
+              {
+                "input_index": 13,
+                "label": 1
+              },
+              {
+                "input_index": 14,
+                "label": 1
+              },
+              {
+                "input_index": 15,
+                "label": 0
+              }
+            ],
+            "compatible_functions": 4096,
+            "minimum_cost": 604.2822133667776,
+            "minimum_is_infinite": false,
+            "cheapest_function_count": 1,
+            "cheapest_functions_first_16": [
+              "0x6FFF"
+            ],
+            "cheapest_representatives": [
+              "0x6FFF"
+            ],
+            "representative_quality": {
+              "0x6FFF": "NO_INTERNAL_ALARM_NOT_RECHECKED"
+            }
+          }
+        },
+        {
+          "n": 5,
+          "datasets": 139776,
+          "maximum": 662.0323137736673,
+          "maximum_is_infinite": false,
+          "maximum_minus_n0": 600.6238994465037,
+          "increment": 57.750100406889715,
+          "mean": 236.69046468487986,
+          "median": 215.6767101360506,
+          "p90": 335.8926511721243,
+          "p99": 564.5318506206509,
+          "maximizing_datasets": 8,
+          "witness": {
+            "ternary_index": 32889561,
+            "observed_mask": 21569,
+            "label_mask": 5184,
+            "observations": [
+              {
+                "input_index": 0,
+                "label": 0
+              },
+              {
+                "input_index": 6,
+                "label": 1
+              },
+              {
+                "input_index": 10,
+                "label": 1
+              },
+              {
+                "input_index": 12,
+                "label": 1
+              },
+              {
+                "input_index": 14,
+                "label": 0
+              }
+            ],
+            "compatible_functions": 2048,
+            "minimum_cost": 662.0323137736673,
+            "minimum_is_infinite": false,
+            "cheapest_function_count": 3,
+            "cheapest_functions_first_16": [
+              "0xBEFE",
+              "0xBFEE",
+              "0xBFFA"
+            ],
+            "cheapest_representatives": [
+              "0x0083"
+            ],
+            "representative_quality": {
+              "0x0083": "NO_INTERNAL_ALARM_NOT_RECHECKED"
+            }
+          }
+        },
+        {
+          "n": 6,
+          "datasets": 512512,
+          "maximum": 747.9406111571611,
+          "maximum_is_infinite": false,
+          "maximum_minus_n0": 686.5321968299976,
+          "increment": 85.90829738349385,
+          "mean": 292.60170580735337,
+          "median": 259.3815336031167,
+          "p90": 549.738823197556,
+          "p99": 635.577185298264,
+          "maximizing_datasets": 2,
+          "witness": {
+            "ternary_index": 7792278,
+            "observed_mask": 59521,
+            "label_mask": 26752,
+            "observations": [
+              {
+                "input_index": 0,
+                "label": 0
+              },
+              {
+                "input_index": 7,
+                "label": 1
+              },
+              {
+                "input_index": 11,
+                "label": 1
+              },
+              {
+                "input_index": 13,
+                "label": 1
+              },
+              {
+                "input_index": 14,
+                "label": 1
+              },
+              {
+                "input_index": 15,
+                "label": 0
+              }
+            ],
+            "compatible_functions": 1024,
+            "minimum_cost": 747.9406111571611,
+            "minimum_is_infinite": false,
+            "cheapest_function_count": 6,
+            "cheapest_functions_first_16": [
+              "0x6EEE",
+              "0x7AFA",
+              "0x7CFC",
+              "0x7FAA",
+              "0x7FCC",
+              "0x7FF0"
+            ],
+            "cheapest_representatives": [
+              "0x6EEE"
+            ],
+            "representative_quality": {
+              "0x6EEE": "WARN_RECHECK_PENDING"
+            }
+          }
+        },
+        {
+          "n": 7,
+          "datasets": 1464320,
+          "maximum": 894.4806883306621,
+          "maximum_is_infinite": false,
+          "maximum_minus_n0": 833.0722740034986,
+          "increment": 146.540077173501,
+          "mean": 357.82149418703636,
+          "median": 316.08102790701025,
+          "p90": 611.462165382244,
+          "p99": 723.9759537332426,
+          "maximizing_datasets": 6,
+          "witness": {
+            "ternary_index": 6729344,
+            "observed_mask": 63624,
+            "label_mask": 26752,
+            "observations": [
+              {
+                "input_index": 3,
+                "label": 0
+              },
+              {
+                "input_index": 7,
+                "label": 1
+              },
+              {
+                "input_index": 11,
+                "label": 1
+              },
+              {
+                "input_index": 12,
+                "label": 0
+              },
+              {
+                "input_index": 13,
+                "label": 1
+              },
+              {
+                "input_index": 14,
+                "label": 1
+              },
+              {
+                "input_index": 15,
+                "label": 0
+              }
+            ],
+            "compatible_functions": 512,
+            "minimum_cost": 894.4806883306621,
+            "minimum_is_infinite": false,
+            "cheapest_function_count": 1,
+            "cheapest_functions_first_16": [
+              "0x6FF7"
+            ],
+            "cheapest_representatives": [
+              "0x6FF7"
+            ],
+            "representative_quality": {
+              "0x6FF7": "NO_INTERNAL_ALARM_NOT_RECHECKED"
+            }
+          }
+        },
+        {
+          "n": 8,
+          "datasets": 3294720,
+          "maximum": 925.3390175959584,
+          "maximum_is_infinite": false,
+          "maximum_minus_n0": 863.9306032687948,
+          "increment": 30.85832926529622,
+          "mean": 427.89911821791605,
+          "median": 381.8534962513295,
+          "p90": 667.0461502820035,
+          "p99": 787.1929025012148,
+          "maximizing_datasets": 168,
+          "witness": {
+            "ternary_index": 29668094,
+            "observed_mask": 30532,
+            "label_mask": 5696,
+            "observations": [
+              {
+                "input_index": 2,
+                "label": 0
+              },
+              {
+                "input_index": 6,
+                "label": 1
+              },
+              {
+                "input_index": 8,
+                "label": 0
+              },
+              {
+                "input_index": 9,
+                "label": 1
+              },
+              {
+                "input_index": 10,
+                "label": 1
+              },
+              {
+                "input_index": 12,
+                "label": 1
+              },
+              {
+                "input_index": 13,
+                "label": 0
+              },
+              {
+                "input_index": 14,
+                "label": 0
+              }
+            ],
+            "compatible_functions": 256,
+            "minimum_cost": 925.3390175959584,
+            "minimum_is_infinite": false,
+            "cheapest_function_count": 1,
+            "cheapest_functions_first_16": [
+              "0x1E78"
+            ],
+            "cheapest_representatives": [
+              "0x17E8"
+            ],
+            "representative_quality": {
+              "0x17E8": "NO_INTERNAL_ALARM_NOT_RECHECKED"
+            }
+          }
+        },
+        {
+          "n": 9,
+          "datasets": 5857280,
+          "maximum": 985.1766926466637,
+          "maximum_is_infinite": false,
+          "maximum_minus_n0": 923.7682783195002,
+          "increment": 59.83767505070534,
+          "mean": 498.3990875403525,
+          "median": 555.7133731161254,
+          "p90": 732.8114132297258,
+          "p99": 844.6409654574913,
+          "maximizing_datasets": 48,
+          "witness": {
+            "ternary_index": 6611942,
+            "observed_mask": 64594,
+            "label_mask": 26640,
+            "observations": [
+              {
+                "input_index": 1,
+                "label": 0
+              },
+              {
+                "input_index": 4,
+                "label": 1
+              },
+              {
+                "input_index": 6,
+                "label": 0
+              },
+              {
+                "input_index": 10,
+                "label": 0
+              },
+              {
+                "input_index": 11,
+                "label": 1
+              },
+              {
+                "input_index": 12,
+                "label": 0
+              },
+              {
+                "input_index": 13,
+                "label": 1
+              },
+              {
+                "input_index": 14,
+                "label": 1
+              },
+              {
+                "input_index": 15,
+                "label": 0
+              }
+            ],
+            "compatible_functions": 128,
+            "minimum_cost": 985.1766926466637,
+            "minimum_is_infinite": false,
+            "cheapest_function_count": 1,
+            "cheapest_functions_first_16": [
+              "0x6BBD"
+            ],
+            "cheapest_representatives": [
+              "0x6BBD"
+            ],
+            "representative_quality": {
+              "0x6BBD": "WARN_RECHECK_PENDING"
+            }
+          }
+        },
+        {
+          "n": 10,
+          "datasets": 8200192,
+          "maximum": 1050.8958026981945,
+          "maximum_is_infinite": false,
+          "maximum_minus_n0": 989.487388371031,
+          "increment": 65.71911005153083,
+          "mean": 566.657639048694,
+          "median": 611.462165382244,
+          "p90": 797.708715204983,
+          "p99": 920.6933831112385,
+          "maximizing_datasets": 12,
+          "witness": {
+            "ternary_index": 6716059,
+            "observed_mask": 63897,
+            "label_mask": 26753,
+            "observations": [
+              {
+                "input_index": 0,
+                "label": 1
+              },
+              {
+                "input_index": 3,
+                "label": 0
+              },
+              {
+                "input_index": 4,
+                "label": 0
+              },
+              {
+                "input_index": 7,
+                "label": 1
+              },
+              {
+                "input_index": 8,
+                "label": 0
+              },
+              {
+                "input_index": 11,
+                "label": 1
+              },
+              {
+                "input_index": 12,
+                "label": 0
+              },
+              {
+                "input_index": 13,
+                "label": 1
+              },
+              {
+                "input_index": 14,
+                "label": 1
+              },
+              {
+                "input_index": 15,
+                "label": 0
+              }
+            ],
+            "compatible_functions": 64,
+            "minimum_cost": 1050.8958026981945,
+            "minimum_is_infinite": false,
+            "cheapest_function_count": 1,
+            "cheapest_functions_first_16": [
+              "0x6881"
+            ],
+            "cheapest_representatives": [
+              "0x6881"
+            ],
+            "representative_quality": {
+              "0x6881": "UNRESOLVED_WARNING"
+            }
+          }
+        },
+        {
+          "n": 11,
+          "datasets": 8945664,
+          "maximum": 1084.2076447935613,
+          "maximum_is_infinite": false,
+          "maximum_minus_n0": 1022.7992304663977,
+          "increment": 33.31184209536673,
+          "mean": 631.7020437169019,
+          "median": 660.1870526587253,
+          "p90": 847.7328991930827,
+          "p99": 968.9780928380558,
+          "maximizing_datasets": 48,
+          "witness": {
+            "ternary_index": 29445615,
+            "observed_mask": 32287,
+            "label_mask": 6676,
+            "observations": [
+              {
+                "input_index": 0,
+                "label": 0
+              },
+              {
+                "input_index": 1,
+                "label": 0
+              },
+              {
+                "input_index": 2,
+                "label": 1
+              },
+              {
+                "input_index": 3,
+                "label": 0
+              },
+              {
+                "input_index": 4,
+                "label": 1
+              },
+              {
+                "input_index": 9,
+                "label": 1
+              },
+              {
+                "input_index": 10,
+                "label": 0
+              },
+              {
+                "input_index": 11,
+                "label": 1
+              },
+              {
+                "input_index": 12,
+                "label": 1
+              },
+              {
+                "input_index": 13,
+                "label": 0
+              },
+              {
+                "input_index": 14,
+                "label": 0
+              }
+            ],
+            "compatible_functions": 32,
+            "minimum_cost": 1084.2076447935613,
+            "minimum_is_infinite": false,
+            "cheapest_function_count": 1,
+            "cheapest_functions_first_16": [
+              "0x1A14"
+            ],
+            "cheapest_representatives": [
+              "0x0398"
+            ],
+            "representative_quality": {
+              "0x0398": "WARN_RECHECK_PENDING"
+            }
+          }
+        },
+        {
+          "n": 12,
+          "datasets": 7454720,
+          "maximum": 1152.3313820816231,
+          "maximum_is_infinite": false,
+          "maximum_minus_n0": 1090.9229677544597,
+          "increment": 68.12373728806188,
+          "mean": 693.5137814643929,
+          "median": 725.3206819237246,
+          "p90": 918.1612193847063,
+          "p99": 1019.7268420475762,
+          "maximizing_datasets": 24,
+          "witness": {
+            "ternary_index": 824187,
+            "observed_mask": 64687,
+            "label_mask": 7334,
+            "observations": [
+              {
+                "input_index": 0,
+                "label": 0
+              },
+              {
+                "input_index": 1,
+                "label": 1
+              },
+              {
+                "input_index": 2,
+                "label": 1
+              },
+              {
+                "input_index": 3,
+                "label": 0
+              },
+              {
+                "input_index": 5,
+                "label": 1
+              },
+              {
+                "input_index": 7,
+                "label": 1
+              },
+              {
+                "input_index": 10,
+                "label": 1
+              },
+              {
+                "input_index": 11,
+                "label": 1
+              },
+              {
+                "input_index": 12,
+                "label": 1
+              },
+              {
+                "input_index": 13,
+                "label": 0
+              },
+              {
+                "input_index": 14,
+                "label": 0
+              },
+              {
+                "input_index": 15,
+                "label": 0
+              }
+            ],
+            "compatible_functions": 16,
+            "minimum_cost": 1152.3313820816231,
+            "minimum_is_infinite": false,
+            "cheapest_function_count": 1,
+            "cheapest_functions_first_16": [
+              "0x1FF6"
+            ],
+            "cheapest_representatives": [
+              "0x1FF6"
+            ],
+            "representative_quality": {
+              "0x1FF6": "WARN_RECHECK_PENDING"
+            }
+          }
+        },
+        {
+          "n": 13,
+          "datasets": 4587520,
+          "maximum": 1187.9895959401476,
+          "maximum_is_infinite": false,
+          "maximum_minus_n0": 1126.5811816129842,
+          "increment": 35.658213858524505,
+          "mean": 752.410106783435,
+          "median": 772.5241739164198,
+          "p90": 969.3418128947885,
+          "p99": 1068.7647153887815,
+          "maximizing_datasets": 48,
+          "witness": {
+            "ternary_index": 812370,
+            "observed_mask": 64891,
+            "label_mask": 7266,
+            "observations": [
+              {
+                "input_index": 0,
+                "label": 0
+              },
+              {
+                "input_index": 1,
+                "label": 1
+              },
+              {
+                "input_index": 3,
+                "label": 0
+              },
+              {
+                "input_index": 4,
+                "label": 0
+              },
+              {
+                "input_index": 5,
+                "label": 1
+              },
+              {
+                "input_index": 6,
+                "label": 1
+              },
+              {
+                "input_index": 8,
+                "label": 0
+              },
+              {
+                "input_index": 10,
+                "label": 1
+              },
+              {
+                "input_index": 11,
+                "label": 1
+              },
+              {
+                "input_index": 12,
+                "label": 1
+              },
+              {
+                "input_index": 13,
+                "label": 0
+              },
+              {
+                "input_index": 14,
+                "label": 0
+              },
+              {
+                "input_index": 15,
+                "label": 0
+              }
+            ],
+            "compatible_functions": 8,
+            "minimum_cost": 1187.9895959401476,
+            "minimum_is_infinite": false,
+            "cheapest_function_count": 1,
+            "cheapest_functions_first_16": [
+              "0x1E62"
+            ],
+            "cheapest_representatives": [
+              "0x16AC"
+            ],
+            "representative_quality": {
+              "0x16AC": "WARN_RECHECK_PENDING"
+            }
+          }
+        },
+        {
+          "n": 14,
+          "datasets": 1966080,
+          "maximum": 1234.5616966226894,
+          "maximum_is_infinite": false,
+          "maximum_minus_n0": 1173.153282295526,
+          "increment": 46.57210068254176,
+          "mean": 808.6840690671514,
+          "median": 828.3407352603108,
+          "p90": 1021.2409021931483,
+          "p99": 1122.4102151392008,
+          "maximizing_datasets": 24,
+          "witness": {
+            "ternary_index": 744483,
+            "observed_mask": 65263,
+            "label_mask": 6854,
+            "observations": [
+              {
+                "input_index": 0,
+                "label": 0
+              },
+              {
+                "input_index": 1,
+                "label": 1
+              },
+              {
+                "input_index": 2,
+                "label": 1
+              },
+              {
+                "input_index": 3,
+                "label": 0
+              },
+              {
+                "input_index": 5,
+                "label": 0
+              },
+              {
+                "input_index": 6,
+                "label": 1
+              },
+              {
+                "input_index": 7,
+                "label": 1
+              },
+              {
+                "input_index": 9,
+                "label": 1
+              },
+              {
+                "input_index": 10,
+                "label": 0
+              },
+              {
+                "input_index": 11,
+                "label": 1
+              },
+              {
+                "input_index": 12,
+                "label": 1
+              },
+              {
+                "input_index": 13,
+                "label": 0
+              },
+              {
+                "input_index": 14,
+                "label": 0
+              },
+              {
+                "input_index": 15,
+                "label": 0
+              }
+            ],
+            "compatible_functions": 4,
+            "minimum_cost": 1234.5616966226894,
+            "minimum_is_infinite": false,
+            "cheapest_function_count": 2,
+            "cheapest_functions_first_16": [
+              "0x1AD6",
+              "0x1BC6"
+            ],
+            "cheapest_representatives": [
+              "0x1AD6"
+            ],
+            "representative_quality": {
+              "0x1AD6": "WARN_RECHECK_PENDING"
+            }
+          }
+        },
+        {
+          "n": 15,
+          "datasets": 524288,
+          "maximum": 1305.8120781919024,
+          "maximum_is_infinite": false,
+          "maximum_minus_n0": 1244.403663864739,
+          "increment": 71.250381569213,
+          "mean": 862.3863765392956,
+          "median": 883.0362373469484,
+          "p90": 1065.3769060242003,
+          "p99": 1163.6671746259135,
+          "maximizing_datasets": 2,
+          "witness": {
+            "ternary_index": 6563282,
+            "observed_mask": 65534,
+            "label_mask": 27030,
+            "observations": [
+              {
+                "input_index": 1,
+                "label": 1
+              },
+              {
+                "input_index": 2,
+                "label": 1
+              },
+              {
+                "input_index": 3,
+                "label": 0
+              },
+              {
+                "input_index": 4,
+                "label": 1
+              },
+              {
+                "input_index": 5,
+                "label": 0
+              },
+              {
+                "input_index": 6,
+                "label": 0
+              },
+              {
+                "input_index": 7,
+                "label": 1
+              },
+              {
+                "input_index": 8,
+                "label": 1
+              },
+              {
+                "input_index": 9,
+                "label": 0
+              },
+              {
+                "input_index": 10,
+                "label": 0
+              },
+              {
+                "input_index": 11,
+                "label": 1
+              },
+              {
+                "input_index": 12,
+                "label": 0
+              },
+              {
+                "input_index": 13,
+                "label": 1
+              },
+              {
+                "input_index": 14,
+                "label": 1
+              },
+              {
+                "input_index": 15,
+                "label": 0
+              }
+            ],
+            "compatible_functions": 2,
+            "minimum_cost": 1305.8120781919024,
+            "minimum_is_infinite": false,
+            "cheapest_function_count": 1,
+            "cheapest_functions_first_16": [
+              "0x6997"
+            ],
+            "cheapest_representatives": [
+              "0x6997"
+            ],
+            "representative_quality": {
+              "0x6997": "WARN_RECHECK_PENDING"
+            }
+          }
+        },
+        {
+          "n": 16,
+          "datasets": 65536,
+          "maximum": 1322.8025077653497,
+          "maximum_is_infinite": false,
+          "maximum_minus_n0": 1261.3940934381862,
+          "increment": 16.990429573447273,
+          "mean": 913.5390975477262,
+          "median": 945.994364302535,
+          "p90": 1106.3961512043002,
+          "p99": 1201.4228473301994,
+          "maximizing_datasets": 2,
+          "witness": {
+            "ternary_index": 6563280,
+            "observed_mask": 65535,
+            "label_mask": 27030,
+            "observations": [
+              {
+                "input_index": 0,
+                "label": 0
+              },
+              {
+                "input_index": 1,
+                "label": 1
+              },
+              {
+                "input_index": 2,
+                "label": 1
+              },
+              {
+                "input_index": 3,
+                "label": 0
+              },
+              {
+                "input_index": 4,
+                "label": 1
+              },
+              {
+                "input_index": 5,
+                "label": 0
+              },
+              {
+                "input_index": 6,
+                "label": 0
+              },
+              {
+                "input_index": 7,
+                "label": 1
+              },
+              {
+                "input_index": 8,
+                "label": 1
+              },
+              {
+                "input_index": 9,
+                "label": 0
+              },
+              {
+                "input_index": 10,
+                "label": 0
+              },
+              {
+                "input_index": 11,
+                "label": 1
+              },
+              {
+                "input_index": 12,
+                "label": 0
+              },
+              {
+                "input_index": 13,
+                "label": 1
+              },
+              {
+                "input_index": 14,
+                "label": 1
+              },
+              {
+                "input_index": 15,
+                "label": 0
+              }
+            ],
+            "compatible_functions": 1,
+            "minimum_cost": 1322.8025077653497,
+            "minimum_is_infinite": false,
+            "cheapest_function_count": 1,
+            "cheapest_functions_first_16": [
+              "0x6996"
+            ],
+            "cheapest_representatives": [
+              "0x6996"
+            ],
+            "representative_quality": {
+              "0x6996": "UNRESOLVED_WARNING"
+            }
+          }
+        }
+      ],
+      "linear_fit_description_only": {
+        "range_n": [
+          0,
+          16
+        ],
+        "slope_with_intercept": 82.8485495906141,
+        "intercept": 145.80131001639072,
+        "r_squared": 0.934927042912956,
+        "max_residual_as_fraction_of_total_rise": 0.13377225409391189,
+        "baseline_subtracted_origin_slope": 90.52063101690752,
+        "baseline_subtracted_max_residual_fraction": 0.15810115008669873
+      },
+      "enumerated_datasets_including_empty": 43046721,
+      "id": "b4_tanh_w16_d1_K_0.004",
+      "bits": 4,
+      "architecture": "tanh_w16_d1",
+      "meaning": "M_n = max_{|D|=n} min_{f compatible D} K_full(f; epsilon)",
+      "seconds": 9.157267099944875,
+      "epsilon": 0.004,
+      "aggregation": "median",
+      "quantity": "K_minimax"
+    }
+  ]
+}

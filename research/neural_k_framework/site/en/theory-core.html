@@ -86,7 +86,11 @@
 </li>
 <li><a href="#10-why-this-is-not-a-circular-definition">10. Why this is not a circular definition</a></li>
 <li><a href="#11-data-volume-loss-depth-and-phase-regions">11. Data volume, loss depth, and phase regions</a></li>
-<li><a href="#12-current-theoretical-boundaries">12. Current theoretical boundaries</a></li>
+<li><a href="#12-current-theoretical-boundaries">12. Current theoretical boundaries</a><ul>
+<li><a href="#open-questions-20261027">12.1 Six unresolved questions of calibration and applicability</a></li>
+<li><a href="#12-2-the-unified-picture-remains-a-testable-working-hypothesis">12.2 The unified picture remains a testable working hypothesis</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </nav>
@@ -694,13 +698,17 @@ $$</div>
 K^N_\Pi(f;\epsilon)=-\log_2V^{\mathrm{full}}_\Pi(f;\epsilon)
 $$</div>
 <p>and <strong>defining</strong> it as the protocol-relative volume complexity is of course not falsifiable by itself; it merely names a measurement result. What is genuinely falsifiable is whether this definition can predict quantities outside itself.</p>
-<p>There are currently four kinds of independent anchors:</p>
+<p>There are currently the following independent anchors:</p>
 <ol>
 <li><a href="experiments/e10.html">E10</a> constructed strictly simple/complex function pairs using linear separability before the experiment, then looked at the low-loss odds, avoiding renaming the winner after the fact.</li>
 <li><a href="experiments/e23.html">E23</a> first measured the complete-rule volume score and froze the hash, then predicted the <code>n50/n90</code> of independent random training sets; the parity-family ordering was hit exactly.</li>
 <li><a href="experiments/e25.html">E25</a> used static branches to predict unseen MNIST labels and the NLL turning point, rather than only explaining the training objective itself.</li>
 <li><a href="experiments/e18.html">E18</a> and <a href="experiments/e21.html">E21</a> used an independent symbolic-complexity audit to check whether the high-agreement endpoints are human-readable.</li>
+<li><a href="experiments/e31.html#update-20261027">The f/g extension of E31</a> first used logical structure to judge that g should be more complex than f; after observing the counterintuitive raw-BCE ordering, it prospectively predicted reversal under amplitude alignment. New direct sampling, increased-budget runs, and bridging support that direction.</li>
+<li><a href="experiments/e33.html#update-20261027">E33 external calibration</a> checks Neural K against independent logical costs and complexity proxies, retaining shared orderings as well as robust local reversals; no single gate library is declared a universal complexity ruler for all architectures.</li>
 </ol>
+<p>For <code>f=a XOR b</code> and <code>g=(a XOR b) OR c</code>, an independent strict logical criterion is available: in a fixed gate library containing XOR and OR, with at most two inputs per gate and free wiring, f has minimum cost 1 gate; g has three essential inputs, so one gate cannot implement it, while a two-gate construction exists, giving minimum cost 2 gates. This formal explanation does not depend on Neural K and is not presented as a formal preregistration of that gate library at the time. The logical ordering comes from outside the measurement, which gives the subsequent intervention its non-circular calibration role.</p>
+<p>The reversal also exposes a limitation of mean BCE as a universal complexity ruler: it can let an easy branch lower its loss first while a difficult branch retains a looser precision allowance. The original volume remains a valid measurement, but is not thereby identical to independent logical cost. Further work may need to revise or supplement the constraint family on the joint output distribution; amplitude alignment has not been proved the uniquely correct definition.</p>
 <p>Counterexamples have also genuinely changed the theory: the AND shortcut refuted the presupposed winner, the weighted rule-bit refuted the whole-course monotonicity of a single function, the shallow misordering of random/parity refuted the single-cross-section scalar, the deep crossing refuted the sufficiency of the hard ID, and MUX3/parity2 further refuted "the difficulty of the complete rule alone determines the sample transition". Precisely because the theory is forced to revise by these results, it is not the circular explanation that "whatever the network selects is called simple".</p>
 <h2 id="11-data-volume-loss-depth-and-phase-regions">11. Data volume, loss depth, and phase regions</h2>
 <p>The same rule can exhibit four typical regions at different data volumes:</p>
@@ -724,8 +732,56 @@ $$</div>
 </ul>
 <p>This theory is therefore currently a static-dynamic layered framework supported by controlled experiments, not a completed unified law of deep learning.</p>
 <blockquote>
-<p><strong>Strongest claim: the continuous decrease of the training loss has function-selection meaning; this selection can be measured with protocol-relative function volume, free energy, prediction branches, and sample transitions.</strong></p>
+<p><strong>Current empirical claim: in the protocols tested, the continuous decrease of training loss has function-selection meaning; this selection can be measured with protocol-relative function volume, free energy, prediction branches, and sample transitions.</strong></p>
 </blockquote>
+<h3 id="open-questions-20261027">12.1 Six unresolved questions of calibration and applicability</h3>
+<p>Quantities under a specified protocol can be rigorously defined, but a rigorous definition does not establish a unique ruler, a complete explanation, or universal applicability. After the October 2026 evidence update, the following questions remain open.</p>
+<table>
+<thead>
+<tr>
+<th>Question</th>
+<th>What can already be specified</th>
+<th>What has not been established</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Loss and amplitude</td>
+<td>Specifying a joint-output event, precision coordinate, and reference measure defines its mass and finite-window slope; different positions may have different amplitudes.</td>
+<td>Which of mean BCE, pointwise bounds, or equal-amplitude conditions provides a more general complexity ruler.</td>
+</tr>
+<tr>
+<td>Reference measure</td>
+<td>Gaussian measures can be replaced by explicitly specified spherical or other probability measures.</td>
+<td>Independence from every measure, or identical values, orderings, and asymptotic formulas under all natural measures.</td>
+</tr>
+<tr>
+<td>Memory calibration</td>
+<td>Growth and curvature as random sample count increases can be measured within an architecture.</td>
+<td>Necessary strict proportionality of the contraction coefficient to sample count, or equality to a universal additive information quantity; additional exploration of this question is deferred.</td>
+</tr>
+<tr>
+<td>Architecture and scale</td>
+<td>Evidence covers several finite architectures and larger parameter counts with small training sets.</td>
+<td>The same law for every architecture, and validity when both the network and dataset become large.</td>
+</tr>
+<tr>
+<td>Optimizer correspondence</td>
+<td>Accuracy, pointwise frequencies, and other observables can be compared under specified protocols.</td>
+<td>One static distribution simultaneously equaling distinct SGD, Adam, and STP distributions; wider-CNN discrepancies remain a boundary.</td>
+</tr>
+<tr>
+<td>Function resolution</td>
+<td>A hard function is a measurable coarse-graining of continuous outputs and can be refined using intervals or distance tubes.</td>
+<td>A uniquely natural resolution, or invariant complexity when the resolution changes.</td>
+</tr>
+</tbody>
+</table>
+<p>STP tests whether the distinctive gradient updates of SGD/Adam are indispensable. Similar generalization and correspondence with static predictions in tested conditions support the importance of shared low-loss structure, but do not prove optimization bias irrelevant. The new memory findings likewise do not invalidate the volume definition; they limit interpreting the contraction slope directly as a bit counter with a fixed contribution per label.</p>
+<h3 id="12-2-the-unified-picture-remains-a-testable-working-hypothesis">12.2 The unified picture remains a testable working hypothesis</h3>
+<p>The retained core picture is that, for a specified architecture, reference measure, and data constraints, some continuous output-precision paths can eliminate insufficiently fitting shortcuts and increase the relative competitiveness of compatible, simpler implementations within certain windows. Existing experiments test several such paths and their predictive power for actual function selection.</p>
+<p>The claim that every neural network has such a direction and ultimately finds an implementation that fits the data as simply as possible is a stronger universality conjecture, not a completed proof. A direction should be specifiable in advance and reusable across a class of tasks, and the complexity criterion should have independent content; selecting the desired function region after the fact does not prove such a direction exists. Static mass preference also does not guarantee optimization accessibility, a globally simplest implementation, or recovery of the true rule.</p>
+<p>These questions can remain unresolved, but should be disclosed alongside the positive evidence. For the specific extensions and unreached conditions, see <a href="experiments/e31.html#update-20261027">E31</a>, <a href="experiments/e32.html#update-20261027">E32</a>, <a href="experiments/e33.html#update-20261027">E33</a>, <a href="experiments/e36.html#update-20261027">E36</a>, and <a href="experiments/e37.html#update-20261027">E37</a>.</p>
     <div class="metric-strip" aria-label="Theory supplements">
       <div><strong><a href="post-upload-language.html">Strict probability language</a></strong><span>Joint outputs, function mass, and updates</span></div>
       <div><strong><a href="post-upload-mdl.html">Long MDL–grokking derivation</a></strong><span>Competitor mass and sample transitions</span></div>

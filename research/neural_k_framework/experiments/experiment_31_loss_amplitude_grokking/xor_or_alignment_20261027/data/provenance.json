@@ -1,0 +1,93 @@
+{
+  "publication_date": "2026-10-27",
+  "source_files": [
+    {
+      "source": "research/xor_or_alignment_20261024/run_experiment.py",
+      "sha256": "7960cbdeac3554850eefeb9f596637ed77ba615eaf56e68c4fd4268ece1b0aeb"
+    },
+    {
+      "source": "research/xor_or_alignment_20261024/bridge_diagnostic.py",
+      "sha256": "a911e05823a5548bfa3a890c345ff5ffb6d2c3a7439b5c4fb7196c7747ccbf8f"
+    },
+    {
+      "source": "research/xor_or_alignment_20261024/analyze.py",
+      "sha256": "83d3afc8ade8dea4afcc9d76b0b7f7245db9f8ac63f2b25c0031c61d3608b2c0"
+    },
+    {
+      "source": "research/xor_or_alignment_20261024/verify_bridge.py",
+      "sha256": "d79c687965d1a432a3a61f7eee5da31aeee7eb94d1cfdc7c252950f2171f0de4"
+    },
+    {
+      "source": "research/xor_or_alignment_20261024/test_experiment.py",
+      "sha256": "bce6b47b85ba9ae2fac2a44756cad288e1439ebadce5c35a7a84b0e1e693d965"
+    },
+    {
+      "source": "research/xor_or_alignment_20261024/CONFIRMATION_SCOPE.json",
+      "sha256": "03f0fcf4967668f2f65d356c46c6c26fd4ab7edc3d1129fee0466e87cceb1e6d"
+    },
+    {
+      "source": "research/xor_or_alignment_20261024/RESULTS_ZH.md",
+      "sha256": "d8ebc7991e450adc3bb49a1597ff6588c6f738d405a578e9d7c4b7b53d79c3c7"
+    },
+    {
+      "source": "research/xor_or_alignment_20261024/README.md",
+      "sha256": "9190c39e83a40d4a26c7f37d4d2f9dfa191ae40961eed4cf311d01eb8149b56c"
+    },
+    {
+      "source": "research/xor_or_alignment_20261024/results_primary/frozen_source.py",
+      "sha256": "7960cbdeac3554850eefeb9f596637ed77ba615eaf56e68c4fd4268ece1b0aeb"
+    },
+    {
+      "source": "research/xor_or_alignment_20261024/results_confirm/frozen_source.py",
+      "sha256": "7960cbdeac3554850eefeb9f596637ed77ba615eaf56e68c4fd4268ece1b0aeb"
+    },
+    {
+      "source": "research/xor_or_alignment_20261024/results_primary/aggregates.csv",
+      "sha256": "cb57713fc77b6821dc48d5964a967c0aeef9106eea7306362536f727e043e166"
+    },
+    {
+      "source": "research/xor_or_alignment_20261024/results_primary/differences.csv",
+      "sha256": "b99423b3a68b0249d462a6b13afd1d1e811d59fce89f268fe0f92bc4171fe795"
+    },
+    {
+      "source": "research/xor_or_alignment_20261024/results_confirm/aggregates.csv",
+      "sha256": "b6f76eeaacfa0f228c50d607b4f52c8d8b17659162cb4b3099bdf1f1edc72ec0"
+    },
+    {
+      "source": "research/xor_or_alignment_20261024/results_confirm/differences.csv",
+      "sha256": "5eee20f47002bf3b267beb568b06c5af18e3d7dd4f79bdd0952c480c19f7744d"
+    },
+    {
+      "source": "research/xor_or_alignment_20261024/bridge_results/INDEPENDENT_VERIFICATION.json",
+      "sha256": "c01ed7186ca439d17cc6a653adde2adf241f383734a3c8e90ba3b3bbd65b3688"
+    }
+  ],
+  "data_files": [
+    {
+      "file": "bridge_verification.json",
+      "sha256": "c01ed7186ca439d17cc6a653adde2adf241f383734a3c8e90ba3b3bbd65b3688",
+      "bytes": 1708
+    },
+    {
+      "file": "confirm_aggregates.csv",
+      "sha256": "b6f76eeaacfa0f228c50d607b4f52c8d8b17659162cb4b3099bdf1f1edc72ec0",
+      "bytes": 20377
+    },
+    {
+      "file": "confirm_differences.csv",
+      "sha256": "5eee20f47002bf3b267beb568b06c5af18e3d7dd4f79bdd0952c480c19f7744d",
+      "bytes": 2932
+    },
+    {
+      "file": "primary_aggregates.csv",
+      "sha256": "cb57713fc77b6821dc48d5964a967c0aeef9106eea7306362536f727e043e166",
+      "bytes": 30412
+    },
+    {
+      "file": "primary_differences.csv",
+      "sha256": "b99423b3a68b0249d462a6b13afd1d1e811d59fce89f268fe0f92bc4171fe795",
+      "bytes": 4414
+    }
+  ],
+  "scope": "只读历史结果的发布整理；未运行神经训练、SMC或新证书求解。聚合数据不等于原始快照或证书。"
+}

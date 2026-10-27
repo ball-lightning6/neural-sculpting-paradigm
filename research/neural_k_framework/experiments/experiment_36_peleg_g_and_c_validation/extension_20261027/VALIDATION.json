@@ -1,0 +1,133 @@
+{
+  "date": "2026-10-27",
+  "status": "passed",
+  "training_started": false,
+  "smc_started": false,
+  "download_started": false,
+  "compiled_python_files": 19,
+  "frozen_source_files": 15,
+  "python": "3.13.5",
+  "dependencies": {
+    "numpy": "2.4.1",
+    "torch": "2.11.0+cu130",
+    "torchvision": "0.26.0+cu130",
+    "matplotlib": "3.10.9",
+    "pillow": "12.3.0",
+    "sympy": "1.14.0"
+  },
+  "selected_function_globals_checked": [
+    "e36_broad_worker.save",
+    "e36_broad_worker.record",
+    "e36_broad_worker.run_group",
+    "e36_wide_stp_control.stp_step",
+    "e36_wide_worker.collect",
+    "e36_wide_worker.save_optimizer",
+    "e36_wide_worker.optimize",
+    "e36_wide_worker.sample",
+    "e36_cloud_worker.collect",
+    "e36_cloud_worker.save_optimizer",
+    "e36_cloud_worker.optimize",
+    "e36_cloud_worker.sample",
+    "e36_adam_probe.node_name",
+    "e36_adam_probe.atomic_json",
+    "e36_adam_probe.observe",
+    "e36_adam_probe.energy",
+    "e36_adam_probe.interpolate",
+    "e36_adam_probe.serialize",
+    "e36_adam_probe.run_model",
+    "e36_recheck._sampler",
+    "e36_anchor_control.interrupted",
+    "e36_anchor_control.sha",
+    "e36_anchor_control.atomic_json",
+    "e36_anchor_control.atomic_torch",
+    "e36_anchor_control.atomic_npz",
+    "e36_anchor_control.node_name",
+    "e36_anchor_control.log",
+    "e36_anchor_control.select_three",
+    "e36_anchor_control.capture_nodes",
+    "e36_anchor_control.cpu_state",
+    "e36_anchor_control.restore",
+    "e36_anchor_control.new_state",
+    "e36_anchor_control.run_stp",
+    "e36_anchor_control.run_sgd",
+    "e36_anchor_control.export_predictions",
+    "e36_anchor_budget.group_name"
+  ],
+  "forward_checks": [
+    {
+      "network": "cnn_w4",
+      "parameters": 173890,
+      "logit_max_abs_error": 4.291534423828125e-06
+    },
+    {
+      "network": "mlp_256_128",
+      "parameters": 234114,
+      "logit_max_abs_error": 3.337860107421875e-06
+    },
+    {
+      "network": "cnn_w8",
+      "parameters": 693378,
+      "logit_max_abs_error": 0.0
+    }
+  ],
+  "evidence": {
+    "public_files": 23,
+    "cv_conditions": 58,
+    "direct_gc_sufficient": 13,
+    "direct_gc_zero_hits": 45,
+    "stp_groups": 48,
+    "stp_nodes": 240,
+    "wide_slow_sgd_at_1e_5": [
+      0,
+      0
+    ]
+  },
+  "bilingual": {
+    "blocks": 82,
+    "types": {
+      "anchor": 1,
+      "heading:2": 1,
+      "paragraph": 46,
+      "heading:3": 9,
+      "heading:4": 5,
+      "formula": 3,
+      "table": 13,
+      "image": 3,
+      "code": 1
+    },
+    "links": 29,
+    "link_base": "original_experiment_directory",
+    "anchor": "update-20261027"
+  },
+  "figures": [
+    {
+      "file": "e36_ext_cv_mae.png",
+      "size": [
+        1620,
+        810
+      ],
+      "nonwhite_fraction": 0.2737311385459534
+    },
+    {
+      "file": "e36_ext_stp_steps.png",
+      "size": [
+        1620,
+        684
+      ],
+      "nonwhite_fraction": 0.03914609053497942
+    },
+    {
+      "file": "e36_ext_wide_boundary.png",
+      "size": [
+        1800,
+        720
+      ],
+      "nonwhite_fraction": 0.06147762345679012
+    }
+  ],
+  "limits": [
+    "未运行优化或SMC；前向检查只使用小型合成输入",
+    "未认证全局混合或长任务显存预算",
+    "GPU虚拟环境启动器的_ctypes错误未修复；本轮由同版本系统Python加载现有依赖核验"
+  ]
+}

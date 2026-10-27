@@ -90,6 +90,13 @@
 <li><a href="#6-结论边界与尚未解决的问题">6. 结论边界与尚未解决的问题</a></li>
 <li><a href="#7-结论">7. 结论</a></li>
 <li><a href="#2026-10网站补充">2026-10网站补充</a></li>
+<li><a href="#evidence-update-20261027">2026-10-27 四类补证与最新边界</a><ul>
+<li><a href="#静态预测与不同训练方法">静态预测与不同训练方法</a></li>
+<li><a href="#复杂度的独立判据与幅度干预">复杂度的独立判据与幅度干预</a></li>
+<li><a href="#测度与固定半径">测度与固定半径</a></li>
+<li><a href="#记忆系数的标定及暂缓决定">记忆系数的标定及暂缓决定</a></li>
+</ul>
+</li>
 <li><a href="#附录计划">附录计划</a></li>
 </ul>
 </div>
@@ -1050,7 +1057,7 @@ $$</div>
 <li>不主张高 agreement 保证外部正确，或已经证明所有高 agreement 映射人类可读；</li>
 <li>不主张静态体积消除了 optimizer、初始化和全局可达性的独立作用。</li>
 </ol>
-<p>本文最强结果集中在有限 Boolean 规则、元胞自动机、模运算、tiny MLP 和两个 MNIST 二分类任务。百余合成任务提供广度，SMC 与闭环实验提供深度，但距离“任意现代架构和真实任务的普适定律”仍有明显范围差。所有数量都应连同协议报告。</p>
+<p>早期证据集中在有限 Boolean 规则、元胞自动机、模运算、tiny MLP 和两个 MNIST 二分类任务。2026年10月又扩展到多个MNIST数字分组、数据seed、样本数和训练方法，见本页后段补证。百余合成任务提供广度，SMC 与闭环实验提供深度，但距离“任意现代架构和真实任务的普适定律”仍有明显范围差。所有数量都应连同协议报告。</p>
 <p>下一步可证伪预测包括：</p>
 <ol>
 <li>在新 MNIST 数字对上盲预测 static/SGD U 形最低区间；</li>
@@ -1070,6 +1077,140 @@ $$</div>
 <h2 id="2026-10网站补充">2026-10网站补充</h2>
 <p class="evidence-experiment"><a href="experiments/e38.html">E38</a>完成了五配置、19目标、9阈值的宽深SMC扫描。在BCE≤0.30下，17个选定非单bit目标相对同一单bit参照的估计质量劣势均随四个双隐层宽度扩大。它是指定均匀测度与缩放下的连续loss事件证据，不是hard cell质量、测度无关复杂度或双下降因果证明。预算随宽度变化、共享池适应与混合边界在实验页逐项保留。</p>
 <p>网站另提供<a href="width-double-descent.html">双下降解释与宽度证据</a>及<a href="complexity-methods.html">复杂度测量方法</a>。后者是针对规则和权重所实现函数的测量方案，本轮没有新增方法验证实验。</p>
+<h2 id="evidence-update-20261027">2026-10-27 四类补证与最新边界</h2>
+<p>新增结果分别并入E36、E31/E33、E37和E32，保留原报告；没有因研究主题增加而另开实验编号。这里汇总已完成结果，未达、采样不确定性和未解决解释不删除。</p>
+<h3 id="静态预测与不同训练方法">静态预测与不同训练方法</h3>
+<p><a href="experiments/e36.html#update-20261027">E36扩展</a>完成原34加追加24条件，共58条件。小训练集来自MNIST十个数字的五类对五类划分、多个样本seed及标签干预；它是任意性较强的小样本约束，不是已认证的纯随机标签，也不要求训练集足以唯一识别完整规则。</p>
+<table>
+<thead>
+<tr>
+<th>条件组</th>
+<th style="text-align: right;">条件数</th>
+<th style="text-align: right;">hard-fit预测SGD的准确率MAE/百分点</th>
+<th style="text-align: right;">低loss SMC的MAE/百分点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CNN W4，干净n32</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">8.18</td>
+<td style="text-align: right;">0.74</td>
+</tr>
+<tr>
+<td>MLP，干净n32</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">6.05</td>
+<td style="text-align: right;">1.16</td>
+</tr>
+<tr>
+<td>CNN W8，干净n32</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">8.43</td>
+<td style="text-align: right;">5.02</td>
+</tr>
+<tr>
+<td>CNN W4，追加n64</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">8.13</td>
+<td style="text-align: right;">0.58</td>
+</tr>
+<tr>
+<td>MLP，追加n64</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">6.63</td>
+<td style="text-align: right;">0.26</td>
+</tr>
+</tbody>
+</table>
+<p>低loss节点为BCE≤0.003，比较平均单模型准确率，不是集成正确率或完整函数分布相等。13条件拿到足额直接G&amp;C；12个n8条件中，直接G&amp;C与hard-fit SMC的准确率MAE约0.120个百分点，不能将其外推为深尾混合认证。</p>
+<p>STP完成16条件、三步长、各128初始化，共48组。它是检验SGD/Adam特有梯度更新是否不可替代的机制对照；与低loss静态预测对应，比仅证明能拟合更有信息。最小步长下，小CNN/MLP六个干净条件的STP–SGD准确率MAE为0.793/0.192个百分点，但CNN不是步长越小越接近。</p>
+<p>宽CNN两个原条件的增强SMC到1e-5，准确率75.59%/75.16%，SGD lr=.001为79.68%/77.25%，STP约69.65%–70.85%。优化器本身不一致，不能说存在所有训练方法共同给出的唯一参照而SMC单独偏离；同时这些具体偏差仍限制精确对应，不能归零或隐去。</p>
+<h3 id="复杂度的独立判据与幅度干预">复杂度的独立判据与幅度干预</h3>
+<p><a href="experiments/e31.html#update-20261027">E31新增f/g实验</a>从独立逻辑比较出发：f为两位XOR，g为其结果再OR第三位。在包含XOR和OR、每门最多两输入的固定门库下，最小门数严格为1与2；该比较不依赖Neural K。观察raw BCE下g反而更便宜后，用户提前提出容易分支的精度分配解释，并预测幅度对齐可能反转排序。</p>
+<table>
+<thead>
+<tr>
+<th>分数阈值0.001</th>
+<th style="text-align: right;">K_g−K_f/bit</th>
+<th>口径</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>原始平均BCE</td>
+<td style="text-align: right;">−37.79</td>
+<td>首轮</td>
+</tr>
+<tr>
+<td>逐点BCE上限</td>
+<td style="text-align: right;">+29.47</td>
+<td>加预算</td>
+</tr>
+<tr>
+<td>BCE加margin方差约束</td>
+<td style="text-align: right;">+50.28</td>
+<td>加预算</td>
+</tr>
+<tr>
+<td>从原BCE父事件桥接至幅度对齐</td>
+<td style="text-align: right;">+49.77</td>
+<td>继承父池误差</td>
+</tr>
+</tbody>
+</table>
+<p>g的两分支平均BCE从0.0018534/0.0001242变为对齐后的0.0009212/0.0009130。结果支持事前干预方向，同时表明平均BCE作为统一逻辑复杂度标尺可能不够合适；原体积测量合法，不意味着它已剥离精度分配的影响，也不证明对齐是唯一正确定义。</p>
+<p><a href="experiments/e33.html#update-20261027">E33新增外部校准</a>包含代理重算和60个逻辑成本问题，其中59项精确、1项保留界。10个平衡轨道的45对中43对跨四架构同向，但指定外部逻辑成本仍存在稳健局部倒序。共享排序是独立证据，不是经典Kolmogorov等价定理。</p>
+<h3 id="测度与固定半径">测度与固定半径</h3>
+<p><a href="experiments/e37.html#update-20261027">E37扩展</a>公开旧多测度背景与新增固定球面对照，明确旧数据日期。R=40时，projection、majority3、parity2在BCE 0.03→0.001的ΔK为14.66、27.81、69.04 bit，固定半径仍有规则相关角向收缩。</p>
+<p>R=20的复杂规则有8池未达全部节点；同一projection在该半径的ΔK为70.61 bit，不是只改变截距。原96池算子故障是实现问题，修复后的24池中16全到、8停滞。结论是主要现象非Gaussian径向尾部专有，不是所有自然测度共享同一公式或局部排序。</p>
+<h3 id="记忆系数的标定及暂缓决定">记忆系数的标定及暂缓决定</h3>
+<p><a href="experiments/e32.html#update-20261027">E32扩展</a>的动机是：若独立记忆负担与系数成正比，可为复杂度解释提供强的外部标定，而非由定义自行保证。现已完成一至三隐藏层、四表、八档、每表四池，共384主池；另有三层增强24池、五规则20池和幅度极差桥接。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">n</th>
+<th style="text-align: right;">单层32的c</th>
+<th style="text-align: right;">两层32/32的c</th>
+<th style="text-align: right;">三层32/32/32的c</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">153.93</td>
+<td style="text-align: right;">57.45</td>
+<td style="text-align: right;">35.98</td>
+</tr>
+<tr>
+<td style="text-align: right;">32</td>
+<td style="text-align: right;">274.87</td>
+<td style="text-align: right;">82.62</td>
+<td style="text-align: right;">46.78</td>
+</tr>
+<tr>
+<td style="text-align: right;">64</td>
+<td style="text-align: right;">508.54</td>
+<td style="text-align: right;">121.45</td>
+<td style="text-align: right;">62.58</td>
+</tr>
+<tr>
+<td style="text-align: right;">96</td>
+<td style="text-align: right;">668.14</td>
+<td style="text-align: right;">148.72</td>
+<td style="text-align: right;">74.07</td>
+</tr>
+<tr>
+<td style="text-align: right;">128</td>
+<td style="text-align: right;">815.48</td>
+<td style="text-align: right;">169.82</td>
+<td style="text-align: right;">83.07</td>
+</tr>
+</tbody>
+</table>
+<p>c使用同池K(.001)−K(.002)，先取四池中位数再平均四表。增长趋势保留，但两层/三层有系统曲率；增强采样没有使其消失。严格幅度管的大n结果重复性不足，不能称已恢复线性。</p>
+<p>补充诊断包括3840条agreement训练、720条逐点loss训练、132份随机表结构排查和旧全函数目录的min–max枚举。两个候选记忆标准是同n最大成本和最少未见预测倾向；最低成本候选主导是连接它们的机制猜想，不是第三种已确立定义。全规则目录min–max不是实际fixed-D体积的直接测量。</p>
+<p>目前三项困难是个体记忆数据的认证、可靠SMC的成本，以及线性并非神经表示成本必然满足的性质。追加探索暂缓，非线性、未达和采样分歧照实保留；不把严格线性当作整个框架成立的必要条件。理论层的六个开放问题见<a href="theory-core.html#open-questions-20261027">当前边界</a>。</p>
 <h2 id="附录计划">附录计划</h2>
 <ul>
 <li>A. 网络、数据、优化器与全部超参数；</li>

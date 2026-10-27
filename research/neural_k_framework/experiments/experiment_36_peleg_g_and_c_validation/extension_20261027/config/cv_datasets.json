@@ -1,0 +1,1919 @@
+[
+  {
+    "stage": "original_static",
+    "condition": "cnn_w4__anchor_0_7_n16",
+    "record": {
+      "case": {
+        "name": "anchor_0_7_n16",
+        "kind": "pair",
+        "digits": [
+          0,
+          7
+        ],
+        "n": 16,
+        "seed": 202610229,
+        "anchor": true
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "5fda426c2406586eee50cb8bad535ee9fa889f7bb8a37515790e18fa8030a934",
+        "y": "de8a8128a6109b56956c2aed25b4b8c345283070d3c70943d606e4d34227b5c2",
+        "train_ids": "7248c87253e48355403b720122cbd4c68940a5f62dcf7f65f7fb3e3db4e2145e",
+        "probe_x": "0f5186aeb79d9a29236e4d90223ff59112b42f050b8246ca825fcb40743fed8a",
+        "probe_y": "fb11c0d663a733af7b57423f51e421b167c821e1fcaba5ea833ff801a76087a1",
+        "probe_ids": "695dbcb7ea1fde51343df2317bb1fa9b9b73d529265f7e4b8282dcf603c47430"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "cnn_w4__partition0_seed0_n32",
+    "record": {
+      "case": {
+        "name": "partition0_seed0_n32",
+        "kind": "partition",
+        "digits": [
+          2,
+          4,
+          7,
+          8,
+          9
+        ],
+        "n": 32,
+        "seed": 202611230,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "140bf8b69ed08b45b68eba69c6a8f602c691961589ef414e522f6503612b16d6",
+        "y": "a3ab9e3cffe5079758d48d22e83f08507abbb6858d30f28636484d5bed9a74d0",
+        "train_ids": "de13394f081ab0f703b9450dab154a1c7492cf78729e4691e619408f45cfa711",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "d48ebcc5207f43ab8317d56cb8c8c9a756512aca9ffb0a83442cca039c03fe73",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "cnn_w4__partition0_seed0_n32_flip_quarter",
+    "record": {
+      "case": {
+        "name": "partition0_seed0_n32_flip_quarter",
+        "kind": "partition",
+        "digits": [
+          2,
+          4,
+          7,
+          8,
+          9
+        ],
+        "n": 32,
+        "seed": 202611230,
+        "anchor": false,
+        "noise": "flip_quarter"
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "140bf8b69ed08b45b68eba69c6a8f602c691961589ef414e522f6503612b16d6",
+        "y": "849a9c8ddfc747356655c058b0fdeb2b80452068fca7f1c7eac9ebdb46f5ef5f",
+        "train_ids": "de13394f081ab0f703b9450dab154a1c7492cf78729e4691e619408f45cfa711",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "d48ebcc5207f43ab8317d56cb8c8c9a756512aca9ffb0a83442cca039c03fe73",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "cnn_w4__partition0_seed0_n32_random_balanced",
+    "record": {
+      "case": {
+        "name": "partition0_seed0_n32_random_balanced",
+        "kind": "partition",
+        "digits": [
+          2,
+          4,
+          7,
+          8,
+          9
+        ],
+        "n": 32,
+        "seed": 202611230,
+        "anchor": false,
+        "noise": "random_balanced"
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "140bf8b69ed08b45b68eba69c6a8f602c691961589ef414e522f6503612b16d6",
+        "y": "be6bb5c0b34fb78a0a95e4162e8622a22bc1c9671f4aa746ec7f094d9c96e496",
+        "train_ids": "de13394f081ab0f703b9450dab154a1c7492cf78729e4691e619408f45cfa711",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "d48ebcc5207f43ab8317d56cb8c8c9a756512aca9ffb0a83442cca039c03fe73",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "cnn_w4__partition0_seed1_n32",
+    "record": {
+      "case": {
+        "name": "partition0_seed1_n32",
+        "kind": "partition",
+        "digits": [
+          2,
+          4,
+          7,
+          8,
+          9
+        ],
+        "n": 32,
+        "seed": 202611231,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "243f12c0a273d169f0e6833af51d027d606d49f3b9805ffef11f11c6cbcdc002",
+        "y": "2e6d343b677111e87821b242786c5fbb4f41558a2f5f263a6e21015b3a9b7dcf",
+        "train_ids": "88cdaaab6d968bf01d1f38a3e5e29faca55b52772d424b6dd2993385e35a57c9",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "d48ebcc5207f43ab8317d56cb8c8c9a756512aca9ffb0a83442cca039c03fe73",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "cnn_w4__partition0_seed2_n32",
+    "record": {
+      "case": {
+        "name": "partition0_seed2_n32",
+        "kind": "partition",
+        "digits": [
+          2,
+          4,
+          7,
+          8,
+          9
+        ],
+        "n": 32,
+        "seed": 202611232,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "f8af750ab4031aa9d383236dde8c46a09c8e40abc2c40f02e77b05019ec04e08",
+        "y": "16ece413b474ce4fd424e8c7bff98f3648e24ee1eae09f38aac7edefb5d06cb8",
+        "train_ids": "b3783c50c34baf9813910bcc615e0458ccfe400ae1517c0cbd16e1e0e0a2def9",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "d48ebcc5207f43ab8317d56cb8c8c9a756512aca9ffb0a83442cca039c03fe73",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "cnn_w4__partition1_seed0_n32",
+    "record": {
+      "case": {
+        "name": "partition1_seed0_n32",
+        "kind": "partition",
+        "digits": [
+          0,
+          1,
+          3,
+          7,
+          8
+        ],
+        "n": 32,
+        "seed": 202611330,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "2f1fa2c0aa257a026f86ee79ce7ef6cb4c8f3e8371d4cb774c0595a0e7c1a286",
+        "y": "48b3af53ddc171b6378a9fd9aa715cb6fe0e16522a3941dcf3e9a7eb43ce410c",
+        "train_ids": "8f1652b5200bd35c4e1ea2ed9d898e581b820a5f4676ca2f371e2b9c594d2f54",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "254402a09a92a6d2fa303b6a1ee0c94f98ce199f891e2ac09c1edf4d1e213ece",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "cnn_w4__partition1_seed1_n32",
+    "record": {
+      "case": {
+        "name": "partition1_seed1_n32",
+        "kind": "partition",
+        "digits": [
+          0,
+          1,
+          3,
+          7,
+          8
+        ],
+        "n": 32,
+        "seed": 202611331,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "1c3028f5694d220963dcee318391c397b354b958febf1d588e2eb60a8e5a9356",
+        "y": "9a7d6f03666185c25c0a0ba9311b79bf9e85fcd16dfcd900d316a8f92e57fe76",
+        "train_ids": "8bfad19f66e9599de9637aeb9fc1c8952b80a5ff04f7d24c1066d75d565e4b89",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "254402a09a92a6d2fa303b6a1ee0c94f98ce199f891e2ac09c1edf4d1e213ece",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "cnn_w4__partition1_seed2_n32",
+    "record": {
+      "case": {
+        "name": "partition1_seed2_n32",
+        "kind": "partition",
+        "digits": [
+          0,
+          1,
+          3,
+          7,
+          8
+        ],
+        "n": 32,
+        "seed": 202611332,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "1962864ef54c7eff45ff4b2b87f80503acd590853832593ded9d876c2f4acfe5",
+        "y": "803cd93656fe011fd0dfe7dbfcd7284d1114817d534db2bd38b6aa6ca43b6a8a",
+        "train_ids": "a3fbb1aca32210b5c819cad7afe72dcde82fb617130a0660416152f9b3a5105d",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "254402a09a92a6d2fa303b6a1ee0c94f98ce199f891e2ac09c1edf4d1e213ece",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "cnn_w4__partition2_seed0_n32",
+    "record": {
+      "case": {
+        "name": "partition2_seed0_n32",
+        "kind": "partition",
+        "digits": [
+          1,
+          3,
+          4,
+          8,
+          9
+        ],
+        "n": 32,
+        "seed": 202611430,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "d971a13151b84a8bbe51a5c46c4470dc80fc0dbe2aca4a11afbc94f43fc3f0df",
+        "y": "9aaebf9885cdd7ebdbc3c9063593df24aba626fb5d955838d297686c2cd85b5c",
+        "train_ids": "e216fe8a988fa4ffadcfa6da8eb915ec54a466ae0e7a03d4afa146c49b792ed8",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "d45eca1952489461b708436e1f84a634d4500d26fa65d8dca3ea2ac64b455a2c",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "cnn_w4__partition2_seed1_n32",
+    "record": {
+      "case": {
+        "name": "partition2_seed1_n32",
+        "kind": "partition",
+        "digits": [
+          1,
+          3,
+          4,
+          8,
+          9
+        ],
+        "n": 32,
+        "seed": 202611431,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "b9d49d2ee60a0016c681eeb016ede1bebdd31af93ea275add6be265c49faaf3e",
+        "y": "728c0e1e81423e123d636fda17567c2750dea3183a15746a4890f4fdc845d523",
+        "train_ids": "1c6dce28b886722422f647c35d7dadf3c5f5565dcc9b945b8d5804934f15b66e",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "d45eca1952489461b708436e1f84a634d4500d26fa65d8dca3ea2ac64b455a2c",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "cnn_w4__partition2_seed2_n32",
+    "record": {
+      "case": {
+        "name": "partition2_seed2_n32",
+        "kind": "partition",
+        "digits": [
+          1,
+          3,
+          4,
+          8,
+          9
+        ],
+        "n": 32,
+        "seed": 202611432,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "2521a956dda8e0c2f9b82991dc6574f199cc889f1a930654da1c26eb30a1f5d8",
+        "y": "8b8940b0ea7dfe67ddd31466fbc726c46ac54ac508995dee1bf328db7f78ef95",
+        "train_ids": "7e08c1ebe53d35ca49f115d79c6be23d35b6be8d656eb0af858f00966f6fa768",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "d45eca1952489461b708436e1f84a634d4500d26fa65d8dca3ea2ac64b455a2c",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "cnn_w8__partition0_seed0_n32",
+    "record": {
+      "case": {
+        "name": "partition0_seed0_n32",
+        "kind": "partition",
+        "digits": [
+          2,
+          4,
+          7,
+          8,
+          9
+        ],
+        "n": 32,
+        "seed": 202611230,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "140bf8b69ed08b45b68eba69c6a8f602c691961589ef414e522f6503612b16d6",
+        "y": "a3ab9e3cffe5079758d48d22e83f08507abbb6858d30f28636484d5bed9a74d0",
+        "train_ids": "de13394f081ab0f703b9450dab154a1c7492cf78729e4691e619408f45cfa711",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "d48ebcc5207f43ab8317d56cb8c8c9a756512aca9ffb0a83442cca039c03fe73",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "cnn_w8__partition0_seed0_n32_flip_quarter",
+    "record": {
+      "case": {
+        "name": "partition0_seed0_n32_flip_quarter",
+        "kind": "partition",
+        "digits": [
+          2,
+          4,
+          7,
+          8,
+          9
+        ],
+        "n": 32,
+        "seed": 202611230,
+        "anchor": false,
+        "noise": "flip_quarter"
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "140bf8b69ed08b45b68eba69c6a8f602c691961589ef414e522f6503612b16d6",
+        "y": "849a9c8ddfc747356655c058b0fdeb2b80452068fca7f1c7eac9ebdb46f5ef5f",
+        "train_ids": "de13394f081ab0f703b9450dab154a1c7492cf78729e4691e619408f45cfa711",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "d48ebcc5207f43ab8317d56cb8c8c9a756512aca9ffb0a83442cca039c03fe73",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "cnn_w8__partition0_seed0_n32_random_balanced",
+    "record": {
+      "case": {
+        "name": "partition0_seed0_n32_random_balanced",
+        "kind": "partition",
+        "digits": [
+          2,
+          4,
+          7,
+          8,
+          9
+        ],
+        "n": 32,
+        "seed": 202611230,
+        "anchor": false,
+        "noise": "random_balanced"
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "140bf8b69ed08b45b68eba69c6a8f602c691961589ef414e522f6503612b16d6",
+        "y": "be6bb5c0b34fb78a0a95e4162e8622a22bc1c9671f4aa746ec7f094d9c96e496",
+        "train_ids": "de13394f081ab0f703b9450dab154a1c7492cf78729e4691e619408f45cfa711",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "d48ebcc5207f43ab8317d56cb8c8c9a756512aca9ffb0a83442cca039c03fe73",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "cnn_w8__partition0_seed1_n32",
+    "record": {
+      "case": {
+        "name": "partition0_seed1_n32",
+        "kind": "partition",
+        "digits": [
+          2,
+          4,
+          7,
+          8,
+          9
+        ],
+        "n": 32,
+        "seed": 202611231,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "243f12c0a273d169f0e6833af51d027d606d49f3b9805ffef11f11c6cbcdc002",
+        "y": "2e6d343b677111e87821b242786c5fbb4f41558a2f5f263a6e21015b3a9b7dcf",
+        "train_ids": "88cdaaab6d968bf01d1f38a3e5e29faca55b52772d424b6dd2993385e35a57c9",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "d48ebcc5207f43ab8317d56cb8c8c9a756512aca9ffb0a83442cca039c03fe73",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "cnn_w8__partition0_seed2_n32",
+    "record": {
+      "case": {
+        "name": "partition0_seed2_n32",
+        "kind": "partition",
+        "digits": [
+          2,
+          4,
+          7,
+          8,
+          9
+        ],
+        "n": 32,
+        "seed": 202611232,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "f8af750ab4031aa9d383236dde8c46a09c8e40abc2c40f02e77b05019ec04e08",
+        "y": "16ece413b474ce4fd424e8c7bff98f3648e24ee1eae09f38aac7edefb5d06cb8",
+        "train_ids": "b3783c50c34baf9813910bcc615e0458ccfe400ae1517c0cbd16e1e0e0a2def9",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "d48ebcc5207f43ab8317d56cb8c8c9a756512aca9ffb0a83442cca039c03fe73",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "cnn_w8__partition1_seed0_n32",
+    "record": {
+      "case": {
+        "name": "partition1_seed0_n32",
+        "kind": "partition",
+        "digits": [
+          0,
+          1,
+          3,
+          7,
+          8
+        ],
+        "n": 32,
+        "seed": 202611330,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "2f1fa2c0aa257a026f86ee79ce7ef6cb4c8f3e8371d4cb774c0595a0e7c1a286",
+        "y": "48b3af53ddc171b6378a9fd9aa715cb6fe0e16522a3941dcf3e9a7eb43ce410c",
+        "train_ids": "8f1652b5200bd35c4e1ea2ed9d898e581b820a5f4676ca2f371e2b9c594d2f54",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "254402a09a92a6d2fa303b6a1ee0c94f98ce199f891e2ac09c1edf4d1e213ece",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "cnn_w8__partition1_seed1_n32",
+    "record": {
+      "case": {
+        "name": "partition1_seed1_n32",
+        "kind": "partition",
+        "digits": [
+          0,
+          1,
+          3,
+          7,
+          8
+        ],
+        "n": 32,
+        "seed": 202611331,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "1c3028f5694d220963dcee318391c397b354b958febf1d588e2eb60a8e5a9356",
+        "y": "9a7d6f03666185c25c0a0ba9311b79bf9e85fcd16dfcd900d316a8f92e57fe76",
+        "train_ids": "8bfad19f66e9599de9637aeb9fc1c8952b80a5ff04f7d24c1066d75d565e4b89",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "254402a09a92a6d2fa303b6a1ee0c94f98ce199f891e2ac09c1edf4d1e213ece",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "cnn_w8__partition1_seed2_n32",
+    "record": {
+      "case": {
+        "name": "partition1_seed2_n32",
+        "kind": "partition",
+        "digits": [
+          0,
+          1,
+          3,
+          7,
+          8
+        ],
+        "n": 32,
+        "seed": 202611332,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "1962864ef54c7eff45ff4b2b87f80503acd590853832593ded9d876c2f4acfe5",
+        "y": "803cd93656fe011fd0dfe7dbfcd7284d1114817d534db2bd38b6aa6ca43b6a8a",
+        "train_ids": "a3fbb1aca32210b5c819cad7afe72dcde82fb617130a0660416152f9b3a5105d",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "254402a09a92a6d2fa303b6a1ee0c94f98ce199f891e2ac09c1edf4d1e213ece",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "cnn_w8__partition2_seed0_n32",
+    "record": {
+      "case": {
+        "name": "partition2_seed0_n32",
+        "kind": "partition",
+        "digits": [
+          1,
+          3,
+          4,
+          8,
+          9
+        ],
+        "n": 32,
+        "seed": 202611430,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "d971a13151b84a8bbe51a5c46c4470dc80fc0dbe2aca4a11afbc94f43fc3f0df",
+        "y": "9aaebf9885cdd7ebdbc3c9063593df24aba626fb5d955838d297686c2cd85b5c",
+        "train_ids": "e216fe8a988fa4ffadcfa6da8eb915ec54a466ae0e7a03d4afa146c49b792ed8",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "d45eca1952489461b708436e1f84a634d4500d26fa65d8dca3ea2ac64b455a2c",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "cnn_w8__partition2_seed1_n32",
+    "record": {
+      "case": {
+        "name": "partition2_seed1_n32",
+        "kind": "partition",
+        "digits": [
+          1,
+          3,
+          4,
+          8,
+          9
+        ],
+        "n": 32,
+        "seed": 202611431,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "b9d49d2ee60a0016c681eeb016ede1bebdd31af93ea275add6be265c49faaf3e",
+        "y": "728c0e1e81423e123d636fda17567c2750dea3183a15746a4890f4fdc845d523",
+        "train_ids": "1c6dce28b886722422f647c35d7dadf3c5f5565dcc9b945b8d5804934f15b66e",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "d45eca1952489461b708436e1f84a634d4500d26fa65d8dca3ea2ac64b455a2c",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "cnn_w8__partition2_seed2_n32",
+    "record": {
+      "case": {
+        "name": "partition2_seed2_n32",
+        "kind": "partition",
+        "digits": [
+          1,
+          3,
+          4,
+          8,
+          9
+        ],
+        "n": 32,
+        "seed": 202611432,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "2521a956dda8e0c2f9b82991dc6574f199cc889f1a930654da1c26eb30a1f5d8",
+        "y": "8b8940b0ea7dfe67ddd31466fbc726c46ac54ac508995dee1bf328db7f78ef95",
+        "train_ids": "7e08c1ebe53d35ca49f115d79c6be23d35b6be8d656eb0af858f00966f6fa768",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "d45eca1952489461b708436e1f84a634d4500d26fa65d8dca3ea2ac64b455a2c",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "mlp_256_128__partition0_seed0_n32",
+    "record": {
+      "case": {
+        "name": "partition0_seed0_n32",
+        "kind": "partition",
+        "digits": [
+          2,
+          4,
+          7,
+          8,
+          9
+        ],
+        "n": 32,
+        "seed": 202611230,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "140bf8b69ed08b45b68eba69c6a8f602c691961589ef414e522f6503612b16d6",
+        "y": "a3ab9e3cffe5079758d48d22e83f08507abbb6858d30f28636484d5bed9a74d0",
+        "train_ids": "de13394f081ab0f703b9450dab154a1c7492cf78729e4691e619408f45cfa711",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "d48ebcc5207f43ab8317d56cb8c8c9a756512aca9ffb0a83442cca039c03fe73",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "mlp_256_128__partition0_seed0_n32_flip_quarter",
+    "record": {
+      "case": {
+        "name": "partition0_seed0_n32_flip_quarter",
+        "kind": "partition",
+        "digits": [
+          2,
+          4,
+          7,
+          8,
+          9
+        ],
+        "n": 32,
+        "seed": 202611230,
+        "anchor": false,
+        "noise": "flip_quarter"
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "140bf8b69ed08b45b68eba69c6a8f602c691961589ef414e522f6503612b16d6",
+        "y": "849a9c8ddfc747356655c058b0fdeb2b80452068fca7f1c7eac9ebdb46f5ef5f",
+        "train_ids": "de13394f081ab0f703b9450dab154a1c7492cf78729e4691e619408f45cfa711",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "d48ebcc5207f43ab8317d56cb8c8c9a756512aca9ffb0a83442cca039c03fe73",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "mlp_256_128__partition0_seed0_n32_random_balanced",
+    "record": {
+      "case": {
+        "name": "partition0_seed0_n32_random_balanced",
+        "kind": "partition",
+        "digits": [
+          2,
+          4,
+          7,
+          8,
+          9
+        ],
+        "n": 32,
+        "seed": 202611230,
+        "anchor": false,
+        "noise": "random_balanced"
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "140bf8b69ed08b45b68eba69c6a8f602c691961589ef414e522f6503612b16d6",
+        "y": "be6bb5c0b34fb78a0a95e4162e8622a22bc1c9671f4aa746ec7f094d9c96e496",
+        "train_ids": "de13394f081ab0f703b9450dab154a1c7492cf78729e4691e619408f45cfa711",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "d48ebcc5207f43ab8317d56cb8c8c9a756512aca9ffb0a83442cca039c03fe73",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "mlp_256_128__partition0_seed1_n32",
+    "record": {
+      "case": {
+        "name": "partition0_seed1_n32",
+        "kind": "partition",
+        "digits": [
+          2,
+          4,
+          7,
+          8,
+          9
+        ],
+        "n": 32,
+        "seed": 202611231,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "243f12c0a273d169f0e6833af51d027d606d49f3b9805ffef11f11c6cbcdc002",
+        "y": "2e6d343b677111e87821b242786c5fbb4f41558a2f5f263a6e21015b3a9b7dcf",
+        "train_ids": "88cdaaab6d968bf01d1f38a3e5e29faca55b52772d424b6dd2993385e35a57c9",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "d48ebcc5207f43ab8317d56cb8c8c9a756512aca9ffb0a83442cca039c03fe73",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "mlp_256_128__partition0_seed2_n32",
+    "record": {
+      "case": {
+        "name": "partition0_seed2_n32",
+        "kind": "partition",
+        "digits": [
+          2,
+          4,
+          7,
+          8,
+          9
+        ],
+        "n": 32,
+        "seed": 202611232,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "f8af750ab4031aa9d383236dde8c46a09c8e40abc2c40f02e77b05019ec04e08",
+        "y": "16ece413b474ce4fd424e8c7bff98f3648e24ee1eae09f38aac7edefb5d06cb8",
+        "train_ids": "b3783c50c34baf9813910bcc615e0458ccfe400ae1517c0cbd16e1e0e0a2def9",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "d48ebcc5207f43ab8317d56cb8c8c9a756512aca9ffb0a83442cca039c03fe73",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "mlp_256_128__partition1_seed0_n32",
+    "record": {
+      "case": {
+        "name": "partition1_seed0_n32",
+        "kind": "partition",
+        "digits": [
+          0,
+          1,
+          3,
+          7,
+          8
+        ],
+        "n": 32,
+        "seed": 202611330,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "2f1fa2c0aa257a026f86ee79ce7ef6cb4c8f3e8371d4cb774c0595a0e7c1a286",
+        "y": "48b3af53ddc171b6378a9fd9aa715cb6fe0e16522a3941dcf3e9a7eb43ce410c",
+        "train_ids": "8f1652b5200bd35c4e1ea2ed9d898e581b820a5f4676ca2f371e2b9c594d2f54",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "254402a09a92a6d2fa303b6a1ee0c94f98ce199f891e2ac09c1edf4d1e213ece",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "mlp_256_128__partition1_seed1_n32",
+    "record": {
+      "case": {
+        "name": "partition1_seed1_n32",
+        "kind": "partition",
+        "digits": [
+          0,
+          1,
+          3,
+          7,
+          8
+        ],
+        "n": 32,
+        "seed": 202611331,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "1c3028f5694d220963dcee318391c397b354b958febf1d588e2eb60a8e5a9356",
+        "y": "9a7d6f03666185c25c0a0ba9311b79bf9e85fcd16dfcd900d316a8f92e57fe76",
+        "train_ids": "8bfad19f66e9599de9637aeb9fc1c8952b80a5ff04f7d24c1066d75d565e4b89",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "254402a09a92a6d2fa303b6a1ee0c94f98ce199f891e2ac09c1edf4d1e213ece",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "mlp_256_128__partition1_seed2_n32",
+    "record": {
+      "case": {
+        "name": "partition1_seed2_n32",
+        "kind": "partition",
+        "digits": [
+          0,
+          1,
+          3,
+          7,
+          8
+        ],
+        "n": 32,
+        "seed": 202611332,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "1962864ef54c7eff45ff4b2b87f80503acd590853832593ded9d876c2f4acfe5",
+        "y": "803cd93656fe011fd0dfe7dbfcd7284d1114817d534db2bd38b6aa6ca43b6a8a",
+        "train_ids": "a3fbb1aca32210b5c819cad7afe72dcde82fb617130a0660416152f9b3a5105d",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "254402a09a92a6d2fa303b6a1ee0c94f98ce199f891e2ac09c1edf4d1e213ece",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "mlp_256_128__partition2_seed0_n32",
+    "record": {
+      "case": {
+        "name": "partition2_seed0_n32",
+        "kind": "partition",
+        "digits": [
+          1,
+          3,
+          4,
+          8,
+          9
+        ],
+        "n": 32,
+        "seed": 202611430,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "d971a13151b84a8bbe51a5c46c4470dc80fc0dbe2aca4a11afbc94f43fc3f0df",
+        "y": "9aaebf9885cdd7ebdbc3c9063593df24aba626fb5d955838d297686c2cd85b5c",
+        "train_ids": "e216fe8a988fa4ffadcfa6da8eb915ec54a466ae0e7a03d4afa146c49b792ed8",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "d45eca1952489461b708436e1f84a634d4500d26fa65d8dca3ea2ac64b455a2c",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "mlp_256_128__partition2_seed1_n32",
+    "record": {
+      "case": {
+        "name": "partition2_seed1_n32",
+        "kind": "partition",
+        "digits": [
+          1,
+          3,
+          4,
+          8,
+          9
+        ],
+        "n": 32,
+        "seed": 202611431,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "b9d49d2ee60a0016c681eeb016ede1bebdd31af93ea275add6be265c49faaf3e",
+        "y": "728c0e1e81423e123d636fda17567c2750dea3183a15746a4890f4fdc845d523",
+        "train_ids": "1c6dce28b886722422f647c35d7dadf3c5f5565dcc9b945b8d5804934f15b66e",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "d45eca1952489461b708436e1f84a634d4500d26fa65d8dca3ea2ac64b455a2c",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "original_static",
+    "condition": "mlp_256_128__partition2_seed2_n32",
+    "record": {
+      "case": {
+        "name": "partition2_seed2_n32",
+        "kind": "partition",
+        "digits": [
+          1,
+          3,
+          4,
+          8,
+          9
+        ],
+        "n": 32,
+        "seed": 202611432,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "2521a956dda8e0c2f9b82991dc6574f199cc889f1a930654da1c26eb30a1f5d8",
+        "y": "8b8940b0ea7dfe67ddd31466fbc726c46ac54ac508995dee1bf328db7f78ef95",
+        "train_ids": "7e08c1ebe53d35ca49f115d79c6be23d35b6be8d656eb0af858f00966f6fa768",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "d45eca1952489461b708436e1f84a634d4500d26fa65d8dca3ea2ac64b455a2c",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "extension",
+    "condition": "cnn_w4__partition0_seed0_n64",
+    "record": {
+      "case": {
+        "name": "partition0_seed0_n64",
+        "kind": "partition",
+        "digits": [
+          2,
+          4,
+          7,
+          8,
+          9
+        ],
+        "n": 64,
+        "seed": 202611230,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "23e4b7e7574fd57296a8d95ca0ec0ea281845db329b76c228abcd2e0551af52b",
+        "y": "17a189bb99727631f2acca8b6424812bde35e2607786b599d4cba966ffc3f5c3",
+        "train_ids": "c8378deaed0ae0c4ca8200d403499b374b5b25ece59ff58e0780483ffa0d35e5",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "d48ebcc5207f43ab8317d56cb8c8c9a756512aca9ffb0a83442cca039c03fe73",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "extension",
+    "condition": "cnn_w4__partition0_seed0_n8",
+    "record": {
+      "case": {
+        "name": "partition0_seed0_n8",
+        "kind": "partition",
+        "digits": [
+          2,
+          4,
+          7,
+          8,
+          9
+        ],
+        "n": 8,
+        "seed": 202611230,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "d22f5defdb089e0f31456c94eee558527df7d7bf323c7c79642c8f5c7e37f461",
+        "y": "ddbd5a5cce44ed46a194d54826da8d83049a8461b2214d09484dbba261f2b64f",
+        "train_ids": "6e2a47cd91755d2a1b49dac8c27b4b3356c84ae38b1180f6da2767ba26c290e1",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "d48ebcc5207f43ab8317d56cb8c8c9a756512aca9ffb0a83442cca039c03fe73",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "extension",
+    "condition": "cnn_w4__partition0_seed1_n64",
+    "record": {
+      "case": {
+        "name": "partition0_seed1_n64",
+        "kind": "partition",
+        "digits": [
+          2,
+          4,
+          7,
+          8,
+          9
+        ],
+        "n": 64,
+        "seed": 202611231,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "d884acf9a07078958fbbac3c77dcab942772578bf1f0c52515b9297091f7e481",
+        "y": "f2e1c808213e81d8d4fc52dfa468eb7e53e3fb7919e2399edf3030e68eb66beb",
+        "train_ids": "12adc0932017f154b599c573ac441cdeba4552b773773be9daf92f173d6913cd",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "d48ebcc5207f43ab8317d56cb8c8c9a756512aca9ffb0a83442cca039c03fe73",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "extension",
+    "condition": "cnn_w4__partition0_seed1_n8",
+    "record": {
+      "case": {
+        "name": "partition0_seed1_n8",
+        "kind": "partition",
+        "digits": [
+          2,
+          4,
+          7,
+          8,
+          9
+        ],
+        "n": 8,
+        "seed": 202611231,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "2150ebf70c338b8eaf5261c9f5b07bc5d1bb9ea0477792227a48dcadb0e0785e",
+        "y": "a4c69fdee16f782f4330beabbfa6f6d060ee847bf85d00234cf3f056c00ba3e0",
+        "train_ids": "e1c56d761212b442da2d88b39e1060ff2931b199c074bcc18ff4d582c7584325",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "d48ebcc5207f43ab8317d56cb8c8c9a756512aca9ffb0a83442cca039c03fe73",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "extension",
+    "condition": "cnn_w4__partition1_seed0_n64",
+    "record": {
+      "case": {
+        "name": "partition1_seed0_n64",
+        "kind": "partition",
+        "digits": [
+          0,
+          1,
+          3,
+          7,
+          8
+        ],
+        "n": 64,
+        "seed": 202611330,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "688c865b002190d82b6b139b05f653935d1f5c6d87b698d70f109a7520d6a1c6",
+        "y": "98106f2a8062e93a975d5e7b21b983eeb4fa4bd39ab94b1b76ea370e2a37a1a4",
+        "train_ids": "cf38adcceb0f7815e772f6f86da7202fcf6ffb0d6402933746d11bb01f1b38b8",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "254402a09a92a6d2fa303b6a1ee0c94f98ce199f891e2ac09c1edf4d1e213ece",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "extension",
+    "condition": "cnn_w4__partition1_seed0_n8",
+    "record": {
+      "case": {
+        "name": "partition1_seed0_n8",
+        "kind": "partition",
+        "digits": [
+          0,
+          1,
+          3,
+          7,
+          8
+        ],
+        "n": 8,
+        "seed": 202611330,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "00469bb8e75811bd9836f1aee68d8ead7047abb9989164646203a17f7e225bf6",
+        "y": "612f5dae204063a969f6130cc7c2f96e308dfb71fd5eae9ea94991db1ca44373",
+        "train_ids": "5c11d66986e603882916d3b47c7455aa2e9693151b43bb47e84eea3c8ff4f530",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "254402a09a92a6d2fa303b6a1ee0c94f98ce199f891e2ac09c1edf4d1e213ece",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "extension",
+    "condition": "cnn_w4__partition1_seed1_n64",
+    "record": {
+      "case": {
+        "name": "partition1_seed1_n64",
+        "kind": "partition",
+        "digits": [
+          0,
+          1,
+          3,
+          7,
+          8
+        ],
+        "n": 64,
+        "seed": 202611331,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "7645ab1784350cb792b63392532e08c8a970e650c1439f66bdb60c30dc357d5a",
+        "y": "d906977f2e46e22a8a9e4da72b3b50511009217cacad5a988e07b3b8bc8cf836",
+        "train_ids": "7492040846421267782b249be88cacef08138d078a2deda8da83a459a107ac2a",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "254402a09a92a6d2fa303b6a1ee0c94f98ce199f891e2ac09c1edf4d1e213ece",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "extension",
+    "condition": "cnn_w4__partition1_seed1_n8",
+    "record": {
+      "case": {
+        "name": "partition1_seed1_n8",
+        "kind": "partition",
+        "digits": [
+          0,
+          1,
+          3,
+          7,
+          8
+        ],
+        "n": 8,
+        "seed": 202611331,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "071b961261098dd9e319457fa7b15cca8ad86582e234ded46154a904b956e29c",
+        "y": "f7a4109983a878df23226963e117ecabe58b076d2aab868dc3270c7d83a53f16",
+        "train_ids": "3cbfb02eedeef25f1c22451e29b99a922df63795b146798017fd7aff866f7cf2",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "254402a09a92a6d2fa303b6a1ee0c94f98ce199f891e2ac09c1edf4d1e213ece",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "extension",
+    "condition": "cnn_w4__partition2_seed0_n64",
+    "record": {
+      "case": {
+        "name": "partition2_seed0_n64",
+        "kind": "partition",
+        "digits": [
+          1,
+          3,
+          4,
+          8,
+          9
+        ],
+        "n": 64,
+        "seed": 202611430,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "47201ebb687987c6506cbf9b854d2d684962b4644211c2fcf9cefe3789f7e709",
+        "y": "a700992a189ee09482794861dfe62084fa2599b9558bb63bc92c2e24ee34e596",
+        "train_ids": "c3f5fb867b377c624e7d5d64a731c4c1e351ead7dd7e6c27f9783c934f34cc9d",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "d45eca1952489461b708436e1f84a634d4500d26fa65d8dca3ea2ac64b455a2c",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "extension",
+    "condition": "cnn_w4__partition2_seed0_n8",
+    "record": {
+      "case": {
+        "name": "partition2_seed0_n8",
+        "kind": "partition",
+        "digits": [
+          1,
+          3,
+          4,
+          8,
+          9
+        ],
+        "n": 8,
+        "seed": 202611430,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "d8bec2eb97dec32b438bbb0e8e2a8b9f3857a87e606c45311dd94a4c2820e395",
+        "y": "58fe8ad25c38edb59f82fe1c7fb92a78417df70ed4d0b95bda9ad93a0d4eb0fc",
+        "train_ids": "c09326b80c146899d28029a357aed773ea303bc43814c677f727e18712198c95",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "d45eca1952489461b708436e1f84a634d4500d26fa65d8dca3ea2ac64b455a2c",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "extension",
+    "condition": "cnn_w4__partition2_seed1_n64",
+    "record": {
+      "case": {
+        "name": "partition2_seed1_n64",
+        "kind": "partition",
+        "digits": [
+          1,
+          3,
+          4,
+          8,
+          9
+        ],
+        "n": 64,
+        "seed": 202611431,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "55e3b4fc107d1e284ec86ee5c2a2dd46bdbb95e9309d1bbfd89c11580e5bd471",
+        "y": "c5cf7eb230c4cb987e6add70cf215169ed300a30d278ef26cb50d93714343eb5",
+        "train_ids": "e4bf5bce93333e68492bd126344a9834e55e9ab0c532f60cd1c6d711e269101d",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "d45eca1952489461b708436e1f84a634d4500d26fa65d8dca3ea2ac64b455a2c",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "extension",
+    "condition": "cnn_w4__partition2_seed1_n8",
+    "record": {
+      "case": {
+        "name": "partition2_seed1_n8",
+        "kind": "partition",
+        "digits": [
+          1,
+          3,
+          4,
+          8,
+          9
+        ],
+        "n": 8,
+        "seed": 202611431,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "3189a671ddd346b02ca940d850841f99e2a39bd6a5b9fcadb10f521559b3078f",
+        "y": "7182ba70e757cbb119bc8c24fc22d833e1d83faa6840cf934071355f46f28ca4",
+        "train_ids": "d1f46297d82207edfa1bb2abc6708dd0018ad44d8da4b34a7f7929e46c0bf647",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "d45eca1952489461b708436e1f84a634d4500d26fa65d8dca3ea2ac64b455a2c",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "extension",
+    "condition": "mlp_256_128__partition0_seed0_n64",
+    "record": {
+      "case": {
+        "name": "partition0_seed0_n64",
+        "kind": "partition",
+        "digits": [
+          2,
+          4,
+          7,
+          8,
+          9
+        ],
+        "n": 64,
+        "seed": 202611230,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "23e4b7e7574fd57296a8d95ca0ec0ea281845db329b76c228abcd2e0551af52b",
+        "y": "17a189bb99727631f2acca8b6424812bde35e2607786b599d4cba966ffc3f5c3",
+        "train_ids": "c8378deaed0ae0c4ca8200d403499b374b5b25ece59ff58e0780483ffa0d35e5",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "d48ebcc5207f43ab8317d56cb8c8c9a756512aca9ffb0a83442cca039c03fe73",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "extension",
+    "condition": "mlp_256_128__partition0_seed0_n8",
+    "record": {
+      "case": {
+        "name": "partition0_seed0_n8",
+        "kind": "partition",
+        "digits": [
+          2,
+          4,
+          7,
+          8,
+          9
+        ],
+        "n": 8,
+        "seed": 202611230,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "d22f5defdb089e0f31456c94eee558527df7d7bf323c7c79642c8f5c7e37f461",
+        "y": "ddbd5a5cce44ed46a194d54826da8d83049a8461b2214d09484dbba261f2b64f",
+        "train_ids": "6e2a47cd91755d2a1b49dac8c27b4b3356c84ae38b1180f6da2767ba26c290e1",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "d48ebcc5207f43ab8317d56cb8c8c9a756512aca9ffb0a83442cca039c03fe73",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "extension",
+    "condition": "mlp_256_128__partition0_seed1_n64",
+    "record": {
+      "case": {
+        "name": "partition0_seed1_n64",
+        "kind": "partition",
+        "digits": [
+          2,
+          4,
+          7,
+          8,
+          9
+        ],
+        "n": 64,
+        "seed": 202611231,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "d884acf9a07078958fbbac3c77dcab942772578bf1f0c52515b9297091f7e481",
+        "y": "f2e1c808213e81d8d4fc52dfa468eb7e53e3fb7919e2399edf3030e68eb66beb",
+        "train_ids": "12adc0932017f154b599c573ac441cdeba4552b773773be9daf92f173d6913cd",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "d48ebcc5207f43ab8317d56cb8c8c9a756512aca9ffb0a83442cca039c03fe73",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "extension",
+    "condition": "mlp_256_128__partition0_seed1_n8",
+    "record": {
+      "case": {
+        "name": "partition0_seed1_n8",
+        "kind": "partition",
+        "digits": [
+          2,
+          4,
+          7,
+          8,
+          9
+        ],
+        "n": 8,
+        "seed": 202611231,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "2150ebf70c338b8eaf5261c9f5b07bc5d1bb9ea0477792227a48dcadb0e0785e",
+        "y": "a4c69fdee16f782f4330beabbfa6f6d060ee847bf85d00234cf3f056c00ba3e0",
+        "train_ids": "e1c56d761212b442da2d88b39e1060ff2931b199c074bcc18ff4d582c7584325",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "d48ebcc5207f43ab8317d56cb8c8c9a756512aca9ffb0a83442cca039c03fe73",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "extension",
+    "condition": "mlp_256_128__partition1_seed0_n64",
+    "record": {
+      "case": {
+        "name": "partition1_seed0_n64",
+        "kind": "partition",
+        "digits": [
+          0,
+          1,
+          3,
+          7,
+          8
+        ],
+        "n": 64,
+        "seed": 202611330,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "688c865b002190d82b6b139b05f653935d1f5c6d87b698d70f109a7520d6a1c6",
+        "y": "98106f2a8062e93a975d5e7b21b983eeb4fa4bd39ab94b1b76ea370e2a37a1a4",
+        "train_ids": "cf38adcceb0f7815e772f6f86da7202fcf6ffb0d6402933746d11bb01f1b38b8",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "254402a09a92a6d2fa303b6a1ee0c94f98ce199f891e2ac09c1edf4d1e213ece",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "extension",
+    "condition": "mlp_256_128__partition1_seed0_n8",
+    "record": {
+      "case": {
+        "name": "partition1_seed0_n8",
+        "kind": "partition",
+        "digits": [
+          0,
+          1,
+          3,
+          7,
+          8
+        ],
+        "n": 8,
+        "seed": 202611330,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "00469bb8e75811bd9836f1aee68d8ead7047abb9989164646203a17f7e225bf6",
+        "y": "612f5dae204063a969f6130cc7c2f96e308dfb71fd5eae9ea94991db1ca44373",
+        "train_ids": "5c11d66986e603882916d3b47c7455aa2e9693151b43bb47e84eea3c8ff4f530",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "254402a09a92a6d2fa303b6a1ee0c94f98ce199f891e2ac09c1edf4d1e213ece",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "extension",
+    "condition": "mlp_256_128__partition1_seed1_n64",
+    "record": {
+      "case": {
+        "name": "partition1_seed1_n64",
+        "kind": "partition",
+        "digits": [
+          0,
+          1,
+          3,
+          7,
+          8
+        ],
+        "n": 64,
+        "seed": 202611331,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "7645ab1784350cb792b63392532e08c8a970e650c1439f66bdb60c30dc357d5a",
+        "y": "d906977f2e46e22a8a9e4da72b3b50511009217cacad5a988e07b3b8bc8cf836",
+        "train_ids": "7492040846421267782b249be88cacef08138d078a2deda8da83a459a107ac2a",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "254402a09a92a6d2fa303b6a1ee0c94f98ce199f891e2ac09c1edf4d1e213ece",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "extension",
+    "condition": "mlp_256_128__partition1_seed1_n8",
+    "record": {
+      "case": {
+        "name": "partition1_seed1_n8",
+        "kind": "partition",
+        "digits": [
+          0,
+          1,
+          3,
+          7,
+          8
+        ],
+        "n": 8,
+        "seed": 202611331,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "071b961261098dd9e319457fa7b15cca8ad86582e234ded46154a904b956e29c",
+        "y": "f7a4109983a878df23226963e117ecabe58b076d2aab868dc3270c7d83a53f16",
+        "train_ids": "3cbfb02eedeef25f1c22451e29b99a922df63795b146798017fd7aff866f7cf2",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "254402a09a92a6d2fa303b6a1ee0c94f98ce199f891e2ac09c1edf4d1e213ece",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "extension",
+    "condition": "mlp_256_128__partition2_seed0_n64",
+    "record": {
+      "case": {
+        "name": "partition2_seed0_n64",
+        "kind": "partition",
+        "digits": [
+          1,
+          3,
+          4,
+          8,
+          9
+        ],
+        "n": 64,
+        "seed": 202611430,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "47201ebb687987c6506cbf9b854d2d684962b4644211c2fcf9cefe3789f7e709",
+        "y": "a700992a189ee09482794861dfe62084fa2599b9558bb63bc92c2e24ee34e596",
+        "train_ids": "c3f5fb867b377c624e7d5d64a731c4c1e351ead7dd7e6c27f9783c934f34cc9d",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "d45eca1952489461b708436e1f84a634d4500d26fa65d8dca3ea2ac64b455a2c",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "extension",
+    "condition": "mlp_256_128__partition2_seed0_n8",
+    "record": {
+      "case": {
+        "name": "partition2_seed0_n8",
+        "kind": "partition",
+        "digits": [
+          1,
+          3,
+          4,
+          8,
+          9
+        ],
+        "n": 8,
+        "seed": 202611430,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "d8bec2eb97dec32b438bbb0e8e2a8b9f3857a87e606c45311dd94a4c2820e395",
+        "y": "58fe8ad25c38edb59f82fe1c7fb92a78417df70ed4d0b95bda9ad93a0d4eb0fc",
+        "train_ids": "c09326b80c146899d28029a357aed773ea303bc43814c677f727e18712198c95",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "d45eca1952489461b708436e1f84a634d4500d26fa65d8dca3ea2ac64b455a2c",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "extension",
+    "condition": "mlp_256_128__partition2_seed1_n64",
+    "record": {
+      "case": {
+        "name": "partition2_seed1_n64",
+        "kind": "partition",
+        "digits": [
+          1,
+          3,
+          4,
+          8,
+          9
+        ],
+        "n": 64,
+        "seed": 202611431,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "55e3b4fc107d1e284ec86ee5c2a2dd46bdbb95e9309d1bbfd89c11580e5bd471",
+        "y": "c5cf7eb230c4cb987e6add70cf215169ed300a30d278ef26cb50d93714343eb5",
+        "train_ids": "e4bf5bce93333e68492bd126344a9834e55e9ab0c532f60cd1c6d711e269101d",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "d45eca1952489461b708436e1f84a634d4500d26fa65d8dca3ea2ac64b455a2c",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  },
+  {
+    "stage": "extension",
+    "condition": "mlp_256_128__partition2_seed1_n8",
+    "record": {
+      "case": {
+        "name": "partition2_seed1_n8",
+        "kind": "partition",
+        "digits": [
+          1,
+          3,
+          4,
+          8,
+          9
+        ],
+        "n": 8,
+        "seed": 202611431,
+        "anchor": false
+      },
+      "normalization": [
+        0.13066047430038452,
+        0.30810782313346863
+      ],
+      "arrays": {
+        "x": "3189a671ddd346b02ca940d850841f99e2a39bd6a5b9fcadb10f521559b3078f",
+        "y": "7182ba70e757cbb119bc8c24fc22d833e1d83faa6840cf934071355f46f28ca4",
+        "train_ids": "d1f46297d82207edfa1bb2abc6708dd0018ad44d8da4b34a7f7929e46c0bf647",
+        "probe_x": "fefad702071334dcb7b59e8d096438654cfbeac683d2cd618201e5dc0227184e",
+        "probe_y": "d45eca1952489461b708436e1f84a634d4500d26fa65d8dca3ea2ac64b455a2c",
+        "probe_ids": "820883f2c82d2e1490a131622a63d77bfaa4c049999857eafaeb64a46addd755"
+      },
+      "test_label_policy": "静态采样只读取probe_x；预测冻结后才评分probe_y。"
+    }
+  }
+]

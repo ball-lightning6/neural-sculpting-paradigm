@@ -1,0 +1,50 @@
+{
+  "protocol": "4bit_natural_reference_measures_v1",
+  "created_local": "2026-09-13 16:24:18",
+  "source_panel": "source_panel",
+  "source_panel_sha256": "078136de474e44b685e4904e8acd14246a6db8aead6462a6cbee4446f55bb9b3",
+  "selection": "原4个锚点+原12个分层区间各第一个样本+预指定4个近似/反转案例；不使用新测度结果挑选。",
+  "function_ids": [
+    0,
+    255,
+    4080,
+    27030,
+    3,
+    3838,
+    4081,
+    12285,
+    27583,
+    15598,
+    1715,
+    10664,
+    27582,
+    1718,
+    7127,
+    6886,
+    495,
+    10942,
+    12276,
+    2464
+  ],
+  "reference_radius": 72,
+  "dimension": 97,
+  "coordinate_std": 7.236272269866327,
+  "expected_norm2": 5079.272727272728,
+  "cube_half_width": 12.533591228810243,
+  "student_df": 8,
+  "student_scale": 6.266795614405122,
+  "measures": [
+    "wide_gaussian",
+    "spherical_t8",
+    "uniform_cube"
+  ],
+  "primary_spherical_measures": [
+    "wide_gaussian",
+    "spherical_t8"
+  ],
+  "directional_stress_test": [
+    "uniform_cube"
+  ],
+  "data_independent_definition": true,
+  "note": "R72仅作为二阶矩标尺；宽高斯和球对称t没有范数硬边界。立方体是逐坐标边界，另作方向偏置压力测试。"
+}

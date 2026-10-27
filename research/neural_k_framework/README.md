@@ -20,6 +20,8 @@
 
 ## 2026年10月网站增补
 
+2026-10-27的四类补证已合并进原编号：训练方法对应归入[E36](experiments/experiment_36_peleg_g_and_c_validation/VALIDATION_EXTENSION_20261027.md)，复杂度干预/校准归入[E31](experiments/experiment_31_loss_amplitude_grokking/XOR_OR_ALIGNMENT_20261027.md)和[E33](experiments/experiment_33_cross_architecture/COMPLEXITY_CALIBRATION_20261027.md)，测度归入[E37](experiments/experiment_37_measure_robustness/FIXED_RADIUS_20261027.md)，记忆归入[E32](experiments/experiment_32_random_memory/MEMORY_EXTENSION_20261027.md)。原报告保留，实验总数仍为38，中英文完整对应。六个开放问题已加入理论核心；这些更新不改正式论文或PDF，不新增实验。
+
 2026-10-21宽深SMC的95个目标运行全部完成，以E38加入实验索引。双下降解释、完整SMC曲线、跨测度比较边界，以及两种复杂度测量方案已接入中英文网站。本轮这两项新增内容不加入正式论文或PDF，测量方法没有被写成已完成实验，也未因此启动新实验。MNIST训练对照仍缺1个计划条件，仅保留为文献启发的探索记录，不称为严格复现或完整双下降验证。
 
 - **宽度与双下降：**[中文网页](site/width-double-descent.html) / [English page](site/en/width-double-descent.html)；[中文源稿](width_double_descent_zh.md) / [English source](width_double_descent_en.md)。
@@ -30,7 +32,7 @@
 
 研究问题、理论判断、实验设计和实验工作来自作者。当前网页及配套说明的大部分具体文字由 AI 根据对话、脚本、结果包和既有文档整理。
 
-**理论核心与正式短论文是文字写作例外：作者对理论核心进行了逐段审阅和深度修改，并对正式短论文的中文正文进行了逐段重写和定稿；英文版在中文定稿基础上翻译。除这两项外，作者没有参与本目录其他页面的具体文字写作。**
+**理论核心的既有版本与正式短论文是文字写作例外：作者对理论核心进行了逐段审阅和深度修改，并对正式短论文的中文正文进行了逐段重写和定稿；英文版在中文定稿基础上翻译。2026-10-27理论新增段落由AI根据作者讨论整理，仍待作者审阅；其余页面的具体文字也由AI整理，不应视为作者已经逐句认可。**
 
 这些材料是可核查的研究记录与阶段性理论总纲，不应被视为已经完成同行评审的正式论文。主张应与实验脚本、证据总账和边界说明一起阅读。
 

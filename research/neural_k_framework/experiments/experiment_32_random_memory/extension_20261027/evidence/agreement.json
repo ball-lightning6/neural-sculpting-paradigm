@@ -1,0 +1,878 @@
+{
+  "means": [
+    {
+      "kind": "random",
+      "hidden": [
+        32
+      ],
+      "n": 16,
+      "datasets": 4,
+      "agreement": 0.938259986139113,
+      "model_accuracy": 0.48956298828125,
+      "vote_accuracy": 0.48828125,
+      "predicted_one_fraction": 0.45037841796875,
+      "probe_function_collision": 0.007056451612903226,
+      "probe_function_modal_fraction": 0.0546875
+    },
+    {
+      "kind": "random",
+      "hidden": [
+        32
+      ],
+      "n": 32,
+      "datasets": 4,
+      "agreement": 0.8886994392641129,
+      "model_accuracy": 0.50054931640625,
+      "vote_accuracy": 0.501953125,
+      "predicted_one_fraction": 0.52166748046875,
+      "probe_function_collision": 0.0005040322580645161,
+      "probe_function_modal_fraction": 0.0390625
+    },
+    {
+      "kind": "random",
+      "hidden": [
+        32
+      ],
+      "n": 48,
+      "datasets": 4,
+      "agreement": 0.8283730783770161,
+      "model_accuracy": 0.49505615234375,
+      "vote_accuracy": 0.5,
+      "predicted_one_fraction": 0.55706787109375,
+      "probe_function_collision": 0,
+      "probe_function_modal_fraction": 0.03125
+    },
+    {
+      "kind": "random",
+      "hidden": [
+        32
+      ],
+      "n": 64,
+      "datasets": 4,
+      "agreement": 0.8128898374495968,
+      "model_accuracy": 0.49053955078125,
+      "vote_accuracy": 0.4794921875,
+      "predicted_one_fraction": 0.55181884765625,
+      "probe_function_collision": 0,
+      "probe_function_modal_fraction": 0.03125
+    },
+    {
+      "kind": "random",
+      "hidden": [
+        32
+      ],
+      "n": 80,
+      "datasets": 4,
+      "agreement": 0.7869479271673387,
+      "model_accuracy": 0.49835205078125,
+      "vote_accuracy": 0.505859375,
+      "predicted_one_fraction": 0.54669189453125,
+      "probe_function_collision": 0,
+      "probe_function_modal_fraction": 0.03125
+    },
+    {
+      "kind": "random",
+      "hidden": [
+        32
+      ],
+      "n": 96,
+      "datasets": 4,
+      "agreement": 0.7631009009576613,
+      "model_accuracy": 0.50225830078125,
+      "vote_accuracy": 0.4912109375,
+      "predicted_one_fraction": 0.53656005859375,
+      "probe_function_collision": 0,
+      "probe_function_modal_fraction": 0.03125
+    },
+    {
+      "kind": "random",
+      "hidden": [
+        32
+      ],
+      "n": 112,
+      "datasets": 4,
+      "agreement": 0.7720671622983871,
+      "model_accuracy": 0.496337890625,
+      "vote_accuracy": 0.4951171875,
+      "predicted_one_fraction": 0.5225830078125,
+      "probe_function_collision": 0,
+      "probe_function_modal_fraction": 0.03125
+    },
+    {
+      "kind": "random",
+      "hidden": [
+        32
+      ],
+      "n": 128,
+      "datasets": 4,
+      "agreement": 0.7717993951612903,
+      "model_accuracy": 0.5059814453125,
+      "vote_accuracy": 0.50390625,
+      "predicted_one_fraction": 0.5203857421875,
+      "probe_function_collision": 0,
+      "probe_function_modal_fraction": 0.03125
+    },
+    {
+      "kind": "random",
+      "hidden": [
+        32,
+        32
+      ],
+      "n": 16,
+      "datasets": 4,
+      "agreement": 0.939909904233871,
+      "model_accuracy": 0.4866943359375,
+      "vote_accuracy": 0.4892578125,
+      "predicted_one_fraction": 0.440673828125,
+      "probe_function_collision": 0.004032258064516129,
+      "probe_function_modal_fraction": 0.0625
+    },
+    {
+      "kind": "random",
+      "hidden": [
+        32,
+        32
+      ],
+      "n": 32,
+      "datasets": 4,
+      "agreement": 0.8843836630544355,
+      "model_accuracy": 0.49822998046875,
+      "vote_accuracy": 0.498046875,
+      "predicted_one_fraction": 0.53570556640625,
+      "probe_function_collision": 0,
+      "probe_function_modal_fraction": 0.03125
+    },
+    {
+      "kind": "random",
+      "hidden": [
+        32,
+        32
+      ],
+      "n": 48,
+      "datasets": 4,
+      "agreement": 0.8317280430947581,
+      "model_accuracy": 0.48150634765625,
+      "vote_accuracy": 0.462890625,
+      "predicted_one_fraction": 0.55987548828125,
+      "probe_function_collision": 0,
+      "probe_function_modal_fraction": 0.03125
+    },
+    {
+      "kind": "random",
+      "hidden": [
+        32,
+        32
+      ],
+      "n": 64,
+      "datasets": 4,
+      "agreement": 0.813933341733871,
+      "model_accuracy": 0.48681640625,
+      "vote_accuracy": 0.48046875,
+      "predicted_one_fraction": 0.5330810546875,
+      "probe_function_collision": 0,
+      "probe_function_modal_fraction": 0.03125
+    },
+    {
+      "kind": "random",
+      "hidden": [
+        32,
+        32
+      ],
+      "n": 80,
+      "datasets": 4,
+      "agreement": 0.8037345640120969,
+      "model_accuracy": 0.4970703125,
+      "vote_accuracy": 0.4970703125,
+      "predicted_one_fraction": 0.5386962890625,
+      "probe_function_collision": 0,
+      "probe_function_modal_fraction": 0.03125
+    },
+    {
+      "kind": "random",
+      "hidden": [
+        32,
+        32
+      ],
+      "n": 96,
+      "datasets": 4,
+      "agreement": 0.7899642452116936,
+      "model_accuracy": 0.49517822265625,
+      "vote_accuracy": 0.4892578125,
+      "predicted_one_fraction": 0.52203369140625,
+      "probe_function_collision": 0,
+      "probe_function_modal_fraction": 0.03125
+    },
+    {
+      "kind": "random",
+      "hidden": [
+        32,
+        32
+      ],
+      "n": 112,
+      "datasets": 4,
+      "agreement": 0.7859595514112903,
+      "model_accuracy": 0.4921875,
+      "vote_accuracy": 0.4990234375,
+      "predicted_one_fraction": 0.521240234375,
+      "probe_function_collision": 0,
+      "probe_function_modal_fraction": 0.03125
+    },
+    {
+      "kind": "random",
+      "hidden": [
+        32,
+        32
+      ],
+      "n": 128,
+      "datasets": 4,
+      "agreement": 0.7955991683467742,
+      "model_accuracy": 0.4996337890625,
+      "vote_accuracy": 0.5068359375,
+      "predicted_one_fraction": 0.519287109375,
+      "probe_function_collision": 0,
+      "probe_function_modal_fraction": 0.03125
+    },
+    {
+      "kind": "random",
+      "hidden": [
+        32,
+        32,
+        32
+      ],
+      "n": 16,
+      "datasets": 4,
+      "agreement": 0.9218907510080645,
+      "model_accuracy": 0.48583984375,
+      "vote_accuracy": 0.4853515625,
+      "predicted_one_fraction": 0.4434814453125,
+      "probe_function_collision": 0.0010080645161290322,
+      "probe_function_modal_fraction": 0.046875
+    },
+    {
+      "kind": "random",
+      "hidden": [
+        32,
+        32,
+        32
+      ],
+      "n": 32,
+      "datasets": 4,
+      "agreement": 0.870392830141129,
+      "model_accuracy": 0.5020751953125,
+      "vote_accuracy": 0.5029296875,
+      "predicted_one_fraction": 0.522216796875,
+      "probe_function_collision": 0,
+      "probe_function_modal_fraction": 0.03125
+    },
+    {
+      "kind": "random",
+      "hidden": [
+        32,
+        32,
+        32
+      ],
+      "n": 48,
+      "datasets": 4,
+      "agreement": 0.81787109375,
+      "model_accuracy": 0.485595703125,
+      "vote_accuracy": 0.4697265625,
+      "predicted_one_fraction": 0.5611572265625,
+      "probe_function_collision": 0,
+      "probe_function_modal_fraction": 0.03125
+    },
+    {
+      "kind": "random",
+      "hidden": [
+        32,
+        32,
+        32
+      ],
+      "n": 64,
+      "datasets": 4,
+      "agreement": 0.7938941217237903,
+      "model_accuracy": 0.48553466796875,
+      "vote_accuracy": 0.490234375,
+      "predicted_one_fraction": 0.53790283203125,
+      "probe_function_collision": 0,
+      "probe_function_modal_fraction": 0.03125
+    },
+    {
+      "kind": "random",
+      "hidden": [
+        32,
+        32,
+        32
+      ],
+      "n": 80,
+      "datasets": 4,
+      "agreement": 0.7899957472278226,
+      "model_accuracy": 0.49407958984375,
+      "vote_accuracy": 0.4873046875,
+      "predicted_one_fraction": 0.53668212890625,
+      "probe_function_collision": 0,
+      "probe_function_modal_fraction": 0.03125
+    },
+    {
+      "kind": "random",
+      "hidden": [
+        32,
+        32,
+        32
+      ],
+      "n": 96,
+      "datasets": 4,
+      "agreement": 0.773866714969758,
+      "model_accuracy": 0.48541259765625,
+      "vote_accuracy": 0.4716796875,
+      "predicted_one_fraction": 0.52679443359375,
+      "probe_function_collision": 0,
+      "probe_function_modal_fraction": 0.03125
+    },
+    {
+      "kind": "random",
+      "hidden": [
+        32,
+        32,
+        32
+      ],
+      "n": 112,
+      "datasets": 4,
+      "agreement": 0.7788952242943548,
+      "model_accuracy": 0.498779296875,
+      "vote_accuracy": 0.5009765625,
+      "predicted_one_fraction": 0.5283203125,
+      "probe_function_collision": 0,
+      "probe_function_modal_fraction": 0.03125
+    },
+    {
+      "kind": "random",
+      "hidden": [
+        32,
+        32,
+        32
+      ],
+      "n": 128,
+      "datasets": 4,
+      "agreement": 0.7899760584677419,
+      "model_accuracy": 0.5003662109375,
+      "vote_accuracy": 0.501953125,
+      "predicted_one_fraction": 0.516845703125,
+      "probe_function_collision": 0,
+      "probe_function_modal_fraction": 0.03125
+    },
+    {
+      "kind": "projection0",
+      "hidden": [
+        32
+      ],
+      "n": 16,
+      "datasets": 1,
+      "agreement": 0.9859185987903225,
+      "model_accuracy": 0.9375,
+      "vote_accuracy": 0.9296875,
+      "predicted_one_fraction": 0.5390625,
+      "probe_function_collision": 0.5100806451612904,
+      "probe_function_modal_fraction": 0.71875
+    },
+    {
+      "kind": "projection0",
+      "hidden": [
+        32
+      ],
+      "n": 32,
+      "datasets": 1,
+      "agreement": 1,
+      "model_accuracy": 1,
+      "vote_accuracy": 1,
+      "predicted_one_fraction": 0.4765625,
+      "probe_function_collision": 1,
+      "probe_function_modal_fraction": 1
+    },
+    {
+      "kind": "projection0",
+      "hidden": [
+        32
+      ],
+      "n": 48,
+      "datasets": 1,
+      "agreement": 1,
+      "model_accuracy": 1,
+      "vote_accuracy": 1,
+      "predicted_one_fraction": 0.4765625,
+      "probe_function_collision": 1,
+      "probe_function_modal_fraction": 1
+    },
+    {
+      "kind": "projection0",
+      "hidden": [
+        32
+      ],
+      "n": 64,
+      "datasets": 1,
+      "agreement": 1,
+      "model_accuracy": 1,
+      "vote_accuracy": 1,
+      "predicted_one_fraction": 0.4765625,
+      "probe_function_collision": 1,
+      "probe_function_modal_fraction": 1
+    },
+    {
+      "kind": "projection0",
+      "hidden": [
+        32
+      ],
+      "n": 80,
+      "datasets": 1,
+      "agreement": 1,
+      "model_accuracy": 1,
+      "vote_accuracy": 1,
+      "predicted_one_fraction": 0.4765625,
+      "probe_function_collision": 1,
+      "probe_function_modal_fraction": 1
+    },
+    {
+      "kind": "projection0",
+      "hidden": [
+        32
+      ],
+      "n": 96,
+      "datasets": 1,
+      "agreement": 1,
+      "model_accuracy": 1,
+      "vote_accuracy": 1,
+      "predicted_one_fraction": 0.4765625,
+      "probe_function_collision": 1,
+      "probe_function_modal_fraction": 1
+    },
+    {
+      "kind": "projection0",
+      "hidden": [
+        32
+      ],
+      "n": 112,
+      "datasets": 1,
+      "agreement": 1,
+      "model_accuracy": 1,
+      "vote_accuracy": 1,
+      "predicted_one_fraction": 0.4765625,
+      "probe_function_collision": 1,
+      "probe_function_modal_fraction": 1
+    },
+    {
+      "kind": "projection0",
+      "hidden": [
+        32
+      ],
+      "n": 128,
+      "datasets": 1,
+      "agreement": 1,
+      "model_accuracy": 1,
+      "vote_accuracy": 1,
+      "predicted_one_fraction": 0.4765625,
+      "probe_function_collision": 1,
+      "probe_function_modal_fraction": 1
+    },
+    {
+      "kind": "projection0",
+      "hidden": [
+        32,
+        32
+      ],
+      "n": 16,
+      "datasets": 1,
+      "agreement": 0.9670961441532258,
+      "model_accuracy": 0.968994140625,
+      "vote_accuracy": 0.98046875,
+      "predicted_one_fraction": 0.507568359375,
+      "probe_function_collision": 0.024193548387096774,
+      "probe_function_modal_fraction": 0.09375
+    },
+    {
+      "kind": "projection0",
+      "hidden": [
+        32,
+        32
+      ],
+      "n": 32,
+      "datasets": 1,
+      "agreement": 1,
+      "model_accuracy": 1,
+      "vote_accuracy": 1,
+      "predicted_one_fraction": 0.4765625,
+      "probe_function_collision": 1,
+      "probe_function_modal_fraction": 1
+    },
+    {
+      "kind": "projection0",
+      "hidden": [
+        32,
+        32
+      ],
+      "n": 48,
+      "datasets": 1,
+      "agreement": 1,
+      "model_accuracy": 1,
+      "vote_accuracy": 1,
+      "predicted_one_fraction": 0.4765625,
+      "probe_function_collision": 1,
+      "probe_function_modal_fraction": 1
+    },
+    {
+      "kind": "projection0",
+      "hidden": [
+        32,
+        32
+      ],
+      "n": 64,
+      "datasets": 1,
+      "agreement": 1,
+      "model_accuracy": 1,
+      "vote_accuracy": 1,
+      "predicted_one_fraction": 0.4765625,
+      "probe_function_collision": 1,
+      "probe_function_modal_fraction": 1
+    },
+    {
+      "kind": "projection0",
+      "hidden": [
+        32,
+        32
+      ],
+      "n": 80,
+      "datasets": 1,
+      "agreement": 1,
+      "model_accuracy": 1,
+      "vote_accuracy": 1,
+      "predicted_one_fraction": 0.4765625,
+      "probe_function_collision": 1,
+      "probe_function_modal_fraction": 1
+    },
+    {
+      "kind": "projection0",
+      "hidden": [
+        32,
+        32
+      ],
+      "n": 96,
+      "datasets": 1,
+      "agreement": 1,
+      "model_accuracy": 1,
+      "vote_accuracy": 1,
+      "predicted_one_fraction": 0.4765625,
+      "probe_function_collision": 1,
+      "probe_function_modal_fraction": 1
+    },
+    {
+      "kind": "projection0",
+      "hidden": [
+        32,
+        32
+      ],
+      "n": 112,
+      "datasets": 1,
+      "agreement": 1,
+      "model_accuracy": 1,
+      "vote_accuracy": 1,
+      "predicted_one_fraction": 0.4765625,
+      "probe_function_collision": 1,
+      "probe_function_modal_fraction": 1
+    },
+    {
+      "kind": "projection0",
+      "hidden": [
+        32,
+        32
+      ],
+      "n": 128,
+      "datasets": 1,
+      "agreement": 1,
+      "model_accuracy": 1,
+      "vote_accuracy": 1,
+      "predicted_one_fraction": 0.4765625,
+      "probe_function_collision": 1,
+      "probe_function_modal_fraction": 1
+    },
+    {
+      "kind": "projection0",
+      "hidden": [
+        32,
+        32,
+        32
+      ],
+      "n": 16,
+      "datasets": 1,
+      "agreement": 0.9476278981854838,
+      "model_accuracy": 0.963623046875,
+      "vote_accuracy": 1,
+      "predicted_one_fraction": 0.509033203125,
+      "probe_function_collision": 0.13911290322580644,
+      "probe_function_modal_fraction": 0.375
+    },
+    {
+      "kind": "projection0",
+      "hidden": [
+        32,
+        32,
+        32
+      ],
+      "n": 32,
+      "datasets": 1,
+      "agreement": 1,
+      "model_accuracy": 1,
+      "vote_accuracy": 1,
+      "predicted_one_fraction": 0.4765625,
+      "probe_function_collision": 1,
+      "probe_function_modal_fraction": 1
+    },
+    {
+      "kind": "projection0",
+      "hidden": [
+        32,
+        32,
+        32
+      ],
+      "n": 48,
+      "datasets": 1,
+      "agreement": 1,
+      "model_accuracy": 1,
+      "vote_accuracy": 1,
+      "predicted_one_fraction": 0.4765625,
+      "probe_function_collision": 1,
+      "probe_function_modal_fraction": 1
+    },
+    {
+      "kind": "projection0",
+      "hidden": [
+        32,
+        32,
+        32
+      ],
+      "n": 64,
+      "datasets": 1,
+      "agreement": 1,
+      "model_accuracy": 1,
+      "vote_accuracy": 1,
+      "predicted_one_fraction": 0.4765625,
+      "probe_function_collision": 1,
+      "probe_function_modal_fraction": 1
+    },
+    {
+      "kind": "projection0",
+      "hidden": [
+        32,
+        32,
+        32
+      ],
+      "n": 80,
+      "datasets": 1,
+      "agreement": 1,
+      "model_accuracy": 1,
+      "vote_accuracy": 1,
+      "predicted_one_fraction": 0.4765625,
+      "probe_function_collision": 1,
+      "probe_function_modal_fraction": 1
+    },
+    {
+      "kind": "projection0",
+      "hidden": [
+        32,
+        32,
+        32
+      ],
+      "n": 96,
+      "datasets": 1,
+      "agreement": 1,
+      "model_accuracy": 1,
+      "vote_accuracy": 1,
+      "predicted_one_fraction": 0.4765625,
+      "probe_function_collision": 1,
+      "probe_function_modal_fraction": 1
+    },
+    {
+      "kind": "projection0",
+      "hidden": [
+        32,
+        32,
+        32
+      ],
+      "n": 112,
+      "datasets": 1,
+      "agreement": 1,
+      "model_accuracy": 1,
+      "vote_accuracy": 1,
+      "predicted_one_fraction": 0.4765625,
+      "probe_function_collision": 1,
+      "probe_function_modal_fraction": 1
+    },
+    {
+      "kind": "projection0",
+      "hidden": [
+        32,
+        32,
+        32
+      ],
+      "n": 128,
+      "datasets": 1,
+      "agreement": 1,
+      "model_accuracy": 1,
+      "vote_accuracy": 1,
+      "predicted_one_fraction": 0.4765625,
+      "probe_function_collision": 1,
+      "probe_function_modal_fraction": 1
+    }
+  ],
+  "sequential_prediction": [
+    {
+      "kind": "random",
+      "hidden": [
+        32
+      ],
+      "dataset": 0,
+      "cumulative_log_loss_bits_including_first16": 210.19871640638704,
+      "saving_relative_to_128_fair_coin_bits": -82.19871640638704
+    },
+    {
+      "kind": "random",
+      "hidden": [
+        32
+      ],
+      "dataset": 1,
+      "cumulative_log_loss_bits_including_first16": 257.6242706296877,
+      "saving_relative_to_128_fair_coin_bits": -129.62427062968771
+    },
+    {
+      "kind": "random",
+      "hidden": [
+        32
+      ],
+      "dataset": 2,
+      "cumulative_log_loss_bits_including_first16": 249.32577892732164,
+      "saving_relative_to_128_fair_coin_bits": -121.32577892732164
+    },
+    {
+      "kind": "random",
+      "hidden": [
+        32
+      ],
+      "dataset": 3,
+      "cumulative_log_loss_bits_including_first16": 252.70550839659634,
+      "saving_relative_to_128_fair_coin_bits": -124.70550839659634
+    },
+    {
+      "kind": "random",
+      "hidden": [
+        32,
+        32
+      ],
+      "dataset": 0,
+      "cumulative_log_loss_bits_including_first16": 215.24214069839587,
+      "saving_relative_to_128_fair_coin_bits": -87.24214069839587
+    },
+    {
+      "kind": "random",
+      "hidden": [
+        32,
+        32
+      ],
+      "dataset": 1,
+      "cumulative_log_loss_bits_including_first16": 258.6166371292054,
+      "saving_relative_to_128_fair_coin_bits": -130.6166371292054
+    },
+    {
+      "kind": "random",
+      "hidden": [
+        32,
+        32
+      ],
+      "dataset": 2,
+      "cumulative_log_loss_bits_including_first16": 235.88182339317373,
+      "saving_relative_to_128_fair_coin_bits": -107.88182339317373
+    },
+    {
+      "kind": "random",
+      "hidden": [
+        32,
+        32
+      ],
+      "dataset": 3,
+      "cumulative_log_loss_bits_including_first16": 240.0090218688082,
+      "saving_relative_to_128_fair_coin_bits": -112.00902186880819
+    },
+    {
+      "kind": "random",
+      "hidden": [
+        32,
+        32,
+        32
+      ],
+      "dataset": 0,
+      "cumulative_log_loss_bits_including_first16": 221.98177237232653,
+      "saving_relative_to_128_fair_coin_bits": -93.98177237232653
+    },
+    {
+      "kind": "random",
+      "hidden": [
+        32,
+        32,
+        32
+      ],
+      "dataset": 1,
+      "cumulative_log_loss_bits_including_first16": 247.89291417104718,
+      "saving_relative_to_128_fair_coin_bits": -119.89291417104718
+    },
+    {
+      "kind": "random",
+      "hidden": [
+        32,
+        32,
+        32
+      ],
+      "dataset": 2,
+      "cumulative_log_loss_bits_including_first16": 220.057176119546,
+      "saving_relative_to_128_fair_coin_bits": -92.057176119546
+    },
+    {
+      "kind": "random",
+      "hidden": [
+        32,
+        32,
+        32
+      ],
+      "dataset": 3,
+      "cumulative_log_loss_bits_including_first16": 238.4631837873502,
+      "saving_relative_to_128_fair_coin_bits": -110.4631837873502
+    },
+    {
+      "kind": "projection0",
+      "hidden": [
+        32
+      ],
+      "dataset": 0,
+      "cumulative_log_loss_bits_including_first16": 24.489314121988333,
+      "saving_relative_to_128_fair_coin_bits": 103.51068587801167
+    },
+    {
+      "kind": "projection0",
+      "hidden": [
+        32,
+        32
+      ],
+      "dataset": 0,
+      "cumulative_log_loss_bits_including_first16": 21.31938912054602,
+      "saving_relative_to_128_fair_coin_bits": 106.68061087945398
+    },
+    {
+      "kind": "projection0",
+      "hidden": [
+        32,
+        32,
+        32
+      ],
+      "dataset": 0,
+      "cumulative_log_loss_bits_including_first16": 20.01084005545986,
+      "saving_relative_to_128_fair_coin_bits": 107.98915994454015
+    }
+  ],
+  "max_agreement_recompute_error": 0,
+  "verified_groups": 120
+}
