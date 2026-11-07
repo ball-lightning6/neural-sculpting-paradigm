@@ -37,6 +37,7 @@
         <div class="sidebar-label">On this page</div>
         <nav class="toc"><div class="toc">
 <ul>
+<li><a href="#2026-11-06-revision-mechanistic-interpretation-of-amplitude-regularization">2026-11-06 Revision: Mechanistic Interpretation of Amplitude Regularization</a></li>
 <li><a href="#core-experimental-chain">Core experimental chain</a></li>
 <li><a href="#public-report-entry-points">Public report entry points</a></li>
 <li><a href="#core-result">Core Result</a></li>
@@ -96,8 +97,11 @@
           <h1>E31: Loss, target amplitude, and grokking</h1>
           <p class="article-description">How raw MSE, BCE amplitude alignment, and target amplitude change rule recovery and grokking.</p>
         </header>
-        <div class="article-body"><p><strong>October 2026 update:</strong> The original report is retained; <a href="#update-20261027">jump to the added experiments, checks, and limitations</a>.</p>
+        <div class="article-body"><nav class="ledger-path" id="update-20261106" aria-label="November 2026 supplement"><span>November 2026 supplement</span><a href="update-training-controls.html">Target-amplitude and norm training controls</a><a href="interpretation-update.html">Measure, amplitude, complexity, and prediction</a></nav><p><strong>October 2026 update:</strong> The original report is retained; <a href="#update-20261027">jump to the added experiments, checks, and limitations</a>.</p>
 <p>The core of public experiment E31 is not an isolated loss comparison, but an evidence chain on the same Power-architecture mod97 task: <strong>original grokking with amplitude-alignment regularization -&gt; raw-MSE target-amplitude controls -&gt; amplitude series and static checks on smaller networks</strong>. The question is how the loss selects a joint output distribution and changes rule recovery, rather than treating "lower training CE" as the only explanation.</p>
+<h2 id="2026-11-06-revision-mechanistic-interpretation-of-amplitude-regularization">2026-11-06 Revision: Mechanistic Interpretation of Amplitude Regularization</h2>
+<p><strong>The earlier mechanistic interpretation is revised; the actual observations are retained.</strong> Amplitude regularization primarily constrains margin dispersion across examples; its multiclass form also includes margins between the actual training label and each non-target class. It may raise low margins, lower high margins or shrink overall output scale, without specifying a shared high amplitude. It therefore cannot automatically be equated with universally stronger simplicity bias, and lower absolute variance alone establishes neither better relative fitting balance nor greater noise memorization.</p>
+<p>The original Power rule-recovery results, MSE amplitude controls and static candidate-mass changes under fixed training data are all retained; an unidentified mechanism does not mean the effect is absent. This revision supersedes earlier mechanistic interpretations in the historical reports. The original numbers, successful and failed conditions below, and subsequent historical reports remain unchanged.</p>
 <h2 id="core-experimental-chain">Core experimental chain</h2>
 <ol>
 <li><strong>CE + amplitude-alignment regularization on the original Power mod97 task</strong>: the unregularized CE baseline still had not recovered the rule when training CE reached about <code>4e-11</code>; both amplitude-alignment conditions achieved complete generalization in 3/3 runs, while retaining a post-fitting grokking delay. This is the most important original-Transformer result in this experiment; see <code>POWER_MOD97_ALIGNMENT_REPORT.md</code>.</li>

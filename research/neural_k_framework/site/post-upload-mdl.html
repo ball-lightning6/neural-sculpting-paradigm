@@ -44,7 +44,8 @@
 <li><a href="#1-硬约束模型-样本怎样排除竞争函数">1. 硬约束模型：样本怎样排除竞争函数</a></li>
 <li><a href="#2-条件质量门槛-代理门槛与恢复率门槛">2. 条件质量门槛、代理门槛与恢复率门槛</a></li>
 <li><a href="#2-1-复杂度-分歧联合谱">2.1 复杂度—分歧联合谱</a></li>
-<li><a href="#3-mdl为什么会给出相同的交叉图景">3. MDL为什么会给出相同的交叉图景</a></li>
+<li><a href="#2-2-相邻函数的结构是待检验条件">2.2 相邻函数的结构是待检验条件</a></li>
+<li><a href="#3-mdl参照与软候选竞争">3. MDL参照与软候选竞争</a></li>
 <li><a href="#4-这怎样连接到grokking">4. 这怎样连接到grokking</a></li>
 <li><a href="#5-为什么复杂度通常和相变点相关-但不是唯一决定因素">5. 为什么复杂度通常和相变点相关，但不是唯一决定因素</a></li>
 <li><a href="#6-当前可以形成的可检验预测">6. 当前可以形成的可检验预测</a></li>
@@ -73,6 +74,7 @@ K_D^*(\epsilon)=\inf_{f\in\mathcal F_D(\epsilon)}K_{\rm ref}(f).
 $$</div>
 <p>它是“允许最大误差时最简单的可行函数”这一问题的严格定义。对同一个训练集和嵌套子水平集，<code>epsilon</code>降低时 <code>F_D(epsilon)</code>只能缩小，因此 <code>K_D^*(epsilon)</code>不下降。</p>
 <p>这条严格性质不等于网络一定选择该函数，也不等于该函数的参数体积最大。</p>
+<p>2026-10-31 修订进一步区分“最低可行成本”与“软候选分布”：即使某个候选单独最简单，大量各自较小的竞争质量相加也可能压过它。最低成本只描述可行边界，不是网络执行确定性最短描述选择的假设。</p>
 <h2 id="剩余候选中的简单性偏置">剩余候选中的简单性偏置</h2>
 <p>静态参考系综中的候选质量分布是：</p>
 <div class="math-display">$$
@@ -102,10 +104,12 @@ $$</div>
 L_{\rm MDL}(f;D)=K_{\rm ref}(f)+L_{\rm residual}(D\mid f).
 $$</div>
 <p><code>K_D^*(epsilon)</code>对应最低模型码长前沿，<code>Q_D,epsilon</code>对应静态参考系综中剩余可行候选的质量分布；实际训练偏好仍须由 <code>Qopt</code> 检查。网络没有显式优化第二个“程序长度”目标；这里的静态 MDL式偏好来自网络参考质量与loss几何的共同作用。</p>
+<p>对冻结的、互斥函数上的参考概率，训练标签只提供相容性筛选，目标能否占优取决于它与全部幸存竞争者总质量的比值。这个软竞争模型在固定简单性偏置下就成立，不要求额外改变偏置强度。概率码长、独立程序复杂度与局部收缩系数须分别定义；只有前者天然对应质量的负 log。</p>
 <h2 id="与grokking的关系">与grokking的关系</h2>
 <p>数据量轴、loss轴和训练时间轴必须分开：数据样本按竞争函数分歧位置淘汰函数，loss收紧重排剩余实现质量，训练时间还包含optimizer transport。因而复杂度可以和 <code>n50/n90</code>有条件的近似关系，但不等于数据相变点或grokking时间点。</p>
+<p>下方完整推导分别给出独立采样和有限空间无放回采样的存活概率，并用 Jensen 与 Markov 不等式界定平均目标质量及静态门槛失败概率。近似线性还需要竞争结构可比；预测实际恢复率则另需静态分布与优化器对应。相邻函数复杂度的统计相关性可以作为待检验的结构条件，不能代替这些前提。</p>
 <h1 id="mdl可辨识样本-neural-k与grokking相变-条件推导">MDL可辨识样本、Neural K与grokking相变：条件推导</h1>
-<p>日期：2026-09-20。</p>
+<p>日期：2026-09-20；2026-10-31 修订软偏置、采样协议与共识边界。</p>
 <p>这份备忘对应此前对话中“复杂度为什么通常和grokking相变点相关”的讨论。目标是把三个量分开并建立一条可检验关系：</p>
 <ol>
 <li>完整目标在当前神经协议中的实现质量；</li>
@@ -113,6 +117,7 @@ $$</div>
 <li>固定训练集后，loss下降和optimizer运输造成的晚期函数重排。</li>
 </ol>
 <p>本文不把 <span class="math-inline">$n_{50}/n_{90}$</span> 直接定义成Neural K，也不把grokking时间点直接当作MDL交叉点。它给出的是在明确假设下的桥接模型。</p>
+<p>这里的“硬约束”只指候选必须符合已观察标签，不指网络必选最短描述。函数参考质量可以提供软偏好，许多复杂度不同的候选可以同时保留质量。以下先固定这种偏置，再分析数据筛选；不要求偏置强度随 loss 改变。</p>
 <h2 id="1-硬约束模型-样本怎样排除竞争函数">1. 硬约束模型：样本怎样排除竞争函数</h2>
 <p>固定有限输入域 <span class="math-inline">$\mathcal X$</span>、目标函数 <span class="math-inline">$f_*$</span>、输入采样分布 <span class="math-inline">$q(x)$</span>，以及一个归一化函数参考质量 <span class="math-inline">$\pi(f)$</span>，并假设 <span class="math-inline">$\pi(f_*)&gt;0$</span>。这里 <span class="math-inline">$\pi(f)$</span> 可以是初始化函数质量，也可以是某个固定静态协议下的函数质量；它必须在模型开始前冻结，不能直接用可能重叠的 full-target 事件质量替代。</p>
 <p>从 <span class="math-inline">$q$</span> 独立抽取 <span class="math-inline">$n$</span> 个输入，并观察无噪声标签：</p>
@@ -132,6 +137,11 @@ S_n(g)
 (1-\delta_q(g,f_*))^n.
 $$</div>
 <p>这一步是纯粹的抽样概率，不涉及SGD。</p>
+<p>E23 实际从有限输入域均匀无放回抽取训练集。若域大小为 <span class="math-inline">$N$</span>，竞争函数与目标在 <span class="math-inline">$h_g$</span> 个输入上不同，则精确存活概率应改为：</p>
+<div class="math-display">$$
+S_n^{\rm wo}(g)=\frac{\binom{N-h_g}{n}}{\binom{N}{n}},
+$$</div>
+<p>其中分子在 <span class="math-inline">$n&gt;N-h_g$</span> 时取零。这不是独立采样公式的另一种写法；例如 <span class="math-inline">$N=256,n=240,h_g=1$</span> 时，两者分别为约 0.3909 和 0.0625。回测近满空间样本量时必须保留这一差别。加权抽样、主动构造标签等协议还须另算，不能直接套用上述任一公式。下文以 <span class="math-inline">$s_n(g)$</span> 统一表示所选协议的存活概率。</p>
 <p>对一个已经实现的具体训练集 <span class="math-inline">$D_n$</span>，所有错误竞争函数在训练集之后剩余的总质量严格是：</p>
 <div class="math-display">$$
 M_{D_n}^{\rm comp}
@@ -150,16 +160,16 @@ $$</div>
 <blockquote>
 <p>沿嵌套数据序列，每个竞争函数按样本是否击中其分歧位置而保留或被排除；平滑的衰减谱描述的是随机数据集上的期望质量。</p>
 </blockquote>
-<p>对于随机抽样的数据集，单个竞争函数的存活指标满足：</p>
+<p>对于随机抽样的数据集，单个竞争函数 <span class="math-inline">$g$</span> 的存活指标满足：</p>
 <div class="math-display">$$
 \mathbb E_{D_n}\mathbf 1[g\models D_n]
-=(1-\delta_q(g,f_*))^n.
+=s_n(g).
 $$</div>
 <p>因此期望竞争质量严格为</p>
 <div class="math-display">$$
 \bar M_n^{\rm comp}
 =\mathbb E_{D_n}M_{D_n}^{\rm comp}
-=\sum_{g\ne f_*}\pi(g)(1-\delta_q(g,f_*))^n,
+=\sum_{g\ne f_*}\pi(g)s_n(g),
 $$</div>
 <p>而平均未归一化质量再归一化的代理定义为</p>
 <div class="math-display">$$
@@ -167,6 +177,17 @@ $$</div>
 =\frac{\pi(f_*)}{\pi(f_*)+\bar M_n^{\rm comp}}.
 $$</div>
 <p>两式分别是期望恒等式和代理定义，不是同一个近似。只有进一步以 <span class="math-inline">$\bar Q_n$</span> 近似 <span class="math-inline">$\mathbb E_{D_n}Q_{D_n}(f_*)$</span> 时，才需要剩余质量集中、自平均等条件；一般不能把比值的期望等同于期望质量的比值，更不能把两者直接当作数据集级恢复率。</p>
+<p>但该代理有一个不需要自平均的严格用途。由于 <span class="math-inline">$u\mapsto\pi(f_*)/(\pi(f_*)+u)$</span> 是凸函数，Jensen 不等式给出：</p>
+<div class="math-display">$$
+\bar Q_n(f_*)\leq\mathbb E_{D_n}Q_{D_n}(f_*).
+$$</div>
+<p>它是平均目标质量的保守下界，不能直接当作 E23 指定判据的恢复率。若恢复专指从该条件分布抽取一次完整函数恰好得到目标，平均目标质量才严格等于这种抽样恢复率。进一步，对任意 <span class="math-inline">$q_0\in(0,1)$</span>，由 Markov 不等式得到：</p>
+<div class="math-display">$$
+\Pr_{D_n}\{Q_{D_n}(f_*)&lt;q_0\}
+\leq\min\left\{1,\frac{q_0}{1-q_0}
+\frac{\bar M_n^{\rm comp}}{\pi(f_*)}\right\}.
+$$</div>
+<p>这给出静态质量达到门槛的保守概率保证，可能很松，但不要求质量集中。它仍不是实际 SGD 恢复率；将静态事件接到训练结果须另行验证。</p>
 <p>如果一个错误函数只在极少数输入上与目标不同，它即使本身很复杂，也可能在大量随机样本后继续存活。这正是MUX3与Parity2错序的结构性解释。</p>
 <h2 id="2-条件质量门槛-代理门槛与恢复率门槛">2. 条件质量门槛、代理门槛与恢复率门槛</h2>
 <p>对上面的固定数据集，目标概率达到 <span class="math-inline">$q_0\in(0,1)$</span> 的条件是：</p>
@@ -216,7 +237,7 @@ $$</div>
 <blockquote>
 <p>样本增加后，竞争函数的有效总复杂度何时超过目标复杂度足够多。</p>
 </blockquote>
-<p>如果竞争函数有近似相同的分歧率 <span class="math-inline">$0&lt;\delta&lt;1$</span>，初始总质量为 <span class="math-inline">$M_0$</span>，则期望质量满足：</p>
+<p>在独立采样下，如果竞争函数有近似相同的分歧率 <span class="math-inline">$0&lt;\delta&lt;1$</span>，初始总质量为 <span class="math-inline">$M_0$</span>，则期望质量满足：</p>
 <div class="math-display">$$
 \bar M_n^{\rm comp}
 \approx M_0(1-\delta)^n.
@@ -246,6 +267,8 @@ a_\delta
 }.
 $$</div>
 <p>这个近似解释了为什么在一组分歧结构相似的规则中，复杂度和代理所需样本数可能近似成正比：目标 <span class="math-inline">$K_*$</span> 越高，目标初始质量越小，需要更多样本让期望竞争总质量衰减下去。把它接到具体数据序列还需要质量集中或自平均；接到E23还需要恢复判据与静态目标质量的对应及优化可达性。因此它不是实验 <code>n50/n90</code> 的严格等式。</p>
+<p>无放回采样时，只有在所考察窗口内核验过指数存活近似，才能借用这个线性代理；否则应直接用组合数存活概率计算竞争总质量。上述不等式提供的是保守保证，而非实际相变点必须线性的证明。</p>
+<p>这里 <span class="math-inline">$K_*=-\log_2\pi(f_*)$</span> 是冻结参考系综的概率成本，不是收缩系数。若用某个固定深度的 Neural K-profile 或局部收缩率预测它，必须保留前置质量、积分深度及 full-target 到 fixed-D 的桥接条件。不能将收缩系数直接代入当作同一个量。</p>
 <p>但它也明确说明了为什么这种关系不是普遍定律：</p>
 <ul>
 <li><span class="math-inline">$K_*$</span> 不同；</li>
@@ -261,7 +284,7 @@ K_g=-\log_2\pi(g),
 \qquad
 \lambda_g=-\ln(1-\delta_q(g,f_*)).
 $$</div>
-<p>其期望竞争质量严格为：</p>
+<p>在独立采样下，其期望竞争质量严格为：</p>
 <div class="math-display">$$
 \bar M_n^{\rm comp}
 =
@@ -289,7 +312,21 @@ $$</div>
 \iint 2^{-K}e^{-n\lambda}\,\rho(dK,d\lambda).
 $$</div>
 <p>这个表达比“复杂度与样本数线性关系”更一般。线性或近似线性只是当竞争谱集中在相近的 <span class="math-inline">$\lambda$</span> 区域，或者随机记忆的有效残差成本近似按样本独立增加时的特殊情形。</p>
-<h2 id="3-mdl为什么会给出相同的交叉图景">3. MDL为什么会给出相同的交叉图景</h2>
+<p>无放回采样应将每个指数项替换为对应的组合数存活因子，不能把 <span class="math-inline">$\lambda_g$</span> 当成与样本数无关的精确衰减率。</p>
+<h2 id="2-2-相邻函数的结构是待检验条件">2.2 相邻函数的结构是待检验条件</h2>
+<p>完整真值表只在少数输入上不同，定义了函数之间的 Hamming 邻近关系。固定网络、测度和精度后，可以比较邻近函数的复杂度差与独立配对的差异，检验复杂度在这个离散空间上是否具有统计相关性；不必先假定存在连续流形。</p>
+<p>相邻复杂度相关，可能约束竞争谱为何在一些规则族中相似，但不会单独保证排除效率相同。复杂度值相对接近也未必意味着质量同阶，例如概率成本相差 10 bit 已对应 1024 倍质量比。收缩率接近与固定深度的概率成本接近还须分开。</p>
+<p>该谱记录单个竞争者的分歧率，却不记录所有分歧位置之间的重叠；后者影响不同竞争者共同幸存的概率与数据集间波动。因此，从平均竞争质量到典型相变点，既可使用上面的保守界，也需要进一步测量联合竞争结构。邻域规律是需要验证的解释条件，不是“复杂”的定义。</p>
+<p>邻域条件也能给出一个精确限制。假设二值目标在 <span class="math-inline">$m$</span> 个不同未见输入处分别翻转一个标签，得到仍相容的邻居 <span class="math-inline">$g_1,\ldots,g_m$</span>，且这些邻居都满足 <span class="math-inline">$\pi(g_i)\ge r\pi(f_*)$</span>，其中 <span class="math-inline">$r&gt;0$</span>。仅计入这些竞争者就有：</p>
+<div class="math-display">$$
+Q_{D_n}(f_*)\leq\frac{1}{1+mr},
+\qquad
+Q_{D_n}(f_*)\ge q_0\quad\Longrightarrow\quad
+mr\leq\frac{1-q_0}{q_0}.
+$$</div>
+<p>例如概率成本与目标相差不超过 <span class="math-inline">$b$</span> bit 时，可取 <span class="math-inline">$r=2^{-b}$</span>。只要大量邻居仍有可观相对质量，完整目标就无法独占共识；随机样本必须覆盖其分歧位置才能排除它们。这个限制不要求偏置强度变化，但依赖质量比前提，不能从相邻复杂度“相关”或参数连续性自动得到。它约束完整目标恢复，不排除剩余多个邻居在绝大多数输入上高度一致，也不独自推出复杂度与相变点线性。</p>
+<h2 id="3-mdl参照与软候选竞争">3. MDL参照与软候选竞争</h2>
+<p>为什么不直接选最短的规则，也能讨论泛化需要多少样本？<a href="https://arxiv.org/html/2402.06323v3#S3" target="_blank" rel="noopener">Buzaglo 等，引理 3.2</a>给出了一个严格例子。先按固定先验给候选规则分配概率，排除答错任何训练题的规则，再按剩余概率抽取一个，而不是选最短的一个。若先验中与真实规则在输入分布上几乎处处相同的候选共占概率 <span class="math-inline">$p&gt;0$</span>，则在引理的条件下，对固定容许错误率和失败概率，保证泛化的<strong>充分样本数上界</strong>随 <span class="math-inline">$-\log p$</span> 线性增长。这里的“复杂度”是目标在先验下的概率成本，不是我们测的体积收缩斜率。上界也不意味着每个规则实际都需要这么多样本。下面再看我们的候选竞争与最短描述原则究竟在哪一点上不同。</p>
 <p>两段式MDL可以写成：</p>
 <div class="math-display">$$
 L_{\rm MDL}(g;D)
@@ -298,11 +335,11 @@ L_{\rm code}(g)
 +
 L_{\rm code}(D\mid g).
 $$</div>
-<p>对于目标规则 <span class="math-inline">$f_*$</span>，在无噪声情形下，给定它以后训练标签几乎不需要额外残差码长：</p>
+<p>把训练输入和编码约定作为共享背景，对于目标规则 <span class="math-inline">$f_*$</span>，在无噪声情形下，给定它以后训练标签几乎不需要额外残差码长：</p>
 <div class="math-display">$$
 L_{\rm code}(D\mid f_*)\approx0.
 $$</div>
-<p>对于一个错误延拓 <span class="math-inline">$g$</span>，它在训练样本上偶尔出错，残差码长会随样本数增加。若只用hard一致性近似，则其通过全部样本的概率对应：</p>
+<p>对于一个错误延拓 <span class="math-inline">$g$</span>，残差码长描述已经出现的标签差异。独立抽样下，另一个不同的量是它通过全部 hard 检查的概率，其负对数为：</p>
 <div class="math-display">$$
 -\log_2 S_n(g)
 =
@@ -323,6 +360,13 @@ L_{\rm comp}^{\rm proxy}(g;n)
 K_{\rm ref}(f_*).
 $$</div>
 <p>这就是“复杂规则需要更多样本才从记忆或错误延拓中被识别出来”的MDL原型。</p>
+<p>但逐候选成本交叉不等于软分布的整体选择。令 <span class="math-inline">$\mathcal V_D$</span> 为相容候选集合，仅在 <span class="math-inline">$K_{\rm ref}(g)=-\log_2\pi(g)$</span> 时，定义 <span class="math-inline">$K_{\min}(D)=\min_{g\in\mathcal V_D}K_{\rm ref}(g)$</span>，则：</p>
+<div class="math-display">$$
+-\log_2\sum_{g\in\mathcal V_D}\pi(g)
+=K_{\min}(D)-\log_2\sum_{g\in\mathcal V_D}
+2^{-[K_{\rm ref}(g)-K_{\min}(D)]}.
+$$</div>
+<p>第二项保留候选数量与相对质量。若最简单候选之外还有 1000 个相容候选，每个质量仅低 32 倍，则最简单候选的条件占比只有约 3.1%。因此最低可行复杂度只是边界，目标要占优必须胜过全部竞争质量之和；这不要求网络执行最短描述的确定性 argmin。</p>
 <p>但这里的 <span class="math-inline">$K_{\rm ref}$</span> 必须明确是哪一种编码：</p>
 <ul>
 <li>经典程序码长；</li>
@@ -395,8 +439,8 @@ $$</div>
 <li>对MUX类任务，只要提高真正区分selector候选的输入比例，<span class="math-inline">$n_{50}/n_{90}$</span>应下降，且可能发生复杂度排序反转。</li>
 <li>如果固定数据量接近辨识边界，grokking前后的静态profile应显示目标函数质量在更深loss处超过竞争总质量。</li>
 <li>直接学习任务中，目标静态优势应在较浅loss出现，训练/验证曲线会同步下降。</li>
-<li>如果静态目标质量已占优势但真实训练仍不泛化，则差异主要来自optimizer可达性，而不是MDL竞争本身。</li>
-<li>随机标签记忆实验中，记忆残差成本随样本数近似线性增加，应成为MDL交叉模型的校准对照。</li>
+<li>如果静态目标质量已占优势但真实训练仍不泛化，应先核对采样可靠性、事件与测度匹配，再检查优化器选择偏置及可达性；不能只归因于目标程序成本。</li>
+<li>随机标签记忆实验可作为复杂度校准对照，但近似线性是依赖网络、数据与精度窗口的待检验现象。已有弯曲结果应保留，不能把神经收缩系数随样本数线性当作主推导前提。即使单样本成本存在统一上限，也只给出线性增长上界，不保证实际增长线性。</li>
 </ol>
 <h2 id="7-当前结论的严格边界">7. 当前结论的严格边界</h2>
 <p>目前能说的是：</p>

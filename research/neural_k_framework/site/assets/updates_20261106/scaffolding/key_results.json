@@ -1,0 +1,720 @@
+{
+  "schema_version": 2,
+  "review_date": "2026-11-06",
+  "reference_commit": "3834fb3f6555c7c58218462502635b16b9b377f9",
+  "publication_scope": "mod3_input_sample_efficiency_with_historical_accessibility_context",
+  "units": {
+    "test_accuracy": "percent",
+    "change": "percentage_points"
+  },
+  "protocol": {
+    "data_seeds": [
+      202611020,
+      202611021
+    ],
+    "model_seeds_per_dataset": [
+      0,
+      1,
+      2
+    ],
+    "complete_panel_trials_per_arm": 6,
+    "independent_datasets": 2,
+    "training_steps": 16000,
+    "budget_steps": [
+      4000,
+      8000,
+      16000
+    ],
+    "paired_initial_weights": true,
+    "paired_minibatch_sequence": true,
+    "input_budget_unit": "distinct_training_inputs",
+    "endpoint_label_bits_per_input": 2,
+    "auxiliary_label_bits_per_input": {
+      "14": 26,
+      "16": 30
+    },
+    "endpoint_loss_coefficient": 1,
+    "auxiliary_mean_loss_coefficient": 1,
+    "test_time_auxiliary_labels": false,
+    "total_supervision_budget_matched": false
+  },
+  "interpretation": {
+    "finding": "解耦辅助监督能帮助优化，并在已测固定预算下减少达到高泛化所需的输入样本。",
+    "distinct_axes": "优化可达性与规则/样本困难不是同一轴；较低训练损失不等于较少输入样本需求。",
+    "supervision_boundary": "前缀标签增加了监督信息；输入样本减少不代表总监督预算减少。"
+  },
+  "mod3_14bit": {
+    "bits": 14,
+    "parameters_per_model": 2165788,
+    "final": [
+      {
+        "n": 256,
+        "data_seeds": [
+          202611020,
+          202611021
+        ],
+        "trials_per_arm": 6,
+        "complete_panel": true,
+        "direct_test_percent": 31.22829861111111,
+        "scaffold_test_percent": 31.047905815972225,
+        "paired_change_pp": -0.18039279513888395,
+        "stable_99_counts": [
+          0,
+          0
+        ],
+        "fit_bce_counts": [
+          6,
+          6
+        ],
+        "train_exact_100_counts": [
+          6,
+          6
+        ],
+        "train_bce_means": [
+          1.764818381308425e-09,
+          3.342610374790359e-09
+        ]
+      },
+      {
+        "n": 1024,
+        "data_seeds": [
+          202611020,
+          202611021
+        ],
+        "trials_per_arm": 6,
+        "complete_panel": true,
+        "direct_test_percent": 32.21164279513889,
+        "scaffold_test_percent": 44.71435546875,
+        "paired_change_pp": 12.50271267361111,
+        "stable_99_counts": [
+          0,
+          0
+        ],
+        "fit_bce_counts": [
+          6,
+          6
+        ],
+        "train_exact_100_counts": [
+          6,
+          6
+        ],
+        "train_bce_means": [
+          3.6277572963579435e-09,
+          6.779831380116511e-09
+        ]
+      },
+      {
+        "n": 2048,
+        "data_seeds": [
+          202611020,
+          202611021
+        ],
+        "trials_per_arm": 6,
+        "complete_panel": true,
+        "direct_test_percent": 80.15814887152779,
+        "scaffold_test_percent": 99.14279513888889,
+        "paired_change_pp": 18.984646267361104,
+        "stable_99_counts": [
+          0,
+          5
+        ],
+        "fit_bce_counts": [
+          6,
+          6
+        ],
+        "train_exact_100_counts": [
+          6,
+          6
+        ],
+        "train_bce_means": [
+          4.950368629268693e-09,
+          7.705819570762115e-09
+        ]
+      },
+      {
+        "n": 4096,
+        "data_seeds": [
+          202611020,
+          202611021
+        ],
+        "trials_per_arm": 6,
+        "complete_panel": true,
+        "direct_test_percent": 99.46763780381946,
+        "scaffold_test_percent": 99.76331922743054,
+        "paired_change_pp": 0.29568142361109384,
+        "stable_99_counts": [
+          5,
+          6
+        ],
+        "fit_bce_counts": [
+          6,
+          6
+        ],
+        "train_exact_100_counts": [
+          6,
+          6
+        ],
+        "train_bce_means": [
+          5.36059074897776e-09,
+          1.3108701813159978e-08
+        ]
+      },
+      {
+        "n": 8192,
+        "data_seeds": [
+          202611020,
+          202611021
+        ],
+        "trials_per_arm": 6,
+        "complete_panel": true,
+        "direct_test_percent": 99.97694227430554,
+        "scaffold_test_percent": 99.97490776909721,
+        "paired_change_pp": -0.002034505208325932,
+        "stable_99_counts": [
+          6,
+          6
+        ],
+        "fit_bce_counts": [
+          6,
+          6
+        ],
+        "train_exact_100_counts": [
+          6,
+          5
+        ],
+        "train_bce_means": [
+          6.434128042449538e-07,
+          0.00012591771455104842
+        ]
+      }
+    ],
+    "selected_budget_comparisons": [
+      {
+        "n": 2048,
+        "steps": 4000,
+        "direct_percent": 74.44254557291666,
+        "scaffold_percent": 98.67078993055554,
+        "change_pp": 24.228244357638886
+      },
+      {
+        "n": 2048,
+        "steps": 8000,
+        "direct_percent": 76.93684895833334,
+        "scaffold_percent": 98.92510308159721,
+        "change_pp": 21.988254123263886
+      },
+      {
+        "n": 2048,
+        "steps": 16000,
+        "direct_percent": 80.15814887152779,
+        "scaffold_percent": 99.14279513888889,
+        "change_pp": 18.984646267361104
+      }
+    ],
+    "selected_by_dataset": [
+      {
+        "n": 2048,
+        "data_seed": 202611020,
+        "direct_percent": 97.71999782986111,
+        "scaffold_percent": 99.22960069444446,
+        "change_pp": 1.509602864583337
+      },
+      {
+        "n": 2048,
+        "data_seed": 202611021,
+        "direct_percent": 62.59629991319445,
+        "scaffold_percent": 99.05598958333334,
+        "change_pp": 36.459689670138886
+      }
+    ],
+    "audit": {
+      "completed_groups": 10,
+      "models": 60,
+      "summary_rows_recomputed": 30,
+      "paired_rows_recomputed": 90,
+      "endpoint_fit_count": 60,
+      "train_exact_100_count": 59,
+      "nonexact_final_rows": [
+        {
+          "n": 8192,
+          "data_seed": 202611020,
+          "model_seed": 1,
+          "arm": "scaffold",
+          "train_endpoint_bce": 0.0007393865099033626,
+          "train_endpoint_exact": 0.99951171875
+        }
+      ],
+      "saved_forward_max_error": 1.898023615698463e-05
+    }
+  },
+  "mod3_16bit": {
+    "bits": 16,
+    "parameters_per_model": 2169888,
+    "final": [
+      {
+        "n": 1024,
+        "data_seeds": [
+          202611020,
+          202611021
+        ],
+        "trials_per_arm": 6,
+        "complete_panel": true,
+        "direct_test_percent": 31.85662163628472,
+        "scaffold_test_percent": 31.865437825520832,
+        "paired_change_pp": 0.008816189236110494,
+        "stable_99_counts": [
+          0,
+          0
+        ],
+        "fit_bce_counts": [
+          6,
+          6
+        ],
+        "train_exact_100_counts": [
+          6,
+          6
+        ],
+        "train_bce_means": [
+          3.478433790016956e-09,
+          6.12970583188468e-09
+        ]
+      },
+      {
+        "n": 2048,
+        "data_seeds": [
+          202611020,
+          202611021
+        ],
+        "trials_per_arm": 6,
+        "complete_panel": true,
+        "direct_test_percent": 30.62201605902778,
+        "scaffold_test_percent": 37.61783175998264,
+        "paired_change_pp": 6.995815700954861,
+        "stable_99_counts": [
+          0,
+          0
+        ],
+        "fit_bce_counts": [
+          6,
+          6
+        ],
+        "train_exact_100_counts": [
+          6,
+          6
+        ],
+        "train_bce_means": [
+          6.512141067690132e-09,
+          9.610849484960878e-09
+        ]
+      },
+      {
+        "n": 2500,
+        "data_seeds": [
+          202611020
+        ],
+        "trials_per_arm": 3,
+        "complete_panel": false,
+        "direct_test_percent": 31.722005208333332,
+        "scaffold_test_percent": 54.7698974609375,
+        "paired_change_pp": 23.047892252604168,
+        "stable_99_counts": [
+          0,
+          0
+        ],
+        "fit_bce_counts": [
+          3,
+          3
+        ],
+        "train_exact_100_counts": [
+          3,
+          3
+        ],
+        "train_bce_means": [
+          7.975793437265693e-09,
+          1.0364667415293369e-08
+        ]
+      },
+      {
+        "n": 3000,
+        "data_seeds": [
+          202611020,
+          202611021
+        ],
+        "trials_per_arm": 6,
+        "complete_panel": true,
+        "direct_test_percent": 30.60150146484375,
+        "scaffold_test_percent": 91.5896945529514,
+        "paired_change_pp": 60.98819308810764,
+        "stable_99_counts": [
+          0,
+          0
+        ],
+        "fit_bce_counts": [
+          6,
+          6
+        ],
+        "train_exact_100_counts": [
+          6,
+          6
+        ],
+        "train_bce_means": [
+          9.515826254341119e-09,
+          1.0185194020872557e-08
+        ]
+      },
+      {
+        "n": 4096,
+        "data_seeds": [
+          202611020,
+          202611021
+        ],
+        "trials_per_arm": 6,
+        "complete_panel": true,
+        "direct_test_percent": 49.99610053168402,
+        "scaffold_test_percent": 98.9045884874132,
+        "paired_change_pp": 48.90848795572918,
+        "stable_99_counts": [
+          0,
+          2
+        ],
+        "fit_bce_counts": [
+          6,
+          6
+        ],
+        "train_exact_100_counts": [
+          6,
+          6
+        ],
+        "train_bce_means": [
+          1.0387488147120376e-08,
+          9.141941649339103e-09
+        ]
+      },
+      {
+        "n": 6000,
+        "data_seeds": [
+          202611020,
+          202611021
+        ],
+        "trials_per_arm": 6,
+        "complete_panel": true,
+        "direct_test_percent": 61.38441297743055,
+        "scaffold_test_percent": 99.86385769314236,
+        "paired_change_pp": 38.47944471571182,
+        "stable_99_counts": [
+          0,
+          6
+        ],
+        "fit_bce_counts": [
+          6,
+          6
+        ],
+        "train_exact_100_counts": [
+          6,
+          6
+        ],
+        "train_bce_means": [
+          1.3067732921077312e-08,
+          1.3098231793603567e-06
+        ]
+      },
+      {
+        "n": 8192,
+        "data_seeds": [
+          202611020,
+          202611021
+        ],
+        "trials_per_arm": 6,
+        "complete_panel": true,
+        "direct_test_percent": 90.33440483940971,
+        "scaffold_test_percent": 99.92218017578125,
+        "paired_change_pp": 9.587775336371529,
+        "stable_99_counts": [
+          3,
+          6
+        ],
+        "fit_bce_counts": [
+          6,
+          5
+        ],
+        "train_exact_100_counts": [
+          5,
+          5
+        ],
+        "train_bce_means": [
+          0.0001176081033321619,
+          0.0012914130183842687
+        ]
+      },
+      {
+        "n": 32768,
+        "data_seeds": [
+          202611020,
+          202611021
+        ],
+        "trials_per_arm": 6,
+        "complete_panel": true,
+        "direct_test_percent": 99.98270670572916,
+        "scaffold_test_percent": 99.99186197916666,
+        "paired_change_pp": 0.0091552734375,
+        "stable_99_counts": [
+          6,
+          6
+        ],
+        "fit_bce_counts": [
+          5,
+          6
+        ],
+        "train_exact_100_counts": [
+          2,
+          6
+        ],
+        "train_bce_means": [
+          0.0002923301401150505,
+          1.2485966509550222e-05
+        ]
+      }
+    ],
+    "selected_budget_comparisons": [
+      {
+        "n": 3000,
+        "steps": 4000,
+        "direct_percent": 30.13949924045139,
+        "scaffold_percent": 86.29964192708334,
+        "change_pp": 56.16014268663194
+      },
+      {
+        "n": 3000,
+        "steps": 8000,
+        "direct_percent": 30.31395806206597,
+        "scaffold_percent": 89.09946017795139,
+        "change_pp": 58.785502115885414
+      },
+      {
+        "n": 3000,
+        "steps": 16000,
+        "direct_percent": 30.60150146484375,
+        "scaffold_percent": 91.5896945529514,
+        "change_pp": 60.98819308810764
+      },
+      {
+        "n": 4096,
+        "steps": 4000,
+        "direct_percent": 44.00227864583333,
+        "scaffold_percent": 98.52956136067709,
+        "change_pp": 54.52728271484375
+      },
+      {
+        "n": 4096,
+        "steps": 8000,
+        "direct_percent": 46.58932156032986,
+        "scaffold_percent": 98.73284233940971,
+        "change_pp": 52.143520779079864
+      },
+      {
+        "n": 4096,
+        "steps": 16000,
+        "direct_percent": 49.99610053168402,
+        "scaffold_percent": 98.9045884874132,
+        "change_pp": 48.90848795572918
+      },
+      {
+        "n": 6000,
+        "steps": 4000,
+        "direct_percent": 54.43132188585069,
+        "scaffold_percent": 99.81943766276041,
+        "change_pp": 45.38811577690972
+      },
+      {
+        "n": 6000,
+        "steps": 8000,
+        "direct_percent": 57.27962917751736,
+        "scaffold_percent": 99.85419379340279,
+        "change_pp": 42.57456461588542
+      },
+      {
+        "n": 6000,
+        "steps": 16000,
+        "direct_percent": 61.38441297743055,
+        "scaffold_percent": 99.86385769314236,
+        "change_pp": 38.47944471571182
+      },
+      {
+        "n": 8192,
+        "steps": 4000,
+        "direct_percent": 86.51292588975696,
+        "scaffold_percent": 99.92184109157986,
+        "change_pp": 13.408915201822913
+      },
+      {
+        "n": 8192,
+        "steps": 8000,
+        "direct_percent": 88.11136881510416,
+        "scaffold_percent": 99.93421766493054,
+        "change_pp": 11.822848849826384
+      },
+      {
+        "n": 8192,
+        "steps": 16000,
+        "direct_percent": 90.33440483940971,
+        "scaffold_percent": 99.92218017578125,
+        "change_pp": 9.587775336371529
+      }
+    ],
+    "selected_by_dataset": [
+      {
+        "n": 3000,
+        "data_seed": 202611020,
+        "direct_percent": 31.492106119791668,
+        "scaffold_percent": 89.68505859375,
+        "change_pp": 58.19295247395833
+      },
+      {
+        "n": 3000,
+        "data_seed": 202611021,
+        "direct_percent": 29.710896809895832,
+        "scaffold_percent": 93.49433051215279,
+        "change_pp": 63.78343370225694
+      },
+      {
+        "n": 4096,
+        "data_seed": 202611020,
+        "direct_percent": 66.13294813368056,
+        "scaffold_percent": 98.75996907552084,
+        "change_pp": 32.62702094184028
+      },
+      {
+        "n": 4096,
+        "data_seed": 202611021,
+        "direct_percent": 33.8592529296875,
+        "scaffold_percent": 99.04920789930557,
+        "change_pp": 65.18995496961807
+      },
+      {
+        "n": 6000,
+        "data_seed": 202611020,
+        "direct_percent": 83.65275065104166,
+        "scaffold_percent": 99.84842936197916,
+        "change_pp": 16.1956787109375
+      },
+      {
+        "n": 6000,
+        "data_seed": 202611021,
+        "direct_percent": 39.11607530381944,
+        "scaffold_percent": 99.87928602430557,
+        "change_pp": 60.76321072048613
+      },
+      {
+        "n": 8192,
+        "data_seed": 202611020,
+        "direct_percent": 99.74263509114584,
+        "scaffold_percent": 99.92743598090277,
+        "change_pp": 0.18480088975693088
+      },
+      {
+        "n": 8192,
+        "data_seed": 202611021,
+        "direct_percent": 80.9261745876736,
+        "scaffold_percent": 99.91692437065973,
+        "change_pp": 18.99074978298613
+      }
+    ],
+    "audit": {
+      "completed_groups": 15,
+      "models": 90,
+      "summary_rows_recomputed": 48,
+      "paired_rows_recomputed": 135,
+      "endpoint_fit_count": 88,
+      "train_exact_100_count": 84,
+      "nonexact_final_rows": [
+        {
+          "n": 32768,
+          "data_seed": 202611020,
+          "model_seed": 2,
+          "arm": "direct",
+          "train_endpoint_bce": 0.001492211114304718,
+          "train_endpoint_exact": 0.998565673828125
+        },
+        {
+          "n": 8192,
+          "data_seed": 202611020,
+          "model_seed": 2,
+          "arm": "direct",
+          "train_endpoint_bce": 0.0007055832320811313,
+          "train_endpoint_exact": 0.999755859375
+        },
+        {
+          "n": 32768,
+          "data_seed": 202611021,
+          "model_seed": 0,
+          "arm": "direct",
+          "train_endpoint_bce": 0.00011997472915299512,
+          "train_endpoint_exact": 0.999969482421875
+        },
+        {
+          "n": 32768,
+          "data_seed": 202611021,
+          "model_seed": 1,
+          "arm": "direct",
+          "train_endpoint_bce": 4.531197124793385e-05,
+          "train_endpoint_exact": 0.999969482421875
+        },
+        {
+          "n": 32768,
+          "data_seed": 202611021,
+          "model_seed": 2,
+          "arm": "direct",
+          "train_endpoint_bce": 9.559559364514463e-05,
+          "train_endpoint_exact": 0.999969482421875
+        },
+        {
+          "n": 8192,
+          "data_seed": 202611021,
+          "model_seed": 1,
+          "arm": "scaffold",
+          "train_endpoint_bce": 0.007711360280688703,
+          "train_endpoint_exact": 0.9970703125
+        }
+      ],
+      "saved_forward_max_error": 2.5294294095701275e-05
+    },
+    "queue": {
+      "status": "stopped_at_user_request",
+      "stop_marker_present": true,
+      "complete_refinement_counts": [
+        3000,
+        6000
+      ],
+      "partial_counts": [
+        2500
+      ],
+      "unstarted_counts": [
+        3500,
+        5000,
+        7000
+      ],
+      "cancelled_counts": [
+        12000,
+        16000
+      ]
+    }
+  },
+  "historical_30bit_mod3": {
+    "evidence_level": "dated_2026-09-13_notes_not_raw_checkpoint_recomputed",
+    "role": "optimization_accessibility_context_not_new_sample_measurements",
+    "new_measurements": false,
+    "source_paths": [
+      "research/notes/20260913_mod3_endpoint_scaffold_matched_bce_zh.md",
+      "research/notes/20260913_mod3_weight_perturbation_generalization_zh.md",
+      "research/notes/20260913_mod3_scaffold_withdrawal_zh.md"
+    ]
+  },
+  "unresolved": [
+    "relative_static_Neural_K_reduction",
+    "exact_sample_threshold",
+    "infinite_budget_gap",
+    "mechanism_contribution_separation",
+    "total_supervision_budget_reduction",
+    "cross_architecture_generality"
+  ]
+}

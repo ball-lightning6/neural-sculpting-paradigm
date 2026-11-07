@@ -37,6 +37,7 @@
         <div class="sidebar-label">本页目录</div>
         <nav class="toc"><div class="toc">
 <ul>
+<li><a href="#2026-11-06-修订-幅度正则的机制解释">2026-11-06 修订：幅度正则的机制解释</a></li>
 <li><a href="#核心实验链">核心实验链</a></li>
 <li><a href="#公开报告入口">公开报告入口</a></li>
 <li><a href="#核心结果">核心结果</a></li>
@@ -96,8 +97,11 @@
           <h1>E31 Loss 与幅度对齐</h1>
           <p class="article-description">E31 Loss 与幅度对齐的完整协议、结果和边界。</p>
         </header>
-        <div class="article-body"><p><strong>2026年10月更新：</strong> 本页保留原报告；<a href="#update-20261027">跳转至新增实验、复核和边界</a>。</p>
+        <div class="article-body"><nav class="ledger-path" id="update-20261106" aria-label="2026年11月增补"><span>2026年11月增补</span><a href="../update-training-controls.html">目标幅度与范数训练干预</a><a href="../interpretation-update.html">测度、幅度、复杂度与预测</a></nav><p><strong>2026年10月更新：</strong> 本页保留原报告；<a href="#update-20261027">跳转至新增实验、复核和边界</a>。</p>
 <p>公开实验 E31 的核心不是某一个孤立的 loss 对照，而是一条在同一 Power 架构 mod97 任务上逐步展开的证据链：<strong>原版 grokking + 幅度对齐正则 → 原始 MSE 的目标幅度对照 → 小型网络上的幅度系列与静态复核</strong>。它检验的是 loss 所选择的输出联合分布如何改变规则恢复，而不是把“训练 CE 越低”当成唯一解释。</p>
+<h2 id="2026-11-06-修订-幅度正则的机制解释">2026-11-06 修订：幅度正则的机制解释</h2>
+<p><strong>旧机制解释已修订，实际观察保留。</strong> 幅度正则首先约束跨样本的 margin 分散；多分类形式还包括实际训练标签相对各非目标类的 margin 差异。它既可能提高低 margin，也可能降低高 margin 或缩小整体输出尺度，不指定共同的高幅度。因此不能把它自动等同于普遍增强简单性偏置，也不能从绝对方差下降单独推出相对拟合更均衡或更多噪声记忆。</p>
+<p>原 Power 规则恢复、MSE 幅度对照和固定训练集下的静态候选质量变化均保留，不把机制尚未分离改写成效果不存在。历史报告中的早期机制解释以本修订为准；下列原有数值、成功与失败条件及后续历史报告保持不变。</p>
 <h2 id="核心实验链">核心实验链</h2>
 <ol>
 <li><strong>Power 原版 mod97 的 CE + 幅度对齐正则</strong>：无正则 CE 基线在训练 CE 约 <code>4e-11</code> 时仍未恢复规则；两个幅度对齐条件均为 3/3 完整泛化，并且仍保留拟合后的 grokking 延迟。这是本实验最重要的原版 Transformer 结果，见 <code>POWER_MOD97_ALIGNMENT_REPORT.md</code>。</li>

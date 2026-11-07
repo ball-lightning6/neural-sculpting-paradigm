@@ -6,6 +6,7 @@ import os
 import re
 import shutil
 import unicodedata
+import zipfile
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -20,6 +21,65 @@ EXPERIMENT_ROOT = ROOT / "experiments"
 SITE_ROOT = ROOT / "site"
 WEB_ASSETS = ROOT / "web_assets"
 FIGURE_ROOT = ROOT / "assets" / "figures"
+NOVEMBER_ROOT = ROOT / "supplementary" / "updates_20261106"
+READER_TOPICS = {"geometry", "consensus", "scaffolding", "training_controls"}
+READER_ASSETS = {
+    "rule30_width": ("train_width_scan.py", "matched_crossings.csv", "check_width.py"),
+    "mod3_reproduction": ("original_sources.zip", "README_zh.md", "README_en.md"),
+}
+
+# 新专题沿用既有实验编号；源稿和轻量证据均有完整双语入口。
+NOVEMBER_PAGES = (
+    ("research_updates_20261106", "research-updates.html", "本轮研究进展", "Research updates",
+     "10月27日之后的主干澄清、实验结果、负结果与尚未验证的方向。",
+     "Clarifications, experimental findings, negative results, and open directions since October 27."),
+    ("interpretation_update_20261106", "interpretation-update.html", "测度、幅度、复杂度与预测", "Measure, amplitude, complexity, and prediction",
+     "区分表示存在、实现质量、收缩率、优化可达性与预测集中。",
+     "Separating representability, implementation mass, contraction rates, reachability, and predictive concentration."),
+    ("supplementary/updates_20261106/geometry/README", "update-geometry.html", "收缩、径向混合与局部几何", "Contraction, radial mixtures, and local geometry",
+     "逐步要求网络答得更有把握，能达标的参数还剩多少？换一种抽参数的方法，答案会不会变？",
+     "As we require more decisive answers, how often do weights still qualify? Does the answer change when we sample weights differently?"),
+    ("supplementary/updates_20261106/scaffolding/README", "update-scaffolding.html", "解耦提示、样本效率与可达性", "Scaffolding, sample efficiency, and reachability",
+     "训练时多教几步怎么算余数，测试时拿走提示。网络能不能用更少的练习题学会？",
+     "Give intermediate remainders during training, then remove the hints at test time. Can the network learn from fewer practice questions?"),
+    ("supplementary/updates_20261106/consensus/README", "update-consensus.html", "小训练集共识与训练分布边界", "Small-dataset consensus and training-distribution limits",
+     "给不同的网络同样四道题，它们会怎样回答没见过的题？同一个网络在不同时刻还会改口吗？",
+     "Train different networks on the same four examples. Do they agree on unseen inputs? Will one network change its own answers over time?"),
+    ("supplementary/updates_20261106/training_controls/README", "update-training-controls.html", "目标幅度与范数训练干预", "Target-amplitude and norm training controls",
+     "一道题要求网络复制最后一位，另一道题要求预测一行格子。前者改变目标分值，后者改变对权重大小的惩罚。",
+     "One task copies the last input bit; another predicts a row of cells. We change the target score in the first and penalize weight sizes in the second."),
+    ("supplementary/updates_20261106/related_work/README", "update-related-work.html", "相关工作与比较边界", "Related work and comparison boundaries",
+     "loss-aware体积、软插值采样、预测校准与算法信息论方法。",
+     "Loss-aware volume, soft interpolator sampling, predictive calibration, and algorithmic-information methods."),
+)
+
+NOVEMBER_EXPERIMENT_LINKS = {
+    "e08": ("update-scaffolding.html",),
+    "e16": ("update-scaffolding.html",),
+    "e18": ("update-consensus.html", "interpretation-update.html"),
+    "e21": ("update-consensus.html", "interpretation-update.html"),
+    "e29": ("update-consensus.html",),
+    "e30": ("update-training-controls.html",),
+    "e31": ("update-training-controls.html", "interpretation-update.html"),
+    "e32": ("update-consensus.html",),
+    "e33": ("update-geometry.html",),
+    "e36": ("update-consensus.html", "update-related-work.html"),
+    "e37": ("update-geometry.html",),
+}
+
+
+def november_experiment_notice(slug: str, language: str, prefix: str) -> str:
+    if slug == "e38":
+        label = ("配套训练证据：增宽后，Rule30 需要多少样本？" if language == "zh"
+                 else "Training comparison: how many Rule30 examples does a wider network need?")
+        return f'<p class="ledger-path"><a href="{prefix}width-double-descent.html#rule30-width-transition">{label}</a></p>'
+    targets = NOVEMBER_EXPERIMENT_LINKS.get(slug, ())
+    if not targets:
+        return ""
+    titles = {row[1]: row[2 if language == "zh" else 3] for row in NOVEMBER_PAGES}
+    label = "2026年11月增补" if language == "zh" else "November 2026 supplement"
+    links = "".join(f'<a href="{prefix}{target}">{html.escape(titles[target])}</a>' for target in targets)
+    return f'<nav class="ledger-path" id="update-20261106" aria-label="{label}"><span>{label}</span>{links}</nav>'
 
 
 # 提交后新增的公开实验使用连续E编号，不把内部探索目录名当作实验编号。
@@ -264,6 +324,7 @@ def rewrite_ledger_links_en(markdown_text: str, experiments: list[Experiment]) -
 
 def rewrite_experiment_links(markdown_text: str, experiment: Experiment) -> str:
     text = markdown_text
+    text = text.replace("(../../theory_core_zh.md", "(../theory-core.html")
     text = re.sub(
         r"\((?:\.\./)+(?:experiments/)?(experiment_\d+_[^/)]+/[^)]+)\)",
         r"(../../experiments/\1)",
@@ -298,6 +359,7 @@ def rewrite_experiment_links_en(markdown_text: str, experiment: Experiment) -> s
     site/assets/figures/，因此无需像中文页那样改写资源路径。
     """
     text = markdown_text
+    text = text.replace("(../../theory_core_en.md", "(../theory-core.html")
     text = re.sub(
         r"\((?:\.\./)+(?:experiments/)?(experiment_\d+_[^/)]+/[^)]+)\)",
         r"(../../../experiments/\1)",
@@ -645,9 +707,13 @@ def build_paper(experiments: list[Experiment]) -> None:
     """
     core_entry = """
     <div class="core-entry-banner">
-      <div><strong>想直接看核心研究主张？</strong><span>可跳过探索叙事，直接阅读简单性原则、Neural K-profile、统计物理、预测、agreement 与 AGI 理论关系。</span></div>
+      <div><strong>想直接看核心研究主张？</strong><span>可跳过探索叙事，直接阅读简单性原则、Neural K-profile、联合输出、预测、agreement 与 AGI 理论关系。</span></div>
       <a href="theory-core.html">打开理论核心 →</a>
     </div>
+    <nav class="ledger-path" aria-label="理论主线入口">
+      <span>2026-10-30 理论主线</span>
+      <a href="ait-connections.html">神经网络泛化与算法信息论</a>
+    </nav>
     """
     body = disclosure + core_entry + metrics + body
     page = page_template(
@@ -727,12 +793,18 @@ def build_references() -> None:
 
 def build_theory_core() -> None:
     source = read_text(ROOT / "theory_core_zh.md")
+    source = source.replace(
+        "(release_20260920/theory/mdl_identifiability_grokking_derivation_zh.md)",
+        "(post-upload-mdl.html)",
+    )
     title = first_heading(source, "理论核心")
     body, toc = render_markdown(strip_first_h1(source))
     supplement_links = """
     <div class="metric-strip" aria-label="理论补充入口">
+      <div><strong><a href="ait-connections.html">算法信息论主线</a></strong><span>丰富表示、简单性偏置与精度调节</span></div>
       <div><strong><a href="post-upload-language.html">严格概率语言</a></strong><span>联合输出、函数质量和信息更新</span></div>
       <div><strong><a href="post-upload-mdl.html">MDL—grokking 长推导</a></strong><span>竞争质量与样本相变</span></div>
+      <div><strong><a href="experiments/e37.html">E37 测度鲁棒性</a></strong><span>高斯测度、欧氏球与训练对应</span></div>
       <div><strong><a href="post-upload-theory-update.html">理论增量全文</a></strong><span>统计语言和周末理论修正</span></div>
       <div><strong><a href="post-upload-estimator.html">Neural K 估计器</a></strong><span>CGF、鞍点与 520 节点回测</span></div>
       <div><strong><a href="width-double-descent.html">双下降与宽度证据</a></strong><span>容量轴、时间轴与E38完整SMC结果</span></div>
@@ -742,7 +814,7 @@ def build_theory_core() -> None:
     body = body + supplement_links
     page = page_template(
         title=title,
-        description="简单性、Neural K-profile、静态/动力学分层、统计物理、预测、信息增益、agreement与符号形成的最小理论总纲。",
+        description="简单性、Neural K-profile、静态/动力学分层、联合输出、预测、信息增益、agreement与符号形成的最小理论总纲。",
         eyebrow="独立总纲 · 只写理论核心",
         body=body,
         sidebar=toc_sidebar(toc, '<a class="sidebar-action" href="index.html">返回研究主文 →</a>'),
@@ -820,6 +892,9 @@ def post_upload_page(
     body, toc = render_markdown(strip_first_h1(source))
     overview_label = "返回增量总览 →" if language == "zh" else "Back to the increments overview →"
     nav_base = nav_prefix if nav_prefix is not None else prefix
+    slug = Path(outfile).stem.removeprefix("post-upload-")
+    slug = "e36" if slug == "peleg" else slug
+    body = november_experiment_notice(slug, language, nav_base) + body
     page = page_template(
         title=first_heading(source, fallback),
         description=description,
@@ -850,6 +925,8 @@ def build_post_upload() -> None:
     """
     links = """
     <div class="metric-strip" aria-label="增量入口">
+      <div><strong><a href="research-updates.html">本轮研究进展</a></strong><span>概念修正、六类材料与未验证方向</span></div>
+      <div><strong><a href="ait-connections.html">算法信息论主线</a></strong><span>2026-10-30：基本归纳、精度调节与信息增益</span></div>
       <div><strong><a href="post-upload-mdl.html">MDL 与 grokking</a></strong><span>最低可行复杂度与条件推导</span></div>
       <div><strong><a href="post-upload-language.html">严格概率语言</a></strong><span>联合输出、信息更新与统计物理边界</span></div>
       <div><strong><a href="post-upload-theory-update.html">理论增量全文</a></strong><span>统计语言、MDL、复杂度收窄与周末修正</span></div>
@@ -1032,6 +1109,8 @@ def build_post_upload_en() -> None:
     """
     links = """
     <div class="metric-strip" aria-label="Increment entries">
+      <div><strong><a href="research-updates.html">Research updates</a></strong><span>Clarifications, six evidence supplements, and open directions</span></div>
+      <div><strong><a href="ait-connections.html">Algorithmic information theory</a></strong><span>2026-10-30: basic induction, precision adjustment, and information gain</span></div>
       <div><strong><a href="post-upload-mdl.html">MDL and grokking</a></strong><span>Minimum viable complexity and conditional derivations</span></div>
       <div><strong><a href="post-upload-language.html">Strict probability language</a></strong><span>Joint outputs, updates, and statistical-physics boundaries</span></div>
       <div><strong><a href="post-upload-theory-update.html">Full theory increment</a></strong><span>Strict language, MDL, narrowing, and weekend corrections</span></div>
@@ -1289,6 +1368,7 @@ def build_experiment_pages(experiments: list[Experiment]) -> None:
       <input id="experiment-search" type="search" placeholder="输入 E23、parity、MNIST…" data-experiment-search autocomplete="off">
       <span class="search-count" data-search-count>{total_experiments} / {total_experiments}</span>
     </div>
+    <p><a href="../research-updates.html"><strong>本轮新增的实验、结果和 Python 脚本</strong></a>：从给网络中间答案的算术实验说起。这些对照沿用原编号，列表仍是 E01–E38。</p>
     {october_navigation("zh", "../")}
     <div class="experiment-grid">{''.join(cards)}</div>
     <section class="supplement-experiments">
@@ -1328,7 +1408,7 @@ def build_experiment_pages(experiments: list[Experiment]) -> None:
             title=experiment.title,
             description=experiment.purpose,
             eyebrow=f"{experiment.code} · 实验详情",
-            body=source_bar + body,
+            body=november_experiment_notice(f"e{experiment.number:02d}", "zh", "../") + source_bar + body,
             sidebar=toc_sidebar(toc, extra),
             prefix="../",
             active="experiments",
@@ -1488,9 +1568,13 @@ def build_paper_en(experiments: list[Experiment], output: Path) -> None:
     """
     core_entry = """
     <div class="core-entry-banner">
-      <div><strong>Want the core claims first?</strong><span>Skip the research chronology and open the standalone framework for simplicity, Neural K-profiles, statistical physics, prediction, agreement, and AGI relations.</span></div>
+      <div><strong>Want the core claims first?</strong><span>Skip the research chronology and open the standalone framework for simplicity, Neural K-profiles, joint outputs, prediction, agreement, and AGI relations.</span></div>
       <a href="theory-core.html">Open Core Theory →</a>
     </div>
+    <nav class="ledger-path" aria-label="Main theoretical account">
+      <span>2026-10-30 Theoretical account</span>
+      <a href="ait-connections.html">Neural Network Generalization and Algorithmic Information Theory</a>
+    </nav>
     """
     page = page_template(
         title=title,
@@ -1568,10 +1652,15 @@ def build_references_en(output: Path) -> None:
 
 def build_theory_core_en(output: Path) -> None:
     source = read_text(ROOT / "theory_core_en.md")
+    source = source.replace(
+        "(translations_en/theory/mdl_identifiability_grokking_derivation.md)",
+        "(post-upload-mdl.html)",
+    )
     title = first_heading(source, "Core theory")
     body, toc = render_markdown(strip_first_h1(source))
     supplement_links = """
     <div class="metric-strip" aria-label="Theory supplements">
+      <div><strong><a href="ait-connections.html">Algorithmic information theory</a></strong><span>Rich representations, simplicity bias, and precision adjustment</span></div>
       <div><strong><a href="post-upload-language.html">Strict probability language</a></strong><span>Joint outputs, function mass, and updates</span></div>
       <div><strong><a href="post-upload-mdl.html">Long MDL–grokking derivation</a></strong><span>Competitor mass and sample transitions</span></div>
       <div><strong><a href="experiments/e37.html">E37 Measure robustness</a></strong><span>Gaussian, Euclidean balls, and training correspondence</span></div>
@@ -1584,7 +1673,7 @@ def build_theory_core_en(output: Path) -> None:
     body = body + supplement_links
     page = page_template(
         title=title,
-        description="The minimal framework for simplicity, Neural K-profiles, static versus dynamical selection, statistical physics, prediction, information gain, agreement, and symbolic emergence.",
+        description="The minimal framework for simplicity, Neural K-profiles, static versus dynamical selection, joint outputs, prediction, information gain, agreement, and symbolic emergence.",
         eyebrow="Standalone framework · Core theory only",
         body=body,
         sidebar=toc_sidebar(toc, '<a class="sidebar-action" href="index.html">Return to the research narrative →</a>', language="en"),
@@ -1629,6 +1718,7 @@ def build_experiment_pages_en(experiments: list[Experiment], output: Path) -> No
       <input id="experiment-search-en" type="search" placeholder="Try E23, parity, MNIST…" data-experiment-search autocomplete="off">
       <span class="search-count" data-search-count>{total_experiments} / {total_experiments}</span>
     </div>
+    <p><a href="../research-updates.html"><strong>New experiments, results and Python scripts</strong></a>: start with an arithmetic task that supplies intermediate answers during training. These comparisons extend existing entries, so the list still runs from E01 to E38.</p>
     {october_navigation("en", "../")}
     <div class="experiment-grid">{''.join(cards)}</div>
     <section class="supplement-experiments">
@@ -1665,7 +1755,7 @@ def build_experiment_pages_en(experiments: list[Experiment], output: Path) -> No
             title=f'{experiment.code}: {translated["title"]}',
             description=translated["purpose"],
             eyebrow=f"{experiment.code} · Experiment details",
-            body=source_bar + body,
+            body=november_experiment_notice(f"e{experiment.number:02d}", "en", "../") + source_bar + body,
             sidebar=toc_sidebar(toc, experiment_nav_en(experiments, "", experiment.number) + post_upload_experiment_nav("../", "en"), language="en"),
             prefix="../../",
             nav_prefix="../",
@@ -1718,11 +1808,18 @@ def copy_assets() -> None:
     figure_output.mkdir(parents=True, exist_ok=True)
     for figure in FIGURE_ROOT.glob("*.png"):
         shutil.copy2(figure, figure_output / figure.name)
+    for folder, names in READER_ASSETS.items():
+        output = assets / folder
+        output.mkdir(exist_ok=True)
+        for name in names:
+            shutil.copy2(ROOT / "assets" / folder / name, output / name)
 
 
 def copy_public_theory_sources() -> None:
     """把理论源稿放入静态站点，方便从网页直接复查完整版本。"""
     sources = {
+        "zh/ait_connections_zh.md": ROOT / "ait_connections_zh.md",
+        "en/ait_connections_en.md": ROOT / "ait_connections_en.md",
         "zh/width_double_descent_zh.md": ROOT / "width_double_descent_zh.md",
         "en/width_double_descent_en.md": ROOT / "width_double_descent_en.md",
         "zh/complexity_measurement_methods_zh.md": ROOT / "complexity_measurement_methods_zh.md",
@@ -1740,6 +1837,14 @@ def copy_public_theory_sources() -> None:
         "en/mdl_identifiability_grokking_derivation.md": TRANSLATIONS_EN / "theory" / "mdl_identifiability_grokking_derivation.md",
         "en/measure_robustness_and_gaussian_alignment.md": TRANSLATIONS_EN / "theory" / "measure_robustness_and_gaussian_alignment.md",
     }
+    for stem, *_ in NOVEMBER_PAGES:
+        for language in ("zh", "en"):
+            relative = f"{language}/{stem}_{language}.md"
+            sources[relative] = ROOT / f"{stem}_{language}.md"
+    for topic in READER_TOPICS:
+        for language in ("zh", "en"):
+            name = f"reader_notes/{topic}_{language}.md"
+            sources[f"{language}/{name}"] = ROOT / name
     output = SITE_ROOT / "source_docs"
     for relative, source in sources.items():
         if not source.exists():
@@ -1749,9 +1854,41 @@ def copy_public_theory_sources() -> None:
         shutil.copy2(source, destination)
 
 
+def copy_november_assets() -> None:
+    """只发布各专题根目录的轻量证据，不递归收集原始结果或临时缓存。"""
+    allowed = {".json", ".csv", ".py", ".txt", ".png", ".svg"}
+    for stem, *_ in NOVEMBER_PAGES:
+        source = (ROOT / stem).parent
+        if not source.is_relative_to(NOVEMBER_ROOT):
+            continue
+        published = []
+        for path in sorted(source.iterdir()):
+            is_readme = path.name in {"README_zh.md", "README_en.md"}
+            if not path.is_file() or path.name.startswith(".") or (path.suffix.lower() not in allowed and not is_readme):
+                continue
+            if path.stat().st_size > 20 * 1024 * 1024:
+                raise RuntimeError(f"新增公开附件过大，需要明确整理：{path}")
+            destination = SITE_ROOT / "assets" / "updates_20261106" / path.relative_to(NOVEMBER_ROOT)
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(path, destination)
+            published.append(destination)
+        package = SITE_ROOT / "assets" / "updates_20261106" / source.relative_to(NOVEMBER_ROOT) / "package.zip"
+        # 固定ZIP元数据，避免重建网站产生无意义的二进制变化。
+        with zipfile.ZipFile(package, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
+            for path in published:
+                info = zipfile.ZipInfo(path.name, date_time=(2026, 11, 6, 0, 0, 0))
+                info.compress_type = zipfile.ZIP_DEFLATED
+                info.external_attr = 0o100644 << 16
+                archive.writestr(info, path.read_bytes())
+
+
 def build_october_theory_pages() -> None:
-    """发布两份双语理论说明，不改正式论文，也不将方法方案伪装成新实验。"""
+    """发布双语理论说明，不改正式论文，也不将方法方案伪装成新实验。"""
     specifications = (
+        ("ait_connections", "ait-connections.html",
+         "神经网络泛化与算法信息论", "Neural Network Generalization and Algorithmic Information Theory",
+         "从丰富表示、简单性偏置与精度调节，连接复杂度、共享结构、信息增益和数据量相变。",
+         "Connecting rich representations, simplicity bias, and precision adjustment to complexity, shared structure, information gain, and sample-size transitions."),
         ("width_double_descent", "width-double-descent.html",
          "双下降解释与宽度证据", "Double descent and width evidence",
          "容量轴与时间轴的条件解释、E38完整SMC结果及明确标注的探索对照。",
@@ -1760,7 +1897,7 @@ def build_october_theory_pages() -> None:
          "复杂度测量方法", "Complexity measurement methods",
          "规则的有限查询估计与训练快照所实现函数的测量方案；尚未新增验证实验。",
          "Proposed finite-query estimation of rules and measurement of functions implemented by checkpoints; no new validation experiments."),
-    )
+    ) + NOVEMBER_PAGES
     for language in ("zh", "en"):
         output = SITE_ROOT if language == "zh" else SITE_ROOT / "en"
         routes = {
@@ -1768,9 +1905,16 @@ def build_october_theory_pages() -> None:
             (ROOT / f"evidence_ledger_{language}.md").resolve(): output / "evidence-ledger.html",
             (ROOT / f"width_double_descent_{language}.md").resolve(): output / "width-double-descent.html",
             (ROOT / f"complexity_measurement_methods_{language}.md").resolve(): output / "complexity-methods.html",
+            (ROOT / f"ait_connections_{language}.md").resolve(): output / "ait-connections.html",
             (POST_UPLOAD / "theory/minimal_strict_statistical_language_zh.md").resolve(): output / "post-upload-language.html",
             (TRANSLATIONS_EN / "theory/probability_language.md").resolve(): output / "post-upload-language.html",
+            (POST_UPLOAD / "theory/mdl_identifiability_grokking_derivation_zh.md").resolve(): output / "post-upload-mdl.html",
+            (TRANSLATIONS_EN / "theory/mdl_identifiability_grokking_derivation.md").resolve(): output / "post-upload-mdl.html",
         }
+        for stem, filename, *_ in specifications:
+            for target_language in ("zh", "en"):
+                destination_root = SITE_ROOT if target_language == "zh" else SITE_ROOT / "en"
+                routes[(ROOT / f"{stem}_{target_language}.md").resolve()] = destination_root / filename
         for directory in EXPERIMENT_ROOT.glob("experiment_*"):
             match = re.match(r"experiment_(\d+)_", directory.name)
             if not match or not 1 <= int(match[1]) <= 38:
@@ -1787,13 +1931,18 @@ def build_october_theory_pages() -> None:
             target, separator, fragment = raw.partition("#")
             if not target or re.match(r"^[A-Za-z][A-Za-z0-9+.-]*:", target):
                 return match.group(0)
-            source = (ROOT / target).resolve()
+            source = (source_path.parent / target).resolve()
             if source in routes:
                 destination = routes[source]
-                # 源Markdown标题slug未必与拼接网页一致，使用实验或理论页入口。
-                fragment = ""
+                # 通常进入整页；这个双语小节在源稿显式声明了相同的稳定锚点。
+                if not (destination.name == "width-double-descent.html" and fragment == "rule30-width-transition"):
+                    fragment = ""
             elif source.is_relative_to(ROOT / "assets"):
                 destination = SITE_ROOT / "assets" / source.relative_to(ROOT / "assets")
+            elif source.is_relative_to(NOVEMBER_ROOT):
+                destination = SITE_ROOT / "assets" / "updates_20261106" / source.relative_to(NOVEMBER_ROOT)
+                if not destination.is_file():
+                    raise RuntimeError(f"专题链接未纳入公开附件：{raw}")
             elif source.is_relative_to(ROOT):
                 destination = source
             else:
@@ -1802,12 +1951,31 @@ def build_october_theory_pages() -> None:
             return f"]({relative}{'#' + fragment if separator and fragment else ''})"
 
         for stem, filename, title_zh, title_en, description_zh, description_en in specifications:
-            source = read_text(ROOT / f"{stem}_{language}.md")
+            source_path = ROOT / f"{stem}_{language}.md"
+            source = read_text(source_path)
             source = re.sub(r"\]\(([^)]+)\)", rewrite_link, source)
             body, toc = render_markdown(strip_first_h1(source))
             is_chinese = language == "zh"
             title = title_zh if is_chinese else title_en
             back = "返回理论核心 →" if is_chinese else "Back to core theory →"
+            if any(filename == row[1] for row in NOVEMBER_PAGES):
+                label = "本轮进展总览" if is_chinese else "Research update overview"
+                body = f'<nav class="ledger-path"><a href="research-updates.html">{label}</a></nav>' + body
+            if source_path.is_relative_to(NOVEMBER_ROOT):
+                package = SITE_ROOT / "assets" / "updates_20261106" / source_path.parent.relative_to(NOVEMBER_ROOT) / "package.zip"
+                package_href = Path(os.path.relpath(package, output)).as_posix()
+                label = "下载本专题公开材料包（ZIP）" if is_chinese else "Download this topic's public materials (ZIP)"
+                note = "包含双语说明与已发布附件；核验范围见正文。" if is_chinese else "Includes both language versions and published attachments; verification scope is stated below."
+                body = f'<p class="source-bar"><a href="{package_href}" download>{label}</a><span>{note}</span></p>' + body
+                topic = source_path.parent.name
+                if topic in READER_TOPICS:
+                    intro, _ = render_markdown(read_text(ROOT / "reader_notes" / f"{topic}_{language}.md"))
+                    if topic == "scaffolding":
+                        assets = Path(os.path.relpath(SITE_ROOT / "assets/mod3_reproduction", output)).as_posix()
+                        names = ("训练源码", "运行说明") if is_chinese else ("Training sources", "Run instructions")
+                        intro += (f'<p><a href="{assets}/original_sources.zip">{names[0]}</a> · '
+                                  f'<a href="{assets}/README_{language}.md">{names[1]}</a></p>')
+                    body = f'<div class="reader-intro">{intro}</div>' + body
             page = page_template(
                 title=title,
                 description=description_zh if is_chinese else description_en,
@@ -1860,6 +2028,7 @@ def write_manifest(experiments: list[Experiment]) -> None:
         "languages": {"zh-CN": "index.html", "en": "en/index.html"},
         "core_theory": {"zh-CN": "theory-core.html", "en": "en/theory-core.html"},
         "october_theory": {
+            "algorithmic_information": {"zh-CN": "ait-connections.html", "en": "en/ait-connections.html"},
             "double_descent": {"zh-CN": "width-double-descent.html", "en": "en/width-double-descent.html"},
             "complexity_methods": {"zh-CN": "complexity-methods.html", "en": "en/complexity-methods.html"},
         },
@@ -1873,6 +2042,14 @@ def write_manifest(experiments: list[Experiment]) -> None:
                 "measure_robustness": ["E37"],
                 "memory_calibration": ["E32"],
             },
+        },
+        "november_2026_update": {
+            "baseline": "3834fb3",
+            "through": "2026-11-06",
+            "entry": {"zh-CN": "research-updates.html", "en": "en/research-updates.html"},
+            "pages": [{"source_stem": row[0], "zh-CN": row[1], "en": f"en/{row[1]}"} for row in NOVEMBER_PAGES],
+            "experiment_links": NOVEMBER_EXPERIMENT_LINKS,
+            "new_experiment_ids": [],
         },
         "experiment_count": len(experiment_items),
         "experiments": experiment_items,
@@ -1898,11 +2075,28 @@ def main() -> None:
         str(path) for slug in OCTOBER_EXTENSIONS for path in october_extension_paths(slug)
         if not path.is_file()
     ]
+    missing_extensions.extend(
+        str(path) for language in ("zh", "en")
+        if not (path := ROOT / f"ait_connections_{language}.md").is_file()
+    )
+    missing_extensions.extend(
+        str(path) for stem, *_ in NOVEMBER_PAGES for language in ("zh", "en")
+        if not (path := ROOT / f"{stem}_{language}.md").is_file()
+    )
+    missing_extensions.extend(
+        str(path) for topic in READER_TOPICS for language in ("zh", "en")
+        if not (path := ROOT / "reader_notes" / f"{topic}_{language}.md").is_file()
+    )
+    missing_extensions.extend(
+        str(path) for folder, names in READER_ASSETS.items() for name in names
+        if not (path := ROOT / "assets" / folder / name).is_file()
+    )
     if missing_extensions:
         raise RuntimeError(f"新增双语源稿未齐，不清理现有站点：{missing_extensions}")
     prepare_site_root()
     copy_assets()
     copy_public_theory_sources()
+    copy_november_assets()
     build_paper(experiments)
     build_ledger(experiments)
     build_references()

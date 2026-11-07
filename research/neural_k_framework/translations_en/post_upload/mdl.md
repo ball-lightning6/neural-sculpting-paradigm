@@ -16,6 +16,8 @@ It is the rigorous definition of the problem "the simplest feasible function whe
 
 This rigorous property does not imply that the network necessarily selects that function, nor that that function has the largest parameter volume.
 
+The revision of 2026-10-31 further separates the minimum feasible cost from the soft candidate distribution: even when one candidate is individually simplest, many individually smaller competing masses may outweigh it in total. The minimum cost describes a feasibility frontier, not an assumption that the network deterministically selects the shortest description.
+
 ## Simplicity bias among the remaining candidates
 
 The candidate mass distribution in the static reference ensemble is:
@@ -57,6 +59,10 @@ L_{\rm MDL}(f;D)=K_{\rm ref}(f)+L_{\rm residual}(D\mid f).
 
 `K_D^*(epsilon)` corresponds to the lowest model code-length frontier, and `Q_D,epsilon` corresponds to the mass distribution over remaining feasible candidates in the static reference ensemble; actual training preference must still be checked through `Qopt`. The network does not explicitly optimize a second "program length" objective; the static MDL-style preference here arises from the joint action of the network reference mass and the loss geometry.
 
+For a frozen reference probability on mutually exclusive functions, training labels provide only compatibility filtering. Target dominance depends on its mass relative to the total mass of all surviving competitors. This soft-competition model already works with a fixed simplicity bias; no further change in bias strength is required. Probability code length, independent program complexity, and local contraction coefficient must be defined separately; only the first is intrinsically the negative log of mass.
+
 ## Relation to grokking
 
 The data-size axis, the loss axis, and the training-time axis must be kept separate: data samples eliminate functions according to the positions where competing functions disagree, loss tightening rearranges the remaining implementation mass, and training time additionally includes optimizer transport. Therefore complexity can have a conditional approximate relationship with `n50/n90`, but it is not equal to the data transition point or the grokking time point.
+
+The full derivation below gives separate survival probabilities for independent sampling and finite-space sampling without replacement, then uses Jensen's and Markov's inequalities to bound mean target mass and the probability of missing a static threshold. Approximate linearity additionally requires comparable competition structures; predicting actual recovery rates requires correspondence between static and optimizer distributions. Statistical correlation of neighboring-function complexity can be a structural condition to test, not a substitute for these premises.

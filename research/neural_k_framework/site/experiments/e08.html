@@ -67,7 +67,7 @@
           <h1>E08：共享中间表示与有限容量压力</h1>
           <p class="article-description">E08 检验一个唯象机制：当两个输出任务具有昂贵的共同 CA 前缀计算时，允许网络共享隐藏表示，是否比强制两条独立分支更容易达到同一极低 loss。</p>
         </header>
-        <div class="article-body"><div class="source-bar"><span>复现脚本</span><div><a href="../../experiments/experiment_08_shared_intermediate_pressure/experiment_ca_shared_intermediate_pressure.py">experiment_ca_shared_intermediate_pressure.py</a></div></div><h2 id="overview">实验概览</h2>
+        <div class="article-body"><nav class="ledger-path" id="update-20261106" aria-label="2026年11月增补"><span>2026年11月增补</span><a href="../update-scaffolding.html">解耦提示、样本效率与可达性</a></nav><div class="source-bar"><span>复现脚本</span><div><a href="../../experiments/experiment_08_shared_intermediate_pressure/experiment_ca_shared_intermediate_pressure.py">experiment_ca_shared_intermediate_pressure.py</a></div></div><h2 id="overview">实验概览</h2>
 <h2 id="目的">目的</h2>
 <p>E08 检验一个唯象机制：当两个输出任务具有昂贵的共同 CA 前缀计算时，允许网络共享隐藏表示，是否比强制两条独立分支更容易达到同一极低 loss。</p>
 <p>实验采用四格交叉设计，使完全相同的四个原子子任务各自在 Shared 与 Separate 组出现一次；另设参数量匹配的 forced-split 架构作为阴性对照，排除标签边际或原子任务固有难度。</p>

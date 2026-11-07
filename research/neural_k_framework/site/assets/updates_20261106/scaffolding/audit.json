@@ -1,0 +1,36 @@
+{
+  "scope": "只读JSON复算与源码哈希；未加载权重，未重新执行前向、数据划分或训练。",
+  "framework_imports": [],
+  "gpu_used": false,
+  "training_started": false,
+  "sampling_started": false,
+  "historical_sources_written": false,
+  "stop_marker_sha256": "b175b792e69d22aac1548962d531d7398315d74d2d59b08b1214f57ac5116047",
+  "mod3_models": 150,
+  "mod3_summary_rows": 78,
+  "mod3_paired_rows": 225,
+  "maximum_absolute_errors": {
+    "mod3_statistics": 2.220446049250313e-16
+  },
+  "bilingual": {
+    "status": "passed",
+    "aligned_blocks": 46,
+    "checks": [
+      "block_order",
+      "numeric_tokens",
+      "display_formulas",
+      "package_links",
+      "mod3_main_budget_dataset_tables_vs_key_results"
+    ],
+    "semantic_translation_review": "manual"
+  },
+  "public_summary_checks": {
+    "mod3_final_rows": 13,
+    "budget_rows": 15,
+    "dataset_rows": 10
+  },
+  "mode": "full_local_recomputation",
+  "requires_local_original_results": true,
+  "hash_assertions": 36,
+  "source_files_unchanged_during_audit": true
+}

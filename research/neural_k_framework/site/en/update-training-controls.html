@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="One task copies the last input bit; another predicts a row of cells. We change the target score in the first and penalize weight sizes in the second.">
+  <title>Target-amplitude and norm training controls · Neural K Research Archive</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="../assets/site.js"></script>
+</head>
+<body data-page-kind="core">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+
+    <header class="topbar">
+      <a class="site-mark" href="index.html" aria-label="Back to the research narrative">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K Research Archive</span>
+      </a>
+      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="index.html">Research</a><a class="top-link active" href="theory-core.html">Core Theory</a><a class="top-link" href="experiments/index.html">Experiments</a><a class="top-link" href="post-upload.html">Updates</a><a class="top-link" href="references.html">References</a><a class="top-link" href="evidence-ledger.html">Evidence</a></nav>
+      <nav class="language-switch" aria-label="Language"><a href="../update-training-controls.html" lang="zh-CN">中文</a><span class="active" lang="en">EN</span></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>Contents</span>
+      </button>
+    </header>
+
+  <div class="page-shell">
+
+    <aside class="sidebar" id="sidebar" aria-label="On this page">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">On this page</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#1-scope-and-evidence-levels">1. Scope and Evidence Levels</a></li>
+<li><a href="#2-copy-target-amplitude-and-full-batch-sgd">2. Copy: Target Amplitude and Full-Batch SGD</a><ul>
+<li><a href="#2-1-objective-relative-error-and-absolute-error">2.1 Objective, Relative Error, and Absolute Error</a></li>
+<li><a href="#2-2-stopping-rule-and-actual-completion">2.2 Stopping Rule and Actual Completion</a></li>
+<li><a href="#2-3-primary-results-and-underfitting">2.3 Primary Results and Underfitting</a></li>
+<li><a href="#2-4-comparability-with-original-adam">2.4 Comparability with Original Adam</a></li>
+<li><a href="#2-5-what-last-layer-scaling-was-actually-tested">2.5 What Last-Layer Scaling Was Actually Tested</a></li>
+</ul>
+</li>
+<li><a href="#3-rule30-high-norm-penalty-and-low-norm-repulsion">3. Rule30: High-Norm Penalty and Low-Norm Repulsion</a><ul>
+<li><a href="#3-1-norm-formulas-and-actual-scan-coverage">3.1 Norm, Formulas, and Actual Scan Coverage</a></li>
+<li><a href="#3-2-fitting-success-criteria-and-test-denominators">3.2 Fitting, Success Criteria, and Test Denominators</a></li>
+<li><a href="#3-3-only-a-coarse-transition-grid">3.3 Only a Coarse Transition Grid</a></li>
+<li><a href="#3-4-layernorm-and-the-complexity-boundary">3.4 LayerNorm and the Complexity Boundary</a></li>
+</ul>
+</li>
+<li><a href="#4-e30-e31-connections-and-non-comparable-protocols">4. E30/E31 Connections and Non-Comparable Protocols</a></li>
+<li><a href="#5-verification-modes-and-package-scope">5. Verification Modes and Package Scope</a></li>
+</ul>
+</div>
+</nav>
+        <a class="sidebar-action" href="theory-core.html">Back to core theory →</a>
+      </div>
+    </aside>
+
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">Theory supplement · Evidence and proposals distinguished</div>
+          <h1>Target-amplitude and norm training controls</h1>
+          <p class="article-description">One task copies the last input bit; another predicts a row of cells. We change the target score in the first and penalize weight sizes in the second.</p>
+        </header>
+        <div class="article-body"><div class="reader-intro"><p>When a network copies the last input bit, only the sign of its output determines the predicted label. Yet shrinking the squared-error targets from magnitude 1 to 0.001 left the earlier Adam models near chance on unseen inputs. Was that peculiar to Adam? A repeat with full-batch SGD reused the same splits and initial weights. At magnitude 0.001, only 352 of 512 models met the training fit criterion, and even those 352 averaged just 48.72% on held-out inputs. At magnitude 1 all 512 met the criterion and scored 100%. Failure to fit cannot explain the whole gap.</p>
+<p>Rule30 asks a separate question that static sampling cannot settle: does pushing parameters toward smaller norms during training improve predictions for the next row of 30 bits? The labels stayed fixed. One group penalized large parameter norms; another pushed small norms outward. At 600 training inputs all groups fit the training set. Counting a test row only when all 30 bits were right gave 68.52% without a penalty, 79.66% with the inward push, and 39.52% with the outward push.</p>
+<p>Section 3.3 compares the first tested sample sizes where at least three of four starts scored 99% or more at each of the final three checks: 750, 750, and 900, respectively. The inward push improved the 600-input score without lowering that observed threshold. Neither intervention measures a rule's complexity.</p></div><p class="source-bar"><a href="../assets/updates_20261106/training_controls/package.zip" download>Download this topic's public materials (ZIP)</a><span>Includes both language versions and published attachments; verification scope is stated below.</span></p><nav class="ledger-path"><a href="research-updates.html">Research update overview</a></nav><!-- block:scope -->
+<h2 id="1-scope-and-evidence-levels">1. Scope and Evidence Levels</h2>
+<p>Audit date: 2026-11-06; baseline commit: <code>3834fb3f6555c7c58218462502635b16b9b377f9</code> (2026-10-27). This supplement covers three training interventions dated 2026-11-03 after that baseline. Source files are identified by paths and byte fingerprints in <a href="../assets/updates_20261106/training_controls/sources_sha256.csv">sources_sha256.csv</a>. The <a href="../update-training-controls.html">Chinese version</a> corresponds fully to this page through matching paragraph identifiers.</p>
+<!-- block:sources -->
+<p>Original source directories are <code>research/copy_mse_amplitude_sgd_20261103/</code>, <code>research/rule30_high_norm_penalty_20261103/</code>, and <code>research/rule30_low_norm_penalty_20261103/</code>. The audit used their code, protocols, MANIFEST, SUMMARY, HISTORY, per-model statistics, and saved arrays. These directories and full original reports are not included; paths are provenance identifiers, not download links. Clickable evidence consists of this package's <a href="../assets/updates_20261106/training_controls/copy_summary.csv">copy summary</a>, <a href="../assets/updates_20261106/training_controls/rule30_summary.csv">Rule30 summary</a>, <a href="../assets/updates_20261106/training_controls/rule30_paired.csv">per-seed paired differences</a>, and <a href="../assets/updates_20261106/training_controls/audit_summary.json">audit record</a>. This supplement is an offline audit of existing results, not new training, SMC, or CIFAR/MNIST label-noise controls. <strong>Training endpoint frequencies are not static parameter mass, and parameter norm is not function complexity.</strong></p>
+<!-- block:copy_design -->
+<h2 id="2-copy-target-amplitude-and-full-batch-sgd">2. Copy: Target Amplitude and Full-Batch SGD</h2>
+<p>The fixed network is <code>4→16→1 tanh</code>, with 97 trainable parameters, linear output, 0/1 inputs, and the rightmost-input-bit copy rule. Raw coordinates have independent standard Gaussian initialization; hidden weights and biases are divided by 2, and output weights and biases by 4. The old Adam archive supplies 16 distinct splits, each with 12 training points, 4 unseen points, and 32 initializations: 512 paired models per condition, with initialization seeds 71001 through 71512. All amplitudes use the same initial state without scaling the output-head initialization. Full rule recovery means correct classification on all 16 inputs; unseen accuracy averages each model's correct fraction over its 4 held-out inputs across models.</p>
+<!-- block:copy_loss -->
+<h3 id="2-1-objective-relative-error-and-absolute-error">2.1 Objective, Relative Error, and Absolute Error</h3>
+<p>Let <code>s=2y-1</code> and let <code>z</code> denote the raw network output. MSE has no sigmoid; classification consistently uses <code>z&gt;0</code>. Optimization uses relative MSE, with BCE as a separate reference:</p>
+<div class="math-display">$$
+L_{\mathrm{raw},A}=\operatorname{mean}[(z-As)^2],\qquad
+L_{\mathrm{rel},A}=L_{\mathrm{raw},A}/A^2=\operatorname{mean}[(z/A-s)^2],\qquad
+L_{\mathrm{BCE}}=\operatorname{mean}\operatorname{softplus}(-sz).
+$$</div>
+<!-- block:copy_thresholds -->
+<p>Sufficient fitting requires every training classification to be correct and <code>L_rel&lt;=1e-4</code> for MSE, or <code>L_BCE&lt;=1e-3</code> for BCE. Thus the absolute MSE cutoff is not held constant across amplitudes. Actual learning rates below apply to relative MSE; the primary BCE learning rate is 0.3.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">A</th>
+<th style="text-align: right;">Raw MSE fitting cutoff</th>
+<th style="text-align: right;">Primary actual learning rate</th>
+<th style="text-align: right;">Half-rate actual learning rate</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">0.001</td>
+<td style="text-align: right;">1e-10</td>
+<td style="text-align: right;">3e-7</td>
+<td style="text-align: right;">1.5e-7</td>
+</tr>
+<tr>
+<td style="text-align: right;">0.01</td>
+<td style="text-align: right;">1e-8</td>
+<td style="text-align: right;">3e-5</td>
+<td style="text-align: right;">1.5e-5</td>
+</tr>
+<tr>
+<td style="text-align: right;">0.1</td>
+<td style="text-align: right;">1e-6</td>
+<td style="text-align: right;">3e-3</td>
+<td style="text-align: right;">1.5e-3</td>
+</tr>
+<tr>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1e-4</td>
+<td style="text-align: right;">0.3</td>
+<td style="text-align: right;">0.15</td>
+</tr>
+<tr>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">1e-2</td>
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">15</td>
+</tr>
+</tbody>
+</table>
+<!-- block:copy_rates -->
+<p>The optimizer is full-batch SGD without momentum or weight decay, equivalently full-batch gradient descent, not a minibatch-noise control. Calibration uses only training labels and 32 new initializations (seeds 91001 through 91032, 2 per split). Candidate raw-MSE-equivalent learning rates are <code>{0.001,0.003,0.01,0.03,0.1,0.3}</code>, each run for 2000 steps. The selected candidate must be numerically valid for every model and minimize the 90th percentile of training relative loss; all six conditions selected 0.3. Calibration comprises 1152 condition runs but only 32 independent new initializations. Primary groups contain 512 models each; half-rate groups use the first 8 original initializations per split, 128 each, for 3840 formal models in total.</p>
+<!-- block:copy_equivalence -->
+<p>For MSE, the actual relative-loss learning rate is <code>eta_rel=0.3*A^2</code> (<code>0.15*A^2</code> for half-rate controls), making each update exactly equivalent to optimizing raw MSE at learning rate 0.3. Every layer uses the same scalar, without inter-layer preconditioning. This equivalence does not make different amplitudes the same objective or make SGD equivalent to Adam.</p>
+<div class="math-display">$$
+\theta^+=\theta-\eta_{\mathrm{rel}}\nabla L_{\mathrm{rel},A}
+=\theta-0.3\nabla L_{\mathrm{raw},A}.
+$$</div>
+<!-- block:copy_stop -->
+<h3 id="2-2-stopping-rule-and-actual-completion">2.2 Stopping Rule and Actual Completion</h3>
+<p>Evaluation occurs every 200 steps, with at least 18000 steps. Fitting-based stopping requires all 3840 models to be sufficiently fitted at three consecutive evaluation nodes; otherwise the cap is 100000 steps. Individual models are not frozen after first fitting. Final, best-training-loss, and first-fit states are saved, without test-based checkpoint selection. Wall-clock limits, STOP, and manual interruption only pause a run and are not scientific endpoints. The actual status is <code>completed_step_cap</code> at 100000 steps, which does not mean every model converged. Old Adam instead ran for a fixed 18000 steps; fitting cutoffs were used for assessment and first-fit recording, not early stopping.</p>
+<!-- block:copy_primary -->
+<h3 id="2-3-primary-results-and-underfitting">2.3 Primary Results and Underfitting</h3>
+<p>The table uses each model's saved best-training-loss checkpoint and separates all-model and fitted-subset denominators. Final checkpoints give the same classification statistics shown here; first-fit checkpoints also give the same fitted-subset statistics.</p>
+<table>
+<thead>
+<tr>
+<th>Target</th>
+<th style="text-align: right;">Sufficiently fitted/512</th>
+<th style="text-align: right;">Unseen accuracy, all models</th>
+<th style="text-align: right;">Unseen accuracy, fitted subset</th>
+<th style="text-align: right;">Full recovery, fitted subset</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MSE ±0.001</td>
+<td style="text-align: right;">352/512</td>
+<td style="text-align: right;">48.9746%</td>
+<td style="text-align: right;">48.7216%</td>
+<td style="text-align: right;">26/352</td>
+</tr>
+<tr>
+<td>MSE ±0.01</td>
+<td style="text-align: right;">473/512</td>
+<td style="text-align: right;">60.1074%</td>
+<td style="text-align: right;">59.1966%</td>
+<td style="text-align: right;">68/473</td>
+</tr>
+<tr>
+<td>MSE ±0.1</td>
+<td style="text-align: right;">512/512</td>
+<td style="text-align: right;">97.7051%</td>
+<td style="text-align: right;">97.7051%</td>
+<td style="text-align: right;">471/512</td>
+</tr>
+<tr>
+<td>MSE ±1</td>
+<td style="text-align: right;">512/512</td>
+<td style="text-align: right;">100%</td>
+<td style="text-align: right;">100%</td>
+<td style="text-align: right;">512/512</td>
+</tr>
+<tr>
+<td>MSE ±10</td>
+<td style="text-align: right;">512/512</td>
+<td style="text-align: right;">100%</td>
+<td style="text-align: right;">100%</td>
+<td style="text-align: right;">512/512</td>
+</tr>
+<tr>
+<td>BCE</td>
+<td style="text-align: right;">512/512</td>
+<td style="text-align: right;">100%</td>
+<td style="text-align: right;">100%</td>
+<td style="text-align: right;">512/512</td>
+</tr>
+</tbody>
+</table>
+<!-- block:copy_selection -->
+<p>At ±0.001 and ±0.01, respectively, 160 and 39 models fail the strict fitting cutoff and must not be counted as generalization failures after sufficient fitting. However, 352 sufficiently fitted ±0.001 models still have near-chance unseen accuracy, so underfitting does not explain the entire phenomenon. The fitted subset is selected, not an unbiased estimate for all original models. Initializations are repeated within 16 splits, so models are not independent dataset replications. These results support an amplitude-associated difference in this protocol, not a universal monotonic law or equality of complete function distributions.</p>
+<!-- block:copy_half -->
+<p>Half-rate controls use the same 100000-step cap. Small amplitudes fit more slowly; the trend remains, but these are not fully converged group comparisons.</p>
+<table>
+<thead>
+<tr>
+<th>Target</th>
+<th style="text-align: right;">Sufficiently fitted/128</th>
+<th style="text-align: right;">Unseen accuracy, fitted subset</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MSE ±0.001</td>
+<td style="text-align: right;">40/128</td>
+<td style="text-align: right;">50.6250%</td>
+</tr>
+<tr>
+<td>MSE ±0.01</td>
+<td style="text-align: right;">80/128</td>
+<td style="text-align: right;">63.4375%</td>
+</tr>
+<tr>
+<td>MSE ±0.1</td>
+<td style="text-align: right;">128/128</td>
+<td style="text-align: right;">96.8750%</td>
+</tr>
+<tr>
+<td>MSE ±1</td>
+<td style="text-align: right;">128/128</td>
+<td style="text-align: right;">100%</td>
+</tr>
+<tr>
+<td>MSE ±10</td>
+<td style="text-align: right;">128/128</td>
+<td style="text-align: right;">100%</td>
+</tr>
+<tr>
+<td>BCE</td>
+<td style="text-align: right;">128/128</td>
+<td style="text-align: right;">100%</td>
+</tr>
+</tbody>
+</table>
+<!-- block:copy_adam -->
+<h3 id="2-4-comparability-with-original-adam">2.4 Comparability with Original Adam</h3>
+<p>Directly shared old Adam conditions are only BCE, ±1, and ±0.001. The old series also contains ±0.1 and ±0.01 follow-ups, but those are not the three-condition original archive supplying the reused initial states. Shared conditions have identical data, initialization, network, and relative fitting criteria. Old Adam used relative MSE, initial learning rate 0.01, multiplication by 0.3 after steps 2000, 5000, 9000, 13000, and 16000, <code>eps=1e-8</code>, weight decay 0, and CPU float64. New SGD uses independently calibrated constant rates, CUDA1 float64 with TF32 disabled, and a budget extended to 100000 steps. This is an optimizer-robustness retest, not an equal-budget causal comparison changing only the optimizer name. Scaling an entire Adam objective must not be described as strictly numerically equivalent without checking.</p>
+<!-- block:copy_adam_results -->
+<p>In the old three-condition archive, all 512 models per group were sufficiently fitted: ±0.001 achieved 49.3164% unseen accuracy and 30/512 full recovery; ±1 and BCE both achieved 100% and 512/512 full recovery. The direction agrees with new SGD, but the new small-amplitude group has a lower training-fit rate. Old values come from <code>tmp/4bit_copy_small_target_local_20260910/analysis.json</code>; this audit checks provenance and shared initial states without rerunning Adam.</p>
+<!-- block:copy_intermediate -->
+<p>The retained 18000-step SGD intermediate snapshot was also checked: its status is <code>paused_at_checkpoint</code>, not final completion. Only 8/512, 45/512, and 329/512 primary models were sufficiently fitted at ±0.001, ±0.01, and ±0.1. Main results were obtained only after reaching 100000 steps. Thus old Adam and this intermediate snapshot, both at 18000 steps, must not be described as an equal-budget comparison in which all models have fitted.</p>
+<!-- block:copy_scale -->
+<h3 id="2-5-what-last-layer-scaling-was-actually-tested">2.5 What Last-Layer Scaling Was Actually Tested</h3>
+<p>A unit check was performed: SGD code multiplies both last-layer weights and bias by <code>c</code>, also multiplies target amplitude by <code>c</code>, and checks relative loss and gradient-scaling relations. Saved maximum gradient errors for <code>c=0.001,10</code> are both approximately <code>1.11e-16</code>; the old Adam independent pure-unit-change gradient check reports approximately <code>5.55e-17</code>. These historical unit tests were not rerun in this audit.</p>
+<div class="math-display">$$
+z_{(\theta_h,c\theta_o)}=c z_{(\theta_h,\theta_o)},\qquad
+L_{\mathrm{rel},cA}(\theta_h,c\theta_o)=L_{\mathrm{rel},A}(\theta_h,\theta_o),\qquad c&gt;0.
+$$</div>
+<!-- block:copy_scale_limit -->
+<p><strong>No executed formal generalization control freezing hidden layers and only retraining or scaling the last layer was found.</strong> The identity, gradient check, and post-training layer-displacement statistics must not be presented as that causal control. In the primary fitted subsets, median relative hidden-feature displacement is 0.2080, 0.2050, and 0.2104 at ±0.001, ±0.01, and ±0.1, despite very different generalization; it is 0.4034 and 1.0880 at ±1 and ±10. Displacement is a correlational diagnostic: it neither establishes that larger changes guarantee generalization nor isolates feature direction, readout scale, and residual output.</p>
+<!-- block:ca_design -->
+<h2 id="3-rule30-high-norm-penalty-and-low-norm-repulsion">3. Rule30: High-Norm Penalty and Low-Norm Repulsion</h2>
+<p>The task uses one step with periodic boundaries, 30-bit inputs, and 30-bit outputs, labeled by <code>left XOR (center OR right)</code>. The network is <code>30→1024→1024→1024→30</code>; all three hidden layers use Linear, GELU, and LayerNorm (<code>eps=1e-5</code>), with 2167838 total parameters. Training uses nested prefixes <code>{600,750,900,1200}</code> of one historical pool. Seeds <code>{0,1,2,3}</code> are initialization repeats, not four independent training datasets. Monitor and probe each contain 4096 inputs and are disjoint from the training pool and each other. Primary results use probe alone, not a newly combined 8192-input result.</p>
+<!-- block:ca_optimizer -->
+<p>Each run has 32 models (16 intervention models and 16 rerun baselines), totaling 64 model runs. Baselines are exact duplicates, leaving only 48 distinct conditions in the three-arm comparison; repeated baselines are not additional seeds. Old initial weights are reused. Models at the same sample count share with-replacement batch indices, with index seed 314159 and batch size 512. AdamW uses learning rate 0.001, weight decay 0, float32, TF32 enabled, and CUDA1 for a fixed 20000 steps. Evaluation occurs every 500 steps, with additional initial and early nodes saved. High/low interventions share the same new batch schedule, not necessarily the stepwise schedule of the old 900/1500 scan. BCE uses numerically stable <code>softplus(-signed_y*z)</code>; old BCEWithLogits differs numerically at extremely low loss, motivating freshly paired baselines.</p>
+<!-- block:ca_norm -->
+<h3 id="3-1-norm-formulas-and-actual-scan-coverage">3.1 Norm, Formulas, and Actual Scan Coverage</h3>
+<p>The penalty includes only weights and biases of the four linear layers, totaling <code>P_linear=2161694</code> parameters. LayerNorm gamma and beta remain trainable but are not directly penalized. Original linear initialization is uniform; variance normalization does not imply a Gaussian measure over the whole network.</p>
+<div class="math-display">$$
+r^2=\frac{1}{P_{\mathrm{linear}}}\sum_j\frac{\theta_j^2}{\sigma_j^2},\qquad
+\sigma_j^2=\frac{1}{3\,\mathrm{fan\_in}_j}.
+$$</div>
+<!-- block:ca_penalties -->
+<p>The reference is the median radius of eight old BCE endpoints at <code>n=900</code>, <code>r_med=1.2291480798</code>. Cutoffs were fixed in advance at <code>r_H=0.85*r_med=1.0447758679</code> and <code>r_L=1.5*r_med=1.8437221198</code>, without adjustment to current test results. Both runs compare only <code>lambda=0</code> against <code>lambda=0.1</code>; <strong>there was no dense lambda-range scan or cutoff search</strong>.</p>
+<div class="math-display">$$
+J_H=L_{\mathrm{BCE}}+\lambda[\max(0,r^2/r_H^2-1)]^2,\qquad
+J_L=L_{\mathrm{BCE}}+\lambda[\max(0,1-r^2/r_L^2)]^2.
+$$</div>
+<!-- block:ca_directions -->
+<p>The high-norm penalty pushes inward only when <code>r&gt;r_H</code>; low-norm repulsion pushes outward only when <code>r&lt;r_L</code>, becoming zero beyond its cutoff. Neither is a hard radius constraint, decoupled weight decay, or a strength-symmetric positive/negative weight-decay pair. Low-norm repulsion does not push norms to infinity. Its actual endpoint radii are 1.886650 to 1.892699, approximately 2% to 3% above cutoff, with zero endpoint penalties. High-penalty radii are 1.044651 to 1.044777, with maximum endpoint penalty only <code>5.1301e-13</code> and a tiny cutoff exceedance. Thus endpoints are not all strictly inside a hard constraint, nor are trajectories continuously subject to an unchanged radial force.</p>
+<!-- block:ca_success -->
+<h3 id="3-2-fitting-success-criteria-and-test-denominators">3.2 Fitting, Success Criteria, and Test Denominators</h3>
+<p>Sufficient fitting means 100% training whole-sample accuracy and raw BCE no greater than <code>1e-4</code>. Stable generalization additionally requires probe whole-sample accuracy of at least 99% at each of the last three evaluation nodes (19000, 19500, and 20000 steps). This is a success classification after a fixed budget, not test-driven early stopping; training actually reached 20000 steps. All 32 models in each run were sufficiently fitted. Maximum training BCE is <code>2.9231732e-9</code> in the high-penalty run and <code>2.8179692e-9</code> in the low-repulsion run. This audit checks saved metrics for that conclusion; it does not load large-network weights to recompute BCE by forward evaluation.</p>
+<!-- block:ca_accuracy_def -->
+<p>Whole-sample/exact accuracy requires all 30 output bits of an input to be correct simultaneously; bit accuracy averages individual output positions. Each entry below is computed per model and then averaged equally across four seeds. These metrics are not interchangeable, and perfect probe accuracy is not exhaustive correctness over all <code>2^30</code> inputs.</p>
+<div class="math-display">$$
+\mathrm{Acc}_{\mathrm{whole}}=\frac1N\sum_i\mathbf1[\forall b,\hat y_{ib}=y_{ib}],\qquad
+\mathrm{Acc}_{\mathrm{bit}}=\frac1{30N}\sum_{i,b}\mathbf1[\hat y_{ib}=y_{ib}].
+$$</div>
+<!-- block:ca_table -->
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">n</th>
+<th>Arm</th>
+<th style="text-align: right;">Whole-sample accuracy</th>
+<th style="text-align: right;">Bit accuracy</th>
+<th style="text-align: right;">Stable successes</th>
+<th style="text-align: right;">Sufficiently fitted</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">600</td>
+<td>baseline</td>
+<td style="text-align: right;">68.5181%</td>
+<td style="text-align: right;">98.6302%</td>
+<td style="text-align: right;">0/4</td>
+<td style="text-align: right;">4/4</td>
+</tr>
+<tr>
+<td style="text-align: right;">600</td>
+<td>high_norm</td>
+<td style="text-align: right;">79.6570%</td>
+<td style="text-align: right;">99.1982%</td>
+<td style="text-align: right;">0/4</td>
+<td style="text-align: right;">4/4</td>
+</tr>
+<tr>
+<td style="text-align: right;">600</td>
+<td>low_norm</td>
+<td style="text-align: right;">39.5203%</td>
+<td style="text-align: right;">96.5871%</td>
+<td style="text-align: right;">0/4</td>
+<td style="text-align: right;">4/4</td>
+</tr>
+<tr>
+<td style="text-align: right;">750</td>
+<td>baseline</td>
+<td style="text-align: right;">99.2188%</td>
+<td style="text-align: right;">99.9738%</td>
+<td style="text-align: right;">3/4</td>
+<td style="text-align: right;">4/4</td>
+</tr>
+<tr>
+<td style="text-align: right;">750</td>
+<td>high_norm</td>
+<td style="text-align: right;">99.7620%</td>
+<td style="text-align: right;">99.9921%</td>
+<td style="text-align: right;">4/4</td>
+<td style="text-align: right;">4/4</td>
+</tr>
+<tr>
+<td style="text-align: right;">750</td>
+<td>low_norm</td>
+<td style="text-align: right;">95.0256%</td>
+<td style="text-align: right;">99.8234%</td>
+<td style="text-align: right;">0/4</td>
+<td style="text-align: right;">4/4</td>
+</tr>
+<tr>
+<td style="text-align: right;">900</td>
+<td>baseline</td>
+<td style="text-align: right;">99.9939%</td>
+<td style="text-align: right;">99.9998%</td>
+<td style="text-align: right;">4/4</td>
+<td style="text-align: right;">4/4</td>
+</tr>
+<tr>
+<td style="text-align: right;">900</td>
+<td>high_norm</td>
+<td style="text-align: right;">100%</td>
+<td style="text-align: right;">100%</td>
+<td style="text-align: right;">4/4</td>
+<td style="text-align: right;">4/4</td>
+</tr>
+<tr>
+<td style="text-align: right;">900</td>
+<td>low_norm</td>
+<td style="text-align: right;">99.9756%</td>
+<td style="text-align: right;">99.9992%</td>
+<td style="text-align: right;">4/4</td>
+<td style="text-align: right;">4/4</td>
+</tr>
+<tr>
+<td style="text-align: right;">1200</td>
+<td>baseline</td>
+<td style="text-align: right;">100%</td>
+<td style="text-align: right;">100%</td>
+<td style="text-align: right;">4/4</td>
+<td style="text-align: right;">4/4</td>
+</tr>
+<tr>
+<td style="text-align: right;">1200</td>
+<td>high_norm</td>
+<td style="text-align: right;">100%</td>
+<td style="text-align: right;">100%</td>
+<td style="text-align: right;">4/4</td>
+<td style="text-align: right;">4/4</td>
+</tr>
+<tr>
+<td style="text-align: right;">1200</td>
+<td>low_norm</td>
+<td style="text-align: right;">100%</td>
+<td style="text-align: right;">100%</td>
+<td style="text-align: right;">4/4</td>
+<td style="text-align: right;">4/4</td>
+</tr>
+</tbody>
+</table>
+<!-- block:ca_grid -->
+<h3 id="3-3-only-a-coarse-transition-grid">3.3 Only a Coarse Transition Grid</h3>
+<p>At 600 and 750 samples, high-norm penalties improve all four paired seeds over baseline, averaging +11.1389 and +0.5432 percentage points; low-norm repulsion worsens all four, averaging -28.9978 and -4.1931 percentage points. The smallest <strong>tested grid levels</strong> with at least 3/4 stable successes are baseline 750, high_norm 750, and low_norm 900. High-norm penalization does not establish a leftward threshold shift on this grid. The low-repulsion change from 750 to 900 is a coarse fixed-budget trend on one data sequence, not an exact n50/n90 or an estimate that the true threshold increases by 20%. Differences are small or absent at 900 and 1200. Longer training might recover the gap; no additional training is performed here.</p>
+<!-- block:ca_loss_match -->
+<p>Records at <code>1e-2</code>, <code>1e-3</code>, and <code>1e-4</code> are merely the first saved evaluation nodes at which each model has all training classifications correct and crosses the BCE cutoff. Actual BCE and update counts differ. <code>MATCHED_THRESHOLDS.csv</code> is not an exact matched-loss comparison. Final BCE is slightly higher with the high-norm penalty than with baseline despite better generalization, so the improvement does not result from a lower terminal training BCE. This also does not establish equal endpoint distributions or optimization paths.</p>
+<!-- block:ca_gauge -->
+<h3 id="3-4-layernorm-and-the-complexity-boundary">3.4 LayerNorm and the Complexity Boundary</h3>
+<p>Multiplying a hidden layer's gamma and beta by a positive scalar and dividing the next linear layer's weights by it can preserve the function while changing raw norm. Historical code also absorbs the preceding LayerNorm affine parameters into the next linear layer to compute an effective radius:</p>
+<div class="math-display">$$
+W_{\mathrm{eff}}=W\operatorname{diag}(\gamma),\qquad b_{\mathrm{eff}}=b+W\beta.
+$$</div>
+<!-- block:ca_gauge_limit -->
+<p>Relative to paired baseline, effective radius is approximately 0.864 to 0.871 with the high-norm penalty and 1.459 to 1.475 with low-norm repulsion, so the change is not solely that particular scale compensation. But effective radius is neither a complete reparameterization invariant nor a complexity measurement. Interventions simultaneously change objective geometry, effective step sizes, feature formation, and reachable paths. There is no static sampling or candidate-complexity measurement here, so this experiment alone cannot establish a static-volume mechanism, much less a unique mechanism.</p>
+<!-- block:compare -->
+<h2 id="4-e30-e31-connections-and-non-comparable-protocols">4. E30/E31 Connections and Non-Comparable Protocols</h2>
+<p>This supplement provides <strong>an SGD training retest related to E31's copy amplitude series</strong> and <strong>Rule30 training-intervention evidence related to E30's static-selection results</strong>. E30 uses a fixed Gaussian reference measure, an <code>8→16→16→1 tanh</code> network, 40 training inputs, and constrained SMC for the static AND task. Current Rule30 results are training outcomes in a large LayerNorm network. Task, architecture, measure/initialization, norm definition, conditioning event, and output denominators differ. Numerical results or regularization coefficients cannot be pooled or presented as a closed causal chain.</p>
+<!-- block:e30 -->
+<p>Historical primary E30 conditions define <code>J=BCE+lambda*||theta||^2/2</code>, keeping the reference measure fixed while changing the low-objective constraint region. This table is transcribed and checked against the published report, not recomputed with SMC. Raw BCE is approximately, not exactly, matched.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">lambda</th>
+<th style="text-align: right;">Mean raw BCE</th>
+<th style="text-align: right;">Static mass of complete AND</th>
+<th style="text-align: right;">Observed complete functions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.00258150</td>
+<td style="text-align: right;">53.683%</td>
+<td style="text-align: right;">4190</td>
+</tr>
+<tr>
+<td style="text-align: right;">5e-5</td>
+<td style="text-align: right;">0.00251046</td>
+<td style="text-align: right;">58.423%</td>
+<td style="text-align: right;">1246</td>
+</tr>
+<tr>
+<td style="text-align: right;">1e-4</td>
+<td style="text-align: right;">0.00258978</td>
+<td style="text-align: right;">73.318%</td>
+<td style="text-align: right;">86</td>
+</tr>
+</tbody>
+</table>
+<!-- block:e30_limit -->
+<p>This is direct static-selection evidence, not something to replace with actual training endpoints. Conversely, E30's unpenalized, loss-stratified low-norm AUC median is 0.5088, not evidence that correct functions inherently always have lower norm. Endpoint raw BCE differs by only about 0.32%, but all three points are not exactly matched. Deeper all-AND observed modes have insufficient sampling diagnostics and must not be upgraded to an exact static probability of 100%. Source path: <code>research/neural_k_framework/experiments/experiment_30_weight_decay_static_landscape/RESULTS_AND_CONCLUSION.md</code>; the original file is not included.</p>
+<!-- block:e31_ca -->
+<p>Old E31 centered Rule30 MSE also differs from current copy normalization: old optimization uses raw MSE without dividing by squared amplitude. For ±0.5, ±0.25, and ±0.1, the fitting diagnostic is <code>MSE/(2A)^2&lt;=1e-6</code>, corresponding to absolute cutoffs <code>1e-6,2.5e-7,4e-8</code>. Old runs use 900/1500 samples, eight seeds, 25000 steps, and two evaluation sets totaling 8192 inputs. Current norm interventions use four seeds, 20000 steps, and a separate 4096-input probe. These are protocol background only; old accuracies are not appended to the new three-arm curve. Source paths: <code>research/neural_k_framework/experiments/experiment_31_loss_amplitude_grokking/RULE30_CENTERED_MSE_AMPLITUDES.md</code> and <code>research/neural_k_framework/experiments/experiment_31_loss_amplitude_grokking/RULE30_MSE_PM01.md</code>; the original files are not included.</p>
+<!-- block:audit -->
+<h2 id="5-verification-modes-and-package-scope">5. Verification Modes and Package Scope</h2>
+<p><a href="../assets/updates_20261106/training_controls/audit_cpu.py">audit_cpu.py</a> offers two verification modes, neither running training, sampling, or Torch. <code>--public-only</code> checks consistency of the bundled tables; the default mode requires unbundled local original results and NumPy. The default mode previously independently recalculated final/best/first-fit copy outputs, losses, classifications, complete function IDs, and layer-norm/feature diagnostics, and checked the intermediate snapshot. It reconstructed Rule30 labels from input IDs and decoded monitor/probe predictions at every saved node, checking whole-sample and bit accuracy, the last-three-node success criterion, first threshold crossings, and duplicated baselines. CA BCE, parameter norms, and training fitting came from saved metrics, not new forward passes through large-network weights. Old radius-reference weights were hashed, not reprocessed to recalculate tensor radii. Historical gradient, CUDA Graph, resume-consistency, and file-lock tests were inspected as records, not rerun. Errors, source counts, and bilingual checks from that local audit are recorded in <a href="../assets/updates_20261106/training_controls/audit_summary.json">audit_summary.json</a>; they do not mean that public mode repeated these original-data checks.</p>
+<!-- block:commands -->
+<p>After downloading this package, run the following from its directory. Public mode requires only the Python standard library, not NumPy, the full repository, original weights, or datasets. It recalculates insufficient-fit counts, mean paired differences, and the smallest sample levels implied by published success counts from CSV, and checks document tables, bilingual numbers, and package-file hashes. It does not read original files named in the source manifest or revalidate predictions, training, or original-source hashes.</p>
+<pre><code class="language-powershell">python -I -S audit_cpu.py --public-only
+</code></pre>
+<!-- block:local_command -->
+<p>Full local verification requires the original research directories, <code>tmp/</code> archives, and historical data ZIP, acquired separately and kept in the original repository layout. Downloading this package alone is insufficient for that mode. With those materials present, run the following from the repository root; Python and NumPy are required. <code>--archive</code> can specify a relocated historical data package. The script neither installs dependencies nor downloads files, and missing original material is not silently treated as a successful full audit.</p>
+<pre><code class="language-powershell">python -I research/neural_k_framework/supplementary/updates_20261106/training_controls/audit_cpu.py
+</code></pre>
+<!-- block:write_command -->
+<p><code>--public-only</code> is always read-only and cannot be combined with <code>--write</code> or <code>--archive</code>. Default local verification fails on differences; only explicit <code>--write</code> updates the five derived summaries. The script has no training, resume, SMC, or GPU entry point and does not execute historical <code>run.py</code>, <code>analyze.py</code>, or <code>compare.py</code>. The SHA256 list is a historical record of source-byte fingerprints, not a download manifest or cryptographic proof of chronology or scientific validity. Public mode can only check package-file hashes and consistency of manifest records.</p>
+<!-- block:deliverables -->
+<p>Package files: <a href="../update-training-controls.html">README_zh.md</a>, <a href="update-training-controls.html">README_en.md</a>, <a href="../assets/updates_20261106/training_controls/audit_cpu.py">audit_cpu.py</a>, <a href="../assets/updates_20261106/training_controls/copy_summary.csv">copy_summary.csv</a>, <a href="../assets/updates_20261106/training_controls/rule30_summary.csv">rule30_summary.csv</a>, <a href="../assets/updates_20261106/training_controls/rule30_paired.csv">rule30_paired.csv</a>, <a href="../assets/updates_20261106/training_controls/sources_sha256.csv">sources_sha256.csv</a>, and <a href="../assets/updates_20261106/training_controls/audit_summary.json">audit_summary.json</a>. CSV files preserve unrounded fractions; document percentages are rounded for display. Bilingual paragraph numbers, displayed formulas, and tables use identical conventions. The copy summary includes all three checkpoint types and both learning-rate arms. Rule30 summaries include whole-sample/bit accuracy, fitting/stable success, radius, and penalty; the paired table retains per-seed differences.</p>
+<!-- block:publish -->
+<p><strong>Public-package capabilities:</strong> the bilingual descriptions, compact CSV/JSON, source-hash records, and script support consistency checks on published summaries. A public-mode <code>PASS</code> means only that these package-level checks succeeded. <strong>It does not revalidate original training or static sampling, nor mean that downloading the package enables experiment reruns or original-result recalculation.</strong> E30 appears only as historical-report context, without particle archives; public mode cannot independently validate the old-experiment values in this package.</p>
+<!-- block:local -->
+<p><strong>Not included:</strong> original copy <code>RESULTS.npz</code>, intermediate snapshots, and old Adam archives; Rule30 <code>DATA.npz</code>, <code>PREDICTIONS.npz</code>, initial/final/best weights, and optimizer checkpoints; the historical data ZIP, old radius-reference weights, raw logs, and machine-path records. Original research notes and full reports are referenced only through source paths and hashes, not published in full. The local audit hashes consumed arrays, reference files, and text material, not every large checkpoint byte. Excluding these materials defines the package's scope; it does not imply that synthetic data are inherently confidential.</p></div>
+
+      </article>
+    </main>
+  </div>
+</body>
+</html>

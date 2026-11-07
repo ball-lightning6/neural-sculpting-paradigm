@@ -191,6 +191,28 @@ The new contribution is numerical evidence, without SGD, for redistribution of f
 
 What remains unestablished is that changes in static competitor mass on the same finite training set quantitatively determine a particular actual double-descent curve, or guarantee better generalization at every width. These remain boundaries of the account; the unfinished MNIST exploration is neither a complete reproduction of double descent nor validation of the new mechanism proposed here. This update organizes manuscripts and existing reproduction materials only for the Chinese and English websites, not the formal papers or PDFs, and launches no training or sampling.
 
+### 5.6 How many examples does a wider network need to learn Rule30? {#rule30-width-transition}
+
+In E38, increasing width gave a simple rule more mass **relative** to selected complex rules. E38 did not train a network. Does width have a corresponding effect when a network actually learns? A training scan from August 20 asked a different, observable question: once every network gets its training examples right, can a wider network learn the same rule on new inputs from fewer examples?
+
+Each input is a ring of 30 black or white cells. Rule30 determines the next color of each cell from that cell and its two neighbors. The network sees the whole ring and its successor, but not the generating rule. A test example counts as correct only if all 30 cells are right. We trained three-hidden-layer MLPs (GELU, LayerNorm) with AdamW and no weight decay. All five widths used the same data split. Each larger training set retained every input in the smaller set. Fourteen set sizes and three initializations per condition gave 210 models.
+
+**How do we avoid giving faster networks an unfair advantage?** Instead of comparing at the same step, we compared the first time each run crossed the same training loss (raw BCE). The network got every training example right at both checkpoints bracketing that crossing. We interpolated test accuracy between them on the log-loss scale. Each entry below is the **smallest tested training-set size at which all three initializations got at least 99% of 4096 unseen examples entirely right**. It is a threshold on the tested grid, not an exact critical point.
+
+| Hidden width | BCE = 0.001 | BCE = 0.0003 | BCE = 0.0001 |
+|---:|---:|---:|---:|
+| 128 | 1536 | 1280 | 1152 |
+| 256 | 1280 | 1152 | 1152 |
+| 512 | 1152 | 1024 | 960 |
+| 1024 | 1152 | 1024 | 960 |
+| 2048 | 1152 | 960 | 896 |
+
+At the lowest matched loss, the threshold fell **from 1152 inputs to 896**. Near the transition (512 to 1152 inputs), the widest model beat the narrowest on whole-ring accuracy in **81/81** comparisons matched by training-set size, seed and loss. The median gain was **19.18 percentage points**. Several loss levels come from the same runs, so these are not 81 independent replicates. The original prediction went the other way: limited capacity was expected to help the narrow network learn the rule from fewer examples. That prediction failed here.
+
+This is **direct training evidence for a shift in the sample threshold**. Its direction is consistent with E38, but E38 sampled 4-bit truth tables, not Rule30; the training scan did not measure competing function masses on Rule30. The two experiments support the part of the capacity-wise account in which width can still improve unseen predictions after interpolation. Neither the threshold shift nor their agreement reproduces a complete double-descent curve.
+
+**Check the result.** The [training script](assets/rule30_width/train_width_scan.py) generates the rings, trains the networks and records the loss crossings. It requires PyTorch, NumPy and Matplotlib; the original GPU runs used up to 20000 steps. Set Config.RESULT_DIR to a fresh output directory before a rerun. The [per-run data](assets/rule30_width/matched_crossings.csv) contain all 630 records at the three main loss levels. Place the [check script](assets/rule30_width/check_width.py) beside the CSV and run **python check_width.py** to reproduce the table and the 81 paired comparisons with the Python standard library; it does not train a network. This November 7 addition revisits the August experiment, not a new batch of E38 samples.
+
 ## 6. Connections to the published research
 
 - [Core theory](theory_core_en.md): shortcut elimination and redistribution among compatible candidates as loss tightens.

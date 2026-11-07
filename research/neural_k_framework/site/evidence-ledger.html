@@ -37,6 +37,7 @@
         <div class="sidebar-label">本页目录</div>
         <nav class="toc"><div class="toc">
 <ul>
+<li><a href="#evidence-update-20261106">2026-11-06 增补汇总与证据分级</a></li>
 <li><a href="#摘要">摘要</a></li>
 <li><a href="#1-引言">1. 引言</a></li>
 <li><a href="#2-问题设置与可测对象">2. 问题设置与可测对象</a><ul>
@@ -123,13 +124,52 @@
       <a href="#6-结论边界与尚未解决的问题">证据边界</a>
     </nav>
     <blockquote>
-<p><strong>文件定位：内部证据总账，不是当前主稿。</strong> 本文件保留完整实验数字、反例、限定语和早期理论版本；可读的研究叙事见 <a href="index.html">short_paper_zh.md</a>。</p>
+<p><strong>文件定位：内部证据总账，不是当前主稿。</strong> 本文件保留完整实验数字、反例、限定语和早期理论版本；可读的研究叙事见<a href="index.html">研究主文</a>。</p>
 <p>工作稿，2026-08-25。本文首先追求把问题、证据与理论边界讲清楚；格式、英文翻译和投稿模板留到中文科学内容冻结以后处理。</p>
-<p>正文中的稳定标识 <code>[E01a]</code>、<code>[E01b]</code> 等链接到<a href="experiments/index.html"><code>experiments/README.md</code></a>。每个标识对应可上传的实验说明、冻结脚本、原始结果包与结论边界。</p>
+<p>正文中的稳定标识 <code>[E01a]</code>、<code>[E01b]</code> 等链接到<a href="experiments/index.html">实验目录</a>。每个标识对应可上传的实验说明、冻结脚本、原始结果包与结论边界。</p>
 </blockquote>
+<h2 id="evidence-update-20261106">2026-11-06 增补汇总与证据分级</h2>
+<p>本节汇总2026-10-27之后至2026-11-06的结果，离线整理与文献核查记录延至2026-11-07。沿用 E01--E38，不把追加预算、相关 checkpoint 或重复基线计为新增独立证据。主叙事见<a href="research-updates.html">进展总览</a>，定义边界见<a href="interpretation-update.html">概念澄清</a>；尚未实施的新设想不纳入本轮公开整理。</p>
+<table>
+<thead>
+<tr>
+<th>增补报告</th>
+<th>已保存观察</th>
+<th>当前证据等级与边界</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="update-geometry.html">几何与测度</a></td>
+<td>跨架构18条曲线、54池；径向42条件、168池。增强分层重构与独立 Gaussian 估计的最大 K 差约0.085754 bit。</td>
+<td>有限协议的实测与离线复算。GRU增强预算最深 K 仍变动12.59 bit；近直线不等于恒定指数或全局混合，局部秩与最低范数不等于总质量。</td>
+</tr>
+<tr>
+<td><a href="update-scaffolding.html">解耦提示与可达性</a></td>
+<td>14-bit Mod3、2048输入的测试exact为80.16%→99.14%；16-bit、6000输入为61.38%→99.86%。</td>
+<td>配对结果支持降低输入样本需求，历史可达性干预支持帮助优化；优化困难与规则/样本困难不是同一轴。辅助输出标签属于额外监督，不把样本收益等同直接测得静态Neural K下降。</td>
+</tr>
+<tr>
+<td><a href="update-training-controls.html">训练幅度与范数干预</a></td>
+<td>Copy最小幅度组352/512充分拟合，拟合子集未见准确率48.7216%。Rule30在600样本下，基线/高范数惩罚/低范数排斥整串准确率为68.5181%/79.6570%/39.5203%。</td>
+<td>真实训练干预，不是静态质量测量。Copy全组并未充分拟合；Rule30最小稳定成功已测档为750/750/900，高惩罚未证明门槛左移，范数不等于复杂度。</td>
+</tr>
+<tr>
+<td><a href="update-consensus.html">共识与训练分布</a></td>
+<td>高完整延拓成本代理的代表也可高共识；晚期时间 agreement 为99.955%/99.941%，多 seed 为79.055%/81.692%。</td>
+<td>四点成本是 full-target 延拓代理，不是 fixed-D 低 BCE 成本；高成本代表也有低共识。时间样本不能代替独立 seed，未消除既有宽 CNN 静态预测偏差，也未证明遍历性。</td>
+</tr>
+<tr>
+<td><a href="update-related-work.html">定向相关工作</a></td>
+<td>核对17项工作的主来源元数据及相关定义、方法、结果陈述。已有 CE/MSE、loss 分层与局部精度 profile；Alexander 的反例按连续 MSE 接受。</td>
+<td>文献核查，不是新增实验或完整证明审计。拒绝“此前无人考虑 loss”及“全部反例只因 loss 未控制”；AIT 代理、最小表示与函数质量仍须分别定位。</td>
+</tr>
+</tbody>
+</table>
+<p>这些报告保留未完成、未收敛和负结果。公开包的一致性检查不等于原始训练复现或全局 SMC 混合证明；不同数据份数、初始化重复和单轨迹时间点不能混作独立样本。下文的历史数字与公式保留，机制性概括按本节及所链报告的条件阅读。</p>
 <h2 id="摘要">摘要</h2>
 <p>过参数神经网络能够用大量不同函数拟合同一有限训练集，但真实训练通常只偏向其中很小的一部分。已有函数先验理论揭示了随机初始化网络具有强烈的简单性偏置，并提出训练后的函数分布可由初始化先验在训练集硬一致性条件下近似得到。</p>
-<p>本文通过完整函数枚举、无梯度 constrained sequential Monte Carlo（SMC）和多初始化真实训练，研究这一图景遗漏的连续 loss 维度。</p>
+<p>本文通过完整函数枚举、无梯度 constrained sequential Monte Carlo（SMC）和多初始化真实训练，研究硬分类相容之外的连续 loss 条件及其与真实训练的关系。这一维度已有明确文献先例，本文不将它表述为此前研究普遍遗漏的问题。</p>
 <p>我们区分初始化函数先验、固定训练集下的静态 loss-conditioned 函数质量、优化器诱导分布和单轨迹时间分布，并定义协议相对的 loss-resolved 函数体积</p>
 <div class="math-display">$$
 \Omega_{\Pi,D}(f;\epsilon)
@@ -984,21 +1024,21 @@ $$</div>
 </ol>
 <p>Grokking 相变点因此不是单一宇宙常数，而是<code>agreement/target mass/accuracy</code>阈值、loss 深度、架构和训练预算共同定义的区间。它仍然有操作价值：随机训练集平均的相变位置可作为 Neural K 的样本复杂度读数。</p>
 <h3 id="4-7-grokking-捷径-过拟合和噪声属于同一分布流">4.7 Grokking、捷径、过拟合和噪声属于同一分布流</h3>
-<p><strong>Grokking。</strong> 插值只表示 hard 约束已满足，不表示函数或内部实现已冻结。继续降低 raw loss 会提高 margin 精度并改变相对体积；早期记忆/捷径可以是当时 loss 尺度上最经济的方案，直到更深 loss 使其不足，规则实现才接管。无需假定网络从第一步就在秘密追逐外部真实规则。</p>
+<p><strong>Grokking。</strong> 插值只表示 hard 约束已满足，不表示函数或内部实现已冻结。后续约束和优化路径可能改变候选群的相对质量与可达性，从而出现迟发泛化；这是一种需逐协议检验的解释。严格正 margin 后的末层缩放可在不改变 hard function 或隐藏表示时继续降低 BCE，因此不能把低 loss 当作旧函数全部消失、新特征出现或规则必然接管的证据。</p>
 <p><strong>过拟合。</strong> 当 D 不足以在所需 loss 精度区分外部正确延拓时，更深 loss 仍会让函数分布收束，却可能收束到训练集特异方向。E25 的3/8显示 agreement 继续上升、hard accuracy 平台和错误 NLL 恶化可以同时发生。</p>
 <p><strong>标签噪声。</strong> 早期先利用跨样本相干的规则方向；继续压低训练 loss 后，不可复用例外开始支配剩余残差，外部规则性能下降。Early stopping 不是普适神秘技巧，而是在当前数据噪声和目标定义下选择一个较浅 loss 截面。</p>
 <p><strong>经典 U 形。</strong> 它不必完全归因 optimizer 轨迹。固定训练集的静态分支质量本身就能先改善未见样本、后对持续错误点增加错误置信度，从而产生 validation NLL U 形；optimizer 决定实际曲线如何穿过这套几何。</p>
 <h3 id="4-8-agreement-测量凝聚-不测真理">4.8 Agreement 测量凝聚，不测真理</h3>
-<p>必须区分逐点 agreement、完整函数 collision、modal function 质量和外部 target 质量。高逐点 agreement 说明当前协议下大多数模型在 probe 上给出相同答案；它可以对应外部目标规则、相对外部 generator 错误但仍然极短可读的常量规则，或训练集特异延拓。单样本常量凝聚因此不是可读性猜想的反例，只是否定“agreement 自动恢复隐藏 teacher”。低 agreement 则说明函数分布尚未凝聚，但不能单独区分数据不足、噪声、多模态还是优化不可达。</p>
-<p>E18--E21 支持一个仍待扩展的单向猜想：在所测8-bit MLP 中，严格高完整函数共识系统落入短 signed-threshold 或二次 PTF 族；对抗前缀越长，重新凝聚所需样本和符号复杂度共同上升。它提示神经相对复杂度与人类可提取符号复杂度存在显著交集，但没有证明所有高 agreement 函数都人类可读。</p>
-<p>若该对应能在更多架构和更大空间中保持，它将暗示一个比“网络偶然选中可读函数”更强的可能性：神经复杂度和人类直觉复杂度都在捕捉局部性、对称性、组合性与计算复用等稳健可压缩结构。这里所谓“客观”不是唯一绝对编码，而是多种有效表示语言对一批可复用规律给出大体相似排序。Parity 和架构换序已经限定了这种对齐只能是部分的。百余确定性规则任务在数据充分时同时出现极低未见样本 loss 与高函数一致性，为此提供广度旁证；由于它们未全部执行同一 fresh-seed 符号审计，不能替代 E18/E21 的直接检验。</p>
+<p>必须区分逐点 agreement、完整函数 collision、modal function 质量和外部 target 质量。高逐点 agreement 说明当前协议下大多数模型在 probe 上给出相同答案；它可以对应真实目标、错误常量或训练集特异延拓。低 agreement 则说明函数分布尚未凝聚，但不能单独区分数据不足、噪声、多模态还是优化不可达。2026-10-31 修订明确：高共识单独不保证外部正确性、人类可读性或数据充分性。</p>
+<p>E18/E21 的历史观察不变：所测8-bit MLP 的严格高完整函数共识落入短 signed-threshold 或二次 PTF 族；对抗前缀越长，重新凝聚所需样本和符号复杂度共同上升。但 E21 主动构造输入和标签，不是固定外部规则随机采样的恢复门槛。两项结果提示复杂度与共识成本有关，不证明高 agreement 普遍蕴含短描述。</p>
+<p>当前问题改为固定协议下的共识形成成本、覆盖范围与独立复杂度的关系。完整真值表能指定任意可表示目标；把任意 4-bit 表扩展成忽略后六位的 10-bit 任务，也能大幅增大空间而不增加独立目标标签。因此不能只靠空间大小或样本占比排除查表式共识。应预先固定生成器与采样方式，检查独立约束、fresh seeds、probe 覆盖及符号复杂度，并研究相邻候选复杂度与分歧结构如何影响竞争总质量。<a href="update-consensus.html">11月四点复核</a>已有高完整延拓成本代理与高共识并存的见证，也有低共识；真正 fixed-D 低 BCE 成本、随机记忆认证和一般频率仍未解决，不能将代理与这些对象混同。</p>
 <p>作为工具，优先查询 committee 分歧大的样本、向 oracle 取得标签并全局重训，通常比随机补样更高效。每个新样本都会重塑全局地形，可能修复旧漏洞又暴露新漏洞；这与对抗修补、持续学习和主动数据维护是同一个问题，而不是局部打补丁的单调过程。</p>
 <h3 id="4-9-特征学习是下降机制-不等于泛化本身">4.9 特征学习是下降机制，不等于泛化本身</h3>
 <p>共享中间表示、特征复用和语义绑定可以在有限容量下减少重复计算，使网络更容易把同一训练目标压到更低 loss。E08 显示共享任务收益随前缀深度增加、随宽度增加减弱；E05 则显示固定 NTK 已经足以拟合时，有限网络仍会主动重组表示。</p>
 <p>由此，feature learning 是实现更经济深 loss 解的一种动力学机制，但它既不是泛化的同义词，也不是所有可解任务的必要条件。</p>
 <p>OOD 规则实验中，网络把同一 role bit 解释为可复用语义、组合到未见规则组合，符合“稳定语义绑定比逐组合查表更经济”的图景。这为连接主义系统中符号宏观态的形成提供了实验桥：符号并非预先写入神经元，而可以作为跨任务复用的低描述程序出现。外推到人类概念或大模型时应保留层级差异。</p>
 <h3 id="4-10-容量-数据-训练深度与能力涌现">4.10 容量、数据、训练深度与能力涌现</h3>
-<p>一种能力是否出现至少受三类条件控制：网络容量必须能表示相应实现；数据必须把目标方向辨识到足够精度；训练必须进入该实现占优势且 optimizer 可达的 loss 区域。评测又常用离散阈值把连续概率变化切成“会/不会”。因此很多涌现现象可以在不诉诸神秘新机制的情况下理解为：容量提供候选程序，数据移动体积竞争边界，loss 深度加强压缩，读出阈值把连续变化显示成突变。</p>
+<p>一种能力是否出现至少受三类条件控制：网络容量必须能表示相应实现；数据必须把目标方向辨识到足够精度；训练必须进入该实现占优势且 optimizer 可达的 loss 区域。评测又常用离散阈值把连续概率变化切成“会/不会”。因此很多涌现现象可以在不诉诸神秘新机制的情况下理解为：容量提供候选程序，数据移动体积竞争边界，loss 深度重排候选质量，读出阈值把连续变化显示成突变；重排不自动等于压缩增强。</p>
 <p>这与“大模型通过压缩 token 和概念关系获得能力”的图景相容，但本文没有在 LLM 上直接测量完整 Neural K-profile。这里是由受控实验支持的候选解释，不是对所有 LLM 涌现的完成证明。</p>
 <h3 id="4-11-架构是参考语言-dead-bit-自然包含在内">4.11 架构是参考语言，dead bit 自然包含在内</h3>
 <p>网络结构、输入编码和参数化决定什么程序容易表达。卷积、注意力、局部连接或人为加入的 rule primitive 相当于改变参考语言：它们能让某类任务变短，却不可能无代价地让所有任务都同时更短。本文不研究如何从架构解析推导 profile，只测量给定协议的结果。</p>
@@ -1030,8 +1070,8 @@ $$</div>
 <p>数据决定约束内容和权重，loss 深度决定分辨精度，架构决定参考语言，参考测度决定静态质量，optimizer 决定可达运输。先验简单性、loss 差异收缩、数据相变、grokking、过拟合、特征学习和符号凝聚由此不再需要彼此独立的故事；它们是同一个函数系综在不同坐标和尺度上的观测。</p>
 <h2 id="5-与已有理论的关系">5. 与已有理论的关系</h2>
 <h3 id="5-1-参数到函数映射-简单性先验与静态-bayesian-近似">5.1 参数到函数映射、简单性先验与静态 Bayesian 近似</h3>
-<p><a href="https://www.nature.com/articles/s41467-018-03101-6" target="_blank" rel="noopener">Dingle 等（2018）</a>、<a href="https://arxiv.org/abs/1805.08522" target="_blank" rel="noopener">Valle-Pérez 等（2019）</a>、<a href="https://arxiv.org/abs/1909.11522" target="_blank" rel="noopener">Mingard 等（2019）</a>、<a href="https://www.jmlr.org/papers/v22/20-676.html" target="_blank" rel="noopener">Mingard 等（2021）</a>及<a href="https://www.nature.com/articles/s41467-024-54813-x" target="_blank" rel="noopener">Mingard 等（2025）</a>系统展示了随机参数经网络映射后产生高度非均匀的函数先验，并用 hard conditioning 解释简单函数和泛化。本文接受其最重要的起点：参数空间的多对一映射本身已经产生简单性偏好。E19 也确认不同完整目标的先验和浅 loss 质量极不均匀。</p>
-<p>本文的修正有三层。第一，训练不是只做一次 hard 过滤；<code>Qstatic(D,epsilon)</code>会随连续 raw loss 发生函数特异重排。第二，部分训练集没有由研究者指定的唯一“真实规则”，必须保留全部相容延拓。第三，optimizer pushforward 与静态条件质量相关但不相等。</p>
+<p><a href="https://www.nature.com/articles/s41467-018-03101-6" target="_blank" rel="noopener">Dingle 等（2018）</a>、<a href="https://arxiv.org/abs/1805.08522" target="_blank" rel="noopener">Valle-Pérez 等（2019）</a>、<a href="https://arxiv.org/abs/1909.11522" target="_blank" rel="noopener">Mingard 等（2019）</a>、<a href="https://www.jmlr.org/papers/v22/20-676.html" target="_blank" rel="noopener">Mingard 等（2021）</a>及<a href="https://www.nature.com/articles/s41467-024-54813-x" target="_blank" rel="noopener">Mingard 等（2025）</a>系统展示了随机参数经网络映射后产生高度非均匀的函数先验，并以条件函数概率解释泛化；其中已有不同 loss、likelihood 和尺度的比较，不能统一缩写成只考虑 hard conditioning。本文接受其最重要的起点：参数空间的多对一映射本身已经产生简单性偏好。E19 也确认不同完整目标的先验和浅 loss 质量极不均匀。</p>
+<p>本研究在具体协议中检验三层区别。第一，训练不是只做一次 hard 过滤；<code>Qstatic(D,epsilon)</code>可随连续 raw loss 发生函数特异重排。第二，部分训练集没有由研究者指定的唯一“真实规则”，必须保留全部相容延拓及其总质量。第三，optimizer pushforward 与静态条件质量相关但不相等。这些区别不意味着前人没有考虑 loss；Yang 的连续 loss 态密度、Peleg 的归一化/margin 分析及 Alexander 的连续 MSE 反例见<a href="update-related-work.html">相关工作增补</a>。</p>
 <p>E01--E07 和 E17 直接排除了“首次插值即终点”与“SGD 透明采样静态后验”的普适强版本。</p>
 <h3 id="5-2-grokking-插值后训练与表示重组">5.2 Grokking、插值后训练与表示重组</h3>
 <p><a href="https://arxiv.org/abs/2201.02177" target="_blank" rel="noopener">Power 等（2022）的原始 Grokking 工作</a>将训练误差先归零、验证性能延迟跃迁作为核心现象；<a href="https://arxiv.org/abs/2301.05217" target="_blank" rel="noopener">Nanda 等（2023）</a>进一步用 Fourier 电路和连续 progress measures 分解模加法 grokking。本文不取代这些微观机制，而提供一个更上层的静态坐标：插值后 raw loss 仍可下降，不同函数 cell 和同一 cell 内部实现会继续差异收缩。</p>
@@ -1043,7 +1083,7 @@ $$</div>
 <h3 id="5-4-flat-minima-slt-rlct-与函数体积">5.4 Flat minima、SLT/RLCT 与函数体积</h3>
 <p><a href="https://doi.org/10.1162/neco.1997.9.1.1" target="_blank" rel="noopener">Hochreiter 与 Schmidhuber（1997）</a>把 flat minima 与 MDL/泛化联系起来，<a href="https://arxiv.org/abs/1611.01838" target="_blank" rel="noopener">Chaudhari 等（2017）</a>用 local entropy 构造 Entropy-SGD，<a href="https://doi.org/10.1017/CBO9780511800474" target="_blank" rel="noopener">Watanabe（2009）</a>的 SLT/RLCT 研究奇异模型中的证据与自由能渐近，<a href="https://proceedings.mlr.press/v258/lau25a.html" target="_blank" rel="noopener">Lau 等（2025）</a>进一步提出可估计的 Local Learning Coefficient。本文与它们共享“质量而非单点”视角，但坚持函数分辨与 loss 分辨：参数范数、Hessian 平坦度或某个局部极小值并不自动等于完整函数质量。</p>
 <p>重参数化也会改变朴素欧氏平坦度，因此本文始终相对于明确参考协议报告<code>mu</code>和 SMC 体积。</p>
-<p>未来最直接的桥是比较 Neural K-profile 局部斜率、RLCT/局部学习系数和 margin 核心的渐近关系；本文没有预先宣称三者等价。</p>
+<p><a href="update-geometry.html">11月几何增补</a>已比较局部输出保持探针与全局收缩，并核对末层积分联系；相同最细数值秩仍可对应不同全局斜率。Neural K-profile、RLCT/局部学习系数和 margin 核心的渐近桥接仍未完成，不宣称三者等价。</p>
 <h3 id="5-5-统计力学中的网络-ensemble-与自由能">5.5 统计力学中的网络 ensemble 与自由能</h3>
 <p><a href="https://mlanthology.org/colt/1989/levin1989colt-statistical/" target="_blank" rel="noopener">Levin、Tishby 和 Solla（1989）</a>已经将分层网络写成统计系综，用训练自由能差描述预测和泛化。这说明“神经网络+配分函数+predictive MDL”的数学祖先很早就存在。现代延伸中，<a href="https://www.nature.com/articles/s42256-023-00767-6" target="_blank" rel="noopener">Pacelli 等（2023）</a>建立了超越无限宽极限的有限宽 Bayesian 深网统计力学框架；<a href="https://arxiv.org/abs/1806.07572" target="_blank" rel="noopener">Jacot 等（2018）</a>则给出无限宽训练的 NTK 核极限。它们都依赖各自明确假设，不能直接替代本文的函数级经验测量。</p>
 <p>本文的贡献不在重新命名配分函数，而在经验对象的补全：现代非线性网络、完整 hard function、连续 loss、部分训练集候选 cell、hard-margin 内部核心、optimizer 运输和样本相变被放进同一可复现测量链。我们没有解析求出态密度；“为什么某个架构给某函数分配这条 profile”仍明确留给更硬的数学理论。</p>

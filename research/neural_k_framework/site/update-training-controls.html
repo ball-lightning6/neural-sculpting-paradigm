@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="一道题要求网络复制最后一位，另一道题要求预测一行格子。前者改变目标分值，后者改变对权重大小的惩罚。">
+  <title>目标幅度与范数训练干预 · Neural K 研究档案</title>
+  <link rel="stylesheet" href="assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="assets/site.js"></script>
+</head>
+<body data-page-kind="core">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+
+    <header class="topbar">
+      <a class="site-mark" href="index.html" aria-label="返回研究主文">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K 研究档案</span>
+      </a>
+      <nav class="top-nav" aria-label="全站导航"><a class="top-link" href="index.html">研究主文</a><a class="top-link active" href="theory-core.html">理论核心</a><a class="top-link" href="experiments/index.html">实验索引</a><a class="top-link" href="post-upload.html">提交后增量</a><a class="top-link" href="references.html">参考文献</a><a class="top-link" href="evidence-ledger.html">证据总账</a></nav>
+      <nav class="language-switch" aria-label="语言"><span class="active" lang="zh-CN">中文</span><a href="en/update-training-controls.html" lang="en">EN</a></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>目录</span>
+      </button>
+    </header>
+
+  <div class="page-shell">
+
+    <aside class="sidebar" id="sidebar" aria-label="本页目录">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">本页目录</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#1-范围与证据层级">1. 范围与证据层级</a></li>
+<li><a href="#2-copy-目标幅度与全批量-sgd">2. Copy：目标幅度与全批量 SGD</a><ul>
+<li><a href="#2-1-目标-相对误差与绝对误差">2.1 目标、相对误差与绝对误差</a></li>
+<li><a href="#2-2-停止规则与实际完成状态">2.2 停止规则与实际完成状态</a></li>
+<li><a href="#2-3-主结果与未拟合负结果">2.3 主结果与未拟合负结果</a></li>
+<li><a href="#2-4-与原-adam-的可比范围">2.4 与原 Adam 的可比范围</a></li>
+<li><a href="#2-5-末层缩放到底做过什么">2.5 末层缩放到底做过什么</a></li>
+</ul>
+</li>
+<li><a href="#3-rule30-高范数惩罚与低范数排斥">3. Rule30：高范数惩罚与低范数排斥</a><ul>
+<li><a href="#3-1-范数-公式与实际扫描范围">3.1 范数、公式与实际扫描范围</a></li>
+<li><a href="#3-2-拟合-成功标准与测试分母">3.2 拟合、成功标准与测试分母</a></li>
+<li><a href="#3-3-相变只到粗网格趋势">3.3 相变只到粗网格趋势</a></li>
+<li><a href="#3-4-layernorm-与复杂度边界">3.4 LayerNorm 与复杂度边界</a></li>
+</ul>
+</li>
+<li><a href="#4-与-e30-e31-的连接及不可混用项">4. 与 E30/E31 的连接及不可混用项</a></li>
+<li><a href="#5-核验方式与材料范围">5. 核验方式与材料范围</a></li>
+</ul>
+</div>
+</nav>
+        <a class="sidebar-action" href="theory-core.html">返回理论核心 →</a>
+      </div>
+    </aside>
+
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">理论补充 · 证据与方案分开</div>
+          <h1>目标幅度与范数训练干预</h1>
+          <p class="article-description">一道题要求网络复制最后一位，另一道题要求预测一行格子。前者改变目标分值，后者改变对权重大小的惩罚。</p>
+        </header>
+        <div class="article-body"><div class="reader-intro"><p>复制输入的末位时，分类只看输出的正负。旧 Adam 实验把平方误差的目标从 ±1 缩到 ±0.001 后，模型在未见输入上的表现却跟猜测差不多。这是 Adam 特有的吗？复测沿用相同的数据划分和初始权重，改用全批 SGD。目标为 ±0.001 时，512 个模型只有 352 个达到训练拟合标准；即使只看这 352 个，未见准确率也只有 48.72%。目标为 ±1 时，512 个全部过关，未见准确率为 100%。没拟合好不能解释全部差距。</p>
+<p>Rule30 单独检验静态采样答不了的问题：训练时把参数往小范数推，对下一行 30 位的预测会更准吗？这里不改标签，一组惩罚过大的范数，另一组把过小的范数往外推。用 600 个训练输入，三组都充分拟合；按 30 位全对计，基线的测试准确率为 68.52%，向内推是 79.66%，向外推是 39.52%。</p>
+<p>第 3.3 节把末三次测试均达 99% 算作一次稳定成功。四个初值中至少三个成功的首个已测样本档，基线和向内推同为 750，向外推为 900。压低范数改善了 600 档的预测，却没有降低已测的成功档位；范数也不是函数复杂度。</p></div><p class="source-bar"><a href="assets/updates_20261106/training_controls/package.zip" download>下载本专题公开材料包（ZIP）</a><span>包含双语说明与已发布附件；核验范围见正文。</span></p><nav class="ledger-path"><a href="research-updates.html">本轮进展总览</a></nav><!-- block:scope -->
+<h2 id="1-范围与证据层级">1. 范围与证据层级</h2>
+<p>核验日期：2026-11-06；基准提交：<code>3834fb3f6555c7c58218462502635b16b9b377f9</code>（2026-10-27）。本增补整理该基准之后的三组 2026-11-03 训练干预；来源文件由 <a href="assets/updates_20261106/training_controls/sources_sha256.csv">sources_sha256.csv</a> 中的路径和字节指纹标识。<a href="en/update-training-controls.html">English</a> 与本页按相同段落标识完整对应。</p>
+<!-- block:sources -->
+<p>原始来源目录为 <code>research/copy_mse_amplitude_sgd_20261103/</code>、<code>research/rule30_high_norm_penalty_20261103/</code>、<code>research/rule30_low_norm_penalty_20261103/</code>。核验使用其源码、协议、MANIFEST、SUMMARY、HISTORY、逐模型统计和保存数组；这些目录及完整原始报告未随本包提供，路径是来源标识而非下载链接。可点击证据为本包的 <a href="assets/updates_20261106/training_controls/copy_summary.csv">copy 汇总</a>、<a href="assets/updates_20261106/training_controls/rule30_summary.csv">Rule30 汇总</a>、<a href="assets/updates_20261106/training_controls/rule30_paired.csv">逐 seed 配对差值</a> 和 <a href="assets/updates_20261106/training_controls/audit_summary.json">核验记录</a>。本增补是既有结果的离线核验，不包含新的训练、SMC 或 CIFAR/MNIST 错标对照。<strong>训练终点频率不是静态参数质量，参数范数不是函数复杂度。</strong></p>
+<!-- block:copy_design -->
+<h2 id="2-copy-目标幅度与全批量-sgd">2. Copy：目标幅度与全批量 SGD</h2>
+<p>固定 <code>4→16→1 tanh</code>、97 个可训练参数、线性输出、0/1 输入和最右输入 bit 的 copy 规则。原始坐标独立标准 Gaussian 初始化，隐藏层权重及 bias 除以 2，输出层权重及 bias 除以 4。复用旧 Adam 归档中 16 份不同划分，每份 12 个训练点、4 个未见点、32 个初始化；每条件 512 个配对模型，初始化 seed 为 71001 至 71512。所有幅度使用相同初态，不缩放输出头初始化。完整规则恢复指全部 16 个输入分类正确；未见准确率指每模型 4 个留出输入的正确比例再对模型平均。</p>
+<!-- block:copy_loss -->
+<h3 id="2-1-目标-相对误差与绝对误差">2.1 目标、相对误差与绝对误差</h3>
+<p>令 <code>s=2y-1</code>，原始网络输出为 <code>z</code>。MSE 没有 sigmoid；分类统一用 <code>z&gt;0</code>。实际优化相对 MSE，BCE 为独立参照：</p>
+<div class="math-display">$$
+L_{\mathrm{raw},A}=\operatorname{mean}[(z-As)^2],\qquad
+L_{\mathrm{rel},A}=L_{\mathrm{raw},A}/A^2=\operatorname{mean}[(z/A-s)^2],\qquad
+L_{\mathrm{BCE}}=\operatorname{mean}\operatorname{softplus}(-sz).
+$$</div>
+<!-- block:copy_thresholds -->
+<p>充分拟合要求训练分类全部正确，且 MSE 的 <code>L_rel&lt;=1e-4</code>，或 BCE 的 <code>L_BCE&lt;=1e-3</code>。因此不是对所有幅度使用相同绝对 MSE 门槛。下表的实际学习率用于相对 MSE；BCE 主组学习率为 0.3。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">A</th>
+<th style="text-align: right;">原始 MSE 拟合上限</th>
+<th style="text-align: right;">主组实际学习率</th>
+<th style="text-align: right;">半步长实际学习率</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">0.001</td>
+<td style="text-align: right;">1e-10</td>
+<td style="text-align: right;">3e-7</td>
+<td style="text-align: right;">1.5e-7</td>
+</tr>
+<tr>
+<td style="text-align: right;">0.01</td>
+<td style="text-align: right;">1e-8</td>
+<td style="text-align: right;">3e-5</td>
+<td style="text-align: right;">1.5e-5</td>
+</tr>
+<tr>
+<td style="text-align: right;">0.1</td>
+<td style="text-align: right;">1e-6</td>
+<td style="text-align: right;">3e-3</td>
+<td style="text-align: right;">1.5e-3</td>
+</tr>
+<tr>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1e-4</td>
+<td style="text-align: right;">0.3</td>
+<td style="text-align: right;">0.15</td>
+</tr>
+<tr>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">1e-2</td>
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">15</td>
+</tr>
+</tbody>
+</table>
+<!-- block:copy_rates -->
+<p>使用无动量、无 weight decay 的全批量 SGD，严格说也是全批量梯度下降，不是小批量噪声对照。32 个新初始化（seed 91001 至 91032，每划分 2 个）在训练标签上校准；候选原始 MSE 等价学习率为 <code>{0.001,0.003,0.01,0.03,0.1,0.3}</code>，每个 2000 步。选择全部数值有效且训练相对损失第 90 百分位最小的候选，六条件均选中 0.3。校准共 1152 个条件运行，但只有 32 个独立新初始化。主组各 512 个，半步长组取每划分前 8 个原初始化、各 128 个，正式合计 3840 个模型。</p>
+<!-- block:copy_equivalence -->
+<p>对 MSE，实际相对损失学习率是 <code>eta_rel=0.3*A^2</code>（半步长为 <code>0.15*A^2</code>），所以单步更新精确等价于以学习率 0.3 优化原始 MSE；各层同用一个标量，没有层间预条件。这一等价性不把不同幅度变成同一目标，也不把 SGD 变成 Adam。</p>
+<div class="math-display">$$
+\theta^+=\theta-\eta_{\mathrm{rel}}\nabla L_{\mathrm{rel},A}
+=\theta-0.3\nabla L_{\mathrm{raw},A}.
+$$</div>
+<!-- block:copy_stop -->
+<h3 id="2-2-停止规则与实际完成状态">2.2 停止规则与实际完成状态</h3>
+<p>每 200 步评估，最少 18000 步；只有全部 3840 个模型连续三个评估节点充分拟合才可按拟合停止，否则最多 100000 步。单模型首次达标后没有冻结；保存最终、训练损失最佳、首次拟合三种状态，不按测试成绩选检查点。墙钟预算、STOP 或人工中断只产生暂停，不代表科学终点。实际状态为 <code>completed_step_cap</code>，完成 100000 步；这不表示全部模型收敛。旧 Adam 则固定训练 18000 步，拟合门槛用于评估和记录首次达标，不是其提前停止条件。</p>
+<!-- block:copy_primary -->
+<h3 id="2-3-主结果与未拟合负结果">2.3 主结果与未拟合负结果</h3>
+<p>下表用每模型训练损失最佳的保存检查点；全部模型与拟合子集分母分列。最终状态给出相同的这些分类统计；首次拟合状态的拟合子集统计也相同。</p>
+<table>
+<thead>
+<tr>
+<th>目标</th>
+<th style="text-align: right;">充分拟合/512</th>
+<th style="text-align: right;">全部模型未见准确率</th>
+<th style="text-align: right;">拟合子集未见准确率</th>
+<th style="text-align: right;">拟合子集完整恢复</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MSE ±0.001</td>
+<td style="text-align: right;">352/512</td>
+<td style="text-align: right;">48.9746%</td>
+<td style="text-align: right;">48.7216%</td>
+<td style="text-align: right;">26/352</td>
+</tr>
+<tr>
+<td>MSE ±0.01</td>
+<td style="text-align: right;">473/512</td>
+<td style="text-align: right;">60.1074%</td>
+<td style="text-align: right;">59.1966%</td>
+<td style="text-align: right;">68/473</td>
+</tr>
+<tr>
+<td>MSE ±0.1</td>
+<td style="text-align: right;">512/512</td>
+<td style="text-align: right;">97.7051%</td>
+<td style="text-align: right;">97.7051%</td>
+<td style="text-align: right;">471/512</td>
+</tr>
+<tr>
+<td>MSE ±1</td>
+<td style="text-align: right;">512/512</td>
+<td style="text-align: right;">100%</td>
+<td style="text-align: right;">100%</td>
+<td style="text-align: right;">512/512</td>
+</tr>
+<tr>
+<td>MSE ±10</td>
+<td style="text-align: right;">512/512</td>
+<td style="text-align: right;">100%</td>
+<td style="text-align: right;">100%</td>
+<td style="text-align: right;">512/512</td>
+</tr>
+<tr>
+<td>BCE</td>
+<td style="text-align: right;">512/512</td>
+<td style="text-align: right;">100%</td>
+<td style="text-align: right;">100%</td>
+<td style="text-align: right;">512/512</td>
+</tr>
+</tbody>
+</table>
+<!-- block:copy_selection -->
+<p>±0.001、±0.01 分别有 160、39 个模型未过严格拟合门槛，不能把这些模型算作“充分拟合后泛化失败”。但已有 352 个充分拟合的 ±0.001 模型，未见准确率仍接近随机，说明未拟合不能解释全部现象。拟合子集是选择后的样本，不是原始全部模型的无偏估计；16 个划分内有重复初始化，不能把所有模型当作独立数据集重复。结果支持此协议的幅度相关差异，不证明普遍单调规律或完整函数分布等价。</p>
+<!-- block:copy_half -->
+<p>半步长对照使用同样的 100000 步上限。小幅度拟合更慢，趋势保留但不能称作全组收敛对照。</p>
+<table>
+<thead>
+<tr>
+<th>目标</th>
+<th style="text-align: right;">充分拟合/128</th>
+<th style="text-align: right;">拟合子集未见准确率</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MSE ±0.001</td>
+<td style="text-align: right;">40/128</td>
+<td style="text-align: right;">50.6250%</td>
+</tr>
+<tr>
+<td>MSE ±0.01</td>
+<td style="text-align: right;">80/128</td>
+<td style="text-align: right;">63.4375%</td>
+</tr>
+<tr>
+<td>MSE ±0.1</td>
+<td style="text-align: right;">128/128</td>
+<td style="text-align: right;">96.8750%</td>
+</tr>
+<tr>
+<td>MSE ±1</td>
+<td style="text-align: right;">128/128</td>
+<td style="text-align: right;">100%</td>
+</tr>
+<tr>
+<td>MSE ±10</td>
+<td style="text-align: right;">128/128</td>
+<td style="text-align: right;">100%</td>
+</tr>
+<tr>
+<td>BCE</td>
+<td style="text-align: right;">128/128</td>
+<td style="text-align: right;">100%</td>
+</tr>
+</tbody>
+</table>
+<!-- block:copy_adam -->
+<h3 id="2-4-与原-adam-的可比范围">2.4 与原 Adam 的可比范围</h3>
+<p>旧 Adam 直接共同条件只有 BCE、±1、±0.001；旧系列另有 ±0.1、±0.01 补测，但它们不是本次复用初态的三条件原归档。共同条件的数据、初态、网络、相对拟合标准相同。旧 Adam 使用相对 MSE、初始学习率 0.01，在 2000、5000、9000、13000、16000 步之后各乘 0.3，<code>eps=1e-8</code>、weight decay 为 0、CPU float64；新 SGD 是独立校准的恒定步长、CUDA1 float64、TF32 关闭，并扩大至 100000 步。因此是优化器稳健性复测，不是仅替换优化器名称的等预算因果对照。Adam 上整体缩放目标也不能未经检查就称为严格数值等价。</p>
+<!-- block:copy_adam_results -->
+<p>旧三条件归档中全部每组 512 个模型充分拟合：±0.001 未见准确率为 49.3164%，完整恢复 30/512；±1 与 BCE 都为 100%，完整恢复 512/512。方向与新 SGD 一致，但新小幅度组的训练拟合率更低。旧数值来自 <code>tmp/4bit_copy_small_target_local_20260910/analysis.json</code>；本轮复核其来源与共享初态，不重跑 Adam。</p>
+<!-- block:copy_intermediate -->
+<p>本轮也复核了保留的 18000 步 SGD 中间快照：状态为 <code>paused_at_checkpoint</code>，不是最终完成；主组 ±0.001、±0.01、±0.1 仅有 8/512、45/512、329/512 充分拟合。后续达到 100000 步才得到主结果。因此不能拿同为 18000 步的旧 Adam 与这个中间快照，写成“全部已经拟合的等预算比较”。</p>
+<!-- block:copy_scale -->
+<h3 id="2-5-末层缩放到底做过什么">2.5 末层缩放到底做过什么</h3>
+<p>已做的是单元核验：SGD 源码把末层权重和 bias 同乘 <code>c</code>，并把目标幅度同乘 <code>c</code>，核对相对损失与梯度缩放关系。<code>c=0.001,10</code> 的已保存最大梯度误差均约 <code>1.11e-16</code>；旧 Adam 独立核验的纯单位变换梯度误差约 <code>5.55e-17</code>。这些历史单元测试本轮没有重新运行。</p>
+<div class="math-display">$$
+z_{(\theta_h,c\theta_o)}=c z_{(\theta_h,\theta_o)},\qquad
+L_{\mathrm{rel},cA}(\theta_h,c\theta_o)=L_{\mathrm{rel},A}(\theta_h,\theta_o),\qquad c&gt;0.
+$$</div>
+<!-- block:copy_scale_limit -->
+<p><strong>没有找到已执行的“冻结隐藏层、仅重新训练或缩放末层”的正式泛化对照。</strong> 不能把上述恒等式、梯度检查或训练后层间位移统计冒充这一因果对照。主组拟合子集的隐藏表示相对位移中位数在 ±0.001、±0.01、±0.1 分别为 0.2080、0.2050、0.2104，泛化却差很多；±1、±10 分别为 0.4034、1.0880。表示位移只是相关诊断，既不证明改变量越大必然越泛化，也没有隔离特征方向、读出尺度和残留输出的作用。</p>
+<!-- block:ca_design -->
+<h2 id="3-rule30-高范数惩罚与低范数排斥">3. Rule30：高范数惩罚与低范数排斥</h2>
+<p>一步、周期边界、30-bit 输入和 30-bit 输出；标签为 <code>left XOR (center OR right)</code>。网络 <code>30→1024→1024→1024→30</code>，三个隐藏层均为 Linear、GELU、LayerNorm（<code>eps=1e-5</code>），共 2167838 个参数。训练取同一历史数据池的嵌套前缀 <code>{600,750,900,1200}</code>；每档 seed <code>{0,1,2,3}</code> 是初始化重复，不是四份独立训练集。monitor、probe 各 4096 个输入，与训练池及彼此互斥。主结果只用 probe，不把两个评估集合并成 8192 的新结果。</p>
+<!-- block:ca_optimizer -->
+<p>两次各 32 个模型（16 个干预、16 个重跑基线），共 64 次模型运行；基线完全重复，三组比较只有 48 个不重复条件，不能把重复基线算作更多 seed。复用旧初始权重；相同样本档的模型共享有放回 batch 索引，索引 seed 314159，batch 512。AdamW 学习率 0.001、weight decay 为 0、float32、TF32 开启、CUDA1，固定 20000 步；每 500 步评估，另保存初始化及早期节点。高/低干预使用完全相同的新 batch 计划，但不声称与旧 900/1500 扫描逐步相同。BCE 使用数值稳定的 <code>softplus(-signed_y*z)</code>；旧 BCEWithLogits 在极低损失下的数值实现不同，所以使用本轮重新配对的基线。</p>
+<!-- block:ca_norm -->
+<h3 id="3-1-范数-公式与实际扫描范围">3.1 范数、公式与实际扫描范围</h3>
+<p>惩罚只包括四个线性层的权重与 bias，共 <code>P_linear=2161694</code> 个参数。LayerNorm 的 gamma、beta 仍训练但不直接惩罚。原线性层初始化是均匀分布，按初始化方差标准化不意味着整个网络采用 Gaussian 测度。</p>
+<div class="math-display">$$
+r^2=\frac{1}{P_{\mathrm{linear}}}\sum_j\frac{\theta_j^2}{\sigma_j^2},\qquad
+\sigma_j^2=\frac{1}{3\,\mathrm{fan\_in}_j}.
+$$</div>
+<!-- block:ca_penalties -->
+<p>参考半径取旧 BCE、<code>n=900</code>、八个 seed 终点的半径中位数 <code>r_med=1.2291480798</code>。预先固定 <code>r_H=0.85*r_med=1.0447758679</code>、<code>r_L=1.5*r_med=1.8437221198</code>，没有根据本轮测试成绩调整。两次都只比较 <code>lambda=0</code> 与 <code>lambda=0.1</code>，<strong>没有 lambda 区间密扫或阈值搜索</strong>。</p>
+<div class="math-display">$$
+J_H=L_{\mathrm{BCE}}+\lambda[\max(0,r^2/r_H^2-1)]^2,\qquad
+J_L=L_{\mathrm{BCE}}+\lambda[\max(0,1-r^2/r_L^2)]^2.
+$$</div>
+<!-- block:ca_directions -->
+<p>高范数惩罚只在 <code>r&gt;r_H</code> 时向内推动；低范数排斥只在 <code>r&lt;r_L</code> 时向外推动，越过阈值后为零。它们不是硬半径约束，不是解耦 weight decay，也不是强度对称的正/负 weight decay。低排斥不是无限推动范数发散。实际终点低排斥半径为 1.886650 至 1.892699，超过阈值约 2% 至 3%，惩罚均为零；高惩罚半径为 1.044651 至 1.044777，最大终点惩罚仅 <code>5.1301e-13</code>，有极小阈值超出。因此不能描述为所有终点严格落在硬约束内，或全程持续承受相同径向作用。</p>
+<!-- block:ca_success -->
+<h3 id="3-2-拟合-成功标准与测试分母">3.2 拟合、成功标准与测试分母</h3>
+<p>训练充分拟合定义为训练整串准确率 100% 且 raw BCE 不超过 <code>1e-4</code>。稳定泛化成功另外要求最后三个评估节点（19000、19500、20000 步）的 probe 整串准确率都至少 99%。这是固定预算后的成功分类，不是测试驱动的提前停止；训练实际完成 20000 步。两次全部 32 个模型均充分拟合，最大训练 BCE 分别为高惩罚运行 <code>2.9231732e-9</code>、低排斥运行 <code>2.8179692e-9</code>。此结论本轮从保存指标核对，没有加载大网络权重重新前向计算 BCE。</p>
+<!-- block:ca_accuracy_def -->
+<p>整串（whole-sample/exact）准确率要求一个输入的全部 30 个输出 bit 同时正确；bit accuracy 只平均所有输出位。下面每项先按模型计算，再对四个 seed 等权平均。两种指标不可互换，probe 上全对也不等于穷举全部 <code>2^30</code> 输入。</p>
+<div class="math-display">$$
+\mathrm{Acc}_{\mathrm{whole}}=\frac1N\sum_i\mathbf1[\forall b,\hat y_{ib}=y_{ib}],\qquad
+\mathrm{Acc}_{\mathrm{bit}}=\frac1{30N}\sum_{i,b}\mathbf1[\hat y_{ib}=y_{ib}].
+$$</div>
+<!-- block:ca_table -->
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">n</th>
+<th>组别</th>
+<th style="text-align: right;">整串准确率</th>
+<th style="text-align: right;">bit accuracy</th>
+<th style="text-align: right;">稳定成功</th>
+<th style="text-align: right;">训练充分拟合</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">600</td>
+<td>baseline</td>
+<td style="text-align: right;">68.5181%</td>
+<td style="text-align: right;">98.6302%</td>
+<td style="text-align: right;">0/4</td>
+<td style="text-align: right;">4/4</td>
+</tr>
+<tr>
+<td style="text-align: right;">600</td>
+<td>high_norm</td>
+<td style="text-align: right;">79.6570%</td>
+<td style="text-align: right;">99.1982%</td>
+<td style="text-align: right;">0/4</td>
+<td style="text-align: right;">4/4</td>
+</tr>
+<tr>
+<td style="text-align: right;">600</td>
+<td>low_norm</td>
+<td style="text-align: right;">39.5203%</td>
+<td style="text-align: right;">96.5871%</td>
+<td style="text-align: right;">0/4</td>
+<td style="text-align: right;">4/4</td>
+</tr>
+<tr>
+<td style="text-align: right;">750</td>
+<td>baseline</td>
+<td style="text-align: right;">99.2188%</td>
+<td style="text-align: right;">99.9738%</td>
+<td style="text-align: right;">3/4</td>
+<td style="text-align: right;">4/4</td>
+</tr>
+<tr>
+<td style="text-align: right;">750</td>
+<td>high_norm</td>
+<td style="text-align: right;">99.7620%</td>
+<td style="text-align: right;">99.9921%</td>
+<td style="text-align: right;">4/4</td>
+<td style="text-align: right;">4/4</td>
+</tr>
+<tr>
+<td style="text-align: right;">750</td>
+<td>low_norm</td>
+<td style="text-align: right;">95.0256%</td>
+<td style="text-align: right;">99.8234%</td>
+<td style="text-align: right;">0/4</td>
+<td style="text-align: right;">4/4</td>
+</tr>
+<tr>
+<td style="text-align: right;">900</td>
+<td>baseline</td>
+<td style="text-align: right;">99.9939%</td>
+<td style="text-align: right;">99.9998%</td>
+<td style="text-align: right;">4/4</td>
+<td style="text-align: right;">4/4</td>
+</tr>
+<tr>
+<td style="text-align: right;">900</td>
+<td>high_norm</td>
+<td style="text-align: right;">100%</td>
+<td style="text-align: right;">100%</td>
+<td style="text-align: right;">4/4</td>
+<td style="text-align: right;">4/4</td>
+</tr>
+<tr>
+<td style="text-align: right;">900</td>
+<td>low_norm</td>
+<td style="text-align: right;">99.9756%</td>
+<td style="text-align: right;">99.9992%</td>
+<td style="text-align: right;">4/4</td>
+<td style="text-align: right;">4/4</td>
+</tr>
+<tr>
+<td style="text-align: right;">1200</td>
+<td>baseline</td>
+<td style="text-align: right;">100%</td>
+<td style="text-align: right;">100%</td>
+<td style="text-align: right;">4/4</td>
+<td style="text-align: right;">4/4</td>
+</tr>
+<tr>
+<td style="text-align: right;">1200</td>
+<td>high_norm</td>
+<td style="text-align: right;">100%</td>
+<td style="text-align: right;">100%</td>
+<td style="text-align: right;">4/4</td>
+<td style="text-align: right;">4/4</td>
+</tr>
+<tr>
+<td style="text-align: right;">1200</td>
+<td>low_norm</td>
+<td style="text-align: right;">100%</td>
+<td style="text-align: right;">100%</td>
+<td style="text-align: right;">4/4</td>
+<td style="text-align: right;">4/4</td>
+</tr>
+</tbody>
+</table>
+<!-- block:ca_grid -->
+<h3 id="3-3-相变只到粗网格趋势">3.3 相变只到粗网格趋势</h3>
+<p>600、750 样本下，高惩罚相对基线四个配对 seed 都改善，平均为 +11.1389、+0.5432 个百分点；低排斥四个都下降，平均为 -28.9978、-4.1931 个百分点。至少 3/4 seed 稳定成功的最小<strong>已测档位</strong>依次为 baseline 750、high_norm 750、low_norm 900。高惩罚未在此网格证明门槛左移；低排斥的 750 到 900 是固定预算、单数据序列的粗趋势，不是精确 n50/n90 或真实阈值提高 20% 的估计。900、1200 的差距很小或消失；未排除更长训练补回差距，本轮不追加训练。</p>
+<!-- block:ca_loss_match -->
+<p><code>1e-2</code>、<code>1e-3</code>、<code>1e-4</code> 的记录只是每模型首次在已保存评估节点满足训练分类全对且 BCE 过门槛的状态；实际 BCE 和更新步数并不相同。不能把 <code>MATCHED_THRESHOLDS.csv</code> 当作精确 matched-loss 对照。高惩罚最终 BCE 略高于基线但仍改善泛化，所以不是通过更低的终点训练 BCE 获得该提升；这也不证明两个终点分布或整个优化路径相同。</p>
+<!-- block:ca_gauge -->
+<h3 id="3-4-layernorm-与复杂度边界">3.4 LayerNorm 与复杂度边界</h3>
+<p>把某隐藏层 gamma、beta 同乘正数，再把下一线性层权重除以该数，可以保持函数而改变裸范数。历史代码另外把前一 LayerNorm 仿射参数吸收到下一线性层，计算有效半径：</p>
+<div class="math-display">$$
+W_{\mathrm{eff}}=W\operatorname{diag}(\gamma),\qquad b_{\mathrm{eff}}=b+W\beta.
+$$</div>
+<!-- block:ca_gauge_limit -->
+<p>高惩罚的有效半径相对配对基线约 0.864 至 0.871 倍，低排斥约 1.459 至 1.475 倍，变化不只是上述那一类尺度补偿。但有效半径也不是完整重参数化不变量，更不是复杂度测量。干预同时改变目标地形、有效步长、特征形成与可达路径；本轮没有静态采样或候选复杂度测量，不能单独证明静态体积机制，更不能确定唯一机制。</p>
+<!-- block:compare -->
+<h2 id="4-与-e30-e31-的连接及不可混用项">4. 与 E30/E31 的连接及不可混用项</h2>
+<p>本增补提供与 <strong>E31 的 copy 幅度系列相关的 SGD 训练复测</strong>，以及与 <strong>E30 静态选择结果相关的 Rule30 训练干预证据</strong>。E30 是固定 Gaussian 参考测度、<code>8→16→16→1 tanh</code>、40 个训练输入的 AND 静态 constrained SMC；本轮 Rule30 则是含 LayerNorm 的大网络训练。任务、架构、测度/初始化、范数定义、筛选事件及输出分母都不同，不能合并数值、比较正则系数大小或把它们写成闭合因果链。</p>
+<!-- block:e30 -->
+<p>E30 的历史主条件定义 <code>J=BCE+lambda*||theta||^2/2</code>，固定参考测度，改变低目标约束区域。下表仅转录并核对已发布报告，不重算旧 SMC；三点 raw BCE 近似匹配而非相等。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">lambda</th>
+<th style="text-align: right;">raw BCE 均值</th>
+<th style="text-align: right;">完整 AND 静态质量</th>
+<th style="text-align: right;">观测完整函数数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.00258150</td>
+<td style="text-align: right;">53.683%</td>
+<td style="text-align: right;">4190</td>
+</tr>
+<tr>
+<td style="text-align: right;">5e-5</td>
+<td style="text-align: right;">0.00251046</td>
+<td style="text-align: right;">58.423%</td>
+<td style="text-align: right;">1246</td>
+</tr>
+<tr>
+<td style="text-align: right;">1e-4</td>
+<td style="text-align: right;">0.00258978</td>
+<td style="text-align: right;">73.318%</td>
+<td style="text-align: right;">86</td>
+</tr>
+</tbody>
+</table>
+<!-- block:e30_limit -->
+<p>这是直接静态选择证据，不需要真实训练终点来替代。与此同时，E30 无惩罚、loss 分层后的低范数 AUC 中位数为 0.5088，并不支持“正确函数本来总是范数更低”。两端 raw BCE 只差约 0.32%，但三点不完全匹配；更深层观察到的全 AND 模态因采样诊断不足，不能升级为精确 100% 的静态概率。来源路径：<code>research/neural_k_framework/experiments/experiment_30_weight_decay_static_landscape/RESULTS_AND_CONCLUSION.md</code>，原文件未随本包提供。</p>
+<!-- block:e31_ca -->
+<p>E31 的旧 Rule30 居中 MSE 也不是本次 copy 的归一化协议：旧目标为原始 MSE，优化时不除以幅度平方；±0.5、±0.25、±0.1 的拟合诊断采用 <code>MSE/(2A)^2&lt;=1e-6</code>，对应绝对门槛 <code>1e-6,2.5e-7,4e-8</code>。旧数据档为 900/1500、八个 seed、25000 步、两个评估集合计 8192 输入；本轮范数干预是四个 seed、20000 步、单独 4096 probe。因此只作协议背景，不把旧准确率接到新的三组曲线上。来源路径：<code>research/neural_k_framework/experiments/experiment_31_loss_amplitude_grokking/RULE30_CENTERED_MSE_AMPLITUDES.md</code>、<code>research/neural_k_framework/experiments/experiment_31_loss_amplitude_grokking/RULE30_MSE_PM01.md</code>；原文件未随本包提供。</p>
+<!-- block:audit -->
+<h2 id="5-核验方式与材料范围">5. 核验方式与材料范围</h2>
+<p><a href="assets/updates_20261106/training_controls/audit_cpu.py">audit_cpu.py</a> 有两种核验模式，都不运行训练、采样或 Torch。<code>--public-only</code> 仅核对本包表格的一致性；默认模式依赖未随本包提供的本地原始结果和 NumPy。默认模式曾独立复算 copy 的最终/最佳/首次拟合前向、损失、分类、完整函数编号与层范数/表示诊断，并核对中间快照；从 Rule30 输入 ID 重建标签并解码全部保存节点的 monitor/probe 预测，核对整串与 bit accuracy、最后三个节点成功判据、首次门槛穿越和重复基线。CA 的 BCE、参数范数及训练拟合来自保存指标，未从大网络权重重新前向；旧半径参考权重只校验哈希，不重新计算张量半径。历史梯度、CUDA Graph、恢复一致性及文件锁测试仅查看其记录，不重新执行。这次本地核验的误差、来源数量和双语检查记录保存在 <a href="assets/updates_20261106/training_controls/audit_summary.json">audit_summary.json</a>，不代表公开模式重新执行了这些原始核验。</p>
+<!-- block:commands -->
+<p>下载本包后，在本包目录执行下列命令。公开模式只需要 Python 标准库，不依赖 NumPy、完整仓库、原始权重或数据；它从 CSV 重新核算未充分拟合数、配对平均差值和已发布成功数对应的最小样本档，核对文档表格、双语数字与包内文件哈希。它不读取来源清单指向的原文件，不重新验证预测、训练过程或原始来源哈希。</p>
+<pre><code class="language-powershell">python -I -S audit_cpu.py --public-only
+</code></pre>
+<!-- block:local_command -->
+<p>完整本地核验需要另行取得原始研究目录、<code>tmp/</code> 归档及历史数据 ZIP，并保持原仓库布局；仅下载本包不能使用该模式。具备这些材料时，在仓库根目录执行下列命令，需要 Python 与 NumPy。可用 <code>--archive</code> 指定历史数据包的新位置。脚本不安装依赖、不触发下载，缺少原始材料时不会自动转成“完整核验通过”。</p>
+<pre><code class="language-powershell">python -I research/neural_k_framework/supplementary/updates_20261106/training_controls/audit_cpu.py
+</code></pre>
+<!-- block:write_command -->
+<p><code>--public-only</code> 始终只读，不能与 <code>--write</code> 或 <code>--archive</code> 合用。默认的本地模式发现差异即报错，只有显式加 <code>--write</code> 才更新五个派生汇总。脚本没有训练、恢复、SMC 或 GPU 入口，不运行历史 <code>run.py</code>、<code>analyze.py</code> 或 <code>compare.py</code>。SHA256 清单是来源字节的历史指纹记录，不是下载清单，也不是对时间顺序或科学正确性的密码学证明；公开模式只能核对本包文件哈希，以及来源清单记录内部的一致性。</p>
+<!-- block:deliverables -->
+<p>本包文件：<a href="update-training-controls.html">README_zh.md</a>、<a href="en/update-training-controls.html">README_en.md</a>、<a href="assets/updates_20261106/training_controls/audit_cpu.py">audit_cpu.py</a>、<a href="assets/updates_20261106/training_controls/copy_summary.csv">copy_summary.csv</a>、<a href="assets/updates_20261106/training_controls/rule30_summary.csv">rule30_summary.csv</a>、<a href="assets/updates_20261106/training_controls/rule30_paired.csv">rule30_paired.csv</a>、<a href="assets/updates_20261106/training_controls/sources_sha256.csv">sources_sha256.csv</a>、<a href="assets/updates_20261106/training_controls/audit_summary.json">audit_summary.json</a>。CSV 保存未四舍五入的比例，文档百分比按显示精度舍入；双语段落数字、展示公式及表格使用相同规约。copy 汇总包括全部三种检查点和两个步长组；Rule30 汇总包括整串/bit、拟合/稳定成功、半径与惩罚；配对表保留逐 seed 差值。</p>
+<!-- block:publish -->
+<p><strong>公开包能力：</strong> 双语说明、精简 CSV/JSON、来源哈希记录及脚本足以核对已发布汇总的一致性。公开模式的 <code>PASS</code> 仅表示这些包内检查通过，<strong>不表示重新验证了原始训练或静态采样，也不表示下载本包即可重跑实验或完成原始结果复算</strong>。E30 只作为历史报告背景，不附带粒子包；本包中的旧实验数字不能由公开模式独立验证。</p>
+<!-- block:local -->
+<p><strong>未随本包提供：</strong> copy 原始 <code>RESULTS.npz</code>、中间快照、旧 Adam 归档；Rule30 的 <code>DATA.npz</code>、<code>PREDICTIONS.npz</code>、初始/最终/最佳权重、optimizer 检查点；历史数据 ZIP、用于半径参考的旧权重、原始日志与机器路径记录。原始研究笔记与完整报告仅以来源路径和哈希引用，不整份发布。本地核验只对使用到的数组、参考文件及文本材料建哈希，不声称已逐字节校验全部大型检查点。未包含这些材料是包的范围限制，不暗示合成数据天然保密。</p></div>
+
+      </article>
+    </main>
+  </div>
+</body>
+</html>

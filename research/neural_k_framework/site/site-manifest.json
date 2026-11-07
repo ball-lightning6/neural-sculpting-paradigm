@@ -10,6 +10,10 @@
     "en": "en/theory-core.html"
   },
   "october_theory": {
+    "algorithmic_information": {
+      "zh-CN": "ait-connections.html",
+      "en": "en/ait-connections.html"
+    },
     "double_descent": {
       "zh-CN": "width-double-descent.html",
       "en": "en/width-double-descent.html"
@@ -44,6 +48,91 @@
         "E32"
       ]
     }
+  },
+  "november_2026_update": {
+    "baseline": "3834fb3",
+    "through": "2026-11-06",
+    "entry": {
+      "zh-CN": "research-updates.html",
+      "en": "en/research-updates.html"
+    },
+    "pages": [
+      {
+        "source_stem": "research_updates_20261106",
+        "zh-CN": "research-updates.html",
+        "en": "en/research-updates.html"
+      },
+      {
+        "source_stem": "interpretation_update_20261106",
+        "zh-CN": "interpretation-update.html",
+        "en": "en/interpretation-update.html"
+      },
+      {
+        "source_stem": "supplementary/updates_20261106/geometry/README",
+        "zh-CN": "update-geometry.html",
+        "en": "en/update-geometry.html"
+      },
+      {
+        "source_stem": "supplementary/updates_20261106/scaffolding/README",
+        "zh-CN": "update-scaffolding.html",
+        "en": "en/update-scaffolding.html"
+      },
+      {
+        "source_stem": "supplementary/updates_20261106/consensus/README",
+        "zh-CN": "update-consensus.html",
+        "en": "en/update-consensus.html"
+      },
+      {
+        "source_stem": "supplementary/updates_20261106/training_controls/README",
+        "zh-CN": "update-training-controls.html",
+        "en": "en/update-training-controls.html"
+      },
+      {
+        "source_stem": "supplementary/updates_20261106/related_work/README",
+        "zh-CN": "update-related-work.html",
+        "en": "en/update-related-work.html"
+      }
+    ],
+    "experiment_links": {
+      "e08": [
+        "update-scaffolding.html"
+      ],
+      "e16": [
+        "update-scaffolding.html"
+      ],
+      "e18": [
+        "update-consensus.html",
+        "interpretation-update.html"
+      ],
+      "e21": [
+        "update-consensus.html",
+        "interpretation-update.html"
+      ],
+      "e29": [
+        "update-consensus.html"
+      ],
+      "e30": [
+        "update-training-controls.html"
+      ],
+      "e31": [
+        "update-training-controls.html",
+        "interpretation-update.html"
+      ],
+      "e32": [
+        "update-consensus.html"
+      ],
+      "e33": [
+        "update-geometry.html"
+      ],
+      "e36": [
+        "update-consensus.html",
+        "update-related-work.html"
+      ],
+      "e37": [
+        "update-geometry.html"
+      ]
+    },
+    "new_experiment_ids": []
   },
   "experiment_count": 38,
   "experiments": [

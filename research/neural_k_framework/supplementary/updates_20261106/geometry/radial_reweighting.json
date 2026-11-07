@@ -1,0 +1,510 @@
+{
+  "config": {
+    "diagnostic_date": "2026-11-01",
+    "recheck_date": "2026-11-07",
+    "dimension": 97,
+    "sigma0": 7.236272269866327,
+    "epsilon": [
+      0.01,
+      0.0063,
+      0.004,
+      0.0025,
+      0.0016,
+      0.001
+    ],
+    "families": {
+      "radial_power_p": [
+        1,
+        1.5,
+        2,
+        2.5,
+        3
+      ],
+      "gaussian_variance_ratio": [
+        0.9,
+        1,
+        1.1
+      ]
+    },
+    "coordinate": "-ln(expm1(epsilon))",
+    "power_second_moment": "d*sigma0^2",
+    "gaussian_ratio": "v/v0",
+    "pooling": "mean_probability_before_K",
+    "ess": "min_over_nodes_and_pools((sum w)^2/(N*sum w^2))",
+    "pools": 4,
+    "rules": {
+      "copy": {
+        "source": "research/radial_mixture_diagnostic_20261101/results_v1/copy__gaussian",
+        "particles_per_pool": 768
+      },
+      "parity2": {
+        "source": "research/radial_mixture_diagnostic_20261101/results_v2_enhanced/parity2__gaussian",
+        "particles_per_pool": 1536
+      },
+      "parity4": {
+        "source": "research/radial_mixture_diagnostic_20261101/results_v2_enhanced/parity4__gaussian",
+        "particles_per_pool": 1536
+      }
+    }
+  },
+  "curves": [
+    {
+      "rule": "copy",
+      "family": "radial_power_p",
+      "parameter": 1,
+      "K_bits": [
+        14.089718161260349,
+        14.988609353176217,
+        15.784125881335536,
+        16.700943879997315,
+        17.53642011506806,
+        18.445532481637766
+      ],
+      "min_weight_ess_fraction": 0.1280175208839962,
+      "linear_slope": 1.8815859830036943,
+      "first_slope": 1.9377333433578283,
+      "last_slope": 1.933032586587964,
+      "drift_pct": -0.24259048779737835
+    },
+    {
+      "rule": "copy",
+      "family": "radial_power_p",
+      "parameter": 1.5,
+      "K_bits": [
+        14.089858755472212,
+        14.981867228267989,
+        15.840927251472156,
+        16.72004718120955,
+        17.58885215921826,
+        18.52188045812014
+      ],
+      "min_weight_ess_fraction": 0.8650863679978954,
+      "linear_slope": 1.9138189110671515,
+      "first_slope": 1.9228963147475648,
+      "last_slope": 1.9838846905046312,
+      "drift_pct": 3.1716934131767127
+    },
+    {
+      "rule": "copy",
+      "family": "radial_power_p",
+      "parameter": 2,
+      "K_bits": [
+        14.09498347252668,
+        14.982600619366094,
+        15.861246899054995,
+        16.73557602891378,
+        17.627663927767706,
+        18.572757189614578
+      ],
+      "min_weight_ess_fraction": 0.9999999999999996,
+      "linear_slope": 1.9347614960156263,
+      "first_slope": 1.9134299646445454,
+      "last_slope": 2.0095382481794006,
+      "drift_pct": 5.022827347261138
+    },
+    {
+      "rule": "copy",
+      "family": "radial_power_p",
+      "parameter": 2.5,
+      "K_bits": [
+        14.098240261999313,
+        14.984132846898873,
+        15.86960489017411,
+        16.745658988978988,
+        17.650137036077833,
+        18.605423010661642
+      ],
+      "min_weight_ess_fraction": 0.9684360228101637,
+      "linear_slope": 1.9478729756514,
+      "first_slope": 1.9097123387476684,
+      "last_slope": 2.031210867088518,
+      "drift_pct": 6.362137683025315
+    },
+    {
+      "rule": "copy",
+      "family": "radial_power_p",
+      "parameter": 3,
+      "K_bits": [
+        14.100053482926109,
+        14.986270020423296,
+        15.873902861281548,
+        16.7522088277072,
+        17.66226825960776,
+        18.627470616796444
+      ],
+      "min_weight_ess_fraction": 0.9184785407999125,
+      "linear_slope": 1.9561463585626537,
+      "first_slope": 1.9104106810562096,
+      "last_slope": 2.0522959292009437,
+      "drift_pct": 7.426950108250541
+    },
+    {
+      "rule": "copy",
+      "family": "gaussian_variance_ratio",
+      "parameter": 0.9,
+      "K_bits": [
+        14.414941441244611,
+        15.35942799519693,
+        16.333857685873156,
+        17.24805196253425,
+        18.182889005269953,
+        19.18890912305918
+      ],
+      "min_weight_ess_fraction": 0.584005449520803,
+      "linear_slope": 2.062263568505373,
+      "first_slope": 2.0360229407140884,
+      "last_slope": 2.139086148159368,
+      "drift_pct": 5.061986551543107
+    },
+    {
+      "rule": "copy",
+      "family": "gaussian_variance_ratio",
+      "parameter": 1,
+      "K_bits": [
+        14.09498347252668,
+        14.9826006193661,
+        15.861246899055013,
+        16.735576028913805,
+        17.62766392776774,
+        18.572757189614613
+      ],
+      "min_weight_ess_fraction": 1.0,
+      "linear_slope": 1.9347614960156405,
+      "first_slope": 1.913429964644557,
+      "last_slope": 2.009538248179408,
+      "drift_pct": 5.022827347260894
+    },
+    {
+      "rule": "copy",
+      "family": "gaussian_variance_ratio",
+      "parameter": 1.1,
+      "K_bits": [
+        13.819681449149272,
+        14.68160866689327,
+        15.463542932290405,
+        16.322440762790134,
+        17.13971124603651,
+        18.030019902541216
+      ],
+      "min_weight_ess_fraction": 0.5644793072324982,
+      "linear_slope": 1.8161667174174827,
+      "first_slope": 1.8580503673758426,
+      "last_slope": 1.8930505275587355,
+      "drift_pct": 1.8837035204984254
+    },
+    {
+      "rule": "parity2",
+      "family": "radial_power_p",
+      "parameter": 1,
+      "K_bits": [
+        32.60342917788121,
+        34.63042561597301,
+        36.84094812890513,
+        38.99764806860058,
+        41.08606271496819,
+        43.139525138349654
+      ],
+      "min_weight_ess_fraction": 0.024827736270288125,
+      "linear_slope": 4.601651688266732,
+      "first_slope": 4.3695817917477715,
+      "last_slope": 4.366247700169093,
+      "drift_pct": -0.07630230391785231
+    },
+    {
+      "rule": "parity2",
+      "family": "radial_power_p",
+      "parameter": 1.5,
+      "K_bits": [
+        32.97893171163891,
+        35.212248424616476,
+        37.449561409286474,
+        39.747879736498,
+        41.93424441287979,
+        44.26635254641264
+      ],
+      "min_weight_ess_fraction": 0.5406601508205758,
+      "linear_slope": 4.893147122359415,
+      "first_slope": 4.814344939559689,
+      "last_slope": 4.958728077339584,
+      "drift_pct": 2.999019380466339
+    },
+    {
+      "rule": "parity2",
+      "family": "radial_power_p",
+      "parameter": 2,
+      "K_bits": [
+        33.211923402680796,
+        35.52241454241871,
+        37.825285930574054,
+        40.21097938564069,
+        42.48453259662718,
+        44.919410287578
+      ],
+      "min_weight_ess_fraction": 0.9999999999999998,
+      "linear_slope": 5.073501582063071,
+      "first_slope": 4.980709301935198,
+      "last_slope": 5.177245513360988,
+      "drift_pct": 3.9459482477611774
+    },
+    {
+      "rule": "parity2",
+      "family": "radial_power_p",
+      "parameter": 2.5,
+      "K_bits": [
+        33.36332541074933,
+        35.718207287522276,
+        38.070259089590394,
+        40.51691616510904,
+        42.849283914855974,
+        45.343814943431866
+      ],
+      "min_weight_ess_fraction": 0.8837673944562522,
+      "linear_slope": 5.193365667240075,
+      "first_slope": 5.076402097751421,
+      "last_slope": 5.304085549607659,
+      "drift_pct": 4.485134303231986
+    },
+    {
+      "rule": "parity2",
+      "family": "radial_power_p",
+      "parameter": 3,
+      "K_bits": [
+        33.46859717394718,
+        35.85383029072001,
+        38.24279176932181,
+        40.732571623149575,
+        43.105507974027205,
+        45.64413810677697
+      ],
+      "min_weight_ess_fraction": 0.7293445080009998,
+      "linear_slope": 5.278958117625177,
+      "first_slope": 5.141830049753807,
+      "last_slope": 5.397852842345173,
+      "drift_pct": 4.9792153788440485
+    },
+    {
+      "rule": "parity2",
+      "family": "gaussian_variance_ratio",
+      "parameter": 0.9,
+      "K_bits": [
+        34.50534392599583,
+        36.9738683005443,
+        39.46066978091168,
+        41.98770187259718,
+        44.413252300894854,
+        47.007252450690615
+      ],
+      "min_weight_ess_fraction": 0.5480802720608362,
+      "linear_slope": 5.417375315042584,
+      "first_slope": 5.321380421204287,
+      "last_slope": 5.515585315475745,
+      "drift_pct": 3.649520968236031
+    },
+    {
+      "rule": "parity2",
+      "family": "gaussian_variance_ratio",
+      "parameter": 1,
+      "K_bits": [
+        33.21192340268092,
+        35.52241454241884,
+        37.82528593057421,
+        40.21097938564087,
+        42.484532596627375,
+        44.91941028757822
+      ],
+      "min_weight_ess_fraction": 1.0,
+      "linear_slope": 5.073501582063108,
+      "first_slope": 4.980709301935228,
+      "last_slope": 5.177245513361048,
+      "drift_pct": 3.9459482477617547
+    },
+    {
+      "rule": "parity2",
+      "family": "gaussian_variance_ratio",
+      "parameter": 1.1,
+      "K_bits": [
+        32.133086452804264,
+        34.30314601527394,
+        36.47797758516793,
+        38.72490205919607,
+        40.86763012910378,
+        43.17214489478589
+      ],
+      "min_weight_ess_fraction": 0.5485166426479975,
+      "linear_slope": 4.783652232501238,
+      "first_slope": 4.677981950526836,
+      "last_slope": 4.9000566950214095,
+      "drift_pct": 4.747233889381808
+    },
+    {
+      "rule": "parity4",
+      "family": "radial_power_p",
+      "parameter": 1,
+      "K_bits": [
+        56.38858798884997,
+        59.95725370128305,
+        63.37657610433831,
+        67.05491280602612,
+        70.43192306523842,
+        73.72676074165318
+      ],
+      "min_weight_ess_fraction": 0.008240670743843256,
+      "linear_slope": 7.553039524385337,
+      "first_slope": 7.692947271561001,
+      "last_slope": 7.0057660969450275,
+      "drift_pct": -8.93261256522997
+    },
+    {
+      "rule": "parity4",
+      "family": "radial_power_p",
+      "parameter": 1.5,
+      "K_bits": [
+        58.174191587961396,
+        62.086673524311706,
+        65.85898476163875,
+        69.81157823875074,
+        73.42733615870429,
+        77.27956698616612
+      ],
+      "min_weight_ess_fraction": 0.2156411969070681,
+      "linear_slope": 8.279344420246597,
+      "first_slope": 8.434109457889504,
+      "last_slope": 8.190943159908578,
+      "drift_pct": -2.883129501638859
+    },
+    {
+      "rule": "parity4",
+      "family": "radial_power_p",
+      "parameter": 2,
+      "K_bits": [
+        59.30839344514996,
+        63.4967666247212,
+        67.57810993324847,
+        71.71343667405543,
+        75.60814040127862,
+        79.7588946404211
+      ],
+      "min_weight_ess_fraction": 0.9999999999999996,
+      "linear_slope": 8.851091033384977,
+      "first_slope": 9.028846246877494,
+      "last_slope": 8.825689208755653,
+      "drift_pct": -2.250088577952025
+    },
+    {
+      "rule": "parity4",
+      "family": "radial_power_p",
+      "parameter": 2.5,
+      "K_bits": [
+        60.07698274176107,
+        64.46575484119207,
+        68.79704582934262,
+        73.07187902906067,
+        77.18577090258573,
+        81.529691878985
+      ],
+      "min_weight_ess_fraction": 0.6782778419572861,
+      "linear_slope": 9.28365172835163,
+      "first_slope": 9.460844771812969,
+      "last_slope": 9.236416871795994,
+      "drift_pct": -2.3721761156638044
+    },
+    {
+      "rule": "parity4",
+      "family": "radial_power_p",
+      "parameter": 3,
+      "K_bits": [
+        60.637340946025176,
+        65.17272242934841,
+        69.7027383905919,
+        74.09954008679189,
+        78.36982100247107,
+        82.87694840099242
+      ],
+      "min_weight_ess_fraction": 0.35338571285034653,
+      "linear_slope": 9.62393582290316,
+      "first_slope": 9.776889576981926,
+      "last_slope": 9.583440346454898,
+      "drift_pct": -1.9786377763994834
+    },
+    {
+      "rule": "parity4",
+      "family": "gaussian_variance_ratio",
+      "parameter": 0.9,
+      "K_bits": [
+        62.08435806391189,
+        66.585308856613,
+        71.05492676982273,
+        75.39318264276164,
+        79.5623435720327,
+        83.9527815629775
+      ],
+      "min_weight_ess_fraction": 0.5360426053663142,
+      "linear_slope": 9.464293752753235,
+      "first_slope": 9.702667582314096,
+      "last_slope": 9.335325332679194,
+      "drift_pct": -3.785992321374476
+    },
+    {
+      "rule": "parity4",
+      "family": "gaussian_variance_ratio",
+      "parameter": 1,
+      "K_bits": [
+        59.30839344515025,
+        63.49676662472153,
+        67.57810993324885,
+        71.71343667405584,
+        75.60814040127907,
+        79.75889464042157
+      ],
+      "min_weight_ess_fraction": 1.0,
+      "linear_slope": 8.851091033385066,
+      "first_slope": 9.028846246877587,
+      "last_slope": 8.825689208755684,
+      "drift_pct": -2.2500885779526913
+    },
+    {
+      "rule": "parity4",
+      "family": "gaussian_variance_ratio",
+      "parameter": 1.1,
+      "K_bits": [
+        56.996765772177596,
+        60.90734794242557,
+        64.69758950308562,
+        68.67954410981692,
+        72.33467946038157,
+        76.27538622181359
+      ],
+      "min_weight_ess_fraction": 0.5493492268227527,
+      "linear_slope": 8.351027975355057,
+      "first_slope": 8.430014145626803,
+      "last_slope": 8.3790682693915,
+      "drift_pct": -0.604339154777489
+    }
+  ],
+  "source_sha256": {
+    "research/radial_mixture_diagnostic_20261101/results_v1/copy__gaussian/identity.json": "3f7a96efb60a2f8c2dc5fe551615b29bb5934197a4e4fd68e29ccc29e0f12f64",
+    "research/radial_mixture_diagnostic_20261101/results_v1/copy__gaussian/result.json": "4b9e34d14b9c7fd1f4e97d49fffbfb605be68f41baa3371ba88c5c45a07dd2d3",
+    "research/radial_mixture_diagnostic_20261101/results_v1/copy__gaussian/node_0.01.npz": "f3d9e553cd9851be30809ad7ee5f2271f48f59730b24b523741aff063e2193dd",
+    "research/radial_mixture_diagnostic_20261101/results_v1/copy__gaussian/node_0.0063.npz": "161dad40563f35d6e1f4fbc48e42cfcd21958c7b59d81fe999cc17f94e77bcd0",
+    "research/radial_mixture_diagnostic_20261101/results_v1/copy__gaussian/node_0.004.npz": "7309ec089acf072cdc078b401197da4a487735a3a96725f84bea83c9853c8b20",
+    "research/radial_mixture_diagnostic_20261101/results_v1/copy__gaussian/node_0.0025.npz": "6c475137f9e5321f61183a8e28b845ecdcb24d11d27bf4ea8a8958841931df80",
+    "research/radial_mixture_diagnostic_20261101/results_v1/copy__gaussian/node_0.0016.npz": "8caf09dee3531ff037f9abb7cd19631b55daabc439b71d7b40b7e646e9ba65f0",
+    "research/radial_mixture_diagnostic_20261101/results_v1/copy__gaussian/node_0.001.npz": "e471f453cf34c0e8f5f627e92c0baa0726b66091cc437055e33de865675ef318",
+    "research/radial_mixture_diagnostic_20261101/results_v2_enhanced/parity2__gaussian/identity.json": "014c46b30f5b58de9f4dbe8329dafcfffc95244ec7967e658973c64857b59bf3",
+    "research/radial_mixture_diagnostic_20261101/results_v2_enhanced/parity2__gaussian/result.json": "9b58291055904485276ed70e199aae7262bc1ccbcf757b668ce25205a3674d0c",
+    "research/radial_mixture_diagnostic_20261101/results_v2_enhanced/parity2__gaussian/node_0.01.npz": "655a0975eee2b3450eff7100a74be2bab12690f8713ba34d06e4b629d9b642d4",
+    "research/radial_mixture_diagnostic_20261101/results_v2_enhanced/parity2__gaussian/node_0.0063.npz": "ddf7b097a5d87b939b3b757b322163ab557195ff5ef0a8323c0aeb0bbcc632bf",
+    "research/radial_mixture_diagnostic_20261101/results_v2_enhanced/parity2__gaussian/node_0.004.npz": "a2d406e38dd7c843726650fba63b695e0483574bcfbb6df30f3ac0a5738b1269",
+    "research/radial_mixture_diagnostic_20261101/results_v2_enhanced/parity2__gaussian/node_0.0025.npz": "1d5cc3a0bd8cb76fc9441ff0ef055dd6319d1014b0f01774a02fd370c5eeca8f",
+    "research/radial_mixture_diagnostic_20261101/results_v2_enhanced/parity2__gaussian/node_0.0016.npz": "84afc5717799f51b41d2262414e031904e0761f3a13544bf826b847bb7b4b1ef",
+    "research/radial_mixture_diagnostic_20261101/results_v2_enhanced/parity2__gaussian/node_0.001.npz": "e9569227297d0c127987e262be9edac1efe501acac5c2028166c9829c2d32757",
+    "research/radial_mixture_diagnostic_20261101/results_v2_enhanced/parity4__gaussian/identity.json": "7d2b35935c4eb2595122a36bc9328d8dbc9bfd3fab24ab71dacd62ebc47ca056",
+    "research/radial_mixture_diagnostic_20261101/results_v2_enhanced/parity4__gaussian/result.json": "689f25b602e797b50de5dfb60d8f10186d1ca5995856114e611d97bdf45d318a",
+    "research/radial_mixture_diagnostic_20261101/results_v2_enhanced/parity4__gaussian/node_0.01.npz": "589d21ad001f3f4c127b14a01bee2dd6e6e65d1d8bd309ecead750ac692672cc",
+    "research/radial_mixture_diagnostic_20261101/results_v2_enhanced/parity4__gaussian/node_0.0063.npz": "fe5a5842d6a22d352b526c4506176e462bb915b238f8602219389cf235c564c1",
+    "research/radial_mixture_diagnostic_20261101/results_v2_enhanced/parity4__gaussian/node_0.004.npz": "7a70d90ba7ac2a58532e1d68a10f0a8bdcccb7788ce1501760dc94447771563e",
+    "research/radial_mixture_diagnostic_20261101/results_v2_enhanced/parity4__gaussian/node_0.0025.npz": "787b4e52cedd65ab23d694eb176c0cc1a4832ccea384a3a1f08ce55e6c6a4551",
+    "research/radial_mixture_diagnostic_20261101/results_v2_enhanced/parity4__gaussian/node_0.0016.npz": "f1e12533f2c43ae48b60fc069deeaf34a70c5b512d6788478c002d6be70db4d1",
+    "research/radial_mixture_diagnostic_20261101/results_v2_enhanced/parity4__gaussian/node_0.001.npz": "8acf5d6505e7b7e1691afac4d4261d76aac054844bf1cccac77cab182ceefedb"
+  }
+}

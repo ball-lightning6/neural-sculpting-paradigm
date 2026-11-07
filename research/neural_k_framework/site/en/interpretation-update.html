@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Separating representability, implementation mass, contraction rates, reachability, and predictive concentration.">
+  <title>Measure, amplitude, complexity, and prediction · Neural K Research Archive</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="../assets/site.js"></script>
+</head>
+<body data-page-kind="core">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+
+    <header class="topbar">
+      <a class="site-mark" href="index.html" aria-label="Back to the research narrative">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K Research Archive</span>
+      </a>
+      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="index.html">Research</a><a class="top-link active" href="theory-core.html">Core Theory</a><a class="top-link" href="experiments/index.html">Experiments</a><a class="top-link" href="post-upload.html">Updates</a><a class="top-link" href="references.html">References</a><a class="top-link" href="evidence-ledger.html">Evidence</a></nav>
+      <nav class="language-switch" aria-label="Language"><a href="../interpretation-update.html" lang="zh-CN">中文</a><span class="active" lang="en">EN</span></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>Contents</span>
+      </button>
+    </header>
+
+  <div class="page-shell">
+
+    <aside class="sidebar" id="sidebar" aria-label="On this page">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">On this page</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#1-four-steps-from-the-actual-problem-to-prediction">1 Four Steps from the Actual Problem to Prediction</a><ul>
+<li><a href="#encoding-evidence">1.1 Early Encoding Experiments: Symbols, Positions and Real Values</a></li>
+</ul>
+</li>
+<li><a href="#2-priors-and-contraction-are-different-readings-of-the-same-joint-distribution">2 Priors and Contraction Are Different Readings of the Same Joint Distribution</a></li>
+<li><a href="#3-what-the-last-linear-layer-can-scale">3 What the Last Linear Layer Can Scale</a></li>
+<li><a href="#4-amplitude-alignment-does-not-force-every-margin-upward">4 Amplitude Alignment Does Not Force Every Margin Upward</a></li>
+<li><a href="#measure-contraction">5 Measure, Radius and Contraction Shape</a></li>
+<li><a href="#prediction-concentration">6 How Close Must Static Sampling and Training Be?</a></li>
+<li><a href="#agreement-conjecture">7 Agreement, Rule Nodes and Memory</a><ul>
+<li><a href="#rule-noise-contributions">7.1 Rules and Noise: Complexity Contributions of Added and Removed Samples</a></li>
+</ul>
+</li>
+<li><a href="#8-independent-complexity-calibration-remains-essential">8 Independent Complexity Calibration Remains Essential</a></li>
+</ul>
+</div>
+</nav>
+        <a class="sidebar-action" href="theory-core.html">Back to core theory →</a>
+      </div>
+    </aside>
+
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">Theory supplement · Evidence and proposals distinguished</div>
+          <h1>Measure, amplitude, complexity, and prediction</h1>
+          <p class="article-description">Separating representability, implementation mass, contraction rates, reachability, and predictive concentration.</p>
+        </header>
+        <div class="article-body"><nav class="ledger-path"><a href="research-updates.html">Research update overview</a></nav><p>Two networks get every training example right but give different answers on new ones. Of all the rules that fit, which will a network usually learn? Consider a binary classifier that reads a positive output as 1. One network outputs 0.1, another outputs 10. They give the same <strong>answer</strong> but different <strong>scores</strong>. For label 1, binary cross-entropy (BCE), a common training loss, assigns the second network a smaller loss.</p>
+<p>Does changing 0.1 to 10 require a new way of solving the problem? Section 3 shows why rescaling the last layer alone can do it. Even if the same solution is possible at either scale, is it equally common when we sample weights, or when we train? Sections 5 and 6 examine those two ways of obtaining weights. Separating what is possible from what is probable gives us a way to ask which rules generalize. The <a href="research-updates.html">experiment overview</a> starts with a training comparison.</p>
+<h2 id="1-four-steps-from-the-actual-problem-to-prediction">1 Four Steps from the Actual Problem to Prediction</h2>
+<p>For example, to teach a network addition, first decide which numbers represent which symbols. Use that same code for training and test questions. Training gives one set of weights. Run those weights on the questions to obtain a vector of real scores, then decode them using the agreed rule. <strong>Read the scores from one set of weights together</strong>: a new initialization can change the whole answer sheet. The distribution of those vectors over repeated draws of weights is the joint output distribution.</p>
+<p>On a finite probe set U, let the continuous outputs be Z_U(theta) and the decoded table be H_U(theta). The output distributions induced by reference measure mu and actual training pushforward nu are, respectively:</p>
+<div class="math-display">$$
+\nu_U^{\rm ref}=(Z_U)_\#\mu,\qquad
+\nu_U^{\rm opt}=(Z_U)_\#\nu,\qquad H_U=\operatorname{decode}\circ Z_U.
+$$</div>
+<p>The conditioning event for a fixed training set D constrains only D. Unseen points can decode correctly at small or different amplitudes; they need not satisfy the same margins as on D. Thus fixed-D conditional prediction is not equivalent to adding all test labels to a full-target event. Whether their trends are similar is an empirical question, not something to assume by definition. <a href="experiments/e20.html">E20</a></p>
+<p>Consistently re-encoding training and test data can preserve task information, but does not guarantee unchanged representation, optimization or sample costs. An arbitrary fixed pixel permutation differs from a separate random permutation for each image; Swin's local windows do not automatically eliminate the influence of positional encoding either. No new image-permutation experiment is reported here, and symmetries of other architectures cannot be transferred directly to CNNs or Swin.</p>
+<h3 id="encoding-evidence">1.1 Early Encoding Experiments: Symbols, Positions and Real Values</h3>
+<p>The historical experiments revisited on 2026-11-07 provide concrete counterparts to these four steps. For an actual rule f, input encoder E_in and output decoder D_out, evaluation concerns decoded task behavior, not just the network's raw numerical outputs:</p>
+<div class="math-display">$$
+\widehat f_\theta(x)=D_{\rm out}\!\left(F_\theta(E_{\rm in}(x))\right)\approx f(x).
+$$</div>
+<p><strong>Symbol and position shuffling have results recorded in the earlier paper.</strong> Section 4.1.2 of that paper (<a href="https://github.com/ball-lightning6/neural-sculpting-paradigm/blob/3834fb3f6555c7c58218462502635b16b9b377f9/paper_zh.pdf" target="_blank" rel="noopener">Chinese PDF</a>, <a href="https://github.com/ball-lightning6/neural-sculpting-paradigm/blob/3834fb3f6555c7c58218462502635b16b9b377f9/paper.pdf" target="_blank" rel="noopener">English PDF</a>) trains a Transformer to add two 8-digit hexadecimal numbers: 16 input characters, 33 binary output bits, and mean BCE. The <a href="https://github.com/ball-lightning6/neural-sculpting-paradigm/blob/3834fb3f6555c7c58218462502635b16b9b377f9/symbolic_math_logic/generate_symbol_add_shuffle_dataset.py" target="_blank" rel="noopener">generator</a> separately controls a fixed substitution of digit symbols with printable characters and a fixed permutation of the 16 input positions. Mappings remain identical across training and evaluation within each experiment, rather than being resampled per example; outputs remain standard binary. The table below transcribes each condition's last listed evaluation point from the table on page 11 of both PDFs.</p>
+<table>
+<thead>
+<tr>
+<th>Symbol substitution</th>
+<th>Position shuffle</th>
+<th style="text-align: right;">Last listed step</th>
+<th style="text-align: right;">Eval BCE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>No</td>
+<td>No</td>
+<td style="text-align: right;">12000</td>
+<td style="text-align: right;">0.000099</td>
+</tr>
+<tr>
+<td>No</td>
+<td>Yes</td>
+<td style="text-align: right;">7000</td>
+<td style="text-align: right;">0.000024</td>
+</tr>
+<tr>
+<td>Yes</td>
+<td>No</td>
+<td style="text-align: right;">9000</td>
+<td style="text-align: right;">0.000051</td>
+</tr>
+<tr>
+<td>Yes</td>
+<td>Yes</td>
+<td style="text-align: right;">25000</td>
+<td style="text-align: right;">0.000095</td>
+</tr>
+</tbody>
+</table>
+<p>All four records reach evaluation BCE below 0.0001, supporting learning without dependence on the original symbol identities or natural digit order. This is a review of historical results, not a rerun in this update. Different stopping points and multi-seed logs not rechecked here do not establish equal learning costs or statistical equivalence, and BCE is not converted directly into whole-string accuracy. The results do not establish that the network internally performs human-style digitwise addition or an explicit inverse-permutation algorithm.</p>
+<p><strong>Historical code also specifies real-valued input and output encodings.</strong> The <a href="https://github.com/ball-lightning6/neural-sculpting-paradigm/blob/3834fb3f6555c7c58218462502635b16b9b377f9/symbolic_math_logic/generate_add_quaternary_float_encoding.py" target="_blank" rel="noopener">floating-point input addition generator</a> groups the inputs of two 20-bit addends into pairs, producing 20 real-valued inputs with <code>00→0.0, 01→5.5, 10→1.3, 11→10.0</code>, while retaining a 21-bit binary output. The <a href="https://github.com/ball-lightning6/neural-sculpting-paradigm/blob/3834fb3f6555c7c58218462502635b16b9b377f9/cellular_automata/generate_ca_to_abstract_real.py" target="_blank" rel="noopener">real-valued output CA generator</a> retains a 30-bit input and encodes the output after 5 Rule110 steps into 15 real values using <code>00→7.6, 01→1.3, 10→5.9, 11→3.0</code>. These are different tasks, not a single controlled experiment re-encoding both sides. The encoding protocols were checked, but the corresponding training results have not all been located, so no new success rates or convergence values are reported. Real-valued outputs can be decoded to the nearest valid code value; this readout must be specified together with the actual training and evaluation protocol.</p>
+<p>These experiments connect to the early claim that networks learn structure: a basic-symbol codebook and positional conversion can be reused across many examples, so changing surface form need not destroy the compressibility of task relations. Encoding nevertheless belongs to the neural reference language and can alter loss geometry, candidate mass and learning cost. The evidence concerns learnability under specific re-encodings, not invariance to arbitrary encoding or a guarantee that randomly indexing the entire input space remains equally easy.</p>
+<h2 id="2-priors-and-contraction-are-different-readings-of-the-same-joint-distribution">2 Priors and Contraction Are Different Readings of the Same Joint Distribution</h2>
+<p>A function prior integrates over all continuous outputs within a decoded cell; equal-amplitude targets, mean BCE and pointwise BCE bounds select different subsets of that output space. They derive from the same underlying object, but are not the same integral.</p>
+<div class="math-display">$$
+P_\mu(f)=\nu_U^{\rm ref}(C_f),\qquad
+V_f(a,\delta)=\nu_U^{\rm ref}\{z:\|z-a s_f\|\leq\delta\},\qquad s_f\in\{-1,+1\}^{|U|}.
+$$</div>
+<p>The fact that all target rays pass through zero does not imply equal priors for all hard functions: sign decoding at zero may be ambiguous, and a ray or its small neighborhood does not cover an entire cell. Contraction curves along equal-amplitude directions alone cannot reconstruct a prior obtained by integrating over all amplitudes and nonuniform outputs.</p>
+<p>For the same event family, over a differentiable window with positive mass, contraction rates can be accumulated exactly into a mass ratio:</p>
+<div class="math-display">$$
+K_f(t)=-\log_2V_f(t),\quad \kappa_f(t)=\frac{dK_f}{dt},\qquad
+K_f(t)-K_f(t_0)=\int_{t_0}^{t}\kappa_f(u)\,du.
+$$</div>
+<p>This explains the close connection between bias at a fixed section and a contraction profile; it also requires retaining the starting mass, coordinate and entire integration path. Knowing a slope over one segment does not determine the original prior, nor do identically named thresholds in different losses represent the same precision.</p>
+<h2 id="3-what-the-last-linear-layer-can-scale">3 What the Last Linear Layer Can Scale</h2>
+<p>If the final readout is F_theta(x)=v^T phi_eta(x)+b, multiplying both v and b by a positive number a multiplies every logit by a. Existing hard classifications remain unchanged; if every training margin is strictly positive, increasing a can drive BCE to zero. This requires no change in the hidden representation. Incorrect or zero margins cannot become correct, strictly positive margins through this operation.</p>
+<p>Thus "tightening the loss excludes shortcuts" has two different meanings: a current implementation that fits unfaithfully is excluded; or a class of implementations that still exists loses relative mass. The former does not establish that all implementations of the same hard function cease to exist. Lower BCE is also insufficient evidence of new features.</p>
+<p>Collect the readout parameters into a q-dimensional vector v and let S_a(eta,v)=(eta,av). For a reference measure with density rho and any measurable parameter region A, a change of variables gives:</p>
+<div class="math-display">$$
+\mu(S_a A)=\int_A a^q\rho(\eta,av)\,d\eta\,dv.
+$$</div>
+<p>If the readout coordinates follow a zero-mean isotropic Gaussian with covariance sigma^2 I, independently of the hidden parameters eta (using the corresponding standardized coordinates when layer scales differ), the relative change in density and volume element is:</p>
+<div class="math-display">$$
+\frac{a^q\rho(\eta,av)}{\rho(\eta,v)}
+=a^q\exp\!\left[-\frac{(a^2-1)\|v\|^2}{2\sigma^2}\right].
+$$</div>
+<p>This is an exact change of variables for a scaled region, not a computation of all candidate masses. It shows that a one-to-one correspondence need not preserve probability. It also shows that a small readout share of the total norm does not by itself imply a small change in Gaussian cost: what matters is the absolute increment in squared norm in whitened coordinates. Rescaling can also change an event's relative tolerance: when an MSE target is multiplied by a, the MSE tolerance must also be multiplied by a^2 to represent the same relative output error.</p>
+<p>When the entire unconstrained network is retrained, changes in output scale can accompany changes in hidden representations, layer norms and optimization paths. But "the network must distribute amplitude evenly across layers" is not a general law. The balanced factorization favored by a minimum-norm solution and whether gradient descent finds that factorization are different questions.</p>
+<p>For example, consider the two-layer scalar linear model yhat=uvx, a differentiable data loss depending only on the product uv, continuous gradient flow with equal learning rates and no regularization:</p>
+<div class="math-display">$$
+\dot u=-v\,\partial_{uv}L,\quad \dot v=-u\,\partial_{uv}L,
+\qquad \frac{d}{dt}(u^2-v^2)=0.
+$$</div>
+<p>The gradient can also be zero once an exact fit has been reached. A highly unbalanced factorization therefore does not automatically become balanced merely through gradient descent. Adding regularization, changing the optimizer, introducing nonlinearities or changing learning rates requires fresh analysis. Normalizations such as LayerNorm also introduce specific scaling equivalences, making the raw total weight norm still less suitable as a unique cost intrinsic to the function.</p>
+<h2 id="4-amplitude-alignment-does-not-force-every-margin-upward">4 Amplitude Alignment Does Not Force Every Margin Upward</h2>
+<p>Mean BCE allows different samples to bear different errors. Variance regularization constrains these differences, but when the common amplitude is free, it can increase low margins, decrease high margins or shrink outputs overall. For a fixed margin vector m:</p>
+<div class="math-display">$$
+\operatorname{Var}(a m)=a^2\operatorname{Var}(m).
+$$</div>
+<p>Ordinary BCE itself attenuates gradients at high-margin points; the variance term is not what first makes it attend to difficult points. Difficult points may reflect undiscovered structure or incorrect labels, and the variance term does not directly distinguish between them. Broader fitting, optimization changes and reallocation of candidate mass can occur together; no single mechanism should be presumed.</p>
+<p>The f/g intervention shows that mean BCE, pointwise BCE constraints and variance alignment can produce different rankings; the original improvements and prospective reversal prediction remain evidence. This supports including precision allocation across samples in complexity calibration rather than treating one mean-BCE section as the only scale. A variance term does not fix the common amplitude, so a decrease in absolute variance alone does not identify the mechanism. <a href="experiments/e31.html">E31</a></p>
+<h2 id="measure-contraction">5 Measure, Radius and Contraction Shape</h2>
+<p>The central contribution in this line is the sequence of diagnostics on 2026-11-01: measuring contraction on different norm spheres, examining how Gaussian-conditioned mass moving to larger radii offsets some curvature, and then testing other norm-only weights on the same stored particles. Within the exp[-(r/a_p)^p] family with matched prior mean squared norm, p=1.5, 2.5 and 3 retain approximately 2%–3% first-to-last segment slope changes for parity4; a Gaussian is not the only weighting with approximately stable coefficients. Changing Gaussian variance to 0.9 or 1.1 of its original value also changes the window coefficient rather than merely translating K. <a href="update-geometry.html">Current radial-reweighting diagnostic</a></p>
+<p>This is read-only importance reweighting of existing samples, without a new independent SMC run for each weight. The heavier-tailed p=1 case has marked weight concentration and cannot support a reliable stability claim. That evidence-level distinction does not erase the observed family of weightings; it locates the evidence accurately, with earlier independent cross-measure sampling providing a complement.</p>
+<p>The volume-contraction law is empirical within a specified protocol and window, not exclusive to a Gaussian measure. Earlier E37 uniform-solid-ball and uniform-cube measurements, together with sphere controls in this update, also show rule-dependent contraction and approximately linear intervals; the uniform ball was additionally rechecked with an independent transition kernel. Spherical t8 curves flatten more noticeably, so stability differs across weightings. Here "stable complexity" means a relatively steady effective contraction coefficient over a window, not that K stops growing. <a href="update-geometry.html">Cross-measure evidence</a></p>
+<p><strong>Not requiring a Gaussian does not mean independence from the measure.</strong> Weighting affects values, slopes and curvature, not merely a normalization constant. For a spherical measure, let A_f(r,t) be the uniform angular fraction satisfying the event at radius r and rho_mu(r) its radial probability density; a Gaussian is only one choice:</p>
+<div class="math-display">$$
+V_{\mu,f}(t)=\int A_f(r,t)\rho_\mu(r)\,dr,
+\qquad \rho_{\mathrm G}(r)\propto r^{d-1}e^{-r^2/(2\sigma^2)}.
+$$</div>
+<p>Gaussian parameter density is largest at the origin, but radial mass includes the volume factor r^(d-1). A fixed sphere, uniform ball and Gaussian are not the same kind of uniformity. A cube also changes the angular distribution, so it cannot be treated solely as radial reweighting of the common A_f above.</p>
+<p>For a finite radial partition with fixed prior weights p_j, define V=sum_j p_j V_j, K_j=-log2 V_j and conditional stratum weights w_j=p_j V_j/V. Within a differentiable window:</p>
+<div class="math-display">$$
+K'=\mathbb E_w[K_j'],\qquad
+K''=\mathbb E_w[K_j'']-\ln(2)\operatorname{Var}_w(K_j').
+$$</div>
+<p>Mass migration between strata can therefore partly offset within-stratum curvature, but does not guarantee a strictly linear curve. The <a href="update-geometry.html">radial experiment</a> tests this accounting. Greater radii being more favorable to some complex rules is a relative finding for specified coordinates, rules and windows, not a claim that all rules become simple at large norms.</p>
+<p>The empirical form V≈C epsilon^kappa is approximately exponential in log(1/epsilon), with both C and kappa indexed by measure, architecture, rule and window. It is not exponential in raw epsilon or output amplitude. Local slopes, secant fits and eventual asymptotic exponents are not interchangeable. The substantive observation is measurable relative-mass change and additional penalties on complex rules recurring across multiple protocols, not an unconditional, measure-independent exact power law.</p>
+<p>SLT's local risk volumes and RLCT can motivate effective-dimensional explanations, but SLT is not restricted to MSE, nor can it be equated directly with our global BCE volume. Local error around a fixed finite output target, an event moving toward larger margins, and all implementations of one hard function are different objects. Current local probes find that the same finest-scale rank can accompany different global contraction, so effective parameter count is only part of a candidate explanation. <a href="update-geometry.html">Geometry probes</a></p>
+<h2 id="prediction-concentration">6 How Close Must Static Sampling and Training Be?</h2>
+<p>First consider groups of functions rather than only the single simplest function. Let B be a group of compatible candidates. Each Q(f) already integrates all parameter implementations of f; the group's mass must additionally sum over functions:</p>
+<div class="math-display">$$
+Q(B)=\sum_{f\in B}Q(f)=|B|\,\overline Q_B.
+$$</div>
+<p>A few cheapest candidates may be outweighed collectively by many candidates that are each slightly more expensive. This has a counting logic similar to high-dimensional mass not necessarily concentrating at the point of maximum density. Changing the strength of simplicity bias can move the typical candidate group and its test performance; an ensemble is not equivalent to always selecting the unique minimum-cost explanation.</p>
+<p>The static reference distribution Q differs from the training pushforward P. Even if their parameter distributions are not close, a particular observable can be similar; however, similar accuracy alone does not imply similar distributions. Let g(f) be single-model test accuracy. If P is absolutely continuous with respect to Q, w=dP/dQ and w has a finite second moment, then:</p>
+<div class="math-display">$$
+\mathbb E_Pg-\mathbb E_Qg=\operatorname{Cov}_Q(w,g),\qquad
+|\mathbb E_Pg-\mathbb E_Qg|\leq\sqrt{\operatorname{Var}_Q(w)\operatorname{Var}_Q(g)}.
+$$</div>
+<p>This supplies a conditional robustness mechanism: if g is concentrated under Q and the reweighting is not excessively biased, predictions can be insensitive to distributional differences. It does not guarantee that actual SGD meets these conditions. An optimizer may still strongly amplify regions with extremely small static mass; saying that "good functions account for 99.99%" cannot by itself exclude this possibility.</p>
+<p>For correctness indicators Z_i at fixed test points, the following expectation and variance formulas do not require errors across samples to be independent:</p>
+<div class="math-display">$$
+A(f)=\frac1m\sum_iZ_i(f),\qquad
+\mathbb E_QA=\frac1m\sum_i\Pr_Q(Z_i=1),
+$$</div>
+<div class="math-display">$$
+\operatorname{Var}_Q(A)=\frac1{m^2}\left[\sum_i\operatorname{Var}_Q(Z_i)+2\sum_{i&lt;j}\operatorname{Cov}_Q(Z_i,Z_j)\right].
+$$</div>
+<p>Thus "70% correct mass at every point" gives 70% mean single-model accuracy. If error covariances across test points are sufficiently small, averaging over many points can also concentrate individual-run accuracy. Different models can make similar numbers of errors at different locations. If errors are perfectly synchronized, individual accuracy can instead be only 0 or 1; concentration depends on joint error structure, not pointwise means alone.</p>
+<p>Jordan repeated training 60000 times in a fixed CIFAR-10 setting. At 64 epochs, accuracy on the fixed test set had standard deviation 0.149 percentage points; the analysis found approximately uncorrelated error indicators across different test examples as the seed varied, while allowing different error probabilities per example. This is not independence of two fixed models' error events over random inputs. <a href="https://arxiv.org/pdf/2304.01910v4#page=5" target="_blank" rel="noopener">Jordan, Section 3.2</a></p>
+<p>The Jiang et al. paper cited by Jordan further connects disagreement and error: for independent models h and h' from the same training-induced distribution, the stated calibration conditions on hard-prediction vote probabilities imply equality of expected disagreement and mean error. This is not calibration of one model's softmax and not an exact equality for every model pair. <a href="https://arxiv.org/pdf/2106.13799v2#page=7" target="_blank" rel="noopener">Jiang, Section 4</a></p>
+<p>Our mechanistic account is that a candidate group can reuse similar shared structure while retaining different training-specific residuals. If candidates have similar total error, or small cross-point error covariances, concentrated accuracy can coexist with differing error locations. A finite-strength simplicity bias can also make a moderately costly but numerous function group dominant. This is an explanatory direction for the statistics, not a claim that the two papers measured the complexity of that group or its internal residual structure.</p>
+<p>The Rule30 norm intervention supplies a related observation. At 600 inputs, below the observed recovery range, all groups sufficiently fit the same training set, but mean whole-string accuracy is 68.5181%, 79.6570% and 39.5203% for baseline, high-norm penalty and low-norm repulsion. The hard-label-compatible set is unchanged; regularization and actual training selection change. This is compatible with altered relative candidate-group mass or accessibility. Differences shrink again as data become sufficient over the 750 to 900 input levels. <a href="update-training-controls.html">Training controls</a></p>
+<p>Consequently, accuracy concentration within one setting is compatible with different mean accuracies across penalty settings. This Rule30 study has not directly measured the static candidate-complexity distribution or validated Jordan-style error independence with sufficient repetitions. Its evidence concerns fixed data, changed selection preferences and changed generalization, not a completed measurement of every step in the proposed mechanism.</p>
+<p>An ensemble across seeds need not match a time ensemble along one trajectory. Slowly changing late-stage loss and stable predictions may indicate that the trajectory stays within a narrow predictive region, or that finite observations cannot detect change; they do not prove ergodicity. In the new wide-CNN check, time agreement is much higher than agreement across seeds, reinforcing the need for this distinction. <a href="update-consensus.html">Consensus check</a></p>
+<h2 id="agreement-conjecture">7 Agreement, Rule Nodes and Memory</h2>
+<p>The core agreement conjecture is retained: do high-consensus neural preferences often correspond to human-interpretable, reusable structure with low description cost? E18 found signed-threshold rules at all 46 strict complete-consensus endpoints confirmed after screening 8192 random datasets; E21 also found more complex but readable quadratic-threshold rules. These independent symbolic checks are positive evidence linking neural preferences to human complexity, not merely "consensus means consensus." The revision adds conditions concerning architecture, data generation, sample budget, bias strength and unseen coverage to this statistical relationship rather than abandoning it. <a href="experiments/e18.html">E18</a>, <a href="experiments/e21.html">E21</a></p>
+<p>For pointwise predictions q_x(y) on an unconstrained probe set T, pointwise agreement between two independent draws and the complete-function collision probability are, respectively:</p>
+<div class="math-display">$$
+\operatorname{Agr}_T(Q)=\frac1{|T|}\sum_{x\in T}\sum_yq_x(y)^2,
+\qquad \operatorname{Coll}_U(Q)=\sum_f Q(f)^2.
+$$</div>
+<p>These are not the same quantity. Many functions differing at only a few points can still yield high pointwise agreement. High agreement therefore guarantees neither a unique complete function nor a unique internal implementation. True labels must be specified by an independent generator or evaluation distribution; "generalization" cannot be defined after the fact from the predictions.</p>
+<p>Treating added hard labels as a refinement of events, the current conditional distribution can be written as a mixture over subsequent mutually exclusive and exhaustive branches B_j:</p>
+<div class="math-display">$$
+Q_E=\sum_j Q_E(B_j)\,Q_E(\cdot\mid B_j).
+$$</div>
+<p>A tree of added samples therefore permits dispersion, concentration and renewed dispersion. A few same-label examples may first favor a constant; an incompatible sample weakens the old explanation, and further evidence for an AND-like rule can concentrate a new group. Simple rules often gain an advantage earlier, while more complex rules can also form high-consensus nodes given sufficiently identifying data. Different orders may reach the same endpoint; redefining the mean-loss event still requires checking whether it constitutes refinement.</p>
+<p>A "rule node" is not an additional mysterious entity. It is a state in which an economical behavior or a behaviorally similar group dominates the constrained region. This remains informative: which nodes form readily reflects implementation economy determined by architecture, computational structure and bias strength. A finite input space limits independent samples and remaining validation space; once coverage is complete, training consistency is no longer evidence about unseen extensions.</p>
+<p>Training-set cost, confidence in unseen predictions and correctness relative to the true generator are related but distinct axes. High full-extension cost and high agreement coexist in the four-point XOR example, while XOR remains human-readable; this does not directly refute the link between consensus and interpretable structure. High-cost frontiers at fixed n remain relevant to memory, but this proxy is not direct K_D. Non-stochastic objects and the separability of rules from residuals also offer a conceptual connection, without equating them to high agreement or requiring a unique shortest program.</p>
+<h3 id="rule-noise-contributions">7.1 Rules and Noise: Complexity Contributions of Added and Removed Samples</h3>
+<p>The primary question is whether a sample belongs to a shared explanation of the current dataset or requires an additional residual description. Fix the protocol, precision requirement and per-point event E_z, let E_D be their intersection, and define C(D)=-log2 mu(E_D). For positive masses, addition and deletion contributions are:</p>
+<div class="math-display">$$
+\Delta^+(z\mid D)=C(D\cup\{z\})-C(D),\qquad
+\Delta^-(z\mid D)=C(D)-C(D\setminus\{z\}).
+$$</div>
+<p>When many constant-label samples support a stable background, deleting an ordinary sample may barely change cost; deleting the only exception may lower cost substantially, and the remaining samples may not predict that exception. This makes rules/noise relative to the current background quantitatively testable. A large contribution from one sample is not a certificate of objective noise: the first observations of a rare complex branch may look the same, with later examples revealing reusable structure.</p>
+<p>The same additions and deletions can be applied to sample groups to expose shared explanations within them; pointwise attribution depends on background and order. The main object here is the rule/residual distinction, with information gain only a related identity under pure conditioning. Renormalizing mean BCE can break nesting, and a local contraction-slope difference is not automatically a negative-log-mass difference, so the measurement convention must remain fixed. See the <a href="theory-core.html">rule/noise quantification in the theoretical core</a> for the full definition.</p>
+<h2 id="8-independent-complexity-calibration-remains-essential">8 Independent Complexity Calibration Remains Essential</h2>
+<p>A neural network can serve as a resource-bounded representation language. Different architectures provide different low-cost operations and forms of reuse, so some ranking changes are reasonable. Compiler constants between universal languages are not the same as finite-network execution time, required width or implementation-mass overhead, nor do they guarantee similar rankings on real tasks.</p>
+<p>For an effectively encodable discrete generative protocol, probabilistic coding gives a one-way relation:</p>
+<div class="math-display">$$
+K(f)\leq-\log_2P_\Pi(f)+K(P_\Pi)+O(1).
+$$</div>
+<p>High generation probability can therefore yield a short universal description, but a short description does not guarantee large implementation mass in a specified network. Still less can a contraction slope be substituted directly into the right-hand side. Independent logical constructions, shared structure, shortest descriptions within a specified language and external predictions remain necessary calibrations.</p>
+<p>"Preserving the original computation while adding irreducible extra work" is a useful structural comparison, but does not currently constitute a strict monotonicity theorem across all architectures and output protocols. An extra branch may change how often the original computation occurs or its required precision, as the f/g intervention already illustrates. For functions without a structural inclusion relation, interpretable architecture-dependent ranking reversals should be allowed, rather than retrospectively relabeling every winner as simple.</p>
+<p>Back to the two classifiers: an output of 10 does not establish that its network learned a more advanced feature than the one that outputs 0.1. We can instead ask which rule becomes more common as the training scores must become more decisive, then see whether repeated training changes predictions on new examples in the same direction. A match gives us a testable prediction. Calling the winning rule simpler requires one more check against its logic or another independent standard.</p></div>
+
+      </article>
+    </main>
+  </div>
+</body>
+</html>

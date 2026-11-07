@@ -2,21 +2,25 @@
 
 > This page presents only the final theoretical framework and does not retell the research process. Experiment IDs serve only as evidence anchors.
 
+> Macroscopic reading entry: [Neural Network Generalization and Algorithmic Information Theory](ait-connections.html). This page follows rich representations, simplicity bias, and precision adjustment, distinguishes basic induction from bias enhancement, and connects information gain, shared structure, and sample-size transitions.
+
+> November 2026 revision: the [research overview](research-updates.html) summarizes the new evidence; the [conceptual clarification](interpretation-update.html) separates readout scaling, measures, norms, and predictive concentration. The new prose was organized by AI from the author's discussions and still awaits paragraph-by-paragraph author review; the formal paper was not expanded.
+
 ## One-sentence version
 
-Once the network architecture, encoding, parameter measure, and loss are fixed, a neural network is inherently more likely to represent certain simple functions; continuing to lower the training loss then causes different functions and their internal implementations to lose parameter volume at different rates, usually giving an advantage to descriptions with lower neural-network-relative complexity and higher reusability. Therefore, on structured data, pushing the training loss lower is often equivalent to requiring the network to describe the training set with a more economical program. The data determine which programs remain compatible with the samples, the network architecture determines what counts as "economical", and the optimizer determines whether these low-loss programs can actually be reached from initialization.
+Once encoding, network, reference measure, and output requirements are fixed, candidate implementations compatible with the training set carry different relative masses. Along several measured precision paths, reusable, more economical function groups gain further advantage. Generalization can follow when actual training also favors these regions and their predictions agree with an independently specified test rule. Data determine compatibility, architecture and measure affect implementation economy and mass, and the optimizer determines reachability and additional bias; this does not require a unique simplest function to win or equate lower loss with discovering new features.
 
 ## 1. Two kinds of simplicity are two scales of one principle
 
 ### 1.1 Prior simplicity
 
-When network parameters are drawn at random, the probabilities of different functions are highly nonuniform. A function that can be implemented by more parameter configurations has greater mass in the function prior induced by the network. A large body of existing research and this project's own prior sampling both show that structurally simpler, more architecture-aligned functions typically have greater prior mass.
+When network parameters are drawn at random, function probabilities are highly nonuniform. A function occurs more often when its implementation set carries greater reference-measure mass; a bare count of continuous parameter configurations cannot replace probability. Prior work and this project's sampling show that structurally simpler, more architecture-aligned functions often have larger prior mass in the measured protocols.
 
 This does not mean that every function that looks simple to humans is easier. Parity is the classic counterexample: it is short in the human XOR language, but can be expensive in the representational language of an ordinary tanh MLP.
 
 ### 1.2 Loss-resolved simplicity
 
-The cleanest definition of, and the direct evidence for, the loss-resolved simplicity used here is: **use all input-output samples of each candidate function**, then measure that function's full-target loss-volume profile separately. For a finite Boolean space this means using the complete truth table; for spaces that cannot be enumerated, a sufficiently complete target set, applied consistently to all candidates, must be specified in advance. It does not start from a small subset of training samples and then automatically treat the data generator known to the researcher as the only target function.
+The cleanest definition of, and direct evidence for, loss-resolved simplicity here is: **use all input-output samples of each candidate function**, then measure its full-target loss-volume profile separately. In a finite Boolean space this means the complete truth table; in a space that cannot be enumerated, only a consistent finite-probe protocol can be specified in advance, without claiming that it constrains the entire function unless separately validated. It does not start from a small training subset and automatically identify the researcher's generator as the unique target function.
 
 Under a full target, parameters can still sit at different loss depths even after they already produce all correct hard outputs.
 
@@ -28,7 +32,7 @@ This empirical regularity cannot be written as "some pre-specified simple functi
 
 ### 1.2.1 Constraint elimination and reallocation among the feasible candidates: why the complexity distribution can narrow
 
-Lowering training error involves at least two different processes. Adding hard-label constraints within a fixed parent ensemble, or tightening the loss threshold for a fixed training set, can eliminate shortcuts and extensions that no longer satisfy the requirements; among functions that remain feasible, the continuous-precision requirements of the joint outputs reallocate parameter mass. These effects can coexist, and the latter cannot be replaced by the former. When adding samples redefines the average-loss event, its nesting must be checked separately.
+With a fixed training set as the object of study, lowering training error involves at least two different processes: shortcut implementations that only fit these data coarsely can fail to satisfy tighter requirements, while the continuous-precision requirements of the joint outputs reallocate parameter mass among functions that remain feasible. These effects can coexist, and the latter cannot be replaced by the former. Adding samples expands the data object and identifies extensions; it is not uniformly described as shortcut elimination within the old training set. When adding samples redefines the average-loss event, its nesting must be checked separately.
 
 Let the remaining function mass be
 
@@ -60,11 +64,19 @@ Therefore, the empirical observation that "the complexity distribution keeps nar
 
 This also corrects the earlier BCE-centered wording by placing the joint output distribution at the center: the architecture, encoding, and parameter reference measure first determine the continuous joint distribution over outputs on multiple examples, while BCE, MSE, and amplitude regularization cut different regions from it. The specific loss genuinely changes function odds, ordering, and contraction rates through the geometry of its cross-section, but the name of no particular loss is a universal mechanism. The theoretical claim concerns the reallocation of function mass under a specified joint-output event.
 
+### 1.2.2 Scaling, amplitude alignment, and total candidate-group mass
+
+If every training margin is positive, jointly scaling the final affine readout weights and bias upward preserves the hard function while reducing BCE. A parameter point leaving a higher-loss region therefore does not mean every implementation of its function is eliminated. Scaling changes measure density and the volume element, so a one-to-one correspondence between feasible implementations does not preserve probability across amplitudes. MSE comparisons must also distinguish an absolute tolerance from a relative tolerance scaled with the square of target amplitude. [Change of variables and conditions](interpretation-update.html)
+
+Margin-variance regularization directly constrains margin differences; it neither fixes the common amplitude nor identifies noise. It can raise difficult-point margins, lower easy-point margins, or shrink all outputs. E31's improvements in rule recovery and the prospective f/g ordering-reversal prediction remain valid observations. Their mechanism must distinguish output scale, allocation of precision across samples, and redistribution of compatible-function mass; reduced variance alone does not establish a universal increase in simplicity bias. [Conceptual clarification](interpretation-update.html)
+
+Even when an economical function is individually more likely, numerous somewhat less economical functions can dominate in aggregate. The relevant object is candidate-group mass and its predictions, not an assumed shortest-description argmin. A dominant group with similar behavior can support good prediction without a unique hard function or internal implementation.
+
 ### 1.3 Relation to "compression is intelligence"
 
-Ordinary training code explicitly optimizes only the training loss; there is no second term for machine-independent program complexity. Compression is a consequence produced by the network architecture, the parameter measure, and the loss geometry: if reusing features, intermediate computations, and rules can satisfy more samples simultaneously with fewer independent degrees of freedom, it is usually easier for such a solution to keep reaching deep loss.
+Training code explicitly optimizes a loss or a regularized objective; it does not automatically include machine-independent program complexity. Architecture, parameter measure, output geometry, and dynamics may jointly induce a compression preference: reused features, intermediate computations, and rules may satisfy more samples through economical implementations, but both this preference and its reachability require testing.
 
-Therefore, in clean, structured tasks with sufficient data, lowering the loss can basically be understood as continually searching for a more economical description of the training set. This connects directly to "compression is intelligence": intelligent behavior comes from discovering reusable regularities, not from storing an independent answer for every input. [E08](experiments/e08.html) gives causal evidence for shared intermediate computation, and the early hundred-plus rule experiments provide breadth evidence.
+For clean, structured tasks with informative data, this offers an account of how reusable structure supports many predictions, connecting to the direction of "compression is intelligence". [E08](experiments/e08.html) provides intervention evidence about shared intermediate computation, and the early hundred-plus rule experiments provide broad observations; neither proves that every loss decrease shortens a program or constitutes a complete theory of intelligence.
 
 But this is not an unconditional equality. Early in training, when the task is learned from constant outputs, the absolute program complexity can rise; with random labels or noise, continuing to lower the loss can also increase the memorization of exceptions.
 
@@ -97,6 +109,8 @@ $$
 It is not machine-independent Kolmogorov complexity, but "how rare it is for the current neural language to implement the function $f$ to accuracy $\epsilon$". Changing the architecture, activation, width, encoding, initialization scale, or loss all changes this curve.
 
 Complexity is first of all a profile: the volume at a fixed loss is one cross-section, and the local contraction rate is a slope. The hard-function prior is a separate baseline, not the high-threshold limit of the full-target curve; for finite loss, $\epsilon\to\infty$ gives $V^{\mathrm{full}}_\Pi(f;\epsilon)\to1$. In contrast, the fixed-D branch mass intersected with the target cell tends to its hard-prior mass in that limit. Different full-target curves can cross; even when their respective output signs are fixed, continuous margin and logit implementations remain subject to filtering. [E24](experiments/e24.html) provides corresponding deep-tail sampling evidence, with sampling uncertainty limiting the precise crossing location.
+
+**The volume-contraction law is measure-dependent and empirical, not a theorem exclusive to Gaussians.** Gaussian, uniform-ball and other tested weightings can exhibit approximately stable finite-window coefficients, while changing the weighting changes values, slopes and curvature. The November 1 radial-reweighting diagnostic additionally compared the exp[-(r/a_p)^p] family with matched mean squared norm: p=1.5, 2.5 and 3 also retained approximately stable window contraction. Gaussian contributions to straightening therefore do not imply Gaussian exclusivity. This is read-only reweighting of existing particles, not a new independent SMC run under each weighting; independent non-Gaussian sampling supplies complementary evidence. [Measures, spheres and radial weights](update-geometry.html)
 
 ### An independent operational quantity: identification and recovery transition from random training sets
 
@@ -151,7 +165,7 @@ The key missing term is **which alternative explanations the current training se
 
 The first supplementary experiment changed only the sampling method. When we added exactly those samples that distinguish the true MUX3 from the copy shortcuts, MUX3 immediately recovered earlier than parity2. Neither the target rule nor the network changed; what changed was only whether the samples hit the positions where the competing functions genuinely disagree.
 
-The second supplementary experiment removed the optimizer entirely and directly observed the low-loss functions allowed by the same batch of training samples. The result was still the same: ordinary samples leave behind many wrong shortcuts, while conflict samples systematically eliminate them, letting the true MUX3 become dominant. This shows that the phenomenon above comes first from the static function competition shaped by the training set itself, and that the optimizer mainly affects the arrival speed and the specific path.
+The second supplementary experiment removed the optimizer entirely and directly observed the low-loss functions allowed by the same batch of training samples. The qualitative reversal still appeared: ordinary samples leave behind many wrong shortcuts, while conflict samples systematically eliminate them, letting the true MUX3 become dominant. Static function competition shaped by the training set can therefore produce this reversal without AdamW; the optimizer's contributions to endpoint mass, effect size, and arrival time have not been fully separated.
 
 > **Revised conclusion: how much data a rule needs depends not only on how hard the rule itself is, but also on which functions are currently competing with it, and on whether the sampled data can effectively exclude those competing functions. The Neural K of the complete rule is still an important first-order predictor, but it does not equal the grokking transition point.**
 
@@ -212,9 +226,11 @@ The parity scaffold shows that a low-loss endpoint can exist and be locally stab
 
 [E29](experiments/e29.html), in contrast, gives a matched-loss verdict for hard-threshold static SMC in a dead-bit counterfactual: the five-function average difference between decay-free Adam and static SMC is only 0.0010, while L2/MAP forms a different transport outcome by actively compressing the unconstrained weights. The experiments must be interpreted separately according to their respective target distributions; "close prediction" and "equal distribution" remain different, and the posterior-weighted comparison must not be counted as hard-threshold volume evidence.
 
-[E30](experiments/e30.html) serves only as a supplementary clarification: grokking does not require weight decay; the raw-loss landscape without regularization can itself already support rule takeover. Weight decay written into the loss merely strengthens the rule preference within the same static landscape, and is nothing mysterious or special.
+[E30](experiments/e30.html) shows that, in its measured protocol, the raw-loss landscape can support rule takeover without weight decay, while a norm penalty changes relative mass. This does not imply that every norm penalty improves generalization. The new high-/low-norm Rule30 interventions changed recovery performance, but the high-norm penalty did not establish a leftward sample-threshold shift on the coarse grid. [Training evidence](update-training-controls.html)
 
 For any task, three things should be checked separately: whether the network can represent the target, whether the data are sufficient to identify the target, and whether the optimizer can reach the target.
+
+Predictive concentration can make some observables robust to reweighting, but it neither requires nor proves equal parameter distributions, and does not imply that long training eliminates SGD bias. High-dimensional exploration and thermodynamic language are candidate mechanisms; a late-time ensemble need not equal a multi-seed ensemble. In the new wider-CNN check, time agreement is approximately 99.955%/99.941%, versus 79.055%/81.692% across seeds. A stable trajectory cannot be treated as an ergodic sample of the static region. [Prediction and ensemble limits](update-consensus.html)
 
 ### Decoupling, scaffolds, and optimization accessibility are not complexity
 
@@ -250,6 +266,8 @@ Conversely, the success of auxiliary supervision cannot by itself prove that the
 4. **Optimization accessibility**: whether, starting from the specified initialization and optimizer, the gradient can enter that region.
 
 If the auxiliary variables, modules, or inputs are kept permanently in the final system, then the neural reference protocol $\Pi$ has already changed, and the target may indeed be simpler in the new language. If the auxiliary information is used only during training and removed entirely at the end, then it is mainly a continuation / curriculum path; the final complexity should still be measured under the original endpoint protocol. When comparing decoupled and end-to-end results, one must first declare which case applies.
+
+In the new paired 14/16-bit Mod3 experiments, the auxiliary information consists of additional prefix-remainder output labels, not test-time input hints. At several sample sizes where both groups fit the training data, the auxiliary group generalizes better: from 80.16% to 99.14% at 2048 inputs for 14-bit, and from 61.38% to 99.86% at 6000 inputs for 16-bit. This supports reduced input-sample requirements under a finite budget. Together with E16 and historical accessibility interventions, scaffolding can both help optimization and alter the data needed for rule recovery. Optimization difficulty and a rule's sample/complexity difficulty are different axes. Auxiliary labels add supervision, and improved sample requirements alone are not a direct measurement of reduced static Neural K. [Results and protocol](update-scaffolding.html)
 
 ## 4. The language of statistical physics
 
@@ -389,6 +407,19 @@ When the per-sample loss is the standard negative log-likelihood and $\beta=1$, 
 The volume curves of different labels can still cross, so a prediction must declare which loss depth or $\beta$ it uses. MNIST [E25](experiments/e25.html) directly tested this kind of static branch prediction.
 
 [E26](experiments/e26.html) pushes the same principle to the level of label combinations: given only one anchor and the 5:5 ratio, the natural MNIST 0/1 split rises in both blinded panels from last place at shallow loss to top-1 at deep loss, and occupies about 99.97% of the normalized volume mass at loss 0.3. It supports the claim that "volume can predict unseen label combinations", but it does not amount to fully unsupervised clustering with the class-ratio constraint removed.
+
+### 5.1 From correct-prediction mass to single-model accuracy
+
+Let Z_i(f) indicate a correct prediction on a fixed test point, and let A(f) be single-model accuracy. Within the same function ensemble Q, linearity of expectation gives:
+
+$$
+A(f)=\frac1m\sum_iZ_i(f),\qquad
+\mathbb E_QA=\frac1m\sum_i\Pr_Q[Z_i(f)=1].
+$$
+
+This does not require independent errors, but initially predicts an ensemble mean. If correctness is perfectly synchronized across test points, 70% correct mass at each point can produce individual accuracies of 0 or 1, rather than 70% on every run. Predicting why one training run lies near that mean additionally requires sufficiently small cross-point covariances or another concentration mechanism; replacing static Q with the training distribution requires a separate correspondence test.
+
+Majority-vote accuracy, mean single-model accuracy, pointwise label frequencies, and the complete prediction-vector distribution are therefore not interchangeable. Jordan and colleagues provide empirical reference points for error structure in some training protocols; Jiang and colleagues require additional calibration conditions to relate disagreement to error. [Definitions, variance formula, and limits](interpretation-update.html), [related originals](update-related-work.html)
 
 ## 6. Surprise, information gain, and sample-order invariants
 
@@ -539,7 +570,7 @@ Here $\ell$ uses natural logarithms, requiring division by $\ln2$. Under a soft 
 
 ### 6.4 After adding a sample: convergence at the query point does not imply monotone global agreement
 
-After hard conditioning, all surviving functions give the label $y$ at the added query point $x$, so the local agreement at that point immediately becomes 1. But at another probe point $x'$, the agreement can go up or down: the deleted function cluster may originally have sustained some global consensus, or it may have been exactly the source of the disagreement. Consequently there is no per-sample monotonicity theorem for the global average agreement, the complete-function collision, or the target-function mass.
+After hard conditioning, all surviving functions give the label $y$ at the added query point $x$, so the local agreement at that point immediately becomes 1. But at another probe point $x'$, agreement can go up or down: the deleted function cluster may have sustained a global consensus or caused the disagreement. Consequently global average agreement and complete-function collision have no per-sample monotonicity theorem. A fixed target compatible with every added label is different: its conditional mass cannot decrease under nested hard conditioning of the same reference measure. This does not imply monotonicity after redefining an average-loss event or retraining.
 
 This gives a direct explanation of "convergence—divergence—reconvergence": a high-surprise label may first destroy the previously dominant function cluster, making the remaining clusters temporarily more balanced and lowering the global agreement; subsequent informative samples then continue to delete competing clusters, and only then does the function distribution condense onto the new rule. The local KL information gain is always nonnegative; this does not mean the global agreement must rise.
 
@@ -547,7 +578,7 @@ The MUX3 cell/conflict experiment turned this distinction into a visible mechani
 
 ## 7. The agreement conjecture
 
-For an input $x$, if the candidate-label probabilities are $P(y\mid x,D)$, the pairwise agreement — the probability that two independent function draws give the same label — is:
+First fix the network, input and output domains, reference ensemble, and filtering or training protocol. For an input $x$, if the candidate-label probabilities are $P(y\mid x,D)$, pairwise agreement, the probability that two independent function draws give the same label, is:
 
 $$
 A(x\mid D)=\sum_yP(y\mid x,D)^2.
@@ -561,25 +592,61 @@ $$
 
 High average per-point agreement does not guarantee high complete-function collision; many functions can disagree at only a few distinct positions. In applications one must therefore report, at the same time, the per-point agreement on representative probes, the modal mass of the complete function, and the collision or Hamming-ball mass.
 
-> **The key advantage of agreement is that it does not require knowing the external generating rule. Per-point agreement measures consistency at the corresponding inputs; only complete-function collision or modal mass close to one supports stable selection of a complete mapping under the current protocol. In the early rule experiments that motivated the conjecture, insufficient samples produced greater disagreement, while sufficient samples with generalization produced less disagreement. These observations motivated the conjecture that stable condensation may indicate an extractable rule, but per-point agreement alone proves neither complete-function condensation nor data sufficiency.**
+> **The agreement conjecture is retained as an empirically supported statistical claim, not discarded: in a fixed neural system not tailored to the target, when an incompletely covering training set induces stable high consensus across broad unseen inputs, the selected behavior often has reusable, human-interpretable structure. The question is whether neural preferences and independent description complexity broadly align because they exploit shared compressible structure.** What is revised is the unconditional implication from high agreement to a simple rule; sample cost, bias strength, coverage and data generation must be reported together.
+
+This is a central line of positive evidence. [E18](experiments/e18.html) screened 8192 random datasets and confirmed 46 strict complete-consensus endpoints with fresh seeds; 46/46 fell into a signed-threshold family with equal-magnitude weights. In an earlier panel of 512 random datasets, consensus was negatively associated with several independent complexity proxies. [E21](experiments/e21.html) still found readable quadratic polynomial-threshold rules after harder active prefixes. These observations support a systematic link between neural preferences and human-compressible structure rather than merely renaming winners with Neural K; their statistical scope remains the tested protocols.
 
 [E27](experiments/e27.html) directly checked the temporal ordering that this intuition most easily confuses. At the four data levels of mod97, the unseen-input agreement at hard fit was only 0.027--0.033; it did not approach 1 just because the training set had been memorized. After entering grokking, agreement rose mainly as different seeds jointly recovered the correct target, and the remaining errors were still mostly seed-specific. The current evidence therefore does not support "a shared complete wrong function had already formed before grokking", nor was a second agreement jump independent of accuracy observed.
 
-High agreement does not guarantee that the network has recovered the external generating rule presupposed by the researcher. A single sample can make the network converge unanimously to some constant extension; but a constant function is itself an extremely short and human-readable rule, so this is not a counterexample to the conjecture that "high agreement corresponds to a readable rule". It only shows that the conjecture must be teacher-free: agreement points to the rule jointly selected by the training set and the network protocol, and does not guarantee that this rule equals the generator the researcher hid behind the data. Our conjecture is more specific:
+High agreement does not guarantee recovery of the external generating rule presupposed by the researcher. A constant extension induced by a single sample illustrates this. Conversely, on a finite domain, providing the full truth table uniquely specifies any target at the hard-label level, provided the target is representable and the conditioning event has positive mass. But then no unseen inputs remain for testing generalization. The ability to form consensus does not itself imply a simple target.
 
-> In a sufficiently large problem space, if a nontrivial training set can make the **complete-function distribution** converge to close to 1 under a strict fresh-seed audit, then that training set usually corresponds to a logical rule that can be extracted into a short, human-readable form. Discovering the rule itself can still be very difficult.
+Nor are a large space and a small sample fraction sufficient. Extend an arbitrary 4-bit lookup rule to 10-bit inputs by ignoring the last six bits: there are 1024 input combinations but still only 16 independent target labels. If a network learns the table and invariance to the irrelevant bits, it can exhibit high agreement, even correct generalization, on many unseen combinations without establishing additional short logical structure in the original table. This is a conceptual distinction to enforce, not a completed new experiment.
 
-Needing more samples to reach high agreement usually means that the identifiable rule is more complex, or that the competing extensions are harder to exclude. In this direction, the number of samples needed for agreement convergence can be used as another operational measure of protocol-relative complexity.
+Subsequent judgments should therefore fix or report at least:
 
-The conjecture has already passed two rounds of preliminary stress tests: the strict high-consensus endpoints of [E18](experiments/e18.html) all fell into the signed threshold family; after [E21](experiments/e21.html) pushed up the required sample size with anti-consensus prefixes, the endpoints expanded from linear thresholds to more complex but still readable quadratic polynomial thresholds. Both results support the conjecture, but they have not yet proved that "all high-agreement functions are necessarily human-readable".
+- The architecture, encoding, reference measure, loss condition, and training budget, without tailoring them to the target;
+- A generator and input distribution specified in advance, distinguishing random sampling, sampling without replacement, and active data construction; the true rule cannot be chosen after observing predictions;
+- The sample cost of reaching a preset consensus threshold, unseen-input coverage, and effective independent constraints, not just the sample fraction of the full space;
+- Fresh-seed and independent-probe audits, together with symbolic-complexity checks independent of Neural K. Condensation on finitely many probes does not automatically imply condensation over the entire input domain.
 
-This conjecture also has a deeper implication: if high agreement still systematically corresponds to human-readable short rules across more tasks, architectures, and larger problem spaces, then the complexity ordering induced by neural networks and the complexity ordering in human intuition are not unrelated to each other. The two may both be exploiting the same batch of compressible structures, such as locality, symmetry, compositionality, low-order interactions, and computational reuse. The early hundred-plus deterministic-rule experiments also provide breadth side-evidence in the same direction: when the target has an exact, reusable generating rule, and the data and optimization accessibility are sufficient, the network can often simultaneously press both the unseen-sample loss and the cross-seed function disagreement very low; underconstrained or noisy conditions do not automatically produce this kind of complete condensation.
+The strict high-consensus endpoints of [E18](experiments/e18.html) all fell into the signed-threshold family; [E21](experiments/e21.html) obtained more complex but still readable quadratic polynomial thresholds after anti-consensus prefixes. These experimental observations remain. E21 actively selects inputs and labels, so it is not directly a grokking data threshold under random sampling from a predetermined rule. Neither experiment proves that high consensus universally implies a short description.
 
-> **If this direction continues to withstand stress tests, what it suggests is not a unique, absolute "universal encoding", but a class of robust compression structures that are relatively economical in many effective representational languages. Neural networks and humans may partly converge to similar complexity judgments because they face the same structures and finite computational resources.**
+The complexity connection should be studied through the [soft candidate-competition derivation](translations_en/theory/mdl_identifiability_grokking_derivation.md): a target must outweigh the total competing mass, and sample cost also depends on disagreement locations and coverage. Statistical correlation between the complexities of neighboring truth tables may constrain this competition structure, but does not alone imply a linear sample law and cannot be inferred directly from parameter continuity. On a fixed finite binary domain, a hard function is already a complete label table; finer objects must be specified as its internal logits, margins, or implementations, not undefined "finer hard functions".
 
-This is still a strong conjecture, not a conclusion. The architecture dependence and counterexamples such as parity have already shown that the two kinds of complexity do not coincide completely; nor did all of the hundred-plus rule experiments adopt the strict fresh-seed symbolic audit of E18/E21, so they can only serve as supporting phenomena and cannot replace cross-architecture preregistered tests.
+The new four-point experiments provide examples with both a high full-extension cost proxy and high agreement; agreement within the high-cost representative set also spans 49.95%–99.64%. XOR remains a human-readable rule, so this example does not directly refute the link between high consensus and interpretable structure. It corrects the conflation of neural cost, extension uncertainty and human description length. The low-BCE training-set cost K_D of these four-point sets has not been measured directly; constructed examples must still be distinguished from typical behavior under random sampling from a fixed generator. [Data and proxy definition](update-consensus.html)
 
-Potential applications include rule discovery and data-sufficiency diagnosis. When complete-function collision or modal mass is close to one and passes fresh-seed and independent-input audits, one can attempt to extract the rule stably selected by that protocol. This does not guarantee that it is the unique extension logically allowed by the data or the external true rule. When only per-point agreement is high, residual disagreement must be checked before claiming a unique complete rule.
+The sample-addition "tree" represents dataset filtering that repeatedly refines the candidate region. A few same-label samples may initially support a constant; new samples that make it incompatible may disperse mass; further examples of an AND-like rule can then make that rule or a behaviorally similar group dominant. More complex rules can also form such high-consensus nodes when their data are sufficiently identifying. A node is not a mysterious kind of weight vector: it is a predictive manifestation of implementation economy shaped by architecture, computational structure and bias strength.
+
+A finite input space limits available independent constraints and remaining validation space, so which rules reach high consensus within a given sample budget depends on complexity and the competitor spectrum. A constant with one exception may be an additional residual relative to the constant background. Whether it belongs to another reusable rule should be assessed through addition/deletion costs and held-out prediction, not its name. Connections between rule nodes and non-stochastic objects are retained at the conceptual level of how much residual can be separated from an explanation, without equating the objects or requiring a unique shortest program.
+
+Shared compressible structure may explain why stable neural preferences often correspond to human-readable rules. This remains a valuable external-calibration hypothesis behind the agreement conjecture, not a consequence of the agreement definition. The early hundred-plus rule experiments support that precise rule recovery with sufficient data can accompany condensation, but did not all perform the same symbolic audit and cannot replace the tests above.
+
+As a tool, agreement remains useful for active querying and rule extraction: first identify the extension stably selected by the protocol, then check residual disagreement and independent evidence. Agreement alone certifies neither data sufficiency, external correctness, nor human readability.
+
+### 7.1 Rules and Noise: Complexity Contributions of Added and Removed Samples
+
+Rules and noise can be examined through conditional costs rather than intuitive labels alone. Fix a reference protocol and an event E_z for each sample z, such as correct hard labeling or a prespecified pointwise loss tolerance. Let the dataset event be their intersection; for positive relevant masses define:
+
+$$
+E_D=\bigcap_{z\in D}E_z,\qquad C_\Pi(D)=-\log_2\mu_\Pi(E_D),
+$$
+
+$$
+\Delta_\Pi^+(z\mid D)=C_\Pi(D\cup\{z\})-C_\Pi(D),\qquad
+\Delta_\Pi^-(z\mid D)=C_\Pi(D)-C_\Pi(D\setminus\{z\}).
+$$
+
+Addition cost measures the new constraint not yet explained by the current background; deletion cost measures the implementation mass released by removing a sample. Under pure intersection conditioning, deletion cost equals the surprise of the removed constraint under the remaining samples:
+
+$$
+\Delta_\Pi^-(z\mid D)=-\log_2\mu_\Pi(E_z\mid E_{D\setminus\{z\}}).
+$$
+
+Once many constant-label samples stably support a constant background, deleting an ordinary sample may change cost little, whereas deleting its only exception may lower cost substantially and the remaining samples may not predict that exception. Conversely, further examples from the same rare complex branch may jointly support a reusable explanation, making an apparent noise sample part of a rule. Single-sample and group addition/deletion costs, held-out prediction and agreement should therefore be considered together; a large cost alone does not identify generative noise.
+
+This connects rule/noise decomposition to conditional description and shared computation: samples already explained by shared structure require little additional specification, while separately described residuals cost more. Individual attribution depends on the current background and addition order, but the total cost of a fixed endpoint event does not thereby depend on order. This is a quantitative analysis method, not a claim that this update exhaustively computed decompositions of all datasets.
+
+Exact information accounting above requires nested events. Recomputing mean BCE after adding a sample while retaining the same numerical threshold may relax old constraints, so the identity cannot be applied directly. Changes in a local Neural K contraction coefficient can be reported as another observable with its window specified; slope differences are not automatically the mass-cost differences defined here. [E22](experiments/e22.html) supplies the existing information-accounting evidence.
 
 ## 8. Why symbolic concepts may emerge
 
@@ -656,7 +723,13 @@ E21's disagreement queries and active sample supplementation can be regarded as 
 | disagreement finds high-information training samples | prediction error drives perceptual updating |
 | There is currently no action loop | active inference changes future observations through action |
 
-This project's $-\log Z$ is the evidence under a given reference measure; FEP usually optimizes a variational upper bound of the evidence. After introducing an approximate distribution $q$, the two are connected by the Gibbs variational formula above.
+In the Bayesian case with a standard likelihood and $\beta=1$, $Z=p(D)$ is the evidence, while $-\log Z$ is the negative log evidence. Variational free energy satisfies:
+
+$$
+F_{\rm var}(q)=-\log Z+\mathrm{KL}(q\Vert p(\theta\mid D))\geq-\log Z.
+$$
+
+It is an upper bound on negative log evidence, not on evidence itself. For a general Gibbs energy, $Z$ is more accurately called a partition function; the connection is given by the Gibbs variational formula above.
 
 This is only a mathematical and functional-level connection; it does not prove the biological version of the Free Energy Principle, nor does it prove that the brain works with the function macrostates measured on this site.
 
@@ -801,8 +874,9 @@ The following questions currently have no explanation or rigorous derivation:
 - why the low-loss density of states of a specific function has its current shape;
 - whether the complete Neural K-profile can be analytically predicted from the network structure;
 - whether the profiles of an arbitrary function pair eventually stabilize, and whether the number of crossings is finite;
-- whether high complete-function agreement universally implies a human-readable rule;
+- the statistical relationship between consensus cost, coverage, and independent rule complexity under a fixed protocol;
 - how the static volume forms a quantitative closed-form relationship with concrete SGD/AdamW transport.
+- how far neural-protocol-relative costs differ from independent description complexity, and how much that difference matters under practical task distributions.
 
 This theory is therefore currently a static-dynamic layered framework supported by controlled experiments, not a completed unified law of deep learning.
 
@@ -830,3 +904,5 @@ The retained core picture is that, for a specified architecture, reference measu
 The claim that every neural network has such a direction and ultimately finds an implementation that fits the data as simply as possible is a stronger universality conjecture, not a completed proof. A direction should be specifiable in advance and reusable across a class of tasks, and the complexity criterion should have independent content; selecting the desired function region after the fact does not prove such a direction exists. Static mass preference also does not guarantee optimization accessibility, a globally simplest implementation, or recovery of the true rule.
 
 These questions can remain unresolved, but should be disclosed alongside the positive evidence. For the specific extensions and unreached conditions, see [E31](experiments/e31.html#update-20261027), [E32](experiments/e32.html#update-20261027), [E33](experiments/e33.html#update-20261027), [E36](experiments/e36.html#update-20261027), and [E37](experiments/e37.html#update-20261027).
+
+The November checks additionally record cross-architecture curvature, radial mixtures and other norm-function reweightings, auxiliary-supervision sample efficiency, the link between agreement and independent complexity, and time versus multi-seed differences. See the [update overview](research-updates.html). Prior loss-aware volume work and counterexamples must also remain visible: the framework should not claim that previous work ignored loss, or pre-assign every static/optimizer discrepancy to unmatched thresholds. [Related work](update-related-work.html)

@@ -56,6 +56,7 @@
 <li><a href="#5-3-depth-comparison-and-sampling-boundaries">5.3 Depth comparison and sampling boundaries</a></li>
 <li><a href="#5-4-mnist-an-unfinished-literature-inspired-attempt-to-reproduce-the-phenomenon">5.4 MNIST: an unfinished, literature-inspired attempt to reproduce the phenomenon</a></li>
 <li><a href="#5-5-what-this-round-establishes">5.5 What this round establishes</a></li>
+<li><a href="#rule30-width-transition">5.6 How many examples does a wider network need to learn Rule30?</a></li>
 </ul>
 </li>
 <li><a href="#6-connections-to-the-published-research">6. Connections to the published research</a></li>
@@ -358,6 +359,55 @@ $$</div>
 <h3 id="5-5-what-this-round-establishes">5.5 What this round establishes</h3>
 <p>The new contribution is numerical evidence, without SGD, for redistribution of full-target mass with width under a specified protocol. It supports one candidate component of the later capacity-wise regime: wider networks may increase the mass advantage of simple targets relative to complex targets. Together with existing interventions on shortcut constraints and post-hard-fit migration results, it supports a conditional account covering both the capacity and time axes.</p>
 <p>What remains unestablished is that changes in static competitor mass on the same finite training set quantitatively determine a particular actual double-descent curve, or guarantee better generalization at every width. These remain boundaries of the account; the unfinished MNIST exploration is neither a complete reproduction of double descent nor validation of the new mechanism proposed here. This update organizes manuscripts and existing reproduction materials only for the Chinese and English websites, not the formal papers or PDFs, and launches no training or sampling.</p>
+<h3 id="rule30-width-transition">5.6 How many examples does a wider network need to learn Rule30?</h3>
+<p>In E38, increasing width gave a simple rule more mass <strong>relative</strong> to selected complex rules. E38 did not train a network. Does width have a corresponding effect when a network actually learns? A training scan from August 20 asked a different, observable question: once every network gets its training examples right, can a wider network learn the same rule on new inputs from fewer examples?</p>
+<p>Each input is a ring of 30 black or white cells. Rule30 determines the next color of each cell from that cell and its two neighbors. The network sees the whole ring and its successor, but not the generating rule. A test example counts as correct only if all 30 cells are right. We trained three-hidden-layer MLPs (GELU, LayerNorm) with AdamW and no weight decay. All five widths used the same data split. Each larger training set retained every input in the smaller set. Fourteen set sizes and three initializations per condition gave 210 models.</p>
+<p><strong>How do we avoid giving faster networks an unfair advantage?</strong> Instead of comparing at the same step, we compared the first time each run crossed the same training loss (raw BCE). The network got every training example right at both checkpoints bracketing that crossing. We interpolated test accuracy between them on the log-loss scale. Each entry below is the <strong>smallest tested training-set size at which all three initializations got at least 99% of 4096 unseen examples entirely right</strong>. It is a threshold on the tested grid, not an exact critical point.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">Hidden width</th>
+<th style="text-align: right;">BCE = 0.001</th>
+<th style="text-align: right;">BCE = 0.0003</th>
+<th style="text-align: right;">BCE = 0.0001</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">128</td>
+<td style="text-align: right;">1536</td>
+<td style="text-align: right;">1280</td>
+<td style="text-align: right;">1152</td>
+</tr>
+<tr>
+<td style="text-align: right;">256</td>
+<td style="text-align: right;">1280</td>
+<td style="text-align: right;">1152</td>
+<td style="text-align: right;">1152</td>
+</tr>
+<tr>
+<td style="text-align: right;">512</td>
+<td style="text-align: right;">1152</td>
+<td style="text-align: right;">1024</td>
+<td style="text-align: right;">960</td>
+</tr>
+<tr>
+<td style="text-align: right;">1024</td>
+<td style="text-align: right;">1152</td>
+<td style="text-align: right;">1024</td>
+<td style="text-align: right;">960</td>
+</tr>
+<tr>
+<td style="text-align: right;">2048</td>
+<td style="text-align: right;">1152</td>
+<td style="text-align: right;">960</td>
+<td style="text-align: right;">896</td>
+</tr>
+</tbody>
+</table>
+<p>At the lowest matched loss, the threshold fell <strong>from 1152 inputs to 896</strong>. Near the transition (512 to 1152 inputs), the widest model beat the narrowest on whole-ring accuracy in <strong>81/81</strong> comparisons matched by training-set size, seed and loss. The median gain was <strong>19.18 percentage points</strong>. Several loss levels come from the same runs, so these are not 81 independent replicates. The original prediction went the other way: limited capacity was expected to help the narrow network learn the rule from fewer examples. That prediction failed here.</p>
+<p>This is <strong>direct training evidence for a shift in the sample threshold</strong>. Its direction is consistent with E38, but E38 sampled 4-bit truth tables, not Rule30; the training scan did not measure competing function masses on Rule30. The two experiments support the part of the capacity-wise account in which width can still improve unseen predictions after interpolation. Neither the threshold shift nor their agreement reproduces a complete double-descent curve.</p>
+<p><strong>Check the result.</strong> The <a href="../assets/rule30_width/train_width_scan.py">training script</a> generates the rings, trains the networks and records the loss crossings. It requires PyTorch, NumPy and Matplotlib; the original GPU runs used up to 20000 steps. Set Config.RESULT_DIR to a fresh output directory before a rerun. The <a href="../assets/rule30_width/matched_crossings.csv">per-run data</a> contain all 630 records at the three main loss levels. Place the <a href="../assets/rule30_width/check_width.py">check script</a> beside the CSV and run <strong>python check_width.py</strong> to reproduce the table and the 81 paired comparisons with the Python standard library; it does not train a network. This November 7 addition revisits the August experiment, not a new batch of E38 samples.</p>
 <h2 id="6-connections-to-the-published-research">6. Connections to the published research</h2>
 <ul>
 <li><a href="theory-core.html">Core theory</a>: shortcut elimination and redistribution among compatible candidates as loss tightens.</li>

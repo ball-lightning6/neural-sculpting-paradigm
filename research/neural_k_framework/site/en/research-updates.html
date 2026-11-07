@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Clarifications, experimental findings, negative results, and open directions since October 27.">
+  <title>Research updates · Neural K Research Archive</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="../assets/site.js"></script>
+</head>
+<body data-page-kind="core">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+
+    <header class="topbar">
+      <a class="site-mark" href="index.html" aria-label="Back to the research narrative">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K Research Archive</span>
+      </a>
+      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="index.html">Research</a><a class="top-link active" href="theory-core.html">Core Theory</a><a class="top-link" href="experiments/index.html">Experiments</a><a class="top-link" href="post-upload.html">Updates</a><a class="top-link" href="references.html">References</a><a class="top-link" href="evidence-ledger.html">Evidence</a></nav>
+      <nav class="language-switch" aria-label="Language"><a href="../research-updates.html" lang="zh-CN">中文</a><span class="active" lang="en">EN</span></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>Contents</span>
+      </button>
+    </header>
+
+  <div class="page-shell">
+
+    <aside class="sidebar" id="sidebar" aria-label="On this page">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">On this page</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#1-three-factors-and-two-necessary-conditions">1 Three Factors and Two Necessary Conditions</a></li>
+<li><a href="#2-completed-experiments-and-their-actual-limits">2 Completed Experiments and Their Actual Limits</a></li>
+<li><a href="#3-the-most-important-conceptual-corrections">3 The Most Important Conceptual Corrections</a></li>
+<li><a href="#4-complexity-data-requirements-and-shared-structure">4 Complexity, Data Requirements, and Shared Structure</a></li>
+<li><a href="#5-candidate-group-mass-and-typical-predictions">5 Candidate-Group Mass and Typical Predictions</a></li>
+<li><a href="#6-relationship-to-prior-work">6 Relationship to Prior Work</a></li>
+<li><a href="#7-public-scope-and-evidence-status">7 Public Scope and Evidence Status</a></li>
+<li><a href="#8-reading-and-verification">8 Reading and Verification</a></li>
+</ul>
+</div>
+</nav>
+        <a class="sidebar-action" href="theory-core.html">Back to core theory →</a>
+      </div>
+    </aside>
+
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">Theory supplement · Evidence and proposals distinguished</div>
+          <h1>Research updates</h1>
+          <p class="article-description">Clarifications, experimental findings, negative results, and open directions since October 27.</p>
+        </header>
+        <div class="article-body"><nav class="ledger-path"><a href="research-updates.html">Research update overview</a></nav><p>Give a network a binary number and ask for the remainder after division by 3. One way to teach it is to give the final answer to each practice question. Another is to also give the remainder after each digit. <strong>Neither group gets intermediate answers at test time. Can the second group learn to solve new questions after seeing fewer practice inputs?</strong></p>
+<p>On the 14-bit task, both groups saw the same 2048 practice inputs and got all their training answers right by the end. The difference showed up on <strong>unseen inputs</strong>: the group trained on final answers alone averaged 80.16% correct; the group trained on intermediate answers averaged 99.14%. The number of inputs stayed fixed; each input carried more supervision. This is an actual training result from this update. <a href="update-scaffolding.html">Why this comparison was needed, and what happened on 16-bit inputs</a>.</p>
+<p>This round adds experiments to existing entries rather than introducing E39. Below we explain what they ask, then give their results and scripts. The width study marked as an August result was rechecked, not rerun.</p>
+<h2 id="1-three-factors-and-two-necessary-conditions">1 Three Factors and Two Necessary Conditions</h2>
+<p>Rich representational capacity, nonuniform prior function mass, and output constraints that can change the relative mass of candidates are the three factors in this broad explanation. An appropriate bias of fixed strength, combined with data, can already support generalization; continually strengthening a preference is not necessary for all generalization. At the same time, the target must be sufficiently identifiable from the available data, and the training method must be able to reach useful regions. Neither representational capacity alone nor a simplicity bias alone guarantees success.</p>
+<p>This explanation does not require a unique simplest function to win. A small number of very economical explanations can still be outweighed collectively by many explanations that are each slightly less economical. The relevant comparison is the total mass of candidate groups, not a substitution of the single shortest description or the point of highest parameter density. See the <a href="interpretation-update.html">conceptual clarifications</a> and the <a href="ait-connections.html">algorithmic information theory account</a>.</p>
+<p>The 2026-11-07 addition connects <a href="interpretation-update.html">early encoding-decoding experiments</a>: four historical symbol/position-shuffling conditions for addition, plus source code for real-valued input and output encodings. They link the early observations about "learning structure" to the current framework. Historical result checks, source-code protocols and new experiments are distinguished, with no new runs or experiment numbers.</p>
+<h2 id="2-completed-experiments-and-their-actual-limits">2 Completed Experiments and Their Actual Limits</h2>
+<table>
+<thead>
+<tr>
+<th>Topic</th>
+<th>New observations</th>
+<th>Interpretation and scope</th>
+<th>Detailed material</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Contraction across architectures</td>
+<td>Six configurations and two rules, with 18 curves and 54 pools including increased-budget runs; several windows are approximately linear, with differing directions of curvature</td>
+<td>Not an exact exponential law for arbitrary architectures, measures, or rules; the deepest K estimate still shifts by 12.59 bit in the increased-budget GRU runs</td>
+<td><a href="update-geometry.html">Geometry and measures</a></td>
+</tr>
+<tr>
+<td>Radial mixing</td>
+<td>42 conditions and 168 pools in total; the maximum K difference between the increased-budget stratified reconstruction and independent Gaussian estimation is approximately 0.085754 bit</td>
+<td>A relatively straight aggregate curve does not mean equal contraction rates on every sphere or numerical invariance under a change of measure</td>
+<td><a href="update-geometry.html">Radial decomposition</a></td>
+</tr>
+<tr>
+<td>Local geometry and last-layer integration</td>
+<td>All 72 anchors have numerical rank 16 at the finest resolution; integrating over the last layer with hidden layers fixed explains some contraction differences</td>
+<td>Local rank, RLCT, minimum norm, and global rule volume remain different objects</td>
+<td><a href="update-geometry.html">Local probes</a></td>
+</tr>
+<tr>
+<td>Mod3 auxiliary supervision</td>
+<td>With 14-bit inputs and 2048 examples, test exact accuracy increases from 80.16% to 99.14%; with 16-bit inputs and 6000 examples, it increases from 61.38% to 99.86%</td>
+<td>Supports reduced input-sample requirements; together with earlier optimization interventions, optimization and rule/sample difficulty are distinct axes. Prefix labels add supervision</td>
+<td><a href="update-scaffolding.html">Scaffolding and sample efficiency</a></td>
+</tr>
+<tr>
+<td>SGD amplitude retest for copy</td>
+<td>Extremely small MSE target amplitudes still accompany poor predictions on unseen inputs; the fitted subset is explicitly distinguished from all runs</td>
+<td>Small-amplitude runs did not all achieve sufficient fitting, so their failures cannot all be attributed to purely static bias</td>
+<td><a href="update-training-controls.html">Training interventions</a></td>
+</tr>
+<tr>
+<td>Rule30 norm interventions</td>
+<td>Whole-string accuracy with 600 examples: baseline 68.5181%, penalty on high norms 79.6570%, repulsion from low norms 39.5203%</td>
+<td>The smallest stably successful sample-size levels are 750/750/900; penalizing high norms has not demonstrated a leftward threshold shift, and norm is not complexity</td>
+<td><a href="update-training-controls.html">Norm controls</a></td>
+</tr>
+<tr>
+<td>Rule30 width (August result revisited)</td>
+<td>At training BCE 0.0001, widening from 128 to 2048 reduced the smallest tested set needed for whole-ring recovery from 1152 to 896 inputs</td>
+<td>Direct evidence for a shift in sample requirements. Its direction agrees with E38; it is not a full double-descent curve</td>
+<td><a href="width-double-descent.html#rule30-width-transition">Training, per-run records and the threshold check, §5.6</a></td>
+</tr>
+<tr>
+<td>Four-point XOR and consensus</td>
+<td>When the other two bits are fixed to 11/00, agreement is 92.56%/99.64%; high-cost representatives can also be highly consistent</td>
+<td>XOR remains human-readable and does not directly refute the agreement conjecture; the distinction is among neural cost, symbolic description and extension confidence. Cost is a full-extension proxy</td>
+<td><a href="update-consensus.html">Consensus and extensions</a></td>
+</tr>
+<tr>
+<td>Wide-CNN time ensembles</td>
+<td>Late-time agreement for the two datasets is approximately 99.955%/99.941%, versus approximately 79.055%/81.692% across seeds</td>
+<td>A single late-stage trajectory is not the distribution across independent seeds, nor does it establish that SGD explores the static region ergodically</td>
+<td><a href="update-consensus.html">Limits of training-distribution comparisons</a></td>
+</tr>
+</tbody>
+</table>
+<p>Two kinds of scripts are useful here. The <a href="../assets/rule30_width/train_width_scan.py">Rule30 trainer</a> generates examples and trains networks. The <a href="../assets/rule30_width/check_width.py">threshold check</a> only reads the <a href="../assets/rule30_width/matched_crossings.csv">saved records</a>; it needs no GPU. For Mod3, the <a href="../assets/mod3_reproduction/README_en.md">training sources and run order</a> are separate from the <a href="../assets/updates_20261106/scaffolding/recompute.py">results check</a>. Other checks serve narrower purposes: <a href="../assets/updates_20261106/geometry/recompute.py">geometry</a> checks the volume curves, <a href="../assets/updates_20261106/geometry/radial_reweighting.py">radial reweighting</a> checks slopes under different weights, <a href="../assets/updates_20261106/consensus/recompute.py">consensus</a> checks prediction statistics across models, and <a href="../assets/updates_20261106/training_controls/audit_cpu.py">norm controls</a> checks training-result tables. These are not the original trainers. Each topic's download gives the necessary files and commands.</p>
+<h2 id="3-the-most-important-conceptual-corrections">3 The Most Important Conceptual Corrections</h2>
+<p><strong>Last-layer scaling clarifies the distinction between existence and mass.</strong> For correctly classified training points, scaling up the entire final affine readout layer can preserve the hard function while further reducing BCE. Low BCE therefore does not automatically imply that new features have been learned. Scaling changes the parameter measure and volume element; a one-to-one correspondence between admissible realizations does not imply equal mass.</p>
+<p><strong>Amplitude regularization is not a control with only one effect.</strong> A variance penalty can raise low margins, lower high margins or shrink outputs overall; it does not directly identify noise. The earlier f/g ranking reversal and improvements on copy and mod97 remain evidence for analyzing output scale, precision allocation across samples and candidate-mass redistribution separately.</p>
+<p><strong>Volume contraction is an empirical law that depends on the measure but is not exclusive to a Gaussian.</strong> Uniform balls, uniform cubes and some sphere controls also show near-linear contraction, with an independent-kernel recheck for the uniform ball. Changing the weighting changes values, effective coefficients and curvature. A Gaussian can straighten some curves, while t8 flattens more noticeably. The phenomenon can neither be attributed entirely to a Gaussian nor called an exact measure-independent law.</p>
+<p><strong>Similar predictions are a weaker requirement than similar parameter distributions.</strong> Averaging the probabilities of correct predictions over test points is exactly equal to the mean single-model accuracy of the same ensemble. Predicting an individual training run additionally requires accuracy concentration and an empirical correspondence with the training distribution. Ensembles across seeds, time ensembles, mean accuracy, pointwise label frequencies, and complete function distributions must be reported separately.</p>
+<p><strong>The agreement conjecture is refined rather than rejected.</strong> E18/E21 found readable rules at high complete-consensus endpoints induced by small datasets, providing positive evidence linking neural preferences to human-compressible structure. Rule nodes denote dominance of an economical behavior group after dataset filtering; adding samples can disperse and reconcentrate consensus. The revision emphasizes fixed architecture, bias strength, sample budget and independent description audits, without identifying high consensus automatically with external correctness.</p>
+<h2 id="4-complexity-data-requirements-and-shared-structure">4 Complexity, Data Requirements, and Shared Structure</h2>
+<p>Conditional theoretical connections and this project's prospective evidence link the data threshold for recovering a rule through random sampling to rule cost, but they do not establish strict proportionality. Total competing-function mass, the distribution of disagreements with the target, the sampling scheme, loss requirements, and the training budget all help determine the threshold. A deliberately constructed four-point training set and four points sampled randomly from a rule are different problems. <a href="post-upload-mdl.html">Soft bias and the MDL derivation</a></p>
+<p>Rules and noise can be distinguished quantitatively through complexity contributions from adding and deleting samples. Samples already explained by shared structure may have low marginal cost, while removing a separately described exception may lower cost substantially. This definition is relative to the current dataset and explanatory background; individual samples, groups and addition order all matter. Further related examples can turn a current exception into part of a reusable rule. This is a central tool for rule/residual analysis, with information gain a mathematical connection under pure conditioning; see the <a href="interpretation-update.html">conceptual clarification</a>.</p>
+<p>The relationship between Neural K and Kolmogorov complexity also remains an independent calibration problem. Network architectures can be viewed as representation languages, making systematic preferences and ranking reversals across architectures unsurprising. However, using different languages does not excuse every mismatch. In particular, representability, shortest realizations, total realization mass, and volume-contraction slopes still require separate tests.</p>
+<h2 id="5-candidate-group-mass-and-typical-predictions">5 Candidate-Group Mass and Typical Predictions</h2>
+<p>The single simplest candidate need not dominate total mass: many individually more complex functions can outweigh it collectively. Candidates sharing major structure but retaining different residuals can make similar numbers of errors at different locations, so concentrated accuracy does not require identical complete functions. Jordan and the Jiang paper it cites supply compatible statistics and calibration relationships; the structure/residual mechanism is this framework's interpretation.</p>
+<p>At Rule30 data levels below the observed recovery range, the dataset is unchanged and all groups fit it, yet a high-norm penalty improves test performance and low-norm repulsion reduces it. Actual selection among compatible candidates can therefore change, connecting to the picture of shifted group weights and typical error. Rule30 error covariances and static group complexities have not been measured step by step, so a changed mean is not passed off as that measurement; the <a href="interpretation-update.html">prediction/norm connection</a> separates observation from interpretation.</p>
+<h2 id="6-relationship-to-prior-work">6 Relationship to Prior Work</h2>
+<p>There are clear precedents for function priors, soft conditional sampling, and competition between candidate multiplicity and individual function probabilities. Yang et al.'s joint-density-of-states work already considers continuous loss, and Alexander et al.'s matrix problems do not merely filter by hard classification. This study therefore no longer uses the narratives that previous work ignored loss or that every volume counterexample results from unmatched loss conditions.</p>
+<p>The contribution to compare is an inspectable chain of evidence linking complete-function mass profiles, fixed-D competition, output-geometry interventions, external complexity calibration, measure checks, and predictions of actual training under finite neural-network protocols. Such a chain is not established automatically by combining existing terms, nor does it require every component idea to be new. <a href="update-related-work.html">Related work and limits</a></p>
+<h2 id="7-public-scope-and-evidence-status">7 Public Scope and Evidence Status</h2>
+<p>This update selects conceptual clarifications, experiments and literature checks relevant to the main research line, without expanding new unimplemented proposals. Published and newly selected evidence retains necessary failure, budget and statistical boundaries; explorations deferred from publication remain in local records. Previously proposed methods are not counted again as new contributions merely because they are reorganized.</p>
+<p>Research should also distinguish description cost, execution cost, the sample cost of identification, and optimization-search cost. Strong representational capacity alone does not guarantee learnability; high agreement alone does not guarantee readability; local flatness cannot substitute for global mass; and thermodynamic analogies cannot substitute for tests of ergodicity.</p>
+<h2 id="8-reading-and-verification">8 Reading and Verification</h2>
+<p>Start with the <a href="theory-core.html">theoretical core</a> or the <a href="ait-connections.html">AIT account</a>. For questions about why these quantities are not the same, see the <a href="interpretation-update.html">conceptual clarifications</a>. Experimental entry points retain their original E numbers and link to the supplementary materials above. Lightweight result tables and audit summaries accompany the pages; large weight files, particles, and private discussions are excluded from the site.</p>
+<p>These experiments change different things. Mod3 changes the clues supplied with an example. Rule30 changes the width or the penalty on weights. Static sampling does not train a network at all. What ties them together is a question: when several rules fit the training answers, which ones carry over to new questions? Each study gives evidence for its own comparison; how far the combined explanation transfers remains open. AI prepared this account from the author's research records; it still awaits the author's review.</p></div>
+
+      </article>
+    </main>
+  </div>
+</body>
+</html>

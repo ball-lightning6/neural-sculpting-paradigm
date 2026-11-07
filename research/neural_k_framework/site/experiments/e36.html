@@ -72,7 +72,7 @@
           <h1>E36 Peleg/G&amp;C 与跨方法训练对照</h1>
           <p class="article-description">E36 Peleg/G&amp;C 与跨方法训练对照的完整协议、结果和边界。</p>
         </header>
-        <div class="article-body"><p><strong>2026年10月更新：</strong> 本页保留原报告；<a href="#update-20261027">跳转至新增实验、复核和边界</a>。</p>
+        <div class="article-body"><nav class="ledger-path" id="update-20261106" aria-label="2026年11月增补"><span>2026年11月增补</span><a href="../update-consensus.html">小训练集共识与训练分布边界</a><a href="../update-related-work.html">相关工作与比较边界</a></nav><p><strong>2026年10月更新：</strong> 本页保留原报告；<a href="#update-20261027">跳转至新增实验、复核和边界</a>。</p>
 <p>首轮已完成。先读<a href="../../experiments/experiment_36_peleg_g_and_c_validation/CONCLUSION.md">结论</a>或<a href="../../experiments/experiment_36_peleg_g_and_c_validation/analysis/REPORT.md">完整表格</a>。不是全论文复现，只有一个16样本训练集。</p>
 <h2 id="运行">运行</h2>
 <p><code>experiment.py</code>集中实现训练与SMC，配置在顶部，无argparse。需要PyTorch GPU版、torchvision、NumPy；分析另需Matplotlib。预检还依赖同目录<code>upstream</code>中的作者数据类，因此本轮是完整目录可运行，不是已经制作好的单文件迁移包。默认物理GPU1 RTX3080，所有数学和采样设置见<a href="../../experiments/experiment_36_peleg_g_and_c_validation/PROTOCOL.md">协议</a>。</p>

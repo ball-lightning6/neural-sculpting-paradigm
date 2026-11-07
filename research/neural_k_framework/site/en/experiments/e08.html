@@ -67,7 +67,7 @@
           <h1>E08: Shared Intermediate Computation under Finite Capacity</h1>
           <p class="article-description">Test whether reusable intermediate computation causally helps a network reach deeper loss with less capacity and data.</p>
         </header>
-        <div class="article-body"><div class="source-bar"><span>Scripts</span><div><a href="../../../experiments/experiment_08_shared_intermediate_pressure/experiment_ca_shared_intermediate_pressure.py">experiment_ca_shared_intermediate_pressure.py</a></div></div><h2 id="overview">Experiment overview</h2>
+        <div class="article-body"><nav class="ledger-path" id="update-20261106" aria-label="November 2026 supplement"><span>November 2026 supplement</span><a href="../update-scaffolding.html">Scaffolding, sample efficiency, and reachability</a></nav><div class="source-bar"><span>Scripts</span><div><a href="../../../experiments/experiment_08_shared_intermediate_pressure/experiment_ca_shared_intermediate_pressure.py">experiment_ca_shared_intermediate_pressure.py</a></div></div><h2 id="overview">Experiment overview</h2>
 <h2 id="purpose">Purpose</h2>
 <p>E08 tests a phenomenological mechanism: when two output tasks share an expensive common CA prefix computation, does allowing the network to share hidden representations make it easier to reach the same extremely low loss than forcing two independent branches?</p>
 <p>The experiment uses a four-cell crossover design so that the exact same four atomic subtasks each appear once in the Shared group and once in the Separate group; a parameter-count-matched forced-split architecture is added as a negative control, ruling out label marginals or the intrinsic difficulty of the atomic tasks.</p>

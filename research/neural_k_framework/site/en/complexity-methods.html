@@ -62,6 +62,7 @@
         </header>
         <div class="article-body"><p>Date: 2026-10-21. Status: website methods draft, for the Chinese and English websites only, not the formal papers or PDFs. This document retains method definitions and estimation proposals awaiting calibration and reports no new measurements; the new MNIST snapshot measurements and Rule30 proxy-accuracy validation are unfinished, and this update launches no experiments.</p>
 <p>The two methods connect: first, treat the hard function implemented by any training snapshot as a target and measure its Neural K; second, use data transitions and query saturation to select finite target samples and reduce SMC evaluation costs on large tasks. The former expands what can be measured; the latter attempts to reduce measurement cost.</p>
+<p><strong>Evidence-scope update, 2026-11-06:</strong> This page retains the two previously proposed measurement methods without adding a new method validation. Neither proposal has completed proxy-accuracy validation on large tasks; full-extension costs for four-point training sets likewise remain proxies, as documented in the <a href="update-consensus.html">consensus recheck</a>. These explorations must not be presented as an already established way to measure the complexity of arbitrary weights reliably.</p>
 <h2 id="1-fixing-the-measurement-object">1. Fixing the measurement object</h2>
 <p>For source-network weights theta_t at training time t, define the hard output function</p>
 <div class="math-display">$$

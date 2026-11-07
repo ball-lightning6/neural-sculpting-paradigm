@@ -1,0 +1,970 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="As we require more decisive answers, how often do weights still qualify? Does the answer change when we sample weights differently?">
+  <title>Contraction, radial mixtures, and local geometry · Neural K Research Archive</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="../assets/site.js"></script>
+</head>
+<body data-page-kind="core">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+
+    <header class="topbar">
+      <a class="site-mark" href="index.html" aria-label="Back to the research narrative">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K Research Archive</span>
+      </a>
+      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="index.html">Research</a><a class="top-link active" href="theory-core.html">Core Theory</a><a class="top-link" href="experiments/index.html">Experiments</a><a class="top-link" href="post-upload.html">Updates</a><a class="top-link" href="references.html">References</a><a class="top-link" href="evidence-ledger.html">Evidence</a></nav>
+      <nav class="language-switch" aria-label="Language"><a href="../update-geometry.html" lang="zh-CN">中文</a><span class="active" lang="en">EN</span></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>Contents</span>
+      </button>
+    </header>
+
+  <div class="page-shell">
+
+    <aside class="sidebar" id="sidebar" aria-label="On this page">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">On this page</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#1-questions-and-claim-boundaries">1. Questions and Claim Boundaries</a><ul>
+<li><a href="#1-1-tested-measures-windows-and-shapes">1.1 Tested Measures, Windows and Shapes</a></li>
+<li><a href="#1-2-independent-non-gaussian-recheck-and-other-controls">1.2 Independent Non-Gaussian Recheck and Other Controls</a></li>
+<li><a href="#1-3-radial-reweighting-of-the-same-gaussian-particles-2026-11-01">1.3 Radial Reweighting of the Same Gaussian Particles (2026-11-01)</a></li>
+</ul>
+</li>
+<li><a href="#2-objects-and-noninterchangeable-protocols">2. Objects and Noninterchangeable Protocols</a></li>
+<li><a href="#3-cross-architecture-finite-window-contraction">3. Cross-Architecture Finite-Window Contraction</a><ul>
+<li><a href="#3-1-actual-models-and-sampling-protocol">3.1 Actual Models and Sampling Protocol</a></li>
+<li><a href="#3-2-main-results">3.2 Main Results</a></li>
+<li><a href="#3-3-completion-budget-sensitivity-and-negative-results">3.3 Completion, Budget Sensitivity and Negative Results</a></li>
+</ul>
+</li>
+<li><a href="#4-radius-conditional-volume-and-gaussian-radial-mixtures">4. Radius-Conditional Volume and Gaussian Radial Mixtures</a><ul>
+<li><a href="#4-1-model-measures-and-actual-scope">4.1 Model, Measures and Actual Scope</a></li>
+<li><a href="#4-2-reconstruction-and-curvature-decomposition">4.2 Reconstruction and Curvature Decomposition</a></li>
+<li><a href="#4-3-main-results-and-fixed-sphere-controls">4.3 Main Results and Fixed-Sphere Controls</a></li>
+<li><a href="#4-4-uncertainty-and-negative-results">4.4 Uncertainty and Negative Results</a></li>
+</ul>
+</li>
+<li><a href="#5-slt-local-probes-positive-evidence-and-failure-boundaries">5. SLT Local Probes: Positive Evidence and Failure Boundaries</a><ul>
+<li><a href="#5-1-anchors-and-local-target">5.1 Anchors and Local Target</a></li>
+<li><a href="#5-2-local-results">5.2 Local Results</a></li>
+<li><a href="#5-3-initial-failure-and-strong-localization-check">5.3 Initial Failure and Strong-Localization Check</a></li>
+</ul>
+</li>
+<li><a href="#6-readout-geometry-conditional-models-and-full-distribution-integration">6. Readout Geometry: Conditional Models and Full-Distribution Integration</a><ul>
+<li><a href="#6-1-fixed-hidden-representations-are-not-all-networks">6.1 Fixed Hidden Representations Are Not All Networks</a></li>
+<li><a href="#6-2-readout-identity-under-the-original-gaussian-conditional-distribution">6.2 Readout Identity Under the Original Gaussian Conditional Distribution</a></li>
+<li><a href="#6-3-terminal-results-and-supported-interpretation">6.3 Terminal Results and Supported Interpretation</a></li>
+</ul>
+</li>
+<li><a href="#7-independent-audit-and-reproducible-provenance">7. Independent Audit and Reproducible Provenance</a></li>
+<li><a href="#8-relation-to-e33-e37-and-evidence-gaps">8. Relation to E33/E37 and Evidence Gaps</a></li>
+</ul>
+</div>
+</nav>
+        <a class="sidebar-action" href="theory-core.html">Back to core theory →</a>
+      </div>
+    </aside>
+
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">Theory supplement · Evidence and proposals distinguished</div>
+          <h1>Contraction, radial mixtures, and local geometry</h1>
+          <p class="article-description">As we require more decisive answers, how often do weights still qualify? Does the answer change when we sample weights differently?</p>
+        </header>
+        <div class="article-body"><div class="reader-intro"><p>All 16 inputs in a four-bit truth table can be classified correctly even when some outputs barely have the right sign. How many parameter settings still qualify if we lower the ceiling on mean binary cross-entropy from 0.01 to 0.001? Here, "how many" means the probability of drawing such a setting from a specified distribution, the reference measure. Each halving of that probability adds one bit to the cost K. Earlier Gaussian measurements showed K rising almost linearly with log precision. That curve alone could not tell us how much its shape depended on the weight given to different radii.</p>
+<p>Section 1.3 reweights the same sampled parameters by distance from the origin, keeping the distribution of directions and the mean squared radius fixed. For four-bit parity, the fitted Gaussian line rises 8.85 bits per unit on the log precision scale <code>a</code> used there. A heavier tail (p = 1.5) gives 8.28; a lighter one (p = 3) gives 9.62. In all three cases the last segment is only about 2% to 3% less steep than the first.</p>
+<p>The nearly straight shape persists. Its slope measures effective complexity for that measure and window, not a universal constant as loss approaches zero. Section 4 separates the contributions from different radii to see how they can shrink at different rates yet yield a nearly straight curve together.</p></div><p class="source-bar"><a href="../assets/updates_20261106/geometry/package.zip" download>Download this topic's public materials (ZIP)</a><span>Includes both language versions and published attachments; verification scope is stated below.</span></p><nav class="ledger-path"><a href="research-updates.html">Research update overview</a></nav><p>This addendum independently audits three experiments dated 2026-11-01 after commit <code>3834fb3f6555c7c58218462502635b16b9b377f9</code> (2026-10-27), aligning their definitions with existing E33/E37. Prepared on 2026-11-06, it distinguishes experiment dates from this audit date. The <a href="../update-geometry.html">Chinese version</a> corresponds paragraph by paragraph, with identical formulas, numbers and sources. This audit used short CPU checks only: no training, new SMC or GPU computation.</p>
+<p>Correction on 2026-11-07: Section 1.3 gives the direct evidence for the weighting question. The radial-reweighting command and output from 2026-11-01 were recovered from the chat history; recomputation from the same Gaussian particle radii and pool costs reproduces the results. Sections 1.1–1.2 retain the older cross-measure tables and independent uniform-ball recheck as supporting evidence; Section 4 separately reports fixed-sphere drift. The original experiments are unchanged.</p>
+<h2 id="1-questions-and-claim-boundaries">1. Questions and Claim Boundaries</h2>
+<p>This audit addresses three related but different questions: whether contraction is approximately a power law in finite loss windows; whether relatively straight Gaussian curves partly result from radial reallocation; and whether local output geometry and readout implementation costs explain differences in global contraction slopes. All tasks constrain complete targets on small Boolean networks. They are neither competition among candidates under partial training data nor new generalization or optimizer experiments.</p>
+<p><strong>Synthesis: reproducible approximate contraction laws in finite windows, and effective complexity defined through them, are not unique to Gaussian measures.</strong> An independent-kernel uniform-ball recheck, the uniform-cube panel and several fixed-sphere controls also yield approximately linear K curves with rule-dependent coefficients. The entire pattern therefore cannot be dismissed as an artifact manufactured by Gaussian weighting. Here, "approximately stable complexity" means a relatively slowly varying contraction coefficient in a specified precision coordinate and measured window, not a constant K, nor slope stability inferred merely from decreasing mass. Straightness differs across measures, particularly for t8, whose later curve segments flatten appreciably.</p>
+<p>This is an <strong>empirical law conditional on measure, parameterization, rule and window</strong>: weighting changes masses and curve positions, but can also change slopes and curvature, not just an intercept. Gaussian radial mixing explains some straightening without replacing the evidence for non-Gaussian regularity. The finest local rank cannot directly replace a global slope; the readout integral supplies a computable geometric connection without equating all network complexities with margins, whitened norms or SLT learning coefficients. Minimum norm is not the total probability mass of an implementation set.</p>
+<h3 id="1-1-tested-measures-windows-and-shapes">1.1 Tested Measures, Windows and Shapes</h3>
+<p>Earlier public evidence is available in the original E37 report (<a href="https://github.com/ball-lightning6/neural-sculpting-paradigm/blob/3834fb3f6555c7c58218462502635b16b9b377f9/research/neural_k_framework/experiments/experiment_37_measure_robustness/README.md" target="_blank" rel="noopener">Chinese</a> / <a href="https://github.com/ball-lightning6/neural-sculpting-paradigm/blob/3834fb3f6555c7c58218462502635b16b9b377f9/research/neural_k_framework/translations_en/post_upload/e37.md" target="_blank" rel="noopener">English</a>) and its fixed-radius and natural-measure addendum (<a href="https://github.com/ball-lightning6/neural-sculpting-paradigm/blob/3834fb3f6555c7c58218462502635b16b9b377f9/research/neural_k_framework/experiments/experiment_37_measure_robustness/FIXED_RADIUS_20261027.md" target="_blank" rel="noopener">Chinese</a> / <a href="https://github.com/ball-lightning6/neural-sculpting-paradigm/blob/3834fb3f6555c7c58218462502635b16b9b377f9/research/neural_k_framework/translations_en/post_upload/e37_update_20261027.md" target="_blank" rel="noopener">English</a>). These links identify a committed version and do not depend on unpublished raw directories.</p>
+<p>The following 20-rule comparison uses <code>4→16→1 tanh</code>, 97 standardized parameters and all 16 inputs encoded as 0/1. The uniform ball has R72; the wide Gaussian uses <code>sigma=72/sqrt(99)</code>; spherical t8 is <code>theta=sigma*sqrt(6/G)*Z</code>, with <code>G~chi²_8</code> independent of <code>Z~N(0,I)</code>; and uniform-cube coordinates are independent on <code>[-sqrt(3)*sigma,+sqrt(3)*sigma]</code>. All four match prior mean squared norm. The entire t8 vector shares one G, whereas the cube also changes the directional distribution, so these are not all purely radial reweightings. The old unit Gaussian and ball-truncated unit Gaussian are outside this scale-matched group.</p>
+<p>The common window is <code>BCE 0.01→0.001</code>, with nodes <code>[0.01,0.0063,0.004,0.0025,0.0016,0.001]</code> and precision coordinate <code>a=-ln(expm1(epsilon))</code>. Table entries <code>c_a=ΔK/Δa</code> are whole-window secants in bit/a. "Drift" means the last adjacent-node slope divided by the first, minus 1, not a point derivative or a difference between measures. Pool probabilities are averaged before taking K. R² describes whole-curve near-linearity and must be read together with segment slopes.</p>
+<table>
+<thead>
+<tr>
+<th>Measure</th>
+<th><code>c_a</code> for constant / complemented copy / parity2 / parity4</th>
+<th style="text-align: right;">Median absolute drift, 20 rules</th>
+<th style="text-align: right;">Linear-fit R² range, 20 rules</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R72 uniform ball</td>
+<td>0.600 / 1.962 / 5.716 / 12.488</td>
+<td style="text-align: right;">13.71%</td>
+<td style="text-align: right;">0.998712–0.999949</td>
+</tr>
+<tr>
+<td>Wide Gaussian</td>
+<td>0.598 / 1.907 / 5.046 / 8.828</td>
+<td style="text-align: right;">2.74%</td>
+<td style="text-align: right;">0.999715–0.999993</td>
+</tr>
+<tr>
+<td>Spherical t8</td>
+<td>0.609 / 1.435 / 1.975 / 2.163</td>
+<td style="text-align: right;">25.40%</td>
+<td style="text-align: right;">0.996368–0.999881</td>
+</tr>
+<tr>
+<td>Uniform cube</td>
+<td>0.628 / 2.668 / 6.948 / 9.938</td>
+<td style="text-align: right;">12.84%</td>
+<td style="text-align: right;">0.999338–0.999902</td>
+</tr>
+</tbody>
+</table>
+<p>This table provides positive evidence while quantifying its limits. Uniform-ball and cube curves admit approximate window-average descriptions but retain visible drift. For t8, parity2 adjacent slopes change from <code>2.248→1.753</code> (-22.00%) and parity4 from <code>2.520→1.857</code> (-26.30%), so they are not as stable as the wide-Gaussian curves. Relative to the uniform ball, wide Gaussian / t8 / cube have terminal-K Spearman correlations of <code>0.99699 / 0.98947 / 0.94887</code> and window-coefficient correlations of <code>0.99549 / 0.90526 / 0.94135</code>. Robust principal rankings and stable within-curve slopes are distinct claims; the 190 rule pairs are not independent replicates. The three then-new measures comprise 60 jobs with 8 pools per job and 2048 particles per pool, all reaching 0.001. Uniform-ball results select the same 20 rules from the existing 36-rule panel and are not pooled with the independent recheck below.</p>
+<h3 id="1-2-independent-non-gaussian-recheck-and-other-controls">1.2 Independent Non-Gaussian Recheck and Other Controls</h3>
+<p>A more direct near-linearity recheck uses the old R72 uniform ball: constant <code>0x0000</code>, complemented copy <code>0x00FF</code>, parity2 <code>0x0FF0</code> and parity4 <code>0x6996</code>, with independent new seeds, 8 pools per rule, 4096 particles per pool and 48 updates per level. It replaces the original rotation/radial-refresh kernel with a symmetric random walk and hard rejection. All four curves reach 0.001; the maximum K discrepancy across 64 shared nodes against the main scan is 0.4468 bit. The following table uses the same 6-node window and does not substitute high R² for a drift check.</p>
+<table>
+<thead>
+<tr>
+<th>Rule</th>
+<th style="text-align: right;"><code>c_a</code> / bit/a</th>
+<th style="text-align: right;">Linear-fit R²</th>
+<th style="text-align: right;">First→last segment slope / bit/a</th>
+<th style="text-align: right;">Relative drift</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Constant</td>
+<td style="text-align: right;">0.599</td>
+<td style="text-align: right;">0.999621</td>
+<td style="text-align: right;">0.584→0.637</td>
+<td style="text-align: right;">+9.01%</td>
+</tr>
+<tr>
+<td>Complemented copy</td>
+<td style="text-align: right;">1.980</td>
+<td style="text-align: right;">0.999887</td>
+<td style="text-align: right;">1.931→2.041</td>
+<td style="text-align: right;">+5.71%</td>
+</tr>
+<tr>
+<td>parity2</td>
+<td style="text-align: right;">5.794</td>
+<td style="text-align: right;">0.999795</td>
+<td style="text-align: right;">5.580→6.019</td>
+<td style="text-align: right;">+7.88%</td>
+</tr>
+<tr>
+<td>parity4</td>
+<td style="text-align: right;">12.505</td>
+<td style="text-align: right;">0.999350</td>
+<td style="text-align: right;">11.703→13.440</td>
+<td style="text-align: right;">+14.84%</td>
+</tr>
+</tbody>
+</table>
+<p>This supports an independently rechecked, non-Gaussian finite-window approximation, not strictly constant slopes. The source report is <code>research/notes/20260913_uniform_ball_euclidean_volume_zh.md</code>. This follow-up recalculates <code>tmp/4bit_uniform_ball_recheck_20260913/*/volume_curve.csv</code> and cross-checks <code>analysis/curve_summary.csv</code> and <code>analysis/local_slopes.csv</code> in that directory. These paths identify repository-local sources, not public attachment links. Historical R24 parity2/parity4 runs did not complete the window; R48 parity4 steepened appreciably and raised warnings. Neither is counted as positive slope-stability evidence.</p>
+<table>
+<thead>
+<tr>
+<th>Other completed controls</th>
+<th>Actual window and results</th>
+<th>Supported interpretation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R72 ball-truncated unit Gaussian versus unbounded unit Gaussian</td>
+<td>BCE 0.01→0.001; constant <code>c_a</code> is 16.864 versus 16.893, complemented copy 36.882 versus 36.880; parity4 239.062 versus 235.376, retaining warnings for both Gaussian deep-tail estimates</td>
+<td>A hard boundary alone cannot explain uniform-ball versus unit-Gaussian numerical differences; this is not an additional family-wide stable-reweighting scan</td>
+</tr>
+<tr>
+<td>E37 uniform spheres at fixed R20/R40</td>
+<td>BCE 0.03→0.001; R40 projection / majority3 / parity2 have <code>ΔK/log2(30)</code> of 2.99 / 5.67 / 14.07; only projection completes at R20, with 8 stalled pools across the other two rules</td>
+<td>Rule-dependent angular contraction survives without radial migration; a whole-window mean alone does not establish local slope stability, and unreached nodes are not zero mass</td>
+</tr>
+<tr>
+<td>This report's four conditional Gaussian radial bands, R72 ball and R72/R80/R88/R96 spheres</td>
+<td>BCE 0.01→0.001; 3 rules and 10 conditions; the enhanced round covers only 2 rules and 6 conditions, detailed in Section 4</td>
+<td>Independent radial reconstruction, radius dependence and sphere shapes; not every condition is a different unconditional prior</td>
+</tr>
+<tr>
+<td>Old E37 / supplementary 3-bit uniform-ball MSE target shifts</td>
+<td>R72, MSE=0.01; increasing target separation 18→20 gives K increments of 0.25 / 1.77 / 2.60 / 5.51 bit for constant / copy / majority / parity; R72/R96 additionally check endpoint interactions at MSE=0.001</td>
+<td>Non-Gaussian rule-dependent target responses and finite-window approximate additivity; shifted targets are not nested events and do not supply BCE slope-stability evidence</td>
+</tr>
+</tbody>
+</table>
+<p>The same <code>research/neural_k_framework/supplementary/measure_robustness/RESULTS.md</code> also records MSE controls for joint target/reference-center translation, target-only translation, removal of readout bias and target half-separations <code>0.01/0.1/0.5/1/3</code>. All 40 curves reach <code>1e-5</code>; the last 4 nodes are <code>0.001/0.0003/0.0001/1e-5</code>, with reported deep-tail slopes around <code>12.2–13.5 bit/decade</code>. These intervene on output events, coordinates or architecture, not additional radial priors; their MSE precision slopes cannot be combined with the bit/a values above.</p>
+<h3 id="1-3-radial-reweighting-of-the-same-gaussian-particles-2026-11-01">1.3 Radial Reweighting of the Same Gaussian Particles (2026-11-01)</h3>
+<p><strong>Changing the radial density shape changes the contraction slope, yet the first-to-last segment drift for parity4 remains small under several non-Gaussian weights.</strong> This diagnostic changes the target density using retained particles from the direct conditional Gaussian runs; it does not run SMC afresh for each target prior. Complemented copy uses <code>results_v1/copy__gaussian</code>; parity2 and parity4 use <code>results_v2_enhanced/parity2__gaussian</code> and <code>results_v2_enhanced/parity4__gaussian</code>. Each node has 4 pools, with 768 particles per pool in the first round and 1536 in the enhanced round.</p>
+<p>The primary comparison changes the density with respect to parameter-space volume, not the one-dimensional density of radius. Set <code>d=97</code> and <code>sigma0=72/sqrt(99)</code>; varying p holds the mean squared radius fixed, and <code>p=2</code> gives the original Gaussian. The angular distribution is unchanged, and the radial Jacobian cancels in the density ratio:</p>
+<div class="math-display">$$
+\rho_p(\theta)=C_p e^{-(r/a_p)^p},\quad r=\|\theta\|,\quad
+a_p^2=d\sigma_0^2\frac{\Gamma(d/p)}{\Gamma((d+2)/p)},\quad
+C_p=\frac{p}{S_{d-1}a_p^d\Gamma(d/p)},\quad S_{d-1}=\frac{2\pi^{d/2}}{\Gamma(d/2)}.
+$$</div>
+<p>At BCE nodes <code>[0.01,0.0063,0.004,0.0025,0.0016,0.001]</code>, the target-to-original Gaussian density ratio w corrects each pool's cost before pool probabilities are averaged. Rule columns report 6-point least-squares slopes in <code>a=-ln(expm1(epsilon))</code> (bit/a), not the Section 1.1 secants. Drift is <code>100*(last segment slope / first segment slope - 1)</code>, in %. The weight ESS fraction reported is the minimum across nodes and pools, with N particles in each pool:</p>
+<div class="math-display">$$
+K'_b=K_{0,b}-\log_2\!\left(\frac1N\sum_i w_{bi}\right),\qquad
+K'=-\log_2\!\left(\frac1B\sum_b2^{-K'_b}\right),\qquad
+q_b=\frac{(\sum_i w_{bi})^2}{N\sum_i w_{bi}^2}.
+$$</div>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;"><code>p</code></th>
+<th style="text-align: right;">Complemented copy</th>
+<th style="text-align: right;">parity2</th>
+<th style="text-align: right;">parity4</th>
+<th style="text-align: right;">parity4 drift</th>
+<th style="text-align: right;">parity4 minimum weight ESS fraction</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1.8816</td>
+<td style="text-align: right;">4.6017</td>
+<td style="text-align: right;">7.5530</td>
+<td style="text-align: right;">-8.93%</td>
+<td style="text-align: right;">0.00824</td>
+</tr>
+<tr>
+<td style="text-align: right;">1.5</td>
+<td style="text-align: right;">1.9138</td>
+<td style="text-align: right;">4.8931</td>
+<td style="text-align: right;">8.2793</td>
+<td style="text-align: right;">-2.88%</td>
+<td style="text-align: right;">0.21564</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1.9348</td>
+<td style="text-align: right;">5.0735</td>
+<td style="text-align: right;">8.8511</td>
+<td style="text-align: right;">-2.25%</td>
+<td style="text-align: right;">1.00000</td>
+</tr>
+<tr>
+<td style="text-align: right;">2.5</td>
+<td style="text-align: right;">1.9479</td>
+<td style="text-align: right;">5.1934</td>
+<td style="text-align: right;">9.2837</td>
+<td style="text-align: right;">-2.37%</td>
+<td style="text-align: right;">0.67828</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">1.9561</td>
+<td style="text-align: right;">5.2790</td>
+<td style="text-align: right;">9.6239</td>
+<td style="text-align: right;">-1.98%</td>
+<td style="text-align: right;">0.35339</td>
+</tr>
+</tbody>
+</table>
+<p>Across <code>p=1.5/2/2.5/3</code>, slopes rise with p for all three rules, while the last parity4 segment is only about 2%–3% shallower than the first. <strong><code>p=1</code> is a stress test, not reliable positive evidence</strong>: the minimum parity4 weight ESS fraction is only 0.00824. The old E37 formal scan replaced the planned Laplace prior with spherical t8; reweighting here is not an independent Laplace scan.</p>
+<p>The other control changes only Gaussian <strong>variance</strong>. Write <code>h=v/v0</code> and <code>v0=sigma0²</code>, using the same nodes and probability pooling. The <code>0.9/1/1.1</code> values are not standard-deviation multipliers; the separate, wider standard-deviation scan is not included:</p>
+<div class="math-display">$$
+\log w=-\frac d2\log h+(1-1/h)\frac{r^2}{2v_0}.
+$$</div>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;"><code>v/v0</code></th>
+<th style="text-align: right;">Complemented copy</th>
+<th style="text-align: right;">parity2</th>
+<th style="text-align: right;">parity4</th>
+<th style="text-align: right;">Minimum weight ESS fraction: complemented copy / parity2 / parity4</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">0.9</td>
+<td style="text-align: right;">2.0623</td>
+<td style="text-align: right;">5.4174</td>
+<td style="text-align: right;">9.4643</td>
+<td style="text-align: right;">0.58401 / 0.54808 / 0.53604</td>
+</tr>
+<tr>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1.9348</td>
+<td style="text-align: right;">5.0735</td>
+<td style="text-align: right;">8.8511</td>
+<td style="text-align: right;">1.00000 / 1.00000 / 1.00000</td>
+</tr>
+<tr>
+<td style="text-align: right;">1.1</td>
+<td style="text-align: right;">1.8162</td>
+<td style="text-align: right;">4.7837</td>
+<td style="text-align: right;">8.3510</td>
+<td style="text-align: right;">0.56448 / 0.54852 / 0.54935</td>
+</tr>
+</tbody>
+</table>
+<p>ESS in both tables diagnoses concentration of importance weights, not MCMC ESS. Reweighting preserves the original SMC genealogy, and high ESS cannot establish coverage of unseen tails. In Section 4 the layer contributions <code>w_j=p_j*A_j/V</code> change with loss by conditioning a fixed prior, and <code>K_frozen</code> is a mean cost with layer contributions frozen. Neither operation changes the target density as done here.</p>
+<p>The original command and output were recovered from chat history; no separate diagnostic output file was saved at the time. The <a href="../assets/updates_20261106/geometry/radial_reweighting.json">recheck record</a> was generated on 2026-11-07 and contains only configuration, pooled node costs, curve summaries and source SHA256 hashes, not particles. The short CPU recomputation matches the recovered 21 slopes and 4 drift percentages with maximum absolute discrepancies of 0; the maximum discrepancy for the 5 parity4 minimum weight ESS fractions is 4.44e-16. These are arithmetic discrepancies, not statistical errors.</p>
+<p>Run the <a href="../assets/updates_20261106/geometry/radial_reweighting.py">standalone script</a> from this directory. The first command is the default read-only standard-library check: it recomputes slopes and drift from published node costs and checks the configuration and both reports' tables. It cannot reconstruct weight ESS from K or verify actual source-file hashes. The second requires the original files and NumPy; it recomputes K, weight ESS and source hashes read-only and compares them with the release. Only an explicit additional <code>--write</code> generates the JSON.</p>
+<pre><code class="language-bash">python -I -S -B radial_reweighting.py --public-only
+python -B radial_reweighting.py --from-sources
+</code></pre>
+<h2 id="2-objects-and-noninterchangeable-protocols">2. Objects and Noninterchangeable Protocols</h2>
+<p>For the complete input table, write label signs, logits, mean BCE, reference-measure mass and bit cost as:</p>
+<div class="math-display">$$
+s_i=2y_i-1,\quad m_i=s_i z_\theta(x_i),\quad
+L_f(\theta)=\frac1{16}\sum_{i=1}^{16}\log(1+e^{-m_i}),\quad
+V_{\mu,f}(\epsilon)=\Pr_\mu[L_f\le\epsilon],\quad
+K_{\mu,f}(\epsilon)=-\log_2 V_{\mu,f}(\epsilon).
+$$</div>
+<p>When <code>epsilon &lt; ln(2)/16 = 0.0433217</code>, any wrong sign or zero margin contradicts the mean-BCE bound, so every hard label must be correct. Above this threshold, complete-target events remain BCE events and cannot automatically be treated as disjoint hard-function cells. Mean BCE, pointwise margin lower bounds and equal-amplitude logit densities are different objects.</p>
+<table>
+<thead>
+<tr>
+<th>Experiment</th>
+<th>Actual inputs and output</th>
+<th>Parameter measure or local target</th>
+<th>Main analysis window</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cross-architecture</td>
+<td>All 16 4-bit inputs; MLP/CNN encoded as ±1, GRU/Transformer use bit tokens; one logit</td>
+<td>Independent standard whitened Gaussian over all variable parameters; fan-in scaling</td>
+<td>BCE 0.03 to 0.0001, 11 nodes</td>
+</tr>
+<tr>
+<td>Radial mixture</td>
+<td>All 16 inputs encoded as 0/1; one logit</td>
+<td>Wide Gaussian, conditional Gaussian radial bands, uniform solid ball or uniform sphere in 97 standardized coordinates</td>
+<td>BCE 0.01 to 0.001, 6 nodes</td>
+</tr>
+<tr>
+<td>SLT local probe</td>
+<td>Same inputs as the selected cross-architecture MLPs; auxiliary continuous-logit preservation error</td>
+<td>Localized Gibbs target around anchors, not the original global prior</td>
+<td>Controlled BCE anchors 0.03, 0.003, 0.0001</td>
+</tr>
+<tr>
+<td>Readout integral</td>
+<td>Complete terminal particle sets from the original cross-architecture global SMC</td>
+<td>Original standard whitened Gaussian conditioned on the BCE event</td>
+<td>Point derivative 0.0001; secant 0.0002 to 0.0001</td>
+</tr>
+</tbody>
+</table>
+<p>The cross-architecture main table averages pool K values; the radial main table averages probabilities before taking the negative logarithm. These summaries are unequal and their difference is not itself a scientific effect. Three precision coordinates must also be distinguished:</p>
+<div class="math-display">$$
+\overline K=\frac1M\sum_{r=1}^M K_r,\qquad
+K_{\rm pooled}=-\log_2\!\left(\frac1M\sum_{r=1}^M2^{-K_r}\right),\qquad
+t=\ln(1/\epsilon),\quad u=\log_2(1/\epsilon),\quad
+a(\epsilon)=-\ln(\operatorname{expm1}(\epsilon)).
+$$</div>
+<p>If <code>V ≈ C epsilon^kappa</code>, then <code>dK/dt = kappa/ln(2)</code>, whereas <code>dK/du = kappa</code>. Radial tables use <code>dK/da</code>; at finite epsilon, <code>a</code> and <code>t</code> are not exactly the same coordinate. Fitted intercepts are not estimates of hard-function prior mass.</p>
+<h2 id="3-cross-architecture-finite-window-contraction">3. Cross-Architecture Finite-Window Contraction</h2>
+<h3 id="3-1-actual-models-and-sampling-protocol">3.1 Actual Models and Sampling Protocol</h3>
+<p>Source definitions, parameter shapes in result identities and parameter counts agree. Counts below are dimensions included in the measure and sampling, including variable biases but excluding fixed positional encodings or fixed normalization affine constants.</p>
+<table>
+<thead>
+<tr>
+<th>Configuration</th>
+<th>Actual width, depth and readout</th>
+<th style="text-align: right;">Sampled parameters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tanh16</td>
+<td>4→16→1; 1 tanh hidden layer</td>
+<td style="text-align: right;">97</td>
+</tr>
+<tr>
+<td>tanh32x3</td>
+<td>4→32→32→32→1; 3 tanh hidden layers</td>
+<td style="text-align: right;">2305</td>
+</tr>
+<tr>
+<td>relu32x3</td>
+<td>4→32→32→32→1; 3 ReLU hidden layers</td>
+<td style="text-align: right;">2305</td>
+</tr>
+<tr>
+<td>cnn8x2</td>
+<td>1D convolutions with channels 1→8→8, kernel 3, padding 1, ReLU; length 4 flattened to 32 before linear readout</td>
+<td style="text-align: right;">265</td>
+</tr>
+<tr>
+<td>gru16</td>
+<td>2×4 token embedding; 1 hidden-16 GRU layer unrolled over 4 steps; final-hidden linear readout</td>
+<td style="text-align: right;">1081</td>
+</tr>
+<tr>
+<td>transformer8</td>
+<td>3×8 embedding including CLS; 4 input tokens plus CLS; 1 width-8, 2-head, FF-16 ReLU encoder block with CLS linear readout</td>
+<td style="text-align: right;">601</td>
+</tr>
+</tbody>
+</table>
+<p>Both Transformer LayerNorm operations fix gain=1 and bias=0, with epsilon=1e-5; the corresponding 32 fixed affine values are excluded from the 601 dimensions. This is not the same protocol as the existing E33 conditional derivation with jointly scaled random LayerNorm affine parameters and a Gaussian readout. MLP/CNN weights and biases are both divided by the square root of the associated weight fan-in; embedding standard deviation is 1. GRU unrolling steps are not stacked depth.</p>
+<p>Rules are first-bit copy and XOR of the first two bits (parity2), each constraining all 16 points, without amplitude regularization, equal-amplitude constraints or SGD. Prespecified BCE nodes are <code>[0.3,0.1,0.03,0.02,0.01,0.006,0.003,0.002,0.001,0.0006,0.0003,0.0002,0.0001]</code>. An independent 384-particle pilot uses survival quantile 0.6 to choose intermediate thresholds and tune block-pCN step sizes. Production pools freeze this schedule and accumulate actual survival fractions, not a fixed per-level survival rate substituted for measured mass.</p>
+<p>The main budget uses 3 pools per condition, 768 particles per pool and 12 block sweeps. Enhanced budgets check only parity2 in each configuration, using 1536 particles and 24 sweeps, independent production random streams but the same condition-specific pilot. Original records specify Python 3.13.5, PyTorch 2.11.0+cu130, CUDA 13.0, RTX 3080, cuda:1, float64 and disabled TF32. Reported sampling time is not the time of this audit.</p>
+<h3 id="3-2-main-results">3.2 Main Results</h3>
+<p>Main-budget terminal K and window slopes follow. The early window is <code>0.03→0.006</code>, the late window <code>0.0006→0.0001</code>; slopes are in bit/nat. Enhanced curves are not pooled into this table.</p>
+<table>
+<thead>
+<tr>
+<th>Configuration</th>
+<th style="text-align: right;">Copy terminal K</th>
+<th style="text-align: right;">Parity2 terminal K</th>
+<th style="text-align: right;">Copy early→late slope</th>
+<th style="text-align: right;">Parity2 early→late slope</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tanh16</td>
+<td style="text-align: right;">190.00</td>
+<td style="text-align: right;">709.63</td>
+<td style="text-align: right;">21.24→24.98</td>
+<td style="text-align: right;">75.88→85.32</td>
+</tr>
+<tr>
+<td>tanh32x3</td>
+<td style="text-align: right;">226.15</td>
+<td style="text-align: right;">452.54</td>
+<td style="text-align: right;">24.81→26.82</td>
+<td style="text-align: right;">43.74→39.50</td>
+</tr>
+<tr>
+<td>relu32x3</td>
+<td style="text-align: right;">172.90</td>
+<td style="text-align: right;">281.48</td>
+<td style="text-align: right;">17.33→13.17</td>
+<td style="text-align: right;">26.14→19.38</td>
+</tr>
+<tr>
+<td>cnn8x2</td>
+<td style="text-align: right;">152.08</td>
+<td style="text-align: right;">274.10</td>
+<td style="text-align: right;">15.71→12.89</td>
+<td style="text-align: right;">27.56→21.66</td>
+</tr>
+<tr>
+<td>gru16</td>
+<td style="text-align: right;">307.24</td>
+<td style="text-align: right;">441.80</td>
+<td style="text-align: right;">28.61→24.81</td>
+<td style="text-align: right;">39.53→38.69</td>
+</tr>
+<tr>
+<td>transformer8</td>
+<td style="text-align: right;">102.57</td>
+<td style="text-align: right;">135.40</td>
+<td style="text-align: right;">8.70→13.50</td>
+<td style="text-align: right;">10.28→14.27</td>
+</tr>
+</tbody>
+</table>
+<p>Across 12 main curves and 11 low-loss nodes, linear-fit R² ranges from 0.99246 to 0.99995; RMSE is about 0.22%–2.76% of the K span. Yet fitting only the shallower 8 nodes gives prediction RMSE of 0.30–10.95 bit on the deepest 3 nodes; 1 bit already means a factor of 2 in mass. Thus a nearly straight plot is not an accurate volume prediction or evidence of a constant slope.</p>
+<p>The 2305-parameter tanh32x3 and relu32x3 differ only in activation but show different curvature directions. The parity2 K disadvantage relative to copy grows as the threshold tightens in all six configurations, but two rules cannot establish a complexity theorem for all functions. Free p in <code>K=a+b*t^p</code> is descriptive only: main-budget copy/parity2 values are tanh16 1.27/1.14, tanh32x3 1.08/0.81, ReLU 0.59/0.55, CNN 0.69/0.61, GRU 0.69/0.90 and Transformer 1.64/1.43. These are not identified ultimate asymptotic exponents.</p>
+<h3 id="3-3-completion-budget-sensitivity-and-negative-results">3.3 Completion, Budget Sensitivity and Negative Results</h3>
+<p>Final raw records show 18/18 curves and 54/54 pools reaching 0.0001, with 0 final failed curves. Historical <code>results_v1/progress.json</code> retains 3 file-access failures, excluded as additional repetitions. <code>results_v2/progress.json</code> also retains 3 enhanced-entry identity tuple/list comparison errors. These occurred before enhanced production sampling; final status must combine the 6 completed entries in <code>additional_budget_checks.json</code> with actual result files, not rely only on the older progress file.</p>
+<table>
+<thead>
+<tr>
+<th>Parity2 configuration</th>
+<th style="text-align: right;">Main terminal K</th>
+<th style="text-align: right;">Enhanced terminal K</th>
+<th style="text-align: right;">Enhanced minus main K</th>
+<th style="text-align: right;">Change in window ΔK</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tanh16</td>
+<td style="text-align: right;">709.63</td>
+<td style="text-align: right;">708.56</td>
+<td style="text-align: right;">-1.07</td>
+<td style="text-align: right;">-0.70</td>
+</tr>
+<tr>
+<td>tanh32x3</td>
+<td style="text-align: right;">452.54</td>
+<td style="text-align: right;">451.54</td>
+<td style="text-align: right;">-0.99</td>
+<td style="text-align: right;">-0.38</td>
+</tr>
+<tr>
+<td>relu32x3</td>
+<td style="text-align: right;">281.48</td>
+<td style="text-align: right;">280.19</td>
+<td style="text-align: right;">-1.29</td>
+<td style="text-align: right;">-0.02</td>
+</tr>
+<tr>
+<td>cnn8x2</td>
+<td style="text-align: right;">274.10</td>
+<td style="text-align: right;">274.78</td>
+<td style="text-align: right;">+0.68</td>
+<td style="text-align: right;">+0.69</td>
+</tr>
+<tr>
+<td>gru16</td>
+<td style="text-align: right;">441.80</td>
+<td style="text-align: right;">429.21</td>
+<td style="text-align: right;">-12.59</td>
+<td style="text-align: right;">-10.48</td>
+</tr>
+<tr>
+<td>transformer8</td>
+<td style="text-align: right;">135.40</td>
+<td style="text-align: right;">134.62</td>
+<td style="text-align: right;">-0.77</td>
+<td style="text-align: right;">-0.71</td>
+</tr>
+</tbody>
+</table>
+<p>Differences are calculated before rounding. Except for GRU, changes in low-loss contraction increments are at most about 0.71 bit, supporting budget stability of these parity2 curve shapes, not convergence of all absolute masses. The GRU terminal difference of 12.59 bit corresponds to a mass factor of roughly 6000. Without a third budget or independent global estimator, its precision is unsettled; this alone also does not establish a counterexample to a volume law. Copy has no enhanced budget. Pool SD, acceptance rates, smooth curves and ancestry counts cannot exclude shared mode omission; ancestor counts are not ESS.</p>
+<h2 id="4-radius-conditional-volume-and-gaussian-radial-mixtures">4. Radius-Conditional Volume and Gaussian Radial Mixtures</h2>
+<h3 id="4-1-model-measures-and-actual-scope">4.1 Model, Measures and Actual Scope</h3>
+<p>The radial experiment uses <code>4→16→1 tanh</code>, 97 parameters and 0/1 inputs. Its first 80 standardized coordinates are divided by 2, and its final 17 by 4. Rule codes are complemented copy <code>0x00FF</code>, parity2 <code>0x0FF0</code> and parity4 <code>0x6996</code>; the first rule must not be relabeled as the cross-architecture copy target. Radius is defined in these standardized theta coordinates, not as the norm of actual scaled weights or the norm of internal unit-Gaussian coordinates u.</p>
+<div class="math-display">$$
+\theta=\sigma u,\quad u\sim N(0,I_{97}),\quad
+\sigma=72/\sqrt{99}\approx7.23627227,\qquad
+\mathbb E\|\theta\|^2=97\sigma^2\approx5079.272727.
+$$</div>
+<p>This matches the mean squared radius of the R72 uniform solid ball, not the R72 sphere. The ten measure conditions are direct Gaussian; four conditional Gaussian radial bands <code>[0,72)</code>, <code>[72,80)</code>, <code>[80,88)</code>, <code>[88,+inf)</code>; the R72 uniform solid ball; and uniform spheres R72/R80/R88/R96. Prior band masses are 0.575510896, 0.381866476, 0.041947433 and 0.000675196. Conditional radial bands still mix radii internally; only sphere controls fix radius completely.</p>
+<p>The first round uses 3 rules×10 measure conditions, each with 4 pools, 768 particles, 16 updates at ordinary levels and 48 at designated nodes; an independent 256-particle pilot freezes thresholds and proposal scales. Nodes are <code>[0.7,0.3,0.1,0.03,0.016,0.01,0.0063,0.004,0.0025,0.0016,0.001]</code>. The enhanced round covers only direct Gaussian, the four bands and the R72 sphere for parity2/parity4, using independent new seeds, 1536 particles and 32/96 updates. Both rounds use float64, cuda:1, RTX 3080, disabled TF32 and deterministic operations, without gradient warmup.</p>
+<p>The first round completed 30/30 conditions, 120/120 pools and 330 condition-nodes; the enhanced round completed 12/12 conditions, 48/48 pools and 132 condition-nodes. Both have 0 final failed conditions. Rounds are not pooled as equal-budget repetitions, and the 22 enhanced rule-nodes are not independent tasks. This mechanism test was designed after inspecting the older panel; it is not claimed as blind prediction or formal preregistration.</p>
+<h3 id="4-2-reconstruction-and-curvature-decomposition">4.2 Reconstruction and Curvature Decomposition</h3>
+<p>For a spherical Gaussian, the full radial density must contain the Jacobian. Fixed-radius angular probability and total Gaussian mass are related as follows. Four-band reconstruction uses independent samples from each conditional prior, rather than partitioning the terminal direct-Gaussian samples.</p>
+<div class="math-display">$$
+A_f(r,\epsilon)=\Pr_U[L_f(rU)\le\epsilon],\quad U\sim\operatorname{Unif}(S^{96}),\qquad
+V_f(\epsilon)=\int_0^\infty A_f(r,\epsilon)\rho_\sigma(r)\,dr,\quad
+\rho_\sigma(r)\propto r^{96}e^{-r^2/(2\sigma^2)}.
+$$</div>
+<div class="math-display">$$
+V(a)=\sum_jp_jA_j(a),\quad K_j=-\log_2 A_j,\quad
+w_j(a)=\frac{p_jA_j(a)}{V(a)},\qquad
+K''(a)=\mathbb E_w[K_j''(a)]-\ln(2)\operatorname{Var}_w[K_j'(a)].
+$$</div>
+<p>Where differentiability and exchanging derivatives with integrals are justified, between-band reallocation can offset upward within-band curvature, but does not guarantee a straight total curve. Here <code>A_j</code> is a conditional Gaussian band probability, not the probability <code>A_f(r,epsilon)</code> on one sphere. The four bands cover all radii; sparse sphere interpolation does not substitute for the continuous integral.</p>
+<p>The average-cost diagnostic with weights frozen at <code>epsilon=0.01</code> satisfies an exact finite-partition identity. It is not the probability cost of another actual mixture measure.</p>
+<div class="math-display">$$
+K_{\rm frozen}(a)=K(a_0)+\sum_jw_j(a_0)[K_j(a)-K_j(a_0)],\qquad
+K_{\rm frozen}(a)-K(a)=D_{\rm KL,bits}(w(a_0)\|w(a)).
+$$</div>
+<h3 id="4-3-main-results-and-fixed-sphere-controls">4.3 Main Results and Fixed-Sphere Controls</h3>
+<p>Across all nodes, the maximum K point-estimate discrepancy between stratified reconstruction and independent direct Gaussian is 0.414 bit in the first round and 0.085754 bit in the enhanced round. Curvature units below are bit/a², and the last column is in bits. Mixture and frozen columns use whole-window quadratic fits; the central columns use midpoint derivatives of per-band quadratic fits, so exact columnwise subtraction is not required.</p>
+<table>
+<thead>
+<tr>
+<th>Budget/rule</th>
+<th style="text-align: right;">Mixture curvature</th>
+<th style="text-align: right;">Frozen curvature</th>
+<th style="text-align: right;">Midpoint mean within-band curvature</th>
+<th style="text-align: right;">Midpoint between-band variance term</th>
+<th style="text-align: right;">Terminal frozen-cost gap</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Initial/complemented copy</td>
+<td style="text-align: right;">0.024</td>
+<td style="text-align: right;">0.036</td>
+<td style="text-align: right;">0.036</td>
+<td style="text-align: right;">0.011</td>
+<td style="text-align: right;">0.029</td>
+</tr>
+<tr>
+<td>Initial/parity2</td>
+<td style="text-align: right;">0.045</td>
+<td style="text-align: right;">0.138</td>
+<td style="text-align: right;">0.137</td>
+<td style="text-align: right;">0.090</td>
+<td style="text-align: right;">0.257</td>
+</tr>
+<tr>
+<td>Initial/parity4</td>
+<td style="text-align: right;">-0.098</td>
+<td style="text-align: right;">0.244</td>
+<td style="text-align: right;">0.206</td>
+<td style="text-align: right;">0.296</td>
+<td style="text-align: right;">0.837</td>
+</tr>
+<tr>
+<td>Enhanced/parity2</td>
+<td style="text-align: right;">0.091</td>
+<td style="text-align: right;">0.213</td>
+<td style="text-align: right;">0.207</td>
+<td style="text-align: right;">0.114</td>
+<td style="text-align: right;">0.316</td>
+</tr>
+<tr>
+<td>Enhanced/parity4</td>
+<td style="text-align: right;">-0.114</td>
+<td style="text-align: right;">0.278</td>
+<td style="text-align: right;">0.230</td>
+<td style="text-align: right;">0.353</td>
+<td style="text-align: right;">1.014</td>
+</tr>
+</tbody>
+</table>
+<p>For enhanced parity4, the conditional contribution from R≥88 rises from 15.54% to 58.69%, although this band's prior mass is only 0.06752%. This is reallocation under conditioning, not an altered sampling prior. The 95% pool-bootstrap interval for enhanced parity2 mixture curvature is [0.042,0.139], and for parity4 [-0.224,-0.015], precluding a claim of a strictly constant exponent. Negative curvature means a decreasing but still positive contraction rate, not increasing mass.</p>
+<p>Initial-round linear window slopes for the fixed spheres follow, in bit/a. Rule-dependent contraction persists at fixed radius, and different radii do not share one coefficient.</p>
+<table>
+<thead>
+<tr>
+<th>Rule</th>
+<th style="text-align: right;">R72</th>
+<th style="text-align: right;">R80</th>
+<th style="text-align: right;">R88</th>
+<th style="text-align: right;">R96</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Complemented copy</td>
+<td style="text-align: right;">1.930</td>
+<td style="text-align: right;">1.709</td>
+<td style="text-align: right;">1.536</td>
+<td style="text-align: right;">1.343</td>
+</tr>
+<tr>
+<td>parity2</td>
+<td style="text-align: right;">5.628</td>
+<td style="text-align: right;">4.751</td>
+<td style="text-align: right;">4.148</td>
+<td style="text-align: right;">3.730</td>
+</tr>
+<tr>
+<td>parity4</td>
+<td style="text-align: right;">12.503</td>
+<td style="text-align: right;">10.309</td>
+<td style="text-align: right;">8.694</td>
+<td style="text-align: right;">7.762</td>
+</tr>
+</tbody>
+</table>
+<p>Within the same 6-node window, initial-round parity4 first-to-last adjacent-slope drift at R72/R80/R88/R96 is <code>+19.92% / +8.84% / +4.97% / +5.09%</code>; enhanced R72 still has <code>+16.87%</code>. Thus some non-Gaussian sphere slopes vary relatively little, but not all spheres are equally stable; high linear-fit R² at R72 does not remove residual curvature. These numbers are short CPU recalculations from the poolwise K values in <a href="../assets/updates_20261106/geometry/radial_curves.csv">radial_curves.csv</a>, pooled in probability space, not new samples.</p>
+<h3 id="4-4-uncertainty-and-negative-results">4.4 Uncertainty and Negative Results</h3>
+<p>Similar total masses do not imply identical parameter distributions. Enhanced-round mean/maximum TV between direct-Gaussian and reconstructed four-band distributions is 0.0269/0.0423 for parity2 and 0.0351/0.0598 for parity4. The parity4 95% bootstrap interval for terminal reconstruction K discrepancy remains [-0.606,0.437] bit, and that for window-increment discrepancy is [-0.268,0.291] bit. Intervals resample whole curves from 4 pools per condition, conditional on the frozen pilot, and omit shared mixing bias. This audit checks saved intervals; it does not rerun bootstrap or read particles to recompute TV.</p>
+<p>Retrospective analysis of the old 2026-09-13 panel includes 96 curves. Among 20 scale-matched rules, 20/20 have smaller Gaussian first-to-last relative slope drift than uniform-ball drift; median absolute drift is 2.74% versus 13.71%. This is a specified panel and metric, not a universality test on independently sampled tasks. Coarse stratification of old samples is a mechanism clue, not additional replication of the new independent stratified reconstruction.</p>
+<p>The original numerical audits recomputed forward passes for 682368 parameter vectors across 462 condition-nodes in the two rounds. This audit checks their saved summaries and provenance, without claiming to recheck those particles. Some initial parity4 sphere pools retain only 1–4 initial ancestors; the enhanced minimum is 8. Neither yields ESS. An independent chi-CDF check triggered the original machine-precision tolerance: the actual maximum absolute discrepancy was 2.62e-10, subsequently retained under 1e-8 absolute/1e-7 relative tolerances. This was not a sampling failure, and no sampled values were changed.</p>
+<h2 id="5-slt-local-probes-positive-evidence-and-failure-boundaries">5. SLT Local Probes: Positive Evidence and Failure Boundaries</h2>
+<h3 id="5-1-anchors-and-local-target">5.1 Anchors and Local Target</h3>
+<p>The four conditions use tanh16 (97 parameters) and relu32x3 (2305 parameters), each with copy/parity2. Selecting 2 terminal particles from each of the original 3 main-budget pools per condition gives 24 prototypes. Hidden parameters are fixed while readout weights and bias are scaled together to BCE 0.03, 0.003 and 0.0001, producing 72 controlled anchors. These are not newly sampled global conditional distributions at the three thresholds, and rescaling is not training. Once all training margins are positive, enlarging only the readout can further decrease BCE, so lower BCE need not require new features; existence of this path also does not determine its reference-measure mass.</p>
+<p>Local sampling varies all parameter directions, using continuous-logit preservation error instead of treating nonstationary BCE as a local minimum. A fixed linear preconditioning transform preserves the target; its localization Gaussian differs from the original global Gaussian.</p>
+<div class="math-display">$$
+R(\theta;\theta_0)=\frac1{32}\sum_{i=1}^{16}[z_\theta(x_i)-z_{\theta_0}(x_i)]^2,\qquad
+q_{\beta,\gamma}(\theta\mid\theta_0)\propto
+\exp[-\beta R-\gamma\|\theta-\theta_0\|^2/2].
+$$</div>
+<p>Measurements are finite-scale cost <code>beta E[R]</code>, the Gram spectrum of the logit Jacobian and the BCE generalized Gauss-Newton spectrum. For eigenvalues lambda of the corresponding Gram matrix, spectral participation dimension is:</p>
+<div class="math-display">$$
+d_{\rm eff}=\frac{(\sum_i\lambda_i)^2}{\sum_i\lambda_i^2},\qquad
+\beta\mathbb E[R]_{\rm linear}=\frac12\sum_i\frac{\beta\lambda_i}{\gamma+\beta\lambda_i}.
+$$</div>
+<h3 id="5-2-local-results">5.2 Local Results</h3>
+<p>All 72 anchors have rank 16 at relative singular-value thresholds 1e-6, 1e-8, 1e-10 and 1e-12. The fine-scale benchmark of the local quadratic output-preservation model is r/2=8. This is numerical rank, not an exact-rank proof. The table uses means over 6 anchors at BCE=0.0001; costs are pCN-MH means at gamma=1e7.</p>
+<table>
+<thead>
+<tr>
+<th>Configuration/rule</th>
+<th style="text-align: right;">Rank</th>
+<th style="text-align: right;">Logit spectral participation</th>
+<th style="text-align: right;">BCE GGN spectral participation</th>
+<th style="text-align: right;">Cost beta/gamma=100</th>
+<th style="text-align: right;">Cost beta/gamma=10000</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tanh16/copy</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">5.36</td>
+<td style="text-align: right;">4.78</td>
+<td style="text-align: right;">5.76</td>
+<td style="text-align: right;">7.93</td>
+</tr>
+<tr>
+<td>tanh16/parity2</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">7.08</td>
+<td style="text-align: right;">6.71</td>
+<td style="text-align: right;">6.42</td>
+<td style="text-align: right;">7.99</td>
+</tr>
+<tr>
+<td>relu32x3/copy</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">4.18</td>
+<td style="text-align: right;">3.71</td>
+<td style="text-align: right;">7.57</td>
+<td style="text-align: right;">8.02</td>
+</tr>
+<tr>
+<td>relu32x3/parity2</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">5.70</td>
+<td style="text-align: right;">4.83</td>
+<td style="text-align: right;">7.83</td>
+<td style="text-align: right;">7.92</td>
+</tr>
+</tbody>
+</table>
+<p>Finite-resolution spectra and lower-probe-strength means place parity2 above copy within both architectures, but stronger probes approach 8; the small ReLU reversal is not a stable complexity reversal. Equal local rank cannot explain widely different global BCE slopes, and continuous-output preservation cost cannot directly be called hard-rule complexity or a new Neural K.</p>
+<h3 id="5-3-initial-failure-and-strong-localization-check">5.3 Initial Failure and Strong-Localization Check</h3>
+<p>The first round used gamma=1000,10000, beta/gamma=100,10000 and SGLD steps 0.04/0.02. Both tanh conditions completed; ReLU/copy produced nonfinite energy at step 5, its completed pCN run also contained zero-acceptance chains, and ReLU/parity2 was not started. The record retains 2 completed, 1 failed and 1 unstarted condition; the round is not reliable equilibrium replication. The failure is documented in <code>results_v1/FAILURE_NOTE.md</code>; the failed condition lacks a final <code>status.json</code> and must not disappear from failure counts for that reason.</p>
+<p>The formal check increased gamma to 1e6,1e7, retaining beta/gamma=100,10000. pCN-MH uses rho=0.6, burn=250 and draws=1000. The fixed-SHA256 vendored devinterp 1.3.2 SGLD kernel uses step 0.02, burn=600 and draws=2400; half-step 0.01 uses 1200/4800, with thin=1. All four conditions completed with 0 final failures. There are 72×4×3×3=2592 local chain runs, not 2592 independent datasets.</p>
+<p>Minimum pCN chain acceptance is 0.293. Maximum group-mean relative discrepancies of the two SGLD budgets from pCN are 4.87%/5.80%; the maximum pCN group-mean difference from the local linear analytic benchmark is 0.1316. Within-chain drift remains, so differences of a few hundredths are not stable rankings. Original official-step, quadratic/quartic-target calibration and preconditioning checks passed; this does not establish sufficient mixing for arbitrary nonlinear local targets.</p>
+<h2 id="6-readout-geometry-conditional-models-and-full-distribution-integration">6. Readout Geometry: Conditional Models and Full-Distribution Integration</h2>
+<h3 id="6-1-fixed-hidden-representations-are-not-all-networks">6.1 Fixed Hidden Representations Are Not All Networks</h3>
+<p>Given hidden parameters eta, absorb readout scaling and bias into feature matrix B_eta. An independent standard whitened readout w then satisfies the formulas below. Minimum unit-common-margin readout cost and minimum equal-amplitude-output norm impose different constraints. The latter equality requires invertible Sigma_eta; otherwise reachability must be checked, rather than adding arbitrary jitter and claiming the original density exists.</p>
+<div class="math-display">$$
+z=B_\eta w,\quad w\sim N(0,I_k),\quad \Sigma_\eta=B_\eta B_\eta^T,\qquad
+C_\eta(s)=\frac12\inf_{\operatorname{diag}(s)B_\eta w\ge\mathbf1}\|w\|^2,\qquad
+\inf_{B_\eta w=as}\|w\|^2=a^2s^T\Sigma_\eta^{-1}s.
+$$</div>
+<p>These describe conditional geometry for a fixed representation in specified whitened coordinates, not a theorem equating all network complexities. For a fixed feasible representation, the leading large-amplitude Gaussian tail cost can connect to minimum norm. Finite-amplitude total mass still includes feasible directions, neighborhood volume, prior scarcity of hidden representations and integration over implementations. Changing representation, parameterization, reference measure or output event changes the answer. Full-network event mass still requires integration:</p>
+<div class="math-display">$$
+V_f(\epsilon)=\int \Pr_w[L_f(\eta,w)\le\epsilon\mid\eta]\,\mu_\eta(d\eta).
+$$</div>
+<p>This work did not newly optimize global minimum norm, verify the infinite tail or substitute the cost of one best implementation for this integral. The existing E33 conditional amplification-order derivation remains a conditional explanation, not a universal cross-architecture proof.</p>
+<h3 id="6-2-readout-identity-under-the-original-gaussian-conditional-distribution">6.2 Readout Identity Under the Original Gaussian Conditional Distribution</h3>
+<p>Unlike the fixed-representation illustration, this diagnostic averages over all original SMC terminal particles, including the distribution of hidden representations. Let k include the readout bias, L be mean BCE and m be positive margins. With a linear readout, standard whitened Gaussian measure, epsilon&lt;ln(2)/16, regular boundaries and vanishing flux at infinity, the Gaussian-weighted divergence formula gives:</p>
+<div class="math-display">$$
+g=w\cdot\nabla_wL=-\operatorname{mean}_i[m_i\sigma(-m_i)],\qquad
+h=w\cdot\nabla_wg=g+\operatorname{mean}_i[m_i^2\sigma(-m_i)\sigma(m_i)],
+$$</div>
+<div class="math-display">$$
+\kappa(\epsilon)=\frac{\epsilon V'(\epsilon)}{V(\epsilon)}
+=\mathbb E\!\left[1+\frac{L(k-\|w\|^2)}g-\frac{Lh}{g^2}\ \middle|\ L\le\epsilon\right].
+$$</div>
+<p>Here sigma is the logistic function, not the earlier Gaussian scale. The right-hand side does not use accumulated survival fractions or a fitted slope, but it still uses SMC conditional particles and is therefore not an independent sampling validation. Integrating conditionally on each hidden representation avoids confusing ReLU hidden-layer nondifferentiabilities with readout derivatives. It also does not prove constant kappa across thresholds.</p>
+<h3 id="6-3-terminal-results-and-supported-interpretation">6.3 Terminal Results and Supported Interpretation</h3>
+<p>The point derivative is evaluated at epsilon=0.0001; the secant uses 0.0002→0.0001. Both columns are in bit per log2 precision unit, namely kappa, not bit/nat. A point derivative need not equal a window average. Each condition equally averages 3 pools; enhanced rows are not pooled with the main budget.</p>
+<table>
+<thead>
+<tr>
+<th>Configuration/rule</th>
+<th style="text-align: right;">Budget</th>
+<th style="text-align: right;">Readout dimension k</th>
+<th style="text-align: right;">Integral point slope</th>
+<th style="text-align: right;">SMC secant slope</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tanh16/copy</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">17.964</td>
+<td style="text-align: right;">17.611</td>
+</tr>
+<tr>
+<td>tanh16/parity2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">61.341</td>
+<td style="text-align: right;">60.281</td>
+</tr>
+<tr>
+<td>tanh16/parity2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">60.708</td>
+<td style="text-align: right;">59.717</td>
+</tr>
+<tr>
+<td>relu32x3/copy</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">33</td>
+<td style="text-align: right;">8.689</td>
+<td style="text-align: right;">8.757</td>
+</tr>
+<tr>
+<td>relu32x3/parity2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">33</td>
+<td style="text-align: right;">12.818</td>
+<td style="text-align: right;">12.959</td>
+</tr>
+<tr>
+<td>relu32x3/parity2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">33</td>
+<td style="text-align: right;">12.876</td>
+<td style="text-align: right;">13.057</td>
+</tr>
+</tbody>
+</table>
+<p>Absolute relative point/secant discrepancies for the four main-budget conditions range from 0.78% to 2.00%. Higher tanh point derivatives and lower ReLU point derivatives are compatible with their respective curvature directions. Main-budget tanh/copy and tanh/parity2 norm contributions are 19.714 and 63.086, dimension contributions -1.857 and -1.853, and derivative corrections 0.107 and 0.108. The difference primarily lies in margin-weighted readout whitened-norm cost, not local rank. This connects conditional implementation costs; it is not a universal equality with minimum norm or independent logical complexity.</p>
+<p>Original identity calibration includes 5 one-dimensional analytic-tail cases and 3 two-dimensional mean-BCE curved-domain integrals, with maximum relative discrepancy 6.00e-7. This audit checks poolwise component sums and original SMC secants, without reopening checkpoints to recompute margins, norms or integrals. Checkpoint SHA256 values in the machine summary are explicitly marked as recorded in the original report and not rehashed. Particle standard deviation is not standard error, and resampling ancestry does not increase the number of independent tasks.</p>
+<h2 id="7-independent-audit-and-reproducible-provenance">7. Independent Audit and Reproducible Provenance</h2>
+<p><a href="../assets/updates_20261106/geometry/recompute.py">recompute.py</a> provides public-package arithmetic checks and a full source audit. Both modes use only the Python standard library, importing neither Torch, NumPy, training entry points nor historical experiment modules. The full audit reads raw level/pool JSON, spectra and chain summaries to independently reconstruct survival ledgers, linear/free-p fits, radial probability pooling, the KL identity, quadratic curvatures, spectral participation dimensions and readout components, and checks prior band masses by a half-integer chi-CDF recurrence. Saved audit records cover SHA256 for 244 source files, frozen-code hashes, pilot/production schedules and configuration signatures. This mode requires original results, frozen code and contextual material outside the package; the table below reports that full audit, not renewed original-source verification by <code>--public-only</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Recomputed quantity</th>
+<th style="text-align: right;">Maximum absolute discrepancy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cross-architecture cumulative level K / bit</td>
+<td style="text-align: right;">1.93e-12</td>
+</tr>
+<tr>
+<td>Cross-architecture holdout prediction RMSE / bit</td>
+<td style="text-align: right;">1.71e-13</td>
+</tr>
+<tr>
+<td>Radial cumulative level K / bit</td>
+<td style="text-align: right;">1.28e-13</td>
+</tr>
+<tr>
+<td>Half-integer chi-CDF band masses</td>
+<td style="text-align: right;">2.62e-10</td>
+</tr>
+<tr>
+<td>Radial finite-partition KL identity / bit</td>
+<td style="text-align: right;">1.37e-14</td>
+</tr>
+<tr>
+<td>Radial mixture curvature / bit/a²</td>
+<td style="text-align: right;">6.05e-14</td>
+</tr>
+<tr>
+<td>Spectral participation dimension</td>
+<td style="text-align: right;">3.55e-15</td>
+</tr>
+<tr>
+<td>Local-cost group mean</td>
+<td style="text-align: right;">1.78e-15</td>
+</tr>
+<tr>
+<td>Sum of readout components</td>
+<td style="text-align: right;">1.42e-14</td>
+</tr>
+</tbody>
+</table>
+<p>These are implementation and ledger consistency errors, not statistical errors or confidence intervals for volume estimates. Rerunning the original forward audits, bootstrap intervals and radial TV computations is outside this CPU audit. The 2026-11-06 audit rechecked only the paired table and summary for the older 96-curve panel, without rereading its full historical particles. No checkpoints, particle arrays or large raw files were copied.</p>
+<p>The 2026-11-07 follow-up additionally uses the standard library to recompute first/last slopes, linear fits and residuals for 96 curves from <code>research/radial_mixture_diagnostic_20261101/historical_analysis/all_curves.csv</code>. The maximum absolute discrepancy against corresponding <code>shape_statistics.csv</code> values is <code>1.78e-14</code>; selecting the 20 rules shared by all four measures gives Section 1.1's drift and R² results. For Section 1.2's four independent uniform-ball rechecks, window secants, R² and adjacent-node slopes reproduce the saved tables with maximum discrepancy 0. These two older table checks neither reread particles nor reran bootstrap calculations; the older panel is documented in <code>research/notes/20260913_natural_measure_symmetry_rank_zh.md</code> and <code>research/notes/20260913_uniform_ball_36_rule_rank_comparison_zh.md</code>. These follow-up checks are outside the scope of the original <code>audit_summary.json</code>, <code>source_manifest.json</code> and <code>recompute.py</code>; Section 1.3's radial reweighting has a separate script and source hashes.</p>
+<table>
+<thead>
+<tr>
+<th>Public file</th>
+<th>Contents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../assets/updates_20261106/geometry/audit_summary.json">audit_summary.json</a></td>
+<td>Parameter dimensions, fits for 18 curves, budget differences, radial decomposition, local/readout summaries and audit errors</td>
+</tr>
+<tr>
+<td><a href="../assets/updates_20261106/geometry/cross_architecture_curves.csv">cross_architecture_curves.csv</a></td>
+<td>234 curve-nodes with K for 3 pools, without combining budgets</td>
+</tr>
+<tr>
+<td><a href="../assets/updates_20261106/geometry/radial_curves.csv">radial_curves.csv</a></td>
+<td>462 condition-nodes with K for 4 pools, retaining version and measure identity</td>
+</tr>
+<tr>
+<td><a href="../assets/updates_20261106/geometry/radial_reweighting.json">radial_reweighting.json</a></td>
+<td>Both Section 1.3 families: 24 curves, 144 pooled node costs, shapes, minimum weight ESS summaries and 24 source-file SHA256 hashes</td>
+</tr>
+<tr>
+<td><a href="../assets/updates_20261106/geometry/radial_reweighting.py">radial_reweighting.py</a></td>
+<td>Section 1.3 standard-library public check and NumPy source recomputation, without sampling</td>
+</tr>
+<tr>
+<td><a href="../assets/updates_20261106/geometry/source_manifest.json">source_manifest.json</a></td>
+<td>Repository-relative source paths, byte sizes and full SHA256; raw results, configurations, statuses, code and contextual notes</td>
+</tr>
+<tr>
+<td><a href="../assets/updates_20261106/geometry/recompute.py">recompute.py</a></td>
+<td>Public-package arithmetic, full source audit and bilingual structure checks, without sampling</td>
+</tr>
+<tr>
+<td><a href="../assets/updates_20261106/geometry/test_public_only.py">test_public_only.py</a></td>
+<td>Tests on copies without original sources, checking missing/changed data, duplicate nodes and write rejection</td>
+</tr>
+</tbody>
+</table>
+<p>Original sources below are path identifiers, not package download links; full SHA256 values are in <a href="../assets/updates_20261106/geometry/source_manifest.json">source_manifest.json</a>. The manifest records source paths, byte sizes and hashes at audit time. It does not substitute for raw data or establish public availability or independent experimental replication. Contextual notes are represented only by provenance metadata; their full text is not distributed in this package.</p>
+<table>
+<thead>
+<tr>
+<th>Topic</th>
+<th>Source paths and roles</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cross-architecture raw data</td>
+<td><code>research/cross_architecture_contraction_20261101/results_v2/*/main_x*/result.json</code>; per-level survival, per-pool K, identities and statuses</td>
+</tr>
+<tr>
+<td>Cross-architecture frozen code</td>
+<td><code>research/cross_architecture_contraction_20261101/source_snapshot_v2/research/</code>; includes the actual model dependency, without replacing historical hashes with a revised entry point</td>
+</tr>
+<tr>
+<td>Radial raw data</td>
+<td>result, identity, pilot and manifest files under <code>research/radial_mixture_diagnostic_20261101/results_v1/</code> and <code>results_v2_enhanced/</code></td>
+</tr>
+<tr>
+<td>Radial code and audits</td>
+<td><code>research/radial_mixture_diagnostic_20261101/results_v1/source/</code>, <code>analyze.py</code> and both <code>AUDIT.json</code> files</td>
+</tr>
+<tr>
+<td>Local raw data</td>
+<td><code>research/slt_local_probe_20261101/results_v2/*/geometry.json</code>, <code>pcn_mh.json</code>, <code>sgld.json</code>, <code>sgld_halfstep.json</code> and status files</td>
+</tr>
+<tr>
+<td>Local failure and code</td>
+<td><code>research/slt_local_probe_20261101/results_v1/FAILURE_NOTE.md</code>, <code>experiment_v1_snapshot.py</code>, <code>experiment_v2_snapshot.py</code> and vendored SGLD</td>
+</tr>
+<tr>
+<td>Readout identity</td>
+<td><code>research/slt_local_probe_20261101/readout_identity.py</code>, <code>readout_identity_results.json</code>, <code>READOUT_IDENTITY_ZH.md</code></td>
+</tr>
+<tr>
+<td>Existing explanations and boundaries</td>
+<td>E33 <code>OUTPUT_CONTRACTION_DERIVATION.md</code>; E37 <code>FIXED_RADIUS_20261027.md</code>; <code>research/notes/20261105_amplitude_alignment_mechanism_revision_zh.md</code> and <code>20261105_core_volume_generalization_literature_review_zh.md</code></td>
+</tr>
+</tbody>
+</table>
+<p>After downloading only this package, run the following read-only check from its extracted directory. <code>--public-only</code> neither locates nor reads original <code>research/</code> directories. Adding <code>--documents</code> checks packaged bilingual heading levels, paragraph structure, formulas, numbers and links.</p>
+<pre><code class="language-bash">python -I -S -B recompute.py --public-only --documents
+</code></pre>
+<p>Public mode uses poolwise K at 234 cross-architecture curve-nodes and 462 radial condition-nodes to recompute endpoints, window slopes, fits and budget differences, probability pooling, radial reconstruction, curvature and the KL identity. It also checks 6 readout-summary rows using CSV secants and saved JSON components. It validates the format of <code>source_manifest.json</code>, without opening the listed sources to verify their hashes. Original SLT spectra, local-chain statistics, terminal statuses and failure logs, the historical panel, bootstrap/TV and particle forward passes are not revalidated in public mode; their saved summaries and limitations remain reported. Agreement between derived files does not prove original-data authenticity, independent experimental replication or global mixing.</p>
+<p>The full source audit requires this package in its original repository hierarchy and all original materials listed in the manifest. In that setting, run the following command from this directory. <code>--write</code> regenerates the four machine-readable package files only in full mode; combining it with <code>--public-only</code> is rejected. When original sources are absent, use public mode rather than treating this package as a complete reproduction bundle for the original SMC runs.</p>
+<pre><code class="language-bash">python -I -S -B recompute.py --documents
+</code></pre>
+<p>Downloading this package alone cannot reconstruct all per-level survival ledgers or reproduce the original SMC runs. Full experimental reproduction additionally requires the original protocols, frozen runtime code, dependencies and suitable sampling budgets; this package does not launch those computations. Run <code>python -I -S -B test_public_only.py</code> separately to test temporary copies containing only public files; they are cleaned automatically, and original experiment directories are not read.</p>
+<h2 id="8-relation-to-e33-e37-and-evidence-gaps">8. Relation to E33/E37 and Evidence Gaps</h2>
+<p>Section 1 reconnects old E37, the natural-measure panel and the independent uniform-ball recheck to the synthesis; Section 3 supplements E33's finite-window cross-architecture measurements; Section 4 supplements E37's fixed-radius and measure analysis; Sections 5–6 explain related local-geometry and readout-integral boundaries without adding an experiment number. Non-Gaussian finite-window regularity, angular contraction at fixed radius and curvature changes from Gaussian radial mixing are compatible but distinct evidence. Only the first, supported by nodewise shapes and independent rechecks, supports approximately stable coefficients in the relevant windows; the second's mere presence of contraction cannot replace that evidence.</p>
+<p>Remaining gaps include a third GRU budget or independent estimator, enhanced copy sampling, more architectures/rules/measures and wider loss windows, readout-identity checks along complete curves, independent separation of global minimum cost from total mass, and calibration of actual training accessibility against static mass. The evidence does not support identical exponents across measures, minimum norm equal to total probability mass, local LLC equal to global BCE contraction, equivalence of all network complexities, or SGD necessarily sampling this static mass.</p></div>
+
+      </article>
+    </main>
+  </div>
+</body>
+</html>

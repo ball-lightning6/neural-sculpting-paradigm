@@ -2,6 +2,19 @@
 
 > This page only includes methodological and theoretical work that the current website explicitly mentions or directly relies on. For paper links, journal, conference, PMLR, JMLR, OpenReview, ML Anthology, or arXiv primary pages are preferred.
 
+## 2026-11-06 Targeted Verification Entry {#related-work-update-20261106}
+
+The [related-work addendum](update-related-work.html) organizes 17 works by object, conditions, and relationship to this study, recording primary sources, authors, version dates, actual inspection scope, and access limitations. Verification spans 2026-11-06 to 2026-11-07. This is targeted full-text checking, not an exhaustive review, experimental replication, or complete theorem-proof audit. Its R01--R17 identifiers are separate from this page's R01--R42.
+
+| Comparison axis | Verified work | Boundary adopted on this site |
+|---|---|---|
+| Loss-aware function mass and local volume | Mingard (2021, 2025), Yang, Zhang, Scherlis/Belrose | CE/MSE, continuous-loss joint density of states, and behavioral cutoffs already have precedents; loss was not previously unconsidered. Strata, cumulative mass, local neighborhoods, and complete-function mass are different objects. |
+| Random compatible predictors and optimizer differences | Buzaglo, Peleg/Hein, Alexander, Pakman | Generalization by random compatible predictors has conditional guarantees. Peleg analyzes normalized loss/margins, and Alexander already uses a continuous-MSE acceptance event. Not every counterexample results from missing loss control, and dataset-size trends in particular binary networks do not establish universal static equivalence. |
+| Predictive consensus, calibration, and data partitioning | Jordan, Jiang, and Tian et al.'s anti-grokking | Distinguish pointwise frequencies, joint predictions, and single-model accuracy; calibration and independence have conditions. The anti-grokking intervention keeps symmetric input pairs together in either training or validation, rather than simply lowering loss. |
+| AIT method positioning | Shaw, QuBD, Approximate Solomonoff, DeMoss, LMN | Coding objectives, quantized-weight proxies, approximate sequence prediction, loss-tolerant compression, and local linear-computation counts have distinct roles. Shortest representations, the codelength of particular weights, total function mass, and contraction slopes are not interchangeable. |
+
+The comparison concerns function-mass profiles, fixed-D competition, amplitude and measure interventions, and actual-training predictions under finite protocols, not the first introduction of loss or AIT into neural generalization. The addendum retains unverified scope and does not substitute citation counts or strong titles for evidence.
+
 ## 1. Function priors, parameter-to-function maps, and simplicity bias
 
 ### R01 · Dingle, Camargo, and Louis (2018)
@@ -30,14 +43,14 @@ Chris Mingard, Joar Skalse, Guillermo Valle-Pérez, David Martínez-Rubio, Vladi
 Chris Mingard, Guillermo Valle-Pérez, Joar Skalse, Ard A. Louis. **Is SGD a Bayesian Sampler? Well, Almost.** *Journal of Machine Learning Research* 22(79):1–64 (2021).
 
 - [JMLR official page](https://www.jmlr.org/papers/v22/20-676.html)
-- **Role on this site:** The most direct predecessor of this site's multi-seed function distribution; it supports the first-order predictive power of a static Bayesian function posterior, while explicitly retaining the second-order deviations caused by the optimizer and hyperparameters.
+- **Role on this site:** The most direct predecessor of this site's multi-seed function distribution; it already distinguishes posterior estimation for MSE/CE and supports the first-order predictive power of a static Bayesian function posterior, while explicitly retaining the second-order deviations caused by the optimizer and hyperparameters.
 
 ### R05 · Mingard et al. (2025)
 
 Chris Mingard, Henry Rees, Guillermo Valle-Pérez, Ard A. Louis. **Deep Neural Networks Have an Inbuilt Occam’s Razor.** *Nature Communications* 16, 220 (2025).
 
 - [Nature Communications original article](https://www.nature.com/articles/s41467-024-54813-x)
-- **Role on this site:** E04 reuses its core 7-bit Boolean, deep tanh, and advSGD protocol, and extends the observation time after the first zero training error.
+- **Role on this site:** E04 reuses its core 7-bit Boolean, deep tanh, and advSGD protocol, and extends the observation time after the first zero training error. The paper already analyzes competition among candidate multiplicity, individual function probabilities, and data filtering, while its supplement compares CE/MSE and scale; it cannot be summarized as ignoring loss.
 
 ### R06 · Mingard et al. (2025)
 
@@ -278,4 +291,41 @@ Xiaotian Zhang, Yue Shang, Entao Yang, Ge Zhang. **Is Grokking a Computational G
 
 - [NeurIPS official paper](https://proceedings.neurips.cc/paper_files/paper/2025/file/92f67b9047fa7a43d7506054b5f0ec6a-Paper-Conference.pdf)
 - [arXiv:2505.11411](https://arxiv.org/abs/2505.11411)
-- **Role on this site:** Uses the Wang--Landau method to map the training-loss--test-accuracy entropy landscape of modular-arithmetic Transformers, and finds high-norm generalizing solutions with WanD without explicit regularization; it supports the external comparison that "grokking does not require weight decay, and the generalizing state can have a static entropy advantage". E30 only clarifies, in a smaller system, how explicit L2 changes the same static function competition.
+- **Role on this site:** Uses Wang--Landau to map the training-loss--test-accuracy entropy landscape of modular-arithmetic Transformers and finds high-norm generalizing solutions with unregularized WanD in the examined tasks, providing an external comparison for static entropy advantage and dynamical intervention. In the checked arXiv v5, the main text's training-loss-driven WanD must be distinguished from the appendix hybrid whose mixing weight uses test accuracy; they cannot all be called test-feedback-free. E30 only clarifies, in a smaller system, how explicit L2 changes the same static function competition. See the [related-work addendum](update-related-work.html) for versions and scope.
+
+## 10. The AIT account and prediction statistics
+
+### R38 · Leonid Levin (1984)
+
+Leonid A. Levin. **Randomness Conservation Inequalities; Information and Independence in Mathematical Theories.** *Information and Control* 61(1):15–37 (1984).
+
+- [Author's original paper](https://www.cs.bu.edu/fac/lnd/pdf/inf.pdf)
+- **Role on this site:** Provides background on algorithmic probability, coding, and information non-increase; the [AIT account](ait-connections.html) connects description economy with generation mass without claiming that arbitrary neural measures satisfy a universal coding theorem.
+
+### R39 · Gács, Tromp, and Vitányi (2001)
+
+Péter Gács, John Tromp, Paul M. B. Vitányi. **Algorithmic Statistics.** *IEEE Transactions on Information Theory* 47(6):2443–2463 (2001).
+
+- [arXiv:math/0006233](https://arxiv.org/abs/math/0006233)
+- **Role on this site:** Connects shared structure, rules, and memory through model descriptions and model-to-data residual descriptions; finite random training sets are not automatically treated as incompressible.
+
+### R40 · Tadaki (2008)
+
+Kohtaro Tadaki. **A statistical mechanical interpretation of algorithmic information theory.** arXiv:0801.4194 (2008).
+
+- [Original arXiv paper](https://arxiv.org/abs/0801.4194)
+- **Role on this site:** Supplies an explicit weighting model that adjusts the penalty on program length as a conceptual reference for bias strength; BCE and neural amplitudes are not directly identified with its temperature.
+
+### R41 · Jordan (2023)
+
+Keller Jordan. **On the Variance of Neural Network Training with respect to Test Sets and Distributions.** arXiv:2304.01910 (2023; revised 2024).
+
+- [Original arXiv paper](https://arxiv.org/abs/2304.01910)
+- **Role on this site:** Helps distinguish ensemble-mean accuracy from individual training outcomes, showing that predictions of the mean must also account for error correlations across test inputs and variation between runs; it does not guarantee concentration for arbitrary tasks.
+
+### R42 · Jiang et al. (2021)
+
+Yiding Jiang, Vaishnavh Nagarajan, Christina Baek, J. Zico Kolter. **Assessing Generalization of SGD via Disagreement.** arXiv:2106.13799 (2021; revised 2022).
+
+- [Original arXiv paper](https://arxiv.org/abs/2106.13799)
+- **Role on this site:** Relates unlabeled disagreement and external test error through ensemble calibration conditions; high agreement alone does not guarantee correct generalization.

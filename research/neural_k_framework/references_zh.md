@@ -2,6 +2,19 @@
 
 > 本页只收录当前网页明确提及或直接依赖的方法与理论工作。论文地址优先使用期刊、会议、PMLR、JMLR、OpenReview、ML Anthology 或 arXiv 原始页面。
 
+## 2026-11-06 定向复核入口 {#related-work-update-20261106}
+
+[相关工作增补](update-related-work.html)按对象、条件和与本研究的关系整理17项工作，并记录主来源、作者、版本日期、实际核对范围及访问限制；核查日期为2026-11-06至2026-11-07。它是定向正文核对，不是穷尽综述、实验复现或全部定理的证明审计。该报告的 R01--R17 是独立编号，不替代本页 R01--R42。
+
+| 比较轴 | 已核实的工作 | 本站采用的边界 |
+|---|---|---|
+| loss-aware 函数质量与局部体积 | Mingard（2021、2025）、Yang、Zhang、Scherlis/Belrose | 已有 CE/MSE、连续 loss 联合态密度和行为 cutoff 比较，不能声称此前无人考虑 loss。薄层、累计质量、局部邻域与完整函数质量不是同一对象。 |
+| 随机相容解与优化器差异 | Buzaglo、Peleg/Hein、Alexander、Pakman | 随机相容预测器的泛化有条件保证；Peleg 分析归一化 loss/margin，Alexander 已使用连续 MSE 接受事件。不能把所有反例都归因于未控制 loss，也不能把特定二值网络的数据量趋势当作普遍静态等价。 |
+| 预测共识、校准与数据划分 | Jordan、Jiang、Tian 等的 anti-grokking | 区分逐点频率、联合预测和单模型准确率；校准与独立性有适用条件。anti-grokking 的干预是让对称输入对同属训练或验证分区，不是简单调低 loss。 |
+| AIT 方法定位 | Shaw、QuBD、Approximate Solomonoff、DeMoss、LMN | 编码目标、量化权重代理、序列预测近似、loss 容差压缩和局部线性计算计数分别定位；最短表示、某组权重的码长、函数总质量和收缩斜率不能直接互换。 |
+
+本研究可比较的内容是有限协议下的函数质量 profile、fixed-D 竞争、幅度与测度干预及真实训练预测，不是“首次把 loss 或 AIT 引入神经泛化”。增补保留核对不到的范围，不以引用量或标题中的强措辞替代证据。
+
 ## 一、函数先验、参数到函数映射与简单性偏置
 
 ### R01 · Dingle、Camargo 与 Louis（2018）
@@ -30,14 +43,14 @@ Chris Mingard, Joar Skalse, Guillermo Valle-Pérez, David Martínez-Rubio, Vladi
 Chris Mingard, Guillermo Valle-Pérez, Joar Skalse, Ard A. Louis. **Is SGD a Bayesian Sampler? Well, Almost.** *Journal of Machine Learning Research* 22(79):1–64 (2021).
 
 - [JMLR 正式页面](https://www.jmlr.org/papers/v22/20-676.html)
-- **本站引用关系**：与本站多 seed 函数分布最直接的前作；支持静态 Bayesian function posterior 的一阶预测力，同时明确保留 optimizer 和超参数造成的二阶偏差。
+- **本站引用关系**：与本站多 seed 函数分布最直接的前作；已区分 MSE/CE 对应的 posterior 估计，支持静态 Bayesian function posterior 的一阶预测力，同时明确保留 optimizer 和超参数造成的二阶偏差。
 
 ### R05 · Mingard 等（2025）
 
 Chris Mingard, Henry Rees, Guillermo Valle-Pérez, Ard A. Louis. **Deep Neural Networks Have an Inbuilt Occam’s Razor.** *Nature Communications* 16, 220 (2025).
 
 - [Nature Communications 原文](https://www.nature.com/articles/s41467-024-54813-x)
-- **本站引用关系**：E04 复用其 7-bit Boolean、深层 tanh 与 advSGD 核心协议，并延长首次零训练错误后的观察时间。
+- **本站引用关系**：E04 复用其 7-bit Boolean、深层 tanh 与 advSGD 核心协议，并延长首次零训练错误后的观察时间。该文已分析候选数量、单函数概率与数据过滤的竞争，补充材料也比较 CE/MSE 和尺度；不能将它概括为未考虑 loss。
 
 ### R06 · Mingard 等（2025）
 
@@ -278,4 +291,41 @@ Xiaotian Zhang, Yue Shang, Entao Yang, Ge Zhang. **Is Grokking a Computational G
 
 - [NeurIPS正式论文](https://proceedings.neurips.cc/paper_files/paper/2025/file/92f67b9047fa7a43d7506054b5f0ec6a-Paper-Conference.pdf)
 - [arXiv:2505.11411](https://arxiv.org/abs/2505.11411)
-- **本站引用关系**：用Wang--Landau方法观测模运算Transformer的训练loss--测试准确率熵图，并用无显式正则的WanD找到高范数泛化解；支持“grokking不需要weight decay、泛化态可具有静态熵优势”的外部对照。E30只在更小系统中澄清显式L2如何改变同一静态函数竞争。
+- **本站引用关系**：用Wang--Landau方法观测模运算Transformer的训练loss--测试准确率熵图，并在所测任务中用无显式正则的WanD找到高范数泛化解，作为静态熵优势与动力学干预的外部对照。已核对的 arXiv v5 须区分正文训练-loss驱动的 WanD 与附录按测试准确率设混合权重的方案，不能一概称为无测试反馈。E30只在更小系统中澄清显式L2如何改变同一静态函数竞争；版本与范围见[相关工作增补](update-related-work.html)。
+
+## 十、算法信息论主线与预测统计
+
+### R38 · Leonid Levin（1984）
+
+Leonid A. Levin. **Randomness Conservation Inequalities; Information and Independence in Mathematical Theories.** *Information and Control* 61(1):15–37 (1984).
+
+- [作者原文](https://www.cs.bu.edu/fac/lnd/pdf/inf.pdf)
+- **本站引用关系**：为算法概率、编码与信息不增提供背景；[算法信息论主线](ait-connections.html)据此连接描述经济性与生成质量，不宣称任意神经测度满足通用编码定理。
+
+### R39 · Gács、Tromp 与 Vitányi（2001）
+
+Péter Gács, John Tromp, Paul M. B. Vitányi. **Algorithmic Statistics.** *IEEE Transactions on Information Theory* 47(6):2443–2463 (2001).
+
+- [arXiv:math/0006233](https://arxiv.org/abs/math/0006233)
+- **本站引用关系**：用模型描述与模型到数据的残差描述，连接共享结构、规则与记忆；不把有限随机训练集自动认定为不可压缩。
+
+### R40 · Tadaki（2008）
+
+Kohtaro Tadaki. **A statistical mechanical interpretation of algorithmic information theory.** arXiv:0801.4194 (2008).
+
+- [arXiv原文](https://arxiv.org/abs/0801.4194)
+- **本站引用关系**：提供调节程序长度惩罚的明确加权模型，作为偏置强度的概念参照；不将BCE或神经幅度直接等同其温度。
+
+### R41 · Jordan（2023）
+
+Keller Jordan. **On the Variance of Neural Network Training with respect to Test Sets and Distributions.** arXiv:2304.01910 (2023; revised 2024).
+
+- [arXiv原文](https://arxiv.org/abs/2304.01910)
+- **本站引用关系**：帮助区分系综平均准确率与单次训练表现，说明预测平均值还需考虑测试点错误相关性和训练间方差；不据此保证任意任务都集中。
+
+### R42 · Jiang 等（2021）
+
+Yiding Jiang, Vaishnavh Nagarajan, Christina Baek, J. Zico Kolter. **Assessing Generalization of SGD via Disagreement.** arXiv:2106.13799 (2021; revised 2022).
+
+- [arXiv原文](https://arxiv.org/abs/2106.13799)
+- **本站引用关系**：将无标签分歧与外部测试错误联系到系综校准条件；高agreement本身不自动保证正确泛化。

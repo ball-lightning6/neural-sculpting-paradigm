@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="训练时多教几步怎么算余数，测试时拿走提示。网络能不能用更少的练习题学会？">
+  <title>解耦提示、样本效率与可达性 · Neural K 研究档案</title>
+  <link rel="stylesheet" href="assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="assets/site.js"></script>
+</head>
+<body data-page-kind="core">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+
+    <header class="topbar">
+      <a class="site-mark" href="index.html" aria-label="返回研究主文">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K 研究档案</span>
+      </a>
+      <nav class="top-nav" aria-label="全站导航"><a class="top-link" href="index.html">研究主文</a><a class="top-link active" href="theory-core.html">理论核心</a><a class="top-link" href="experiments/index.html">实验索引</a><a class="top-link" href="post-upload.html">提交后增量</a><a class="top-link" href="references.html">参考文献</a><a class="top-link" href="evidence-ledger.html">证据总账</a></nav>
+      <nav class="language-switch" aria-label="语言"><span class="active" lang="zh-CN">中文</span><a href="en/update-scaffolding.html" lang="en">EN</a></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>目录</span>
+      </button>
+    </header>
+
+  <div class="page-shell">
+
+    <aside class="sidebar" id="sidebar" aria-label="本页目录">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">本页目录</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#公开结果范围">公开结果范围</a></li>
+<li><a href="#任务与提示的真实定义">任务与提示的真实定义</a></li>
+<li><a href="#mod3-配对协议">Mod3 配对协议</a></li>
+<li><a href="#14-bit-中间样本档的改善">14-bit：中间样本档的改善</a></li>
+<li><a href="#16-bit-更少输入下达到高泛化">16-bit：更少输入下达到高泛化</a></li>
+<li><a href="#与既有优化可达性证据的联系">与既有优化可达性证据的联系</a></li>
+<li><a href="#结论边界">结论边界</a></li>
+<li><a href="#复算范围与公开材料">复算范围与公开材料</a></li>
+</ul>
+</div>
+</nav>
+        <a class="sidebar-action" href="theory-core.html">返回理论核心 →</a>
+      </div>
+    </aside>
+
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">理论补充 · 证据与方案分开</div>
+          <h1>解耦提示、样本效率与可达性</h1>
+          <p class="article-description">训练时多教几步怎么算余数，测试时拿走提示。网络能不能用更少的练习题学会？</p>
+        </header>
+        <div class="article-body"><div class="reader-intro"><p>30 位 Mod3 要求网络用两位输出报出一个二进制整数除以 3 的余数。只教最终余数时，训练损失降下去了，未见输入却仍只答对约三分之一。教中间步骤能帮网络学会长任务，但无辅助组的泛化几乎没动，没法比较双方各需多少输入。于是改测无辅助也能学会的 14 位和 16 位整数。</p>
+<p>每种长度都用两份数据，每份配三个初值。每对模型从相同权重出发，看相同输入，训练 16000 步。辅助组还要预测每个较短前缀的余数：例如开头的 <code>11</code> 表示整数 3，余数是 0。这是额外的训练标签；测试时两组都只看原始位串，不喂前缀答案。</p>
+<p>14 位用 2048 个输入时，两组最后都答对了全部训练样本。按最终余数两位全对计，末三次测试的平均准确率从 80.16% 升到 99.14%。三次都达 99% 的运行从 0/6 增至 5/6；无辅助组到 4096 个输入才有 5/6。另测 16 位，用 6000 个输入时是 61.38% 对 99.86%，稳定次数是 0/6 对 6/6。下文配对表里省下的是固定步数下所需的输入样本，不是总监督；这几档也定不出精确的节约比例。</p><p><a href="assets/mod3_reproduction/original_sources.zip">训练源码</a> · <a href="assets/mod3_reproduction/README_zh.md">运行说明</a></p></div><p class="source-bar"><a href="assets/updates_20261106/scaffolding/package.zip" download>下载本专题公开材料包（ZIP）</a><span>包含双语说明与已发布附件；核验范围见正文。</span></p><nav class="ledger-path"><a href="research-updates.html">本轮进展总览</a></nav><!-- sync:title -->
+<h1 id="解耦降低输入样本需求-mod3-配对结果与优化可达性">解耦降低输入样本需求：Mod3 配对结果与优化可达性</h1>
+<!-- sync:scope -->
+<p>核对日期：2026-11-06。参照提交：<code>3834fb3f6555c7c58218462502635b16b9b377f9</code>，提交日期为 2026-10-27。本公开包发布 2026-11-02 的 14/16-bit Mod3 样本趋势结果，并简要联系 2026-09-13 的 30-bit Mod3 优化可达性证据；本轮仅整理与复算已有记录，没有新增训练实测。</p>
+<!-- sync:takeaway -->
+<p><strong>解耦既能帮助优化，也能减少达到高泛化所需的输入样本。</strong> 在已测固定训练预算下，相关前缀辅助监督使 Mod3 的高泛化区域向较少输入样本移动；既有干预则提供优化可达性的补充证据。优化困难与规则/样本困难不是同一轴：能否拟合训练集、能否找到高泛化解、需要多少输入样本，必须分别衡量。这里减少的是输入样本需求，辅助标签仍是额外监督。</p>
+<!-- sync:status-title -->
+<h2 id="公开结果范围">公开结果范围</h2>
+<!-- sync:status-table -->
+<table>
+<thead>
+<tr>
+<th>证据</th>
+<th>实际完成范围</th>
+<th>结果定位</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>14-bit Mod3</td>
+<td>5 档样本量，2 份数据各 3 个初始化，两组共 60 个模型，均到 16000 步</td>
+<td>完整配对样本趋势；中间样本档改善最明显</td>
+</tr>
+<tr>
+<td>16-bit Mod3</td>
+<td>原 5 档共 60 个模型；3000/6000 档另 24 个；2500 档仅 1 份数据共 6 个；合计 90 个</td>
+<td>完整档支持样本效率改善；2500 档单列为部分面板</td>
+</tr>
+<tr>
+<td>历史 30-bit Mod3</td>
+<td>引用已保存的匹配 BCE、权重扰动及监督撤除记录</td>
+<td>优化可达性背景，不是新增样本需求实测</td>
+</tr>
+</tbody>
+</table>
+<!-- sync:status-source -->
+<p>状态来源为 <code>research/mod3_scaffold_sample_trend_20261102/REPORT_ZH.md</code> 和 <code>research/mod3_scaffold_sample_trend_16bit_20261102/results_refined/STOPPED_SUMMARY.json</code>。本包提供可点击的<a href="assets/updates_20261106/scaffolding/key_results.json">关键结果</a>与<a href="assets/updates_20261106/scaffolding/source_sha256.json">来源 SHA256</a>；原始仓库路径仅标识出处，不是公开下载链接。</p>
+<!-- sync:definition-title -->
+<h2 id="任务与提示的真实定义">任务与提示的真实定义</h2>
+<!-- sync:mod3-definition -->
+<p>Mod3 的输入是从最高位到最低位排列的二进制整数，不是 bit 数量模 3。令有效位数为 L，前缀状态和输出标签为：</p>
+<div class="math-display">$$
+v=\sum_{j=1}^{L}x_j2^{L-j},\qquad r_0=0,\qquad r_j=(2r_{j-1}+x_j)\bmod 3,\qquad y_j=(\lfloor r_j/2\rfloor,\ r_j\bmod 2).
+$$</div>
+<!-- sync:mod3-encoding -->
+<p>最终目标为 <code>y_L</code>，余数 0/1/2 分别编码为 <code>00/01/10</code>，不是三类 softmax。阈值化后的最终两位同时正确才计一次 exact accuracy，<code>11</code> 不是合法余数。14/16 个有效 bit 左侧补零至 30 维；网络一次输出全部有效前缀，辅助输出不会作为真实中间答案再输入网络。</p>
+<!-- sync:hint-types -->
+<p>这里的“解耦”是把最终规则的相关前缀子任务显式监督到辅助输出上。<code>direct</code> 与 <code>scaffold</code> 使用相同输入和网络，后者额外监督较短前缀；不增加输入维度，也不在测试时提供中间标签。</p>
+<!-- sync:information-boundary -->
+<p><strong>输入样本预算与辅助标签预算分别计数。</strong> 每个不同输入的最终任务标签都是 2 位；14-bit scaffold 另外监督 26 位前缀标签，16-bit 另外监督 30 位。这是标签坐标数，不是彼此独立的信息 bit 数。两组匹配输入样本、初始化与训练步数，但不匹配总监督信息，因此不能把输入样本减少写成总监督预算减少。</p>
+<!-- sync:protocol-title -->
+<h2 id="mod3-配对协议">Mod3 配对协议</h2>
+<!-- sync:architecture-table -->
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>14-bit</th>
+<th>16-bit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>网络</td>
+<td>30→1024→1024→1024→28</td>
+<td>30→1024→1024→1024→32</td>
+</tr>
+<tr>
+<td>每模型参数数</td>
+<td>2165788</td>
+<td>2169888</td>
+</tr>
+<tr>
+<td>完整输入空间</td>
+<td>16384</td>
+<td>65536</td>
+</tr>
+<tr>
+<td>嵌套训练池 / 固定测试集</td>
+<td>8192 / 8192</td>
+<td>32768 / 32768</td>
+</tr>
+<tr>
+<td>完整样本档</td>
+<td>256、1024、2048、4096、8192</td>
+<td>1024、2048、3000、4096、6000、8192、32768</td>
+</tr>
+</tbody>
+</table>
+<!-- sync:architecture-detail -->
+<p>每个隐藏层均为 GELU 后接 LayerNorm，LayerNorm epsilon 为 <code>1e-5</code>，无 dropout。两组使用完全相同的多输出网络；<code>direct</code> 只监督最终两位，未用辅助输出的目标梯度为零。<code>scaffold</code> 增加前缀监督。网络宽度、输出维度、参数数在同一长度的两组之间不变；不同长度输出维度改变，不能声称跨长度初始权重完全相同。实现位于 <code>research/mod3_scaffold_sample_trend_20261102/experiment.py</code>（<a href="assets/updates_20261106/scaffolding/source_sha256.json">来源 SHA256</a>）。</p>
+<!-- sync:loss-definition -->
+<p>令 B_j 为训练输入上第 j 个前缀的两位平均 BCE，则样本趋势实验的目标为：</p>
+<div class="math-display">$$
+L_{\mathrm{end}}=B_L,\qquad L_{\mathrm{aux}}=\frac{1}{L-1}\sum_{j=1}^{L-1}B_j,\qquad L_{\mathrm{direct}}=L_{\mathrm{end}},\qquad L_{\mathrm{scaffold}}=L_{\mathrm{end}}+L_{\mathrm{aux}}.
+$$</div>
+<!-- sync:loss-boundary -->
+<p>主任务系数始终为 1，辅助均值的系数也是 1。历史 30-bit 成功协议将全部 60 位整体平均，即 <code>(L_end + 29 L_aux)/30</code>；两者不是同一目标乘一个常数。样本趋势实验使用独立协议，历史结果只作优化可达性背景。</p>
+<!-- sync:randomization -->
+<p>数据 seed 为 <code>202611020</code>、<code>202611021</code>；每份数据各用模型 seed <code>0/1/2</code>，所以完整档每组有 6 次训练，但只有 2 份独立数据排列。同一排列前半作为训练池、后半作为固定测试集；每档取训练池前 n 个不同输入，训练集严格嵌套。相同长度的各档复用初始化；每个有无辅助的配对共享初始权重和 minibatch 序列。两个长度使用相同数字 seed 不意味着同一训练集。</p>
+<!-- sync:budget -->
+<p>AdamW，<code>betas=(0.9,0.999)</code>、<code>eps=1e-8</code>、weight decay 为 0；学习率 <code>0.001</code>，前 10 步线性预热，固定 batch 为 512，所有样本档都进行有放回 minibatch 抽样。每个已启动正式模型均训练到 16000 步；比较 4000/8000/16000 步预算。历史执行为 RTX 3080 <code>cuda:1</code>、float32、TF32 关闭，记录的 Torch 为 <code>2.11.0+cu130</code>。</p>
+<!-- sync:criteria -->
+<p>每个预算 T 使用 <code>T-2000、T-1000、T</code> 三个记录点的测试 exact 均值，再对该档运行取平均，不选择最佳时刻。稳定 99% 指这三个记录点各自均≥99%，不保证其间每一步；拟合通过指预算末点完整训练集的最终任务平均 BCE≤0.001。严格训练插值另按 exact=100% 计数，BCE 门槛不等价于零训练错误。pp 表示百分点，表内差值从未舍入数据计算。</p>
+<!-- sync:result14-title -->
+<h2 id="14-bit-中间样本档的改善">14-bit：中间样本档的改善</h2>
+<!-- sync:table-14 -->
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">训练输入数</th>
+<th style="text-align: right;">direct 测试 exact</th>
+<th style="text-align: right;">scaffold 测试 exact</th>
+<th style="text-align: right;">配对变化 / pp</th>
+<th style="text-align: right;">稳定 99% 次数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">256</td>
+<td style="text-align: right;">31.23%</td>
+<td style="text-align: right;">31.05%</td>
+<td style="text-align: right;">-0.18</td>
+<td style="text-align: right;">0/6 -&gt; 0/6</td>
+</tr>
+<tr>
+<td style="text-align: right;">1024</td>
+<td style="text-align: right;">32.21%</td>
+<td style="text-align: right;">44.71%</td>
+<td style="text-align: right;">+12.50</td>
+<td style="text-align: right;">0/6 -&gt; 0/6</td>
+</tr>
+<tr>
+<td style="text-align: right;">2048</td>
+<td style="text-align: right;">80.16%</td>
+<td style="text-align: right;">99.14%</td>
+<td style="text-align: right;">+18.98</td>
+<td style="text-align: right;">0/6 -&gt; 5/6</td>
+</tr>
+<tr>
+<td style="text-align: right;">4096</td>
+<td style="text-align: right;">99.47%</td>
+<td style="text-align: right;">99.76%</td>
+<td style="text-align: right;">+0.30</td>
+<td style="text-align: right;">5/6 -&gt; 6/6</td>
+</tr>
+<tr>
+<td style="text-align: right;">8192</td>
+<td style="text-align: right;">99.98%</td>
+<td style="text-align: right;">99.97%</td>
+<td style="text-align: right;">-0.002</td>
+<td style="text-align: right;">6/6 -&gt; 6/6</td>
+</tr>
+</tbody>
+</table>
+<!-- sync:result14-interpretation -->
+<p>均为 16000 步窗口。辅助组在 2048 档已有 5/6 稳定成功，无辅助组在 4096 档才出现 5/6，支持已测网格上的输入样本需求降低。2048 是观察到 1024 尚未高泛化、4096 接近饱和后追加的探索性桥接点，不能据此估计精确“减半”系数。256 档没有收益，1024 档仍低于高泛化标准。原始汇总见 <code>research/mod3_scaffold_sample_trend_20261102/results_combined/ANALYSIS.json</code>（<a href="assets/updates_20261106/scaffolding/source_sha256.json">来源 SHA256</a>）。</p>
+<!-- sync:table-14-datasets -->
+<p>2048 档按每份数据的 3 个初始化平均：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">数据 seed</th>
+<th style="text-align: right;">direct</th>
+<th style="text-align: right;">scaffold</th>
+<th style="text-align: right;">变化 / pp</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">202611020</td>
+<td style="text-align: right;">97.72%</td>
+<td style="text-align: right;">99.23%</td>
+<td style="text-align: right;">+1.51</td>
+</tr>
+<tr>
+<td style="text-align: right;">202611021</td>
+<td style="text-align: right;">62.60%</td>
+<td style="text-align: right;">99.06%</td>
+<td style="text-align: right;">+36.46</td>
+</tr>
+</tbody>
+</table>
+<!-- sync:table-14-budgets -->
+<p>2048 档按训练预算比较：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">步数</th>
+<th style="text-align: right;">direct</th>
+<th style="text-align: right;">scaffold</th>
+<th style="text-align: right;">变化 / pp</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">4000</td>
+<td style="text-align: right;">74.44%</td>
+<td style="text-align: right;">98.67%</td>
+<td style="text-align: right;">+24.23</td>
+</tr>
+<tr>
+<td style="text-align: right;">8000</td>
+<td style="text-align: right;">76.94%</td>
+<td style="text-align: right;">98.93%</td>
+<td style="text-align: right;">+21.99</td>
+</tr>
+<tr>
+<td style="text-align: right;">16000</td>
+<td style="text-align: right;">80.16%</td>
+<td style="text-align: right;">99.14%</td>
+<td style="text-align: right;">+18.98</td>
+</tr>
+</tbody>
+</table>
+<!-- sync:result14-fit -->
+<p>2048 档全部 12 个模型最终训练 exact=100%，两组最终任务平均 BCE 分别约 <code>4.95e-9</code>、<code>7.71e-9</code>。因此，这里的泛化差异不能归因于 direct 尚未拟合训练集；训练拟合与输入样本效率需要分别观察。差距随预算增加缩小，无限预算下的差异未测。全实验 60/60 个模型通过 BCE 门槛，59/60 个严格插值；例外完整保留在 <a href="assets/updates_20261106/scaffolding/key_results.json">关键结果</a>。</p>
+<!-- sync:result16-title -->
+<h2 id="16-bit-更少输入下达到高泛化">16-bit：更少输入下达到高泛化</h2>
+<!-- sync:table-16 -->
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">训练输入数</th>
+<th style="text-align: right;">direct 测试 exact</th>
+<th style="text-align: right;">scaffold 测试 exact</th>
+<th style="text-align: right;">配对变化 / pp</th>
+<th style="text-align: right;">稳定 99% 次数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1024</td>
+<td style="text-align: right;">31.86%</td>
+<td style="text-align: right;">31.87%</td>
+<td style="text-align: right;">+0.01</td>
+<td style="text-align: right;">0/6 -&gt; 0/6</td>
+</tr>
+<tr>
+<td style="text-align: right;">2048</td>
+<td style="text-align: right;">30.62%</td>
+<td style="text-align: right;">37.62%</td>
+<td style="text-align: right;">+7.00</td>
+<td style="text-align: right;">0/6 -&gt; 0/6</td>
+</tr>
+<tr>
+<td style="text-align: right;">3000</td>
+<td style="text-align: right;">30.60%</td>
+<td style="text-align: right;">91.59%</td>
+<td style="text-align: right;">+60.99</td>
+<td style="text-align: right;">0/6 -&gt; 0/6</td>
+</tr>
+<tr>
+<td style="text-align: right;">4096</td>
+<td style="text-align: right;">50.00%</td>
+<td style="text-align: right;">98.90%</td>
+<td style="text-align: right;">+48.91</td>
+<td style="text-align: right;">0/6 -&gt; 2/6</td>
+</tr>
+<tr>
+<td style="text-align: right;">6000</td>
+<td style="text-align: right;">61.38%</td>
+<td style="text-align: right;">99.86%</td>
+<td style="text-align: right;">+38.48</td>
+<td style="text-align: right;">0/6 -&gt; 6/6</td>
+</tr>
+<tr>
+<td style="text-align: right;">8192</td>
+<td style="text-align: right;">90.33%</td>
+<td style="text-align: right;">99.92%</td>
+<td style="text-align: right;">+9.59</td>
+<td style="text-align: right;">3/6 -&gt; 6/6</td>
+</tr>
+<tr>
+<td style="text-align: right;">32768</td>
+<td style="text-align: right;">99.98%</td>
+<td style="text-align: right;">99.99%</td>
+<td style="text-align: right;">+0.01</td>
+<td style="text-align: right;">6/6 -&gt; 6/6</td>
+</tr>
+</tbody>
+</table>
+<!-- sync:result16-interpretation -->
+<p>均为 16000 步窗口，完整档每组 6 次。6000 档辅助组达到 6/6 稳定 99% 成功，direct 为 0/6；8192 档 direct 也仅为 3/6。32768 档两组均达 6/6，说明无辅助同样可在更多输入下达到高泛化。3000 档辅助均值虽高于 8192 档 direct，仍是 0/6 稳定成功，不能混用均值与稳定标准；1024 档几乎无收益。原始数据见 <code>research/mod3_scaffold_sample_trend_16bit_20261102/results/ANALYSIS.json</code>（<a href="assets/updates_20261106/scaffolding/source_sha256.json">来源 SHA256</a>）与 <code>research/mod3_scaffold_sample_trend_16bit_20261102/results_refined/ANALYSIS.json</code>（<a href="assets/updates_20261106/scaffolding/source_sha256.json">来源 SHA256</a>）。</p>
+<!-- sync:table-16-budgets -->
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">训练输入数</th>
+<th style="text-align: right;">步数</th>
+<th style="text-align: right;">direct</th>
+<th style="text-align: right;">scaffold</th>
+<th style="text-align: right;">变化 / pp</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">3000</td>
+<td style="text-align: right;">4000</td>
+<td style="text-align: right;">30.14%</td>
+<td style="text-align: right;">86.30%</td>
+<td style="text-align: right;">+56.16</td>
+</tr>
+<tr>
+<td style="text-align: right;">3000</td>
+<td style="text-align: right;">8000</td>
+<td style="text-align: right;">30.31%</td>
+<td style="text-align: right;">89.10%</td>
+<td style="text-align: right;">+58.79</td>
+</tr>
+<tr>
+<td style="text-align: right;">3000</td>
+<td style="text-align: right;">16000</td>
+<td style="text-align: right;">30.60%</td>
+<td style="text-align: right;">91.59%</td>
+<td style="text-align: right;">+60.99</td>
+</tr>
+<tr>
+<td style="text-align: right;">6000</td>
+<td style="text-align: right;">4000</td>
+<td style="text-align: right;">54.43%</td>
+<td style="text-align: right;">99.82%</td>
+<td style="text-align: right;">+45.39</td>
+</tr>
+<tr>
+<td style="text-align: right;">6000</td>
+<td style="text-align: right;">8000</td>
+<td style="text-align: right;">57.28%</td>
+<td style="text-align: right;">99.85%</td>
+<td style="text-align: right;">+42.57</td>
+</tr>
+<tr>
+<td style="text-align: right;">6000</td>
+<td style="text-align: right;">16000</td>
+<td style="text-align: right;">61.38%</td>
+<td style="text-align: right;">99.86%</td>
+<td style="text-align: right;">+38.48</td>
+</tr>
+</tbody>
+</table>
+<!-- sync:result16-datasets -->
+<p>6000 档在两份数据上均改善：数据 seed <code>202611020</code> 为 83.65%→99.85%，<code>202611021</code> 为 39.12%→99.88%。这些是每份数据 3 个初始化的均值，不是置信区间。收益大小随数据排列而变；2 份独立数据尚不足以稳健估计总体样本门槛。</p>
+<!-- sync:result16-fit -->
+<p>3000、4096、6000 档两组末点训练 exact 均为 100%；3000 档主 BCE 均值约为 <code>9.52e-9</code>、<code>1.02e-8</code>。全体 90 个模型中 88 个通过 BCE≤0.001，84 个严格插值；全部例外保留在 <a href="assets/updates_20261106/scaffolding/key_results.json">关键结果</a>。高测试准确率、BCE 门槛与严格训练插值仍分别报告。</p>
+<!-- sync:result16-partial -->
+<p>2500 档只完成数据 seed <code>202611020</code> 的 3 对模型：direct 为 31.72%，scaffold 为 54.77%，变化 +23.05 pp，稳定成功为 0/3→0/3。全部训练到 16000 步；第二份数据未执行，所以单列而不并入完整 6 次的主表。</p>
+<!-- sync:result16-stop -->
+<p>完整增补为 3000/6000；3500/5000/7000 未启动，12000/16000 样本的提议已取消。16000 训练步不是另一个已执行样本档。<code>STOP_AFTER_GROUP</code> 标记及停止状态保持不变；<a href="assets/updates_20261106/scaffolding/key_results.json">关键结果</a>保留完整、部分完成、未启动及取消档位。</p>
+<!-- sync:history-title -->
+<h2 id="与既有优化可达性证据的联系">与既有优化可达性证据的联系</h2>
+<!-- sync:history-summary -->
+<p>2026-09-13 的 30-bit Mod3 记录分别观察到：起始辅助监督在匹配最终任务 BCE 的比较中达到更高泛化；固定标签下改变权重位置与后续路径可以帮助进入高泛化状态；进入后撤除辅助监督，继续训练可恢复高泛化。它们支持解耦帮助优化及路径影响可达性，但不构成本次样本减少的新实测。</p>
+<!-- sync:history-sources -->
+<p>历史出处为 <code>research/notes/20260913_mod3_endpoint_scaffold_matched_bce_zh.md</code>、<code>research/notes/20260913_mod3_weight_perturbation_generalization_zh.md</code> 和 <code>research/notes/20260913_mod3_scaffold_withdrawal_zh.md</code>（<a href="assets/updates_20261106/scaffolding/source_sha256.json">来源 SHA256</a>）。这里仅引用已存笔记，没有重新加载历史权重或复跑前向；撤除后的恢复不等于全程无波动。</p>
+<!-- sync:history-synthesis -->
+<p>优化可达性关注给定数据、目标与预算下，训练能否到达高泛化解；规则/样本困难关注结构、监督信息以及区分候选规则所需的数据。当前 14/16-bit 配对实验表明，解耦在相同输入数下提高泛化，并在已测固定预算下使高泛化所需输入数下降。这与历史优化证据相互补充，但不把有限预算样本曲线等同于纯统计下界，也不据此分离优化与结构性收益的贡献。</p>
+<!-- sync:limits-title -->
+<h2 id="结论边界">结论边界</h2>
+<!-- sync:limits -->
+<ul>
+<li>改善针对相关前缀辅助监督及已测训练预算；输入样本更少不等于总标签信息更少。</li>
+<li>网格扩展具有探索性，独立数据有限；不报告精确相变点、普适节约倍数或无限预算结论。</li>
+<li>本包未测静态 Neural K 的相对降低，也未确认内部实现了特定 DFA；无关辅助任务与跨架构对照仍待检验。</li>
+</ul>
+<!-- sync:audit-title -->
+<h2 id="复算范围与公开材料">复算范围与公开材料</h2>
+<!-- sync:audit-results -->
+<p><a href="assets/updates_20261106/scaffolding/recompute.py">复算脚本</a>仅使用 Python 标准库，不导入 NumPy 或 Torch，不加载权重。完整本地模式从逐运行 JSON 复算 150 个模型、78 行汇总与 225 行配对；最大统计差约 <code>2.22e-16</code>，属于数值舍入范围，并核对冻结源码、完成状态和停止标记。计数与误差见 <a href="assets/updates_20261106/scaffolding/audit.json">复算审计</a>。</p>
+<!-- sync:audit-boundary -->
+<p>完整模式需要 <code>research/mod3_scaffold_sample_trend_20261102/</code>、<code>research/mod3_scaffold_sample_trend_16bit_20261102/</code> 的原始记录，以及来源清单中 <code>research/ca_phase_transition/</code> 的实现与 <code>research/notes/</code> 的历史笔记。数据划分、梯度配对及前向检查沿用历史核验记录；本轮不重新执行这些计算，也不改动原始实验文件。</p>
+<!-- sync:files -->
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>README_zh.md</code>、<code>README_en.md</code></td>
+<td>段落对齐的双语说明与配对数据表</td>
+</tr>
+<tr>
+<td><a href="assets/updates_20261106/scaffolding/key_results.json">key_results.json</a></td>
+<td>Mod3 配对结果、预算、标签计数、拟合例外及历史引用</td>
+</tr>
+<tr>
+<td><a href="assets/updates_20261106/scaffolding/source_sha256.json">source_sha256.json</a></td>
+<td>原始来源路径和 SHA256，以及包内其他文件的校验值</td>
+</tr>
+<tr>
+<td><a href="assets/updates_20261106/scaffolding/audit.json">audit.json</a></td>
+<td>本地只读复算范围、误差与双语一致性</td>
+</tr>
+<tr>
+<td><a href="assets/updates_20261106/scaffolding/recompute.py">recompute.py</a></td>
+<td><code>--public-only</code> 独立核验公开包；默认模式依赖原始记录；<code>--write</code> 更新生成的 JSON</td>
+</tr>
+</tbody>
+</table>
+<!-- sync:commands -->
+<p>仅下载公开包并解压后，在其目录执行以下命令；不需要原仓库、第三方依赖或 GPU：</p>
+<pre><code class="language-powershell">python -I -S -B -X utf8 recompute.py --public-only
+</code></pre>
+<!-- sync:public-boundary -->
+<p>公开模式仅读取包内文件，检查 Mod3 摘要关系、完整/部分面板、辅助标签预算、正文表格、双语数字与公式、包内链接及文件哈希。它不读取原始研究目录，也不独立复算逐模型指标或历史测量。来源哈希是出处与完整性记录，不代替原始内容；清单本身不自哈希，也不是数字签名。两种模式均不启动训练或采样。</p>
+<!-- sync:full-command -->
+<p>原始材料齐全且保持仓库布局时，可在仓库根目录进行完整只读复算；<code>--write</code> 仅更新本目录生成的 JSON，不能与 <code>--public-only</code> 同用。</p>
+<pre><code class="language-powershell">python -I -S -B -X utf8 research/neural_k_framework/supplementary/updates_20261106/scaffolding/recompute.py
+</code></pre></div>
+
+      </article>
+    </main>
+  </div>
+</body>
+</html>

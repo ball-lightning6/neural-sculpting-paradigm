@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Connecting rich representations, simplicity bias, and precision adjustment to complexity, shared structure, information gain, and sample-size transitions.">
+  <title>Neural Network Generalization and Algorithmic Information Theory · Neural K Research Archive</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="../assets/site.js"></script>
+</head>
+<body data-page-kind="core">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+
+    <header class="topbar">
+      <a class="site-mark" href="index.html" aria-label="Back to the research narrative">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K Research Archive</span>
+      </a>
+      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="index.html">Research</a><a class="top-link active" href="theory-core.html">Core Theory</a><a class="top-link" href="experiments/index.html">Experiments</a><a class="top-link" href="post-upload.html">Updates</a><a class="top-link" href="references.html">References</a><a class="top-link" href="evidence-ledger.html">Evidence</a></nav>
+      <nav class="language-switch" aria-label="Language"><a href="../ait-connections.html" lang="zh-CN">中文</a><span class="active" lang="en">EN</span></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>Contents</span>
+      </button>
+    </header>
+
+  <div class="page-shell">
+
+    <aside class="sidebar" id="sidebar" aria-label="On this page">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">On this page</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#1-three-simple-factors">1 Three Simple Factors</a></li>
+<li><a href="#2-the-training-set-is-the-object-of-study">2 The Training Set Is the Object of Study</a></li>
+<li><a href="#3-why-implementation-mass-can-relate-to-complexity">3 Why Implementation Mass Can Relate to Complexity</a></li>
+<li><a href="#4-shared-structure-connects-rules-and-memory">4 Shared Structure Connects Rules and Memory</a></li>
+<li><a href="#5-information-gain-is-definitional-accounting">5 Information Gain Is Definitional Accounting</a></li>
+<li><a href="#6-generalization-and-the-sample-size-transition">6 Generalization and the Sample-Size Transition</a></li>
+<li><a href="#7-what-this-account-adds">7 What This Account Adds</a></li>
+</ul>
+</div>
+</nav>
+        <a class="sidebar-action" href="theory-core.html">Back to core theory →</a>
+      </div>
+    </aside>
+
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">Theory supplement · Evidence and proposals distinguished</div>
+          <h1>Neural Network Generalization and Algorithmic Information Theory</h1>
+          <p class="article-description">Connecting rich representations, simplicity bias, and precision adjustment to complexity, shared structure, information gain, and sample-size transitions.</p>
+        </header>
+        <div class="article-body"><p>Update scope: 2026-10-30 through 2026-11-07; the final day adds connections to historical encoding experiments, not new runs. This page presents the author's experiment-informed macroscopic account without turning conceptual correspondences into a theorem that every network generalizes efficiently. See the <a href="research-updates.html">update overview</a> for new evidence and negative results, and the <a href="interpretation-update.html">conceptual clarification</a> for distinctions among representation, measure, and dynamics.</p>
+<p><strong>Why neural networks work can first be understood through a few factors: they can represent a rich set of functions, their parameterizations do not assign equal implementation mass to those functions, and data and output requirements further filter implementations. Once reusable explanations gain an advantage, they can support many predictions that were never supplied individually.</strong></p>
+<p>Algorithmic information theory (AIT) connects description length, generation probability, and shared information. This research measures these relationships in specific neural systems: which functions have greater implementation mass, how continuous-output requirements change their relative advantage, and how far these static distributions can predict actual training.</p>
+<h2 id="1-three-simple-factors">1 Three Simple Factors</h2>
+<ol>
+<li><strong>Rich representational capacity.</strong> A network can accommodate many candidate mappings, and a finite training set usually permits many complete extensions. Universal approximation ideas connect to this level, but the existence of an implementation does not mean that training can easily find it.</li>
+<li><strong>A prior simplicity bias.</strong> Architecture, encoding, parameterization, and the reference measure jointly determine the implementation mass of different functions. Structurally economical rules that fit the architecture are often easier to obtain from random parameters; this does not mean that every rule humans regard as simple is cheap.</li>
+<li><strong>The bias can be adjusted.</strong> In some tested protocols, increasing joint-output precision or changing amplitude requirements causes different candidates to lose mass at different rates, strengthening the preference for more economical explanations. BCE is a major studied route, not the only possible form.</li>
+</ol>
+<p>The first two factors, combined with informative data, already provide a basic account of induction. The third is an additional mechanism, not a necessary condition for all generalization. The finite target amplitude reached by sufficiently fitting raw-output MSE can be studied as a fixed endpoint; continuing to drive BCE toward zero can keep increasing the correctly signed margins. <a href="experiments/e31.html">E31</a> shows that finite-amplitude MSE can also generalize effectively, and that target center, amplitude, and alignment all matter.</p>
+<p>Broad effectiveness therefore need not depend on one engineering detail having a uniquely indispensable role. The more general research question is whether different systems have rich representations, suitable nonuniform implementation mass, and the ability to use data to select structure. Practical efficiency remains constrained by architecture and optimization reachability.</p>
+<p>The update on 2026-11-07 connects the early encoding experiments: all four addition symbol/position-shuffling conditions in the earlier paper reached low evaluation BCE, and historical source code also specifies real-valued input and output encodings. These make "learning structure" operational as learning task relations under fixed re-encoding. Encoding conversions can themselves be reused, but costs, priors and internal algorithms need not remain unchanged. Recorded results and source-code evidence are distinguished in the <a href="interpretation-update.html">encoding-decoding experiment connections</a>.</p>
+<h2 id="2-the-training-set-is-the-object-of-study">2 The Training Set Is the Object of Study</h2>
+<p>For a fixed training set, the object is the parameter region satisfying its requirements and the mass occupied there by different complete functions. Higher-mass candidates occur more often; this does not mean that every training run deterministically selects the largest-mass function. Correspondence between static SMC distributions and SGD, Adam, or STP outcomes is an empirical relationship to be tested.</p>
+<p>An individually economical function need not outweigh a numerous candidate group. For a normalized candidate distribution Q, the negative-log gap between selecting the best term and retaining the sum is <code>-log2(max_f Q(f))</code>; it is small only when mass is concentrated. Total mass cannot be assumed to be dominated by one shortest description for every training set.</p>
+<p>The prior and the data play different roles: the prior sets initial preferences among compatible explanations, while observations exclude incompatible extensions. A simple target with a substantial initial advantage may dominate after a small amount of informative data; a more complex target usually needs more samples to exclude other explanations with substantial mass and then reduce the total remaining competitor mass. This connects to the candidate-prediction picture of <a href="https://raysolomonoff.com/publications/solo1.pdf" target="_blank" rel="noopener">Solomonoff induction</a>.</p>
+<p><strong>Adding samples and increasing precision on fixed data should be named separately.</strong> Changing the training set from D to D' expands data constraints and identifies extensions; a candidate legitimate under the old D should not retroactively be called a shortcut under that D merely because it later disagrees with a new label.</p>
+<p>With the same D fixed, tighter output requirements can have two effects: shortcuts that only fit coarsely cease to suffice, and continuous implementation mass is reallocated among candidates that remain feasible. These connect respectively to adequately explaining the data and choosing economical descriptions in MDL. They motivate possible narrowing of the complexity distribution from both sides, but do not guarantee that variance or the winning function changes monotonically with precision. <a href="https://arxiv.org/abs/math/0406077" target="_blank" rel="noopener">MDL background</a></p>
+<p>The joint output distribution is the underlying object throughout; loss and amplitude conditions select regions within it. The same hard function can have different continuous implementations, and separate full-target volumes for different rules cannot simply be summed as the fixed-D conditional distribution of one training set. See the <a href="post-upload-language.html">strict probability language</a> and <a href="experiments/e20.html">E20</a> for precise definitions.</p>
+<h2 id="3-why-implementation-mass-can-relate-to-complexity">3 Why Implementation Mass Can Relate to Complexity</h2>
+<p>Levin's coding theorem connects two independently defined quantities: the shortest program producing a given object and the total probability of all prefix programs producing it. It is not an arbitrary renaming of negative log probability. There is therefore a concrete theoretical basis for investigating the relationship between description economy and implementation mass, although a finite neural prior is not automatically universal algorithmic probability. <a href="https://www.cs.bu.edu/fac/lnd/pdf/inf.pdf" target="_blank" rel="noopener">Levin's coding and information-theoretic framework</a></p>
+<p>There are two levels of aggregation: fix a complete function and combine its different implementations; fix a training set and then combine all complete extensions satisfying its requirements. The simplest compatible explanation and the total mass of all compatible explanations are related but distinct objects.</p>
+<p>For an effectively encodable discrete neural generation protocol, probability coding can yield a short universal description. The reverse direction additionally requires showing that short descriptions admit inexpensive implementations with sufficient parameter mass in the specified network. Universal approximation does not replace inexpensive decoding, and a compiler's fixed program length does not imply fixed computation in a finite network. A total-mass budget limits the individual mass available to numerous complex objects, but a uniform lookup model also satisfies that budget; it alone does not establish high probability for simple functions.</p>
+<p>Under one measurement protocol, let <span class="math-inline">$V_f(t)$</span> be implementation mass along precision coordinate <span class="math-inline">$t$</span>, <span class="math-inline">$K_f$</span> its negative logarithm, and <span class="math-inline">$\kappa_f$</span> its local growth rate. On a positive-mass interval where negative log mass is absolutely continuous:</p>
+<div class="math-display">$$
+\begin{aligned}
+K_f(t)&amp;=-\log_2 V_f(t),\\
+\kappa_f(t)&amp;=\frac{dK_f(t)}{dt},\\
+V_f(t)&amp;=V_f(t_0)\,2^{-\int_{t_0}^{t}\kappa_f(u)\,du}.
+\end{aligned}
+$$</div>
+<p><strong>Accumulated contraction rates determine mass at a fixed precision; they are not just another isolated metric.</strong> If measurement starting points are equal and branches approximately contract exponentially at constant rates, the coefficients directly relate to probability rankings at a fixed cross-section. If starting points differ or rates change, prefactors and the full path must be retained. The resulting distribution is first an effective distribution under specified output conditions, not automatically the original function prior integrated over all amplitudes.</p>
+<p>A training set itself can also have a cost profile. Its local contraction rate is the mass-weighted average of branch rates within the same fixed-D event; under suitable deep-tail conditions, the more slowly contracting group can dominate total mass. This provides a conditional mechanism for approaching more economical compatible explanations, but separate full-target coefficients cannot be substituted without a bridge.</p>
+<p>Interpreting contraction rate as complexity requires calibration against independent logical structure, sharing, or external predictions; it cannot rest on the circular argument that faster contraction means greater complexity and greater complexity explains faster contraction. Proxy-complexity comparisons in <a href="experiments/e33.html">E33</a> and the prospective amplitude-intervention prediction in <a href="experiments/e31.html">E31</a> are examples of such calibration. Parity rules also remind us that short symbolic descriptions need not be cheap neural implementations.</p>
+<p>AIT models that adjust the penalty on program length provide an explicit reference for bias strength. Whether a neural amplitude or loss path implements comparable reweighting remains a matter for neural measurement. No interpretation as physical temperature is needed here. <a href="https://arxiv.org/abs/0801.4194" target="_blank" rel="noopener">Tadaki's extension of program weighting</a></p>
+<p>A precise conditional model fixes a universal prefix machine U and reweights every program producing the same object f by inverse temperature beta. The ordinary coding theorem supplies a constant c independent of f and beta such that:</p>
+<div class="math-display">$$
+m_\beta(f)=\sum_{p:U(p)=f}2^{-\beta|p|},\quad \beta\geq1,
+\qquad 2^{-\beta K_U(f)}\leq m_\beta(f)\leq c\,2^{-\beta K_U(f)}.
+$$</div>
+<p>Returning to the original codelength units gives:</p>
+<div class="math-display">$$
+K_U(f)-\frac{\log_2c}{\beta}\leq-\frac1\beta\log_2m_\beta(f)\leq K_U(f).
+$$</div>
+<p>Increasing inverse temperature strengthens the penalty. It is the unnormalized total-mass cost rescaled by 1/beta that approaches the shortest length. Normalization introduces a common normalization term, and tied shortest implementations do not become unique. This is a substantive correspondence for the diminishing extra contribution of longer implementations under stronger penalties, not proof that BCE implements this reweighting or that neural candidate-complexity variance decreases monotonically.</p>
+<p>The contraction coefficient remains a measure-dependent empirical quantity. Different norm spheres and their radial weighting jointly determine the aggregate curve. Independent sampling evidence exists beyond Gaussian measures; on November 1, stored particles were also reweighted by a family of norm functions, showing approximately stable coefficients beyond the Gaussian form. This connection to AIT penalty strength therefore needs no uniquely Gaussian measure, but it does not imply unchanged coefficients after changing the measure. <a href="update-geometry.html">Radial-weight diagnostics</a></p>
+<h2 id="4-shared-structure-connects-rules-and-memory">4 Shared Structure Connects Rules and Memory</h2>
+<p>Algorithmic mutual information measures the description saved by describing objects jointly rather than separately. The same structure can be reused across samples, input branches, or output tasks; shared intermediate representations and computation are possible neural implementations of this saving.</p>
+<p>For equal sample counts, comparable input protocols, and a common independent-description baseline, lower joint cost generally indicates more shareable description; less sharing means smaller savings. An absolute contraction rate does not yet give algorithmic mutual information in bits, and savings in parameters, execution cost, and description length are distinct quantities. <a href="experiments/e08.html">E08</a> provides implementation-level evidence for shared computation.</p>
+<p>Rules and noise therefore need not be treated as two categorically different kinds of information. Relative to the current model and observations, a local exception may require a separate description; after more samples arrive, it may reveal itself as part of another reusable rule. Algorithmic statistics studies such decompositions through a model description and a residual description given the model. <a href="https://arxiv.org/abs/math/0006233" target="_blank" rel="noopener">Algorithmic Statistics</a></p>
+<p>This research has used approximate linearity between random-memory contraction coefficients and sample count as an external calibration of the complexity definition. Results include approximate linearity, but also curvature across architectures and variation between training sets. Finite random data need not be devoid of exploitable structure, so strict linearity is not treated as a necessary premise of the whole framework. <a href="experiments/e32.html">E32</a></p>
+<p>Searching for the highest-cost dataset at fixed n, or the fewest samples achieving a given cost, offers candidate definitions of a memory frontier; these differ from being least confident on unseen points. A relative rule/noise definition can also be quantified by comparing complexity before and after adding or removing a sample or group, testing whether it is explained by current shared structure or needs an additional residual description. See <a href="interpretation-update.html">complexity contributions of added and removed samples</a> for definitions and measurement conventions.</p>
+<p>For example, once a constant background has substantial support, deleting an ordinary sample may barely lower cost, while deleting its only exception may lower cost considerably and the remaining data may not predict that exception. Further similar exceptions can reveal a rare but reusable complex rule. Rules/noise are therefore not arbitrary names: they concern sharing relative to current data and explanatory background. Individual attribution can depend on addition order without changing the cost of the same fixed endpoint event. Information gain is a mathematical connection under pure conditioning, not a replacement for the primary rule/residual question.</p>
+<h2 id="5-information-gain-is-definitional-accounting">5 Information Gain Is Definitional Accounting</h2>
+<p>Fix a reference measure and an existing positive-mass event E, and add only an actual hard-label event B. Let p be the fraction of mass in the old ensemble supporting that label, with p&gt;0. Then:</p>
+<div class="math-display">$$
+G=-\log_2 p.
+$$</div>
+<p>This is simultaneously the label's predictive surprise, the increase in negative log event mass, and the KL information cost of the new conditional distribution relative to the old one in this setting. It is an identity once the objects are fixed, not a neural regularity awaiting experimental confirmation. The probability p includes all functions supporting the label and cannot be replaced by the mass of one complete function.</p>
+<p>Along nested constraints under the same fixed prior, the sum of stepwise costs equals the difference between endpoint costs. The total cost of reaching the same endpoint is order-independent, although individual steps can receive different shares. <a href="experiments/e22.html">E22</a> checked this numerical accounting. It connects to <a href="https://proceedings.neurips.cc/paper_files/paper/2018/file/3b712de48137572f3849aabd5666a4e3-Paper.pdf" target="_blank" rel="noopener">prequential coding</a>, but the prequential codelength of an arbitrary practical learner does not thereby become order-independent.</p>
+<p>When a rule has been reliably identified, its labels on typical new samples receive high support, so their additional information cost is small. Conversely, informative samples can substantially change candidate mass. A low-mass function need not have low label support at every new input; it is the cumulative cost of fully identifying that function that directly relates to its probability at the starting point.</p>
+<p>In an independent, uniform binary lookup-table model, every new entry supplies a fixed 1 bit, while other unseen entries remain unpredictable. Simplicity bias and shared structure allow different samples to have different marginal costs. Training and reasoning can also make existing information more usable without adding external evidence every time; active learning seeks disagreements worth querying externally.</p>
+<p>These identities require explicit conditioning. Redefining an average-loss event after adding a sample need not produce a subset of the old event. Parameter-level information changes from continuous-precision filtering are also not identical to new label information, still less an automatic update law for SGD.</p>
+<h2 id="6-generalization-and-the-sample-size-transition">6 Generalization and the Sample-Size Transition</h2>
+<p>Generalization requires independent true labels or an evaluation criterion; the true rule cannot be defined after the fact from model predictions. Agreement describes consistency among candidates or repeated training runs and can be measured without a teacher, but consistent answers can still be wrong.</p>
+<p>The agreement conjecture is not abandoned: whether high consensus statistically corresponds to reusable, interpretable rules under a fixed system and sampling protocol is an important external test of alignment between neural preferences and human description complexity. Independent symbolic audits of high-consensus endpoints in E18/E21 provide positive evidence. The revision narrows an unconditional claim to a statistical relationship requiring explicit bias strength, sample cost, finite input space and unseen coverage, rather than denying the connection.</p>
+<p>Dominance by the complete true function is sufficient for good generalization, not necessary: many complete extensions can give the same correct answer on most test inputs. Averaging per-input correctness probabilities over test inputs equals the ensemble's mean single-model accuracy exactly. Predicting one actual training run additionally requires correspondence between static and optimizer distributions and concentration of accuracy. <a href="https://arxiv.org/abs/2304.01910" target="_blank" rel="noopener">Jordan's study of training variance</a></p>
+<p>Using unlabeled agreement to estimate external error requires another connection, such as suitable ensemble calibration conditions; it does not follow from the definition of agreement. <a href="https://arxiv.org/abs/2106.13799" target="_blank" rel="noopener">Jiang et al. on disagreement and calibration</a></p>
+<p>The single simplest function need not dominate mass either: many individually more complex functions can outweigh it collectively. If they share major structure while retaining different residuals, they may make similar numbers of errors at different locations; small cross-point error covariances can concentrate average accuracy. This connects candidate-group multiplicity, Jordan's statistics and the Rule30 norm interventions with fixed training data. Rule30 already shows changes in mean accuracy but has not measured every step of this structure/residual mechanism; the <a href="interpretation-update.html">predictive-distribution account</a> separates these levels.</p>
+<p>The grokking transition here means a sample-size recovery threshold, not the training time required for delayed generalization. It depends on the target's cost relative to competitors and how much competing mass samples can exclude. Under comparable conditions, this can yield approximate linearity or a stable complexity ordering, but not a universal strict proportionality law for all rules. <a href="post-upload-mdl.html">Conditional derivation</a>, <a href="experiments/e23.html">E23</a></p>
+<p>The comparison concerns total competing mass in a soft distribution, not an MDL decision that necessarily chooses the shortest description. Minimum feasible complexity, probability cost, and contraction coefficient are not interchangeable; independent and without-replacement sampling also have different survival probabilities. Statistical correlation between neighboring truth-table complexities may help explain similar competition spectra within some rule families, but requires measurement and does not follow directly from network continuity.</p>
+<p>If two explanations are indistinguishable within the available observation range, more observations of the same kind cannot decide between them. New variables, experimental conditions, or input ranges may reveal shared structure at a broader level. Identifiability depends not only on rule complexity but also on what can be observed.</p>
+<p>The idea discussed on 2026-10-30 of estimating algorithmic mutual information from sample-size transitions compares recovery thresholds for separate tasks with those for a joint task organized by a rule bit or output concatenation, using the savings as a proxy for shared description. It is neither newly proposed nor newly validated by this editorial update, and differs from the <a href="complexity-methods.html">existing measurement proposal</a> that uses a transition to select query samples before running SMC. Without calibration, differences in sample requirements cannot be reported directly as algorithmic mutual information in bits.</p>
+<p>The new four-point experiments include examples combining a relatively high full-extension cost proxy with high agreement. This limits treating the two memory criteria as synonyms, but does not directly measure low-BCE training-set cost. Constructed examples and their frequency under random sampling from a fixed generator remain distinct. The impossibility of recovering every member of a large distinguishable rule family from very few labels is a separate, family-level information constraint, not a prohibition on well-designed examples. <a href="update-consensus.html">Consensus and cost proxies</a></p>
+<p>The "tree of added samples" represents dataset filtering and candidate competition: economical explanations such as constants can dominate early; incompatible evidence disperses the old consensus, and further identifying examples concentrate a new rule or behaviorally similar group. High-consensus nodes reflect implementation economy shaped by architecture and computational structure; more complex rules can also form nodes with suitable data. Non-stochastic objects offer a conceptual reference for rule/residual separability, not a guarantee of unique extension. Shared compressible structure is the central hypothesis connecting neural preferences, human readability and high consensus, still requiring independent calibration.</p>
+<h2 id="7-what-this-account-adds">7 What This Account Adds</h2>
+<p>Basic induction can occur under a fixed bias; continuous-output constraints provide an additional mechanism for adjusting that bias. A fixed finite target in raw-output MSE differs from BCE's continuing margin-growth path, but either defines a static ensemble at a specified endpoint. The object of study is the particular joint-output region, not the loss name itself.</p>
+<p>Nor does a sufficient fixed bias automatically mean that the original initialization prior, filtered only for correct labels, is sufficient. Sufficient MSE fitting also requires numerical outputs to approach their targets. G&amp;C is a rejection-sampling method that can check hard correctness or finer loss conditions. With the same prior and final event, it and SMC target the same conditional distribution; computational efficiency and finite-sampling error differ.</p>
+<p>Prior work includes not only general compression intuitions, but function posteriors, continuous-loss strata, local behavior volumes, and sample bounds for soft interpolator sampling. This research links continuous constraints, function-mass profiles, independent calibration, and training predictions in explicit finite protocols, rather than claiming that previous work ignored loss. Sampling/gradient separations under continuous MSE also limit universal equivalence claims. <a href="update-related-work.html">Original work and comparison objects</a></p>
+<table>
+<thead>
+<tr>
+<th>Main connection</th>
+<th>Evidence in this research</th>
+<th>Retained boundary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Precision changes function mass</td>
+<td><a href="experiments/e19.html">E19</a>, <a href="experiments/e24.html">E24</a>, <a href="experiments/e31.html">E31</a></td>
+<td>Rankings can cross; arbitrary cross-sections are not one interchangeable scale</td>
+</tr>
+<tr>
+<td>Shared structure and independent calibration</td>
+<td><a href="experiments/e08.html">E08</a>, <a href="experiments/e33.html">E33</a></td>
+<td>No universal equality with classical Kolmogorov complexity has been established</td>
+</tr>
+<tr>
+<td>Information cost and data recovery</td>
+<td><a href="experiments/e22.html">E22</a>, <a href="experiments/e23.html">E23</a></td>
+<td>Identity-based accounting and empirical transition prediction are distinct</td>
+</tr>
+<tr>
+<td>Static distributions and training</td>
+<td><a href="experiments/e36.html">E36</a></td>
+<td>Similar predictions do not imply identical optimizer distributions</td>
+</tr>
+<tr>
+<td>Memory and reference measures</td>
+<td><a href="experiments/e32.html">E32</a>, <a href="experiments/e37.html">E37</a></td>
+<td>Nonlinearity, data variation, and the tested range of measures remain explicit</td>
+</tr>
+</tbody>
+</table>
+<p><strong>The resulting main line is: rich representations accommodate explanations, nonuniform implementation mass creates preferences, data determine compatibility, and shared structure supports generalization; continuous-output precision can additionally change bias strength and provide a route for measuring complexity.</strong> Architecture determines which implementations are economical, while the optimizer determines whether finite resources can reach them. AIT supplies theoretical language for these connections; neural experiments test their implementation and scope.</p>
+<p>For fuller definitions, see the <a href="theory-core.html">theory core</a> and <a href="post-upload-language.html">strict probability language</a>. This page does not develop Ω, incompleteness, or detailed proofs of temperature corrections, and does not make those branches premises of the main account.</p>
+<p>Description length, execution time, identification sample requirements, and optimization-search cost are different resource axes. They have not been jointly calibrated into machine-independent KC.</p></div>
+
+      </article>
+    </main>
+  </div>
+</body>
+</html>

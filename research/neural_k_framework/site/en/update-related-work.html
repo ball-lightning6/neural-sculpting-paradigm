@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Loss-aware volume, soft interpolator sampling, predictive calibration, and algorithmic-information methods.">
+  <title>Related work and comparison boundaries · Neural K Research Archive</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="../assets/site.js"></script>
+</head>
+<body data-page-kind="core">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+
+    <header class="topbar">
+      <a class="site-mark" href="index.html" aria-label="Back to the research narrative">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K Research Archive</span>
+      </a>
+      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="index.html">Research</a><a class="top-link active" href="theory-core.html">Core Theory</a><a class="top-link" href="experiments/index.html">Experiments</a><a class="top-link" href="post-upload.html">Updates</a><a class="top-link" href="references.html">References</a><a class="top-link" href="evidence-ledger.html">Evidence</a></nav>
+      <nav class="language-switch" aria-label="Language"><a href="../update-related-work.html" lang="zh-CN">中文</a><span class="active" lang="en">EN</span></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>Contents</span>
+      </button>
+    </header>
+
+  <div class="page-shell">
+
+    <aside class="sidebar" id="sidebar" aria-label="On this page">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">On this page</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#1-claims-requiring-correction">1. Claims Requiring Correction</a></li>
+<li><a href="#2-distinguish-the-objects-first">2. Distinguish the Objects First</a></li>
+<li><a href="#3-the-loss-and-volume-line">3. The Loss-and-Volume Line</a></li>
+<li><a href="#4-evidence-levels-for-agreement-and-accuracy">4. Evidence Levels for Agreement and Accuracy</a></li>
+<li><a href="#5-the-actual-anti-grokking-intervention">5. The Actual Anti-Grokking Intervention</a></li>
+<li><a href="#6-concise-ait-method-positioning">6. Concise AIT Method Positioning</a></li>
+<li><a href="#7-bounded-positioning-of-this-study">7. Bounded Positioning of This Study</a></li>
+<li><a href="#8-actual-verification-boundary">8. Actual Verification Boundary</a></li>
+</ul>
+</div>
+</nav>
+        <a class="sidebar-action" href="theory-core.html">Back to core theory →</a>
+      </div>
+    </aside>
+
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">Theory supplement · Evidence and proposals distinguished</div>
+          <h1>Related work and comparison boundaries</h1>
+          <p class="article-description">Loss-aware volume, soft interpolator sampling, predictive calibration, and algorithmic-information methods.</p>
+        </header>
+        <div class="article-body"><p class="source-bar"><a href="../assets/updates_20261106/related_work/package.zip" download>Download this topic's public materials (ZIP)</a><span>Includes both language versions and published attachments; verification scope is stated below.</span></p><nav class="ledger-path"><a href="research-updates.html">Research update overview</a></nav><!-- pair: p001 -->
+<p><a href="../update-related-work.html">Simplified Chinese</a> | <a href="../assets/updates_20261106/related_work/references.json">References and verification record</a>. Paragraph identifiers, table-row identifiers, and citations correspond one-to-one across the two languages; R01-R17 identify the reference records.</p>
+<!-- pair: p002 -->
+<p>The user-specified integration baseline is <code>3834fb3</code> (2026-10-27). The update batch remains <code>20261106</code>; primary-source verification spans 2026-11-06 to 2026-11-07 (Asia/Shanghai). This is a bounded related-work addendum, not a systematic review, proof of priority, or new experimental report. It does not imply that the entire baseline has been re-audited.</p>
+<h2 id="1-claims-requiring-correction">1. Claims Requiring Correction</h2>
+<!-- pair: t001 -->
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Overstatement to avoid</th>
+<th>Wording adopted here</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C01</td>
+<td>Previous work did not consider loss or fitting precision.</td>
+<td>Existing work compares CE/MSE, loss strata, and behavioral precision cutoffs. Specify this study's constraints and measurement objects instead of presenting the question as previously unexplored. See R01-R05.</td>
+</tr>
+<tr>
+<td>C02</td>
+<td>Every G&amp;C counterexample merely failed to control loss.</td>
+<td>Incorrect. Peleg discusses scale normalization and margins; Alexander's acceptance event itself requires low continuous MSE. Condition matching deserves examination but cannot dismiss counterexamples in advance. See R07-R08.</td>
+</tr>
+<tr>
+<td>C03</td>
+<td>Static mass can explain generalization, so the optimizer is irrelevant.</td>
+<td>A static reference can have explanatory and predictive value without equaling the training pushforward distribution. Preserve cases where high-entropy references outperform training, as well as width and dataset-size dependence. See R01, R03, R08-R09.</td>
+</tr>
+<tr>
+<td>C04</td>
+<td>Neural function mass, contraction slopes, shortest descriptions, and Solomonoff probabilities are interchangeable.</td>
+<td>These concern different objects and protocols. AIT methods can supply conditional connections, not automatic universal identities for this study. See R13-R17.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="2-distinguish-the-objects-first">2. Distinguish the Objects First</h2>
+<!-- pair: p003 -->
+<p>Here, "mass" means probability mass, not predictive quality. Fix the architecture, encoding, decoding rule, probe set, and reference probability measure <span class="math-inline">$\mu$</span> over parameters. Let <span class="math-inline">$C_f$</span> contain parameters producing the same decoded function <span class="math-inline">$f$</span>. The following notation aligns the literature; it is not a new theoretical result.</p>
+<!-- pair: t002 -->
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Object</th>
+<th>Conditions and distinctions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>O01</td>
+<td>Function prior <span class="math-inline">$\mu(C_f)$</span></td>
+<td>No training constraint; uniform weights do not imply uniform functions.</td>
+</tr>
+<tr>
+<td>O02</td>
+<td>Hard-classification-compatible mass <span class="math-inline">$\mu(C_f\cap H_D)$</span></td>
+<td><span class="math-inline">$H_D$</span> requires correct training labels, without fixing logits, margins, or continuous loss.</td>
+</tr>
+<tr>
+<td>O03</td>
+<td>Continuously constrained mass <span class="math-inline">$\mu(C_f\cap\{L_D\leq\epsilon\})$</span></td>
+<td>Only normalization produces a conditional function distribution; it depends on loss, scale, threshold, and measure.</td>
+</tr>
+<tr>
+<td>O04</td>
+<td>Loss-stratified joint density of states</td>
+<td>Joint mass of a loss bin and a test metric; thin strata, cumulative sublevel sets, means, and modes are not interchangeable.</td>
+</tr>
+<tr>
+<td>O05</td>
+<td>Local behavioral volume around trained parameters</td>
+<td>A loss- or output-KL-defined neighborhood, not all disconnected realizations of the same hard function.</td>
+</tr>
+<tr>
+<td>O06</td>
+<td>Optimizer output distribution</td>
+<td>Induced jointly by initialization, updates, randomness, and stopping; low loss alone does not determine it.</td>
+</tr>
+</tbody>
+</table>
+<!-- pair: p004 -->
+<p>G&amp;C, SMC, and Wang-Landau name methods, not complete target measures. A comparable protocol must specify at least the reference measure, acceptance event, normalization, training stopping rule, and evaluation quantity. Full-target constraints cover the entire target, whereas fixed-D constraints cover only the training set; these are also distinct.</p>
+<h2 id="3-the-loss-and-volume-line">3. The Loss-and-Volume Line</h2>
+<!-- pair: t003 -->
+<table>
+<thead>
+<tr>
+<th>Reference</th>
+<th>Object and verified conditions</th>
+<th>Relation to this study and limits</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R01 <a href="https://www.jmlr.org/papers/v22/20-676.html" target="_blank" rel="noopener">Mingard et al., JMLR 2021</a></td>
+<td>Function probabilities on finite test probes; MSE uses a Gaussian-likelihood NNGP, while CE comparisons use an EP approximation with a 0-1 likelihood. Training usually stops at the first zero-classification-error epoch, with additional continued-training comparisons.</td>
+<td>Direct precedent for correlations and residual differences between function posteriors and optimizer distributions, beyond mean accuracy. This does not establish equality between finite-network low-BCE sublevel sets and arbitrary training distributions. Relevant passages in Sections 2.3, 3.1, 5, and Appendix B were checked.</td>
+</tr>
+<tr>
+<td>R02 <a href="https://arxiv.org/html/2304.06670v2" target="_blank" rel="noopener">Mingard et al., Nature Communications 2025</a></td>
+<td>Function priors, candidate counts within complexity levels, and data filtering jointly determine competition. Supplementary Section 8.6.2 acknowledges that a 0-1 posterior is not the exact training posterior; Fig. S10 compares CE, fixed-target-amplitude MSE, and initialization scales.</td>
+<td>Neither candidate multiplicity nor loss sensitivity should be presented as originating here. A possible distinction is per-function measurement of continuous-constraint mass profiles and rank changes under a fixed finite network and measure; this does not establish priority.</td>
+</tr>
+<tr>
+<td>R03 <a href="https://arxiv.org/html/2503.13145v2" target="_blank" rel="noopener">Yang et al., 2503.13145v2; journal version 2026</a></td>
+<td>Wang-Landau estimates joint density over training loss and test performance, with specified finite parameter ranges, comparing maximum-entropy performance with SGD/Adam at matched loss strata. Test metrics participate in landscape exploration.</td>
+<td>Direct precedent for continuous-loss conditioning. Static high-entropy performance sometimes exceeds training performance, rather than equaling it. Retrospective landscape diagnosis is not a training algorithm without test-label access. A loss-stratum mode is not cumulative function mass.</td>
+</tr>
+<tr>
+<td>R04 <a href="https://arxiv.org/html/2505.11411v5" target="_blank" rel="noopener">Zhang et al., 2505.11411v5</a></td>
+<td>Loss/test-accuracy entropy landscapes for modular-arithmetic Transformers; no entropy barrier was observed in the examined settings. Section 5's WanD explores using training loss and finds high-norm generalizing solutions.</td>
+<td>Covers both static landscapes and dynamical intervention, not automatic dynamical irrelevance at low loss. WanD is a limited-task proof of concept. Appendix B.3's hybrid uses test accuracy <span class="math-inline">$A_{test}$</span> to set its mixing weight, so it cannot be grouped with Section 5 as a test-feedback-free protocol.</td>
+</tr>
+<tr>
+<td>R05 <a href="https://arxiv.org/html/2501.18812v2" target="_blank" rel="noopener">Scherlis and Belrose, 2501.18812v2</a></td>
+<td>Anchor-centered local loss/KL behavioral neighborhoods under Gaussian/uniform measures; Section 6.3 varies cutoffs and reports approximate local-volume power laws and numerical limitations.</td>
+<td>Precision profiles and information interpretations of negative log-volume have precedents. Local KL volume and its slope are not global hard-function mass or this study's contraction coefficient. The estimator also has underestimation and sampling-error issues.</td>
+</tr>
+<tr>
+<td>R06 <a href="https://arxiv.org/html/2402.06323v3" target="_blank" rel="noopener">Buzaglo et al., 2402.06323v3</a></td>
+<td>A single predictor is sampled from a prior conditioned on correct training classification. Lemma 3.2 gives a sufficient sample bound involving negative log total teacher-equivalent prior mass; network instances impose additional quantized or continuous-model conditions.</td>
+<td>Supports generalization by random compatible predictors without selecting a shortest-description argmin. This conditional sufficient bound is not an equality for empirical grokking sample thresholds, nor an identification of negative log mass with a BCE contraction slope.</td>
+</tr>
+<tr>
+<td>R07 <a href="https://arxiv.org/html/2407.03848v2" target="_blank" rel="noopener">Peleg and Hein, 2407.03848v2</a></td>
+<td>Low-sample binary classification: G&amp;C accepts zero classification error; SGD uses CE. Sections 3.1-3.3 explicitly discuss ReLU scale freedom, Lipschitz-normalized loss, and margins; Section 4 compares initialization, width, and depth.</td>
+<td>Not matching raw continuous-CE sublevel sets is not ignoring loss. Preserve results under their original protocol. Improving a prediction by changing this study's filtering event does not by itself invalidate their optimizer-difference findings.</td>
+</tr>
+<tr>
+<td>R08 <a href="https://arxiv.org/html/2506.03931v2" target="_blank" rel="noopener">Alexander et al., 2506.03931v2</a></td>
+<td>In matrix sensing/factorization, Section 3.5's G&amp;C explicitly accepts <span class="math-inline">$L_{train}&lt;\epsilon_{train}$</span> with MSE loss. Section 4.2 establishes cases inferior to GD under specified prior, activation, and width conditions.</td>
+<td>Directly limits the claim that every counterexample omitted loss control. A continuous threshold does not guarantee static equivalence; conversely, this model-specific result is not a rejection across all architectures. GD initialization, step-size, and other conditions must remain explicit.</td>
+</tr>
+<tr>
+<td>R09 <a href="https://arxiv.org/html/2606.31282v2" target="_blank" rel="noopener">Pakman et al., 2606.31282v2</a></td>
+<td>Uniform binary-weight prior; REWL estimates joint training/test-accuracy density on MNIST/Fashion-MNIST with 30/300/600 training examples, comparing the interpolation-stratum mode with gradient training.</td>
+<td>The gradient advantage shrinks with more data in most examined conditions, making dataset size an important comparison axis. This is not continuous-CE matching or a universal resolution of Alexander's result and other continuous-network disagreements.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="4-evidence-levels-for-agreement-and-accuracy">4. Evidence Levels for Agreement and Accuracy</h2>
+<!-- pair: p005 -->
+<p>Mean single-model accuracy, pointwise prediction frequencies, the joint prediction-vector distribution, and majority-vote accuracy are distinct quantities. Agreement on the first two does not imply close joint distributions or identical pointwise predictions from two trained models. The following works explain how different error locations can coexist with stable aggregate performance; they do not establish equivalence between static sampling and training.</p>
+<!-- pair: t004 -->
+<table>
+<thead>
+<tr>
+<th>Reference</th>
+<th>Object and conditions</th>
+<th>Relation to this study and limits</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R10 <a href="https://arxiv.org/html/2304.01910v4" target="_blank" rel="noopener">Jordan, 2304.01910v4</a></td>
+<td>Error structure across repeated runs with fixed training configurations. Section 3 distinguishes finite-test-set variance from test-distribution variance in settings including CIFAR-10/ImageNet, examining approximately independent errors after convergence and class-wise calibration.</td>
+<td>A reference for accuracy variation and pointwise error probabilities; short training does not satisfy the same independence approximation. Neither a universal independence law nor a license to infer identical function distributions from stable accuracy.</td>
+</tr>
+<tr>
+<td>R11 <a href="https://arxiv.org/html/2106.13799v2" target="_blank" rel="noopener">Jiang et al., 2106.13799v2</a></td>
+<td>Independent training runs on the same dataset. Section 4 connects expected disagreement and expected test error under ensemble calibration on the test distribution.</td>
+<td>Disagreement is a conditional generalization diagnostic. The expectation identity is not exact equality for every model pair or a formula for majority-vote accuracy. It does not automatically establish calibration for arbitrary G&amp;C distributions.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="5-the-actual-anti-grokking-intervention">5. The Actual Anti-Grokking Intervention</h2>
+<!-- pair: p006 -->
+<p>R12 <a href="https://arxiv.org/html/2610.00620v1" target="_blank" rel="noopener">Tian et al., 2610.00620v1</a>, Section 3.2/Fig. 4, keeps modular addition (modulus 97), approximately half the examples for training, the model, and training hyperparameters unchanged. Only the partition changes: <span class="math-inline">$(a,b)$</span> and <span class="math-inline">$(b,a)$</span> are placed in the same partition. Reported anti-grokking means persistently poor validation performance without delayed recovery, not earlier generalization or separating reversed pairs across training and validation.</p>
+<!-- pair: p007 -->
+<p>Appendices H/H.1 reduce the same-partition ratio; their specific record shows no completed grokking at 70% and clear recovery at 60%, with symmetry-orbit coverage used to compare information coverage. Our comparative inference is that partition structure must be controlled even at fixed sample count; this is not a new experiment. Phase-cell counts indirectly probe regional alignment, not global volume. No recovery within a finite budget does not prove that recovery can never occur.</p>
+<h2 id="6-concise-ait-method-positioning">6. Concise AIT Method Positioning</h2>
+<!-- pair: t005 -->
+<table>
+<thead>
+<tr>
+<th>Reference</th>
+<th>Actual object or method</th>
+<th>Useful connection and unsupported identification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R13 <a href="https://arxiv.org/html/2509.22445v3" target="_blank" rel="noopener">Shaw et al., 2509.22445v3</a></td>
+<td>Asymptotically optimal two-part/variational description-length objectives for Transformers; minimum codelength under increasing resources and a differentiable Gaussian-mixture-prior objective.</td>
+<td>A conditional coding bridge. Section 4.2 specifies finite-resource, additive-constant, and minimization limits; Section 6.1 shows that random-initialization optimization misses low-codelength manually initialized solutions. This neither makes ordinary initialization probabilities universal nor guarantees SGD reaches the minimum.</td>
+</tr>
+<tr>
+<td>R14 <a href="https://arxiv.org/html/2605.15551v1" target="_blank" rel="noopener">Bakhtiarifard et al., QuBD, 2605.15551v1</a></td>
+<td>Quantize weights to a finite alphabet, aggregate CTM/BDM estimates across bit-planes, and track weight structure during training.</td>
+<td>A complexity proxy for quantized weights, affected by quantization, partitioning, finite CTM tables, and shared information across bit-planes. It measures neither complete-function algorithmic complexity nor global parameter mass.</td>
+</tr>
+<tr>
+<td>R15 <a href="https://arxiv.org/html/2610.29289v1" target="_blank" rel="noopener">Li and Teng, Approximate Solomonoff, 2610.29289v1</a></td>
+<td>Impose a KL approximation condition between an environment mixture <span class="math-inline">$\xi$</span> and predictor <span class="math-inline">$\rho$</span>, then analyze cumulative prediction error, distinguishing prior averages from low-prior-mass environments.</td>
+<td>Approximation error can be amplified substantially in rare environments. The condition concerns sequence-prediction distributions, not neural parameter volume. Small ordinary training loss does not establish the required population KL condition or a universal prior.</td>
+</tr>
+<tr>
+<td>R16 <a href="https://arxiv.org/html/2412.09810v2" target="_blank" rel="noopener">DeMoss et al., 2412.09810v2</a></td>
+<td>Coarse-grain weights subject to allowed training-loss distortion, then use compression to estimate rate-distortion curves; study grokking complexity dynamics and spectral-entropy regularization.</td>
+<td>Direct methodological precedent connecting loss tolerance and compression. Practical compressed codelength is not exact Kolmogorov complexity; compression changes along a training trajectory are not changes in the aggregate mass of compatible functions.</td>
+</tr>
+<tr>
+<td>R17 <a href="https://arxiv.org/html/2310.05918v1" target="_blank" rel="noopener">Liu, Zhong, and Tegmark, LMN, 2310.05918v1</a></td>
+<td>Define Linear Mapping Number from an input-interpolation linear-connectivity matrix and its spectrum, estimating the effective count of local linear computations and tracking grokking on algorithmic tasks.</td>
+<td>A comparison for nonlinear computational structure and compression, dependent on probes and estimation protocol. Its candidacy as a neural Kolmogorov complexity is the authors' positioning, not a proven universal equivalence or a parameter-volume theorem.</td>
+</tr>
+</tbody>
+</table>
+<!-- pair: p008 -->
+<p>Minimum representation cost, compressed codelength of particular trained weights, and probability mass over all parameter realizations of one decoded function must therefore be accounted for separately. Correlation under some conditions does not make them interchangeable without a bridge. Lowering BCE, changing a program-length penalty, and increasing representation precision are likewise different operations. No new AIT theorem is claimed here, and strong wording in recent preprints does not replace independent verification.</p>
+<h2 id="7-bounded-positioning-of-this-study">7. Bounded Positioning of This Study</h2>
+<!-- pair: p009 -->
+<p>Following existing function-prior, conditional-sampling, and compression approaches, this study examines how continuous training constraints redistribute function probability mass in fixed finite networks, and which training outcomes that redistribution predicts versus which differences still require dynamics. Concrete comparison points are the full-target/fixed-D distinction, loss-resolved profiles, amplitude alignment, reference-measure interventions, and training comparisons under explicit protocols. These identify research objects and candidate distinctions, not a priority list established by this search.</p>
+<!-- pair: p010 -->
+<p>This addendum supplies no new quantitative conclusions about baseline experiments. Each empirical claim still requires support from its existing experimental protocol and discrepant cases; related literature on volume or compression cannot substitute for this project's own validation.</p>
+<h2 id="8-actual-verification-boundary">8. Actual Verification Boundary</h2>
+<!-- pair: p011 -->
+<p>17 works are included. Authors, titles, version dates, and the definitions, methods, result statements, or captions used in the tables were checked. <code>references.json</code> separately records what was and was not examined. There was no line-by-line audit of every proof or independent reconstruction of plotted data. Journal publication dates and arXiv revision dates are recorded separately.</p>
+<!-- pair: p012 -->
+<p>Public evidence links point only to author papers, arXiv, or official journal sources. Direct access to Mingard 2025's journal page initially redirected; publication metadata was checked through the publisher's search result, while supplementary content was checked in arXiv v2. Chiang's OpenReview pages encountered browser verification and supply no additional independent evidence here.</p>
+<!-- pair: p013 -->
+<p>The cited papers' code and experiments were not independently run or replicated, and no new sampling was performed. Citation counts were neither collected nor inferred.</p></div>
+
+      </article>
+    </main>
+  </div>
+</body>
+</html>

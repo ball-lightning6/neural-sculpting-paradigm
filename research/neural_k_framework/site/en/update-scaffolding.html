@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Give intermediate remainders during training, then remove the hints at test time. Can the network learn from fewer practice questions?">
+  <title>Scaffolding, sample efficiency, and reachability · Neural K Research Archive</title>
+  <link rel="stylesheet" href="../assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="../assets/site.js"></script>
+</head>
+<body data-page-kind="core">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+
+    <header class="topbar">
+      <a class="site-mark" href="index.html" aria-label="Back to the research narrative">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K Research Archive</span>
+      </a>
+      <nav class="top-nav" aria-label="Site navigation"><a class="top-link" href="index.html">Research</a><a class="top-link active" href="theory-core.html">Core Theory</a><a class="top-link" href="experiments/index.html">Experiments</a><a class="top-link" href="post-upload.html">Updates</a><a class="top-link" href="references.html">References</a><a class="top-link" href="evidence-ledger.html">Evidence</a></nav>
+      <nav class="language-switch" aria-label="Language"><a href="../update-scaffolding.html" lang="zh-CN">中文</a><span class="active" lang="en">EN</span></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>Contents</span>
+      </button>
+    </header>
+
+  <div class="page-shell">
+
+    <aside class="sidebar" id="sidebar" aria-label="On this page">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">On this page</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#public-results">Public Results</a></li>
+<li><a href="#actual-tasks-and-hints">Actual Tasks and Hints</a></li>
+<li><a href="#paired-mod3-protocol">Paired Mod3 Protocol</a></li>
+<li><a href="#14-bit-gains-at-intermediate-sample-counts">14-bit: Gains at Intermediate Sample Counts</a></li>
+<li><a href="#16-bit-high-generalization-from-fewer-inputs">16-bit: High Generalization from Fewer Inputs</a></li>
+<li><a href="#connection-to-earlier-optimization-accessibility-evidence">Connection to Earlier Optimization-Accessibility Evidence</a></li>
+<li><a href="#scope-of-the-conclusions">Scope of the Conclusions</a></li>
+<li><a href="#recomputation-scope-and-public-materials">Recomputation Scope and Public Materials</a></li>
+</ul>
+</div>
+</nav>
+        <a class="sidebar-action" href="theory-core.html">Back to core theory →</a>
+      </div>
+    </aside>
+
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">Theory supplement · Evidence and proposals distinguished</div>
+          <h1>Scaffolding, sample efficiency, and reachability</h1>
+          <p class="article-description">Give intermediate remainders during training, then remove the hints at test time. Can the network learn from fewer practice questions?</p>
+        </header>
+        <div class="article-body"><div class="reader-intro"><p>On 30-bit Mod3, a network must report the remainder of a binary integer divided by three using two output bits. With only the final remainder as a target, training loss fell but accuracy on unseen integers stayed near one in three. Teaching intermediate remainders helped the network learn. But with the unaided group stuck, how could we compare the number of examples each needed? The experiment moved to 14 and 16 bits, lengths both groups could learn.</p>
+<p>At each length, the groups trained for 16,000 steps on the same inputs from the same initial weights, with three starts on each of two datasets. The auxiliary group also predicted prefix remainders: a leading <code>11</code> represents three, so its target is zero. Neither group received prefix answers at test time.</p>
+<p>At 14 bits and 2,048 inputs, both groups got every training example right. Counting a test answer only when both output bits were right, mean accuracy over the final three checks rose from 80.16% to 99.14%. Runs reaching 99% at all three checks went from 0/6 to 5/6; the unaided group first reached 5/6 at 4,096 inputs. The separate 16-bit comparison at 6,000 inputs gave 61.38% versus 99.86%, with 0/6 versus 6/6 stable runs. The paired tables show a saving in distinct inputs at this budget, not an exact halving or less total supervision.</p><p><a href="../assets/mod3_reproduction/original_sources.zip">Training sources</a> · <a href="../assets/mod3_reproduction/README_en.md">Run instructions</a></p></div><p class="source-bar"><a href="../assets/updates_20261106/scaffolding/package.zip" download>Download this topic's public materials (ZIP)</a><span>Includes both language versions and published attachments; verification scope is stated below.</span></p><nav class="ledger-path"><a href="research-updates.html">Research update overview</a></nav><!-- sync:title -->
+<h1 id="scaffolding-reduces-input-sample-requirements-paired-mod3-results-and-optimization-accessibility">Scaffolding Reduces Input Sample Requirements: Paired Mod3 Results and Optimization Accessibility</h1>
+<!-- sync:scope -->
+<p>Review date: 2026-11-06. Reference commit: <code>3834fb3f6555c7c58218462502635b16b9b377f9</code>, dated 2026-10-27. This public package reports the 14/16-bit Mod3 sample-trend results of 2026-11-02 and briefly connects them to the 30-bit Mod3 optimization-accessibility evidence of 2026-09-13. This revision organizes and recomputes existing records; it adds no new training measurements.</p>
+<!-- sync:takeaway -->
+<p><strong>Scaffolding can both help optimization and reduce the input examples needed for high generalization.</strong> Under the measured fixed training budget, related prefix supervision shifts the high-generalization region toward fewer Mod3 inputs; earlier interventions provide complementary evidence on optimization accessibility. Optimization difficulty and rule/sample difficulty are different axes: fitting the training set, reaching a high-generalization solution, and requiring fewer inputs must be assessed separately. The reduction here concerns input examples, with auxiliary labels still providing extra supervision.</p>
+<!-- sync:status-title -->
+<h2 id="public-results">Public Results</h2>
+<!-- sync:status-table -->
+<table>
+<thead>
+<tr>
+<th>Evidence</th>
+<th>Actually completed</th>
+<th>Role of the results</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>14-bit Mod3</td>
+<td>5 sample counts, 2 datasets with 3 initializations each, 60 models across both arms, all reaching 16000 steps</td>
+<td>Complete paired sample trend; strongest gains at intermediate counts</td>
+</tr>
+<tr>
+<td>16-bit Mod3</td>
+<td>Original 5 counts: 60 models; counts 3000/6000: another 24; count 2500: only 1 dataset with 6 models; total 90</td>
+<td>Complete counts support improved sample efficiency; 2500 is reported separately as a partial panel</td>
+</tr>
+<tr>
+<td>Historical 30-bit Mod3</td>
+<td>References to saved matched-BCE, weight-perturbation, and supervision-withdrawal records</td>
+<td>Optimization-accessibility context, not new sample-requirement measurements</td>
+</tr>
+</tbody>
+</table>
+<!-- sync:status-source -->
+<p>Status sources are <code>research/mod3_scaffold_sample_trend_20261102/REPORT_ZH.md</code> and <code>research/mod3_scaffold_sample_trend_16bit_20261102/results_refined/STOPPED_SUMMARY.json</code>. This package provides clickable <a href="../assets/updates_20261106/scaffolding/key_results.json">key results</a> and <a href="../assets/updates_20261106/scaffolding/source_sha256.json">source SHA256</a>; original repository paths identify provenance, not public download links.</p>
+<!-- sync:definition-title -->
+<h2 id="actual-tasks-and-hints">Actual Tasks and Hints</h2>
+<!-- sync:mod3-definition -->
+<p>The Mod3 input is a binary integer ordered from most to least significant bit, not the number of set bits modulo 3. For effective length L, the prefix states and output labels are:</p>
+<div class="math-display">$$
+v=\sum_{j=1}^{L}x_j2^{L-j},\qquad r_0=0,\qquad r_j=(2r_{j-1}+x_j)\bmod 3,\qquad y_j=(\lfloor r_j/2\rfloor,\ r_j\bmod 2).
+$$</div>
+<!-- sync:mod3-encoding -->
+<p>The final target is <code>y_L</code>. Remainders 0/1/2 are encoded as <code>00/01/10</code>, not a three-class softmax. Exact accuracy requires both thresholded endpoint bits to be correct; <code>11</code> is not a valid remainder. The 14/16 effective bits are left-padded with zeros to dimension 30. The network predicts all effective prefixes in one forward pass; auxiliary outputs are not fed back as true intermediate answers.</p>
+<!-- sync:hint-types -->
+<p>Here, scaffolding means explicitly supervising related prefix subtasks through auxiliary outputs. <code>direct</code> and <code>scaffold</code> use the same inputs and network, while the latter additionally supervises shorter prefixes. It adds neither input dimensions nor intermediate labels at test time.</p>
+<!-- sync:information-boundary -->
+<p><strong>Input-example and auxiliary-label budgets are counted separately.</strong> Each distinct input has 2 endpoint label bits; 14-bit scaffold additionally supervises 26 prefix label bits, and 16-bit adds 30. These count label coordinates, not independent bits of information. The arms match input examples, initialization, and training steps, but not total supervision information; fewer inputs must not be described as a reduction in the total supervision budget.</p>
+<!-- sync:protocol-title -->
+<h2 id="paired-mod3-protocol">Paired Mod3 Protocol</h2>
+<!-- sync:architecture-table -->
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>14-bit</th>
+<th>16-bit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Network</td>
+<td>30→1024→1024→1024→28</td>
+<td>30→1024→1024→1024→32</td>
+</tr>
+<tr>
+<td>Parameters per model</td>
+<td>2165788</td>
+<td>2169888</td>
+</tr>
+<tr>
+<td>Complete input domain</td>
+<td>16384</td>
+<td>65536</td>
+</tr>
+<tr>
+<td>Nested training pool / fixed test set</td>
+<td>8192 / 8192</td>
+<td>32768 / 32768</td>
+</tr>
+<tr>
+<td>Complete sample counts</td>
+<td>256, 1024, 2048, 4096, 8192</td>
+<td>1024, 2048, 3000, 4096, 6000, 8192, 32768</td>
+</tr>
+</tbody>
+</table>
+<!-- sync:architecture-detail -->
+<p>Each hidden layer uses GELU followed by LayerNorm, with LayerNorm epsilon <code>1e-5</code> and no dropout. Both arms use exactly the same multi-output network. <code>direct</code> supervises only the endpoint bits, with zero objective gradient on unused auxiliary outputs; <code>scaffold</code> adds prefix supervision. Width, output dimension, and parameter count are matched between arms at each length. Output dimensions differ across lengths, so initial weights must not be described as identical across lengths. See the <code>research/mod3_scaffold_sample_trend_20261102/experiment.py</code> (<a href="../assets/updates_20261106/scaffolding/source_sha256.json">source SHA256</a>).</p>
+<!-- sync:loss-definition -->
+<p>Let B_j be the mean BCE over training inputs and both bits of prefix j. The current objectives are:</p>
+<div class="math-display">$$
+L_{\mathrm{end}}=B_L,\qquad L_{\mathrm{aux}}=\frac{1}{L-1}\sum_{j=1}^{L-1}B_j,\qquad L_{\mathrm{direct}}=L_{\mathrm{end}},\qquad L_{\mathrm{scaffold}}=L_{\mathrm{end}}+L_{\mathrm{aux}}.
+$$</div>
+<!-- sync:loss-boundary -->
+<p>The endpoint coefficient remains 1, and the auxiliary-mean coefficient is also 1. The historical successful 30-bit protocol averaged all 60 outputs, giving <code>(L_end + 29 L_aux)/30</code>; these objectives are not constant rescalings of each other. The sample-trend experiment uses a separate protocol, with historical results serving only as optimization-accessibility context.</p>
+<!-- sync:randomization -->
+<p>Dataset seeds are <code>202611020</code> and <code>202611021</code>, each with model seeds <code>0/1/2</code>. A complete count therefore has 6 runs per arm but only 2 independent dataset permutations. The first half of each permutation forms the training pool and the second half the fixed test set; each count takes the first n distinct training-pool inputs, giving strictly nested training sets. Initializations are reused across counts at the same length. Each direct/scaffold pair shares initial weights and the minibatch sequence. Identical numeric seeds across lengths do not produce identical training sets.</p>
+<!-- sync:budget -->
+<p>AdamW uses <code>betas=(0.9,0.999)</code>, <code>eps=1e-8</code>, and weight decay 0. The learning rate is <code>0.001</code>, with linear warmup over 10 steps and fixed batch size 512; every sample count uses minibatch sampling with replacement. Every started formal model reached 16000 steps, with comparisons at budgets 4000/8000/16000. Historical execution used an RTX 3080 on <code>cuda:1</code>, float32, and TF32 disabled; recorded Torch was <code>2.11.0+cu130</code>.</p>
+<!-- sync:criteria -->
+<p>At budget T, test exact accuracy is averaged over the recorded steps <code>T-2000, T-1000, T</code>, then averaged across runs for that count; the best checkpoint is not selected. Stable 99% means each of those three observations is ≥99%, not every intervening step. Passing the fit criterion means endpoint mean BCE≤0.001 on the entire training set at the budget endpoint. Strict interpolation is counted separately as training exact=100%; the BCE threshold does not imply zero training errors. pp denotes percentage points, and differences are calculated before rounding.</p>
+<!-- sync:result14-title -->
+<h2 id="14-bit-gains-at-intermediate-sample-counts">14-bit: Gains at Intermediate Sample Counts</h2>
+<!-- sync:table-14 -->
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">Training inputs</th>
+<th style="text-align: right;">direct test exact</th>
+<th style="text-align: right;">scaffold test exact</th>
+<th style="text-align: right;">Paired change / pp</th>
+<th style="text-align: right;">Stable 99% counts</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">256</td>
+<td style="text-align: right;">31.23%</td>
+<td style="text-align: right;">31.05%</td>
+<td style="text-align: right;">-0.18</td>
+<td style="text-align: right;">0/6 -&gt; 0/6</td>
+</tr>
+<tr>
+<td style="text-align: right;">1024</td>
+<td style="text-align: right;">32.21%</td>
+<td style="text-align: right;">44.71%</td>
+<td style="text-align: right;">+12.50</td>
+<td style="text-align: right;">0/6 -&gt; 0/6</td>
+</tr>
+<tr>
+<td style="text-align: right;">2048</td>
+<td style="text-align: right;">80.16%</td>
+<td style="text-align: right;">99.14%</td>
+<td style="text-align: right;">+18.98</td>
+<td style="text-align: right;">0/6 -&gt; 5/6</td>
+</tr>
+<tr>
+<td style="text-align: right;">4096</td>
+<td style="text-align: right;">99.47%</td>
+<td style="text-align: right;">99.76%</td>
+<td style="text-align: right;">+0.30</td>
+<td style="text-align: right;">5/6 -&gt; 6/6</td>
+</tr>
+<tr>
+<td style="text-align: right;">8192</td>
+<td style="text-align: right;">99.98%</td>
+<td style="text-align: right;">99.97%</td>
+<td style="text-align: right;">-0.002</td>
+<td style="text-align: right;">6/6 -&gt; 6/6</td>
+</tr>
+</tbody>
+</table>
+<!-- sync:result14-interpretation -->
+<p>All values use the 16000-step window. The scaffold arm already has 5/6 stable successes at 2048, whereas direct first shows 5/6 at 4096, supporting lower input sample requirements on the measured grid. Count 2048 was an exploratory bridge added after observing that 1024 did not generalize highly while 4096 was nearly saturated; it does not establish an exact halving factor. There is no gain at 256, and 1024 remains below the high-generalization criterion. See <code>research/mod3_scaffold_sample_trend_20261102/results_combined/ANALYSIS.json</code> (<a href="../assets/updates_20261106/scaffolding/source_sha256.json">source SHA256</a>).</p>
+<!-- sync:table-14-datasets -->
+<p>At count 2048, averaging the 3 initializations within each dataset:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">Dataset seed</th>
+<th style="text-align: right;">direct</th>
+<th style="text-align: right;">scaffold</th>
+<th style="text-align: right;">Change / pp</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">202611020</td>
+<td style="text-align: right;">97.72%</td>
+<td style="text-align: right;">99.23%</td>
+<td style="text-align: right;">+1.51</td>
+</tr>
+<tr>
+<td style="text-align: right;">202611021</td>
+<td style="text-align: right;">62.60%</td>
+<td style="text-align: right;">99.06%</td>
+<td style="text-align: right;">+36.46</td>
+</tr>
+</tbody>
+</table>
+<!-- sync:table-14-budgets -->
+<p>Budget comparison at count 2048:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">Steps</th>
+<th style="text-align: right;">direct</th>
+<th style="text-align: right;">scaffold</th>
+<th style="text-align: right;">Change / pp</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">4000</td>
+<td style="text-align: right;">74.44%</td>
+<td style="text-align: right;">98.67%</td>
+<td style="text-align: right;">+24.23</td>
+</tr>
+<tr>
+<td style="text-align: right;">8000</td>
+<td style="text-align: right;">76.94%</td>
+<td style="text-align: right;">98.93%</td>
+<td style="text-align: right;">+21.99</td>
+</tr>
+<tr>
+<td style="text-align: right;">16000</td>
+<td style="text-align: right;">80.16%</td>
+<td style="text-align: right;">99.14%</td>
+<td style="text-align: right;">+18.98</td>
+</tr>
+</tbody>
+</table>
+<!-- sync:result14-fit -->
+<p>All 12 models at count 2048 end with training exact=100%. Mean endpoint BCE is approximately <code>4.95e-9</code> and <code>7.71e-9</code> in the respective arms. The generalization gain therefore is not merely a failure of direct to fit its training set; training fit and input sample efficiency require separate assessment. The gap narrows with budget, and the unlimited-budget gap was not measured. Across the experiment, 60/60 models pass the BCE criterion and 59/60 strictly interpolate; the exception is fully retained in <a href="../assets/updates_20261106/scaffolding/key_results.json">key results</a>.</p>
+<!-- sync:result16-title -->
+<h2 id="16-bit-high-generalization-from-fewer-inputs">16-bit: High Generalization from Fewer Inputs</h2>
+<!-- sync:table-16 -->
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">Training inputs</th>
+<th style="text-align: right;">direct test exact</th>
+<th style="text-align: right;">scaffold test exact</th>
+<th style="text-align: right;">Paired change / pp</th>
+<th style="text-align: right;">Stable 99% counts</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1024</td>
+<td style="text-align: right;">31.86%</td>
+<td style="text-align: right;">31.87%</td>
+<td style="text-align: right;">+0.01</td>
+<td style="text-align: right;">0/6 -&gt; 0/6</td>
+</tr>
+<tr>
+<td style="text-align: right;">2048</td>
+<td style="text-align: right;">30.62%</td>
+<td style="text-align: right;">37.62%</td>
+<td style="text-align: right;">+7.00</td>
+<td style="text-align: right;">0/6 -&gt; 0/6</td>
+</tr>
+<tr>
+<td style="text-align: right;">3000</td>
+<td style="text-align: right;">30.60%</td>
+<td style="text-align: right;">91.59%</td>
+<td style="text-align: right;">+60.99</td>
+<td style="text-align: right;">0/6 -&gt; 0/6</td>
+</tr>
+<tr>
+<td style="text-align: right;">4096</td>
+<td style="text-align: right;">50.00%</td>
+<td style="text-align: right;">98.90%</td>
+<td style="text-align: right;">+48.91</td>
+<td style="text-align: right;">0/6 -&gt; 2/6</td>
+</tr>
+<tr>
+<td style="text-align: right;">6000</td>
+<td style="text-align: right;">61.38%</td>
+<td style="text-align: right;">99.86%</td>
+<td style="text-align: right;">+38.48</td>
+<td style="text-align: right;">0/6 -&gt; 6/6</td>
+</tr>
+<tr>
+<td style="text-align: right;">8192</td>
+<td style="text-align: right;">90.33%</td>
+<td style="text-align: right;">99.92%</td>
+<td style="text-align: right;">+9.59</td>
+<td style="text-align: right;">3/6 -&gt; 6/6</td>
+</tr>
+<tr>
+<td style="text-align: right;">32768</td>
+<td style="text-align: right;">99.98%</td>
+<td style="text-align: right;">99.99%</td>
+<td style="text-align: right;">+0.01</td>
+<td style="text-align: right;">6/6 -&gt; 6/6</td>
+</tr>
+</tbody>
+</table>
+<!-- sync:result16-interpretation -->
+<p>All values use the 16000-step window, with 6 runs per arm for complete counts. At 6000, scaffold achieves 6/6 stable 99% successes versus 0/6 for direct; direct still has only 3/6 at 8192. Both arms reach 6/6 at 32768, showing that direct also generalizes highly with more inputs. Although scaffold at 3000 has a higher mean than direct at 8192, it still has 0/6 stable successes: mean accuracy and the stability criterion are distinct. There is almost no gain at 1024. See <code>research/mod3_scaffold_sample_trend_16bit_20261102/results/ANALYSIS.json</code> (<a href="../assets/updates_20261106/scaffolding/source_sha256.json">source SHA256</a>) and <code>research/mod3_scaffold_sample_trend_16bit_20261102/results_refined/ANALYSIS.json</code> (<a href="../assets/updates_20261106/scaffolding/source_sha256.json">source SHA256</a>).</p>
+<!-- sync:table-16-budgets -->
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">Training inputs</th>
+<th style="text-align: right;">Steps</th>
+<th style="text-align: right;">direct</th>
+<th style="text-align: right;">scaffold</th>
+<th style="text-align: right;">Change / pp</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">3000</td>
+<td style="text-align: right;">4000</td>
+<td style="text-align: right;">30.14%</td>
+<td style="text-align: right;">86.30%</td>
+<td style="text-align: right;">+56.16</td>
+</tr>
+<tr>
+<td style="text-align: right;">3000</td>
+<td style="text-align: right;">8000</td>
+<td style="text-align: right;">30.31%</td>
+<td style="text-align: right;">89.10%</td>
+<td style="text-align: right;">+58.79</td>
+</tr>
+<tr>
+<td style="text-align: right;">3000</td>
+<td style="text-align: right;">16000</td>
+<td style="text-align: right;">30.60%</td>
+<td style="text-align: right;">91.59%</td>
+<td style="text-align: right;">+60.99</td>
+</tr>
+<tr>
+<td style="text-align: right;">6000</td>
+<td style="text-align: right;">4000</td>
+<td style="text-align: right;">54.43%</td>
+<td style="text-align: right;">99.82%</td>
+<td style="text-align: right;">+45.39</td>
+</tr>
+<tr>
+<td style="text-align: right;">6000</td>
+<td style="text-align: right;">8000</td>
+<td style="text-align: right;">57.28%</td>
+<td style="text-align: right;">99.85%</td>
+<td style="text-align: right;">+42.57</td>
+</tr>
+<tr>
+<td style="text-align: right;">6000</td>
+<td style="text-align: right;">16000</td>
+<td style="text-align: right;">61.38%</td>
+<td style="text-align: right;">99.86%</td>
+<td style="text-align: right;">+38.48</td>
+</tr>
+</tbody>
+</table>
+<!-- sync:result16-datasets -->
+<p>Count 6000 improves on both datasets: dataset seed <code>202611020</code> gives 83.65%→99.85%, and <code>202611021</code> gives 39.12%→99.88%. These are means over 3 initializations per dataset, not confidence intervals. Gain sizes vary with the data permutation; 2 independent datasets do not support a robust population sample-threshold estimate.</p>
+<!-- sync:result16-fit -->
+<p>At 3000, 4096, and 6000, both arms end with training exact 100%; mean endpoint BCE at 3000 is approximately <code>9.52e-9</code> and <code>1.02e-8</code>. Of all 90 models, 88 pass BCE≤0.001 and 84 strictly interpolate; every exception is retained in <a href="../assets/updates_20261106/scaffolding/key_results.json">key results</a>. High test accuracy, the BCE criterion, and strict training interpolation remain separately reported.</p>
+<!-- sync:result16-partial -->
+<p>Count 2500 completed only the 3 model pairs for dataset seed <code>202611020</code>: direct 31.72%, scaffold 54.77%, change +23.05 pp, and stable successes 0/3→0/3. All reached 16000 steps; the second dataset was not run, so this point is separate from the complete 6-run main table.</p>
+<!-- sync:result16-stop -->
+<p>Complete refinements are 3000/6000; counts 3500/5000/7000 were not started, and proposed sample counts 12000/16000 were cancelled. The 16000 training steps are not another executed sample count. The <code>STOP_AFTER_GROUP</code> marker and stopped status remain unchanged; <a href="../assets/updates_20261106/scaffolding/key_results.json">key results</a> retain complete, partial, unstarted, and cancelled counts.</p>
+<!-- sync:history-title -->
+<h2 id="connection-to-earlier-optimization-accessibility-evidence">Connection to Earlier Optimization-Accessibility Evidence</h2>
+<!-- sync:history-summary -->
+<p>The 30-bit Mod3 records dated 2026-09-13 separately observed that scaffolding from initialization reached higher generalization in an endpoint-BCE-matched comparison; changing weight location and the subsequent path with fixed labels helped access high-generalization states; and continued training after withdrawing auxiliary supervision could recover high generalization. These support an optimization benefit and path-dependent accessibility, but are not new measurements of sample reduction.</p>
+<!-- sync:history-sources -->
+<p>Historical sources are <code>research/notes/20260913_mod3_endpoint_scaffold_matched_bce_zh.md</code>, <code>research/notes/20260913_mod3_weight_perturbation_generalization_zh.md</code>, and <code>research/notes/20260913_mod3_scaffold_withdrawal_zh.md</code> (<a href="../assets/updates_20261106/scaffolding/source_sha256.json">source SHA256</a>). This package only references saved notes, without reloading historical weights or rerunning forward passes; recovery after withdrawal does not imply uninterrupted stability.</p>
+<!-- sync:history-synthesis -->
+<p>Optimization accessibility concerns whether training reaches a high-generalization solution under specified data, objectives, and budgets. Rule/sample difficulty concerns structure, supervision information, and the data needed to distinguish candidate rules. The current paired 14/16-bit experiments show higher generalization at matched input counts and fewer required inputs for high generalization under the measured fixed budget. This complements the historical optimization evidence without equating finite-budget sample curves with purely statistical lower bounds or separating the contributions of optimization and structural benefits.</p>
+<!-- sync:limits-title -->
+<h2 id="scope-of-the-conclusions">Scope of the Conclusions</h2>
+<!-- sync:limits -->
+<ul>
+<li>Gains concern related prefix supervision and measured training budgets; fewer inputs do not mean less total label information.</li>
+<li>Grid extensions were exploratory and independent datasets are limited; no exact transition, universal saving factor, or unlimited-budget conclusion is reported.</li>
+<li>This package does not measure a relative reduction in static Neural K or identify a specific internal DFA; unrelated auxiliary-task and cross-architecture controls remain open.</li>
+</ul>
+<!-- sync:audit-title -->
+<h2 id="recomputation-scope-and-public-materials">Recomputation Scope and Public Materials</h2>
+<!-- sync:audit-results -->
+<p>The <a href="../assets/updates_20261106/scaffolding/recompute.py">recomputation script</a> uses only the Python standard library, imports neither NumPy nor Torch, and loads no weights. Full local mode recomputes 150 models, 78 summary rows, and 225 paired rows from per-run JSON. The maximum statistical discrepancy is approximately <code>2.22e-16</code>, consistent with numerical rounding; frozen sources, completion states, and the stop marker are also checked. Counts and errors are reported in the <a href="../assets/updates_20261106/scaffolding/audit.json">recomputation audit</a>.</p>
+<!-- sync:audit-boundary -->
+<p>Full mode requires original records under <code>research/mod3_scaffold_sample_trend_20261102/</code> and <code>research/mod3_scaffold_sample_trend_16bit_20261102/</code>, plus implementations under <code>research/ca_phase_transition/</code> and historical notes under <code>research/notes/</code> listed in the source manifest. Data separation, gradient pairing, and forward checks come from historical verification records. This revision reruns none of those computations and does not modify original experiment files.</p>
+<!-- sync:files -->
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>README_zh.md</code>, <code>README_en.md</code></td>
+<td>Paragraph-aligned bilingual explanations and paired data tables</td>
+</tr>
+<tr>
+<td><a href="../assets/updates_20261106/scaffolding/key_results.json">key_results.json</a></td>
+<td>Paired Mod3 results, budgets, label counts, fitting exceptions, and historical references</td>
+</tr>
+<tr>
+<td><a href="../assets/updates_20261106/scaffolding/source_sha256.json">source_sha256.json</a></td>
+<td>Original-source paths and SHA256, plus checksums for the other package files</td>
+</tr>
+<tr>
+<td><a href="../assets/updates_20261106/scaffolding/audit.json">audit.json</a></td>
+<td>Scope, errors, and bilingual consistency of read-only local recomputation</td>
+</tr>
+<tr>
+<td><a href="../assets/updates_20261106/scaffolding/recompute.py">recompute.py</a></td>
+<td><code>--public-only</code> independently checks the public package; default mode requires original records; <code>--write</code> updates generated JSON</td>
+</tr>
+</tbody>
+</table>
+<!-- sync:commands -->
+<p>After downloading and extracting only this package, run the following from its directory. No original repository, third-party dependencies, or GPU are required:</p>
+<pre><code class="language-powershell">python -I -S -B -X utf8 recompute.py --public-only
+</code></pre>
+<!-- sync:public-boundary -->
+<p>Public mode reads only package files, checking Mod3 summary relationships, complete/partial panels, auxiliary-label budgets, text tables, bilingual numbers and formulas, package links, and file hashes. It reads no original research directories and does not independently recompute per-model metrics or historical measurements. Source hashes record provenance and integrity but do not replace source contents; the manifest does not hash itself and is not a digital signature. Neither mode starts training or sampling.</p>
+<!-- sync:full-command -->
+<p>With all original materials and the repository layout preserved, run full read-only recomputation from the repository root. <code>--write</code> only updates generated JSON in this directory and cannot be combined with <code>--public-only</code>.</p>
+<pre><code class="language-powershell">python -I -S -B -X utf8 research/neural_k_framework/supplementary/updates_20261106/scaffolding/recompute.py
+</code></pre></div>
+
+      </article>
+    </main>
+  </div>
+</body>
+</html>

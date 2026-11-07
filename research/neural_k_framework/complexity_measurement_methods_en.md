@@ -4,6 +4,8 @@ Date: 2026-10-21. Status: website methods draft, for the Chinese and English web
 
 The two methods connect: first, treat the hard function implemented by any training snapshot as a target and measure its Neural K; second, use data transitions and query saturation to select finite target samples and reduce SMC evaluation costs on large tasks. The former expands what can be measured; the latter attempts to reduce measurement cost.
 
+**Evidence-scope update, 2026-11-06:** This page retains the two previously proposed measurement methods without adding a new method validation. Neither proposal has completed proxy-accuracy validation on large tasks; full-extension costs for four-point training sets likewise remain proxies, as documented in the [consensus recheck](supplementary/updates_20261106/consensus/README_en.md). These explorations must not be presented as an already established way to measure the complexity of arbitrary weights reliably.
+
 ## 1. Fixing the measurement object
 
 For source-network weights theta_t at training time t, define the hard output function

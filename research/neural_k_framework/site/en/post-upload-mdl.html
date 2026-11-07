@@ -44,7 +44,8 @@
 <li><a href="#1-hard-constraints-and-competitor-survival">1. Hard constraints and competitor survival</a></li>
 <li><a href="#2-conditional-mass-proxy-and-recovery-rate-thresholds">2. Conditional-mass, proxy, and recovery-rate thresholds</a></li>
 <li><a href="#2-1-the-joint-complexity-disagreement-spectrum">2.1 The joint complexity-disagreement spectrum</a></li>
-<li><a href="#3-the-mdl-crossing-picture">3. The MDL crossing picture</a></li>
+<li><a href="#2-2-neighboring-function-structure-is-a-hypothesis-to-test">2.2 Neighboring-function structure is a hypothesis to test</a></li>
+<li><a href="#3-mdl-as-a-reference-for-soft-candidate-competition">3. MDL as a reference for soft candidate competition</a></li>
 <li><a href="#4-connecting-the-data-axis-to-grokking">4. Connecting the data axis to grokking</a></li>
 <li><a href="#5-why-complexity-correlates-with-the-transition-but-is-not-sufficient">5. Why complexity correlates with the transition, but is not sufficient</a></li>
 <li><a href="#6-testable-predictions">6. Testable predictions</a></li>
@@ -73,6 +74,7 @@ K_D^*(\epsilon)=\inf_{f\in\mathcal F_D(\epsilon)}K_{\rm ref}(f).
 $$</div>
 <p>It is the rigorous definition of the problem "the simplest feasible function when the maximum error is allowed". For the same training set and nested sublevel sets, when <code>epsilon</code> decreases, <code>F_D(epsilon)</code> can only shrink, and therefore <code>K_D^*(epsilon)</code> does not decrease.</p>
 <p>This rigorous property does not imply that the network necessarily selects that function, nor that that function has the largest parameter volume.</p>
+<p>The revision of 2026-10-31 further separates the minimum feasible cost from the soft candidate distribution: even when one candidate is individually simplest, many individually smaller competing masses may outweigh it in total. The minimum cost describes a feasibility frontier, not an assumption that the network deterministically selects the shortest description.</p>
 <h2 id="simplicity-bias-among-the-remaining-candidates">Simplicity bias among the remaining candidates</h2>
 <p>The candidate mass distribution in the static reference ensemble is:</p>
 <div class="math-display">$$
@@ -102,10 +104,12 @@ $$</div>
 L_{\rm MDL}(f;D)=K_{\rm ref}(f)+L_{\rm residual}(D\mid f).
 $$</div>
 <p><code>K_D^*(epsilon)</code> corresponds to the lowest model code-length frontier, and <code>Q_D,epsilon</code> corresponds to the mass distribution over remaining feasible candidates in the static reference ensemble; actual training preference must still be checked through <code>Qopt</code>. The network does not explicitly optimize a second "program length" objective; the static MDL-style preference here arises from the joint action of the network reference mass and the loss geometry.</p>
+<p>For a frozen reference probability on mutually exclusive functions, training labels provide only compatibility filtering. Target dominance depends on its mass relative to the total mass of all surviving competitors. This soft-competition model already works with a fixed simplicity bias; no further change in bias strength is required. Probability code length, independent program complexity, and local contraction coefficient must be defined separately; only the first is intrinsically the negative log of mass.</p>
 <h2 id="relation-to-grokking">Relation to grokking</h2>
 <p>The data-size axis, the loss axis, and the training-time axis must be kept separate: data samples eliminate functions according to the positions where competing functions disagree, loss tightening rearranges the remaining implementation mass, and training time additionally includes optimizer transport. Therefore complexity can have a conditional approximate relationship with <code>n50/n90</code>, but it is not equal to the data transition point or the grokking time point.</p>
+<p>The full derivation below gives separate survival probabilities for independent sampling and finite-space sampling without replacement, then uses Jensen's and Markov's inequalities to bound mean target mass and the probability of missing a static threshold. Approximate linearity additionally requires comparable competition structures; predicting actual recovery rates requires correspondence between static and optimizer distributions. Statistical correlation of neighboring-function complexity can be a structural condition to test, not a substitute for these premises.</p>
 <h1 id="mdl-identifiability-samples-neural-k-and-the-grokking-transition">MDL-identifiability samples, Neural K, and the grokking transition</h1>
-<p>Date: 2026-09-20.</p>
+<p>Date: 2026-09-20; revised on 2026-10-31 for soft bias, sampling protocols, and consensus boundaries.</p>
 <p>This memo addresses why complexity often correlates with the grokking transition. It separates three quantities and develops a testable connection:</p>
 <ol>
 <li>Full-target implementation mass under the current neural protocol;</li>
@@ -113,6 +117,7 @@ $$</div>
 <li>Late function reallocation caused by loss reduction and optimizer transport after fixing the training set.</li>
 </ol>
 <p>It does not define <span class="math-inline">$n_{50}/n_{90}$</span> as Neural K or identify grokking time with an MDL crossing. It gives a bridge model under explicit assumptions.</p>
+<p>Here, "hard constraints" only require candidates to match observed labels; they do not require the network to select the shortest description. Reference function mass can provide a soft preference, with candidates of different complexities retaining mass simultaneously. The analysis first fixes this bias and studies data filtering; it does not require bias strength to change with loss.</p>
 <h2 id="1-hard-constraints-and-competitor-survival">1. Hard constraints and competitor survival</h2>
 <p>Fix a finite input domain <span class="math-inline">$\mathcal X$</span>, target <span class="math-inline">$f_*$</span>, input sampling distribution <span class="math-inline">$q(x)$</span>, and normalized reference function mass <span class="math-inline">$\pi(f)$</span>, with <span class="math-inline">$\pi(f_*)&gt;0$</span>. This mass <span class="math-inline">$\pi(f)$</span> may be the initialization function mass or function mass under a fixed static protocol; it must be frozen before the model is applied and cannot be replaced directly by potentially overlapping full-target event masses.</p>
 <p>Draw <span class="math-inline">$n$</span> inputs independently from <span class="math-inline">$q$</span> and observe noiseless labels:
@@ -128,6 +133,11 @@ The probability that competitor <span class="math-inline">$g$</span> matches a s
 S_n(g)=(1-\delta_q(g,f_*))^n.
 $$</div>
 This is purely a sampling probability and does not involve SGD.</p>
+<p>E23 actually samples its training set uniformly without replacement from a finite input domain. If the domain has size <span class="math-inline">$N$</span> and a competitor differs from the target on <span class="math-inline">$h_g$</span> inputs, its exact survival probability instead is
+<div class="math-display">$$
+S_n^{\rm wo}(g)=\frac{\binom{N-h_g}{n}}{\binom{N}{n}},
+$$</div>
+where the numerator is zero when <span class="math-inline">$n&gt;N-h_g$</span>. This is not another notation for independent sampling: for <span class="math-inline">$N=256,n=240,h_g=1$</span>, the two probabilities are approximately 0.3909 and 0.0625, respectively. Back-testing near-complete sample sizes must retain this difference. Weighted sampling and actively constructed labels require their own calculation rather than direct substitution into either formula. Below, <span class="math-inline">$s_n(g)$</span> denotes the survival probability for the chosen protocol.</p>
 <p>For a realized dataset <span class="math-inline">$D_n$</span>, the total surviving mass of incorrect competitors is exactly
 <div class="math-display">$$
 M_{D_n}^{\rm comp}=\sum_{g\ne f_*}\pi(g)\mathbf 1[g\models D_n].
@@ -143,19 +153,30 @@ This gives an exact conclusion:</p>
 <p>For random datasets, the survival indicator of an individual competitor <span class="math-inline">$g$</span> satisfies
 <div class="math-display">$$
 \mathbb E_{D_n}\mathbf 1[g\models D_n]
-=(1-\delta_q(g,f_*))^n.
+=s_n(g).
 $$</div>
 The expected competitor mass is therefore exactly
 <div class="math-display">$$
 \bar M_n^{\rm comp}
 =\mathbb E_{D_n}M_{D_n}^{\rm comp}
-=\sum_{g\ne f_*}\pi(g)(1-\delta_q(g,f_*))^n,
+=\sum_{g\ne f_*}\pi(g)s_n(g),
 $$</div>
 while the proxy obtained by normalizing mean unnormalized masses is defined as
 <div class="math-display">$$
 \bar Q_n(f_*)=\frac{\pi(f_*)}{\pi(f_*)+\bar M_n^{\rm comp}}.
 $$</div></p>
 <p>These are an expectation identity and a proxy definition, not one shared approximation. Only when using <span class="math-inline">$\bar Q_n$</span> to approximate <span class="math-inline">$\mathbb E_{D_n}Q_{D_n}(f_*)$</span> do we additionally need concentration or self-averaging of surviving mass. The expectation of a ratio is not generally the ratio of expected masses, and neither is automatically a dataset-level recovery rate.</p>
+<p>The proxy nevertheless has a rigorous use that does not require self-averaging. Since <span class="math-inline">$u\mapsto\pi(f_*)/(\pi(f_*)+u)$</span> is convex, Jensen's inequality gives
+<div class="math-display">$$
+\bar Q_n(f_*)\leq\mathbb E_{D_n}Q_{D_n}(f_*).
+$$</div>
+This is a conservative lower bound on mean target mass, not directly the recovery rate under E23's specified criterion. If recovery specifically means that one complete-function draw from this conditional distribution equals the target, mean target mass is exactly that sampling recovery rate. Further, for any <span class="math-inline">$q_0\in(0,1)$</span>, Markov's inequality yields
+<div class="math-display">$$
+\Pr_{D_n}\{Q_{D_n}(f_*)&lt;q_0\}
+\leq\min\left\{1,\frac{q_0}{1-q_0}
+\frac{\bar M_n^{\rm comp}}{\pi(f_*)}\right\}.
+$$</div>
+This gives a conservative probability guarantee for reaching a static mass threshold. It can be loose but does not require mass concentration. It is still not an actual SGD recovery rate; connecting the static event to training outcomes requires separate validation.</p>
 <p>An incorrect function that disagrees with the target on very few inputs can survive many random samples even if it is complex. This is the structural explanation for the MUX3/Parity2 misordering.</p>
 <h2 id="2-conditional-mass-proxy-and-recovery-rate-thresholds">2. Conditional-mass, proxy, and recovery-rate thresholds</h2>
 <p>For the fixed dataset above, reaching target probability <span class="math-inline">$q_0\in(0,1)$</span> is equivalent to
@@ -196,7 +217,7 @@ $$</div></p>
 <blockquote>
 <p>When does the effective total competitor complexity exceed target complexity by enough as samples accumulate?</p>
 </blockquote>
-<p>If competitors have approximately common disagreement rate <span class="math-inline">$0&lt;\delta&lt;1$</span> and initial total mass <span class="math-inline">$M_0$</span>, expected mass satisfies
+<p>Under independent sampling, if competitors have approximately common disagreement rate <span class="math-inline">$0&lt;\delta&lt;1$</span> and initial total mass <span class="math-inline">$M_0$</span>, expected mass satisfies
 <div class="math-display">$$
 \bar M_n^{\rm comp}\approx M_0(1-\delta)^n.
 $$</div>
@@ -218,6 +239,8 @@ Here <span class="math-inline">$\bar K_{\rm comp}^{\rm eff}$</span> is the negat
 {a_\delta}.
 $$</div></p>
 <p>This approximation explains why complexity and proxy sample demand can be approximately proportional within a family with similar disagreement structure: larger <span class="math-inline">$K_*$</span> means smaller initial target mass, requiring more samples to attenuate expected total competitor mass. Connecting it to a realized data sequence additionally needs mass concentration or self-averaging; connecting it to E23 additionally needs correspondence between the recovery criterion and static target mass, as well as optimization accessibility. It is not an exact equation for experimental <code>n50/n90</code>.</p>
+<p>Without replacement, this linear proxy can be used only after checking the exponential-survival approximation over the window of interest; otherwise competitor mass should be computed with the combinatorial survival probabilities. The inequalities above provide conservative guarantees, not a proof that the actual transition must be linear.</p>
+<p>Here <span class="math-inline">$K_*=-\log_2\pi(f_*)$</span> is probability cost under a frozen reference ensemble, not a contraction coefficient. Using a Neural K-profile at a fixed depth or a local contraction rate to predict it requires retaining initial mass, integration depth, and the full-target-to-fixed-D bridge conditions. The contraction coefficient cannot be substituted as the same quantity.</p>
 <p>It also shows why this is not a universal law:</p>
 <ul>
 <li><span class="math-inline">$K_*$</span> can differ;</li>
@@ -232,7 +255,7 @@ $$</div></p>
 K_g=-\log_2\pi(g),\qquad
 \lambda_g=-\ln(1-\delta_q(g,f_*)),
 $$</div>
-so that expected competitor mass is exactly
+so that, under independent sampling, expected competitor mass is exactly
 <div class="math-display">$$
 \bar M_n^{\rm comp}=\sum_{g\ne f_*}2^{-K_g}e^{-n\lambda_g}.
 $$</div>
@@ -256,16 +279,30 @@ This is not the complexity of one competitor, but the negative log of the spectr
 \approx\iint 2^{-K}e^{-n\lambda}\,\rho(dK,d\lambda).
 $$</div>
 This is more general than a linear complexity/sample-count relation. Approximate linearity is a special case when the competitor spectrum concentrates around similar <span class="math-inline">$\lambda$</span>, or when effective residual cost in random memory grows approximately independently per sample.</p>
-<h2 id="3-the-mdl-crossing-picture">3. The MDL crossing picture</h2>
+<p>Without-replacement sampling requires replacing each exponential term with its combinatorial survival factor; <span class="math-inline">$\lambda_g$</span> cannot then be treated as an exact decay rate independent of sample count.</p>
+<h2 id="2-2-neighboring-function-structure-is-a-hypothesis-to-test">2.2 Neighboring-function structure is a hypothesis to test</h2>
+<p>Complete truth tables differing on few inputs define a Hamming neighborhood between functions. With network, measure, and precision fixed, complexity differences between neighbors can be compared with those between independently paired functions to test statistical correlation on this discrete space; no continuous manifold needs to be assumed first.</p>
+<p>Neighboring complexities may help constrain why competitor spectra resemble one another in some rule families, but they do not alone guarantee equal elimination efficiency. Relatively close complexity values need not imply comparable masses: a probability-cost difference of 10 bits already corresponds to a mass ratio of 1024. Similar contraction rates and similar probability costs at a fixed depth must also remain distinct.</p>
+<p>The spectrum records individual competitor disagreement rates but not every overlap between their disagreement sets; these overlaps affect joint survival probabilities and dataset-to-dataset variability. Moving from mean competitor mass to a typical transition therefore calls for the conservative bounds above or further measurement of the joint competition structure. Neighborhood regularity is an explanatory condition to test, not the definition of "complexity".</p>
+<p>A neighborhood condition also gives an exact restriction. Suppose flipping one label of a binary target at each of <span class="math-inline">$m$</span> distinct unseen inputs gives compatible neighbors <span class="math-inline">$g_1,\ldots,g_m$</span>, all satisfying <span class="math-inline">$\pi(g_i)\ge r\pi(f_*)$</span> for <span class="math-inline">$r&gt;0$</span>. Counting just these competitors yields</p>
+<div class="math-display">$$
+Q_{D_n}(f_*)\leq\frac{1}{1+mr},
+\qquad
+Q_{D_n}(f_*)\ge q_0\quad\Longrightarrow\quad
+mr\leq\frac{1-q_0}{q_0}.
+$$</div>
+<p>For example, if their probability costs differ from the target's by at most <span class="math-inline">$b$</span> bits, one may take <span class="math-inline">$r=2^{-b}$</span>. While many neighbors retain appreciable relative mass, the complete target cannot dominate consensus; random samples must cover their disagreement locations to eliminate them. This restriction requires no change in bias strength, but does depend on the mass-ratio premise, which does not follow automatically from correlated neighboring complexities or parameter continuity. It constrains complete-target recovery, not high agreement on most inputs among several surviving neighbors, and does not alone imply a linear complexity-transition relationship.</p>
+<h2 id="3-mdl-as-a-reference-for-soft-candidate-competition">3. MDL as a reference for soft candidate competition</h2>
+<p>Can we bound the number of examples needed to generalize without always choosing the shortest rule? <a href="https://arxiv.org/html/2402.06323v3#S3" target="_blank" rel="noopener">Buzaglo et al., Lemma 3.2</a> give a rigorous example. Assign prior probabilities to rules, discard every rule that makes a training error, and draw one rule according to the remaining weights. Let <span class="math-inline">$p&gt;0$</span> be the total prior probability of rules agreeing with the teacher almost surely on the input distribution. Under the lemma's assumptions, at fixed error and confidence levels, its <strong>sufficient sample bound</strong> grows linearly in <span class="math-inline">$-\log p$</span>. This cost measures prior probability, not the volume-contraction slope measured here. A sufficient bound also does not say that every rule actually needs that many examples. This distinction matters when comparing our candidate distribution with minimum description length.</p>
 <p>Two-part MDL writes
 <div class="math-display">$$
 L_{\rm MDL}(g;D)=L_{\rm code}(g)+L_{\rm code}(D\mid g).
 $$</div>
-Given the target rule <span class="math-inline">$f_*$</span> in the noiseless setting, training labels require almost no additional residual code:
+Treating training inputs and encoding conventions as shared background, given the target rule <span class="math-inline">$f_*$</span> in the noiseless setting, training labels require almost no additional residual code:
 <div class="math-display">$$
 L_{\rm code}(D\mid f_*)\approx0.
 $$</div>
-An incorrect extension occasionally disagrees with training samples, and its residual code length grows with sample count. Under a hard-consistency approximation, its probability of passing all samples corresponds to
+For an incorrect extension <span class="math-inline">$g$</span>, residual code length describes the label discrepancies already observed. Under independent sampling, a different quantity is its probability of passing every hard check, whose negative logarithm is
 <div class="math-display">$$
 -\log_2 S_n(g)=n[-\log_2(1-\delta_q(g,f_*))].
 $$</div>
@@ -280,6 +317,13 @@ It grows with <span class="math-inline">$n$</span>, while the target's program c
 L_{\rm comp}^{\rm proxy}(g;n)\approx K_{\rm ref}(f_*).
 $$</div>
 This is the MDL prototype of why a complex rule can require more samples to be identified against memorization or incorrect extensions.</p>
+<p>But a per-candidate cost crossing is not the overall selection of a soft distribution. Let <span class="math-inline">$\mathcal V_D$</span> be the compatible candidate set. Only when <span class="math-inline">$K_{\rm ref}(g)=-\log_2\pi(g)$</span>, define <span class="math-inline">$K_{\min}(D)=\min_{g\in\mathcal V_D}K_{\rm ref}(g)$</span>; then
+<div class="math-display">$$
+-\log_2\sum_{g\in\mathcal V_D}\pi(g)
+=K_{\min}(D)-\log_2\sum_{g\in\mathcal V_D}
+2^{-[K_{\rm ref}(g)-K_{\min}(D)]}.
+$$</div>
+The second term retains candidate multiplicity and relative mass. If there are 1000 other compatible candidates, each with only 32 times less mass than the simplest candidate, that simplest candidate has a conditional share of only about 3.1%. Minimum feasible complexity is therefore a boundary: the target must outweigh the sum of all competing masses to dominate. This does not require the network to perform a deterministic shortest-description argmin.</p>
 <p>But the coding convention behind <span class="math-inline">$K_{\rm ref}$</span> must be explicit:</p>
 <ul>
 <li>Classical program length;</li>
@@ -343,8 +387,8 @@ Complexity and proxy-threshold rankings can then approximately agree. Agreement 
 <li>Increasing the proportion of inputs that distinguish MUX-selector candidates should lower <span class="math-inline">$n_{50}/n_{90}$</span> and can reverse the complexity ordering.</li>
 <li>Near the identification boundary at fixed data size, static profiles around grokking should show target mass overtaking total competitor mass at deeper loss.</li>
 <li>In direct-learning tasks, static target advantage should appear at shallower loss, with training and validation curves decreasing together.</li>
-<li>If static target mass already dominates but training does not generalize, the discrepancy primarily concerns optimizer accessibility rather than MDL competition itself.</li>
-<li>Approximately linear growth of memory residual cost with sample count in random-label experiments should serve as a calibration control for the MDL crossing model.</li>
+<li>If static target mass already dominates but training does not generalize, first check sampling reliability and event/measure matching, then optimizer selection bias and accessibility; target program cost alone is not an adequate attribution.</li>
+<li>Random-label memory experiments can calibrate complexity, but approximate linearity is a hypothesis depending on network, data, and precision window. Observed curvature must remain reported; linear growth of a neural contraction coefficient with sample count is not a premise of the main derivation. Even a uniform per-sample cost ceiling gives only a linear growth upper bound, not necessarily linear actual growth.</li>
 </ol>
 <h2 id="7-strict-boundaries-of-the-current-conclusion">7. Strict boundaries of the current conclusion</h2>
 <p>The current defensible statement is:</p>

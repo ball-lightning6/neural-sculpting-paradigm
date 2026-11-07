@@ -2,7 +2,18 @@
 
 > This is a research narrative; it does not aim for submission format. Its job is to make the conceptual turns, the experimental objects, the measurement methods, the results, and the interpretation clear.
 >
-> For complete numbers, scripts, and boundaries, see the [experiment catalog](experiments/README.md); the earlier detailed version is preserved in the [evidence ledger](evidence_ledger_zh.md).
+> For complete numbers, scripts, and boundaries, see the [experiment catalog](experiments/index.html); the earlier detailed version is preserved in the [evidence ledger](evidence-ledger.html).
+
+## 2026-11-06 Revision Entry: Four Qualifications {#revision-20261106}
+
+This update retains E01--E38 and the historical results and development below. Start with the [research overview](research-updates.html) and consult the [conceptual clarifications](interpretation-update.html) for definitions and mechanistic limits; new unimplemented proposals are excluded from this public update.
+
+- **Compare the total probability mass of candidate-function groups.** The single simplest explanation need not outweigh numerous competitors. An appropriate fixed bias combined with data can already support generalization, without continually strengthening that preference.
+- **Distinguish static conditional distributions from optimizer distributions.** Initialization, updates, stopping, and reachability affect actual training. Similar mean accuracy does not imply identical complete-function distributions, and late checkpoints from one trajectory cannot automatically replace a multi-seed ensemble.
+- **Amplitude regularization does not automatically strengthen simplicity bias.** A variance penalty can raise low margins, lower high margins, or shrink outputs overall. After correct classification, readout scaling alone can further lower BCE without producing new features. Reported improvements remain, but their mechanism cannot be assumed.
+- **Mass and contraction profiles are measure-conditional.** Architecture, encoding, scale, reference measure, and constraint event jointly determine the profile. Contraction can persist at fixed radius while Gaussian radial mixing changes curvature. Norm, local rank, and total realization mass are not interchangeable.
+
+Numbers, unconverged SMC, single-seed exploration, and negative results are collected in the [November evidence summary](evidence-ledger.html#evidence-update-20261106). The [related-work check](references.html#related-work-update-20261106) explicitly retains existing loss-aware research rather than presenting continuous loss as a previously unconsidered dimension.
 
 ## State the final conclusion first
 
@@ -10,11 +21,11 @@ During training, a neural network is really required to do only one thing: lower
 
 But different parameters implement the training set in different ways. Some implementations can barely answer a few training points correctly; some can reuse the same rule to process a large number of inputs. Some implementations need many mutually independent exceptions; others need only one shared computation. The network architecture and parameterization make these implementations occupy parameter regions of different sizes. As the training loss is driven further down, they also lose parameter volume at different rates.
 
-Therefore, training loss is not merely a switch for "have the training samples been answered correctly." It is also a continuous resolution knob: the stricter the requirement, the more easily certain functions and implementations are eliminated, while other functions gain a relative advantage. This process is not monotone for every function, nor is it determined by a single complexity score. The more appropriate object is a curve: how much parameter volume a target still has at different loss precisions. We later called it the Neural K-profile.
+Therefore, training loss is not merely a switch for "have the training samples been answered correctly." It also defines continuous constraints: tightening them excludes currently noncompliant realizations and may change the relative mass of candidate-function groups, without eliminating every realization of a hard function. For training points with strictly positive margins, readout scaling alone can further lower BCE. Relative preference need not be monotone or determined by one complexity score. The more appropriate object is a curve: how much reference probability mass a target retains at different loss precisions. We later called it the Neural K-profile.
 
 The optimizer is a separate layer. Static volume tells us what the landscape contains and how large each part is; SGD or AdamW determines where one actually ends up from a random initialization, whether one is blocked by an entrance, and along which path one moves. The two are closely related, but they are not the same thing.
 
-Below we first list the latest supporting evidence, then present things in the order in which we actually arrived at these conclusions.
+Below we retain the October 2026 evidence, then present things in the order in which we actually arrived at these conclusions; the November revision's evidence entry points are above.
 
 ## October 2026 evidence: four questions, retaining the existing experiment numbers {#latest-evidence}
 
@@ -426,7 +437,7 @@ At first we tended to think of the low-agreement overfitting state as "the netwo
 
 [E27](experiments/experiment_27_grokking_agreement/README.md) further examined the time interval between hard fit and grokking. On the four Mod97 data levels, when all seeds had already memorized the training set, the unseen agreement was still only 0.027--0.033; it had not stabilized on some shared wrong function. Afterward, agreement mainly rose as the seeds jointly recovered the correct target, with the remaining errors still all different. In this experiment, grokking is therefore not "a wrong consensus suddenly swapped for a correct consensus," but dispersed residual functions gradually sharing more of the target skeleton.
 
-Conversely, high agreement also does not equal recovering the external generation rule presupposed by the researcher. With only one training sample, networks may very consistently choose the constant function, with agreement close to 1, which has nothing to do with the hidden generator. But the constant function is itself an extremely short and human-readable rule, so this phenomenon does not refute the readability conjecture later; it only shows that agreement measures the rule jointly selected by the training set and the network protocol, not the teacher in the researcher's mind.
+Conversely, high agreement does not equal recovery of the external generating rule presupposed by the researcher. With only one training sample, networks may consistently choose a constant function, with agreement close to 1, regardless of the hidden generator. Agreement measures the extension jointly selected by the training set and network protocol; alone, it proves neither external correctness, data sufficiency, nor human readability.
 
 ### Experiment seventeen: what are the high-consensus functions without a teacher, in the end
 
@@ -444,11 +455,11 @@ If the label that makes the final agreement higher is chosen, the function distr
 
 This experiment gives agreement two fairly solid identities: it can measure how much the current training set has narrowed the complete function, and it can serve as a feedback signal for active sampling. It does not tell us which label is the truth; labels still have to be provided by an external oracle.
 
-We therefore keep an explicit but unproven conjecture: **in a suitably large problem space, if a small number of training samples can make the complete-function agreement approach 1, then this training set usually corresponds to some human-readable rule that can be extracted as a short program.** What this conjecture really tests is whether neural-network complexity and human symbolic complexity are roughly aligned, not whether high agreement equals correctness.
+The revision of 2026-10-31 narrows this direction to a testable question: **under a network, encoding, loss, and sampling protocol fixed in advance, how do the sample cost and coverage of high consensus relate to independently measured rule complexity?** The E18/E21 results remain, but "high agreement" no longer directly implies "short and human-readable". E21 actively constructs inputs and labels, which must also be distinguished from recovery thresholds under random sampling from a predetermined generating rule.
 
-Its deeper implication is: if this correspondence can be repeated across tasks and architectures, neural networks and humans may not happen to like the same batch of functions by chance; rather, both are exploiting robust compressible structures such as locality, symmetry, compositionality, and computation reuse. This does not require a unique absolute encoding language, but it may mean that multiple effective representational languages give broadly similar orderings to a batch of "objectively easy-to-compress" regularities. Counterexamples such as parity show that this alignment can only be partial and architecture-relative.
+A full truth table on a finite domain can specify any representable target at the hard-label level, but leaves no unseen inputs to test. Simply enlarging the input space is insufficient too: an arbitrary 4-bit lookup rule extended to 10 bits by ignoring the last six still has only 16 independent target labels. Learning the table and irrelevant-bit invariance may yield high consensus on many new combinations. A small sample fraction of the full space therefore does not suffice for nontrivial readability; effective independent constraints, fresh seeds, independent probes, and external complexity must also be checked.
 
-The initial hundred-plus deterministic-rule experiments provide breadth evidence in the same direction: when the data does come from an exact, reusable rule and the samples and optimization accessibility are sufficient, networks can often push both the unseen-sample loss and the cross-seed function disagreement very low. They did not all use the strict fresh-seed symbolic audits of E18/E21, so they cannot independently prove this conjecture, but they show that high-precision rule recovery and function condensation do not appear only in the later micro-scale verdict tasks.
+The connection between complexity and consensus cost should be explained through soft candidate competition: the target must outweigh all competing mass, while samples eliminate competitors at disagreement locations. Statistical correlation between neighboring-function complexities may constrain this competition structure, but is not yet an established law. The [November four-point check](update-consensus.html) supplies witnesses combining a high complete-extension cost proxy with high consensus, alongside low-consensus cases with similarly high proxies. This proxy is not fixed-D low-BCE cost for the four points and does not certify random memorization; general prevalence remains unknown. The initial hundred-plus deterministic-rule experiments did not all use the same symbolic audit and cannot replace these tests.
 
 ## 10. How to now understand those earlier phenomena in a unified way
 
@@ -460,7 +471,7 @@ Most of our first hundred-plus synthetic tasks sit in this region. These experim
 
 ### 10.2 Grokking
 
-Near the data transition, the training set already permits recovering the rule, but the rule has not yet overwhelmed all shortcuts and memorization schemes at shallower loss. The network first fits the training samples by whatever currently lowers the training objective most easily; as the raw loss is pressed further down, the earlier scheme gradually becomes insufficient, the rule implementation takes over, and validation performance rises with a delay.
+Near the data transition, one conditional explanation is that the training set permits rule recovery, but competing mass and optimization paths at shallow loss do not yet favor takeover by the rule; later constraints and dynamics produce delayed validation improvement. This does not require every realization of the earlier hard function to disappear, and lower BCE alone establishes neither new features nor stronger simplicity bias. The particular takeover mechanism still requires joint examination of static mass and training comparisons.
 
 This does not require the network to be secretly chasing the true rule from the first step. An early shortcut can be the most reasonable choice at the loss scale of that time. Grokking is more like function competition changing hands at deep loss, not the network suddenly "understanding the truth."
 
@@ -678,7 +689,7 @@ The training set determines the competition set and the constraint weights, the 
 
 ## 12. What is the relationship between this framework and existing theories
 
-The parameter-to-function map and the simplicity prior come from the core contributions of [Dingle et al. (2018)](https://www.nature.com/articles/s41467-018-03101-6), [Valle-Pérez et al. (2019)](https://arxiv.org/abs/1805.08522), [Mingard et al. (2019)](https://arxiv.org/abs/1909.11522), [Mingard et al. (2021)](https://www.jmlr.org/papers/v22/20-676.html), and [Mingard et al. (2025)](https://www.nature.com/articles/s41467-024-54813-x). We accept this static foundation, but add continuous loss, and use real training to show that hard conditioning of the initialization prior is not the complete dynamics.
+The parameter-to-function map and the simplicity prior come from the core contributions of [Dingle et al. (2018)](https://www.nature.com/articles/s41467-018-03101-6), [Valle-Pérez et al. (2019)](https://arxiv.org/abs/1805.08522), [Mingard et al. (2019)](https://arxiv.org/abs/1909.11522), [Mingard et al. (2021)](https://www.jmlr.org/papers/v22/20-676.html), and [Mingard et al. (2025)](https://www.nature.com/articles/s41467-024-54813-x). Existing work also compares losses, likelihoods, and output scales rather than considering only hard classification. This study follows that line by measuring loss-resolved function mass and training differences in finite networks, without claiming to introduce continuous loss first. Yang's joint density of states and Alexander's continuous-MSE counterexample are covered in the [targeted related work](update-related-work.html); not every counterexample can be attributed to missing loss control.
 
 [Solomonoff's (1964) algorithmic probability](https://mlanthology.org/misc/1964/solomonoff1964misc-formal/), [Kolmogorov's (1965) descriptive complexity](https://www.mathnet.ru/eng/ppi68), [Grünwald's (2004) MDL tutorial](https://arxiv.org/abs/math/0406077), and [the prequential coding experiments of Blier and Ollivier (2018)](https://proceedings.neurips.cc/paper_files/paper/2018/hash/3b712de48137572f3849aabd5666a4e3-Abstract.html) all connect probability mass, description length, and predictive coding. Neural K is formally close to them, but depends on a concrete neural protocol; it does not claim to equal machine-independent Kolmogorov complexity, nor does it establish a neural coding theorem.
 
@@ -694,9 +705,9 @@ We cannot yet analytically derive a specific Neural K-profile from the network a
 
 We have not proven that any two profiles ultimately cross only finitely many times, have not proven that all high-agreement functions are human-readable, and have not proven that static volume determines all optimizer endpoints.
 
-MNIST currently has only two binary tasks, and the tasks and loss ranges were calibrated; the next step must switch to a brand-new digit pair for a truly blind test. The orders of magnitude in deep-tail SMC also need more particles, replicas, and independent implementations to cross-check.
+The early MNIST static-branch predictions involved only two binary tasks calibrated for task and loss range; subsequent digit-grouping and training interventions do not make them prospective blind tests. Prospective predictions on new tasks and independent deep-tail SMC estimates remain gaps. The November parity conditional volumes are unconverged, so reaching a threshold cannot be reported as confirming a ranking.
 
-The current evidence comes mainly from finite Boolean rules, cellular automata, modular arithmetic, tiny MLPs, and two MNIST binary classifications. It can support a unified candidate framework, but cannot directly declare it proven that all Transformers, LLMs, or real pattern-recognition tasks obey the same quantitative law.
+The evidence now includes finite Boolean rules, cellular automata, modular arithmetic, multiple finite architectures, and MNIST/CIFAR comparisons, but completion status, random replication, and measured objects differ across protocols. In particular, the latest noisy-image comparison has only one seed and one regularization strength, without a clear reproduction of epochwise double descent. These findings support a unified candidate framework, not a common quantitative law for all Transformers, LLMs, or real pattern-recognition tasks.
 
 ## 14. Summary
 
@@ -704,7 +715,7 @@ This research began by asking: is the initialization function prior plus hard fi
 
 The new object really needed is not a universal complexity score, but a Neural K-profile. It allows the same function to present different difficulties at different precisions, allows a shortcut to legitimately dominate at intermediate loss, and allows internal implementations to keep changing after the hard function is fixed. It can also prospectively predict how much data is needed in controlled experiments, and gives static predictions for unseen images and the overfitting turning point on MNIST.
 
-In this language, the network does not need to know the true rule in the researcher's mind. It only keeps lowering the loss under the current network language and training-set constraints. When data is sufficient, this process points toward reusable rules very early; when data is critical, it appears as grokking; when data is insufficient or noisy, it keeps condensing toward training-set-specific extensions. Generalization is not another hidden objective; it is that the training set, the network language, the loss depth, and the optimization path jointly select a transferable function.
+In this language, the network need not know the true rule in the researcher's mind. It selects realizations according to the current network language, training objective, and optimization protocol. In examined conditions where the target is identifiable and useful regions are reachable, rule recovery can occur early or be delayed as grokking; insufficient or conflicting constraints can instead favor training-specific extensions. These are conditional candidate mechanisms, not inevitable outcomes determined by sample count or loss alone. Generalization is not another hidden objective: these selections align with a prespecified test rule or distribution.
 
 ## Post-submission increment: E31--E38
 
@@ -714,12 +725,12 @@ E31 introduced a framework-level correction that places the **joint output distr
 
 | ID | Experiment | New conclusion |
 |---|---|---|
-| [E31](experiments/e31.html) | Loss and magnitude alignment | raw MSE can also produce rule recovery; magnitude alignment can promote generalization in higher mean-CE regions; the key variable is the output joint distribution, not the name BCE. |
+| [E31](experiments/e31.html) | Loss and magnitude alignment | In examined protocols, raw MSE can recover rules and amplitude alignment can improve generalization at higher mean CE; this does not imply universally stronger simplicity bias. The key object is the joint output distribution under specified constraints. |
 | [E32](experiments/e32.html) | Random memory and cross-depth calibration | The original protocol showed a near-linear trend; the added same-data, cross-depth comparisons retain growth but reveal systematic curvature, window dependence, and limits of memory calibration. |
 | [E33](experiments/e33.html) | Cross-architecture joint output volume | Finite-architecture protocols beyond the MLP also show rule-dependent joint output volume curves, but the coefficients and local orderings depend on the architecture and the measure. |
 | [E34](experiments/e34.html) | Conditional rule duels | The independently frozen 4-bit Neural K total order predicted 75/75 population preferences in 8-bit conditional rule duels; this is a protocol-relative external prediction, not a universal softmax law. |
 | [E35](experiments/e35.html) | Mod97 frozen-function duels | When the real complete functions before and after grokking compete in new networks, the conflict points almost all favor the completed rule, but full recovery is still not high, showing this is a function-population preference rather than per-network copying. |
-| [E36](experiments/e36.html) | Peleg/G&C independent verification | Reproduces gradient-free static sampling under the original small-sample MNIST protocol, and shows that after tightening raw BCE, static samples can reach test levels close to SGD. |
+| [E36](experiments/e36.html) | Peleg/G&C independent verification | Under specified small-sample MNIST protocols, tightening raw BCE improves static predictions for the small CNN/MLP. The wider CNN retains discrepancies under specified training protocols; not all volume counterexamples have been removed. |
 | [E37](experiments/e37.html) | Measure robustness and Gaussian alignment | Rechecks Gaussian endpoint effects with uniform Euclidean measure inside a fixed-norm ball, testing complexity ordering, endpoint response, and the boundary of correspondence with real training. |
 
 The architecture pre-training estimator, the MDL--grokking conditional derivation, and the measure-robustness recheck belong to the supplementary material of the same period; the Peleg/G&C independent check is listed as [E36](experiments/e36.html), and the measure recheck as [E37](experiments/e37.html). They are collected in the [post-submission increment overview](post-upload.html).

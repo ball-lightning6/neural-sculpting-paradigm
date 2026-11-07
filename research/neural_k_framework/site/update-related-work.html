@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="loss-aware体积、软插值采样、预测校准与算法信息论方法。">
+  <title>相关工作与比较边界 · Neural K 研究档案</title>
+  <link rel="stylesheet" href="assets/site.css">
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['$', '$']], displayMath: [['$$', '$$']]},
+      options: {skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="assets/site.js"></script>
+</head>
+<body data-page-kind="core">
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+
+    <header class="topbar">
+      <a class="site-mark" href="index.html" aria-label="返回研究主文">
+        <span class="mark-block">NK</span>
+        <span class="mark-text">Neural K 研究档案</span>
+      </a>
+      <nav class="top-nav" aria-label="全站导航"><a class="top-link" href="index.html">研究主文</a><a class="top-link active" href="theory-core.html">理论核心</a><a class="top-link" href="experiments/index.html">实验索引</a><a class="top-link" href="post-upload.html">提交后增量</a><a class="top-link" href="references.html">参考文献</a><a class="top-link" href="evidence-ledger.html">证据总账</a></nav>
+      <nav class="language-switch" aria-label="语言"><span class="active" lang="zh-CN">中文</span><a href="en/update-related-work.html" lang="en">EN</a></nav>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>目录</span>
+      </button>
+    </header>
+
+  <div class="page-shell">
+
+    <aside class="sidebar" id="sidebar" aria-label="本页目录">
+      <div class="sidebar-inner">
+        <div class="sidebar-label">本页目录</div>
+        <nav class="toc"><div class="toc">
+<ul>
+<li><a href="#1-需要纠正的表述">1. 需要纠正的表述</a></li>
+<li><a href="#2-先区分比较对象">2. 先区分比较对象</a></li>
+<li><a href="#3-loss-与体积主线">3. loss 与体积主线</a></li>
+<li><a href="#4-agreement-与准确率的证据层级">4. agreement 与准确率的证据层级</a></li>
+<li><a href="#5-anti-grokking-的真实干预">5. anti-grokking 的真实干预</a></li>
+<li><a href="#6-精简-ait-方法定位">6. 精简 AIT 方法定位</a></li>
+<li><a href="#7-本研究的有限定位">7. 本研究的有限定位</a></li>
+<li><a href="#8-实际核查边界">8. 实际核查边界</a></li>
+</ul>
+</div>
+</nav>
+        <a class="sidebar-action" href="theory-core.html">返回理论核心 →</a>
+      </div>
+    </aside>
+
+    <main class="main-content" id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <div class="eyebrow">理论补充 · 证据与方案分开</div>
+          <h1>相关工作与比较边界</h1>
+          <p class="article-description">loss-aware体积、软插值采样、预测校准与算法信息论方法。</p>
+        </header>
+        <div class="article-body"><p class="source-bar"><a href="assets/updates_20261106/related_work/package.zip" download>下载本专题公开材料包（ZIP）</a><span>包含双语说明与已发布附件；核验范围见正文。</span></p><nav class="ledger-path"><a href="research-updates.html">本轮进展总览</a></nav><!-- pair: p001 -->
+<p><a href="en/update-related-work.html">English</a> | <a href="assets/updates_20261106/related_work/references.json">文献与核查记录</a>。两种语言的段落标识、表格行编号和引用一一对应；R01-R17 对应文献记录。</p>
+<!-- pair: p002 -->
+<p>整合基线为用户指定的 <code>3834fb3</code>（2026-10-27）；增补批次保留为 <code>20261106</code>，主来源核查跨越 2026-11-06 至 2026-11-07（Asia/Shanghai）。本文是有界相关工作增补，不是系统综述、优先权证明或新增实验报告，也不代表已复审基线全部内容。</p>
+<h2 id="1-需要纠正的表述">1. 需要纠正的表述</h2>
+<!-- pair: t001 -->
+<table>
+<thead>
+<tr>
+<th>编号</th>
+<th>不宜保留的强表述</th>
+<th>本增补采用的表述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C01</td>
+<td>前人没有考虑 loss 或拟合精度。</td>
+<td>已有工作比较 CE/MSE、loss 分层和行为精度 cutoff。应说明本研究采用何种约束与测量对象，而不是宣称这一问题此前空白。见 R01-R05。</td>
+</tr>
+<tr>
+<td>C02</td>
+<td>所有 G&amp;C 反例都只是未控制 loss。</td>
+<td>不成立。Peleg 讨论尺度归一化和 margin；Alexander 的接受事件本身就是低连续 MSE。条件匹配值得检查，但不能预先消除反例。见 R07-R08。</td>
+</tr>
+<tr>
+<td>C03</td>
+<td>静态质量可以解释泛化，所以优化器无关。</td>
+<td>静态参照具有解释和预测价值，不等于训练推前分布与条件采样相同。高熵参照优于训练、宽度依赖和数据量依赖都应保留。见 R01、R03、R08-R09。</td>
+</tr>
+<tr>
+<td>C04</td>
+<td>神经函数质量、收缩斜率、最短描述和 Solomonoff 概率可直接互换。</td>
+<td>它们属于不同对象与协议。AIT 方法可以提供有条件的联系，但不能直接赋予本研究普适等式。见 R13-R17。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="2-先区分比较对象">2. 先区分比较对象</h2>
+<!-- pair: p003 -->
+<p>这里的“质量”指概率质量（probability mass），不是模型表现好坏。固定架构、编码、解码规则、探针集合和参数参考概率测度 <span class="math-inline">$\mu$</span>，以 <span class="math-inline">$C_f$</span> 表示产生同一解码函数 <span class="math-inline">$f$</span> 的参数集合。下表是用于对齐文献的记号，不是新的理论结果。</p>
+<!-- pair: t002 -->
+<table>
+<thead>
+<tr>
+<th>编号</th>
+<th>对象</th>
+<th>条件与不能混同之处</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>O01</td>
+<td>函数先验 <span class="math-inline">$\mu(C_f)$</span></td>
+<td>未施加训练约束；均匀权重不意味着均匀函数。</td>
+</tr>
+<tr>
+<td>O02</td>
+<td>硬分类相容质量 <span class="math-inline">$\mu(C_f\cap H_D)$</span></td>
+<td><span class="math-inline">$H_D$</span> 仅要求训练标签全对，不固定 logit、margin 或连续 loss。</td>
+</tr>
+<tr>
+<td>O03</td>
+<td>连续约束质量 <span class="math-inline">$\mu(C_f\cap\{L_D\leq\epsilon\})$</span></td>
+<td>归一化后才是条件函数分布；依赖 loss、尺度、阈值和测度。</td>
+</tr>
+<tr>
+<td>O04</td>
+<td>loss 分层的联合态密度</td>
+<td>统计某个 loss bin 与测试指标的联合质量；薄层、累计子水平集、均值和众数不能互换。</td>
+</tr>
+<tr>
+<td>O05</td>
+<td>已训练参数附近的局部行为体积</td>
+<td>以 loss 或输出 KL 定义邻域，不覆盖同一 hard function 的全部不连通实现。</td>
+</tr>
+<tr>
+<td>O06</td>
+<td>优化器训练输出分布</td>
+<td>由初始化、更新规则、随机性和停机条件共同诱导；不是仅凭低 loss 就确定的静态分布。</td>
+</tr>
+</tbody>
+</table>
+<!-- pair: p004 -->
+<p>G&amp;C、SMC 或 Wang-Landau 是方法名称，不单独规定目标测度。可比较的协议至少要列出参考测度、接受事件、归一化、训练停止条件和评价量；full-target 约束整个目标，fixed-D 只约束训练集，两者也不能替换。</p>
+<h2 id="3-loss-与体积主线">3. loss 与体积主线</h2>
+<!-- pair: t003 -->
+<table>
+<thead>
+<tr>
+<th>文献</th>
+<th>对象与已核对条件</th>
+<th>与本研究的关系及边界</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R01 <a href="https://www.jmlr.org/papers/v22/20-676.html" target="_blank" rel="noopener">Mingard 等，JMLR 2021</a></td>
+<td>有限测试探针上的函数概率；MSE 使用 Gaussian-likelihood NNGP，CE 对照使用 0-1 likelihood 的 EP 近似。通常在首次训练分类全对时停止，另有继续训练对照。</td>
+<td>已直接研究函数后验与优化器分布的相关性及剩余差异，不只研究平均准确率。不能升级为有限网络低 BCE 子水平集与任意训练分布相等。核对 §2.3、§3.1、§5 及附录 B 的相关段落。</td>
+</tr>
+<tr>
+<td>R02 <a href="https://arxiv.org/html/2304.06670v2" target="_blank" rel="noopener">Mingard 等，Nature Communications 2025</a></td>
+<td>函数先验、复杂度层内候选数量和数据过滤共同参与竞争。补充 §8.6.2 承认 0-1 posterior 并非精确训练 posterior；Fig. S10 比较 CE、固定目标幅度 MSE 及初始化尺度。</td>
+<td>不能把“候选数量也重要”或“loss 有影响”写成本研究首次提出。区分点可落在固定有限网络与测度下，逐函数测量连续约束质量曲线和排序变化；不能据此宣布首创。</td>
+</tr>
+<tr>
+<td>R03 <a href="https://arxiv.org/html/2503.13145v2" target="_blank" rel="noopener">Yang 等，2503.13145v2；期刊版 2026</a></td>
+<td>Wang-Landau 估计训练 loss 与测试表现的联合态密度，指定有限参数范围，并在相同 loss 层比较最大熵表现与 SGD/Adam。测试指标参与地形探索。</td>
+<td>这是连续 loss 条件的直接前例。静态高熵表现有时优于训练，不能改写为两者相等；也不能把事后地形诊断当成不使用测试标签的训练算法。loss 分层众数不是累计函数质量。</td>
+</tr>
+<tr>
+<td>R04 <a href="https://arxiv.org/html/2505.11411v5" target="_blank" rel="noopener">Zhang 等，2505.11411v5</a></td>
+<td>模运算 Transformer 的 loss/测试准确率熵景观；在所测设置中未见熵屏障。§5 的 WanD 以训练 loss 探索，得到高范数泛化解。</td>
+<td>同时涉及静态景观与动力学干预，不支持“低 loss 后动力学自动无关”。WanD 是有限任务的概念验证；附录 B.3 的混合方案以测试准确率 <span class="math-inline">$A_{test}$</span> 设置混合权重，不能与 §5 一并称为无测试反馈协议。</td>
+</tr>
+<tr>
+<td>R05 <a href="https://arxiv.org/html/2501.18812v2" target="_blank" rel="noopener">Scherlis、Belrose，2501.18812v2</a></td>
+<td>Gaussian/均匀测度下，围绕 anchor 的局部 loss/KL 行为邻域；§6.3 扫 cutoff，报告局部体积的近似幂律及数值限制。</td>
+<td>精度 profile 和负对数体积的信息解释已有前例；局部 KL 体积及其斜率不是全局 hard-function 质量或本研究的收缩系数。估计器也有低估及采样误差问题。</td>
+</tr>
+<tr>
+<td>R06 <a href="https://arxiv.org/html/2402.06323v3" target="_blank" rel="noopener">Buzaglo 等，2402.06323v3</a></td>
+<td>从先验条件于训练分类全对后随机抽取单个预测器。Lemma 3.2 的充分样本界依赖 teacher-equivalent 总先验质量的负对数；网络实例另有量化或连续模型条件。</td>
+<td>支持“无需选择最短描述 argmin，随机相容解也能泛化”。这是有条件的充分界，不是经验 grokking 样本临界点的等式，更不把该负对数质量等同 BCE 收缩斜率。</td>
+</tr>
+<tr>
+<td>R07 <a href="https://arxiv.org/html/2407.03848v2" target="_blank" rel="noopener">Peleg、Hein，2407.03848v2</a></td>
+<td>少样本二分类中，G&amp;C 接受零分类错误；SGD 用 CE。§3.1-3.3 明确讨论 ReLU 尺度自由度、Lipschitz 归一化 loss 与 margin，§4 比较初始化、宽度和深度。</td>
+<td>未逐项匹配原始连续 CE 子水平集，不等于忽略 loss。其结果应按原协议保留；本研究更改筛选事件后改善某项预测，不能单独撤销其优化器差异结论。</td>
+</tr>
+<tr>
+<td>R08 <a href="https://arxiv.org/html/2506.03931v2" target="_blank" rel="noopener">Alexander 等，2506.03931v2</a></td>
+<td>矩阵感知/分解中，§3.5 的 G&amp;C 明确接受 <span class="math-inline">$L_{train}&lt;\epsilon_{train}$</span>，loss 是 MSE。§4.2 在规定先验、激活和宽度条件下给出劣于 GD 的情形。</td>
+<td>这是对“所有反例都未控制 loss”的直接限制。连续阈值本身并不保证静态等价；也不把该特定模型的结果扩大成所有架构上的否定。GD 的初始化、步长等条件仍须保留。</td>
+</tr>
+<tr>
+<td>R09 <a href="https://arxiv.org/html/2606.31282v2" target="_blank" rel="noopener">Pakman 等，2606.31282v2</a></td>
+<td>二值权重均匀先验，REWL 估计训练/测试准确率联合态密度；MNIST/Fashion-MNIST、30/300/600 个训练样本，比较插值截面的众数与梯度训练。</td>
+<td>多数所测条件下，数据增多时梯度优势缩小，说明样本量是重要比较轴。不是连续 CE 的匹配实验，也不是对 Alexander 或全部连续网络争议的统一解决。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="4-agreement-与准确率的证据层级">4. agreement 与准确率的证据层级</h2>
+<!-- pair: p005 -->
+<p>平均单模型准确率、逐点预测频率、完整预测向量分布和多数投票准确率是不同评价量。前两者接近不推出联合分布接近，也不意味着两个训练结果逐点相同。以下工作解释了为何“错误位置不同”与“总体表现稳定”可以并存，并未证明静态采样与训练等价。</p>
+<!-- pair: t004 -->
+<table>
+<thead>
+<tr>
+<th>文献</th>
+<th>对象与条件</th>
+<th>与本研究的关系及边界</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R10 <a href="https://arxiv.org/html/2304.01910v4" target="_blank" rel="noopener">Jordan，2304.01910v4</a></td>
+<td>固定训练配置下重复训练的误差结构；§3 在 CIFAR-10/ImageNet 等设置中区分有限测试集方差与测试分布方差，考察收敛后近似独立误差及 class-wise calibration。</td>
+<td>为准确率波动与逐点错误概率提供参照；短训练不满足同样的独立近似。不是任意任务的独立性定律，也不能从稳定准确率反推相同函数分布。</td>
+</tr>
+<tr>
+<td>R11 <a href="https://arxiv.org/html/2106.13799v2" target="_blank" rel="noopener">Jiang 等，2106.13799v2</a></td>
+<td>相同训练集上的独立训练；§4 在测试分布上的 ensemble calibration 条件下，连接期望 disagreement 与期望测试错误。</td>
+<td>disagreement 可作为有条件的泛化诊断；期望等式不是每一对模型都精确相等，也不是多数投票准确率的公式。没有为任意 G&amp;C 分布自动提供 calibration。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="5-anti-grokking-的真实干预">5. anti-grokking 的真实干预</h2>
+<!-- pair: p006 -->
+<p>R12 <a href="https://arxiv.org/html/2610.00620v1" target="_blank" rel="noopener">Tian 等，2610.00620v1</a> 的 §3.2/Fig. 4 保持模加法任务（模数 97）、约一半训练样本、模型和训练超参数不变，只改变划分：把 <span class="math-inline">$(a,b)$</span> 与 <span class="math-inline">$(b,a)$</span> 放在同一分区。报告的 anti-grokking 是验证表现持续低、没有迟发恢复，不是更早实现泛化，也不是把反向对拆到训练集与验证集两边。</p>
+<!-- pair: p007 -->
+<p>附录 H/H.1 逐步降低对称对同区比例；其具体记录为 70% 时未完成 grokking，60% 时出现清楚的恢复，并用对称轨道覆盖率比较信息覆盖。对本研究的启示是固定样本数仍需控制划分结构；这是我们的比较判断，不是新实验。论文的相图计数是对区域对齐的间接探针，不是全局体积测量；有限预算内没有恢复，也不等于证明永远不会恢复。</p>
+<h2 id="6-精简-ait-方法定位">6. 精简 AIT 方法定位</h2>
+<!-- pair: t005 -->
+<table>
+<thead>
+<tr>
+<th>文献</th>
+<th>实际对象或方法</th>
+<th>可借鉴之处与不能推出的对应</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R13 <a href="https://arxiv.org/html/2509.22445v3" target="_blank" rel="noopener">Shaw 等，2509.22445v3</a></td>
+<td>Transformer 的渐近最优 two-part/variational description-length objectives；分析资源增长下的最小码长，并构造可微 Gaussian-mixture-prior 目标。</td>
+<td>提供有条件的编码桥接。§4.2 明确有限资源、加性常数和最小化要求；§6.1 显示随机初始化优化未找到手工初始化的低码长解。不是普通初始化函数概率已经普适，也不是 SGD 自动达到该最小值。</td>
+</tr>
+<tr>
+<td>R14 <a href="https://arxiv.org/html/2605.15551v1" target="_blank" rel="noopener">Bakhtiarifard 等，QuBD，2605.15551v1</a></td>
+<td>权重量化为有限字母表后，按 bit-plane 汇总 CTM/BDM 估计，追踪训练中的权重结构。</td>
+<td>可作为量化权重的复杂度代理；受量化、分块、有限 CTM 表和跨 bit-plane 共享信息影响。不是完整函数的算法复杂度测量，也不是全局参数质量估计。</td>
+</tr>
+<tr>
+<td>R15 <a href="https://arxiv.org/html/2610.29289v1" target="_blank" rel="noopener">Li、Teng，Approximate Solomonoff，2610.29289v1</a></td>
+<td>在指定环境混合 <span class="math-inline">$\xi$</span> 与近似预测器 <span class="math-inline">$\rho$</span> 之间施加 KL 误差条件，分析累计预测误差；区分先验平均与低先验质量环境。</td>
+<td>说明近似误差可在罕见环境中显著放大。其条件作用于序列预测分布，不是神经参数体积；普通训练 loss 小不能自动建立所需的总体 KL 条件或通用先验。</td>
+</tr>
+<tr>
+<td>R16 <a href="https://arxiv.org/html/2412.09810v2" target="_blank" rel="noopener">DeMoss 等，2412.09810v2</a></td>
+<td>用允许的训练 loss 失真约束粗粒化权重，再用压缩估计 rate-distortion 曲线；研究 grokking 复杂度动态与谱熵正则化。</td>
+<td>这是 loss 容差与压缩联系的直接方法前例。实际压缩码长不是精确 Kolmogorov complexity；单条训练轨迹的压缩变化也不是相容函数总体质量变化。</td>
+</tr>
+<tr>
+<td>R17 <a href="https://arxiv.org/html/2310.05918v1" target="_blank" rel="noopener">Liu、Zhong、Tegmark，LMN，2310.05918v1</a></td>
+<td>根据输入插值的线性连接矩阵及其谱定义 Linear Mapping Number，作为局部线性计算结构的有效计数，跟踪算法任务的 grokking。</td>
+<td>可对照非线性计算结构与压缩，但依赖探针和估计协议。“神经版 Kolmogorov complexity 候选”是作者定位，不是已证明的普适等价，更不是参数体积定理。</td>
+</tr>
+</tbody>
+</table>
+<!-- pair: p008 -->
+<p>因此，最小表示成本、某个已训练权重的压缩码长、同一解码函数的全部参数实现的概率质量，必须分开记账。即使它们在某些条件下相关，也不能不经桥接就互换；降低 BCE、改变程序长度惩罚与提高表示精度同样不是同一操作。这里不主张新的 AIT 定理，也不以近期预印本的强措辞替代独立验证。</p>
+<h2 id="7-本研究的有限定位">7. 本研究的有限定位</h2>
+<!-- pair: p009 -->
+<p>本研究沿着已有的函数先验、条件采样和压缩解释路线，考察固定有限网络中连续训练约束如何重排函数概率质量，并比较这种重排能预测哪些训练结果、哪些差异仍需动力学解释。具体可比较内容是 full-target/fixed-D 区分、loss-resolved 曲线、幅度对齐、参考测度干预和明确协议下的训练对照；这些是研究对象与差异候选，不是由本轮检索证明的首创清单。</p>
+<!-- pair: p010 -->
+<p>本增补不新增基线实验的定量结论。每个经验主张仍需依据其已有实验协议和不一致案例，不能用“相关文献支持体积/压缩”代替本项目自身的验证。</p>
+<h2 id="8-实际核查边界">8. 实际核查边界</h2>
+<!-- pair: p011 -->
+<p>纳入 17 项工作，核对作者、标题、版本日期，以及表中使用的定义、方法、结果陈述或图注。<code>references.json</code> 分别记录实际核对范围和未核对内容；没有逐行审查全部证明或独立核算图中数据。期刊发表日期与 arXiv 修订日期分别记录，不能混写。</p>
+<!-- pair: p012 -->
+<p>公开论据链接只指向作者论文、arXiv 或正式期刊主来源。Mingard 2025 的期刊直接访问曾重定向，出版信息由期刊检索页面核对，补充内容按 arXiv v2 核对；Chiang 的 OpenReview 页面受浏览验证阻断，本增补不据此增加独立论据。</p>
+<!-- pair: p013 -->
+<p>未独立运行所引论文的代码、复现实验或重新采样；没有采集或推断引用量。</p></div>
+
+      </article>
+    </main>
+  </div>
+</body>
+</html>

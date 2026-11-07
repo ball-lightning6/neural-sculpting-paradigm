@@ -65,9 +65,10 @@
           <h1>E21：Agreement 控制与共识复杂度前沿</h1>
           <p class="article-description">E21 把 agreement 从被动统计量变为训练集干预工具：反复查询当前 committee 最分歧的未见输入，分别尝试两个标签，选择让函数分布收缩更快或更慢的分支。随后用长 anti-consensus 前缀逐层排除早期简单吸引子，再切换 pro-consensus 使分布重新凝聚，测量稳定终点的符号复杂度怎样变化。</p>
         </header>
-        <div class="article-body"><div class="source-bar"><span>复现脚本</span><div><a href="../../experiments/experiment_21_agreement_complexity_frontier/experiment_adversarial_disagreement_completion_pilot.py">experiment_adversarial_disagreement_completion_pilot.py</a><a href="../../experiments/experiment_21_agreement_complexity_frontier/experiment_consensus_complexity_frontier.py">experiment_consensus_complexity_frontier.py</a></div></div><h2 id="overview">实验概览</h2>
+        <div class="article-body"><nav class="ledger-path" id="update-20261106" aria-label="2026年11月增补"><span>2026年11月增补</span><a href="../update-consensus.html">小训练集共识与训练分布边界</a><a href="../interpretation-update.html">测度、幅度、复杂度与预测</a></nav><div class="source-bar"><span>复现脚本</span><div><a href="../../experiments/experiment_21_agreement_complexity_frontier/experiment_adversarial_disagreement_completion_pilot.py">experiment_adversarial_disagreement_completion_pilot.py</a><a href="../../experiments/experiment_21_agreement_complexity_frontier/experiment_consensus_complexity_frontier.py">experiment_consensus_complexity_frontier.py</a></div></div><h2 id="overview">实验概览</h2>
 <h2 id="目的">目的</h2>
 <p>E21 把 agreement 从被动统计量变为训练集干预工具：反复查询当前 committee 最分歧的未见输入，分别尝试两个标签，选择让函数分布收缩更快或更慢的分支。随后用长 anti-consensus 前缀逐层排除早期简单吸引子，再切换 pro-consensus 使分布重新凝聚，测量稳定终点的符号复杂度怎样变化。</p>
+<p><strong>当前解读（2026-10-31）：</strong> 本实验主动构造输入和标签，测量的是共识控制，不能当作预设规则随机采样的恢复门槛。可读终点和样本成本变化保留为实验事实；高共识本身不证明人类可读性。下文原始动机与结果保留，当前边界见<a href="../theory-core.html#7-agreement-猜想">理论核心的修订</a>。</p>
 <h2 id="文件与运行顺序">文件与运行顺序</h2>
 <pre><code class="language-bash">python experiment_adversarial_disagreement_completion_pilot.py
 python experiment_consensus_complexity_frontier.py

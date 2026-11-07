@@ -1,0 +1,28 @@
+{
+  "aligned_blocks": 49,
+  "identical_formula_blocks": 5,
+  "matched_table_rows": 56,
+  "package_local_images": 2,
+  "external_source_links": 0,
+  "results_verified_data_tables": 6,
+  "status": "passed",
+  "source_files": 91,
+  "python": "3.13.5",
+  "numpy": null,
+  "cpu_only": true,
+  "torch_imported": false,
+  "elapsed_seconds": 0.3383349000941962,
+  "mode": "check",
+  "raw_recomputation_in_this_run": false,
+  "script_sha256": "fb6ad9fbf88ac3aa053632e48cb30bc1ad527c3f1a7e976de2633ac030cbae88",
+  "output_sha256": {
+    "README_zh.md": "fb58e89ed22ae6880c454c26f4180cbdeb4950b290d2bdd0312314b6047436b3",
+    "README_en.md": "b2f83467f7a7d5756ac2b9d12968f319e5f89d9d48d60a544ce66408400c8320",
+    "results.json": "5b28f5ccc6e7a562d12087b2a4fe73af85c6628b3790f7c83d3d314cdcb47c3e",
+    "SOURCE_SHA256.json": "ce169fb220b6d329a167f15423d72e9e298f5c1f8fa4ae150fedc4c0769f2b33",
+    "SOURCE_SHA256SUMS.txt": "277c1d2049961f034fc6e0467c52b2c5253a4afd8d7eeaee5dcbbd1a9f53388b",
+    "small_data_consensus.png": "06e45c4e49a0890901297bd664adf3e60474293589d022c6fdfb1bcf7a114936",
+    "wide_cnn_ensembles.png": "aad2748f319122eb5458390ffe50de4933fa5e9df5c70ddc5d9d5b31bcd5ce65",
+    ".gitignore": "261b0e2d4a40d8f958f4db2d458fd1347bac7b633eb12528742895003ced1f58"
+  }
+}

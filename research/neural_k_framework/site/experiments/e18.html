@@ -65,9 +65,10 @@
           <h1>E18：高函数共识与符号可读性</h1>
           <p class="article-description">E18 在不知道数据生成规则的 teacher-free 随机部分真值表上，寻找跨初始化高度收束的完整函数，并审计这些函数是否属于人类可读的低复杂度符号族；随后进行跨容量、样本干预和8,192数据集大规模复核。</p>
         </header>
-        <div class="article-body"><div class="source-bar"><span>复现脚本</span><div><a href="../../experiments/experiment_18_consensus_symbolicity/experiment_8bit_consensus_large_scale.py">experiment_8bit_consensus_large_scale.py</a><a href="../../experiments/experiment_18_consensus_symbolicity/experiment_8bit_consensus_symbolicity.py">experiment_8bit_consensus_symbolicity.py</a><a href="../../experiments/experiment_18_consensus_symbolicity/experiment_8bit_consensus_width_intervention.py">experiment_8bit_consensus_width_intervention.py</a></div></div><h2 id="overview">实验概览</h2>
+        <div class="article-body"><nav class="ledger-path" id="update-20261106" aria-label="2026年11月增补"><span>2026年11月增补</span><a href="../update-consensus.html">小训练集共识与训练分布边界</a><a href="../interpretation-update.html">测度、幅度、复杂度与预测</a></nav><div class="source-bar"><span>复现脚本</span><div><a href="../../experiments/experiment_18_consensus_symbolicity/experiment_8bit_consensus_large_scale.py">experiment_8bit_consensus_large_scale.py</a><a href="../../experiments/experiment_18_consensus_symbolicity/experiment_8bit_consensus_symbolicity.py">experiment_8bit_consensus_symbolicity.py</a><a href="../../experiments/experiment_18_consensus_symbolicity/experiment_8bit_consensus_width_intervention.py">experiment_8bit_consensus_width_intervention.py</a></div></div><h2 id="overview">实验概览</h2>
 <h2 id="目的">目的</h2>
 <p>E18 在不知道数据生成规则的 teacher-free 随机部分真值表上，寻找跨初始化高度收束的完整函数，并审计这些函数是否属于人类可读的低复杂度符号族；随后进行跨容量、样本干预和8,192数据集大规模复核。</p>
+<p><strong>当前解读（2026-10-31）：</strong> 下文保留原始动机、判据和结果。可读终点是本协议的实验发现，不证明高 agreement 普遍蕴含短描述。后续问题应同时考察固定采样协议下的共识形成成本、未见覆盖和独立复杂度；详见<a href="../theory-core.html#7-agreement-猜想">理论核心的修订</a>。</p>
 <h2 id="文件与运行顺序">文件与运行顺序</h2>
 <pre><code class="language-bash">python experiment_8bit_consensus_symbolicity.py
 python experiment_8bit_consensus_width_intervention.py
