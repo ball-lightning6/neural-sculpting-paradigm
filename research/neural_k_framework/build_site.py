@@ -25,6 +25,8 @@ NOVEMBER_ROOT = ROOT / "supplementary" / "updates_20261106"
 READER_TOPICS = {"geometry", "consensus", "scaffolding", "training_controls"}
 READER_ASSETS = {
     "rule30_width": ("train_width_scan.py", "matched_crossings.csv", "check_width.py"),
+    "rule30_lag": ("check_lag.py", "checkpoints.csv", "e11_gradients.csv", "e11_trajectory.csv",
+                   "rule30_lag.png", "paired_1024.zip", "paired_1024.png"),
     "mod3_reproduction": ("original_sources.zip", "README_zh.md", "README_en.md"),
 }
 
@@ -69,6 +71,10 @@ NOVEMBER_EXPERIMENT_LINKS = {
 
 
 def november_experiment_notice(slug: str, language: str, prefix: str) -> str:
+    if slug == "e11":
+        label = ("看两条 loss 曲线：哪些种子最终在整个验证集上全对？" if language == "zh"
+                 else "Compare the loss curves: which runs eventually get every validation example right?")
+        return f'<p class="ledger-path"><a href="{prefix}width-double-descent.html#post-fit-generalization-lag">{label}</a></p>'
     if slug == "e38":
         label = ("配套训练证据：增宽后，Rule30 需要多少样本？" if language == "zh"
                  else "Training comparison: how many Rule30 examples does a wider network need?")
@@ -1934,8 +1940,10 @@ def build_october_theory_pages() -> None:
             source = (source_path.parent / target).resolve()
             if source in routes:
                 destination = routes[source]
-                # 通常进入整页；这个双语小节在源稿显式声明了相同的稳定锚点。
-                if not (destination.name == "width-double-descent.html" and fragment == "rule30-width-transition"):
+                # 只保留在中英文源稿中显式共用的稳定锚点。
+                if not (destination.name == "width-double-descent.html" and fragment in {
+                    "rule30-width-transition", "post-fit-generalization-lag", "rule30-norm-data-gap",
+                }):
                     fragment = ""
             elif source.is_relative_to(ROOT / "assets"):
                 destination = SITE_ROOT / "assets" / source.relative_to(ROOT / "assets")

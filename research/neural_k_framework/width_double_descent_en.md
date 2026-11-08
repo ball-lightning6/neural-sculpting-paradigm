@@ -87,6 +87,8 @@ Hard fit does not leave only one function compatible with the classification lab
 
 This connects training-time double descent naturally to the existing framework: the first descent comes from learning useful structure, the intermediate rise can come from poor extensions while satisfying more training details, and the second descent can come from further strengthening of simplicity selection among compatible solutions. This account neither equates training time with a static temperature nor assumes that SGD samples the constrained reference measure at every moment. With amplitude regularization or other losses, the full output constraints must be considered rather than replaced by a single average BCE value.
 
+Can we study the last step on its own? The [Rule30 training and validation curves](#post-fit-generalization-lag) give an example without injected label noise: the network gets the training set entirely right well before it does the same on validation. This isolates the question of late improvement without requiring a full double-descent curve.
+
 ### 3.3 The capacity axis is another path through the same selection picture
 
 Early widening first changes expressivity and accessibility within a finite training budget, allowing previously unsatisfied constraints to be met more fully. Near the fitting boundary, being able to memorize more training details does not imply that the best extension to unseen inputs has already been selected. If fitting temporarily relies on implementations more sensitive to sample details, test error can increase.
@@ -212,6 +214,69 @@ At the lowest matched loss, the threshold fell **from 1152 inputs to 896**. Near
 This is **direct training evidence for a shift in the sample threshold**. Its direction is consistent with E38, but E38 sampled 4-bit truth tables, not Rule30; the training scan did not measure competing function masses on Rule30. The two experiments support the part of the capacity-wise account in which width can still improve unseen predictions after interpolation. Neither the threshold shift nor their agreement reproduces a complete double-descent curve.
 
 **Check the result.** The [training script](assets/rule30_width/train_width_scan.py) generates the rings, trains the networks and records the loss crossings. It requires PyTorch, NumPy and Matplotlib; the original GPU runs used up to 20000 steps. Set Config.RESULT_DIR to a fresh output directory before a rerun. The [per-run data](assets/rule30_width/matched_crossings.csv) contain all 630 records at the three main loss levels. Place the [check script](assets/rule30_width/check_width.py) beside the CSV and run **python check_width.py** to reproduce the table and the 81 paired comparisons with the Python standard library; it does not train a network. This November 7 addition revisits the August experiment, not a new batch of E38 samples.
+
+### 5.7 Why does validation lag after the training set is already fitted? {#post-fit-generalization-lag}
+
+In the [E11 Rule30 experiment](translations_en/experiments/e11.md), a network sees a ring of 30 cells and predicts the next state. We use a strict, checkable definition of *eventual generalization*: at the end of training, all 5 initializations must get **every bit of every one of the same 4096 held-out rings right**. This is not an exhaustive test of all possible inputs. To study a delay that actually ends, we chose **1024 training examples**, the smallest size tested that met this criterion. At the preceding size, 768, the networks ended with 99.9958% of bits right on average, or 99.8730% of whole rings. Only 1/5 runs made no validation errors. Those networks came close, but they are not the example where all five eventually succeeded.
+
+| Training step | Training BCE | Validation BCE | Validation minus training BCE | Whole-ring validation accuracy |
+|---:|---:|---:|---:|---:|
+| 0 | 0.73157 | 0.73091 | −0.00066 | 0% |
+| 20 | 0.41154 | 0.50238 | +0.09084 | 0.10% |
+| 50 | 0.13502 | 0.31324 | +0.17823 | 2.40% |
+| 100 | 0.01334 | 0.08397 | +0.07064 | 55.01% |
+| 500 | 0.000510 | 0.003090 | +0.002579 | 99.79% |
+| 4000 | 0.0000101 | 0.0000493 | +0.0000392 | 100% |
+
+The table averages 5 initializations on one training set. Between steps 20 and 50 both losses fell, but training loss fell faster; the gap grew in each of the 5 runs. All runs first recorded perfect training accuracy between steps 71 and 91. At step 100 they still got only about half the held-out rings right on average. By step 500 they got 99.79% right, but the last few errors took longer. The first perfect validation checkpoints were steps 4000, 2000, 1000, 1000 and 1000 respectively; all subsequent records through step 20000 stayed perfect. **With 4096 training examples, all 5 runs first recorded perfect training and validation accuracy at the same step, 84.** The smaller set thus gives us a gap that opens and later closes, not a model that never learned the task. A widening gap need not mean validation loss went up.
+
+![Rule30: raw training and validation BCE with 1024 examples (left), and validation minus training BCE with 1024 and 4096 examples (right).](assets/rule30_lag/rule30_lag.png)
+
+**The gradients add evidence that accuracy alone cannot give.** Near a training BCE of 0.1, E11 computed separate gradients on the full training and validation sets. Their mean cosine was **0.446** with 1024 training examples and **0.927** with 4096, at actual mean training BCEs of 0.08977 and 0.09132. In the larger set the two gradients pointed in almost the same direction: a small step downhill on training loss also points nearly downhill on validation loss. This helps explain why the losses can fall together. It does not measure Adam's actual update or tell us which features the network learned.
+
+Changing the amount of data leaves a question open: **if we keep every training example and change which of the possible solutions the network favors, can validation catch up sooner?** We first look at earlier norm controls, then compare the penalties directly on the original 1024 E11 inputs.
+
+**Did a norm penalty shorten the wait?** In a [separate set of paired Rule30 runs](supplementary/updates_20261106/training_controls/README_en.md), we retrospectively compared the first saved steps at which training and validation reached the same raw BCE. Each entry lists the baseline, the penalty on large norms, and the penalty on small norms, in that order, with 4 seeds per condition. Crossing a loss threshold and getting every validation example right are different outcomes:
+
+| Training examples | How many updates later validation reached BCE 0.003 (median paired lag) | Seeds with perfect final whole-ring validation accuracy |
+|---:|---|---|
+| 750 | 6500 / 3750 / none of the 4 crossed | 0 / 1 / 0 |
+| 900 | 750 / 500 / 2250 | 3 / 4 / 2 |
+| 1200 | 0 / 0 / 0 | 4 / 4 / 4 |
+
+With 900 examples, all 3 seeds that eventually got every ring right in the baseline did so earlier with the penalty on large norms. The 4th seed also succeeded within budget. With 1200 examples, all conditions reached perfect validation accuracy, but penalizing large norms gave only 1 seed an *earlier recorded* perfect score; the other 3 tied the baseline. Checkpoints were 500 steps apart late in training: a median lag of 0 neither rules out delays for individual seeds nor resolves differences between observations.
+
+**A direct test on the original 1024 E11 training inputs.** After recovering the original input IDs, we trained all three conditions from scratch on the same split, with the original 5 seeds, identical minibatches and 20000 updates per run. A norm penalty also changes the **training BCE before adding the penalty**. At step 100, mean raw training BCE was 0.01334 without a penalty, 0.01302 when penalizing large norms, and 0.01468 when penalizing small norms. So we ask not only which models generalized sooner but also which gave better validation predictions at the same training loss.
+
+| Comparison on the same split, 5 seeds per condition | No penalty | Penalize large norms | Penalize small norms |
+|---|---:|---:|---:|
+| Whole-ring validation accuracy at matched training BCE 0.01 | 64.79% | 67.13% | 57.10% |
+| Whole-ring validation accuracy at matched training BCE 0.003 | 92.45% | 94.40% | 84.94% |
+| Validation minus training BCE at matched training BCE 0.003 | 0.01871 | 0.01630 | 0.02695 |
+| Median updates from perfect training accuracy to sustained perfect validation accuracy | 875 | 625 | 3070 |
+| Median raw training BCE at first sustained perfect validation accuracy | 0.000179 | 0.000285 | 0.0000185 |
+
+For the three rows matched on training BCE, we interpolated between the checkpoints bracketing each run's first downward crossing, on the log training BCE scale, then averaged over runs. At 0.003 the bracketing checkpoints were 5 steps apart, with perfect training accuracy at both ends. Even without interpolation, for every seed both measured validation accuracies were higher than the baseline pair when penalizing large norms, and lower when penalizing small norms. Panel A also shows that the loss gap was close to 0.18 in all three groups at step 50: penalizing large norms **did not stop the gap from opening**. The difference was clearer as validation caught up. It remained visible at the same raw training BCE, so it was not just a difference in training speed.
+
+![Paired E11 runs with 1024 examples: loss gap and validation accuracy by update, then validation accuracy at matched raw training BCE.](assets/rule30_lag/paired_1024.png)
+
+The [1024-example paired experiment and verification bundle](assets/rule30_lag/paired_1024.zip) includes the protocol, training source, original split, checkpoint metrics, both sides of each seed's loss crossings, and the analysis script. Recalculating the tables only requires the Python standard library.
+
+#### If the data are sufficient, why does a norm penalty change the delay? {#rule30-norm-data-gap}
+
+**Enough data to learn the rule does not mean that fitting the data singles it out.** Given the same 1024 examples, all 15 models across the three conditions eventually got all 4096 held-out inputs right. For this network, budget and validation criterion, the data were sufficient. Yet a function could agree with Rule30 on every training ring and flip a single bit on some unseen rings. Perfect training accuracy cannot distinguish the two. Nor does low training BCE settle the question: it measures confidence in the answers on seen rings, not what the network does on unseen ones.
+
+**A norm penalty supplies no new evidence. It changes which solutions training favors.** Rule30 reuses the same local update at every cell. Our hypothesis is that, near the sample-size threshold, the network may have learned much of this shared structure by the time it fits the training data. Solutions that rely on incidental details of the training rings may still compete. If lower BCE increasingly favors solutions that reuse the shared rule, validation loss can catch up. The late improvement need not come mainly from the discovery of new features.
+
+Why expect the two norm penalties to act in opposite directions? [Sampling small networks at fixed radii](supplementary/updates_20261106/geometry/README_en.md) gave us a clue: for the rules tested, tightening BCE penalized complex rules more strongly relative to simple ones at smaller radii. This led us to expect that **penalizing large norms strengthens the effective simplicity bias, so validation can catch up at a higher training BCE; discouraging small norms may weaken it, requiring a lower BCE.** Bias here means a relative preference among functions that fit, not an equality between parameter norm and function complexity. The paired runs establish the direction of the change in the curves, not the strength of the bias itself. Per-example output magnitudes, later feature learning and optimization paths could also contribute.
+
+**With abundant data, the examples themselves rule out many competitors.** Consider the function that flips one bit on some unseen rings. Just one new training ring exposing that error prevents it from fitting every example. With enough informative observations from the same rule, the remaining functions may already give similar, correct predictions on unseen rings. Validation then need not wait for a strong simplicity bias. The original unpenalized E11 comparison fits this picture: near the same training BCE of 0.1, the mean loss gap was **0.173** with 1024 examples but only **0.019** with 4096, and the training and validation gradients pointed in more similar directions. This does not require identical loss curves with abundant data. Nor were all three norm conditions tested at 4096. What matters is whether new examples expose wrong answers, not how often existing examples are repeated.
+
+This account makes a further distinction. Applying the late preference just as the network fits the training set should shorten the part of the delay caused by competition among solutions. If crucial features have yet to be learned, changing the preference alone will not make the wait disappear. The connection to epochwise double descent concerns **late improvement**; this experiment did not show a peak in validation error followed by a decline.
+
+**Report the output constraint along with the sample-size threshold.** The [width scan above](#rule30-width-transition) holds width fixed and reads out accuracy at different training BCEs. The number of examples needed to meet the same generalization criterion changes. Claims about agreement between networks likewise need to specify when the networks are compared; agreement alone need not be correct. [E31 on division modulo 97](translations_en/post_upload/e31.md) illustrates the point from another angle. Using the Power transformer architecture and a 70% training split, both strengths of output-amplitude alignment gave perfect held-out accuracy in 3/3 runs, at raw answer cross-entropy (CE) between about 0.000076 and 0.00349. Without alignment the count was 0/3 even at step 150550. Alignment did not eliminate all delay. It might discourage the shortcut of reducing loss mainly on easy examples; it might also change the relative weight of competing functions or how the optimizer reaches them. It is not interchangeable with a stronger simplicity bias. One untested implication: even at fixed input dimension, additional rule-consistent observations that actually distinguish competing solutions could permit generalization at a higher training CE on the original task. Merely repeating existing examples does not give that prediction.
+
+**Check the numbers.** The [E11 trajectories](assets/rule30_lag/e11_trajectory.csv), [gradients matched by training BCE](assets/rule30_lag/e11_gradients.csv), and [per-seed norm intervention trajectories](assets/rule30_lag/checkpoints.csv) cover two separate experiments. Place the three tables alongside the [check script](assets/rule30_lag/check_lag.py) and run `python check_lag.py` to reproduce the number of perfect runs, the differences between the loss curves and the waiting times. No training or GPU is needed.
 
 ## 6. Connections to the published research
 

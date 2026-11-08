@@ -1,0 +1,60 @@
+{
+  "data_hashes": {
+    "dataset_split_ids.npz": "cff5ead89715e601e5e5bf592dd46be7730ec73ca7f50169c6206b0048d43f47",
+    "config.json": "e6fe9693bbea162ac33b5bb41bda56d448c8d600aaf6f94003d8bfd2df511c5a",
+    "trajectory.csv": "72b0b2192dd1745598233f0435415396b3fd6b33d5874d91fe39186e8415779c"
+  },
+  "batch_sha256": "9deea369f62bc6317059aee1411c87becd8fc4f94a36233bd88d6b17842f6396",
+  "cfg_sha256": "ba7ad56667e1678ee477b6e74229013fe497241ee9f71f31ec3640771abff4b9",
+  "train_sha256": "6ef890c1c3c5afdb5b58fbeff3821a903ef0e168540f5d3399faaa51ea8f9888",
+  "device": "NVIDIA GeForce RTX 3080",
+  "torch": "2.11.0+cu130",
+  "cuda": "13.0",
+  "dtype": "float32",
+  "tf32": true,
+  "steps": 20000,
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "arms": [
+    "baseline",
+    "high_norm",
+    "low_norm"
+  ],
+  "grad_steps": [
+    40,
+    45,
+    50,
+    55,
+    60,
+    65,
+    70,
+    75,
+    80,
+    85,
+    90,
+    95,
+    100,
+    105,
+    110,
+    115,
+    120,
+    125,
+    130,
+    135,
+    140,
+    150,
+    175,
+    200
+  ],
+  "train": 1024,
+  "validation": 4096,
+  "lambda_": 0.1,
+  "high_cutoff2": 1.0915566140657849,
+  "low_cutoff2": 3.399311254876147,
+  "signature": "491b274d8bfcb1f77f323e24ab27c6771d05ad08a48f2584d398f325148d65a5"
+}

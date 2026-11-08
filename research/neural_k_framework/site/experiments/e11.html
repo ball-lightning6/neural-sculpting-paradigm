@@ -66,7 +66,7 @@
           <h1>E11：Rule30 数据量与训练/验证梯度对齐</h1>
           <p class="article-description">E11 检验：增加同一规则的训练样本，是否只改变最终泛化终点，还是会在近似匹配的 raw BCE 水平下系统性改变原始训练梯度与独立验证梯度的方向关系。冻结实现按 log-loss 距离选最近 checkpoint，允许最多1.35倍 loss 差，并不插值。</p>
         </header>
-        <div class="article-body"><div class="source-bar"><span>复现脚本</span><div><a href="../../experiments/experiment_11_rule30_gradient_alignment/experiment_rule30_train_val_gradient_alignment.py">experiment_rule30_train_val_gradient_alignment.py</a></div></div><h2 id="overview">实验概览</h2>
+        <div class="article-body"><p class="ledger-path"><a href="../width-double-descent.html#post-fit-generalization-lag">看两条 loss 曲线：哪些种子最终在整个验证集上全对？</a></p><div class="source-bar"><span>复现脚本</span><div><a href="../../experiments/experiment_11_rule30_gradient_alignment/experiment_rule30_train_val_gradient_alignment.py">experiment_rule30_train_val_gradient_alignment.py</a></div></div><h2 id="overview">实验概览</h2>
 <h2 id="目的">目的</h2>
 <p>E11 检验：增加同一规则的训练样本，是否只改变最终泛化终点，还是会在近似匹配的 raw BCE 水平下系统性改变原始训练梯度与独立验证梯度的方向关系。冻结实现按 log-loss 距离选最近 checkpoint，允许最多1.35倍 loss 差，并不插值。</p>
 <p>它为“有限训练集只支持规则对齐下降到有限 loss 深度；数据越多，该通道延伸得越深”提供局部梯度几何证据；沿负原始训练梯度的小步一阶预测不等于实际 Adam 更新效果。</p>
@@ -221,8 +221,8 @@ $$</div>
 <h2 id="3-从过拟合到同步泛化的连续谱">3. 从过拟合到同步泛化的连续谱</h2>
 <ul>
 <li><code>n=256/512</code>在31--50步完全拟合训练集，最终 validation bit accuracy 约74.84%/92.96%；</li>
-<li><code>n=768</code>在67步拟合训练集，500--1000步后 validation 才超过99%，最终99.9958%，表现为平滑延迟泛化；</li>
-<li><code>n=1024</code>五个 seed 最终全部零错误；</li>
+<li><code>n=768</code> 在第 67 步训练整串全对，各种子到第 500 至 1000 步验证<strong>逐位</strong>准确率才超过 99%。终点平均逐位准确率为 99.9958%，平均整串准确率为 99.8730%；5 个种子中只有 1 个在 4096 条验证输入上零错；</li>
+<li><code>n=1024</code> 是最小的终点 5/5 验证全对档。第 50 步时验证 BCE 平均比训练 BCE 高 0.178；第 100 步训练集已全对，验证整串准确率均值仍只有 55.01%。第 4000 步五个种子都已验证全对，此后记录至第 20000 步仍全对；</li>
 <li><code>n=4096</code>训练和 validation exact accuracy 都约在84步达到100%，几乎同步。</li>
 </ul>
 <p>在初始化附近，少量数据也能提供明显 Rule30 共有方向；数据量真正决定的是该方向可以延伸到多深的训练 loss。低数据的共享结构较早耗尽，剩余梯度转向训练集特有细节；高数据的剩余约束在低 loss 处仍保持规则相干。</p>

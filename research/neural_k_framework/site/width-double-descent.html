@@ -57,6 +57,7 @@
 <li><a href="#5-4-mnist-未完成的文献启发现象复现尝试">5.4 MNIST：未完成的文献启发现象复现尝试</a></li>
 <li><a href="#5-5-本轮可以推出什么">5.5 本轮可以推出什么</a></li>
 <li><a href="#rule30-width-transition">5.6 宽网络需要看多少个例子才能学会 Rule30？</a></li>
+<li><a href="#post-fit-generalization-lag">5.7 训练集已经全对，验证集为什么还要等？</a></li>
 </ul>
 </li>
 <li><a href="#6-与已发布研究的衔接">6. 与已发布研究的衔接</a></li>
@@ -150,6 +151,7 @@ $$</div>
 <p>早期的简单行为不一定毫无用处。一个不完全正确的近似规则可以先抓住大部分共有结构，使训练和测试误差同时下降。继续拟合时，该规则若在部分训练点上有不可约错误，就无法无限降低loss，必须退出或被修改；满足这些额外细节时，暂态延拓可能变得更依赖具体样本，形成测试误差回升。捷径退出本身不保证回升，回升还要求替代解的未见输入表现更差。</p>
 <p>hard fit之后，分类标签层面的兼容集合并未因此只剩一个函数。不同兼容函数内部仍有不同的连续输出实现；在已测的BCE窗口中，继续降低loss可以改变这些函数的相对质量，部分较经济延拓逐渐占优。实际训练也已观察到保持训练拟合的功能迁移。因此，训练更久不必只意味着不断增加记忆负担，也可以在维持拟合的同时改变未见输入上的规则。</p>
 <p>这使训练时间双下降自然地接到既有主线：第一次下降来自学到有用结构，中间上升可来自满足更多训练细节时的不良延拓，第二次下降可来自兼容解之间进一步增强的简单性选择。这里没有把训练时间等同于静态温度，也没有假定SGD在每一时刻都按受限参考测度采样。涉及幅度正则或其他loss时，应按完整输出约束讨论，不能只用平均BCE一个数代替。</p>
+<p>能否单看最后这一步？<a href="#post-fit-generalization-lag">Rule30 的训练和验证曲线</a>提供了一个没有人工错标的例子：训练集已经全对，验证集仍须等一段时间才全对。它能用来研究后期改善，不要求先观察到完整的双下降。</p>
 <h3 id="3-3-容量轴是同一选择图景的另一条路径">3.3 容量轴是同一选择图景的另一条路径</h3>
 <p>增宽的前段首先改变表示能力和有限训练预算内的可达性，使原来不能充分满足的约束得以满足。在拟合边界附近，能够记住更多训练细节，不等于已经选到对未见输入最合适的延拓。若这种拟合暂时依赖对样本细节更敏感的实现，测试误差可以上升。</p>
 <p>容量已经足够之后，再增宽并不撤销训练集约束。本文关注的正是这一充分拟合区间：如果更大的网络让经济兼容解相对复杂兼容解获得更大的质量优势，而且这种优势在实际训练中有作用，那么测试误差可以再次下降。这里不要求简单目标的绝对质量增加，也不把不同宽度的绝对K当成任务内在复杂度的统一刻度。</p>
@@ -408,6 +410,149 @@ $$</div>
 <p>在最深的损失截面，训练输入从 <strong>1152 减到 896</strong> 就能达到同一标准。在门槛附近（512 至 1152 个输入），逐一匹配输入数、初始化和损失，最宽网络的整串准确率在 <strong>81/81</strong> 个比较中高于最窄网络，中位差为 <strong>19.18 个百分点</strong>。同一轨迹参与多个损失截面的比较，这不是 81 次独立重复。最初的预期其实相反：当时猜测小网络的容量限制会让它更早学到规则。这个任务不支持那一猜测。</p>
 <p>所以这是一条<strong>实际训练直接显示样本门槛移动</strong>的证据。它与 E38 从静态采样看到的宽度效应方向相容，但 E38 采的是 4-bit 真值表，不是 Rule30；这批训练也没有测 Rule30 各个候选的体积。它支持双下降解释中“充分拟合后，增宽仍能改善延拓”这一步，并没有复现整条先降、再升、再降的测试误差曲线。</p>
 <p><strong>怎样查这个结果？</strong> <a href="assets/rule30_width/train_width_scan.py">训练脚本</a>生成题目、训练网络并保存每次穿过阈值时的记录。运行它需要 PyTorch、NumPy、Matplotlib；历史正式实验使用 GPU，最多 20000 步，重跑前请将脚本的 Config.RESULT_DIR 设为新的输出目录。<a href="assets/rule30_width/matched_crossings.csv">逐模型数据</a>保留三个主损失截面的全部 630 条记录。<a href="assets/rule30_width/check_width.py">复算脚本</a>只需要 Python 标准库：与 CSV 放在同一目录后运行 <strong>python check_width.py</strong>，会打印上表和 81 个配对的结果，不会训练网络。本节是 11 月 7 日对 8 月实验的回查，不是 E38 的新一批采样。</p>
+<h3 id="post-fit-generalization-lag">5.7 训练集已经全对，验证集为什么还要等？</h3>
+<p>在 <a href="experiments/e11.html">E11 的 Rule30 实验</a>里，每道题给出一圈 30 个格子，要求预测下一步。这里“完成泛化”取一个严格但可查的标准：5 次不同初始化的训练，到终点都要把同一份独立验证集的 4096 道题<strong>逐题、逐位全部答对</strong>。这不等于穷举了所有输入。为了研究「最后能学会，但验证集要等」，我们选满足这个标准的最小已测训练集：<strong>1024 个样本</strong>。前一档 768 个样本最后平均答对了 99.9958% 的位，按整道题算是 99.8730%；只有 1/5 次训练验证零错。它已经非常接近，但不适合作为五次都完成泛化的例子。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">训练步数</th>
+<th style="text-align: right;">训练 BCE</th>
+<th style="text-align: right;">验证 BCE</th>
+<th style="text-align: right;">差值：验证减训练</th>
+<th style="text-align: right;">验证整题准确率</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.73157</td>
+<td style="text-align: right;">0.73091</td>
+<td style="text-align: right;">−0.00066</td>
+<td style="text-align: right;">0%</td>
+</tr>
+<tr>
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">0.41154</td>
+<td style="text-align: right;">0.50238</td>
+<td style="text-align: right;">+0.09084</td>
+<td style="text-align: right;">0.10%</td>
+</tr>
+<tr>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">0.13502</td>
+<td style="text-align: right;">0.31324</td>
+<td style="text-align: right;">+0.17823</td>
+<td style="text-align: right;">2.40%</td>
+</tr>
+<tr>
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">0.01334</td>
+<td style="text-align: right;">0.08397</td>
+<td style="text-align: right;">+0.07064</td>
+<td style="text-align: right;">55.01%</td>
+</tr>
+<tr>
+<td style="text-align: right;">500</td>
+<td style="text-align: right;">0.000510</td>
+<td style="text-align: right;">0.003090</td>
+<td style="text-align: right;">+0.002579</td>
+<td style="text-align: right;">99.79%</td>
+</tr>
+<tr>
+<td style="text-align: right;">4000</td>
+<td style="text-align: right;">0.0000101</td>
+<td style="text-align: right;">0.0000493</td>
+<td style="text-align: right;">+0.0000392</td>
+<td style="text-align: right;">100%</td>
+</tr>
+</tbody>
+</table>
+<p>表中是同一份训练数据上 5 个种子的均值。从第 20 步到第 50 步，两条 loss 都在降，但训练降得更快；逐个种子看，5 次的差距都扩大了。各次训练在第 71 至 91 步首次记录到训练集全对；到第 100 步，验证集平均才对了约一半。第 500 步验证已对了 99.79%，最后几道题还要更久。各个种子首次验证全对分别在第 4000、2000、1000、1000、1000 步，此后至第 20000 步的记录里都没有再错。<strong>对照组把训练数据增到 4096 个，同样 5 个种子的训练和验证都在第 84 步首次记录到全对。</strong> 所以这里确有一段后来消失的差距，而不是一个最终没学会的模型；差距扩大也不等于验证损失本身反弹。</p>
+<figure class="result-figure"><a href="assets/rule30_lag/rule30_lag.png" target="_blank" rel="noopener"><img src="assets/rule30_lag/rule30_lag.png" alt="Rule30：左图为 1024 个样本时训练和验证的原始 BCE，右图为 1024 和 4096 个样本时验证 BCE 减训练 BCE 的变化。" loading="lazy"></a><figcaption>Rule30：左图为 1024 个样本时训练和验证的原始 BCE，右图为 1024 和 4096 个样本时验证 BCE 减训练 BCE 的变化。</figcaption></figure>
+<p><strong>梯度给出一条独立于准确率的线索。</strong> 在训练 BCE 接近 0.1 时，E11 分别计算了整份训练集和验证集的梯度。1024 样本组的两个梯度方向的平均余弦为 <strong>0.446</strong>，4096 样本组为 <strong>0.927</strong>；两组实际比较的平均训练 BCE 分别是 0.08977 和 0.09132。后者接近同向：沿训练损失下降方向迈一小步，也更接近验证损失的下降方向。这有助于理解为什么数据足时两条曲线能一起走；它量的不是 Adam 的实际更新方向，也没有量出网络学了哪些特征。</p>
+<p>数据量可以解释两组训练为何不同，却留下一个问题：<strong>如果一个训练样本也不增减，只改变网络在多个可行解之间的偏好，验证集会不会更早追上？</strong> 下面先看已有的范数对照，再回到 E11 的原始 1024 个输入做直接比较。</p>
+<p><strong>范数惩罚有没有让验证集早些跟上？</strong> 在<a href="update-training-controls.html">另一批 Rule30 配对训练</a>中，我们事后比较训练和验证首次达到同一原始 BCE 的步数。表中按「基线 / 惩罚大范数 / 惩罚小范数」排序，每组 4 个种子。达到损失阈值和验证集整题全对是两件不同的事：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">训练样本</th>
+<th>验证达到 BCE 0.003 比训练晚多少步（配对中位数）</th>
+<th>最终在验证集整题全对的种子数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">750</td>
+<td>6500 / 3750 / 4 个均未达标</td>
+<td>0 / 1 / 0</td>
+</tr>
+<tr>
+<td style="text-align: right;">900</td>
+<td>750 / 500 / 2250</td>
+<td>3 / 4 / 2</td>
+</tr>
+<tr>
+<td style="text-align: right;">1200</td>
+<td>0 / 0 / 0</td>
+<td>4 / 4 / 4</td>
+</tr>
+</tbody>
+</table>
+<p>在 900 样本档，基线最终全对的 3 个种子，加上大范数惩罚后都更早全对；第 4 个也在预算内追上了。到 1200 样本，所有组都完成泛化，但惩罚大范数只让 1 个种子<strong>更早记录到</strong>验证全对，其余 3 个与基线同一步。后段每 500 步才记录一次，中位数为 0 不等于每个种子都没有等待，也看不到两次记录之间的差距。</p>
+<p><strong>直接检验：在 E11 原来的 1024 个训练输入上重新配对。</strong> 找回原始输入编号后，我们用同一份验证集、原来的 5 个种子和相同的逐步 minibatch，从头训练上述三组，各跑 20000 步。范数惩罚也会改变<strong>不含惩罚项的训练 BCE</strong>：例如在第 100 步，基线、惩罚大范数、惩罚小范数的平均原始训练 BCE 分别为 0.01334、0.01302、0.01468。所以除了问「谁先答对」，还要问「把训练损失降到同一水平时，谁的验证答案更好」。</p>
+<table>
+<thead>
+<tr>
+<th>比较指标（同一份数据，各 5 个种子）</th>
+<th style="text-align: right;">无惩罚</th>
+<th style="text-align: right;">惩罚大范数</th>
+<th style="text-align: right;">惩罚小范数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>训练 BCE 匹配到 0.01 时，验证整串准确率</td>
+<td style="text-align: right;">64.79%</td>
+<td style="text-align: right;">67.13%</td>
+<td style="text-align: right;">57.10%</td>
+</tr>
+<tr>
+<td>训练 BCE 匹配到 0.003 时，验证整串准确率</td>
+<td style="text-align: right;">92.45%</td>
+<td style="text-align: right;">94.40%</td>
+<td style="text-align: right;">84.94%</td>
+</tr>
+<tr>
+<td>训练 BCE 匹配到 0.003 时，验证 BCE 减训练 BCE</td>
+<td style="text-align: right;">0.01871</td>
+<td style="text-align: right;">0.01630</td>
+<td style="text-align: right;">0.02695</td>
+</tr>
+<tr>
+<td>训练全对至验证持续全对的中位等待（步）</td>
+<td style="text-align: right;">875</td>
+<td style="text-align: right;">625</td>
+<td style="text-align: right;">3070</td>
+</tr>
+<tr>
+<td>首次持续验证全对时，中位原始训练 BCE</td>
+<td style="text-align: right;">0.000179</td>
+<td style="text-align: right;">0.000285</td>
+<td style="text-align: right;">0.0000185</td>
+</tr>
+</tbody>
+</table>
+<p>表中匹配训练 BCE 的三行都在每次训练首次穿过目标的前后两个检查点之间，按对数训练 BCE 插值后再平均。在 0.003 处，两端相隔 5 步，训练均已全对；即使不用插值，逐种子比较两端实测的验证准确率，也都是惩罚大范数高于基线、惩罚小范数低于基线。图 A 还能看出，三组在第 50 步的损失差都接近 0.18：惩罚大范数<strong>没有阻止差距出现</strong>。差别更明显的是之后验证集追上的过程，而且在相同的原始训练 BCE 下也能看到，并不只是某一组训练得快。</p>
+<figure class="result-figure"><a href="assets/rule30_lag/paired_1024.png" target="_blank" rel="noopener"><img src="assets/rule30_lag/paired_1024.png" alt="E11 原始 1024 样本的配对干预：按步数看损失差、验证准确率，并按同一训练 BCE 比较验证准确率。" loading="lazy"></a><figcaption>E11 原始 1024 样本的配对干预：按步数看损失差、验证准确率，并按同一训练 BCE 比较验证准确率。</figcaption></figure>
+<p><a href="assets/rule30_lag/paired_1024.zip">1024 样本配对训练与复算包</a>包含方案、训练源码、原始数据划分、逐训练节点的读数、逐种子的跨阈值两端及分析脚本。复算表格只需 Python 标准库，不需要 GPU。</p>
+<h4 id="rule30-norm-data-gap">数据已经够了，为什么范数还会改变泛化滞后？</h4>
+<p><strong>够学会，不等于一拟合就只能选中真实规则。</strong> 同一份 1024 样本让三组共 15 个模型最终都在 4096 条未见输入上全对。就这个网络、训练预算和验证标准而言，数据已经够了。但一个函数可以在所有训练环上都和 Rule30 一致，只在某些未见环上翻错一位。只看训练是否全对，区分不了这两个函数。训练 BCE 很小也不自动解决这个问题：它衡量网络对已见答案有多确信，并不检查未见环。</p>
+<p><strong>范数惩罚没有增加证据，它改变的是网络更容易选到哪种解。</strong> Rule30 对每个格子都复用同一条局部更新规则。我们的解释是：在这份接近样本量门槛的数据上，网络拟合训练集时，可能已经学到了大部分共有特征，但依赖训练环偶然细节的解仍有竞争力。继续压低 BCE，若复用共有规则的解相对于这些竞争解越来越占优势，验证损失就会跟着降下来。按这个解释，后期改善不一定主要靠发现新的高级特征。</p>
+<p>为什么预计两种范数惩罚的方向会相反？<a href="update-geometry.html">小网络的分半径采样</a>提供了一条线索：在已测规则中，收紧 BCE 时，小范数区域对复杂规则的相对惩罚更强。由此我们预期，<strong>惩罚过大范数会加强有效的简单性偏置，验证集可以在较高的训练 BCE 就追上；排斥小范数则可能削弱这种偏置，需要把 BCE 压得更低。</strong> 这里的“偏置”指对兼容函数的相对偏好，不是说权重范数就等于函数复杂度。配对训练证实了两种干预对曲线的影响方向，没有直接测出偏置强度；逐样本的输出幅度、后续特征学习和优化路径仍可能参与其中。</p>
+<p><strong>数据非常充分时，许多竞争解先被样本排除了。</strong> 假如那个会翻错一位的函数仍能拟合原来的训练集，只要新增的训练环中有一个暴露这处差异，它就不再能把训练集答对。足够多有区分力的同规则样本，可以让剩余的解较早就在未见环上给出相近的正确答案，不必等简单性偏置变得很强才泛化。旧 E11 的无惩罚对照符合这个预期：在训练 BCE 同样接近 0.1 时，1024 样本组的平均损失差为 <strong>0.173</strong>，4096 样本组只有 <strong>0.019</strong>，训练与验证梯度也更同向。这不是说数据足时两条 loss 必然重合，也没有在 4096 档比较三种范数惩罚；关键是新样本能否排除错误答案，而不是简单地重复已有样本。</p>
+<p>这个解释还有一个可检验的边界：若能在训练集刚拟合时就施加后期才有的偏好，由候选解竞争造成的那部分等待应当缩短；若网络还没学会关键特征，单改偏好不会让等待消失。这与训练时间双下降的<strong>后期改善</strong>有关，但这里并没有观测到验证误差先升后降的峰。</p>
+<p><strong>相变点要和输出约束一起报。</strong> <a href="#rule30-width-transition">上一节的宽度扫描</a>在同一宽度、不同训练 BCE 处读数，达到同一泛化标准所需的数据量会变。谈多个网络何时达成一致（agreement），同样要说明比较的是哪个训练阶段；一致本身不保证答对。<a href="experiments/e31.html">E31 的模 97 除法</a>从另一侧说明这一点：沿用 Power 的 Transformer 架构、使用 70% 训练样本，两档输出幅度对齐正则各有 3/3 个种子验证全对，当时原始答案交叉熵（CE）约为 0.000076 至 0.00349；不加正则，到第 150550 步仍是 0/3。加正则也没有消除所有等待。它可能削弱了「先把容易样本的损失压低」的捷径，也可能改变了候选权重或优化路径，不能直接等同于加大简单性偏置。一个尚未测试的推论是：保持输入维数不变，如果额外的同规则观测确实能区分原来竞争的解，原任务可能在较高的训练 CE 就能泛化；单纯重复已知样本不作此预测。</p>
+<p><strong>复算这组数。</strong> <a href="assets/rule30_lag/e11_trajectory.csv">E11 逐步训练与验证记录</a>、<a href="assets/rule30_lag/e11_gradients.csv">匹配训练 BCE 的梯度记录</a>和<a href="assets/rule30_lag/checkpoints.csv">范数干预的逐种子记录</a>来自两项不同实验。将三个表与<a href="assets/rule30_lag/check_lag.py">复算脚本</a>放在同一目录，运行 <code>python check_lag.py</code> 即可核对全对的种子数、两条 loss 曲线之差和等待步数；不训练网络，也不需要 GPU。</p>
 <h2 id="6-与已发布研究的衔接">6. 与已发布研究的衔接</h2>
 <ul>
 <li><a href="theory-core.html">理论核心</a>：loss收紧时的捷径淘汰和兼容候选内重排。</li>
