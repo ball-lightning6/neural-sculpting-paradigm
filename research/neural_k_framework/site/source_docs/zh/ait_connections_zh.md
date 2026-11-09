@@ -117,7 +117,7 @@ Agreement猜想并未被放弃：在固定系统和采样协议下，高共识�
 
 用无标签agreement进一步估计外部错误率，则需要额外联系，例如适当的系综校准条件，不能从一致性定义直接推出。[Jiang等的disagreement与校准研究](https://arxiv.org/abs/2106.13799)
 
-最简单的单个函数也不必占主导质量：数量很多、每个稍复杂的函数群可以合计占优。如果它们共享主要结构但保留不同残差，可能具有相近错误总量而错在不同位置；跨点错误协方差较小时，平均准确率就会集中。这把候选群数量效应、Jordan的统计现象与Rule30固定训练集下的范数干预联系起来。Rule30已有平均准确率变化，尚未逐项测出这条结构/残差机制，二者在[预测分布解释](interpretation_update_20261106_zh.md)中分层说明。
+最简单的单个函数也不必占主导质量：数量很多、每个稍复杂的函数群可以合计占优。如果它们共享主要结构但保留不同残差，可能具有相近错误总量而错在不同位置；跨点错误协方差较小时，平均准确率就会集中。Rule30 在固定训练集上实测了[范数惩罚下的准确率、种子间 agreement 和共同错误](supplementary/updates_20261106/training_controls/README_zh.md#rule30-norm-agreement)。这些读数不直接测量内部的共享结构或跨题错误协方差；与 Jordan 的统计结果如何区分，见[预测分布解释](interpretation_update_20261106_zh.md)。
 
 这里的grokking相变点指数据量恢复门槛，不是迟发泛化所需的训练时间。它取决于目标相对于竞争者的成本，以及样本能排除多少竞争质量；在这些条件可比时，可以出现近似线性或稳定的复杂度顺序关系，但不是所有规则的普遍严格正比律。[条件推导](release_20260920/theory/mdl_identifiability_grokking_derivation_zh.md)、[E23](experiments/experiment_23_volume_to_data_transition/RESULTS_AND_CONCLUSION.md)
 

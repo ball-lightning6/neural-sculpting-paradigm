@@ -58,7 +58,7 @@ On retraining with the original 1024 examples, all 15 models across the three co
 
 The single simplest candidate need not dominate total mass: many individually more complex functions can outweigh it collectively. Candidates sharing major structure but retaining different residuals can make similar numbers of errors at different locations, so concentrated accuracy does not require identical complete functions. Jordan and the Jiang paper it cites supply compatible statistics and calibration relationships; the structure/residual mechanism is this framework's interpretation.
 
-At Rule30 data levels below the observed recovery range, the dataset is unchanged and all groups fit it, yet a high-norm penalty improves test performance and low-norm repulsion reduces it. Actual selection among compatible candidates can therefore change, connecting to the picture of shifted group weights and typical error. Rule30 error covariances and static group complexities have not been measured step by step, so a changed mean is not passed off as that measurement; the [prediction/norm connection](interpretation_update_20261106_en.md) separates observation from interpretation.
+All groups fitted the same 600 Rule30 training inputs. Penalizing large norms not only improved accuracy: different seeds more often gave the same 30-bit answer to a held-out input. Discouraging small norms lowered both measures. The [per-input agreement and shared-error counts](supplementary/updates_20261106/training_controls/README_en.md#rule30-norm-agreement) give the observations. [Unlike Jordan's analysis](interpretation_update_20261106_en.md), this does not test whether errors are independent across different inputs.
 
 ## 6 Relationship to Prior Work
 

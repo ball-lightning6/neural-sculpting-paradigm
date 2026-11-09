@@ -139,7 +139,7 @@ $$
 训练充分拟合定义为训练整串准确率 100% 且 raw BCE 不超过 `1e-4`。稳定泛化成功另外要求最后三个评估节点（19000、19500、20000 步）的 probe 整串准确率都至少 99%。这是固定预算后的成功分类，不是测试驱动的提前停止；训练实际完成 20000 步。两次全部 32 个模型均充分拟合，最大训练 BCE 分别为高惩罚运行 `2.9231732e-9`、低排斥运行 `2.8179692e-9`。此结论本轮从保存指标核对，没有加载大网络权重重新前向计算 BCE。
 
 <!-- block:ca_accuracy_def -->
-整串（whole-sample/exact）准确率要求一个输入的全部 30 个输出 bit 同时正确；bit accuracy 只平均所有输出位。下面每项先按模型计算，再对四个 seed 等权平均。两种指标不可互换，probe 上全对也不等于穷举全部 `2^30` 输入。
+<span id="rule30-norm-agreement"></span>整串（whole-sample/exact）准确率要求一个输入的全部 30 个输出 bit 同时正确；bit accuracy 只平均所有输出位。两列准确率先按模型计算，再对四个 seed 等权平均。**整串 agreement** 不看标签：在同一输入上，两个种子的 30 位答案是否完全相同？表中取第 20000 步、4096 个 probe 输入和 4 个种子的全部 6 个不同配对的平均。它不是整套探针上的函数完全相同，也不是穷举全部 `2^30` 输入。
 
 $$
 \mathrm{Acc}_{\mathrm{whole}}=\frac1N\sum_i\mathbf1[\forall b,\hat y_{ib}=y_{ib}],\qquad
@@ -147,20 +147,22 @@ $$
 $$
 
 <!-- block:ca_table -->
-| n | 组别 | 整串准确率 | bit accuracy | 稳定成功 | 训练充分拟合 |
-|---:|---|---:|---:|---:|---:|
-| 600 | baseline | 68.5181% | 98.6302% | 0/4 | 4/4 |
-| 600 | high_norm | 79.6570% | 99.1982% | 0/4 | 4/4 |
-| 600 | low_norm | 39.5203% | 96.5871% | 0/4 | 4/4 |
-| 750 | baseline | 99.2188% | 99.9738% | 3/4 | 4/4 |
-| 750 | high_norm | 99.7620% | 99.9921% | 4/4 | 4/4 |
-| 750 | low_norm | 95.0256% | 99.8234% | 0/4 | 4/4 |
-| 900 | baseline | 99.9939% | 99.9998% | 4/4 | 4/4 |
-| 900 | high_norm | 100% | 100% | 4/4 | 4/4 |
-| 900 | low_norm | 99.9756% | 99.9992% | 4/4 | 4/4 |
-| 1200 | baseline | 100% | 100% | 4/4 | 4/4 |
-| 1200 | high_norm | 100% | 100% | 4/4 | 4/4 |
-| 1200 | low_norm | 100% | 100% | 4/4 | 4/4 |
+| n | 组别 | 整串准确率 | 整串 agreement | bit accuracy | 稳定成功 | 训练充分拟合 |
+|---:|---|---:|---:|---:|---:|---:|
+| 600 | baseline | 68.5181% | 58.0973% | 98.6302% | 0/4 | 4/4 |
+| 600 | high_norm | 79.6570% | 71.4559% | 99.1982% | 0/4 | 4/4 |
+| 600 | low_norm | 39.5203% | 29.1748% | 96.5871% | 0/4 | 4/4 |
+| 750 | baseline | 99.2188% | 98.6125% | 99.9738% | 3/4 | 4/4 |
+| 750 | high_norm | 99.7620% | 99.5483% | 99.9921% | 4/4 | 4/4 |
+| 750 | low_norm | 95.0256% | 91.8335% | 99.8234% | 0/4 | 4/4 |
+| 900 | baseline | 99.9939% | 99.9878% | 99.9998% | 4/4 | 4/4 |
+| 900 | high_norm | 100% | 100% | 100% | 4/4 | 4/4 |
+| 900 | low_norm | 99.9756% | 99.9512% | 99.9992% | 4/4 | 4/4 |
+| 1200 | baseline | 100% | 100% | 100% | 4/4 | 4/4 |
+| 1200 | high_norm | 100% | 100% | 100% | 4/4 | 4/4 |
+| 1200 | low_norm | 100% | 100% | 100% | 4/4 | 4/4 |
+
+在 600 样本基线的 4096 个未见输入里，1544 个四个种子都答对，2238 个有对有错，314 个全部答错。再看模型对：两个种子在同一输入上都错的 4014 次配对中，1162 次给出相同错串，2852 次给出不同错串（71.05%）。可见它们并非总是学到同一个错误答案；这不是对**不同输入之间**错误独立性的检验。[逐种子对计数](seed_pairs.csv) · [分组汇总](group_counts.csv) · [终点硬预测](endpoints.csv.gz) · [复算脚本](check_agreement.py)（运行 `python check_agreement.py`，不需 GPU）。
 
 <!-- block:ca_grid -->
 ### 3.3 相变只到粗网格趋势
@@ -225,7 +227,7 @@ python -I research/neural_k_framework/supplementary/updates_20261106/training_co
 `--public-only` 始终只读，不能与 `--write` 或 `--archive` 合用。默认的本地模式发现差异即报错，只有显式加 `--write` 才更新五个派生汇总。脚本没有训练、恢复、SMC 或 GPU 入口，不运行历史 `run.py`、`analyze.py` 或 `compare.py`。SHA256 清单是来源字节的历史指纹记录，不是下载清单，也不是对时间顺序或科学正确性的密码学证明；公开模式只能核对本包文件哈希，以及来源清单记录内部的一致性。
 
 <!-- block:deliverables -->
-本包文件：[README_zh.md](README_zh.md)、[README_en.md](README_en.md)、[audit_cpu.py](audit_cpu.py)、[copy_summary.csv](copy_summary.csv)、[rule30_summary.csv](rule30_summary.csv)、[rule30_paired.csv](rule30_paired.csv)、[sources_sha256.csv](sources_sha256.csv)、[audit_summary.json](audit_summary.json)。CSV 保存未四舍五入的比例，文档百分比按显示精度舍入；双语段落数字、展示公式及表格使用相同规约。copy 汇总包括全部三种检查点和两个步长组；Rule30 汇总包括整串/bit、拟合/稳定成功、半径与惩罚；配对表保留逐 seed 差值。
+本包文件：[README_zh.md](README_zh.md)、[README_en.md](README_en.md)、[audit_cpu.py](audit_cpu.py)、[copy_summary.csv](copy_summary.csv)、[rule30_summary.csv](rule30_summary.csv)、[rule30_paired.csv](rule30_paired.csv)、[sources_sha256.csv](sources_sha256.csv)、[audit_summary.json](audit_summary.json)。CSV 保存未四舍五入的比例，文档百分比按显示精度舍入；双语段落数字、展示公式及表格使用相同规约。copy 汇总包括全部三种检查点和两个步长组；Rule30 汇总包括整串/bit、拟合/稳定成功、半径与惩罚；配对表保留逐 seed 差值。2026-11-09 并入的终点硬预测、agreement 计数和复算脚本也在此包内，见第 3.2 节。
 
 <!-- block:publish -->
 **公开包能力：** 双语说明、精简 CSV/JSON、来源哈希记录及脚本足以核对已发布汇总的一致性。公开模式的 `PASS` 仅表示这些包内检查通过，**不表示重新验证了原始训练或静态采样，也不表示下载本包即可重跑实验或完成原始结果复算**。E30 只作为历史报告背景，不附带粒子包；本包中的旧实验数字不能由公开模式独立验证。

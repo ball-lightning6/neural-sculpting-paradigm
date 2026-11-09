@@ -2,4 +2,6 @@ When a network copies the last input bit, only the sign of its output determines
 
 Rule30 asks a separate question that static sampling cannot settle: does pushing parameters toward smaller norms during training improve predictions for the next row of 30 bits? The labels stayed fixed. One group penalized large parameter norms; another pushed small norms outward. At 600 training inputs all groups fit the training set. Counting a test row only when all 30 bits were right gave 68.52% without a penalty, 79.66% with the inward push, and 39.52% with the outward push.
 
+The [same table in Section 3.2](#rule30-norm-agreement) reports accuracy and whole-ring agreement side by side: was a model right, and did different seeds give the same answer?
+
 Section 3.3 compares the first tested sample sizes where at least three of four starts scored 99% or more at each of the final three checks: 750, 750, and 900, respectively. The inward push improved the 600-input score without lowering that observed threshold. Neither intervention measures a rule's complexity.

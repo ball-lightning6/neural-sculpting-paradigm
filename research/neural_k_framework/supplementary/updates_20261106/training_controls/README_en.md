@@ -139,7 +139,7 @@ The high-norm penalty pushes inward only when `r>r_H`; low-norm repulsion pushes
 Sufficient fitting means 100% training whole-sample accuracy and raw BCE no greater than `1e-4`. Stable generalization additionally requires probe whole-sample accuracy of at least 99% at each of the last three evaluation nodes (19000, 19500, and 20000 steps). This is a success classification after a fixed budget, not test-driven early stopping; training actually reached 20000 steps. All 32 models in each run were sufficiently fitted. Maximum training BCE is `2.9231732e-9` in the high-penalty run and `2.8179692e-9` in the low-repulsion run. This audit checks saved metrics for that conclusion; it does not load large-network weights to recompute BCE by forward evaluation.
 
 <!-- block:ca_accuracy_def -->
-Whole-sample/exact accuracy requires all 30 output bits of an input to be correct simultaneously; bit accuracy averages individual output positions. Each entry below is computed per model and then averaged equally across four seeds. These metrics are not interchangeable, and perfect probe accuracy is not exhaustive correctness over all `2^30` inputs.
+<span id="rule30-norm-agreement"></span>Whole-sample/exact accuracy requires all 30 output bits of an input to be correct simultaneously; bit accuracy averages individual output positions. Both accuracies are computed per model and then averaged equally across four seeds. **Whole-ring agreement** ignores the label: did two seeds give the same 30-bit answer to the same input? The table averages over 4096 held-out inputs and all 6 distinct pairs of the 4 seeds at step 20000. This does not require identical functions on the entire probe set, nor is it an exhaustive test of all `2^30` inputs.
 
 $$
 \mathrm{Acc}_{\mathrm{whole}}=\frac1N\sum_i\mathbf1[\forall b,\hat y_{ib}=y_{ib}],\qquad
@@ -147,20 +147,22 @@ $$
 $$
 
 <!-- block:ca_table -->
-| n | Arm | Whole-sample accuracy | Bit accuracy | Stable successes | Sufficiently fitted |
-|---:|---|---:|---:|---:|---:|
-| 600 | baseline | 68.5181% | 98.6302% | 0/4 | 4/4 |
-| 600 | high_norm | 79.6570% | 99.1982% | 0/4 | 4/4 |
-| 600 | low_norm | 39.5203% | 96.5871% | 0/4 | 4/4 |
-| 750 | baseline | 99.2188% | 99.9738% | 3/4 | 4/4 |
-| 750 | high_norm | 99.7620% | 99.9921% | 4/4 | 4/4 |
-| 750 | low_norm | 95.0256% | 99.8234% | 0/4 | 4/4 |
-| 900 | baseline | 99.9939% | 99.9998% | 4/4 | 4/4 |
-| 900 | high_norm | 100% | 100% | 4/4 | 4/4 |
-| 900 | low_norm | 99.9756% | 99.9992% | 4/4 | 4/4 |
-| 1200 | baseline | 100% | 100% | 4/4 | 4/4 |
-| 1200 | high_norm | 100% | 100% | 4/4 | 4/4 |
-| 1200 | low_norm | 100% | 100% | 4/4 | 4/4 |
+| n | Arm | Whole-sample accuracy | Whole-ring agreement | Bit accuracy | Stable successes | Sufficiently fitted |
+|---:|---|---:|---:|---:|---:|---:|
+| 600 | baseline | 68.5181% | 58.0973% | 98.6302% | 0/4 | 4/4 |
+| 600 | high_norm | 79.6570% | 71.4559% | 99.1982% | 0/4 | 4/4 |
+| 600 | low_norm | 39.5203% | 29.1748% | 96.5871% | 0/4 | 4/4 |
+| 750 | baseline | 99.2188% | 98.6125% | 99.9738% | 3/4 | 4/4 |
+| 750 | high_norm | 99.7620% | 99.5483% | 99.9921% | 4/4 | 4/4 |
+| 750 | low_norm | 95.0256% | 91.8335% | 99.8234% | 0/4 | 4/4 |
+| 900 | baseline | 99.9939% | 99.9878% | 99.9998% | 4/4 | 4/4 |
+| 900 | high_norm | 100% | 100% | 100% | 4/4 | 4/4 |
+| 900 | low_norm | 99.9756% | 99.9512% | 99.9992% | 4/4 | 4/4 |
+| 1200 | baseline | 100% | 100% | 100% | 4/4 | 4/4 |
+| 1200 | high_norm | 100% | 100% | 100% | 4/4 | 4/4 |
+| 1200 | low_norm | 100% | 100% | 100% | 4/4 | 4/4 |
+
+With 600 baseline training examples, all four seeds got 1544 of the 4096 unseen inputs right, some but not all got 2238 right, and all missed 314. Now count seed-pair/input cases: both models missed 4014 times, giving the same wrong string 1162 times and different wrong strings 2852 times (71.05%). The runs did not always give the same wrong answer; this does not test error independence **across different inputs**. [Per-pair counts](seed_pairs.csv) · [Group totals](group_counts.csv) · [Hard endpoint predictions](endpoints.csv.gz) · [Check script](check_agreement.py) (run `python check_agreement.py`; no GPU required).
 
 <!-- block:ca_grid -->
 ### 3.3 Only a Coarse Transition Grid
@@ -225,7 +227,7 @@ python -I research/neural_k_framework/supplementary/updates_20261106/training_co
 `--public-only` is always read-only and cannot be combined with `--write` or `--archive`. Default local verification fails on differences; only explicit `--write` updates the five derived summaries. The script has no training, resume, SMC, or GPU entry point and does not execute historical `run.py`, `analyze.py`, or `compare.py`. The SHA256 list is a historical record of source-byte fingerprints, not a download manifest or cryptographic proof of chronology or scientific validity. Public mode can only check package-file hashes and consistency of manifest records.
 
 <!-- block:deliverables -->
-Package files: [README_zh.md](README_zh.md), [README_en.md](README_en.md), [audit_cpu.py](audit_cpu.py), [copy_summary.csv](copy_summary.csv), [rule30_summary.csv](rule30_summary.csv), [rule30_paired.csv](rule30_paired.csv), [sources_sha256.csv](sources_sha256.csv), and [audit_summary.json](audit_summary.json). CSV files preserve unrounded fractions; document percentages are rounded for display. Bilingual paragraph numbers, displayed formulas, and tables use identical conventions. The copy summary includes all three checkpoint types and both learning-rate arms. Rule30 summaries include whole-sample/bit accuracy, fitting/stable success, radius, and penalty; the paired table retains per-seed differences.
+Package files: [README_zh.md](README_zh.md), [README_en.md](README_en.md), [audit_cpu.py](audit_cpu.py), [copy_summary.csv](copy_summary.csv), [rule30_summary.csv](rule30_summary.csv), [rule30_paired.csv](rule30_paired.csv), [sources_sha256.csv](sources_sha256.csv), and [audit_summary.json](audit_summary.json). CSV files preserve unrounded fractions; document percentages are rounded for display. Bilingual paragraph numbers, displayed formulas, and tables use identical conventions. The copy summary includes all three checkpoint types and both learning-rate arms. Rule30 summaries include whole-sample/bit accuracy, fitting/stable success, radius, and penalty; the paired table retains per-seed differences. The endpoint predictions, agreement counts and check script added on 2026-11-09 are in the same package and linked in Section 3.2.
 
 <!-- block:publish -->
 **Public-package capabilities:** the bilingual descriptions, compact CSV/JSON, source-hash records, and script support consistency checks on published summaries. A public-mode `PASS` means only that these package-level checks succeeded. **It does not revalidate original training or static sampling, nor mean that downloading the package enables experiment reruns or original-result recalculation.** E30 appears only as historical-report context, without particle archives; public mode cannot independently validate the old-experiment values in this package.

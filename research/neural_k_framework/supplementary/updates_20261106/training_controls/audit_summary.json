@@ -12,16 +12,22 @@
     "rule30_paired.csv": "e81fa155df44ad3638915e4561af0ce7c1f52933d99e1d1797cda0969624fd7a",
     "sources_sha256.csv": "ddbfde2bbdcc67c8d8fc291cd3e1f16afcebee0f2f09e7e0c1e501275fbc8c1b"
   },
+  "agreement_20261109_sha256": {
+    "check_agreement.py": "f7fbd67ab35f2dde4c9dc66155a3f9f5e46c1a229787e867c98d3468569579b3",
+    "endpoints.csv.gz": "58f0b9b75b7aa9058d182875581bab0bf368c7303545ad3394988bd20398f26e",
+    "seed_pairs.csv": "0fd81b715aeb32e81d7207cee1c45b119a44b5179b62b71b492a51098574669e",
+    "group_counts.csv": "1a3922af1bdc97378584906ed334e898c2b247bfcd51c3e741e3a33e889a95d6"
+  },
   "training_started": false,
   "smc_started": false,
   "torch_imported": false,
   "gpu_used": false,
   "numpy_version": "2.4.1",
   "source_files": 84,
-  "audit_script_sha256": "cf91c1f94dc01971f880a00cb4b5659561dac93c63ad86ea7aa5639dbe090318",
+  "audit_script_sha256": "25c7362731386de2c4cdfd607a8bdb5f9f01a291f67952861e65dc02f29a71ac",
   "document_sha256": {
-    "README_zh.md": "088ef846f0ab675b02bf3b970e36505cc6fdc0c34afac23b2f5a13625ad543cf",
-    "README_en.md": "7e856615ea1a1b730a988992c3b312d2e83ad27ce97a3248f29cbd174ef1a860"
+    "README_zh.md": "828314483850db4a6fdcadb6b4ccf195e9712ccd07c4655aa4ee94c201c44f0b",
+    "README_en.md": "eb0f3934ddf6dbcffa31cfafd8ff979dc60fff37d6e8cc2d61ae20ba265b48dd"
   },
   "recorded_hashes_verified": 17,
   "copy": {

@@ -3,3 +3,5 @@ Earlier experiments found networks converging on the same short rule from a few 
 When each network first reaches the same training-loss threshold, two different initializations agree on 92.56% of the 12 unseen inputs on average. Fix the first two bits at `00` instead and agreement rises to 99.64%. Neither number measures correctness. On the `11` face, only 35.51% of model pairs agree on all 12 answers.
 
 The wide CNN in Section 6 asks a different question: can two late checkpoints from one run stand in for two independent starts? On two image datasets, agreement across times within a run was 99.955% and 99.941%, respectively. Across starts at the same time it was 79.055% and 81.692%. A run can settle on its own answers while other runs settle on different ones.
+
+The [per-input Rule30 comparison](../supplementary/updates_20261106/training_controls/README_en.md#rule30-norm-agreement) asks whether two models that both miss a held-out input give the same wrong string. With 600 training inputs and no penalty, the wrong strings differed in 71.05% of such pair/input cases.

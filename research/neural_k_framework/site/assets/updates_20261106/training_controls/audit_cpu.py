@@ -19,7 +19,8 @@ import zipfile
 HERE = Path(__file__).resolve().parent
 BASE_COMMIT = "3834fb3f6555c7c58218462502635b16b9b377f9"
 PACKAGE_TABLES = ("copy_summary.csv", "rule30_summary.csv", "rule30_paired.csv", "sources_sha256.csv")
-PACKAGE_FILES = (*PACKAGE_TABLES, "audit_summary.json", "audit_cpu.py", "README_zh.md", "README_en.md")
+AGREEMENT_FILES = ("check_agreement.py", "endpoints.csv.gz", "seed_pairs.csv", "group_counts.csv")
+PACKAGE_FILES = (*PACKAGE_TABLES, *AGREEMENT_FILES, "audit_summary.json", "audit_cpu.py", "README_zh.md", "README_en.md")
 os.environ["CUDA_VISIBLE_DEVICES"] = ""
 os.environ["OPENBLAS_NUM_THREADS"] = "1"
 os.environ["OMP_NUM_THREADS"] = "1"
@@ -350,6 +351,10 @@ def bilingual_check(copy_rows, ca_rows):
     def percent(text, value):
         assert text == ("100%" if value == 1 else f"{100*value:.4f}%"), (text, value)
 
+    with (HERE / "group_counts.csv").open(encoding="utf-8", newline="") as stream:
+        agreement = {(int(r["n"]), r["arm"]): int(r["agreeing_pair_rings"]) / (6 * 4096)
+                     for r in csv.DictReader(stream)}
+    assert set(agreement) == {(r["n"], r["arm"]) for r in ca_rows}
     for document in blocks:
         for block_name, arm in (("copy_primary", "primary"), ("copy_half", "half_lr")):
             selected = [r for r in copy_rows if r["stage"] == "best_train" and r["arm"] == arm]
@@ -367,11 +372,15 @@ def bilingual_check(copy_rows, ca_rows):
             a = float(cell[0])
             for text, expected in zip(cell[1:], (a*a*1e-4, .3*a*a, .15*a*a)):
                 assert abs(float(text)-expected) <= 1e-12*expected
-        for cell in table(document["ca_table"]):
+        ca_cells = table(document["ca_table"])
+        assert [(int(c[0]), c[1]) for c in ca_cells] == [(n, arm) for n in (600, 750, 900, 1200)
+                                                          for arm in ("baseline", "high_norm", "low_norm")]
+        for cell in ca_cells:
             row = next(r for r in ca_rows if r["n"] == int(cell[0]) and r["arm"] == cell[1])
             percent(cell[2], row["mean_probe_exact"])
-            percent(cell[3], row["mean_probe_bit"])
-            assert cell[4] == f"{row['stable_successes']}/4" and cell[5] == f"{row['fitted']}/4"
+            percent(cell[3], agreement[(row["n"], row["arm"])])
+            percent(cell[4], row["mean_probe_bit"])
+            assert cell[5] == f"{row['stable_successes']}/4" and cell[6] == f"{row['fitted']}/4"
     for doc in docs:
         for target in re.findall(r"\]\(([^)]+)\)", doc):
             assert target in PACKAGE_FILES, f"公开稿含包外链接: {target}"
@@ -386,6 +395,7 @@ def audit_public_package():
     assert set(report["package_sha256"]) == set(PACKAGE_TABLES)
     for name, expected in report["package_sha256"].items():
         assert package_digest(name) == expected, f"本包表格哈希不符: {name}"
+    assert report["agreement_20261109_sha256"] == {name: package_digest(name) for name in AGREEMENT_FILES}
     assert package_digest("audit_cpu.py") == report["audit_script_sha256"]
     assert set(report["document_sha256"]) == {"README_zh.md", "README_en.md"}
     for name, expected in report["document_sha256"].items():
@@ -535,6 +545,7 @@ def main():
                   verification_modes=dict(public_only="published_summary_consistency_only",
                                           default="requires_unbundled_local_sources; no_experiment_rerun"),
                   package_sha256={name: hashlib.sha256(content.encode("utf-8")).hexdigest() for name, content in tables.items()},
+                  agreement_20261109_sha256={name: package_digest(name) for name in AGREEMENT_FILES},
                   training_started=False, smc_started=False, torch_imported=False, gpu_used=False,
                   numpy_version=np.__version__, source_files=len(SOURCES),
                   audit_script_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),

@@ -71,6 +71,7 @@
         </header>
         <div class="article-body"><div class="reader-intro"><p>When a network copies the last input bit, only the sign of its output determines the predicted label. Yet shrinking the squared-error targets from magnitude 1 to 0.001 left the earlier Adam models near chance on unseen inputs. Was that peculiar to Adam? A repeat with full-batch SGD reused the same splits and initial weights. At magnitude 0.001, only 352 of 512 models met the training fit criterion, and even those 352 averaged just 48.72% on held-out inputs. At magnitude 1 all 512 met the criterion and scored 100%. Failure to fit cannot explain the whole gap.</p>
 <p>Rule30 asks a separate question that static sampling cannot settle: does pushing parameters toward smaller norms during training improve predictions for the next row of 30 bits? The labels stayed fixed. One group penalized large parameter norms; another pushed small norms outward. At 600 training inputs all groups fit the training set. Counting a test row only when all 30 bits were right gave 68.52% without a penalty, 79.66% with the inward push, and 39.52% with the outward push.</p>
+<p>The <a href="#rule30-norm-agreement">same table in Section 3.2</a> reports accuracy and whole-ring agreement side by side: was a model right, and did different seeds give the same answer?</p>
 <p>Section 3.3 compares the first tested sample sizes where at least three of four starts scored 99% or more at each of the final three checks: 750, 750, and 900, respectively. The inward push improved the 600-input score without lowering that observed threshold. Neither intervention measures a rule's complexity.</p></div><p class="source-bar"><a href="../assets/updates_20261106/training_controls/package.zip" download>Download this topic's public materials (ZIP)</a><span>Includes both language versions and published attachments; verification scope is stated below.</span></p><nav class="ledger-path"><a href="research-updates.html">Research update overview</a></nav><!-- block:scope -->
 <h2 id="1-scope-and-evidence-levels">1. Scope and Evidence Levels</h2>
 <p>Audit date: 2026-11-06; baseline commit: <code>3834fb3f6555c7c58218462502635b16b9b377f9</code> (2026-10-27). This supplement covers three training interventions dated 2026-11-03 after that baseline. Source files are identified by paths and byte fingerprints in <a href="../assets/updates_20261106/training_controls/sources_sha256.csv">sources_sha256.csv</a>. The <a href="../update-training-controls.html">Chinese version</a> corresponds fully to this page through matching paragraph identifiers.</p>
@@ -285,7 +286,7 @@ $$</div>
 <h3 id="3-2-fitting-success-criteria-and-test-denominators">3.2 Fitting, Success Criteria, and Test Denominators</h3>
 <p>Sufficient fitting means 100% training whole-sample accuracy and raw BCE no greater than <code>1e-4</code>. Stable generalization additionally requires probe whole-sample accuracy of at least 99% at each of the last three evaluation nodes (19000, 19500, and 20000 steps). This is a success classification after a fixed budget, not test-driven early stopping; training actually reached 20000 steps. All 32 models in each run were sufficiently fitted. Maximum training BCE is <code>2.9231732e-9</code> in the high-penalty run and <code>2.8179692e-9</code> in the low-repulsion run. This audit checks saved metrics for that conclusion; it does not load large-network weights to recompute BCE by forward evaluation.</p>
 <!-- block:ca_accuracy_def -->
-<p>Whole-sample/exact accuracy requires all 30 output bits of an input to be correct simultaneously; bit accuracy averages individual output positions. Each entry below is computed per model and then averaged equally across four seeds. These metrics are not interchangeable, and perfect probe accuracy is not exhaustive correctness over all <code>2^30</code> inputs.</p>
+<p><span id="rule30-norm-agreement"></span>Whole-sample/exact accuracy requires all 30 output bits of an input to be correct simultaneously; bit accuracy averages individual output positions. Both accuracies are computed per model and then averaged equally across four seeds. <strong>Whole-ring agreement</strong> ignores the label: did two seeds give the same 30-bit answer to the same input? The table averages over 4096 held-out inputs and all 6 distinct pairs of the 4 seeds at step 20000. This does not require identical functions on the entire probe set, nor is it an exhaustive test of all <code>2^30</code> inputs.</p>
 <div class="math-display">$$
 \mathrm{Acc}_{\mathrm{whole}}=\frac1N\sum_i\mathbf1[\forall b,\hat y_{ib}=y_{ib}],\qquad
 \mathrm{Acc}_{\mathrm{bit}}=\frac1{30N}\sum_{i,b}\mathbf1[\hat y_{ib}=y_{ib}].
@@ -297,6 +298,7 @@ $$</div>
 <th style="text-align: right;">n</th>
 <th>Arm</th>
 <th style="text-align: right;">Whole-sample accuracy</th>
+<th style="text-align: right;">Whole-ring agreement</th>
 <th style="text-align: right;">Bit accuracy</th>
 <th style="text-align: right;">Stable successes</th>
 <th style="text-align: right;">Sufficiently fitted</th>
@@ -307,6 +309,7 @@ $$</div>
 <td style="text-align: right;">600</td>
 <td>baseline</td>
 <td style="text-align: right;">68.5181%</td>
+<td style="text-align: right;">58.0973%</td>
 <td style="text-align: right;">98.6302%</td>
 <td style="text-align: right;">0/4</td>
 <td style="text-align: right;">4/4</td>
@@ -315,6 +318,7 @@ $$</div>
 <td style="text-align: right;">600</td>
 <td>high_norm</td>
 <td style="text-align: right;">79.6570%</td>
+<td style="text-align: right;">71.4559%</td>
 <td style="text-align: right;">99.1982%</td>
 <td style="text-align: right;">0/4</td>
 <td style="text-align: right;">4/4</td>
@@ -323,6 +327,7 @@ $$</div>
 <td style="text-align: right;">600</td>
 <td>low_norm</td>
 <td style="text-align: right;">39.5203%</td>
+<td style="text-align: right;">29.1748%</td>
 <td style="text-align: right;">96.5871%</td>
 <td style="text-align: right;">0/4</td>
 <td style="text-align: right;">4/4</td>
@@ -331,6 +336,7 @@ $$</div>
 <td style="text-align: right;">750</td>
 <td>baseline</td>
 <td style="text-align: right;">99.2188%</td>
+<td style="text-align: right;">98.6125%</td>
 <td style="text-align: right;">99.9738%</td>
 <td style="text-align: right;">3/4</td>
 <td style="text-align: right;">4/4</td>
@@ -339,6 +345,7 @@ $$</div>
 <td style="text-align: right;">750</td>
 <td>high_norm</td>
 <td style="text-align: right;">99.7620%</td>
+<td style="text-align: right;">99.5483%</td>
 <td style="text-align: right;">99.9921%</td>
 <td style="text-align: right;">4/4</td>
 <td style="text-align: right;">4/4</td>
@@ -347,6 +354,7 @@ $$</div>
 <td style="text-align: right;">750</td>
 <td>low_norm</td>
 <td style="text-align: right;">95.0256%</td>
+<td style="text-align: right;">91.8335%</td>
 <td style="text-align: right;">99.8234%</td>
 <td style="text-align: right;">0/4</td>
 <td style="text-align: right;">4/4</td>
@@ -355,6 +363,7 @@ $$</div>
 <td style="text-align: right;">900</td>
 <td>baseline</td>
 <td style="text-align: right;">99.9939%</td>
+<td style="text-align: right;">99.9878%</td>
 <td style="text-align: right;">99.9998%</td>
 <td style="text-align: right;">4/4</td>
 <td style="text-align: right;">4/4</td>
@@ -364,6 +373,7 @@ $$</div>
 <td>high_norm</td>
 <td style="text-align: right;">100%</td>
 <td style="text-align: right;">100%</td>
+<td style="text-align: right;">100%</td>
 <td style="text-align: right;">4/4</td>
 <td style="text-align: right;">4/4</td>
 </tr>
@@ -371,6 +381,7 @@ $$</div>
 <td style="text-align: right;">900</td>
 <td>low_norm</td>
 <td style="text-align: right;">99.9756%</td>
+<td style="text-align: right;">99.9512%</td>
 <td style="text-align: right;">99.9992%</td>
 <td style="text-align: right;">4/4</td>
 <td style="text-align: right;">4/4</td>
@@ -378,6 +389,7 @@ $$</div>
 <tr>
 <td style="text-align: right;">1200</td>
 <td>baseline</td>
+<td style="text-align: right;">100%</td>
 <td style="text-align: right;">100%</td>
 <td style="text-align: right;">100%</td>
 <td style="text-align: right;">4/4</td>
@@ -388,6 +400,7 @@ $$</div>
 <td>high_norm</td>
 <td style="text-align: right;">100%</td>
 <td style="text-align: right;">100%</td>
+<td style="text-align: right;">100%</td>
 <td style="text-align: right;">4/4</td>
 <td style="text-align: right;">4/4</td>
 </tr>
@@ -396,11 +409,13 @@ $$</div>
 <td>low_norm</td>
 <td style="text-align: right;">100%</td>
 <td style="text-align: right;">100%</td>
+<td style="text-align: right;">100%</td>
 <td style="text-align: right;">4/4</td>
 <td style="text-align: right;">4/4</td>
 </tr>
 </tbody>
 </table>
+<p>With 600 baseline training examples, all four seeds got 1544 of the 4096 unseen inputs right, some but not all got 2238 right, and all missed 314. Now count seed-pair/input cases: both models missed 4014 times, giving the same wrong string 1162 times and different wrong strings 2852 times (71.05%). The runs did not always give the same wrong answer; this does not test error independence <strong>across different inputs</strong>. <a href="../assets/updates_20261106/training_controls/seed_pairs.csv">Per-pair counts</a> · <a href="../assets/updates_20261106/training_controls/group_counts.csv">Group totals</a> · <a href="../assets/updates_20261106/training_controls/endpoints.csv.gz">Hard endpoint predictions</a> · <a href="../assets/updates_20261106/training_controls/check_agreement.py">Check script</a> (run <code>python check_agreement.py</code>; no GPU required).</p>
 <!-- block:ca_grid -->
 <h3 id="3-3-only-a-coarse-transition-grid">3.3 Only a Coarse Transition Grid</h3>
 <p>At 600 and 750 samples, high-norm penalties improve all four paired seeds over baseline, averaging +11.1389 and +0.5432 percentage points; low-norm repulsion worsens all four, averaging -28.9978 and -4.1931 percentage points. The smallest <strong>tested grid levels</strong> with at least 3/4 stable successes are baseline 750, high_norm 750, and low_norm 900. High-norm penalization does not establish a leftward threshold shift on this grid. The low-repulsion change from 750 to 900 is a coarse fixed-budget trend on one data sequence, not an exact n50/n90 or an estimate that the true threshold increases by 20%. Differences are small or absent at 900 and 1200. Longer training might recover the gap; no additional training is performed here.</p>
@@ -467,7 +482,7 @@ $$</div>
 <!-- block:write_command -->
 <p><code>--public-only</code> is always read-only and cannot be combined with <code>--write</code> or <code>--archive</code>. Default local verification fails on differences; only explicit <code>--write</code> updates the five derived summaries. The script has no training, resume, SMC, or GPU entry point and does not execute historical <code>run.py</code>, <code>analyze.py</code>, or <code>compare.py</code>. The SHA256 list is a historical record of source-byte fingerprints, not a download manifest or cryptographic proof of chronology or scientific validity. Public mode can only check package-file hashes and consistency of manifest records.</p>
 <!-- block:deliverables -->
-<p>Package files: <a href="../update-training-controls.html">README_zh.md</a>, <a href="update-training-controls.html">README_en.md</a>, <a href="../assets/updates_20261106/training_controls/audit_cpu.py">audit_cpu.py</a>, <a href="../assets/updates_20261106/training_controls/copy_summary.csv">copy_summary.csv</a>, <a href="../assets/updates_20261106/training_controls/rule30_summary.csv">rule30_summary.csv</a>, <a href="../assets/updates_20261106/training_controls/rule30_paired.csv">rule30_paired.csv</a>, <a href="../assets/updates_20261106/training_controls/sources_sha256.csv">sources_sha256.csv</a>, and <a href="../assets/updates_20261106/training_controls/audit_summary.json">audit_summary.json</a>. CSV files preserve unrounded fractions; document percentages are rounded for display. Bilingual paragraph numbers, displayed formulas, and tables use identical conventions. The copy summary includes all three checkpoint types and both learning-rate arms. Rule30 summaries include whole-sample/bit accuracy, fitting/stable success, radius, and penalty; the paired table retains per-seed differences.</p>
+<p>Package files: <a href="../update-training-controls.html">README_zh.md</a>, <a href="update-training-controls.html">README_en.md</a>, <a href="../assets/updates_20261106/training_controls/audit_cpu.py">audit_cpu.py</a>, <a href="../assets/updates_20261106/training_controls/copy_summary.csv">copy_summary.csv</a>, <a href="../assets/updates_20261106/training_controls/rule30_summary.csv">rule30_summary.csv</a>, <a href="../assets/updates_20261106/training_controls/rule30_paired.csv">rule30_paired.csv</a>, <a href="../assets/updates_20261106/training_controls/sources_sha256.csv">sources_sha256.csv</a>, and <a href="../assets/updates_20261106/training_controls/audit_summary.json">audit_summary.json</a>. CSV files preserve unrounded fractions; document percentages are rounded for display. Bilingual paragraph numbers, displayed formulas, and tables use identical conventions. The copy summary includes all three checkpoint types and both learning-rate arms. Rule30 summaries include whole-sample/bit accuracy, fitting/stable success, radius, and penalty; the paired table retains per-seed differences. The endpoint predictions, agreement counts and check script added on 2026-11-09 are in the same package and linked in Section 3.2.</p>
 <!-- block:publish -->
 <p><strong>Public-package capabilities:</strong> the bilingual descriptions, compact CSV/JSON, source-hash records, and script support consistency checks on published summaries. A public-mode <code>PASS</code> means only that these package-level checks succeeded. <strong>It does not revalidate original training or static sampling, nor mean that downloading the package enables experiment reruns or original-result recalculation.</strong> E30 appears only as historical-report context, without particle archives; public mode cannot independently validate the old-experiment values in this package.</p>
 <!-- block:local -->

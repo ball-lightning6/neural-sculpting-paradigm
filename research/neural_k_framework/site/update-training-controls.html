@@ -71,6 +71,7 @@
         </header>
         <div class="article-body"><div class="reader-intro"><p>复制输入的末位时，分类只看输出的正负。旧 Adam 实验把平方误差的目标从 ±1 缩到 ±0.001 后，模型在未见输入上的表现却跟猜测差不多。这是 Adam 特有的吗？复测沿用相同的数据划分和初始权重，改用全批 SGD。目标为 ±0.001 时，512 个模型只有 352 个达到训练拟合标准；即使只看这 352 个，未见准确率也只有 48.72%。目标为 ±1 时，512 个全部过关，未见准确率为 100%。没拟合好不能解释全部差距。</p>
 <p>Rule30 单独检验静态采样答不了的问题：训练时把参数往小范数推，对下一行 30 位的预测会更准吗？这里不改标签，一组惩罚过大的范数，另一组把过小的范数往外推。用 600 个训练输入，三组都充分拟合；按 30 位全对计，基线的测试准确率为 68.52%，向内推是 79.66%，向外推是 39.52%。</p>
+<p><a href="#rule30-norm-agreement">第 3.2 节的同一张表</a>把准确率和整串 agreement 放在一起：前者看模型是否答对，后者看不同种子是否给出相同答案。</p>
 <p>第 3.3 节把末三次测试均达 99% 算作一次稳定成功。四个初值中至少三个成功的首个已测样本档，基线和向内推同为 750，向外推为 900。压低范数改善了 600 档的预测，却没有降低已测的成功档位；范数也不是函数复杂度。</p></div><p class="source-bar"><a href="assets/updates_20261106/training_controls/package.zip" download>下载本专题公开材料包（ZIP）</a><span>包含双语说明与已发布附件；核验范围见正文。</span></p><nav class="ledger-path"><a href="research-updates.html">本轮进展总览</a></nav><!-- block:scope -->
 <h2 id="1-范围与证据层级">1. 范围与证据层级</h2>
 <p>核验日期：2026-11-06；基准提交：<code>3834fb3f6555c7c58218462502635b16b9b377f9</code>（2026-10-27）。本增补整理该基准之后的三组 2026-11-03 训练干预；来源文件由 <a href="assets/updates_20261106/training_controls/sources_sha256.csv">sources_sha256.csv</a> 中的路径和字节指纹标识。<a href="en/update-training-controls.html">English</a> 与本页按相同段落标识完整对应。</p>
@@ -285,7 +286,7 @@ $$</div>
 <h3 id="3-2-拟合-成功标准与测试分母">3.2 拟合、成功标准与测试分母</h3>
 <p>训练充分拟合定义为训练整串准确率 100% 且 raw BCE 不超过 <code>1e-4</code>。稳定泛化成功另外要求最后三个评估节点（19000、19500、20000 步）的 probe 整串准确率都至少 99%。这是固定预算后的成功分类，不是测试驱动的提前停止；训练实际完成 20000 步。两次全部 32 个模型均充分拟合，最大训练 BCE 分别为高惩罚运行 <code>2.9231732e-9</code>、低排斥运行 <code>2.8179692e-9</code>。此结论本轮从保存指标核对，没有加载大网络权重重新前向计算 BCE。</p>
 <!-- block:ca_accuracy_def -->
-<p>整串（whole-sample/exact）准确率要求一个输入的全部 30 个输出 bit 同时正确；bit accuracy 只平均所有输出位。下面每项先按模型计算，再对四个 seed 等权平均。两种指标不可互换，probe 上全对也不等于穷举全部 <code>2^30</code> 输入。</p>
+<p><span id="rule30-norm-agreement"></span>整串（whole-sample/exact）准确率要求一个输入的全部 30 个输出 bit 同时正确；bit accuracy 只平均所有输出位。两列准确率先按模型计算，再对四个 seed 等权平均。<strong>整串 agreement</strong> 不看标签：在同一输入上，两个种子的 30 位答案是否完全相同？表中取第 20000 步、4096 个 probe 输入和 4 个种子的全部 6 个不同配对的平均。它不是整套探针上的函数完全相同，也不是穷举全部 <code>2^30</code> 输入。</p>
 <div class="math-display">$$
 \mathrm{Acc}_{\mathrm{whole}}=\frac1N\sum_i\mathbf1[\forall b,\hat y_{ib}=y_{ib}],\qquad
 \mathrm{Acc}_{\mathrm{bit}}=\frac1{30N}\sum_{i,b}\mathbf1[\hat y_{ib}=y_{ib}].
@@ -297,6 +298,7 @@ $$</div>
 <th style="text-align: right;">n</th>
 <th>组别</th>
 <th style="text-align: right;">整串准确率</th>
+<th style="text-align: right;">整串 agreement</th>
 <th style="text-align: right;">bit accuracy</th>
 <th style="text-align: right;">稳定成功</th>
 <th style="text-align: right;">训练充分拟合</th>
@@ -307,6 +309,7 @@ $$</div>
 <td style="text-align: right;">600</td>
 <td>baseline</td>
 <td style="text-align: right;">68.5181%</td>
+<td style="text-align: right;">58.0973%</td>
 <td style="text-align: right;">98.6302%</td>
 <td style="text-align: right;">0/4</td>
 <td style="text-align: right;">4/4</td>
@@ -315,6 +318,7 @@ $$</div>
 <td style="text-align: right;">600</td>
 <td>high_norm</td>
 <td style="text-align: right;">79.6570%</td>
+<td style="text-align: right;">71.4559%</td>
 <td style="text-align: right;">99.1982%</td>
 <td style="text-align: right;">0/4</td>
 <td style="text-align: right;">4/4</td>
@@ -323,6 +327,7 @@ $$</div>
 <td style="text-align: right;">600</td>
 <td>low_norm</td>
 <td style="text-align: right;">39.5203%</td>
+<td style="text-align: right;">29.1748%</td>
 <td style="text-align: right;">96.5871%</td>
 <td style="text-align: right;">0/4</td>
 <td style="text-align: right;">4/4</td>
@@ -331,6 +336,7 @@ $$</div>
 <td style="text-align: right;">750</td>
 <td>baseline</td>
 <td style="text-align: right;">99.2188%</td>
+<td style="text-align: right;">98.6125%</td>
 <td style="text-align: right;">99.9738%</td>
 <td style="text-align: right;">3/4</td>
 <td style="text-align: right;">4/4</td>
@@ -339,6 +345,7 @@ $$</div>
 <td style="text-align: right;">750</td>
 <td>high_norm</td>
 <td style="text-align: right;">99.7620%</td>
+<td style="text-align: right;">99.5483%</td>
 <td style="text-align: right;">99.9921%</td>
 <td style="text-align: right;">4/4</td>
 <td style="text-align: right;">4/4</td>
@@ -347,6 +354,7 @@ $$</div>
 <td style="text-align: right;">750</td>
 <td>low_norm</td>
 <td style="text-align: right;">95.0256%</td>
+<td style="text-align: right;">91.8335%</td>
 <td style="text-align: right;">99.8234%</td>
 <td style="text-align: right;">0/4</td>
 <td style="text-align: right;">4/4</td>
@@ -355,6 +363,7 @@ $$</div>
 <td style="text-align: right;">900</td>
 <td>baseline</td>
 <td style="text-align: right;">99.9939%</td>
+<td style="text-align: right;">99.9878%</td>
 <td style="text-align: right;">99.9998%</td>
 <td style="text-align: right;">4/4</td>
 <td style="text-align: right;">4/4</td>
@@ -364,6 +373,7 @@ $$</div>
 <td>high_norm</td>
 <td style="text-align: right;">100%</td>
 <td style="text-align: right;">100%</td>
+<td style="text-align: right;">100%</td>
 <td style="text-align: right;">4/4</td>
 <td style="text-align: right;">4/4</td>
 </tr>
@@ -371,6 +381,7 @@ $$</div>
 <td style="text-align: right;">900</td>
 <td>low_norm</td>
 <td style="text-align: right;">99.9756%</td>
+<td style="text-align: right;">99.9512%</td>
 <td style="text-align: right;">99.9992%</td>
 <td style="text-align: right;">4/4</td>
 <td style="text-align: right;">4/4</td>
@@ -378,6 +389,7 @@ $$</div>
 <tr>
 <td style="text-align: right;">1200</td>
 <td>baseline</td>
+<td style="text-align: right;">100%</td>
 <td style="text-align: right;">100%</td>
 <td style="text-align: right;">100%</td>
 <td style="text-align: right;">4/4</td>
@@ -388,6 +400,7 @@ $$</div>
 <td>high_norm</td>
 <td style="text-align: right;">100%</td>
 <td style="text-align: right;">100%</td>
+<td style="text-align: right;">100%</td>
 <td style="text-align: right;">4/4</td>
 <td style="text-align: right;">4/4</td>
 </tr>
@@ -396,11 +409,13 @@ $$</div>
 <td>low_norm</td>
 <td style="text-align: right;">100%</td>
 <td style="text-align: right;">100%</td>
+<td style="text-align: right;">100%</td>
 <td style="text-align: right;">4/4</td>
 <td style="text-align: right;">4/4</td>
 </tr>
 </tbody>
 </table>
+<p>在 600 样本基线的 4096 个未见输入里，1544 个四个种子都答对，2238 个有对有错，314 个全部答错。再看模型对：两个种子在同一输入上都错的 4014 次配对中，1162 次给出相同错串，2852 次给出不同错串（71.05%）。可见它们并非总是学到同一个错误答案；这不是对<strong>不同输入之间</strong>错误独立性的检验。<a href="assets/updates_20261106/training_controls/seed_pairs.csv">逐种子对计数</a> · <a href="assets/updates_20261106/training_controls/group_counts.csv">分组汇总</a> · <a href="assets/updates_20261106/training_controls/endpoints.csv.gz">终点硬预测</a> · <a href="assets/updates_20261106/training_controls/check_agreement.py">复算脚本</a>（运行 <code>python check_agreement.py</code>，不需 GPU）。</p>
 <!-- block:ca_grid -->
 <h3 id="3-3-相变只到粗网格趋势">3.3 相变只到粗网格趋势</h3>
 <p>600、750 样本下，高惩罚相对基线四个配对 seed 都改善，平均为 +11.1389、+0.5432 个百分点；低排斥四个都下降，平均为 -28.9978、-4.1931 个百分点。至少 3/4 seed 稳定成功的最小<strong>已测档位</strong>依次为 baseline 750、high_norm 750、low_norm 900。高惩罚未在此网格证明门槛左移；低排斥的 750 到 900 是固定预算、单数据序列的粗趋势，不是精确 n50/n90 或真实阈值提高 20% 的估计。900、1200 的差距很小或消失；未排除更长训练补回差距，本轮不追加训练。</p>
@@ -467,7 +482,7 @@ $$</div>
 <!-- block:write_command -->
 <p><code>--public-only</code> 始终只读，不能与 <code>--write</code> 或 <code>--archive</code> 合用。默认的本地模式发现差异即报错，只有显式加 <code>--write</code> 才更新五个派生汇总。脚本没有训练、恢复、SMC 或 GPU 入口，不运行历史 <code>run.py</code>、<code>analyze.py</code> 或 <code>compare.py</code>。SHA256 清单是来源字节的历史指纹记录，不是下载清单，也不是对时间顺序或科学正确性的密码学证明；公开模式只能核对本包文件哈希，以及来源清单记录内部的一致性。</p>
 <!-- block:deliverables -->
-<p>本包文件：<a href="update-training-controls.html">README_zh.md</a>、<a href="en/update-training-controls.html">README_en.md</a>、<a href="assets/updates_20261106/training_controls/audit_cpu.py">audit_cpu.py</a>、<a href="assets/updates_20261106/training_controls/copy_summary.csv">copy_summary.csv</a>、<a href="assets/updates_20261106/training_controls/rule30_summary.csv">rule30_summary.csv</a>、<a href="assets/updates_20261106/training_controls/rule30_paired.csv">rule30_paired.csv</a>、<a href="assets/updates_20261106/training_controls/sources_sha256.csv">sources_sha256.csv</a>、<a href="assets/updates_20261106/training_controls/audit_summary.json">audit_summary.json</a>。CSV 保存未四舍五入的比例，文档百分比按显示精度舍入；双语段落数字、展示公式及表格使用相同规约。copy 汇总包括全部三种检查点和两个步长组；Rule30 汇总包括整串/bit、拟合/稳定成功、半径与惩罚；配对表保留逐 seed 差值。</p>
+<p>本包文件：<a href="update-training-controls.html">README_zh.md</a>、<a href="en/update-training-controls.html">README_en.md</a>、<a href="assets/updates_20261106/training_controls/audit_cpu.py">audit_cpu.py</a>、<a href="assets/updates_20261106/training_controls/copy_summary.csv">copy_summary.csv</a>、<a href="assets/updates_20261106/training_controls/rule30_summary.csv">rule30_summary.csv</a>、<a href="assets/updates_20261106/training_controls/rule30_paired.csv">rule30_paired.csv</a>、<a href="assets/updates_20261106/training_controls/sources_sha256.csv">sources_sha256.csv</a>、<a href="assets/updates_20261106/training_controls/audit_summary.json">audit_summary.json</a>。CSV 保存未四舍五入的比例，文档百分比按显示精度舍入；双语段落数字、展示公式及表格使用相同规约。copy 汇总包括全部三种检查点和两个步长组；Rule30 汇总包括整串/bit、拟合/稳定成功、半径与惩罚；配对表保留逐 seed 差值。2026-11-09 并入的终点硬预测、agreement 计数和复算脚本也在此包内，见第 3.2 节。</p>
 <!-- block:publish -->
 <p><strong>公开包能力：</strong> 双语说明、精简 CSV/JSON、来源哈希记录及脚本足以核对已发布汇总的一致性。公开模式的 <code>PASS</code> 仅表示这些包内检查通过，<strong>不表示重新验证了原始训练或静态采样，也不表示下载本包即可重跑实验或完成原始结果复算</strong>。E30 只作为历史报告背景，不附带粒子包；本包中的旧实验数字不能由公开模式独立验证。</p>
 <!-- block:local -->

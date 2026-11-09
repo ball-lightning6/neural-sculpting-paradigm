@@ -340,6 +340,8 @@ def validate_november_manifest(errors: list[str]) -> None:
 
 
 def november_asset_allowed(path: Path) -> bool:
+    if path.parent.name == "training_controls" and path.name == "endpoints.csv.gz":
+        return True
     if path.name.startswith(".") or path.suffix.lower() not in NOVEMBER_ASSET_SUFFIXES:
         return False
     if path.suffix.lower() == ".md":

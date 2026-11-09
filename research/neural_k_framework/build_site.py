@@ -1870,7 +1870,8 @@ def copy_november_assets() -> None:
         published = []
         for path in sorted(source.iterdir()):
             is_readme = path.name in {"README_zh.md", "README_en.md"}
-            if not path.is_file() or path.name.startswith(".") or (path.suffix.lower() not in allowed and not is_readme):
+            is_norm_endpoints = path == NOVEMBER_ROOT / "training_controls/endpoints.csv.gz"
+            if not path.is_file() or path.name.startswith(".") or not (path.suffix.lower() in allowed or is_readme or is_norm_endpoints):
                 continue
             if path.stat().st_size > 20 * 1024 * 1024:
                 raise RuntimeError(f"新增公开附件过大，需要明确整理：{path}")
@@ -1932,18 +1933,19 @@ def build_october_theory_pages() -> None:
             routes[(TRANSLATIONS_EN / f"experiments/e{number:02d}.md").resolve()] = destination
             routes[(TRANSLATIONS_EN / f"post_upload/e{number:02d}.md").resolve()] = destination
 
-        def rewrite_link(match: re.Match[str]) -> str:
+        def rewrite_link(match: re.Match[str], source_dir: Path) -> str:
             raw = match.group(1)
             target, separator, fragment = raw.partition("#")
             if not target or re.match(r"^[A-Za-z][A-Za-z0-9+.-]*:", target):
                 return match.group(0)
-            source = (source_path.parent / target).resolve()
+            source = (source_dir / target).resolve()
             if source in routes:
                 destination = routes[source]
                 # 只保留在中英文源稿中显式共用的稳定锚点。
-                if not (destination.name == "width-double-descent.html" and fragment in {
-                    "rule30-width-transition", "post-fit-generalization-lag", "rule30-norm-data-gap",
-                }):
+                if fragment not in {
+                    "width-double-descent.html": {"rule30-width-transition", "post-fit-generalization-lag", "rule30-norm-data-gap"},
+                    "update-training-controls.html": {"rule30-norm-agreement"},
+                }.get(destination.name, ()):
                     fragment = ""
             elif source.is_relative_to(ROOT / "assets"):
                 destination = SITE_ROOT / "assets" / source.relative_to(ROOT / "assets")
@@ -1958,10 +1960,12 @@ def build_october_theory_pages() -> None:
             relative = Path(os.path.relpath(destination, output)).as_posix()
             return f"]({relative}{'#' + fragment if separator and fragment else ''})"
 
+        def linked_markdown(path: Path) -> str:
+            return re.sub(r"\]\(([^)]+)\)", lambda m: rewrite_link(m, path.parent), read_text(path))
+
         for stem, filename, title_zh, title_en, description_zh, description_en in specifications:
             source_path = ROOT / f"{stem}_{language}.md"
-            source = read_text(source_path)
-            source = re.sub(r"\]\(([^)]+)\)", rewrite_link, source)
+            source = linked_markdown(source_path)
             body, toc = render_markdown(strip_first_h1(source))
             is_chinese = language == "zh"
             title = title_zh if is_chinese else title_en
@@ -1977,7 +1981,7 @@ def build_october_theory_pages() -> None:
                 body = f'<p class="source-bar"><a href="{package_href}" download>{label}</a><span>{note}</span></p>' + body
                 topic = source_path.parent.name
                 if topic in READER_TOPICS:
-                    intro, _ = render_markdown(read_text(ROOT / "reader_notes" / f"{topic}_{language}.md"))
+                    intro, _ = render_markdown(linked_markdown(ROOT / "reader_notes" / f"{topic}_{language}.md"))
                     if topic == "scaffolding":
                         assets = Path(os.path.relpath(SITE_ROOT / "assets/mod3_reproduction", output)).as_posix()
                         names = ("训练源码", "运行说明") if is_chinese else ("Training sources", "Run instructions")
