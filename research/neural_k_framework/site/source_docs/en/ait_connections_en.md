@@ -1,6 +1,6 @@
 # Neural Network Generalization and Algorithmic Information Theory
 
-Update scope: 2026-10-30 through 2026-11-07; the final day adds connections to historical encoding experiments, not new runs. This page presents the author's experiment-informed macroscopic account without turning conceptual correspondences into a theorem that every network generalizes efficiently. See the [update overview](research_updates_20261106_en.md) for new evidence and negative results, and the [conceptual clarification](interpretation_update_20261106_en.md) for distinctions among representation, measure, and dynamics.
+Revised 2026-11-10: [how one more observed input refines a hard function](#hard-function-resolution), and [how cooling on a fixed training set affects the Levin analogy](#levin-temperature). This revision clarifies the interpretation; it reports no new experiment. See the [update overview](research_updates_20261106_en.md) for earlier evidence and negative results, and the [conceptual clarification](interpretation_update_20261106_en.md) for the distinction between representation, measure, and training dynamics.
 
 **Why neural networks work can first be understood through a few factors: they can represent a rich set of functions, their parameterizations do not assign equal implementation mass to those functions, and data and output requirements further filter implementations. Once reusable explanations gain an advantage, they can support many predictions that were never supplied individually.**
 
@@ -22,7 +22,7 @@ The update on 2026-11-07 connects the early encoding experiments: all four addit
 
 For a fixed training set, the object is the parameter region satisfying its requirements and the mass occupied there by different complete functions. Higher-mass candidates occur more often; this does not mean that every training run deterministically selects the largest-mass function. Correspondence between static SMC distributions and SGD, Adam, or STP outcomes is an empirical relationship to be tested.
 
-An individually economical function need not outweigh a numerous candidate group. For a normalized candidate distribution Q, the negative-log gap between selecting the best term and retaining the sum is `-log2(max_f Q(f))`; it is small only when mass is concentrated. Total mass cannot be assumed to be dominated by one shortest description for every training set.
+**The simplest rule that explains the training set need not be the true rule.** Fix a way to describe rules and ask: given these inputs, what is the shortest rule that returns all the observed labels? Suppose the true rule is $y=a\land b$, but every training input has $b=1$. Then $y=a$ fits every label. A stronger simplicity bias cannot supply the missing evidence; one new example with $a=1,b=0,y=0$ rules out that explanation.
 
 The prior and the data play different roles: the prior sets initial preferences among compatible explanations, while observations exclude incompatible extensions. A simple target with a substantial initial advantage may dominate after a small amount of informative data; a more complex target usually needs more samples to exclude other explanations with substantial mass and then reduce the total remaining competitor mass. This connects to the candidate-prediction picture of [Solomonoff induction](https://raysolomonoff.com/publications/solo1.pdf).
 
@@ -34,9 +34,29 @@ The joint output distribution is the underlying object throughout; loss and ampl
 
 ## 3 Why Implementation Mass Can Relate to Complexity
 
-Levin's coding theorem connects two independently defined quantities: the shortest program producing a given object and the total probability of all prefix programs producing it. It is not an arbitrary renaming of negative log probability. There is therefore a concrete theoretical basis for investigating the relationship between description economy and implementation mass, although a finite neural prior is not automatically universal algorithmic probability. [Levin's coding and information-theoretic framework](https://www.cs.bu.edu/fac/lnd/pdf/inf.pdf)
+Levin's coding theorem starts with one discrete object $x$. On a fixed universal prefix machine, the length $K_U(x)$ of its shortest program differs from the negative log of $m_U(x)$, the total probability of all programs producing it, by a constant independent of $x$. The short description thus tells us the scale of the total probability. The theorem does not say that one shortest program carries a majority, nor does it prove the same constant bound for a neural network's conditional distribution. [Coding theorem, Eq. (2)](https://ir.cwi.nl/pub/26818/1-s2.0-S0304397513005124-main.pdf)
 
-There are two levels of aggregation: fix a complete function and combine its different implementations; fix a training set and then combine all complete extensions satisfying its requirements. The simplest compatible explanation and the total mass of all compatible explanations are related but distinct objects.
+There are two different sums for a network. Specify a complete function, and we can add up the mass of all weights that implement it. Specify only the training set, and we must also add over the functions that fit it but may disagree on unseen inputs. A simple function can be more common than any one competitor and still be less common than a whole group of slightly more complex competitors.
+
+### How does one more observed input refine a hard function? {#hard-function-resolution}
+
+**A hard-function table records discrete predictions on specified inputs. It is not the smallest unit of network behavior.** If two models give identical top-1 labels on all [50,000 ImageNet validation images](https://www.image-net.org/download), they have the same table on those images. One more image can distinguish them even if nobody supplies its correct label. Hold the sampling distribution over weights fixed: the mass of the old table equals the sum of the masses of its refinements, one for each answer to the new image. If all models give the same answer, this observation does not split the group. What changed is the resolution of observation. Adding the new label as a training requirement is a different operation: it changes the training constraint.
+
+A 4-bit binary task gives a useful contrast: once we have queried all 16 inputs, repeating them cannot refine the truth table on that domain. Measuring output amplitudes can still distinguish implementations with the same table. On a large task, observing more inputs can make the mass of an individual table tiny even if models agree on almost all natural inputs. We can instead specify an input distribution and a disagreement tolerance in advance, then add the masses of candidates whose predictions stay that close to the same rule. For continuous outputs, too, we need the probability of an observable region; a density at a point cannot be substituted into the coding theorem.
+
+### Which group of functions dominates after cooling? {#levin-temperature}
+
+Fix the training set and reference measure. Independently specify a group $S$ of simplest or near-simplest compatible explanations, without selecting it by its eventual mass. Let $t$ index the training constraint, $V_D(t)$ be the total mass satisfying it, and $V_{D,S}(t)$ the part belonging to the group. When both are positive, the cost in bits of keeping that group instead of all candidates is:
+
+$$
+\Delta_D(S,t)=\log_2\frac{V_D(t)}{V_{D,S}(t)}=-\log_2 Q_{D,t}(S).
+$$
+
+Here $Q_{D,t}(S)$ is the group's share of the constrained region. Extensions resembling random lookup tables are numerous; we can neglect them as a group only if the penalty per extension outweighs their advantage in numbers. For illustration, suppose simple, intermediate, and complex groups start with 10, 30, and 60 units of mass. A tighter BCE threshold leaves 8, 15, and 6. Even the simple group has lost absolute mass, but its share has risen from 10% to about 28%, and the majority has shifted from the complex group to the intermediate one. **Cooling shifts the distribution toward simpler explanations; it need not select the same simplest function in every run.**
+
+The empirical prediction is conditional: if the more complex groups keep shrinking faster than $S$, stronger bias gives $S$ a larger share and makes its mass a better approximation to the total. Tightening BCE is one route to test. Where large norms favor complex rules, penalizing large norms may shift mass in the same direction, but the interventions are not equivalent. The [Rule30 norm comparison](width_double_descent_en.md#rule30-norm-data-gap) measures changes in trained predictions, not this mass share directly. Whether the explanations favored after cooling generalize still depends on which competing rules the training data ruled out.
+
+### How contraction rates relate to short descriptions
 
 For an effectively encodable discrete neural generation protocol, probability coding can yield a short universal description. The reverse direction additionally requires showing that short descriptions admit inexpensive implementations with sufficient parameter mass in the specified network. Universal approximation does not replace inexpensive decoding, and a compiler's fixed program length does not imply fixed computation in a finite network. A total-mass budget limits the individual mass available to numerous complex objects, but a uniform lookup model also satisfies that budget; it alone does not establish high probability for simple functions.
 
